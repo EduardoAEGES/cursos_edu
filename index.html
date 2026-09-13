@@ -102,20 +102,38 @@
   }
   #closeDadoBtn:hover{ color: var(--text); }
 
-  /* Dice */
+  /* Dice scene with strong perspective */
+  .dice-stage{
+    position: relative;
+    margin: 36px auto 24px;
+    width: 220px;
+    height: 200px;
+    perspective: 700px;
+    perspective-origin: 50% 40%;
+  }
   .dice-scene{
-    perspective: 900px;
-    margin: 30px auto;
+    position:absolute;
+    top: 30px;
+    left: 50%;
+    margin-left: -70px;
     width: 140px;
     height: 140px;
+    transform-style: preserve-3d;
   }
   .cube{
     position: relative;
     width: 140px;
     height: 140px;
     transform-style: preserve-3d;
-    transform: rotateX(0deg) rotateY(0deg);
-    transition: transform 1.4s cubic-bezier(.25,.9,.3,1);
+    transform: rotateX(-24deg) rotateY(-24deg);
+    transition: transform 1.6s cubic-bezier(.2,.85,.25,1);
+  }
+  .cube.rolling{
+    animation: tumble 1.6s cubic-bezier(.2,.85,.25,1);
+  }
+  @keyframes tumble{
+    0%   { }
+    100% { }
   }
   .face{
     position:absolute;
@@ -124,21 +142,50 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size: 48px;
-    font-weight: 700;
-    border-radius: 16px;
-    border: 3px solid rgba(255,255,255,.15);
-    background: #f8fafc;
+    font-size: 52px;
+    font-weight: 800;
+    border-radius: 22px;
+    border: 2px solid rgba(255,255,255,.35);
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255,255,255,.85), rgba(255,255,255,0) 55%),
+      linear-gradient(135deg, #ffffff 0%, #e2e8f0 55%, #cbd5e1 100%);
     color: #0f172a;
     user-select:none;
-    backface-visibility: hidden;
+    box-shadow:
+      inset 0 0 22px rgba(0,0,0,.18),
+      inset 6px 6px 14px rgba(255,255,255,.55);
+    text-shadow: 0 1px 1px rgba(255,255,255,.6);
   }
+  /* Face-specific darkening to simulate lighting on different sides */
   .f1{ transform: translateZ(70px); }
-  .f6{ transform: rotateY(180deg) translateZ(70px); }
-  .f3{ transform: rotateY(90deg) translateZ(70px); }
-  .f4{ transform: rotateY(-90deg) translateZ(70px); }
-  .f5{ transform: rotateX(90deg) translateZ(70px); }
-  .f2{ transform: rotateX(-90deg) translateZ(70px); }
+  .f6{ transform: rotateY(180deg) translateZ(70px); filter: brightness(.82); }
+  .f3{ transform: rotateY(90deg) translateZ(70px); filter: brightness(.9); }
+  .f4{ transform: rotateY(-90deg) translateZ(70px); filter: brightness(.9); }
+  .f5{ transform: rotateX(90deg) translateZ(70px); filter: brightness(1.05); }
+  .f2{ transform: rotateX(-90deg) translateZ(70px); filter: brightness(.86); }
+
+  /* Ground shadow under the dice */
+  .dice-shadow{
+    position:absolute;
+    left: 50%;
+    bottom: 6px;
+    width: 150px;
+    height: 34px;
+    margin-left: -75px;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,.55), rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    filter: blur(2px);
+    transition: transform 1.6s ease, opacity 1.6s ease;
+  }
+  .dice-shadow.rolling{
+    animation: shadowPulse 1.6s ease;
+  }
+  @keyframes shadowPulse{
+    0%   { transform: scale(1); opacity:.9; }
+    30%  { transform: scale(.7); opacity:.5; }
+    60%  { transform: scale(1.15); opacity:.95; }
+    100% { transform: scale(1); opacity:.9; }
+  }
 
   .dice-controls{
     display:flex;
@@ -146,6 +193,11 @@
     align-items:center;
     gap: 10px;
     margin-top: 10px;
+  }
+  .control-row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
   }
   #rollBtn{
     padding: 10px 26px;
@@ -158,6 +210,16 @@
     cursor:pointer;
   }
   #rollBtn:disabled{ opacity:.6; cursor:not-allowed; }
+  #soundToggle{
+    background: transparent;
+    border: 1px solid var(--text-dim);
+    color: var(--text-dim);
+    border-radius: 10px;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  #soundToggle.on{ border-color: var(--accent); color: var(--accent); }
   #resultText{
     color: var(--text-dim);
     min-height: 20px;
@@ -241,19 +303,25 @@
     <button id="closeDadoBtn" aria-label="Cerrar">✕</button>
     <h2>Dado 3D</h2>
 
-    <div class="dice-scene">
-      <div class="cube" id="cube">
-        <div class="face f1" data-face="1"></div>
-        <div class="face f2" data-face="2"></div>
-        <div class="face f3" data-face="3"></div>
-        <div class="face f4" data-face="4"></div>
-        <div class="face f5" data-face="5"></div>
-        <div class="face f6" data-face="6"></div>
+    <div class="dice-stage">
+      <div class="dice-scene">
+        <div class="cube" id="cube">
+          <div class="face f1" data-face="1"></div>
+          <div class="face f2" data-face="2"></div>
+          <div class="face f3" data-face="3"></div>
+          <div class="face f4" data-face="4"></div>
+          <div class="face f5" data-face="5"></div>
+          <div class="face f6" data-face="6"></div>
+        </div>
       </div>
+      <div class="dice-shadow" id="diceShadow"></div>
     </div>
 
     <div class="dice-controls">
-      <button id="rollBtn">Lanzar dado</button>
+      <div class="control-row">
+        <button id="rollBtn">Lanzar dado</button>
+        <button id="soundToggle" class="on" aria-pressed="true">🔊 Sonido</button>
+      </div>
       <span id="resultText"></span>
     </div>
 
@@ -271,6 +339,7 @@
 <script>
 (function(){
   const STORAGE_KEY = 'dadoCustomFaces';
+  const SOUND_KEY = 'dadoSound';
   const defaults = [
     { text: '1', color: '#f8fafc' },
     { text: '2', color: '#f8fafc' },
@@ -284,7 +353,9 @@
   const closeBtn = document.getElementById('closeDadoBtn');
   const overlay = document.getElementById('dadoOverlay');
   const cube = document.getElementById('cube');
+  const diceShadow = document.getElementById('diceShadow');
   const rollBtn = document.getElementById('rollBtn');
+  const soundToggle = document.getElementById('soundToggle');
   const resultText = document.getElementById('resultText');
   const customizeGrid = document.getElementById('customizeGrid');
   const saveCustomBtn = document.getElementById('saveCustomBtn');
@@ -305,10 +376,86 @@
     6: { x: 0,   y: 180 }
   };
 
-  let currentX = 0;
-  let currentY = 0;
+  let currentX = -24;
+  let currentY = -24;
   let rolling = false;
 
+  // ---- Sound (Web Audio API, synthesised so no asset files needed) ----
+  let soundOn = true;
+  try {
+    const stored = localStorage.getItem(SOUND_KEY);
+    if (stored === 'off') soundOn = false;
+  } catch (e) {}
+  updateSoundToggle();
+
+  let audioCtx = null;
+  function getCtx(){
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  // A short noise burst = one "clack" of the dice hitting a surface.
+  function playClack(ctx, when, gainValue){
+    const dur = 0.08;
+    const bufferSize = Math.floor(ctx.sampleRate * dur);
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      // decaying white noise
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2.5);
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass';
+    filter.frequency.value = 900 + Math.random() * 700;
+    filter.Q.value = 1.2;
+    const gain = ctx.createGain();
+    gain.gain.value = gainValue;
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(when);
+    src.stop(when + dur);
+  }
+
+  function playRollSound(){
+    if (!soundOn) return;
+    const ctx = getCtx();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    // Several clacks getting faster then settling = tumbling dice.
+    const times = [0, 0.11, 0.24, 0.4, 0.6, 0.85, 1.15, 1.45];
+    times.forEach((t, i) => {
+      const g = 0.35 * (1 - i / (times.length + 1));
+      playClack(ctx, now + t, Math.max(0.08, g));
+    });
+  }
+
+  function updateSoundToggle(){
+    if (soundOn) {
+      soundToggle.classList.add('on');
+      soundToggle.textContent = '🔊 Sonido';
+      soundToggle.setAttribute('aria-pressed', 'true');
+    } else {
+      soundToggle.classList.remove('on');
+      soundToggle.textContent = '🔇 Sonido';
+      soundToggle.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  soundToggle.addEventListener('click', () => {
+    soundOn = !soundOn;
+    try { localStorage.setItem(SOUND_KEY, soundOn ? 'on' : 'off'); } catch (e) {}
+    updateSoundToggle();
+    if (soundOn) { const ctx = getCtx(); if (ctx) playClack(ctx, ctx.currentTime, 0.25); }
+  });
+
+  // ---- Faces ----
   function normalize(deg){
     return ((deg % 360) + 360) % 360;
   }
@@ -357,12 +504,8 @@
   applyFaces(faces);
   buildCustomizeForm(faces);
 
-  function openModal(){
-    overlay.classList.remove('hidden');
-  }
-  function closeModal(){
-    overlay.classList.add('hidden');
-  }
+  function openModal(){ overlay.classList.remove('hidden'); }
+  function closeModal(){ overlay.classList.add('hidden'); }
 
   openBtn.addEventListener('click', openModal);
   closeBtn.addEventListener('click', closeModal);
@@ -379,13 +522,17 @@
     rollBtn.disabled = true;
     resultText.textContent = '';
 
+    playRollSound();
+
     const target = 1 + Math.floor(Math.random() * 6);
     const base = baseRotation[target];
-    const baseX = normalize(base.x);
-    const baseY = normalize(base.y);
+    // Keep a slight tilt so the landing pose still looks 3D, not flat.
+    const baseX = normalize(base.x) - 18;
+    const baseY = normalize(base.y) + 18;
 
-    const spinX = (3 + Math.floor(Math.random() * 3)) * 360;
-    const spinY = (3 + Math.floor(Math.random() * 3)) * 360;
+    // Multiple full spins on all axes for a lively tumble.
+    const spinX = (2 + Math.floor(Math.random() * 3)) * 360;
+    const spinY = (2 + Math.floor(Math.random() * 3)) * 360;
 
     const deltaX = normalize(baseX - normalize(currentX));
     const deltaY = normalize(baseY - normalize(currentY));
@@ -393,13 +540,15 @@
     currentX += spinX + deltaX;
     currentY += spinY + deltaY;
 
+    diceShadow.classList.add('rolling');
     cube.style.transform = 'rotateX(' + currentX + 'deg) rotateY(' + currentY + 'deg)';
 
     setTimeout(() => {
+      diceShadow.classList.remove('rolling');
       resultText.textContent = 'Resultado: ' + faceEls[target].textContent;
       rolling = false;
       rollBtn.disabled = false;
-    }, 1450);
+    }, 1620);
   }
 
   rollBtn.addEventListener('click', roll);
@@ -407,7 +556,7 @@
   saveCustomBtn.addEventListener('click', () => {
     faces = readCustomizeForm();
     applyFaces(faces);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(faces));
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(faces)); } catch (e) {}
     resultText.textContent = 'Caras guardadas';
   });
 
@@ -415,7 +564,7 @@
     faces = defaults.map(f => ({ ...f }));
     applyFaces(faces);
     buildCustomizeForm(faces);
-    localStorage.removeItem(STORAGE_KEY);
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     resultText.textContent = 'Caras restablecidas';
   });
 })();
