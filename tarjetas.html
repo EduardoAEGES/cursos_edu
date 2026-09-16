@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ruleta de tarjetas - Auditores de Encuestas</title>
+<style>
+  :root{
+    --bg: #0f172a;
+    --bg-soft: #1e293b;
+    --accent: #38bdf8;
+    --accent-2: #f472b6;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; min-height:100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: radial-gradient(circle at top, #1e293b, #0f172a 60%);
+    color: var(--text);
+  }
+  header{ text-align:center; padding: 48px 20px 10px; }
+  header h1{
+    margin:0 0 8px; font-size: clamp(24px, 4.5vw, 38px);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  header p{ color: var(--text-dim); margin:0; font-size: 15px; }
+  .back{ display:inline-block; margin-top: 14px; color: var(--accent); text-decoration:none; font-size: 14px; }
+  .back:hover{ text-decoration: underline; }
+
+  main{ max-width: 1000px; margin: 0 auto; padding: 20px 20px 80px; }
+
+  .modes{ display:flex; justify-content:center; gap: 10px; margin: 10px 0 24px; flex-wrap:wrap; }
+  .mode-btn{
+    padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,.2);
+    background: transparent; color: var(--text-dim); cursor:pointer; font-weight:600; font-size: 14px;
+  }
+  .mode-btn.active{ background: var(--accent); border-color: var(--accent); color: #0f172a; }
+
+  .options-row{ display:flex; justify-content:center; gap: 10px; margin-bottom: 18px; flex-wrap:wrap; }
+  .toggle-btn{
+    background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
+    border-radius: 10px; padding: 8px 12px; cursor:pointer; font-size: 13px;
+  }
+  .toggle-btn.on{ border-color: var(--accent); color: var(--accent); }
+
+  /* Roulette */
+  .wheel-wrap{ display:flex; flex-direction:column; align-items:center; gap: 18px; }
+  .wheel-stage{ position: relative; width: 320px; max-width: 86vw; aspect-ratio: 1/1; }
+  .pointer{
+    position:absolute; top: -6px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent;
+    border-top: 26px solid #f8fafc; filter: drop-shadow(0 2px 3px rgba(0,0,0,.4)); z-index: 5;
+  }
+  .wheel{
+    width: 100%; height: 100%; border-radius: 50%;
+    border: 8px solid #f8fafc;
+    box-shadow: 0 12px 30px rgba(0,0,0,.45), inset 0 0 0 4px rgba(15,23,42,.15);
+    transition: transform 4s cubic-bezier(.17,.67,.16,1);
+    position: relative;
+  }
+  .wheel-label{
+    position:absolute; left: 50%; top: 50%;
+    transform-origin: 0 0;
+    color: #0f172a; font-weight: 800; font-size: 15px;
+    pointer-events:none; white-space:nowrap;
+  }
+  .hub{
+    position:absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px;
+    border-radius: 50%; background: #f8fafc; z-index: 4;
+    display:flex; align-items:center; justify-content:center; font-size: 22px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.35);
+  }
+  #spinBtn, #drawBtn{
+    padding: 12px 34px; font-size: 17px; font-weight: 700; border:none; border-radius: 12px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#0f172a; cursor:pointer;
+    box-shadow: 0 8px 20px rgba(56,189,248,.25);
+  }
+  #spinBtn:disabled, #drawBtn:disabled{ opacity:.6; cursor:not-allowed; }
+
+  /* Card deck mode */
+  .deck-wrap{ display:flex; flex-direction:column; align-items:center; gap: 18px; }
+  .deck-visual{ position: relative; width: 220px; height: 150px; }
+  .deck-card{
+    position:absolute; inset:0; border-radius: 14px; border: 3px solid #f8fafc;
+    background: linear-gradient(135deg, #2563eb, #7c3aed); box-shadow: 0 10px 24px rgba(0,0,0,.4);
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size: 34px;
+  }
+  .deck-card:nth-child(1){ transform: rotate(-6deg) translate(-8px, 4px); }
+  .deck-card:nth-child(2){ transform: rotate(3deg) translate(6px, -2px); }
+  .deck-card:nth-child(3){ transform: rotate(-1deg); }
+
+  .hidden{ display:none; }
+  #poolInfo{ text-align:center; color: var(--text-dim); font-size: 13px; min-height: 16px; }
+
+  /* The revealed tarjeta */
+  .tarjeta-holder{ margin-top: 30px; display:flex; justify-content:center; }
+  .tarjeta{
+    width: 100%; max-width: 720px;
+    background: #dbeafe;
+    border-radius: 22px; padding: 18px;
+    box-shadow: 0 18px 44px rgba(0,0,0,.45);
+    border: 3px solid rgba(255,255,255,.5);
+    color: #0f172a;
+    animation: pop .4s ease;
+  }
+  @keyframes pop{ from{ transform: scale(.9); opacity:0; } to{ transform: scale(1); opacity:1; } }
+  .tarjeta-top{ display:flex; align-items:stretch; gap: 12px; flex-wrap:wrap; }
+  .badge{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background: #dc2626; color:#fff; border-radius: 14px; padding: 10px 16px; min-width: 92px;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.15);
+  }
+  .badge .b-t{ font-size: 12px; font-weight:700; letter-spacing:.06em; }
+  .badge .b-n{ font-size: 34px; font-weight: 900; line-height: 1; }
+  .banner{
+    flex:1; min-width: 220px; background: #1d4ed8; color:#fff; border-radius: 14px;
+    padding: 10px 16px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .banner h2{ margin:0; font-size: clamp(18px, 3.5vw, 26px); font-weight: 900; letter-spacing:.02em; }
+  .banner h2 .y{ color: #fde047; }
+  .banner .sub{ font-size: 13px; opacity:.95; margin-top: 2px; }
+  .note{
+    background: #fef9c3; color:#0f172a; border-radius: 12px; padding: 10px 14px;
+    font-size: 13px; font-weight: 700; min-width: 140px; max-width: 200px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.12); align-self:flex-start;
+  }
+
+  .tarjeta-body{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 620px){ .tarjeta-body{ grid-template-columns: 1fr; } }
+  .panel{ background: #eff6ff; border-radius: 14px; padding: 14px; box-shadow: inset 0 0 0 2px rgba(255,255,255,.6); }
+  .panel .p-title{
+    display:inline-block; background:#1d4ed8; color:#fff; font-size: 12px; font-weight:800;
+    padding: 4px 10px; border-radius: 8px; letter-spacing:.04em; margin-bottom: 10px;
+  }
+  .question{ font-size: clamp(18px, 3vw, 24px); font-weight: 800; color:#1e3a8a; line-height:1.15; }
+  .answers{ margin-top: 12px; display:flex; flex-direction:column; gap: 8px; }
+  .answers .opt{
+    display:flex; align-items:center; gap: 8px; font-size: 14px; color:#334155;
+  }
+  .answers .opt .radio{ width: 16px; height:16px; border-radius:50%; border: 2px solid #94a3b8; flex:none; }
+  .scale{ display:flex; gap: 8px; margin-top: 12px; }
+  .scale .num{
+    width: 34px; height: 34px; border-radius: 8px; background:#dbeafe; color:#1e3a8a;
+    display:flex; align-items:center; justify-content:center; font-weight:800;
+  }
+  .scale-labels{ display:flex; justify-content:space-between; font-size:11px; color:#64748b; margin-top:6px; }
+
+  .task .p-title{ background:#db2777; }
+  .task ol{ margin: 0; padding: 0; list-style:none; counter-reset: t; }
+  .task li{
+    display:flex; align-items:flex-start; gap: 10px; margin-bottom: 9px; font-size: 14px; color:#334155;
+    counter-increment: t;
+  }
+  .task li::before{
+    content: counter(t); flex:none;
+    width: 24px; height: 24px; border-radius: 50%; color:#fff; font-weight:800; font-size: 13px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .task li:nth-child(1)::before{ background:#2563eb; }
+  .task li:nth-child(2)::before{ background:#dc2626; }
+  .task li:nth-child(3)::before{ background:#16a34a; }
+  .task li:nth-child(4)::before{ background:#f59e0b; }
+  .task li:nth-child(5)::before{ background:#7c3aed; }
+  .tarjeta-foot{
+    margin-top: 12px; text-align:center; background:#bfdbfe; color:#1e3a8a;
+    border-radius: 10px; padding: 8px; font-weight:800; font-size: 13px; letter-spacing:.04em;
+  }
+  .placeholder{ text-align:center; color: var(--text-dim); margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Auditores de Encuestas</h1>
+  <p>Analiza, discute y decide — gira la ruleta o saca una tarjeta</p>
+  <div><a class="back" href="index.html">← Volver al repositorio</a></div>
+</header>
+
+<main>
+  <div class="modes">
+    <button class="mode-btn active" data-mode="ruleta">🎡 Ruleta</button>
+    <button class="mode-btn" data-mode="carta">🃏 Tipo carta</button>
+  </div>
+
+  <div class="options-row">
+    <button id="noRepeatToggle" class="toggle-btn" aria-pressed="false">🔁 Sin repetir</button>
+  </div>
+
+  <!-- Roulette -->
+  <div id="ruletaMode" class="wheel-wrap">
+    <div class="wheel-stage">
+      <div class="pointer"></div>
+      <div class="wheel" id="wheel"></div>
+      <div class="hub">🎯</div>
+    </div>
+    <button id="spinBtn">Girar ruleta</button>
+  </div>
+
+  <!-- Card deck -->
+  <div id="cartaMode" class="deck-wrap hidden">
+    <div class="deck-visual">
+      <div class="deck-card">?</div>
+      <div class="deck-card">?</div>
+      <div class="deck-card">?</div>
+    </div>
+    <button id="drawBtn">Sacar tarjeta</button>
+  </div>
+
+  <div id="poolInfo"></div>
+
+  <div class="tarjeta-holder">
+    <div id="tarjetaTarget">
+      <p class="placeholder">La tarjeta que salga aparecerá aquí. 👆</p>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  const NOREPEAT_KEY = 'tarjetasNoRepeat';
+
+  const TASKS = [
+    '¿Qué está midiendo esta pregunta?',
+    '¿Qué nivel de medición corresponde?',
+    '¿Qué tipo de escala utilizarías?',
+    '¿La pregunta está bien diseñada? ¿Por qué?',
+    'Si la cambiarías, propone una mejor versión.'
+  ];
+
+  const CARDS = [
+    {
+      n: '01', color: '#dc2626',
+      question: '"¿Qué marca de yogur recuerda?"',
+      answers: { type: 'open', text: 'Respuesta abierta (recordación de marca)' },
+      note: 'Buenas preguntas, mejores decisiones.'
+    },
+    {
+      n: '02', color: '#ea580c',
+      question: '"¿Con qué frecuencia compra yogur?"',
+      answers: { type: 'options', options: ['Nunca', 'A veces', 'Casi siempre', 'Siempre'] },
+      note: 'Las buenas preguntas generan decisiones inteligentes.'
+    },
+    {
+      n: '03', color: '#7c3aed',
+      question: '"¿Qué tan importante es el precio al elegir una marca de yogur?"',
+      answers: { type: 'scale', min: 'Nada importante', max: 'Muy importante' },
+      note: 'Las buenas preguntas revelan verdaderas oportunidades.'
+    },
+    {
+      n: '04', color: '#dc2626',
+      question: '"¿Cuánto estaría dispuesto(a) a pagar por un yogur de 200 gramos?"',
+      answers: { type: 'open', text: 'Respuesta abierta (monto en S/)' },
+      note: 'Las buenas preguntas ayudan a conocer mejor a tus clientes.'
+    },
+    {
+      n: '05', color: '#2563eb',
+      question: '"¿Qué tan probable es que recomiende esta marca de yogur a un amigo o familiar?"',
+      answers: { type: 'scale', min: 'Nada probable', max: 'Muy probable' },
+      note: 'Las buenas preguntas impulsan mejores negocios.'
+    }
+  ];
+
+  const N = CARDS.length;
+  const SEG = 360 / N;
+  const wheelColors = ['#60a5fa', '#f472b6', '#34d399', '#fbbf24', '#a78bfa'];
+
+  const wheel = document.getElementById('wheel');
+  const spinBtn = document.getElementById('spinBtn');
+  const drawBtn = document.getElementById('drawBtn');
+  const target = document.getElementById('tarjetaTarget');
+  const poolInfo = document.getElementById('poolInfo');
+  const noRepeatToggle = document.getElementById('noRepeatToggle');
+  const modeBtns = document.querySelectorAll('.mode-btn');
+  const ruletaMode = document.getElementById('ruletaMode');
+  const cartaMode = document.getElementById('cartaMode');
+
+  // Build wheel background (conic gradient) and labels.
+  function buildWheel(){
+    let stops = [];
+    for (let i = 0; i < N; i++){
+      const c = wheelColors[i % wheelColors.length];
+      stops.push(c + ' ' + (i * SEG) + 'deg ' + ((i + 1) * SEG) + 'deg');
+    }
+    wheel.style.background = 'conic-gradient(' + stops.join(', ') + ')';
+    // Labels
+    for (let i = 0; i < N; i++){
+      const label = document.createElement('div');
+      label.className = 'wheel-label';
+      label.textContent = CARDS[i].n;
+      const angle = i * SEG + SEG / 2; // center of segment, from top, clockwise
+      // Place label along the radius at that angle.
+      const rad = (angle - 90) * Math.PI / 180;
+      const radius = 108;
+      const x = Math.cos(rad) * radius;
+      const y = Math.sin(rad) * radius;
+      label.style.transform = 'translate(' + (x - 10) + 'px,' + (y - 8) + 'px) rotate(' + angle + 'deg)';
+      wheel.appendChild(label);
+    }
+  }
+  buildWheel();
+
+  // ---- No-repeat pool ----
+  let noRepeat = false;
+  try { if (localStorage.getItem(NOREPEAT_KEY) === 'on') noRepeat = true; } catch(e){}
+  let pool = [];
+  function refill(){ pool = CARDS.map((_, i) => i); }
+  function updatePool(){
+    poolInfo.textContent = noRepeat ? ('Sin repetir: quedan ' + pool.length + ' de ' + N) : '';
+  }
+  function setToggle(){
+    if (noRepeat){ noRepeatToggle.classList.add('on'); noRepeatToggle.setAttribute('aria-pressed','true'); }
+    else { noRepeatToggle.classList.remove('on'); noRepeatToggle.setAttribute('aria-pressed','false'); }
+  }
+  refill(); setToggle(); updatePool();
+
+  noRepeatToggle.addEventListener('click', () => {
+    noRepeat = !noRepeat;
+    try { localStorage.setItem(NOREPEAT_KEY, noRepeat ? 'on' : 'off'); } catch(e){}
+    setToggle(); refill(); updatePool();
+  });
+
+  function pickIndex(){
+    if (!noRepeat) return Math.floor(Math.random() * N);
+    if (pool.length === 0) refill();
+    const p = Math.floor(Math.random() * pool.length);
+    const v = pool[p];
+    pool.splice(p, 1);
+    return v;
+  }
+
+  // ---- Render a tarjeta ----
+  function answersHtml(a){
+    if (a.type === 'options'){
+      return '<div class="answers">' + a.options.map(o =>
+        '<div class="opt"><span class="radio"></span>' + o + '</div>').join('') + '</div>';
+    }
+    if (a.type === 'scale'){
+      let nums = '';
+      for (let i = 1; i <= 5; i++) nums += '<div class="num">' + i + '</div>';
+      return '<div class="scale">' + nums + '</div>' +
+        '<div class="scale-labels"><span>' + a.min + '</span><span>' + a.max + '</span></div>';
+    }
+    return '<div class="answers"><div class="opt" style="font-style:italic;color:#64748b">' + a.text + '</div></div>';
+  }
+
+  function renderCard(i){
+    const c = CARDS[i];
+    target.innerHTML =
+      '<div class="tarjeta">' +
+        '<div class="tarjeta-top">' +
+          '<div class="badge" style="background:' + c.color + '"><span class="b-t">TARJETA</span><span class="b-n">' + c.n + '</span></div>' +
+          '<div class="banner"><h2>AUDITORES <span class="y">DE ENCUESTAS</span></h2><span class="sub">Analiza, discute y decide</span></div>' +
+          '<div class="note">' + c.note + '</div>' +
+        '</div>' +
+        '<div class="tarjeta-body">' +
+          '<div class="panel">' +
+            '<span class="p-title">PREGUNTA DE ENCUESTA</span>' +
+            '<div class="question">' + c.question + '</div>' +
+            answersHtml(c.answers) +
+          '</div>' +
+          '<div class="panel task">' +
+            '<span class="p-title">TU TAREA (en pareja)</span>' +
+            '<ol>' + TASKS.map(t => '<li>' + t + '</li>').join('') + '</ol>' +
+          '</div>' +
+        '</div>' +
+        '<div class="tarjeta-foot">PIENSA · ANALIZA · ARGUMENTA</div>' +
+      '</div>';
+  }
+
+  // ---- Roulette spin ----
+  let currentRotation = 0;
+  let spinning = false;
+  function spin(){
+    if (spinning) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    const i = pickIndex();
+    // Segment i center is at (i*SEG + SEG/2) degrees clockwise from top.
+    // To bring it under the top pointer, rotate wheel by -(center) plus full turns.
+    const center = i * SEG + SEG / 2;
+    const fullTurns = (4 + Math.floor(Math.random() * 3)) * 360;
+    const targetRotation = fullTurns - center;
+    // Ensure we always move forward from current.
+    currentRotation = currentRotation - (currentRotation % 360) + targetRotation;
+    wheel.style.transform = 'rotate(' + currentRotation + 'deg)';
+    setTimeout(() => {
+      renderCard(i);
+      updatePool();
+      spinning = false;
+      spinBtn.disabled = false;
+    }, 4050);
+  }
+  spinBtn.addEventListener('click', spin);
+
+  // ---- Card draw ----
+  let drawing = false;
+  function draw(){
+    if (drawing) return;
+    drawing = true;
+    drawBtn.disabled = true;
+    const i = pickIndex();
+    setTimeout(() => {
+      renderCard(i);
+      updatePool();
+      drawing = false;
+      drawBtn.disabled = false;
+    }, 250);
+  }
+  drawBtn.addEventListener('click', draw);
+
+  // ---- Mode switch ----
+  modeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modeBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.getAttribute('data-mode');
+      if (mode === 'ruleta'){ ruletaMode.classList.remove('hidden'); cartaMode.classList.add('hidden'); }
+      else { cartaMode.classList.remove('hidden'); ruletaMode.classList.add('hidden'); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
