@@ -176,44 +176,56 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
   </label>
   <div class="tblwrap">
   <table class="tarea">
-    <thead><tr><th style="width:34px">N.º</th><th>Enunciado</th><th style="width:132px">Nivel</th><th style="width:150px">Escala</th><th style="width:190px">Justificación (opcional)</th><th class="chk"></th></tr></thead>
+    <thead><tr><th style="width:34px">N.º</th><th>Enunciado</th><th style="width:132px">Nivel</th><th style="width:150px">Escala</th><th style="width:190px">Justificación (opcional)</th></tr></thead>
     <tbody id="tbody"></tbody>
   </table>
   </div>
   <div class="actions">
-    <button id="btn-check" type="button">Comprobar (autoevaluación)</button>
-    <span id="score" class="score" aria-live="polite"></span>
     <button id="btn-download" type="button">Descargar mi copia</button>
   </div>
-  <p class="small" style="color:var(--muted);margin-top:10px">Tus respuestas se guardan solas; no necesitas enviar un Word aparte. La autoevaluación es solo para ti.</p>
+  <p class="small" style="color:var(--muted);margin-top:10px">Tus respuestas se guardan solas; no necesitas enviar un Word aparte. La corrección y la nota las ve el docente.</p>
+
+  <h2>Acceso docente</h2>
+  <form id="gate-form" autocomplete="off">
+    <label class="namefield" for="clave-input">Clave
+      <input id="clave-input" type="password" autocomplete="off" placeholder="Ingresa la clave">
+    </label>
+    <div class="actions" style="margin-top:0">
+      <button type="submit">Entrar</button>
+      <span id="gate-msg" class="score" aria-live="polite"></span>
+    </div>
+  </form>
 
   <section id="owner-panel" hidden>
-    <h2>Entregas recibidas · docente</h2>
-    <div class="actions" style="margin-top:0 0 10px"><button id="btn-refresh" type="button">Actualizar</button></div>
-    <div id="owner-body" class="owner-tbl small">Cargando entregas…</div>
-  </section>
-
-  <details class="clave">
-    <summary>Clave de respuestas · uso del docente</summary>
-    <div class="clavebody tblwrap">
-      <table>
-        <thead><tr><th style="width:38px">N.º</th><th>Nivel</th><th>Escala</th></tr></thead>
-        <tbody>
-          <tr><td class="num">1</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos</td></tr>
-          <tr><td class="num">2</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
-          <tr><td class="num">3</td><td><span class="chip nom">Nominal</span></td><td>Opción única</td></tr>
-          <tr><td class="num">4</td><td><span class="chip ord">Ordinal</span></td><td>Ordenamiento</td></tr>
-          <tr><td class="num">5</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos en soles</td></tr>
-          <tr><td class="num">6</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
-          <tr><td class="num">7</td><td><span class="chip raz">Razón</span></td><td>Numérica (años)</td></tr>
-          <tr><td class="num">8</td><td><span class="chip nom">Nominal</span></td><td>Opción única / abierta</td></tr>
-          <tr><td class="num">9</td><td><span class="chip int">Intervalo</span></td><td>Diferencial semántico</td></tr>
-          <tr><td class="num">10</td><td><span class="chip int">Intervalo</span></td><td>Escala de intención / probabilidad</td></tr>
-        </tbody>
-      </table>
-      <p class="small" style="color:var(--muted);margin-top:8px">Nota: la edad y el gasto son de <b>razón</b> aunque a veces se pregunten en rangos por comodidad; lo que define el nivel es la variable, no el formato de respuesta.</p>
+    <div class="actions" style="margin-top:0">
+      <button id="btn-refresh" type="button">Actualizar</button>
+      <button id="btn-logout" type="button">Salir</button>
+      <span id="owner-count" class="score" aria-live="polite"></span>
     </div>
-  </details>
+    <div id="owner-body" class="owner-tbl small">Cargando entregas…</div>
+
+    <details class="clave">
+      <summary>Clave de respuestas</summary>
+      <div class="clavebody tblwrap">
+        <table>
+          <thead><tr><th style="width:38px">N.º</th><th>Nivel</th><th>Escala</th></tr></thead>
+          <tbody>
+            <tr><td class="num">1</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos</td></tr>
+            <tr><td class="num">2</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
+            <tr><td class="num">3</td><td><span class="chip nom">Nominal</span></td><td>Opción única</td></tr>
+            <tr><td class="num">4</td><td><span class="chip ord">Ordinal</span></td><td>Ordenamiento</td></tr>
+            <tr><td class="num">5</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos en soles</td></tr>
+            <tr><td class="num">6</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
+            <tr><td class="num">7</td><td><span class="chip raz">Razón</span></td><td>Numérica (años)</td></tr>
+            <tr><td class="num">8</td><td><span class="chip nom">Nominal</span></td><td>Opción única / abierta</td></tr>
+            <tr><td class="num">9</td><td><span class="chip int">Intervalo</span></td><td>Diferencial semántico</td></tr>
+            <tr><td class="num">10</td><td><span class="chip int">Intervalo</span></td><td>Escala de intención / probabilidad</td></tr>
+          </tbody>
+        </table>
+        <p class="small" style="color:var(--muted);margin-top:8px">Nota: la edad y el gasto son de <b>razón</b> aunque a veces se pregunten en rangos por comodidad; lo que define el nivel es la variable, no el formato de respuesta.</p>
+      </div>
+    </details>
+  </section>
 
   <footer>
     <span>Investigación Cuantitativa — Niveles de medición</span>
@@ -272,8 +284,7 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
     var c2=document.createElement('td'); c2.appendChild(selEl('nivel',i,NIVELES));
     var c3=document.createElement('td'); c3.appendChild(selEl('escala',i,ESCALAS));
     var c4=document.createElement('td'); var ji=document.createElement('input'); ji.type='text'; ji.className='just'; ji.id='just-'+i; ji.autocomplete='off'; c4.appendChild(ji);
-    var c5=document.createElement('td'); c5.className='chk'; c5.id='chk-'+i;
-    tr.appendChild(c0); tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3); tr.appendChild(c4); tr.appendChild(c5);
+    tr.appendChild(c0); tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3); tr.appendChild(c4);
     tbody.appendChild(tr);
   }
 
@@ -311,19 +322,17 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
   applyState(readLocal());
   setStatus('Guardado en este navegador');
 
-  document.getElementById('btn-check').addEventListener('click', function(){
+  // calificación: 1 punto por nivel correcto + 1 por escala correcta = 20 puntos
+  function calificar(r){
+    r = r || {};
     var nOK=0, eOK=0;
     for(var i=1;i<=10;i++){
-      var key=KEY[i-1]; var chk=document.getElementById('chk-'+i);
-      var answered = resp[i].nivel || resp[i].escala;
-      var nok = resp[i].nivel===key.n;
-      var eok = key.e.indexOf(resp[i].escala)>=0;
-      if(nok) nOK++; if(eok) eOK++;
-      chk.textContent = (nok&&eok) ? '✓' : (answered ? '✗' : '');
-      chk.className = 'chk ' + ((nok&&eok) ? 'ok' : (answered ? 'no' : ''));
+      var key=KEY[i-1], a=r[i]||{};
+      if(a.nivel===key.n) nOK++;
+      if(key.e.indexOf(a.escala)>=0) eOK++;
     }
-    document.getElementById('score').textContent = 'Nivel '+nOK+'/10 · Escala '+eOK+'/10';
-  });
+    return {nivel:nOK, escala:eOK, nota:nOK+eOK};
+  }
 
   function esc(s){ s=String(s==null?'':s); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
   document.getElementById('btn-download').addEventListener('click', function(){
@@ -349,43 +358,69 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
     })
     .catch(function(){ online=false; setStatus('Guardado en este navegador', true); });
 
-  // panel docente (agrega #docente al final del enlace)
-  if(/docente/i.test(location.hash)){
-    var panel=document.getElementById('owner-panel'); panel.hidden=false;
-    var body=document.getElementById('owner-body');
-    function loadEntregas(){
-      fetch(REST+"?select=nombre,respuestas,updated_at&order=updated_at.desc", {headers:h()})
-        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-        .then(function(rows){ renderOwner(body, rows||[]); })
-        .catch(function(err){ body.textContent='No se pudieron cargar las entregas ('+err+').'; });
-    }
-    document.getElementById('btn-refresh').addEventListener('click', loadEntregas);
-    loadEntregas(); setInterval(loadEntregas, 20000);
+  // panel docente protegido con clave
+  var CLAVE="46069339", GK="niveles_docente_ok";
+  var gateForm=document.getElementById('gate-form');
+  var gateInput=document.getElementById('clave-input');
+  var gateMsg=document.getElementById('gate-msg');
+  var panel=document.getElementById('owner-panel');
+  var body=document.getElementById('owner-body');
+  var countEl=document.getElementById('owner-count');
+  var timer=null;
+
+  function loadEntregas(){
+    fetch(REST+"?select=nombre,respuestas,updated_at&order=updated_at.desc", {headers:h()})
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(rows){ renderOwner(rows||[]); })
+      .catch(function(err){ body.textContent='No se pudieron cargar las entregas ('+err+').'; });
   }
-  function renderOwner(body, rows){
+  function abrirPanel(){
+    gateForm.hidden=true; panel.hidden=false; gateMsg.textContent='';
+    try{ sessionStorage.setItem(GK,'1'); }catch(e){}
+    loadEntregas(); if(!timer) timer=setInterval(loadEntregas, 20000);
+  }
+  function cerrarPanel(){
+    panel.hidden=true; gateForm.hidden=false; gateInput.value='';
+    try{ sessionStorage.removeItem(GK); }catch(e){}
+    if(timer){ clearInterval(timer); timer=null; }
+  }
+  gateForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(gateInput.value.trim()===CLAVE){ abrirPanel(); }
+    else { gateMsg.textContent='Clave incorrecta'; gateInput.value=''; gateInput.focus(); }
+  });
+  document.getElementById('btn-refresh').addEventListener('click', loadEntregas);
+  document.getElementById('btn-logout').addEventListener('click', cerrarPanel);
+  try{ if(sessionStorage.getItem(GK)==='1') abrirPanel(); }catch(e){}
+
+  function renderOwner(rows){
     body.textContent='';
-    if(!rows || !rows.length){ body.textContent='Aún no hay entregas.'; return; }
-    var head=document.createElement('p'); head.style.margin='0 0 10px';
-    var b=document.createElement('b'); b.textContent=String(rows.length); head.appendChild(b);
-    head.appendChild(document.createTextNode(' entrega(s) recibida(s).')); body.appendChild(head);
-    rows.forEach(function(row){
-      var r=row.respuestas||{}; var done=0; for(var i=1;i<=10;i++){ if(r[i]&&r[i].nivel) done++; }
+    if(!rows || !rows.length){ countEl.textContent=''; body.textContent='Aún no hay entregas.'; return; }
+    var suma=0;
+    var cal=rows.map(function(row){ var c=calificar(row.respuestas); suma+=c.nota; return c; });
+    countEl.textContent = rows.length+' entrega(s) · promedio '+(suma/rows.length).toFixed(1)+'/20';
+    rows.forEach(function(row, k){
+      var r=row.respuestas||{}, c=cal[k];
+      var done=0; for(var i=1;i<=10;i++){ if(r[i]&&r[i].nivel) done++; }
       var det=document.createElement('details');
       var sm=document.createElement('summary');
       var nm=(row.nombre && String(row.nombre).trim()) ? String(row.nombre) : '(sin nombre)';
       var when=row.updated_at ? new Date(row.updated_at).toLocaleString() : '';
-      sm.textContent = nm+' — '+done+'/10 respondidas'+(when?(' · '+when):'');
+      sm.textContent = nm+' — Nota '+c.nota+'/20 · nivel '+c.nivel+'/10 · escala '+c.escala+'/10 · '+done+'/10 respondidas'+(when?(' · '+when):'');
       det.appendChild(sm);
       var tw=document.createElement('div'); tw.className='tblwrap';
       var tbl=document.createElement('table');
-      var th=document.createElement('thead'); th.innerHTML='<tr><th style="width:34px">N.º</th><th>Nivel</th><th>Escala</th><th>Justificación</th></tr>'; tbl.appendChild(th);
+      var th=document.createElement('thead'); th.innerHTML='<tr><th style="width:34px">N.º</th><th>Nivel</th><th>Escala</th><th>Justificación</th><th class="chk"></th></tr>'; tbl.appendChild(th);
       var tb=document.createElement('tbody');
-      for(var j=1;j<=10;j++){ var rr=r[j]||{}; var tr=document.createElement('tr');
+      for(var j=1;j<=10;j++){ var rr=r[j]||{}, key=KEY[j-1]; var tr=document.createElement('tr');
+        var nok=rr.nivel===key.n, eok=key.e.indexOf(rr.escala)>=0;
         var a0=document.createElement('td'); a0.className='num'; a0.textContent=j;
         var a1=document.createElement('td'); a1.textContent=rr.nivel||'—';
         var a2=document.createElement('td'); a2.textContent=rr.escala||'—';
         var a3=document.createElement('td'); a3.textContent=rr.just||'';
-        tr.appendChild(a0); tr.appendChild(a1); tr.appendChild(a2); tr.appendChild(a3); tb.appendChild(tr);
+        var a4=document.createElement('td'); a4.className='chk '+((nok&&eok)?'ok':((rr.nivel||rr.escala)?'no':''));
+        a4.textContent=(nok&&eok)?'✓':((rr.nivel||rr.escala)?'✗':'');
+        tr.appendChild(a0); tr.appendChild(a1); tr.appendChild(a2); tr.appendChild(a3); tr.appendChild(a4); tb.appendChild(tr);
       }
       tbl.appendChild(tb); tw.appendChild(tbl); det.appendChild(tw); body.appendChild(det);
     });
