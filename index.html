@@ -58,6 +58,32 @@
   }
   #ruletaLink:hover{ transform: translateY(-2px); background: var(--accent); color: #0f172a; }
 
+  .section{ margin-top: 40px; }
+  .section:first-child{ margin-top: 20px; }
+  .section-title{
+    font-size: 14px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--text-dim); margin: 0 0 18px;
+  }
+  .courses{
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  @media (max-width: 640px){ .courses{ grid-template-columns: 1fr; } }
+  .course{
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+    text-decoration: none; color: var(--text);
+    background: var(--bg-soft); border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
+    padding: 28px 18px; min-height: 150px;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .course:hover{ transform: translateY(-4px); box-shadow: 0 12px 26px rgba(0,0,0,.35); }
+  .course-emoji{ font-size: 44px; line-height: 1; }
+  .course-name{ font-weight: 700; font-size: 16px; }
+  .course-inv:hover{ border-color: #38bdf8; }
+  .course-mat:hover{ border-color: #34d399; }
+  .course-cos:hover{ border-color: #fbbf24; }
+  .tools{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .tools #openDadoBtn, .tools #ruletaLink{ margin-top: 0; margin-left: 0; }
+
   /* Modal */
   .modal-overlay{
     position: fixed; inset: 0;
@@ -203,8 +229,31 @@
 </header>
 
 <main>
-  <button id="openDadoBtn">🎲 Dado</button>
-  <a id="ruletaLink" href="tarjetas.html">🎡 Ruleta de tarjetas</a>
+  <section class="section">
+    <h2 class="section-title">Cursos</h2>
+    <div class="courses">
+      <a class="course course-inv" href="investigacion-cuantitativa.html">
+        <span class="course-emoji">📊</span>
+        <span class="course-name">Investigación Cuantitativa</span>
+      </a>
+      <a class="course course-mat" href="matematicas-aplicadas.html">
+        <span class="course-emoji">📐</span>
+        <span class="course-name">Matemáticas Aplicadas</span>
+      </a>
+      <a class="course course-cos" href="analisis-costos-presupuestos.html">
+        <span class="course-emoji">💰</span>
+        <span class="course-name">Análisis de Costos y Presupuestos</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Herramientas</h2>
+    <div class="tools">
+      <button id="openDadoBtn">🎲 Dado</button>
+      <a id="ruletaLink" href="tarjetas.html">🎡 Ruleta de tarjetas</a>
+    </div>
+  </section>
 </main>
 
 <div id="dadoOverlay" class="modal-overlay hidden">

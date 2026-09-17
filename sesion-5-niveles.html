@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Niveles de medición</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+<style>
+:root{
+  --ground:#FAF9F6; --surface:#FFFFFF; --surface-2:#F3F2EE;
+  --ink:#1C1B19; --muted:#5D5B55; --faint:#8A8880;
+  --rule:#1C1B19; --border:#D2D0C8; --thead:#E7E5DF; --ayuda:#D3EADF; --ayuda-ink:#154C39;
+  --nom:#1F4E9C; --ord:#1E7A46; --int:#C05A16; --raz:#6B2FA0; --bad:#B3261E;
+  --nom-bg:#E9EFF8; --ord-bg:#E5F1EA; --int-bg:#F7EBE1; --raz-bg:#EFE8F5;
+  --navy:#1F3864; --accent:#1F3864;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#16171A; --surface:#1E2024; --surface-2:#25272C;
+    --ink:#ECEAE4; --muted:#B0AEA6; --faint:#8B8981;
+    --rule:#ECEAE4; --border:#3A3D43; --thead:#2A2D33; --ayuda:#1C3A2E; --ayuda-ink:#B7E4CC;
+    --nom:#8FB2E8; --ord:#8FD3AC; --int:#EBA877; --raz:#C6A6E6; --bad:#E88A82;
+    --nom-bg:#1B2534; --ord-bg:#182A20; --int-bg:#2E2318; --raz-bg:#241A30;
+    --navy:#9DB6DE; --accent:#9DB6DE;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#16171A; --surface:#1E2024; --surface-2:#25272C;
+  --ink:#ECEAE4; --muted:#B0AEA6; --faint:#8B8981;
+  --rule:#ECEAE4; --border:#3A3D43; --thead:#2A2D33; --ayuda:#1C3A2E; --ayuda-ink:#B7E4CC;
+  --nom:#8FB2E8; --ord:#8FD3AC; --int:#EBA877; --raz:#C6A6E6; --bad:#E88A82;
+  --nom-bg:#1B2534; --ord-bg:#182A20; --int-bg:#2E2318; --raz-bg:#241A30;
+  --navy:#9DB6DE; --accent:#9DB6DE;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--ground); color:var(--ink);
+  font-family:'Source Sans 3','Segoe UI',Calibri,system-ui,sans-serif; line-height:1.5; font-size:15px;
+  -webkit-text-size-adjust:100%;}
+img{max-width:100%}
+[hidden]{display:none!important}
+.wrap{max-width:920px; margin:0 auto; padding-block:28px; padding-left:20px; padding-right:20px;}
+.sheet{background:var(--surface); border:1px solid var(--border); box-shadow:0 1px 0 rgba(0,0,0,.03); padding:30px 30px 26px;}
+@media (max-width:560px){ .sheet{padding:20px 16px} }
+.masthead{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; border-bottom:2px solid var(--rule); padding-bottom:10px;}
+.brand{font-weight:700; letter-spacing:.14em; font-size:11px; color:var(--muted); text-transform:uppercase}
+.brand small{display:block; font-weight:600; letter-spacing:.05em; color:var(--faint); margin-top:2px}
+.masthead .tag{font-size:11px; letter-spacing:.22em; color:var(--faint); text-transform:uppercase; text-align:right}
+h1{font-size:26px; line-height:1.15; margin:16px 0 2px; text-wrap:balance; letter-spacing:-.01em}
+.lead{color:var(--muted); margin:0 0 4px; max-width:62ch}
+h2{font-size:13px; letter-spacing:.12em; text-transform:uppercase; margin:26px 0 12px; padding-bottom:5px; border-bottom:1.5px solid var(--rule);}
+p{margin:0 0 10px}
+.small{font-size:13.5px}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse; width:100%; font-size:13.5px}
+th,td{border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top}
+td .q{font-weight:600}
+tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 55%, transparent)}
+.num{font-variant-numeric:tabular-nums; text-align:center; width:38px; color:var(--muted); font-weight:700}
+.chip{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.03em; padding:2px 8px; border-radius:999px; border:1px solid; white-space:nowrap}
+.nom{color:var(--nom); border-color:var(--nom); background:var(--nom-bg)}
+.ord{color:var(--ord); border-color:var(--ord); background:var(--ord-bg)}
+.int{color:var(--int); border-color:var(--int); background:var(--int-bg)}
+.raz{color:var(--raz); border-color:var(--raz); background:var(--raz-bg)}
+.leftbar-nom{border-left:4px solid var(--nom)}
+.leftbar-ord{border-left:4px solid var(--ord)}
+.leftbar-int{border-left:4px solid var(--int)}
+.leftbar-raz{border-left:4px solid var(--raz)}
+.ayuda{border:1px solid var(--border); margin:6px 0 4px}
+.ayuda .h{background:var(--ayuda); color:var(--ayuda-ink); font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; padding:7px 12px}
+.ayuda ol{margin:0; padding:10px 12px 10px 30px}
+.ayuda li{margin:4px 0}
+.casos{display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+@media (max-width:620px){ .casos{grid-template-columns:1fr} }
+.caso{border:1px solid var(--border); background:var(--surface); padding:12px 14px}
+.caso .q{font-weight:600; margin:0 0 8px}
+.caso .tags{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:7px}
+.caso .why{font-size:12.5px; color:var(--muted); margin:0}
+.caso .why b{color:var(--ink); font-weight:600}
+.savechip{display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.02em; padding:2px 9px; border-radius:999px; border:1px solid var(--border); color:var(--muted); background:var(--surface-2); vertical-align:middle}
+.savechip.ok{color:var(--ord); border-color:var(--ord); background:var(--ord-bg)}
+.namefield{display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin:6px 0 14px; max-width:440px}
+.namefield input{font:inherit; font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink); padding:9px 10px; border:1px solid var(--border); background:var(--surface); border-radius:3px}
+table.tarea td{vertical-align:middle}
+table.tarea select, table.tarea input.just{font:inherit; font-size:13px; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 7px; width:100%; min-width:112px}
+table.tarea input.just{min-width:150px}
+td.chk{width:28px; text-align:center; font-weight:800}
+td.chk.ok{color:var(--ord)} td.chk.no{color:var(--bad)}
+.actions{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px}
+.actions button{font:inherit; font-weight:700; font-size:13px; color:#fff; background:var(--accent); border:1px solid var(--accent); border-radius:4px; padding:9px 15px; cursor:pointer}
+.actions button:hover{filter:brightness(1.08)}
+#btn-download{color:var(--accent); background:transparent}
+.score{font-size:13px; font-weight:700; color:var(--muted)}
+#owner-panel{margin-top:26px}
+.owner-tbl details{border:1px solid var(--border); margin:8px 0; background:var(--surface)}
+.owner-tbl summary{cursor:pointer; padding:8px 12px; font-weight:600; color:var(--accent)}
+.owner-tbl details[open] summary{border-bottom:1px solid var(--border)}
+.owner-tbl .tblwrap{padding:0 12px 10px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+details.clave{margin-top:16px; border:1px solid var(--border)}
+details.clave>summary{cursor:pointer; padding:9px 12px; font-weight:700; font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); background:var(--surface-2); list-style:none}
+details.clave[open]>summary{border-bottom:1px solid var(--border)}
+.clavebody{padding:6px 12px 12px}
+.clavebody table{font-size:13px}
+footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); font-size:11.5px; color:var(--faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="sheet">
+  <div class="masthead">
+    <div class="brand">Investigación Cuantitativa
+      <small>Programa de Marketing · Segundo ciclo · 2026-II</small></div>
+    <div class="tag">Guía de práctica</div>
+  </div>
+  <h1>Niveles de medición y tipos de pregunta</h1>
+  <p class="lead">Aprende a mirar una pregunta y decir, en segundos, qué <b>nivel de medición</b> tiene la variable y qué <b>escala</b> le corresponde. Primero varios casos resueltos; al final, una tarea corta para practicar que se guarda sola.</p>
+
+  <h2>Los cuatro niveles de medición</h2>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Nivel</th><th>¿Qué permite hacer con la respuesta?</th><th>Ejemplo de variable</th><th>Escala típica</th></tr></thead>
+    <tbody>
+      <tr class="leftbar-nom"><td><span class="chip nom">Nominal</span></td><td>Solo <b>nombra</b> o clasifica; no hay orden entre las categorías.</td><td>Sexo · distrito · marca · ocupación</td><td>Opción única / abierta</td></tr>
+      <tr class="leftbar-ord"><td><span class="chip ord">Ordinal</span></td><td>Hay un <b>orden</b>, pero las distancias entre posiciones no son iguales.</td><td>Nivel de estudios · puesto en un ranking</td><td>Ordenamiento</td></tr>
+      <tr class="leftbar-int"><td><span class="chip int">Intervalo</span></td><td>Orden con <b>distancias iguales</b>, pero sin un cero verdadero.</td><td>Grado de acuerdo, importancia o satisfacción (1 a 5)</td><td>Likert de 5 · diferencial semántico · intención</td></tr>
+      <tr class="leftbar-raz"><td><span class="chip raz">Razón</span></td><td>Tiene <b>cero real</b> y admite comparar «el doble», «la mitad».</td><td>Edad · gasto en soles · número de compras</td><td>Numérica / rangos</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="ayuda">
+    <div class="h">Tres preguntas para acertar en veinte segundos</div>
+    <ol>
+      <li>¿La respuesta es un <b>número</b> que se cuenta, se paga o se mide en tiempo? → es <span class="chip raz">Razón</span>, en rangos.</li>
+      <li>¿Es un <b>grado</b> de acuerdo, importancia, satisfacción o probabilidad? → es <span class="chip int">Intervalo</span>, con Likert de 5.</li>
+      <li>¿Pone las opciones en un <b>orden</b>? → es <span class="chip ord">Ordinal</span>, con ordenamiento.</li>
+      <li>Si respondiste «no» a las tres, la respuesta solo <b>nombra</b> algo → es <span class="chip nom">Nominal</span>, con opción única o abierta.</li>
+    </ol>
+  </div>
+
+  <h2>Tipos de pregunta (escalas) y su nivel</h2>
+  <div class="tblwrap">
+  <table>
+    <thead><tr><th>Tipo de pregunta</th><th>Nivel</th><th>Ejemplo de ítem</th></tr></thead>
+    <tbody>
+      <tr><td class="q">Opción única</td><td><span class="chip nom">Nominal</span></td><td>¿Dónde compra habitualmente?</td></tr>
+      <tr><td class="q">Numérica / rangos</td><td><span class="chip raz">Razón</span></td><td>¿Cuántas veces compró en el último mes?</td></tr>
+      <tr><td class="q">Likert de 5 puntos</td><td><span class="chip int">Intervalo</span></td><td>¿Qué tan importante es la durabilidad?</td></tr>
+      <tr><td class="q">Diferencial semántico</td><td><span class="chip int">Intervalo</span></td><td>Moderno 1–2–3–4–5 Tradicional</td></tr>
+      <tr><td class="q">Ordenamiento</td><td><span class="chip ord">Ordinal</span></td><td>Ordene estas tres marcas según su preferencia</td></tr>
+      <tr><td class="q">Escala de intención</td><td><span class="chip int">Intervalo</span></td><td>¿Qué tan probable es que lo compre?</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>Casos resueltos</h2>
+  <div class="casos">
+    <div class="caso leftbar-nom"><p class="q">¿En qué distrito reside usted?</p><div class="tags"><span class="chip nom">Nominal</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Opción única</span></div><p class="why"><b>Por qué:</b> solo nombra una categoría (un distrito); no hay orden ni número.</p></div>
+    <div class="caso leftbar-raz"><p class="q">¿Cuántos cuadernos compra al año?</p><div class="tags"><span class="chip raz">Razón</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Rangos numéricos</span></div><p class="why"><b>Por qué:</b> es un conteo con cero real; comprar 4 es el doble de comprar 2.</p></div>
+    <div class="caso leftbar-int"><p class="q">¿Qué tan importante es la durabilidad? (1 Nada … 5 Muy importante)</p><div class="tags"><span class="chip int">Intervalo</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Likert de 5</span></div><p class="why"><b>Por qué:</b> mide el <b>grado</b> de una actitud; hay orden y distancias parejas, pero sin cero verdadero.</p></div>
+    <div class="caso leftbar-ord"><p class="q">Ordene estas 3 marcas de la más a la menos preferida.</p><div class="tags"><span class="chip ord">Ordinal</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Ordenamiento</span></div><p class="why"><b>Por qué:</b> hay orden (1.º, 2.º, 3.º) pero la diferencia entre puestos no es igual.</p></div>
+    <div class="caso leftbar-int"><p class="q">Imagen de la marca: Moderna 1–2–3–4–5 Tradicional</p><div class="tags"><span class="chip int">Intervalo</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Diferencial semántico</span></div><p class="why"><b>Por qué:</b> dos opuestos con puntos intermedios parejos; se analiza como intervalo.</p></div>
+    <div class="caso leftbar-int"><p class="q">¿Qué tan probable es que lo compre en los próximos 3 meses?</p><div class="tags"><span class="chip int">Intervalo</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Escala de intención</span></div><p class="why"><b>Por qué:</b> mide una <b>probabilidad</b> por grados (definitivamente no … definitivamente sí).</p></div>
+    <div class="caso leftbar-raz"><p class="q">¿Cuánto pagó por su última compra? (rangos en S/)</p><div class="tags"><span class="chip raz">Razón</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Rangos numéricos</span></div><p class="why"><b>Por qué:</b> es dinero (número con cero real); se agrupa en rangos para que responder sea fácil.</p></div>
+    <div class="caso leftbar-nom"><p class="q">¿Cuál es su ocupación principal?</p><div class="tags"><span class="chip nom">Nominal</span><span class="chip" style="border-color:var(--border);color:var(--muted)">Opción única</span></div><p class="why"><b>Por qué:</b> son categorías sin orden (estudiante, dependiente, independiente…).</p></div>
+  </div>
+
+  <h2>Tarea para practicar</h2>
+  <p class="small">Escribe tu nombre y clasifica los <b>10 enunciados</b> (nivel y escala). Si quieres, añade una justificación breve. <b>Se guarda solo</b> mientras respondes. <span id="save-status" class="savechip">Conectando…</span></p>
+  <label class="namefield" for="nombre">Apellidos y nombres
+    <input id="nombre" type="text" autocomplete="off" placeholder="Escribe tu nombre">
+  </label>
+  <div class="tblwrap">
+  <table class="tarea">
+    <thead><tr><th style="width:34px">N.º</th><th>Enunciado</th><th style="width:132px">Nivel</th><th style="width:150px">Escala</th><th style="width:190px">Justificación (opcional)</th><th class="chk"></th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  </div>
+  <div class="actions">
+    <button id="btn-check" type="button">Comprobar (autoevaluación)</button>
+    <span id="score" class="score" aria-live="polite"></span>
+    <button id="btn-download" type="button">Descargar mi copia</button>
+  </div>
+  <p class="small" style="color:var(--muted);margin-top:10px">Tus respuestas se guardan solas; no necesitas enviar un Word aparte. La autoevaluación es solo para ti.</p>
+
+  <section id="owner-panel" hidden>
+    <h2>Entregas recibidas · docente</h2>
+    <div class="actions" style="margin-top:0 0 10px"><button id="btn-refresh" type="button">Actualizar</button></div>
+    <div id="owner-body" class="owner-tbl small">Cargando entregas…</div>
+  </section>
+
+  <details class="clave">
+    <summary>Clave de respuestas · uso del docente</summary>
+    <div class="clavebody tblwrap">
+      <table>
+        <thead><tr><th style="width:38px">N.º</th><th>Nivel</th><th>Escala</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos</td></tr>
+          <tr><td class="num">2</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
+          <tr><td class="num">3</td><td><span class="chip nom">Nominal</span></td><td>Opción única</td></tr>
+          <tr><td class="num">4</td><td><span class="chip ord">Ordinal</span></td><td>Ordenamiento</td></tr>
+          <tr><td class="num">5</td><td><span class="chip raz">Razón</span></td><td>Numérica / rangos en soles</td></tr>
+          <tr><td class="num">6</td><td><span class="chip int">Intervalo</span></td><td>Likert de 5</td></tr>
+          <tr><td class="num">7</td><td><span class="chip raz">Razón</span></td><td>Numérica (años)</td></tr>
+          <tr><td class="num">8</td><td><span class="chip nom">Nominal</span></td><td>Opción única / abierta</td></tr>
+          <tr><td class="num">9</td><td><span class="chip int">Intervalo</span></td><td>Diferencial semántico</td></tr>
+          <tr><td class="num">10</td><td><span class="chip int">Intervalo</span></td><td>Escala de intención / probabilidad</td></tr>
+        </tbody>
+      </table>
+      <p class="small" style="color:var(--muted);margin-top:8px">Nota: la edad y el gasto son de <b>razón</b> aunque a veces se pregunten en rangos por comodidad; lo que define el nivel es la variable, no el formato de respuesta.</p>
+    </div>
+  </details>
+
+  <footer>
+    <span>Investigación Cuantitativa — Niveles de medición</span>
+    <span>Práctica individual · se guarda en Supabase</span>
+  </footer>
+</div>
+</div>
+
+<script>
+(function(){
+  var SUPA_URL = "https://klmjmlhwuzhymrplemgw.supabase.co";
+  var ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E";
+  var REST = SUPA_URL + "/rest/v1/entregas_niveles";
+  function h(extra){ var o={apikey:ANON, Authorization:"Bearer "+ANON, "Content-Type":"application/json"}; if(extra){ for(var k in extra) o[k]=extra[k]; } return o; }
+
+  var ITEMS=[
+    "¿Cuántas veces a la semana consume la bebida?",
+    "Indique su grado de acuerdo: «La marca me transmite confianza». (Totalmente en desacuerdo … Totalmente de acuerdo)",
+    "¿Cuál es el color de empaque que prefiere?",
+    "Ordene del 1 al 4 estos beneficios según su importancia.",
+    "¿Cuánto gasta al mes en este producto? (en soles)",
+    "¿Qué tan satisfecho está con la atención recibida? (Nada … Muy satisfecho)",
+    "¿Qué edad tiene? (años cumplidos)",
+    "¿En qué tienda realizó su última compra?",
+    "Percepción de precio: Barato 1–2–3–4–5 Caro",
+    "¿Qué tan probable es que recomiende el producto a un amigo?"
+  ];
+  var KEY=[
+    {n:"Razón",e:["Numérica / rangos"]},{n:"Intervalo",e:["Likert de 5"]},{n:"Nominal",e:["Opción única"]},
+    {n:"Ordinal",e:["Ordenamiento"]},{n:"Razón",e:["Numérica / rangos"]},{n:"Intervalo",e:["Likert de 5"]},
+    {n:"Razón",e:["Numérica / rangos"]},{n:"Nominal",e:["Opción única","Abierta"]},
+    {n:"Intervalo",e:["Diferencial semántico"]},{n:"Intervalo",e:["Escala de intención"]}
+  ];
+  var NIVELES=["","Nominal","Ordinal","Intervalo","Razón"];
+  var ESCALAS=["","Opción única","Abierta","Numérica / rangos","Likert de 5","Diferencial semántico","Ordenamiento","Escala de intención"];
+  var LSK="niveles_tarea_sb_v1";
+
+  var resp={}; for(var k=1;k<=10;k++) resp[k]={nivel:"",escala:"",just:""};
+  var nombre="";
+  var saveT=null, online=false;
+
+  var statusEl=document.getElementById('save-status');
+  var tbody=document.getElementById('tbody');
+  var nombreEl=document.getElementById('nombre');
+
+  function cid(){ try{ var v=localStorage.getItem('niveles_cid'); if(!v){ v=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('cid-'+Date.now()+'-'+Math.random().toString(16).slice(2)); localStorage.setItem('niveles_cid', v); } return v; }catch(e){ return 'cid-'+Date.now(); } }
+  var CLIENT=cid();
+
+  function opt(v){ var o=document.createElement('option'); o.value=v; o.textContent=v||'—'; return o; }
+  function selEl(kind,i,opts){ var s=document.createElement('select'); s.id=kind+'-'+i; opts.forEach(function(v){ s.appendChild(opt(v)); }); return s; }
+  for(var idx=0; idx<ITEMS.length; idx++){
+    var i=idx+1;
+    var tr=document.createElement('tr');
+    var c0=document.createElement('td'); c0.className='num'; c0.textContent=i;
+    var c1=document.createElement('td'); c1.textContent=ITEMS[idx];
+    var c2=document.createElement('td'); c2.appendChild(selEl('nivel',i,NIVELES));
+    var c3=document.createElement('td'); c3.appendChild(selEl('escala',i,ESCALAS));
+    var c4=document.createElement('td'); var ji=document.createElement('input'); ji.type='text'; ji.className='just'; ji.id='just-'+i; ji.autocomplete='off'; c4.appendChild(ji);
+    var c5=document.createElement('td'); c5.className='chk'; c5.id='chk-'+i;
+    tr.appendChild(c0); tr.appendChild(c1); tr.appendChild(c2); tr.appendChild(c3); tr.appendChild(c4); tr.appendChild(c5);
+    tbody.appendChild(tr);
+  }
+
+  function readLocal(){ try{ var raw=localStorage.getItem(LSK); if(raw) return JSON.parse(raw); }catch(e){} return null; }
+  function writeLocal(){ try{ localStorage.setItem(LSK, JSON.stringify({nombre:nombre,resp:resp})); }catch(e){} }
+  function applyState(s){
+    if(!s) return;
+    if(typeof s.nombre==='string'){ nombre=s.nombre; nombreEl.value=nombre; }
+    if(s.resp){ for(var i=1;i<=10;i++){ var r=s.resp[i]; if(!r) continue;
+      resp[i].nivel=r.nivel||""; resp[i].escala=r.escala||""; resp[i].just=r.just||"";
+      var ns=document.getElementById('nivel-'+i); if(ns) ns.value=resp[i].nivel;
+      var es=document.getElementById('escala-'+i); if(es) es.value=resp[i].escala;
+      var js=document.getElementById('just-'+i); if(js) js.value=resp[i].just;
+    } }
+  }
+  function setStatus(txt, ok){ statusEl.textContent=txt; statusEl.className='savechip'+(ok?' ok':''); }
+
+  function scheduleSave(){
+    writeLocal();
+    if(online){ setStatus('Guardando…'); if(saveT) clearTimeout(saveT); saveT=setTimeout(saveCloud,700); }
+    else { setStatus('Guardado en este navegador', true); }
+  }
+  function saveCloud(){
+    var body=[{client_id:CLIENT, nombre:nombre, respuestas:resp, updated_at:new Date().toISOString()}];
+    fetch(REST+"?on_conflict=client_id", {method:"POST", headers:h({Prefer:"resolution=merge-duplicates,return=minimal"}), body:JSON.stringify(body)})
+      .then(function(r){ if(r.ok){ setStatus('Guardado en Supabase ✓', true); } else { r.text().then(function(t){ console.warn('save', r.status, t); }); setStatus('Guardado en este navegador', true); } })
+      .catch(function(){ setStatus('Guardado en este navegador', true); });
+  }
+
+  nombreEl.addEventListener('input', function(){ nombre=nombreEl.value; scheduleSave(); });
+  tbody.addEventListener('change', function(e){ var t=e.target; if(!t.id) return; var parts=t.id.split('-'); var kind=parts[0], i=parts[1];
+    if(resp[i] && (kind==='nivel'||kind==='escala')){ resp[i][kind]=t.value; scheduleSave(); } });
+  tbody.addEventListener('input', function(e){ var t=e.target; if(t.className==='just'){ var i=t.id.split('-')[1]; if(resp[i]){ resp[i].just=t.value; scheduleSave(); } } });
+
+  applyState(readLocal());
+  setStatus('Guardado en este navegador');
+
+  document.getElementById('btn-check').addEventListener('click', function(){
+    var nOK=0, eOK=0;
+    for(var i=1;i<=10;i++){
+      var key=KEY[i-1]; var chk=document.getElementById('chk-'+i);
+      var answered = resp[i].nivel || resp[i].escala;
+      var nok = resp[i].nivel===key.n;
+      var eok = key.e.indexOf(resp[i].escala)>=0;
+      if(nok) nOK++; if(eok) eOK++;
+      chk.textContent = (nok&&eok) ? '✓' : (answered ? '✗' : '');
+      chk.className = 'chk ' + ((nok&&eok) ? 'ok' : (answered ? 'no' : ''));
+    }
+    document.getElementById('score').textContent = 'Nivel '+nOK+'/10 · Escala '+eOK+'/10';
+  });
+
+  function esc(s){ s=String(s==null?'':s); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  document.getElementById('btn-download').addEventListener('click', function(){
+    var rows='';
+    for(var i=1;i<=10;i++){ rows+='<tr><td>'+i+'</td><td>'+esc(ITEMS[i-1])+'</td><td>'+esc(resp[i].nivel)+'</td><td>'+esc(resp[i].escala)+'</td><td>'+esc(resp[i].just)+'</td></tr>'; }
+    var html='<!doctype html><meta charset="utf-8"><title>Respuestas</title><h2>Niveles de medición — respuestas</h2><p><b>Nombre:</b> '+esc(nombre)+'</p><table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:Calibri,Arial,sans-serif;font-size:13px"><tr><th>N.º</th><th>Enunciado</th><th>Nivel</th><th>Escala</th><th>Justificación</th></tr>'+rows+'</table>';
+    var blob=new Blob([html], {type:'text/html'});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Respuestas_niveles.html';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
+
+  // cargar lo mío desde Supabase
+  fetch(REST+"?select=nombre,respuestas&client_id=eq."+encodeURIComponent(CLIENT), {headers:h()})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      online=true;
+      if(rows && rows[0]){ applyState({nombre:rows[0].nombre, resp:rows[0].respuestas}); writeLocal(); setStatus('Guardado en Supabase ✓', true); }
+      else {
+        setStatus('Se guarda en Supabase');
+        var any=false; for(var i=1;i<=10;i++){ if(resp[i].nivel||resp[i].escala||resp[i].just){ any=true; break; } }
+        if(any || nombre) saveCloud();
+      }
+    })
+    .catch(function(){ online=false; setStatus('Guardado en este navegador', true); });
+
+  // panel docente (agrega #docente al final del enlace)
+  if(/docente/i.test(location.hash)){
+    var panel=document.getElementById('owner-panel'); panel.hidden=false;
+    var body=document.getElementById('owner-body');
+    function loadEntregas(){
+      fetch(REST+"?select=nombre,respuestas,updated_at&order=updated_at.desc", {headers:h()})
+        .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+        .then(function(rows){ renderOwner(body, rows||[]); })
+        .catch(function(err){ body.textContent='No se pudieron cargar las entregas ('+err+').'; });
+    }
+    document.getElementById('btn-refresh').addEventListener('click', loadEntregas);
+    loadEntregas(); setInterval(loadEntregas, 20000);
+  }
+  function renderOwner(body, rows){
+    body.textContent='';
+    if(!rows || !rows.length){ body.textContent='Aún no hay entregas.'; return; }
+    var head=document.createElement('p'); head.style.margin='0 0 10px';
+    var b=document.createElement('b'); b.textContent=String(rows.length); head.appendChild(b);
+    head.appendChild(document.createTextNode(' entrega(s) recibida(s).')); body.appendChild(head);
+    rows.forEach(function(row){
+      var r=row.respuestas||{}; var done=0; for(var i=1;i<=10;i++){ if(r[i]&&r[i].nivel) done++; }
+      var det=document.createElement('details');
+      var sm=document.createElement('summary');
+      var nm=(row.nombre && String(row.nombre).trim()) ? String(row.nombre) : '(sin nombre)';
+      var when=row.updated_at ? new Date(row.updated_at).toLocaleString() : '';
+      sm.textContent = nm+' — '+done+'/10 respondidas'+(when?(' · '+when):'');
+      det.appendChild(sm);
+      var tw=document.createElement('div'); tw.className='tblwrap';
+      var tbl=document.createElement('table');
+      var th=document.createElement('thead'); th.innerHTML='<tr><th style="width:34px">N.º</th><th>Nivel</th><th>Escala</th><th>Justificación</th></tr>'; tbl.appendChild(th);
+      var tb=document.createElement('tbody');
+      for(var j=1;j<=10;j++){ var rr=r[j]||{}; var tr=document.createElement('tr');
+        var a0=document.createElement('td'); a0.className='num'; a0.textContent=j;
+        var a1=document.createElement('td'); a1.textContent=rr.nivel||'—';
+        var a2=document.createElement('td'); a2.textContent=rr.escala||'—';
+        var a3=document.createElement('td'); a3.textContent=rr.just||'';
+        tr.appendChild(a0); tr.appendChild(a1); tr.appendChild(a2); tr.appendChild(a3); tb.appendChild(tr);
+      }
+      tbl.appendChild(tb); tw.appendChild(tbl); det.appendChild(tw); body.appendChild(det);
+    });
+  }
+})();
+</script>
+</body>
+</html>
