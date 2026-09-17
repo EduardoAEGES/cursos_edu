@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investigación Cuantitativa</title>
+<style>
+  :root{
+    --bg:#0f172a; --bg-soft:#1e293b; --accent:#38bdf8; --accent-2:#f472b6;
+    --text:#e2e8f0; --text-dim:#94a3b8;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:radial-gradient(circle at top,#1e293b,#0f172a 60%); color:var(--text);
+  }
+  header{ text-align:center; padding:52px 20px 12px; }
+  header .emoji{ font-size:46px; }
+  header h1{
+    margin:10px 0 6px; font-size:clamp(26px,4.5vw,40px);
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  header p{ color:var(--text-dim); margin:0; font-size:15px; }
+  .back{ display:inline-block; margin-top:14px; color:var(--accent); text-decoration:none; font-size:14px; }
+  .back:hover{ text-decoration:underline; }
+  main{ max-width:760px; margin:0 auto; padding:24px 20px 80px; }
+  h2{ font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:10px 0 16px; }
+  .sessions{ display:grid; gap:14px; }
+  .session{
+    display:flex; align-items:center; gap:16px; text-decoration:none; color:var(--text);
+    background:var(--bg-soft); border:1px solid rgba(255,255,255,.08); border-radius:14px;
+    padding:18px 20px; transition:transform .15s ease, border-color .15s ease;
+  }
+  .session:hover{ transform:translateY(-2px); border-color:var(--accent); }
+  .session.disabled{ opacity:.55; pointer-events:none; }
+  .session .num{
+    flex:none; width:52px; height:52px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#0f172a;
+  }
+  .session .info{ flex:1; }
+  .session .info .t{ font-weight:700; font-size:17px; }
+  .session .info .d{ color:var(--text-dim); font-size:13px; margin-top:2px; }
+  .session .chev{ color:var(--text-dim); font-size:22px; }
+  .soon{ font-size:11px; font-weight:700; color:var(--text-dim); border:1px solid var(--text-dim); border-radius:999px; padding:2px 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="emoji">📊</div>
+  <h1>Investigación Cuantitativa</h1>
+  <p>Programa de Marketing · Segundo ciclo · 2026-II</p>
+  <div><a class="back" href="index.html">← Volver al repositorio</a></div>
+</header>
+
+<main>
+  <h2>Sesiones</h2>
+  <div class="sessions">
+    <a class="session" href="sesion-5-niveles.html">
+      <div class="num">5</div>
+      <div class="info">
+        <div class="t">Sesión 5 — Niveles de medición</div>
+        <div class="d">Niveles de medición y tipos de pregunta · práctica que se guarda sola</div>
+      </div>
+      <div class="chev">›</div>
+    </a>
+  </div>
+</main>
+
+</body>
+</html>
