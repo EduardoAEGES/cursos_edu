@@ -112,6 +112,9 @@
   .video .cap{ color:var(--o-muted); text-align:center; margin:8px 0 0; font-size:12.5px; }
 
   /* factura electrónica */
+  .facts{ display:grid; gap:20px; }
+  .fact-lbl{ font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--o-muted); margin:0 0 6px; }
   .fact{ border:1px solid #C9C9C9; background:#fff; font-size:12.5px; }
   .fact-top{ display:flex; gap:0; border-bottom:1px solid #C9C9C9; flex-wrap:wrap; }
   .fact-emisor{ flex:1 1 300px; padding:12px 14px; }
@@ -166,7 +169,7 @@
     <a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a>
     / <b>Caso N.° 2 — Los Gorriones S.A.</b>
   </span>
-  <span class="pager">Apertura + 1 de 11</span>
+  <span class="pager">Apertura + 4 de 11</span>
 </div>
 
 <div class="o-content">
@@ -181,10 +184,11 @@
     <div class="parts">
       <div class="part"><span class="n">0</span><span class="t"><b>Pasos previos al registro de asientos</b></span><span class="chip chip-ok">Resuelto</span></div>
       <div class="part"><span class="n">A</span><span class="t"><b>Asiento de apertura al 01/01/2026</b></span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">1</span><span class="t"><b>Compras de mercadería de febrero</b> <span style="color:var(--o-muted)">· 1 de 6 facturas</span></span><span class="chip chip-ok">En curso</span></div>
-      <div class="part"><span class="n">2</span><span class="t">Servicios recibidos — gastos de administración</span><span class="chip chip-wait">Pendiente</span></div>
-      <div class="part"><span class="n">3</span><span class="t">Servicios recibidos — gastos de ventas</span><span class="chip chip-wait">Pendiente</span></div>
-      <div class="part"><span class="n">4</span><span class="t">Compras de activos fijos en moneda extranjera</span><span class="chip chip-wait">Pendiente</span></div>
+      <div class="part"><span class="n">1</span><span class="t"><b>Compras de mercadería de febrero</b> <span style="color:var(--o-muted)">· 6 facturas</span></span><span class="chip chip-ok">Resuelto</span></div>
+      <div class="part"><span class="n">2</span><span class="t">Servicios recibidos — gastos de administración</span><span class="chip chip-ok">Resuelto</span></div>
+      <div class="part"><span class="n">3</span><span class="t">Servicios recibidos — gastos de ventas</span><span class="chip chip-ok">Resuelto</span></div>
+      <div class="part"><span class="n">·</span><span class="t">Pasos previos: cuenta nueva y parámetros de compra</span><span class="chip chip-ok">Resuelto</span></div>
+      <div class="part"><span class="n">4</span><span class="t">Compras de activos fijos en moneda extranjera</span><span class="chip chip-ok">Resuelto</span></div>
       <div class="part"><span class="n">5</span><span class="t">Ventas con factura</span><span class="chip chip-wait">Pendiente</span></div>
       <div class="part"><span class="n">6</span><span class="t">Ventas con boleta</span><span class="chip chip-wait">Pendiente</span></div>
       <div class="part"><span class="n">7</span><span class="t">Boletas consolidadas</span><span class="chip chip-wait">Pendiente</span></div>
@@ -260,7 +264,7 @@
   <section class="sheet">
     <p class="eyebrow">Parte 1 · Enunciado</p>
     <h2>Compras de mercadería de febrero</h2>
-    <p class="sub">Son seis facturas. Empezamos por la primera; las demás se irán agregando aquí mismo.</p>
+    <p class="sub">Son seis facturas. Empezamos por la primera.</p>
 
     <div class="fact">
       <div class="fact-top">
@@ -312,6 +316,568 @@
       </div>
       <p class="cap">Registro de la compra de mercadería</p>
     </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 1 · Enunciado</p>
+    <h2>Las demás facturas de compra</h2>
+    <p class="sub">Las cinco facturas de mercadería que faltan del mes.</p>
+    <div class="facts">
+      <div>
+        <p class="fact-lbl">Factura 2 de 6</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">ALEXANDER COMPUTER S.R.L. — ALECOM S.R.L.</div>
+              <div class="dir">AV. GARCILASO DE LA VEGA 1348 — CERCADO DE LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20600967291</div>
+              <div class="nro">F001-2260</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>04/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>20.00</td><td>UNIDAD</td><td>MONITOR LED 24 PULGADAS FULL HD</td><td class="num">480.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: ONCE MIL TRESCIENTOS VEINTIOCHO Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 9,600.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 9,600.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 1,728.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 11,328.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: MERCADERÍA PARA LA VENTA.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 3 de 6</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">A&amp;V DIGITAL TECHNOLOGY S.A.C.</div>
+              <div class="dir">JR. PARURO 1290 — CERCADO DE LIMA - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20603715871</div>
+              <div class="nro">F003-0871</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>06/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>30.00</td><td>UNIDAD</td><td>KIT TECLADO Y MOUSE INALÁMBRICO</td><td class="num">95.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: TRES MIL TRESCIENTOS SESENTA Y TRES Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 2,850.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 2,850.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 513.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 3,363.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: MERCADERÍA PARA LA VENTA.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 4 de 6</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">AGIA TECHNOLOGY S.A.C.</div>
+              <div class="dir">AV. JAVIER PRADO ESTE 4200 — SURCO - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20562905244</div>
+              <div class="nro">F001-0733</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>09/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              <div class="row"><span>Observación</span><span>Vence el 11/03/2026</span></div>
+            </div>
+            <div class="der">Forma de pago : <b>Crédito 30 días</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>8.00</td><td>UNIDAD</td><td>IMPRESORA MULTIFUNCIONAL TINTA CONTINUA</td><td class="num">720.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: SEIS MIL SETECIENTOS NOVENTA Y SEIS Y 80/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 5,760.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 5,760.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 1,036.80</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 6,796.80</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: MERCADERÍA PARA LA VENTA. PENDIENTE DE PAGO AL 28/02/2026.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 5 de 6</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">AIRON SISTEMAS DEL PERU S.A.C.</div>
+              <div class="dir">AV. AREQUIPA 2985 — SAN ISIDRO - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20601967830</div>
+              <div class="nro">F001-1502</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>12/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>15.00</td><td>UNIDAD</td><td>DISCO SÓLIDO SSD 1TB NVME</td><td class="num">310.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: CINCO MIL CUATROCIENTOS OCHENTA Y SIETE Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 4,650.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 4,650.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 837.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 5,487.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: MERCADERÍA PARA LA VENTA.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 6 de 6</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">ALIUD TECHNOLOGY E.I.R.L.</div>
+              <div class="dir">AV. EJÉRCITO 1020 — YANAHUARA - AREQUIPA - AREQUIPA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20605483713</div>
+              <div class="nro">F001-0448</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>16/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              <div class="row"><span>Observación</span><span>Vence el 18/03/2026</span></div>
+            </div>
+            <div class="der">Forma de pago : <b>Crédito 30 días</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>10.00</td><td>UNIDAD</td><td>TABLET 10 PULGADAS 128GB CON FUNDA</td><td class="num">890.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: DIEZ MIL QUINIENTOS DOS Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 8,900.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 8,900.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 1,602.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 10,502.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: MERCADERÍA PARA LA VENTA. PENDIENTE DE PAGO AL 28/02/2026.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 1 · Resolución en video</p>
+    <h2>Registro de las facturas de compra restantes</h2>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/ksobVdeL1O8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Compras de mercadería — facturas 2 a 6</p>
+      </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 2 · Enunciado</p>
+    <h2>Servicios recibidos — gastos de administración</h2>
+    <p class="sub">Dos facturas de servicio. Fíjate en cuál lleva detracción y cuál no.</p>
+    <div class="facts">
+      <div>
+        <p class="fact-lbl">Factura 1 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">ABC CONTADORES ASOCIADOS S.A.C.</div>
+              <div class="dir">AV. SAN MARTÍN 320 — CERCADO - AREQUIPA - AREQUIPA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20537907801</div>
+              <div class="nro">F001-4410</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>10/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>SERVICIO</td><td>ASESORÍA CONTABLE Y TRIBUTARIA — FEBRERO 2026</td><td class="num">1,800.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: DOS MIL CIENTO VEINTICUATRO Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 1,800.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 1,800.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 324.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 2,124.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: GASTO DE ADMINISTRACIÓN. OPERACIÓN SUJETA A DETRACCIÓN DEL 12%. SE DEPOSITA S/ 254.88 Y SE PAGA AL PROVEEDOR S/ 1,869.12.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 2 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">PROFESIONALES TECNICOS DE LIMPIEZA S.A.C. — PROTECLIM S.A.C.</div>
+              <div class="dir">CALLE MERCADERES 210 — CERCADO - AREQUIPA - AREQUIPA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20602319751</div>
+              <div class="nro">F001-3320</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>20/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>SERVICIO</td><td>LIMPIEZA Y MANTENIMIENTO DE OFICINAS ADMINISTRATIVAS</td><td class="num">580.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: SEISCIENTOS OCHENTA Y CUATRO Y 40/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 580.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 580.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 104.40</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 684.40</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: GASTO DE ADMINISTRACIÓN. NO SE APLICA DETRACCIÓN PORQUE EL IMPORTE NO SUPERA LOS S/ 700.00.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 2 · Resolución en video</p>
+    <h2>Registro de los gastos de administración</h2>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/D9d_hYjaeqo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Gastos de administración</p>
+      </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 3 · Enunciado</p>
+    <h2>Servicios recibidos — gastos de ventas</h2>
+    <p class="sub">Dos facturas de servicio, ambas con detracción pero a distinta tasa.</p>
+    <div class="facts">
+      <div>
+        <p class="fact-lbl">Factura 1 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">PUBLICIDAD AVISTO S.A.C.</div>
+              <div class="dir">AV. LA MARINA 2455 — SAN MIGUEL - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20604438765</div>
+              <div class="nro">F001-0995</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>13/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>SERVICIO</td><td>CAMPAÑA PUBLICITARIA DIGITAL Y DISEÑO DE CATÁLOGO</td><td class="num">2,400.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: DOS MIL OCHOCIENTOS TREINTA Y DOS Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 2,400.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 2,400.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 432.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 2,832.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: GASTO DE VENTAS. OPERACIÓN SUJETA A DETRACCIÓN DEL 12%. SE DEPOSITA S/ 339.84 Y SE PAGA AL PROVEEDOR S/ 2,492.16.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 2 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">EMPRESA DE TRANSPORTE DE CARGA TRANSOCEANICA S.A.C.</div>
+              <div class="dir">AV. ELMER FAUCETT 3220 — CALLAO - CALLAO</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20510732317</div>
+              <div class="nro">F001-0788</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>23/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>SOLES</span></div>
+              
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>SERVICIO</td><td>REPARTO DE EQUIPOS A CLIENTES — FEBRERO 2026</td><td class="num">1,500.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: MIL SETECIENTOS SETENTA Y 00/100 SOLES</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">S/ 1,500.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">S/ 1,500.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">S/ 270.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">S/ 1,770.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: GASTO DE VENTAS. OPERACIÓN SUJETA A DETRACCIÓN DEL 4%. SE DEPOSITA S/ 70.80 Y SE PAGA AL PROVEEDOR S/ 1,699.20.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 3 · Resolución en video</p>
+    <h2>Registro de los gastos de ventas</h2>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/ZFfA23oEjLw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Gastos de ventas</p>
+      </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 4 · Antes de registrar</p>
+    <h2>Pasos previos a la compra de activos fijos</h2>
+    <p class="sub">Antes del asiento hay que crear la cuenta nueva y configurar los parámetros de compra.</p>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/n4MyZZI4ySM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Creación de la cuenta nueva</p>
+      </div>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/BJiksvcXTZM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Configuración de parámetros de compras</p>
+      </div>
+    <div class="note" style="margin-top:16px">
+      <b>Aclaración sobre el nombre de la cuenta.</b> En el video de creación de la cuenta se le puso un
+      <b>nombre distinto</b> al que aparece después en los videos de configuración de parámetros y de compra
+      del activo fijo. No es un error ni tienes que rehacer nada: los <b>códigos de cuenta son los mismos</b>,
+      lo único que cambia es el nombre con que se muestra.
+    </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 4 · Enunciado</p>
+    <h2>Compras de activos fijos en moneda extranjera</h2>
+    <p class="sub">Las dos facturas están en dólares, así que hay que usar el tipo de cambio del día.</p>
+    <div class="facts">
+      <div>
+        <p class="fact-lbl">Factura 1 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">AUTOMOTORES ATLANTA S.A.C.</div>
+              <div class="dir">AV. REPÚBLICA DE PANAMÁ 4045 — SURQUILLO - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20473363683</div>
+              <div class="nro">F001-1975</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>18/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>DÓLARES AMERICANOS</span></div>
+              <div class="row"><span>Observación</span><span>Tipo de cambio venta del día: 3.720. Vence el 20/03/2026</span></div>
+            </div>
+            <div class="der">Forma de pago : <b>Crédito 30 días</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>UNIDAD</td><td>FURGONETA DE REPARTO AÑO 2026</td><td class="num">4,500.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: CINCO MIL TRESCIENTOS DIEZ Y 00/100 DÓLARES AMERICANOS</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">US$ 4,500.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">US$ 4,500.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">US$ 810.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">US$ 5,310.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: ACTIVO FIJO PARA USO DEL ÁREA DE VENTAS. EN SOLES: VALOR 16,740.00, IGV 3,013.20, TOTAL 19,753.20. PENDIENTE DE PAGO AL 28/02/2026.</div>
+        </div>
+      </div>
+      <div>
+        <p class="fact-lbl">Factura 2 de 2</p>
+        <div class="fact">
+          <div class="fact-top">
+            <div class="fact-emisor">
+              <div class="rz">POS IMPORT SOCIEDAD ANONIMA CERRADA</div>
+              <div class="dir">AV. GUARDIA CIVIL 1235 — SAN BORJA - LIMA - LIMA</div>
+            </div>
+            <div class="fact-doc">
+              <div class="tt">FACTURA ELECTRÓNICA</div>
+              <div class="ruc">RUC: 20344972908</div>
+              <div class="nro">F001-2088</div>
+            </div>
+          </div>
+          <div class="fact-datos">
+            <div class="izq">
+              <div class="row"><span>Fecha de Emisión</span><span>25/02/2026</span></div>
+              <div class="row"><span>Señor(es)</span><span>LOS GORRIONES S.A.</span></div>
+              <div class="row"><span>RUC</span><span>20334020184</span></div>
+              <div class="row"><span>Tipo de Moneda</span><span>DÓLARES AMERICANOS</span></div>
+              <div class="row"><span>Observación</span><span>Tipo de cambio venta del día: 3.735</span></div>
+            </div>
+            <div class="der">Forma de pago : <b>Contado</b></div>
+          </div>
+          <div class="tblwrap">
+            <table class="fact-items">
+              <thead><tr><th>Cantidad</th><th>Unidad medida</th><th>Descripción</th><th class="num">Valor unitario</th></tr></thead>
+              <tbody><tr><td>1.00</td><td>UNIDAD</td><td>SERVIDOR TORRE XEON Y RACK DE COMUNICACIONES</td><td class="num">2,800.000000</td></tr></tbody>
+            </table>
+          </div>
+          <div class="fact-tot">
+            <div class="letras">SON: TRES MIL TRESCIENTOS CUATRO Y 00/100 DÓLARES AMERICANOS</div>
+            <div class="montos">
+              <div class="row"><span>Sub Total Ventas :</span><span class="num">US$ 2,800.00</span></div>
+              <div class="row"><span>Valor Venta :</span><span class="num">US$ 2,800.00</span></div>
+              <div class="row"><span>IGV :</span><span class="num">US$ 504.00</span></div>
+              <div class="row big"><span>Importe Total :</span><span class="num">US$ 3,304.00</span></div>
+            </div>
+          </div>
+          <div class="fact-nota">NOTA: ACTIVO FIJO PARA USO DEL ÁREA DE ADMINISTRACIÓN. EN SOLES: VALOR 10,458.00, IGV 1,882.44, TOTAL 12,340.44.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <p class="eyebrow">Parte 4 · Resolución en video</p>
+    <h2>Registro de la compra de activo fijo en dólares</h2>
+      <div class="video">
+        <div class="video-frame">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/aNoK3iX2NFg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+        <p class="cap">Compra de activo fijo en moneda extranjera</p>
+      </div>
   </section>
 
   <footer>
