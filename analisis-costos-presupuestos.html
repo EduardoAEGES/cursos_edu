@@ -40,10 +40,13 @@
   .empty{
     background:var(--bg-soft); border:1px dashed rgba(255,255,255,.15); border-radius:14px;
     padding:32px 20px; text-align:center; color:var(--text-dim);
+    cursor:pointer; transition:border-color .15s ease, transform .15s ease;
   }
+  .empty:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .empty .pista{ display:block; margin-top:8px; font-size:12.5px; color:var(--accent); font-weight:600; }
 </style>
 </head>
-<body>
+<body data-pendiente-auto>
 
 <header>
   <div class="emoji">💰</div>
@@ -54,9 +57,11 @@
 
 <main>
   <h2>Sesiones</h2>
-  <div class="empty">Aún no hay sesiones publicadas. Pronto se agregará contenido.</div>
+  <div class="empty" data-pendiente role="button" tabindex="0">Aún no hay sesiones publicadas.<span class="pista">Toca aquí para ver en qué anda Eduardo</span></div>
   <div class="back-bottom"><a class="back" href="index.html">Volver al repositorio</a></div>
 </main>
+
+<script src="pendiente.js" defer></script>
 
 </body>
 </html>
