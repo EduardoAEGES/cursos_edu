@@ -73,11 +73,11 @@
   .o-btn-primary{ background:var(--o-purple); color:#fff; border-color:var(--o-purple); }
 
   /* ---------- contenido ---------- */
-  .o-content{ padding:18px 16px 60px; }
+  .o-content{ padding:18px clamp(12px,2.4vw,32px) 60px; }
   .sheet{
     scroll-margin-top:100px;
     background:var(--o-sheet); border:1px solid var(--o-border); border-radius:4px;
-    max-width:1000px; margin:0 auto 18px; padding:24px 26px;
+    max-width:1280px; margin:0 auto 18px; padding:clamp(16px,2vw,26px);
     box-shadow:0 1px 2px rgba(0,0,0,.04);
   }
   @media (max-width:620px){ .sheet{ padding:18px 14px; } }
@@ -175,10 +175,10 @@
   }
   .fact-nota{ border-top:1px solid #C9C9C9; padding:8px 14px; background:#FAFAFA; font-size:12px; color:#4A4A4A; }
 
-  footer{ max-width:1000px; margin:0 auto; padding:10px 4px 40px; color:var(--o-muted); font-size:12px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  footer{ max-width:1280px; margin:0 auto; padding:10px 4px 40px; color:var(--o-muted); font-size:12px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   footer a{ color:var(--o-teal); text-decoration:none; }
   footer a:hover{ text-decoration:underline; }
-  .backbar{ max-width:1000px; margin:0 auto 18px; display:flex; }
+  .backbar{ max-width:1280px; margin:0 auto 18px; display:flex; }
   .backbar.bottom{ justify-content:center; margin:4px auto 26px; }
   .backbtn{
     display:inline-block; font:inherit; font-weight:600; font-size:13px;
@@ -193,8 +193,8 @@
 <body>
 
 <div class="o-navbar">
-  <span class="apps">▦</span>
-  <span class="brand">Contabilidad</span>
+  <a class="apps" href="index.html" aria-label="Inicio" style="color:#fff;text-decoration:none">▦</a>
+  <a class="brand" href="index.html" style="color:#fff;text-decoration:none">Contabilidad</a>
   <nav class="menu">
     <span>Tablero</span><span>Clientes</span><span>Proveedores</span>
     <span>Contabilidad</span><span>Informes</span><span>Configuración</span>

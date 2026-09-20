@@ -4,105 +4,102 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Excel Empresarial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
 <style>
-  :root{
-    --bg:#0f172a; --bg-soft:#1e293b; --accent:#38bdf8; --accent-2:#f472b6;
-    --text:#e2e8f0; --text-dim:#94a3b8; --excel:#21A366;
-  }
-  *{ box-sizing:border-box; }
-  body{
-    margin:0; min-height:100vh;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:radial-gradient(circle at top,#1e293b,#0f172a 60%); color:var(--text);
-  }
-  header{ text-align:center; padding:52px 20px 12px; }
-  header .emoji{ font-size:46px; }
-  header h1{
-    margin:10px 0 6px; font-size:clamp(26px,4.5vw,40px);
-    background:linear-gradient(90deg,var(--excel),var(--accent));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  header p{ color:var(--text-dim); margin:0; font-size:15px; }
-  .back{
-    display:inline-block; padding:11px 22px; border-radius:999px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#0f172a; font-weight:700; font-size:14px; letter-spacing:.01em;
-    text-decoration:none; border:none; cursor:pointer;
-    box-shadow:0 6px 16px rgba(56,189,248,.18);
-    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
-  }
-  .back:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 22px rgba(56,189,248,.28); }
-  .back:active{ transform:translateY(0); }
-  .back-top{ margin-top:18px; }
-  .back-bottom{ margin:40px 0 0; text-align:center; }
-
-  .saltos{
-    display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px;
-  }
+  :root{ --excel:#21A366; }
+  .saltos{ display:flex; gap:6px; flex-wrap:wrap; }
   .saltos a{
-    width:36px; height:36px; display:grid; place-items:center; border-radius:10px;
-    background:var(--bg-soft); border:1px solid rgba(255,255,255,.1);
-    color:var(--text-dim); text-decoration:none; font-weight:700; font-size:14px;
+    width:30px; height:30px; display:grid; place-items:center; border-radius:4px;
+    background:#fff; border:1px solid var(--o-border); color:var(--o-muted);
+    text-decoration:none; font-weight:600; font-size:12.5px;
   }
-  .saltos a:hover{ border-color:var(--excel); color:var(--text); }
+  .saltos a:hover{ border-color:var(--excel); color:var(--excel); }
 
-  main{ max-width:1000px; margin:0 auto; padding:24px 20px 80px; }
   .sesion{
-    background:var(--bg-soft); border:1px solid rgba(255,255,255,.08); border-radius:16px;
-    padding:22px; margin-bottom:22px; scroll-margin-top:18px;
+    background:var(--o-sheet); border:1px solid var(--o-border); border-radius:4px;
+    box-shadow:0 1px 2px rgba(0,0,0,.04);
+    padding:clamp(16px, 2vw, 24px); margin:0 0 18px; scroll-margin-top:100px;
   }
-  @media (max-width:620px){ .sesion{ padding:16px 14px; } }
-  .s-head{ display:flex; gap:14px; align-items:flex-start; margin-bottom:16px; }
+  .s-head{ display:flex; gap:12px; align-items:flex-start; margin-bottom:16px; }
   .s-n{
-    flex:none; width:40px; height:40px; border-radius:11px; display:grid; place-items:center;
-    font-weight:800; font-size:17px; background:linear-gradient(135deg,var(--excel),var(--accent)); color:#0f172a;
+    flex:none; width:34px; height:34px; border-radius:6px; display:grid; place-items:center;
+    font-weight:700; font-size:14px; background:#E8F6EE; color:#15803D; border:1px solid #C6E9D5;
   }
-  .s-head h3{ margin:0 0 3px; font-size:19px; }
-  .s-tema{ margin:0; color:var(--text-dim); font-size:14px; }
-  .s-video{ position:relative; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; }
+  .s-head h3{ margin:0 0 2px; font-size:16px; font-weight:700; }
+  .s-tema{ margin:0; color:var(--o-muted); font-size:13px; }
+
+  /* dos columnas en pantallas anchas: video + material */
+  .s-body{ display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:20px; align-items:start; }
+  @media (max-width:980px){ .s-body{ grid-template-columns:1fr; } }
+  .s-video{ position:relative; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; border:1px solid var(--o-border); }
   .s-video iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
   .s-mat{
-    font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--text-dim);
-    margin:20px 0 12px; font-weight:700;
+    font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--o-label);
+    margin:0 0 10px; font-weight:700;
   }
-  .recursos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; }
+  .recursos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px; }
   .recurso{
     display:flex; flex-direction:column; min-width:0;
-    background:#0f172a; border:1px solid rgba(255,255,255,.1); border-radius:12px; overflow:hidden;
+    background:#fff; border:1px solid var(--o-border); border-radius:4px; overflow:hidden;
   }
-  .r-prev{ position:relative; aspect-ratio:4/3; background:#fff; }
+  .r-prev{ position:relative; aspect-ratio:4/3; background:#fff; border-bottom:1px solid var(--o-line); }
   .r-prev iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
-  .r-noprev{ display:grid; place-items:center; background:#111c30; font-size:44px; }
-  .r-info{ padding:12px 13px 0; }
-  .r-nom{ font-weight:700; font-size:14.5px; }
-  .r-tipo{ color:var(--text-dim); font-size:12.5px; margin-top:2px; }
-  .r-btns{ display:flex; gap:8px; padding:12px 13px 13px; margin-top:auto; flex-wrap:wrap; }
+  .r-noprev{ display:grid; place-items:center; background:#F6F6F6; font-size:40px; }
+  .r-info{ padding:11px 12px 0; }
+  .r-nom{ font-weight:600; font-size:13.5px; overflow-wrap:anywhere; }
+  .r-tipo{ color:var(--o-muted); font-size:12px; margin-top:2px; }
+  .r-btns{ display:flex; gap:8px; padding:11px 12px 12px; margin-top:auto; flex-wrap:wrap; }
   .btn{
     display:inline-flex; align-items:center; gap:6px; text-decoration:none;
-    font-weight:600; font-size:13px; padding:8px 12px; border-radius:9px; border:1px solid transparent;
+    font-weight:500; font-size:12.5px; padding:7px 12px; border-radius:4px; border:1px solid transparent;
   }
-  .btn-primary{ background:var(--excel); color:#fff; }
-  .btn-primary:hover{ filter:brightness(1.12); }
-  .btn-ghost{ border-color:rgba(255,255,255,.25); color:var(--text); }
-  .btn-ghost:hover{ border-color:var(--accent); color:var(--accent); }
+  .btn-primary{ background:var(--excel); color:#fff; border-color:var(--excel); }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-ghost{ border-color:#CFCFCF; color:#4C4C4C; background:#fff; }
+  .btn-ghost:hover{ border-color:var(--excel); color:var(--excel); }
 
-  .carpeta{
-    text-align:center; color:var(--text-dim); font-size:13.5px; margin-top:10px;
-  }
-  .carpeta a{ color:var(--accent); }
+  .carpeta{ color:var(--o-muted); font-size:13px; margin:0; }
+  .carpeta a{ color:var(--o-teal); }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="emoji">📗</div>
-  <h1>Excel Empresarial</h1>
-  <p>Clases grabadas y material de trabajo</p>
-  <div class="back-top"><a class="back" href="index.html">Volver al repositorio</a></div>
-  <nav class="saltos"><a href="#sesion-1">1</a><a href="#sesion-2">2</a><a href="#sesion-3">3</a><a href="#sesion-4">4</a><a href="#sesion-5">5</a><a href="#sesion-6">6</a></nav>
-</header>
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
 
-<main>
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Cursos</span> / <b>Excel Empresarial</b></span>
+  <div class="o-cp-right"><span class="o-count">6 sesiones</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">📗</div>
+      <div class="txt">
+        <h1>Excel Empresarial</h1>
+        <p class="sub">Clases grabadas y material de trabajo</p>
+      </div>
+      <div class="acc">
+        <nav class="saltos" aria-label="Ir a la sesión"><a href="#sesion-1">1</a><a href="#sesion-2">2</a><a href="#sesion-3">3</a><a href="#sesion-4">4</a><a href="#sesion-5">5</a><a href="#sesion-6">6</a></nav>
+      </div>
+    </div>
+  </div>
+
   <section class="sesion" id="sesion-1">
     <div class="s-head">
       <span class="s-n">1</span>
@@ -111,9 +108,13 @@
         <p class="s-tema">Referencias relativas, absolutas y mixtas, más una introducción a la limpieza de datos.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/zoaIWmC1io8" title="Excel Empresarial — sesión 1" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -128,6 +129,8 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
   <section class="sesion" id="sesion-2">
@@ -138,9 +141,13 @@
         <p class="s-tema">Formato de celdas, formato condicional y presentación de la información.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/Ok4KZgnIEME" title="Excel Empresarial — sesión 2" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -155,6 +162,8 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
   <section class="sesion" id="sesion-3">
@@ -165,9 +174,13 @@
         <p class="s-tema">SUMAR.SI, CONTAR.SI y SUMAR.SI.CONJUNTO, además de la detección de duplicados.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/3vI8b8CVC5U" title="Excel Empresarial — sesión 3" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -182,6 +195,8 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
   <section class="sesion" id="sesion-4">
@@ -192,9 +207,13 @@
         <p class="s-tema">La función SI y su combinación con Y y O para evaluar varias condiciones.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/triNxWmFIAA" title="Excel Empresarial — sesión 4" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -209,6 +228,8 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
   <section class="sesion" id="sesion-5">
@@ -219,9 +240,13 @@
         <p class="s-tema">Construcción de tablas dinámicas y uso de segmentadores para filtrar.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/hsIS18M036o" title="Excel Empresarial — sesión 5" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -236,6 +261,8 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
   <section class="sesion" id="sesion-6">
@@ -246,9 +273,13 @@
         <p class="s-tema">Campos calculados dentro de la tabla dinámica e importación y transformación con Power Query.</p>
       </div>
     </div>
+    <div class="s-body">
+    <div class="s-col-video">
     <div class="s-video">
       <iframe src="https://www.youtube.com/embed/AdhLJOIjJms" title="Excel Empresarial — sesión 6" frameborder="0" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
+    </div>
+    <div class="s-col-mat">
     <h4 class="s-mat">Material de la sesión</h4>
     <div class="recursos">
         <div class="recurso">
@@ -285,14 +316,28 @@
           </div>
         </div>
     </div>
+    </div>
+    </div>
   </section>
 
-  <p class="carpeta">
-    ¿Buscas otro archivo?
-    <a href="https://drive.google.com/drive/folders/1-WYLPF8ymxngDT1T2mPm244u0AqTgCMT" target="_blank" rel="noopener">Ver toda la carpeta en Drive ↗</a>
-  </p>
-  <div class="back-bottom"><a class="back" href="index.html">Volver al repositorio</a></div>
-</main>
+  <div class="o-sheet">
+    <p class="carpeta">
+      ¿Buscas otro archivo?
+      <a href="https://drive.google.com/drive/folders/1-WYLPF8ymxngDT1T2mPm244u0AqTgCMT" target="_blank" rel="noopener">Ver toda la carpeta en Drive ↗</a>
+    </p>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Excel Empresarial</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
 
 <script src="pendiente.js" defer></script>
 

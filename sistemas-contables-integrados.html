@@ -4,62 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistemas Contables Integrados</title>
-<style>
-  :root{
-    --bg:#0f172a; --bg-soft:#1e293b; --accent:#38bdf8; --accent-2:#f472b6;
-    --text:#e2e8f0; --text-dim:#94a3b8;
-  }
-  *{ box-sizing:border-box; }
-  body{
-    margin:0; min-height:100vh;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    background:radial-gradient(circle at top,#1e293b,#0f172a 60%); color:var(--text);
-  }
-  header{ text-align:center; padding:52px 20px 12px; }
-  header .emoji{ font-size:46px; }
-  header h1{
-    margin:10px 0 6px; font-size:clamp(26px,4.5vw,40px);
-    background:linear-gradient(90deg,var(--accent),var(--accent-2));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  header p{ color:var(--text-dim); margin:0; font-size:15px; }
-  .back{
-    display:inline-block; padding:11px 22px; border-radius:999px;
-    background:linear-gradient(135deg,var(--accent),var(--accent-2));
-    color:#0f172a; font-weight:700; font-size:14px; letter-spacing:.01em;
-    text-decoration:none; border:none; cursor:pointer;
-    box-shadow:0 6px 16px rgba(56,189,248,.18);
-    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
-  }
-  .back:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 22px rgba(56,189,248,.28); }
-  .back:active{ transform:translateY(0); }
-  .back-top{ margin-top:18px; }
-  .back-bottom{ margin:40px 0 0; text-align:center; }
-  main{ max-width:760px; margin:0 auto; padding:24px 20px 80px; }
-  h2{ font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:10px 0 16px; }
-  .empty{
-    background:var(--bg-soft); border:1px dashed rgba(255,255,255,.15); border-radius:14px;
-    padding:32px 20px; text-align:center; color:var(--text-dim);
-    cursor:pointer; transition:border-color .15s ease, transform .15s ease;
-  }
-  .empty:hover{ border-color:var(--accent); transform:translateY(-2px); }
-  .empty .pista{ display:block; margin-top:8px; font-size:12.5px; color:var(--accent); font-weight:600; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
 </head>
 <body data-pendiente-auto>
 
-<header>
-  <div class="emoji">🖥️</div>
-  <h1>Sistemas Contables Integrados</h1>
-  <p>Gestión contable integrada en sistemas de información</p>
-  <div class="back-top"><a class="back" href="index.html">Volver al repositorio</a></div>
-</header>
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
 
-<main>
-  <h2>Sesiones</h2>
-  <div class="empty" data-pendiente role="button" tabindex="0">Aún no hay sesiones publicadas.<span class="pista">Toca aquí para ver en qué anda Eduardo</span></div>
-  <div class="back-bottom"><a class="back" href="index.html">Volver al repositorio</a></div>
-</main>
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Cursos</span> / <b>Sistemas Contables Integrados</b></span>
+  <div class="o-cp-right"><span class="o-count">0 sesiones</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">🖥️</div>
+      <div class="txt">
+        <h1>Sistemas Contables Integrados</h1>
+        <p class="sub">Gestión contable integrada en sistemas de información</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-wait">Pronto</span></div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Sesiones</h2>
+    <div class="o-empty" data-pendiente role="button" tabindex="0">
+      <span class="ico">🛠️</span>
+      <span class="t">Aún no hay sesiones publicadas</span>
+      <span class="pista">Toca aquí para ver en qué anda Eduardo</span>
+    </div>
+
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Sistemas Contables Integrados</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
 
 <script src="pendiente.js" defer></script>
 

@@ -28,32 +28,34 @@
   /* ---------- estilos ---------- */
   var CSS = '' +
     '.pnd-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;' +
-      'padding:20px;background:rgba(2,6,23,.72);backdrop-filter:blur(3px);opacity:0;transition:opacity .18s ease}' +
+      'padding:16px;background:rgba(0,0,0,.45);opacity:0;transition:opacity .15s ease}' +
     '.pnd-overlay.pnd-on{opacity:1}' +
-    '.pnd-box{position:relative;max-width:420px;width:100%;text-align:center;border-radius:20px;padding:34px 26px 28px;' +
-      'background:#1e293b;color:#e2e8f0;border:1px solid rgba(255,255,255,.1);' +
-      'box-shadow:0 24px 60px rgba(0,0,0,.55);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;' +
-      'transform:translateY(14px) scale(.96);transition:transform .22s cubic-bezier(.2,.9,.3,1.2)}' +
+    '.pnd-box{position:relative;max-width:460px;width:100%;border-radius:6px;background:#fff;color:#1F1F1F;' +
+      'box-shadow:0 14px 44px rgba(0,0,0,.3);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;' +
+      'font-size:13px;line-height:1.5;transform:translateY(10px);transition:transform .18s ease}' +
     '.pnd-overlay.pnd-on .pnd-box{transform:none}' +
-    '.pnd-emoji{font-size:52px;line-height:1;display:block;animation:pnd-bob 1.6s ease-in-out infinite}' +
-    '@keyframes pnd-bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}' +
-    '.pnd-box h3{margin:14px 0 8px;font-size:21px;line-height:1.2;' +
-      'background:linear-gradient(90deg,#38bdf8,#f472b6);-webkit-background-clip:text;background-clip:text;color:transparent}' +
-    '.pnd-box p{margin:0;color:#94a3b8;font-size:15px;line-height:1.5}' +
+    '.pnd-head{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid #DEE2E6}' +
+    '.pnd-head h3{margin:0;font-size:15px;font-weight:600;color:#1F1F1F}' +
+    '.pnd-body{padding:20px 18px;display:flex;gap:14px;align-items:flex-start}' +
+    '.pnd-emoji{flex:none;width:42px;height:42px;border-radius:6px;background:#F4F1F5;display:grid;' +
+      'place-items:center;font-size:22px}' +
+    '.pnd-txt{flex:1;min-width:0}' +
+    '.pnd-txt p{margin:0;color:#6C757D}' +
     '.pnd-dots::after{content:"";animation:pnd-dots 1.4s steps(4,end) infinite}' +
     '@keyframes pnd-dots{0%{content:""}25%{content:" ."}50%{content:" . ."}75%{content:" . . ."}100%{content:" . . . ."}}' +
-    '.pnd-acciones{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:22px}' +
-    '.pnd-btn{font:inherit;font-weight:700;font-size:14px;border-radius:999px;padding:11px 22px;cursor:pointer;' +
-      'text-decoration:none;border:none;background:linear-gradient(135deg,#38bdf8,#f472b6);color:#0f172a;' +
-      'transition:transform .15s ease,filter .15s ease}' +
-    '.pnd-btn:hover{transform:translateY(-2px);filter:brightness(1.07)}' +
-    '.pnd-btn-ghost{background:transparent;border:1px solid #94a3b8;color:#94a3b8}' +
-    '.pnd-btn-ghost:hover{border-color:#38bdf8;color:#38bdf8}' +
-    '.pnd-cerrar{position:absolute;top:12px;right:14px;background:transparent;border:none;color:#94a3b8;' +
-      'font-size:20px;line-height:1;cursor:pointer}' +
-    '.pnd-cerrar:hover{color:#e2e8f0}' +
-    '.pnd-badge{display:inline-block;margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.08em;' +
-      'text-transform:uppercase;color:#94a3b8;border:1px solid #94a3b8;border-radius:999px;padding:2px 10px}';
+    '.pnd-badge{display:inline-block;margin-top:10px;font-size:11px;font-weight:600;padding:2px 9px;' +
+      'border-radius:999px;border:1px solid #D6D6D6;background:#F6F6F6;color:#6C757D}' +
+    '.pnd-acciones{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;padding:12px 18px;' +
+      'border-top:1px solid #DEE2E6;background:#FBFBFB;border-radius:0 0 6px 6px}' +
+    '.pnd-btn{font:inherit;font-weight:500;font-size:12.5px;border-radius:4px;padding:8px 16px;cursor:pointer;' +
+      'text-decoration:none;border:1px solid #714B67;background:#714B67;color:#fff;display:inline-flex;align-items:center}' +
+    '.pnd-btn:hover{background:#5C3D54;border-color:#5C3D54;color:#fff}' +
+    '.pnd-btn-ghost{background:#fff;border-color:#CFCFCF;color:#4C4C4C}' +
+    '.pnd-btn-ghost:hover{background:#F4F1F5;border-color:#714B67;color:#714B67}' +
+    '.pnd-cerrar{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#6C757D;' +
+      'font-size:18px;line-height:1;cursor:pointer;padding:4px}' +
+    '.pnd-cerrar:hover{color:#1F1F1F}' +
+    '@media (max-width:420px){.pnd-acciones{justify-content:stretch}.pnd-acciones .pnd-btn{flex:1;justify-content:center}}';
 
   function ponerEstilos() {
     if (document.getElementById('pnd-css')) return;
@@ -151,37 +153,43 @@
     var box = document.createElement('div');
     box.className = 'pnd-box';
 
+    var head = document.createElement('div');
+    head.className = 'pnd-head';
+    var h3 = document.createElement('h3');
+    h3.textContent = TITULO;
+    head.appendChild(h3);
+
     var cerrarBtn = document.createElement('button');
     cerrarBtn.className = 'pnd-cerrar';
     cerrarBtn.type = 'button';
     cerrarBtn.setAttribute('aria-label', 'Cerrar');
-    cerrarBtn.textContent = '✕';
+    cerrarBtn.textContent = '\u2715';
 
-    var emoji = document.createElement('span');
+    var body = document.createElement('div');
+    body.className = 'pnd-body';
+
+    var emoji = document.createElement('div');
     emoji.className = 'pnd-emoji';
-    emoji.textContent = '🛠️';
+    emoji.textContent = '\ud83d\udee0\ufe0f';
 
-    var h3 = document.createElement('h3');
-    h3.textContent = TITULO;
-
+    var txt = document.createElement('div');
+    txt.className = 'pnd-txt';
     var p = document.createElement('p');
     p.textContent = MENSAJE + ' ';
     var dots = document.createElement('span');
     dots.className = 'pnd-dots';
     p.appendChild(dots);
-
     var badge = document.createElement('span');
     badge.className = 'pnd-badge';
     badge.textContent = 'En preparación';
+    txt.appendChild(p);
+    txt.appendChild(badge);
+
+    body.appendChild(emoji);
+    body.appendChild(txt);
 
     var acciones = document.createElement('div');
     acciones.className = 'pnd-acciones';
-
-    var ok = document.createElement('button');
-    ok.className = 'pnd-btn';
-    ok.type = 'button';
-    ok.textContent = 'Entendido';
-    acciones.appendChild(ok);
 
     if (destino) {
       var ver = document.createElement('a');
@@ -191,11 +199,15 @@
       acciones.appendChild(ver);
     }
 
+    var ok = document.createElement('button');
+    ok.className = 'pnd-btn';
+    ok.type = 'button';
+    ok.textContent = 'Entendido';
+    acciones.appendChild(ok);
+
     box.appendChild(cerrarBtn);
-    box.appendChild(emoji);
-    box.appendChild(h3);
-    box.appendChild(p);
-    box.appendChild(badge);
+    box.appendChild(head);
+    box.appendChild(body);
     box.appendChild(acciones);
     overlay.appendChild(box);
     document.body.appendChild(overlay);
