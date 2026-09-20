@@ -83,6 +83,14 @@
   .course-cos:hover{ border-color: #fbbf24; }
   .course-con:hover{ border-color: #a78bfa; }
   .course-xls:hover{ border-color: #21A366; }
+  .course-exp:hover{ border-color: #fb923c; }
+  .course-cnt:hover{ border-color: #60a5fa; }
+  .course-sci:hover{ border-color: #22d3ee; }
+  .course-efi:hover{ border-color: #f472b6; }
+  .course-pronto{
+    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-dim); border: 1px solid var(--text-dim); border-radius: 999px; padding: 2px 10px;
+  }
   .tools{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .tools #openDadoBtn, .tools #ruletaLink{ margin-top: 0; margin-left: 0; }
 
@@ -238,13 +246,15 @@
         <span class="course-emoji">📊</span>
         <span class="course-name">Investigación Cuantitativa</span>
       </a>
-      <a class="course course-mat" href="matematicas-aplicadas.html">
+      <a class="course course-mat" href="matematicas-aplicadas.html" data-pendiente data-pendiente-href="matematicas-aplicadas.html">
         <span class="course-emoji">📐</span>
-        <span class="course-name">Matemáticas Aplicadas</span>
+        <span class="course-name">Matemáticas Aplicadas / Pensamiento Lógico</span>
+        <span class="course-pronto">Pronto</span>
       </a>
-      <a class="course course-cos" href="analisis-costos-presupuestos.html">
+      <a class="course course-cos" href="analisis-costos-presupuestos.html" data-pendiente data-pendiente-href="analisis-costos-presupuestos.html">
         <span class="course-emoji">💰</span>
-        <span class="course-name">Análisis de Costos y Presupuestos</span>
+        <span class="course-name">Costos y Presupuestos</span>
+        <span class="course-pronto">Pronto</span>
       </a>
       <a class="course course-con" href="sistemas-procesos-contables.html">
         <span class="course-emoji">🧾</span>
@@ -253,6 +263,26 @@
       <a class="course course-xls" href="excel-empresarial.html">
         <span class="course-emoji">📗</span>
         <span class="course-name">Excel Empresarial</span>
+      </a>
+      <a class="course course-exp" href="experiencias-formativas.html" data-pendiente data-pendiente-href="experiencias-formativas.html">
+        <span class="course-emoji">🧭</span>
+        <span class="course-name">Experiencias Formativas</span>
+        <span class="course-pronto">Pronto</span>
+      </a>
+      <a class="course course-cnt" href="contabilidad.html" data-pendiente data-pendiente-href="contabilidad.html">
+        <span class="course-emoji">📒</span>
+        <span class="course-name">Contabilidad</span>
+        <span class="course-pronto">Pronto</span>
+      </a>
+      <a class="course course-sci" href="sistemas-contables-integrados.html" data-pendiente data-pendiente-href="sistemas-contables-integrados.html">
+        <span class="course-emoji">🖥️</span>
+        <span class="course-name">Sistemas Contables Integrados</span>
+        <span class="course-pronto">Pronto</span>
+      </a>
+      <a class="course course-efi" href="estados-financieros.html" data-pendiente data-pendiente-href="estados-financieros.html">
+        <span class="course-emoji">📈</span>
+        <span class="course-name">Estados Financieros</span>
+        <span class="course-pronto">Pronto</span>
       </a>
     </div>
   </section>
@@ -592,6 +622,8 @@
   });
 })();
 </script>
+
+<script src="pendiente.js" defer></script>
 
 </body>
 </html>

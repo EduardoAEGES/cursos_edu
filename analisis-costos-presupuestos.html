@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Análisis de Costos y Presupuestos</title>
+<title>Costos y Presupuestos</title>
 <style>
   :root{
     --bg:#0f172a; --bg-soft:#1e293b; --accent:#38bdf8; --accent-2:#f472b6;
@@ -23,29 +23,45 @@
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   header p{ color:var(--text-dim); margin:0; font-size:15px; }
-  .back{ display:inline-block; margin-top:14px; color:var(--accent); text-decoration:none; font-size:14px; }
-  .back:hover{ text-decoration:underline; }
+  .back{
+    display:inline-block; padding:11px 22px; border-radius:999px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#0f172a; font-weight:700; font-size:14px; letter-spacing:.01em;
+    text-decoration:none; border:none; cursor:pointer;
+    box-shadow:0 6px 16px rgba(56,189,248,.18);
+    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .back:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 22px rgba(56,189,248,.28); }
+  .back:active{ transform:translateY(0); }
+  .back-top{ margin-top:18px; }
+  .back-bottom{ margin:40px 0 0; text-align:center; }
   main{ max-width:760px; margin:0 auto; padding:24px 20px 80px; }
   h2{ font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-dim); margin:10px 0 16px; }
   .empty{
     background:var(--bg-soft); border:1px dashed rgba(255,255,255,.15); border-radius:14px;
     padding:32px 20px; text-align:center; color:var(--text-dim);
+    cursor:pointer; transition:border-color .15s ease, transform .15s ease;
   }
+  .empty:hover{ border-color:var(--accent); transform:translateY(-2px); }
+  .empty .pista{ display:block; margin-top:8px; font-size:12.5px; color:var(--accent); font-weight:600; }
 </style>
 </head>
-<body>
+<body data-pendiente-auto>
 
 <header>
   <div class="emoji">💰</div>
-  <h1>Análisis de Costos y Presupuestos</h1>
+  <h1>Costos y Presupuestos</h1>
   <p>Repositorio de recursos de Eduardo</p>
-  <div><a class="back" href="index.html">← Volver al repositorio</a></div>
+  <div class="back-top"><a class="back" href="index.html">Volver al repositorio</a></div>
 </header>
 
 <main>
   <h2>Sesiones</h2>
-  <div class="empty">Aún no hay sesiones publicadas. Pronto se agregará contenido.</div>
+  <div class="empty" data-pendiente role="button" tabindex="0">Aún no hay sesiones publicadas.<span class="pista">Toca aquí para ver en qué anda Eduardo</span></div>
+  <div class="back-bottom"><a class="back" href="index.html">Volver al repositorio</a></div>
 </main>
+
+<script src="pendiente.js" defer></script>
 
 </body>
 </html>

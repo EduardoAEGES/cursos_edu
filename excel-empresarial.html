@@ -23,8 +23,18 @@
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
   header p{ color:var(--text-dim); margin:0; font-size:15px; }
-  .back{ display:inline-block; margin-top:14px; color:var(--accent); text-decoration:none; font-size:14px; }
-  .back:hover{ text-decoration:underline; }
+  .back{
+    display:inline-block; padding:11px 22px; border-radius:999px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#0f172a; font-weight:700; font-size:14px; letter-spacing:.01em;
+    text-decoration:none; border:none; cursor:pointer;
+    box-shadow:0 6px 16px rgba(56,189,248,.18);
+    transition:transform .15s ease, box-shadow .15s ease, filter .15s ease;
+  }
+  .back:hover{ transform:translateY(-2px); filter:brightness(1.06); box-shadow:0 10px 22px rgba(56,189,248,.28); }
+  .back:active{ transform:translateY(0); }
+  .back-top{ margin-top:18px; }
+  .back-bottom{ margin:40px 0 0; text-align:center; }
 
   .saltos{
     display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:18px;
@@ -88,7 +98,7 @@
   <div class="emoji">📗</div>
   <h1>Excel Empresarial</h1>
   <p>Clases grabadas y material de trabajo</p>
-  <div><a class="back" href="index.html">← Volver al repositorio</a></div>
+  <div class="back-top"><a class="back" href="index.html">Volver al repositorio</a></div>
   <nav class="saltos"><a href="#sesion-1">1</a><a href="#sesion-2">2</a><a href="#sesion-3">3</a><a href="#sesion-4">4</a><a href="#sesion-5">5</a><a href="#sesion-6">6</a></nav>
 </header>
 
@@ -281,7 +291,10 @@
     ¿Buscas otro archivo?
     <a href="https://drive.google.com/drive/folders/1-WYLPF8ymxngDT1T2mPm244u0AqTgCMT" target="_blank" rel="noopener">Ver toda la carpeta en Drive ↗</a>
   </p>
+  <div class="back-bottom"><a class="back" href="index.html">Volver al repositorio</a></div>
 </main>
+
+<script src="pendiente.js" defer></script>
 
 </body>
 </html>

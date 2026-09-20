@@ -1,0 +1,18 @@
+Sonido del aviso "Pronto se implementará"
+=========================================
+
+El aviso (pendiente.js) busca aquí el archivo:
+
+    sonidos/ono-bebe.mp3
+
+Para usar el sonido de MyInstants:
+ 1. Abre https://www.myinstants.com/es/instant/ono-bebe-68745/
+ 2. Pulsa "Descargar MP3".
+ 3. Guarda el archivo en esta carpeta con el nombre exacto: ono-bebe.mp3
+ 4. Súbelo al repositorio (git add sonidos/ono-bebe.mp3).
+
+Mientras el archivo no exista, el aviso reproduce un sonido corto
+generado por el propio navegador, así que nunca queda en silencio.
+
+Si prefieres otro archivo o enlazar directo al mp3 de MyInstants,
+cambia la constante SONIDO_SRC al inicio de pendiente.js.

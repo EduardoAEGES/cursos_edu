@@ -178,6 +178,16 @@
   footer{ max-width:1000px; margin:0 auto; padding:10px 4px 40px; color:var(--o-muted); font-size:12px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   footer a{ color:var(--o-teal); text-decoration:none; }
   footer a:hover{ text-decoration:underline; }
+  .backbar{ max-width:1000px; margin:0 auto 18px; display:flex; }
+  .backbar.bottom{ justify-content:center; margin:4px auto 26px; }
+  .backbtn{
+    display:inline-block; font:inherit; font-weight:600; font-size:13px;
+    color:#fff; background:var(--o-teal); border:1px solid var(--o-teal);
+    border-radius:4px; padding:9px 17px; text-decoration:none; cursor:pointer;
+    transition:filter .15s ease;
+  }
+  .backbtn:hover{ filter:brightness(1.12); text-decoration:none; }
+  footer a.backbtn{ color:#fff; }
 </style>
 </head>
 <body>
@@ -209,6 +219,8 @@
 </div>
 
 <div class="o-content">
+
+  <div class="backbar"><a class="backbtn" href="sistemas-procesos-contables.html">Volver al curso</a></div>
 
   <!-- ====== presentación del caso ====== -->
   <section class="sheet" id="indice">
@@ -1506,7 +1518,7 @@
 
   <footer>
     <span>Caso N.° 2 — Los Gorriones S.A. · caso completo</span>
-    <a href="sistemas-procesos-contables.html">← Volver al curso</a>
+    <a class="backbtn" href="sistemas-procesos-contables.html">Volver al curso</a>
   </footer>
 </div>
 
