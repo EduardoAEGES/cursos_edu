@@ -57,6 +57,7 @@
   /* ---------- contenido ---------- */
   .o-content{ padding:18px 16px 60px; }
   .sheet{
+    scroll-margin-top:62px;
     background:var(--o-sheet); border:1px solid var(--o-border); border-radius:4px;
     max-width:1000px; margin:0 auto 18px; padding:24px 26px;
     box-shadow:0 1px 2px rgba(0,0,0,.04);
@@ -76,7 +77,12 @@
   .part{
     display:flex; align-items:center; gap:12px;
     padding:8px 2px; border-bottom:1px solid var(--o-line);
+    color:inherit; text-decoration:none;
   }
+  a.part{ margin:0 -8px; padding-left:10px; padding-right:10px; border-radius:4px; transition:background .12s ease; }
+  a.part:hover{ background:#F4F1F5; }
+  a.part:hover .t{ color:var(--o-purple); }
+  a.part:focus-visible{ background:#F4F1F5; }
   .part:last-child{ border-bottom:0; }
   .part .n{
     flex:none; width:26px; height:26px; border-radius:4px; background:#F2F0F4; color:var(--o-purple);
@@ -180,7 +186,6 @@
     <p class="eyebrow">Evaluación AA2 · Resolución de caso</p>
     <h2>Los Gorriones S.A. — registro de operaciones de febrero 2026</h2>
     <p class="sub">RUC 20334020184 · Av. Parra 415, Cercado — Arequipa · Venta de equipos de cómputo y accesorios informáticos.</p>
-    <p>Empresa creada en enero 2025 por los socios A y B. Por problemas logísticos y de abastecimiento, recién en febrero de 2026 despega la venta de productos, por lo que hay bastante información que registrar. El caso se resuelve <b>por partes</b>: abajo está la primera y las demás se irán publicando.</p>
 
     <div class="note" style="margin:16px 0 18px">
       <b>Evidencia de la AA2.</b> A medida que registres, toma <b>captura de pantalla de cada asiento</b>
@@ -189,26 +194,26 @@
     </div>
 
     <div class="parts">
-      <div class="part"><span class="n">0</span><span class="t"><b>Pasos previos al registro de asientos</b></span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">A</span><span class="t"><b>Asiento de apertura al 01/01/2026</b></span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">1</span><span class="t"><b>Compras de mercadería de febrero</b> <span style="color:var(--o-muted)">· 6 facturas</span></span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">2</span><span class="t">Servicios recibidos — gastos de administración</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">3</span><span class="t">Servicios recibidos — gastos de ventas</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">·</span><span class="t">Pasos previos: cuenta nueva y parámetros de compra</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">4</span><span class="t">Compras de activos fijos en moneda extranjera</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">5</span><span class="t">Ventas con factura</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">6</span><span class="t">Ventas con boleta</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">7</span><span class="t">Boletas consolidadas</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">·</span><span class="t">Opcional: ver, corregir o eliminar un asiento</span><span class="chip chip-wait">Opcional</span></div>
-      <div class="part"><span class="n">8</span><span class="t">Planilla de remuneraciones — administración</span><span class="chip chip-ok">Resuelto</span></div>
-      <div class="part"><span class="n">9</span><span class="t">Planilla de remuneraciones — ventas</span><span class="chip chip-ok">Resuelto</span></div>
+      <a class="part" href="#paso-0"><span class="n">0</span><span class="t"><b>Pasos previos al registro de asientos</b></span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#apertura"><span class="n">A</span><span class="t"><b>Asiento de apertura al 01/01/2026</b></span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-1"><span class="n">1</span><span class="t"><b>Compras de mercadería de febrero</b> <span style="color:var(--o-muted)">· 6 facturas</span></span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-2"><span class="n">2</span><span class="t">Servicios recibidos — gastos de administración</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-3"><span class="n">3</span><span class="t">Servicios recibidos — gastos de ventas</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#previos-af"><span class="n">·</span><span class="t">Pasos previos: cuenta nueva y parámetros de compra</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-4"><span class="n">4</span><span class="t">Compras de activos fijos en moneda extranjera</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-5"><span class="n">5</span><span class="t">Ventas con factura</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-6"><span class="n">6</span><span class="t">Ventas con boleta</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-7"><span class="n">7</span><span class="t">Boletas consolidadas</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#opcional"><span class="n">·</span><span class="t">Opcional: ver, corregir o eliminar un asiento</span><span class="chip chip-wait">Opcional</span></a>
+      <a class="part" href="#parte-8"><span class="n">8</span><span class="t">Planilla de remuneraciones — administración</span><span class="chip chip-ok">Resuelto</span></a>
+      <a class="part" href="#parte-8"><span class="n">9</span><span class="t">Planilla de remuneraciones — ventas</span><span class="chip chip-ok">Resuelto</span></a>
       <div class="part"><span class="n">10</span><span class="t">Cobros y pagos del mes</span><span class="chip chip-wait">Pendiente</span></div>
       <div class="part"><span class="n">11</span><span class="t">Costo de ventas de febrero</span><span class="chip chip-wait">Pendiente</span></div>
     </div>
   </section>
 
   <!-- ====== PASOS PREVIOS ====== -->
-  <section class="sheet">
+  <section class="sheet" id="paso-0">
     <p class="eyebrow">Paso 0 · Antes de empezar</p>
     <h2>Pasos previos al registro de asientos</h2>
     <p class="sub">Configura la empresa y deja el Libro Diario limpio antes de registrar la primera operación.</p>
@@ -225,7 +230,7 @@
   </section>
 
   <!-- ====== APERTURA · enunciado ====== -->
-  <section class="sheet">
+  <section class="sheet" id="apertura">
     <p class="eyebrow">Apertura · Enunciado</p>
     <h2>Asiento de apertura al 01/01/2026</h2>
     <div class="doc">
@@ -269,7 +274,7 @@
   </section>
 
   <!-- ====== PARTE 1 · COMPRAS DE MERCADERÍA ====== -->
-  <section class="sheet">
+  <section class="sheet" id="parte-1">
     <p class="eyebrow">Parte 1 · Enunciado</p>
     <h2>Compras de mercadería de febrero</h2>
     <p class="sub">Son seis facturas. Empezamos por la primera.</p>
@@ -555,7 +560,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-2">
     <p class="eyebrow">Parte 2 · Enunciado</p>
     <h2>Servicios recibidos — gastos de administración</h2>
     <p class="sub">Dos facturas de servicio. Fíjate en cuál lleva detracción y cuál no.</p>
@@ -658,7 +663,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-3">
     <p class="eyebrow">Parte 3 · Enunciado</p>
     <h2>Servicios recibidos — gastos de ventas</h2>
     <p class="sub">Dos facturas de servicio, ambas con detracción pero a distinta tasa.</p>
@@ -761,7 +766,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="previos-af">
     <p class="eyebrow">Parte 4 · Antes de registrar</p>
     <h2>Pasos previos a la compra de activos fijos</h2>
     <p class="sub">Antes del asiento hay que crear la cuenta nueva y configurar los parámetros de compra.</p>
@@ -785,7 +790,7 @@
     </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-4">
     <p class="eyebrow">Parte 4 · Enunciado</p>
     <h2>Compras de activos fijos en moneda extranjera</h2>
     <p class="sub">Las dos facturas están en dólares, así que hay que usar el tipo de cambio del día.</p>
@@ -888,7 +893,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-5">
     <p class="eyebrow">Parte 5 · Enunciado</p>
     <h2>Ventas con factura</h2>
     <p class="sub">Cuatro facturas emitidas por la empresa. Dos quedan por cobrar y dos se cobraron el mismo día.</p>
@@ -1055,7 +1060,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-6">
     <p class="eyebrow">Parte 6 · Enunciado</p>
     <h2>Ventas con boleta</h2>
     <p class="sub">Cuatro boletas cobradas en efectivo. El importe ya viene con IGV incluido.</p>
@@ -1222,7 +1227,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-7">
     <p class="eyebrow">Parte 7 · Enunciado</p>
     <h2>Boletas consolidadas</h2>
     <p class="sub">Dos resúmenes de ventas menores. Cada uno se registra en un solo asiento por el total.</p>
@@ -1315,7 +1320,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="opcional">
     <p class="eyebrow">Opcional · Manejo de asientos</p>
     <h2>Ver, corregir o eliminar un asiento</h2>
     <p class="sub">Estos dos videos no son parte del caso, pero te sacan de apuros si algo salió mal.</p>
@@ -1333,7 +1338,7 @@
       </div>
   </section>
 
-  <section class="sheet">
+  <section class="sheet" id="parte-8">
     <p class="eyebrow">Partes 8 y 9 · Enunciado</p>
     <h2>Planillas de remuneraciones</h2>
     <p class="sub">Una planilla para el personal de administración y otra para el de ventas.</p>
@@ -1389,5 +1394,34 @@
   </footer>
 </div>
 
+<script>
+(function(){
+  var ctx=null;
+  function nota(freq, dur, vol){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime;
+      var o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  var filas=document.querySelectorAll('a.part');
+  for(var i=0;i<filas.length;i++){
+    filas[i].addEventListener('pointerenter', function(){ nota(1180, 0.05, 0.02); });
+    filas[i].addEventListener('click', function(){
+      nota(660, 0.10, 0.09);
+      setTimeout(function(){ nota(990, 0.12, 0.07); }, 75);
+    });
+  }
+})();
+</script>
 </body>
 </html>
