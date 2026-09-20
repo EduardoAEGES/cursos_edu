@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap">
+<link rel="stylesheet" href="odoo.css">
 <style>
 :root{
   --ground:#FAF9F6; --surface:#FFFFFF; --surface-2:#F3F2EE;
@@ -16,16 +17,6 @@
   --nom-bg:#E9EFF8; --ord-bg:#E5F1EA; --int-bg:#F7EBE1; --raz-bg:#EFE8F5;
   --navy:#1F3864; --accent:#1F3864;
   color-scheme:light dark;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --ground:#16171A; --surface:#1E2024; --surface-2:#25272C;
-    --ink:#ECEAE4; --muted:#B0AEA6; --faint:#8B8981;
-    --rule:#ECEAE4; --border:#3A3D43; --thead:#2A2D33; --ayuda:#1C3A2E; --ayuda-ink:#B7E4CC;
-    --nom:#8FB2E8; --ord:#8FD3AC; --int:#EBA877; --raz:#C6A6E6; --bad:#E88A82;
-    --nom-bg:#1B2534; --ord-bg:#182A20; --int-bg:#2E2318; --raz-bg:#241A30;
-    --navy:#9DB6DE; --accent:#9DB6DE;
-  }
 }
 :root[data-theme="dark"]{
   --ground:#16171A; --surface:#1E2024; --surface-2:#25272C;
@@ -112,11 +103,45 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
   color:var(--ground); background:var(--accent); border:1px solid var(--accent); border-radius:4px;
   padding:10px 18px; text-decoration:none; cursor:pointer; transition:filter .15s ease}
 .backbtn:hover{filter:brightness(1.1)}
+
+/* --- ajuste al estilo Odoo del repositorio --- */
+:root{
+  --ground:#EDEDED; --surface:#FFFFFF; --surface-2:#F6F6F6;
+  --ink:#1F1F1F; --muted:#6C757D; --faint:#8A8880;
+  --rule:#1F1F1F; --border:#DEE2E6; --thead:#EFEFEF;
+  --navy:#714B67; --accent:#714B67;
+  color-scheme:light;
+}
+body{ font-family:Inter,'Source Sans 3','Segoe UI',system-ui,sans-serif; }
+.wrap{ max-width:1240px; padding-block:18px 0; padding-left:var(--o-gutter); padding-right:var(--o-gutter); }
+.sheet{ border-radius:4px; box-shadow:0 1px 2px rgba(0,0,0,.04); }
+.casos{ grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); }
+@media (max-width:620px){ .casos{ grid-template-columns:1fr; } }
+.backbar{ margin:0 0 18px; }
+.backbar.bottom{ margin:18px 0 28px; }
+.backbtn{ border-radius:4px; }
+.o-navbar .brand{ text-transform:none; letter-spacing:normal; font-size:14px; font-weight:600; color:#fff; }
 </style>
 </head>
 <body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a> / <a href="investigacion-cuantitativa.html">Investigación Cuantitativa</a><span class="largo"> / </span><b class="largo">Niveles de medición</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesión 5</span></div>
+</div>
 <div class="wrap">
-<div class="backbar"><a class="backbtn" href="investigacion-cuantitativa.html">Volver al curso</a></div>
 <div class="sheet">
   <div class="masthead">
     <div class="brand">Investigación Cuantitativa

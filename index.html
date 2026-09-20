@@ -4,297 +4,227 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Repositorio de recursos de Eduardo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
 <style>
-  :root{
-    --bg: #0f172a;
-    --bg-soft: #1e293b;
-    --accent: #38bdf8;
-    --accent-2: #f472b6;
-    --text: #e2e8f0;
-    --text-dim: #94a3b8;
-  }
-  *{ box-sizing: border-box; }
-  body{
-    margin:0;
-    min-height:100vh;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    background: radial-gradient(circle at top, #1e293b, #0f172a 60%);
-    color: var(--text);
-  }
-  header{
-    text-align:center;
-    padding: 60px 20px 30px;
-  }
-  header h1{
-    margin:0 0 10px;
-    font-size: clamp(28px, 5vw, 44px);
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  header p{ color: var(--text-dim); margin:0; font-size: 16px; }
-  main{ max-width: 900px; margin: 0 auto; padding: 20px 20px 80px; text-align:center; }
-  #openDadoBtn{
-    margin-top: 20px;
-    padding: 14px 32px;
-    font-size: 18px;
-    font-weight: 600;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    color: #0f172a;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.25);
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-  #openDadoBtn:hover{ transform: translateY(-2px); box-shadow: 0 12px 26px rgba(56, 189, 248, 0.35); }
-  #ruletaLink{
-    display:inline-block; margin-top: 16px; margin-left: 10px;
-    padding: 14px 32px; font-size: 18px; font-weight: 600;
-    border-radius: 12px; text-decoration: none;
-    background: transparent; border: 2px solid var(--accent); color: var(--accent);
-    transition: transform .15s ease, background .15s ease, color .15s ease;
-  }
-  #ruletaLink:hover{ transform: translateY(-2px); background: var(--accent); color: #0f172a; }
-
-  .section{ margin-top: 40px; }
-  .section:first-child{ margin-top: 20px; }
-  .section-title{
-    font-size: 14px; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--text-dim); margin: 0 0 18px;
-  }
-  .courses{
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px;
-  }
-  @media (max-width: 640px){ .courses{ grid-template-columns: 1fr; } }
-  .course{
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-    text-decoration: none; color: var(--text);
-    background: var(--bg-soft); border: 1px solid rgba(255,255,255,.08); border-radius: 16px;
-    padding: 28px 18px; min-height: 150px;
-    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
-  }
-  .course:hover{ transform: translateY(-4px); box-shadow: 0 12px 26px rgba(0,0,0,.35); }
-  .course-emoji{ font-size: 44px; line-height: 1; }
-  .course-name{ font-weight: 700; font-size: 16px; }
-  .course-inv:hover{ border-color: #38bdf8; }
-  .course-mat:hover{ border-color: #34d399; }
-  .course-cos:hover{ border-color: #fbbf24; }
-  .course-con:hover{ border-color: #a78bfa; }
-  .course-xls:hover{ border-color: #21A366; }
-  .course-exp:hover{ border-color: #fb923c; }
-  .course-cnt:hover{ border-color: #60a5fa; }
-  .course-sci:hover{ border-color: #22d3ee; }
-  .course-efi:hover{ border-color: #f472b6; }
-  .course-pronto{
-    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--text-dim); border: 1px solid var(--text-dim); border-radius: 999px; padding: 2px 10px;
-  }
-  .tools{ display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .tools #openDadoBtn, .tools #ruletaLink{ margin-top: 0; margin-left: 0; }
-
-  /* Modal */
+  /* ---------- ventana del dado ---------- */
   .modal-overlay{
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.6);
-    display:flex; align-items:center; justify-content:center;
-    padding: 20px; z-index: 100;
+    position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center;
+    padding:16px; background:rgba(0,0,0,.45);
   }
   .modal-overlay.hidden{ display:none; }
   .modal{
-    background: var(--bg-soft);
-    border-radius: 16px;
-    padding: 28px;
-    max-width: 500px; width: 100%;
-    max-height: 92vh; overflow-y: auto;
-    position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    position:relative; background:#fff; border-radius:6px; width:100%; max-width:560px;
+    max-height:92vh; overflow-y:auto; box-shadow:0 14px 44px rgba(0,0,0,.3); padding:18px;
   }
-  .modal h2{ margin-top:0; text-align:center; }
+  .modal h2{
+    margin:-18px -18px 18px; padding:13px 18px; border-bottom:1px solid var(--o-border);
+    font-size:16px; font-weight:600;
+  }
   #closeDadoBtn{
-    position:absolute; top: 14px; right: 14px;
-    background: transparent; border: none;
-    color: var(--text-dim); font-size: 22px; cursor: pointer; line-height:1;
+    position:absolute; top:9px; right:12px; background:transparent; border:none;
+    color:var(--o-muted); font-size:19px; line-height:1; cursor:pointer; padding:4px;
   }
-  #closeDadoBtn:hover{ color: var(--text); }
+  #closeDadoBtn:hover{ color:var(--o-text); }
 
-  /* Dice scene */
-  .dice-stage{
-    position: relative;
-    margin: 30px auto 20px;
-    width: 240px; height: 220px;
-    perspective: 800px;
-    perspective-origin: 50% 42%;
-  }
-  .dice-scene{
-    position:absolute; top: 26px; left: 50%;
-    margin-left: -80px;
-    width: 160px; height: 160px;
-    transform-style: preserve-3d;
-  }
+  /* dado 3D */
+  .dice-stage{ position:relative; margin:6px auto 16px; width:240px; height:220px; perspective:800px; perspective-origin:50% 42%; }
+  .dice-scene{ position:absolute; top:26px; left:50%; margin-left:-80px; width:160px; height:160px; transform-style:preserve-3d; }
   .cube{
-    position: relative;
-    width: 160px; height: 160px;
-    transform-style: preserve-3d;
-    transform: rotateX(-22deg) rotateY(-26deg);
-    /* Slower, gentler roll */
-    transition: transform 2.6s cubic-bezier(.22,.68,.28,1);
+    position:relative; width:160px; height:160px; transform-style:preserve-3d;
+    transform:rotateX(-22deg) rotateY(-26deg);
+    transition:transform 2.6s cubic-bezier(.22,.68,.28,1);
   }
   .face{
-    position:absolute;
-    width: 160px; height: 160px;
-    border-radius: 18px;
-    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
-    border: 2px solid #ffffff;
-    box-shadow: inset 0 0 18px rgba(148,163,184,.25);
-    display:flex; align-items:center; justify-content:center;
-    padding: 14px;
+    position:absolute; width:160px; height:160px; border-radius:14px;
+    background:linear-gradient(135deg,#ffffff 0%,#f4f4f4 60%,#e9e9e9 100%);
+    border:1px solid #D9D9D9; box-shadow:inset 0 0 16px rgba(0,0,0,.06);
+    display:flex; align-items:center; justify-content:center; padding:14px;
   }
-  /* Inner pastel "card" pegged on each face, like the paper cube */
   .card{
-    width: 100%; height: 100%;
-    border-radius: 12px;
-    border: 2px dashed rgba(255,255,255,.75);
-    display:flex; align-items:center; justify-content:center;
-    padding: 10px;
-    text-align:center;
-    box-shadow: 0 3px 8px rgba(0,0,0,.12);
+    width:100%; height:100%; border-radius:10px; border:2px dashed rgba(255,255,255,.75);
+    display:flex; align-items:center; justify-content:center; padding:10px; text-align:center;
+    box-shadow:0 3px 8px rgba(0,0,0,.12);
   }
   .card-text{
-    color: #1e293b;
-    font-weight: 800;
-    font-size: 26px;
-    line-height: 1.1;
-    word-break: break-word;
-    overflow-wrap: anywhere;
-    text-shadow: 0 1px 1px rgba(255,255,255,.6);
+    color:#1F1F1F; font-weight:800; font-size:26px; line-height:1.1;
+    word-break:break-word; overflow-wrap:anywhere; text-shadow:0 1px 1px rgba(255,255,255,.6);
   }
-  .f1{ transform: translateZ(80px); }
-  .f6{ transform: rotateY(180deg) translateZ(80px); filter: brightness(.9); }
-  .f3{ transform: rotateY(90deg) translateZ(80px); filter: brightness(.94); }
-  .f4{ transform: rotateY(-90deg) translateZ(80px); filter: brightness(.94); }
-  .f5{ transform: rotateX(90deg) translateZ(80px); filter: brightness(1.04); }
-  .f2{ transform: rotateX(-90deg) translateZ(80px); filter: brightness(.92); }
-
+  .f1{ transform:translateZ(80px); }
+  .f6{ transform:rotateY(180deg) translateZ(80px); filter:brightness(.95); }
+  .f3{ transform:rotateY(90deg) translateZ(80px); filter:brightness(.97); }
+  .f4{ transform:rotateY(-90deg) translateZ(80px); filter:brightness(.97); }
+  .f5{ transform:rotateX(90deg) translateZ(80px); filter:brightness(1.02); }
+  .f2{ transform:rotateX(-90deg) translateZ(80px); filter:brightness(.95); }
   .dice-shadow{
-    position:absolute; left: 50%; bottom: 4px;
-    width: 170px; height: 34px; margin-left: -85px;
-    background: radial-gradient(ellipse at center, rgba(0,0,0,.5), rgba(0,0,0,0) 70%);
-    border-radius: 50%; filter: blur(2px);
+    position:absolute; left:50%; bottom:4px; width:170px; height:30px; margin-left:-85px;
+    background:radial-gradient(ellipse at center, rgba(0,0,0,.28), rgba(0,0,0,0) 70%);
+    border-radius:50%; filter:blur(2px);
   }
-  .dice-shadow.rolling{ animation: shadowPulse 2.6s ease; }
+  .dice-shadow.rolling{ animation:shadowPulse 2.6s ease; }
   @keyframes shadowPulse{
-    0%{transform:scale(1);opacity:.85;}
-    35%{transform:scale(.75);opacity:.5;}
-    65%{transform:scale(1.1);opacity:.9;}
-    100%{transform:scale(1);opacity:.85;}
+    0%{transform:scale(1);opacity:.8} 35%{transform:scale(.75);opacity:.45}
+    65%{transform:scale(1.1);opacity:.85} 100%{transform:scale(1);opacity:.8}
   }
 
-  .dice-controls{ display:flex; flex-direction: column; align-items:center; gap: 12px; margin-top: 10px; }
-  .control-row{ display:flex; align-items:center; gap: 12px; flex-wrap: wrap; justify-content:center; }
+  .dice-controls{ display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .control-row{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center; }
   #rollBtn{
-    padding: 11px 28px; font-size: 16px; font-weight: 600;
-    border: none; border-radius: 10px; background: var(--accent); color: #0f172a; cursor:pointer;
+    font:inherit; font-weight:500; font-size:13px; padding:9px 20px; border-radius:4px;
+    border:1px solid var(--o-purple); background:var(--o-purple); color:#fff; cursor:pointer;
   }
-  #rollBtn:disabled{ opacity:.6; cursor:not-allowed; }
+  #rollBtn:hover{ background:var(--o-purple-dk); border-color:var(--o-purple-dk); }
+  #rollBtn:disabled{ opacity:.55; cursor:not-allowed; }
   .toggle-btn{
-    background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim);
-    border-radius: 10px; padding: 9px 12px; cursor: pointer; font-size: 14px;
+    font:inherit; font-size:12.5px; padding:8px 12px; border-radius:4px; cursor:pointer;
+    background:#fff; border:1px solid #CFCFCF; color:#4C4C4C;
   }
-  .toggle-btn.on{ border-color: var(--accent); color: var(--accent); }
-  #resultText{ color: var(--text); min-height: 22px; font-weight: 600; }
-  #poolInfo{ color: var(--text-dim); font-size: 13px; min-height: 16px; }
+  .toggle-btn:hover{ border-color:var(--o-purple); color:var(--o-purple); }
+  .toggle-btn.on{ border-color:var(--o-teal); color:var(--o-teal); background:var(--o-teal-soft); }
+  #resultText{ font-weight:600; min-height:20px; }
+  #poolInfo{ color:var(--o-muted); font-size:12.5px; min-height:16px; }
 
-  details.customize{ margin-top: 22px; border-top: 1px solid rgba(255,255,255,.1); padding-top: 16px; }
-  details.customize summary{ cursor:pointer; font-weight:600; color: var(--accent); }
-  .customize-hint{ font-size:13px; color: var(--text-dim); margin: 10px 0 4px; }
-  .customize-grid{ display:grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-  .customize-row{ display:flex; align-items:center; gap: 8px; }
-  .customize-row label{ width: 60px; font-size: 13px; color: var(--text-dim); }
+  details.customize{ margin-top:18px; border-top:1px solid var(--o-line); padding-top:14px; }
+  details.customize summary{ cursor:pointer; font-weight:600; color:var(--o-purple); }
+  .customize-hint{ font-size:12.5px; color:var(--o-muted); margin:10px 0 4px; }
+  .customize-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; margin-top:10px; }
+  .customize-row{ display:flex; align-items:center; gap:8px; }
+  .customize-row label{ width:56px; font-size:12px; color:var(--o-muted); }
   .customize-row input[type="text"]{
-    flex:1; padding: 8px 10px; border-radius: 8px;
-    border: 1px solid rgba(255,255,255,.15); background: #0f172a; color: var(--text);
+    flex:1; min-width:0; padding:7px 9px; border-radius:4px; font:inherit;
+    border:1px solid var(--o-border); background:#fff; color:var(--o-text);
   }
   .customize-row input[type="color"]{
-    width: 36px; height: 32px; border: none; border-radius: 6px; background: none; cursor:pointer; padding:0;
+    width:34px; height:30px; border:1px solid var(--o-border); border-radius:4px;
+    background:none; cursor:pointer; padding:2px;
   }
-  .customize-actions{ display:flex; justify-content:center; gap: 10px; margin-top: 16px; }
-  .customize-actions button{ padding: 8px 18px; border-radius: 8px; border: none; cursor:pointer; font-weight: 600; }
-  #saveCustomBtn{ background: var(--accent-2); color: #0f172a; }
-  #resetCustomBtn{ background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); }
+  .customize-actions{ display:flex; justify-content:center; gap:10px; margin-top:14px; }
+  .customize-actions button{
+    font:inherit; font-size:12.5px; padding:8px 16px; border-radius:4px; cursor:pointer; font-weight:500;
+  }
+  #saveCustomBtn{ background:var(--o-purple); color:#fff; border:1px solid var(--o-purple); }
+  #saveCustomBtn:hover{ background:var(--o-purple-dk); }
+  #resetCustomBtn{ background:#fff; border:1px solid #CFCFCF; color:#4C4C4C; }
+  #resetCustomBtn:hover{ border-color:var(--o-purple); color:var(--o-purple); }
   .preset-actions{ display:flex; justify-content:center; gap:8px; margin-top:12px; flex-wrap:wrap; }
   .preset-actions button{
-    padding: 6px 12px; border-radius: 8px; cursor:pointer; font-size: 13px;
-    background: transparent; border: 1px solid rgba(255,255,255,.2); color: var(--text-dim);
+    font:inherit; font-size:12px; padding:6px 12px; border-radius:4px; cursor:pointer;
+    background:#fff; border:1px solid var(--o-border); color:var(--o-muted);
   }
-  .hidden{ display:none; }
+  .preset-actions button:hover{ border-color:var(--o-purple); color:var(--o-purple); }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Repositorio de recursos de Eduardo</h1>
-  <p>Materiales, herramientas y utilidades en un solo lugar</p>
-</header>
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a class="activo" href="index.html">Inicio</a>
+    <a href="#cursos">Cursos</a>
+    <a href="#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
 
-<main>
-  <section class="section">
-    <h2 class="section-title">Cursos</h2>
-    <div class="courses">
-      <a class="course course-inv" href="investigacion-cuantitativa.html">
-        <span class="course-emoji">📊</span>
-        <span class="course-name">Investigación Cuantitativa</span>
+<div class="o-cp">
+  <span class="o-crumb"><b>Repositorio</b><span class="largo"> / Cursos y herramientas</span></span>
+  <div class="o-cp-right">
+    <span class="o-count">9 cursos</span>
+    <button class="o-btn o-btn-secondary" id="openDadoBtn" type="button">🎲 Dado</button>
+    <a class="o-btn o-btn-primary" id="ruletaLink" href="tarjetas.html">🎡 Ruleta de tarjetas</a>
+  </div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">📚</div>
+      <div class="txt">
+        <h1>Repositorio de recursos de Eduardo</h1>
+        <p class="sub">Materiales, herramientas y utilidades de todos los cursos en un solo lugar</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-sheet" id="cursos">
+    <h2 class="o-section-title">Cursos</h2>
+    <div class="o-kanban">
+      <a class="o-card" href="investigacion-cuantitativa.html">
+        <div class="top"><span class="ico">📊</span><span class="nombre">Investigación Cuantitativa</span></div>
+        <p class="desc">Programa de Marketing · Segundo ciclo · 2026-II</p>
+        <div class="pie"><span class="o-chip o-chip-ok">1 sesión</span></div>
       </a>
-      <a class="course course-mat" href="matematicas-aplicadas.html" data-pendiente data-pendiente-href="matematicas-aplicadas.html">
-        <span class="course-emoji">📐</span>
-        <span class="course-name">Matemáticas Aplicadas / Pensamiento Lógico</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="matematicas-aplicadas.html" data-pendiente data-pendiente-href="matematicas-aplicadas.html">
+        <div class="top"><span class="ico">📐</span><span class="nombre">Matemáticas Aplicadas / Pensamiento Lógico</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
-      <a class="course course-cos" href="analisis-costos-presupuestos.html" data-pendiente data-pendiente-href="analisis-costos-presupuestos.html">
-        <span class="course-emoji">💰</span>
-        <span class="course-name">Costos y Presupuestos</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="analisis-costos-presupuestos.html" data-pendiente data-pendiente-href="analisis-costos-presupuestos.html">
+        <div class="top"><span class="ico">💰</span><span class="nombre">Costos y Presupuestos</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
-      <a class="course course-con" href="sistemas-procesos-contables.html">
-        <span class="course-emoji">🧾</span>
-        <span class="course-name">Sistemas de Procesos Contables</span>
+      <a class="o-card" href="sistemas-procesos-contables.html">
+        <div class="top"><span class="ico">🧾</span><span class="nombre">Sistemas de Procesos Contables</span></div>
+        <p class="desc">Registro de operaciones en sistema contable · 2026</p>
+        <div class="pie"><span class="o-chip o-chip-ok">1 caso</span></div>
       </a>
-      <a class="course course-xls" href="excel-empresarial.html">
-        <span class="course-emoji">📗</span>
-        <span class="course-name">Excel Empresarial</span>
+      <a class="o-card" href="excel-empresarial.html">
+        <div class="top"><span class="ico">📗</span><span class="nombre">Excel Empresarial</span></div>
+        <p class="desc">Clases grabadas y material de trabajo</p>
+        <div class="pie"><span class="o-chip o-chip-ok">6 sesiones</span></div>
       </a>
-      <a class="course course-exp" href="experiencias-formativas.html" data-pendiente data-pendiente-href="experiencias-formativas.html">
-        <span class="course-emoji">🧭</span>
-        <span class="course-name">Experiencias Formativas</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="experiencias-formativas.html" data-pendiente data-pendiente-href="experiencias-formativas.html">
+        <div class="top"><span class="ico">🧭</span><span class="nombre">Experiencias Formativas</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
-      <a class="course course-cnt" href="contabilidad.html" data-pendiente data-pendiente-href="contabilidad.html">
-        <span class="course-emoji">📒</span>
-        <span class="course-name">Contabilidad</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="contabilidad.html" data-pendiente data-pendiente-href="contabilidad.html">
+        <div class="top"><span class="ico">📒</span><span class="nombre">Contabilidad</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
-      <a class="course course-sci" href="sistemas-contables-integrados.html" data-pendiente data-pendiente-href="sistemas-contables-integrados.html">
-        <span class="course-emoji">🖥️</span>
-        <span class="course-name">Sistemas Contables Integrados</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="sistemas-contables-integrados.html" data-pendiente data-pendiente-href="sistemas-contables-integrados.html">
+        <div class="top"><span class="ico">🖥️</span><span class="nombre">Sistemas Contables Integrados</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
-      <a class="course course-efi" href="estados-financieros.html" data-pendiente data-pendiente-href="estados-financieros.html">
-        <span class="course-emoji">📈</span>
-        <span class="course-name">Estados Financieros</span>
-        <span class="course-pronto">Pronto</span>
+      <a class="o-card" href="estados-financieros.html" data-pendiente data-pendiente-href="estados-financieros.html">
+        <div class="top"><span class="ico">📈</span><span class="nombre">Estados Financieros</span></div>
+        <p class="desc">Contenido en preparación</p>
+        <div class="pie"><span class="o-chip o-chip-wait">Pronto</span></div>
       </a>
     </div>
-  </section>
+  </div>
 
-  <section class="section">
-    <h2 class="section-title">Herramientas</h2>
-    <div class="tools">
-      <button id="openDadoBtn">🎲 Dado</button>
-      <a id="ruletaLink" href="tarjetas.html">🎡 Ruleta de tarjetas</a>
+  <div class="o-sheet" id="herramientas">
+    <h2 class="o-section-title">Herramientas</h2>
+    <div class="o-kanban ancho">
+      <button class="o-card" type="button" data-abre-dado>
+        <div class="top"><span class="ico">🎲</span><span class="nombre">Dado 3D</span></div>
+        <p class="desc">Sortea grupos, turnos o participantes. Caras personalizables.</p>
+        <div class="pie"><span class="o-chip o-chip-purple">Herramienta</span></div>
+      </button>
+      <a class="o-card" href="tarjetas.html">
+        <div class="top"><span class="ico">🎡</span><span class="nombre">Ruleta de tarjetas</span></div>
+        <p class="desc">Auditores de Encuestas: analiza, discute y decide.</p>
+        <div class="pie"><span class="o-chip o-chip-purple">Herramienta</span></div>
+      </a>
     </div>
-  </section>
-</main>
+  </div>
+
+  <div class="o-footer">
+    <span>Repositorio de recursos de Eduardo</span>
+    <span>Materiales de clase · 2026</span>
+  </div>
+
+</div>
+</div>
 
 <div id="dadoOverlay" class="modal-overlay hidden">
   <div class="modal">
@@ -621,6 +551,13 @@
     });
   });
 })();
+</script>
+
+<script>
+  // Las tarjetas de "Herramientas" abren las mismas utilidades del panel superior.
+  document.querySelectorAll('[data-abre-dado]').forEach(function (el) {
+    el.addEventListener('click', function () { document.getElementById('openDadoBtn').click(); });
+  });
 </script>
 
 <script src="pendiente.js" defer></script>
