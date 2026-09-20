@@ -41,7 +41,25 @@
   /* ---------- panel de control ---------- */
   .o-cp{
     background:#fff; border-bottom:1px solid var(--o-border);
-    padding:9px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    padding:9px 16px; display:flex; align-items:center; gap:10px; flex-wrap:nowrap;
+    position:sticky; top:46px; z-index:15;
+  }
+  .o-crumb{ min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #cp-actual{ color:var(--o-text); font-weight:600; }
+  .o-pager{ margin-left:auto; display:flex; align-items:center; gap:6px; flex:none; }
+  .o-pager button{
+    font:inherit; font-size:13px; line-height:1.1; border:1px solid #CFCFCF; background:#fff;
+    color:#4C4C4C; border-radius:4px; padding:5px 10px; cursor:pointer;
+  }
+  .o-pager button:hover{ background:#F4F1F5; border-color:var(--o-purple); color:var(--o-purple); }
+  .o-pager .pos{ color:var(--o-muted); font-variant-numeric:tabular-nums; min-width:54px; text-align:center; }
+  #btn-indice{ cursor:pointer; flex:none; }
+  a.part.active{ background:#F4F1F5; }
+  a.part.active .t{ color:var(--o-purple); font-weight:600; }
+  @media (max-width:720px){
+    .o-cp{ padding:8px 12px; gap:8px; }
+    .o-crumb .largo{ display:none; }
+    .o-pager .pos{ min-width:44px; font-size:12px; }
   }
   .o-crumb{ color:var(--o-muted); }
   .o-crumb b{ color:var(--o-text); font-weight:600; }
@@ -57,7 +75,7 @@
   /* ---------- contenido ---------- */
   .o-content{ padding:18px 16px 60px; }
   .sheet{
-    scroll-margin-top:62px;
+    scroll-margin-top:100px;
     background:var(--o-sheet); border:1px solid var(--o-border); border-radius:4px;
     max-width:1000px; margin:0 auto 18px; padding:24px 26px;
     box-shadow:0 1px 2px rgba(0,0,0,.04);
@@ -119,7 +137,7 @@
   .video .cap{ color:var(--o-muted); text-align:center; margin:8px 0 0; font-size:12.5px; }
 
   /* factura electrónica */
-  .facts{ display:grid; gap:20px; }
+  .facts{ display:grid; grid-template-columns:minmax(0,1fr); gap:20px; }
   .fact-lbl{ font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase;
     color:var(--o-muted); margin:0 0 6px; }
   .fact{ border:1px solid #C9C9C9; background:#fff; font-size:12.5px; }
@@ -148,6 +166,13 @@
   .fact-tot .montos{ flex:0 0 250px; border-left:1px solid #C9C9C9; padding:10px 14px; }
   .fact-tot .montos .row{ display:flex; justify-content:space-between; gap:12px; padding:2px 0; }
   .fact-tot .montos .row.big{ font-weight:700; border-top:1px solid #C9C9C9; margin-top:4px; padding-top:5px; }
+  .fact-emisor,.fact-doc,.fact-datos .izq,.fact-datos .der,.fact-tot .letras,.fact-tot .montos{ min-width:0; }
+  .fact-emisor .rz,.fact-emisor .dir,.fact-doc .nro{ overflow-wrap:anywhere; }
+  @media (max-width:620px){
+    .fact-emisor,.fact-doc,.fact-datos .izq,.fact-datos .der,.fact-tot .letras,.fact-tot .montos{ flex:1 1 100%; }
+    .fact-doc,.fact-datos .der,.fact-tot .montos{ border-left:0; border-top:1px solid #C9C9C9; }
+    .fact-datos .row{ grid-template-columns:106px 1fr; }
+  }
   .fact-nota{ border-top:1px solid #C9C9C9; padding:8px 14px; background:#FAFAFA; font-size:12px; color:#4A4A4A; }
 
   footer{ max-width:1000px; margin:0 auto; padding:10px 4px 40px; color:var(--o-muted); font-size:12px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
@@ -171,18 +196,22 @@
 </div>
 
 <div class="o-cp">
-  <span class="o-btn o-btn-primary">Nuevo</span>
+  <button id="btn-indice" class="o-btn o-btn-primary" type="button">Índice</button>
   <span class="o-crumb">
-    <a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a>
-    / <b>Caso N.° 2 — Los Gorriones S.A.</b>
+    <span class="largo"><a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a> / </span>
+    <span class="largo">Caso N.° 2 — Los Gorriones S.A. / </span><span id="cp-actual">Índice del caso</span>
   </span>
-  <span class="pager">Caso completo · 11 de 11</span>
+  <span class="o-pager">
+    <button id="cp-prev" type="button" aria-label="Parte anterior">‹</button>
+    <span id="cp-pos" class="pos">—</span>
+    <button id="cp-next" type="button" aria-label="Parte siguiente">›</button>
+  </span>
 </div>
 
 <div class="o-content">
 
   <!-- ====== presentación del caso ====== -->
-  <section class="sheet">
+  <section class="sheet" id="indice">
     <p class="eyebrow">Evaluación AA2 · Resolución de caso</p>
     <h2>Los Gorriones S.A. — registro de operaciones de febrero 2026</h2>
     <p class="sub">RUC 20334020184 · Av. Parra 415, Cercado — Arequipa · Venta de equipos de cómputo y accesorios informáticos.</p>
@@ -1500,14 +1529,59 @@
       o.start(t); o.stop(t+dur+0.02);
     }catch(e){}
   }
-  var filas=document.querySelectorAll('a.part');
-  for(var i=0;i<filas.length;i++){
-    filas[i].addEventListener('pointerenter', function(){ nota(1180, 0.05, 0.02); });
-    filas[i].addEventListener('click', function(){
-      nota(660, 0.10, 0.09);
-      setTimeout(function(){ nota(990, 0.12, 0.07); }, 75);
+  function clic(){ nota(660, 0.10, 0.09); setTimeout(function(){ nota(990, 0.12, 0.07); }, 75); }
+
+  var filas=[].slice.call(document.querySelectorAll('a.part'));
+  var partes=[], vistos={};
+  filas.forEach(function(a){
+    var id=a.getAttribute('href').slice(1);
+    var sec=document.getElementById(id);
+    if(sec && !vistos[id]){ vistos[id]=1; partes.push({id:id, sec:sec, txt:a.querySelector('.t').textContent.trim()}); }
+  });
+
+  filas.forEach(function(a){
+    a.addEventListener('pointerenter', function(){ nota(1180, 0.05, 0.02); });
+    a.addEventListener('click', clic);
+  });
+
+  var elNom=document.getElementById('cp-actual');
+  var elPos=document.getElementById('cp-pos');
+  var actual=-1;
+
+  function pintar(i){
+    if(i===actual) return;
+    actual=i;
+    if(i<0){ elNom.textContent='Índice del caso'; elPos.textContent='—'; }
+    else { elNom.textContent=partes[i].txt; elPos.textContent=(i+1)+' / '+partes.length; }
+    filas.forEach(function(a){
+      var on = i>=0 && a.getAttribute('href')==='#'+partes[i].id;
+      a.classList.toggle('active', on);
     });
   }
+  function calcular(){
+    var y=window.pageYOffset+130, i=-1;
+    for(var k=0;k<partes.length;k++){
+      if(partes[k].sec.getBoundingClientRect().top+window.pageYOffset <= y) i=k; else break;
+    }
+    pintar(i);
+  }
+  var pendiente=false;
+  window.addEventListener('scroll', function(){
+    if(pendiente) return;
+    pendiente=true;
+    requestAnimationFrame(function(){ pendiente=false; calcular(); });
+  }, {passive:true});
+  window.addEventListener('resize', calcular);
+  calcular();
+
+  function irA(i){
+    if(i<0){ location.hash='#indice'; }
+    else { location.hash='#'+partes[Math.min(i, partes.length-1)].id; }
+    clic();
+  }
+  document.getElementById('cp-prev').addEventListener('click', function(){ irA(actual-1); });
+  document.getElementById('cp-next').addEventListener('click', function(){ irA(actual+1); });
+  document.getElementById('btn-indice').addEventListener('click', function(){ irA(-1); });
 })();
 </script>
 </body>
