@@ -53,7 +53,6 @@
     padding:5px 12px; cursor:default; border:1px solid transparent;
   }
   .o-btn-primary{ background:var(--o-purple); color:#fff; border-color:var(--o-purple); }
-  .o-btn-secondary{ background:#fff; color:#4C4C4C; border-color:#CFCFCF; }
 
   /* ---------- contenido ---------- */
   .o-content{ padding:18px 16px 60px; }
@@ -112,67 +111,6 @@
   .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
   .video .cap{ color:var(--o-muted); text-align:center; margin:8px 0 0; font-size:12.5px; }
 
-  /* ---------- vista formulario Odoo ---------- */
-  .o-form{ background:#fff; border:1px solid var(--o-border); border-radius:4px; max-width:1000px; margin:0 auto; box-shadow:0 1px 2px rgba(0,0,0,.04); }
-  .o-form-body{ padding:20px 26px 24px; }
-  @media (max-width:620px){ .o-form-body{ padding:16px 14px; } }
-  .o-statusbar{ display:flex; justify-content:flex-end; }
-  .o-stat{
-    border:1px solid #CFCFCF; border-right:0; background:#fff; color:#6B6B6B;
-    padding:4px 13px; font-size:11.5px; font-weight:500; white-space:nowrap;
-  }
-  .o-stat:first-child{ border-radius:4px 0 0 4px; }
-  .o-stat:last-child{ border-right:1px solid #CFCFCF; border-radius:0 4px 4px 0; }
-  .o-stat.active{ background:var(--o-purple); border-color:var(--o-purple); color:#fff; }
-  .o-title-label{ color:var(--o-label); font-weight:500; margin:8px 0 0; }
-  .o-title{ font-size:25px; font-weight:700; margin:1px 0 20px; letter-spacing:-.01em; }
-  .o-group{ display:grid; grid-template-columns:1fr 1fr; gap:2px 44px; }
-  @media (max-width:760px){ .o-group{ grid-template-columns:1fr; } }
-  .o-field{ display:grid; grid-template-columns:140px 1fr; align-items:baseline; padding:3px 0; gap:8px; }
-  .o-field > span:first-child{ color:var(--o-label); font-weight:500; }
-  .o-val{ border-bottom:1px dotted #C4C4C4; padding-bottom:1px; }
-  .o-link{ color:var(--o-teal); }
-
-  .o-tabs{ display:flex; border-bottom:1px solid var(--o-border); margin-top:26px; overflow-x:auto; }
-  .o-tab{ padding:9px 15px; font-weight:500; color:var(--o-muted); border-bottom:2px solid transparent; white-space:nowrap; }
-  .o-tab.active{ color:var(--o-text); border-bottom-color:var(--o-purple); }
-
-  table.o-list{ width:100%; border-collapse:collapse; font-size:12.5px; }
-  .o-list th{
-    background:#F9F9F9; text-align:left; font-weight:500; color:#4C4C4C;
-    padding:7px 8px; border-bottom:1px solid var(--o-border); white-space:nowrap;
-  }
-  .o-list td{ padding:7px 8px; border-bottom:1px solid var(--o-line); vertical-align:top; }
-  .o-list tbody tr:hover td{ background:#FAFAFA; }
-  .o-list tfoot td{ font-weight:700; border-top:1px solid #9B9B9B; border-bottom:0; padding-top:8px; }
-  .o-add{ color:var(--o-teal); padding:8px 8px 0; display:inline-block; }
-
-  .o-chatter{
-    max-width:1000px; margin:0 auto 22px; background:#fff;
-    border:1px solid var(--o-border); border-top:0; border-radius:0 0 4px 4px; padding:14px 26px 18px;
-  }
-  .o-chatter-actions{ display:flex; gap:16px; border-bottom:1px solid var(--o-line); padding-bottom:10px; }
-  .o-chatter-actions span{ color:var(--o-teal); font-weight:500; }
-  .o-msg{ display:flex; gap:10px; padding-top:12px; }
-  .o-msg .av{ flex:none; width:32px; height:32px; border-radius:50%; background:var(--o-purple); color:#fff; display:grid; place-items:center; font-weight:700; font-size:12px; }
-  .o-msg .who{ font-weight:600; }
-  .o-msg .when{ color:var(--o-muted); font-size:11.5px; }
-  .o-msg .body{ color:#3C3C3C; margin-top:2px; }
-
-  /* pasos y comprobación */
-  ol.steps{ margin:0; padding-left:20px; }
-  ol.steps li{ margin:7px 0; }
-  kbd{
-    font:inherit; font-size:12px; font-weight:600; background:#F2F0F4; color:var(--o-purple);
-    border:1px solid #E0DAE3; border-radius:3px; padding:1px 6px;
-  }
-  .check{
-    border-left:3px solid var(--o-green); background:#F2FAF4; padding:10px 14px; margin-top:16px;
-  }
-  .check b{ color:#1B6E33; }
-  .map-tbl{ width:100%; border-collapse:collapse; font-size:12.5px; }
-  .map-tbl th,.map-tbl td{ border-bottom:1px solid var(--o-line); padding:7px 8px; text-align:left; }
-  .map-tbl thead th{ background:#F9F9F9; font-weight:500; color:#4C4C4C; }
   /* factura electrónica */
   .fact{ border:1px solid #C9C9C9; background:#fff; font-size:12.5px; }
   .fact-top{ display:flex; gap:0; border-bottom:1px solid #C9C9C9; flex-wrap:wrap; }
@@ -201,13 +139,6 @@
   .fact-tot .montos .row{ display:flex; justify-content:space-between; gap:12px; padding:2px 0; }
   .fact-tot .montos .row.big{ font-weight:700; border-top:1px solid #C9C9C9; margin-top:4px; padding-top:5px; }
   .fact-nota{ border-top:1px solid #C9C9C9; padding:8px 14px; background:#FAFAFA; font-size:12px; color:#4A4A4A; }
-
-  /* totales de la vista factura en Odoo */
-  .o-totals{ display:flex; justify-content:flex-end; margin-top:10px; }
-  .o-totals .box{ width:290px; max-width:100%; }
-  .o-totals .row{ display:flex; justify-content:space-between; padding:4px 8px; }
-  .o-totals .row.sep{ border-top:1px solid #9B9B9B; font-weight:700; margin-top:4px; padding-top:7px; }
-  .o-subtitle{ font-size:15px; font-weight:700; margin:26px 0 4px; }
 
   footer{ max-width:1000px; margin:0 auto; padding:10px 4px 40px; color:var(--o-muted); font-size:12px; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   footer a{ color:var(--o-teal); text-decoration:none; }
@@ -281,7 +212,7 @@
     </div>
   </section>
 
-  <!-- ====== PARTE 1 · enunciado ====== -->
+  <!-- ====== APERTURA · enunciado ====== -->
   <section class="sheet">
     <p class="eyebrow">Apertura · Enunciado</p>
     <h2>Asiento de apertura al 01/01/2026</h2>
@@ -313,142 +244,15 @@
     </div>
   </section>
 
-  <!-- ====== PARTE 1 · video ====== -->
+  <!-- ====== APERTURA · video ====== -->
   <section class="sheet">
     <p class="eyebrow">Apertura · Resolución en video</p>
     <h2>Mira cómo se registra</h2>
-    <p class="sub">Sigue el video y luego compara con el asiento que está más abajo.</p>
-    <div class="video">
+        <div class="video">
       <div class="video-frame">
         <iframe width="560" height="315" src="https://www.youtube.com/embed/_cRw1pYAYzY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
       <p class="cap">Resolución del asiento de apertura</p>
-    </div>
-  </section>
-
-  <!-- ====== PARTE 1 · asiento en Odoo ====== -->
-  <div class="o-form">
-    <div class="o-form-body">
-      <div class="o-statusbar">
-        <span class="o-stat">Borrador</span>
-        <span class="o-stat active">Contabilizado</span>
-        <span class="o-stat">Cancelado</span>
-      </div>
-
-      <p class="o-title-label">Asiento contable</p>
-      <h1 class="o-title">OV/2026/01/0001</h1>
-
-      <div class="o-group">
-        <div>
-          <div class="o-field"><span>Referencia</span><span class="o-val">Asiento de apertura — ejercicio 2026</span></div>
-          <div class="o-field"><span>Diario</span><span class="o-val o-link">Operaciones Varias (OV)</span></div>
-          <div class="o-field"><span>Fecha contable</span><span class="o-val">01/01/2026</span></div>
-        </div>
-        <div>
-          <div class="o-field"><span>Compañía</span><span class="o-val o-link">LOS GORRIONES S.A.</span></div>
-          <div class="o-field"><span>Moneda</span><span class="o-val o-link">PEN — Sol</span></div>
-          <div class="o-field"><span>Contabilización automática</span><span class="o-val">No</span></div>
-        </div>
-      </div>
-
-      <div class="o-tabs">
-        <span class="o-tab active">Apuntes contables</span>
-        <span class="o-tab">Otra información</span>
-      </div>
-
-      <div class="tblwrap">
-        <table class="o-list">
-          <thead>
-            <tr>
-              <th>Cuenta</th><th>Etiqueta</th><th>Empresa</th>
-              <th>Fecha vencimiento</th><th class="num">Débito</th><th class="num">Crédito</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="o-link">1011 Caja MN</td><td>Saldo inicial de caja</td><td>—</td><td>—</td>
-              <td class="num">8,500.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">1041 Cuentas corrientes operativas</td><td>Saldo inicial banco — cta. 104101</td><td>—</td><td>—</td>
-              <td class="num">32,000.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">1212 Facturas por cobrar emitidas en cartera</td><td>Factura E001-0098</td>
-              <td class="o-link">PIRQA CONSTRUCTORES S.A.C.</td><td>15/01/2026</td>
-              <td class="num">11,800.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">2011 Mercaderías manufacturadas</td><td>Inventario inicial de mercaderías</td><td>—</td><td>—</td>
-              <td class="num">28,000.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">4212 Facturas por pagar emitidas</td><td>Factura F001-0912</td>
-              <td class="o-link">ADVANCE TECHNOLOGY GROUP S.A.C.</td><td>15/01/2026</td>
-              <td class="num">0.00</td><td class="num">14,300.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">5011 Capital social — acciones</td><td>Aporte socios A y B (anexo 0001)</td><td>—</td><td>—</td>
-              <td class="num">0.00</td><td class="num">66,000.00</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4">Total</td>
-              <td class="num">80,300.00</td><td class="num">80,300.00</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <span class="o-add">Agregar línea</span>
-    </div>
-  </div>
-
-  <div class="o-chatter">
-    <div class="o-chatter-actions">
-      <span>Enviar mensaje</span><span>Registrar una nota</span><span>Actividades</span>
-    </div>
-    <div class="o-msg">
-      <div class="av">EA</div>
-      <div>
-        <div><span class="who">Eduardo A.</span> <span class="when">— 01/01/2026 08:12</span></div>
-        <div class="body">Asiento de apertura contabilizado. Débito y crédito cuadran en S/ 80,300.00.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ====== PARTE 1 · explicación ====== -->
-  <section class="sheet">
-    <p class="eyebrow">Apertura · Paso a paso</p>
-    <h2>Cómo se registra en Odoo</h2>
-    <ol class="steps">
-      <li>Entra a <kbd>Contabilidad</kbd> → <kbd>Contabilidad</kbd> → <kbd>Asientos contables</kbd> y pulsa <kbd>Nuevo</kbd>.</li>
-      <li>En <b>Diario</b> elige <b>Operaciones Varias</b>: el asiento de apertura no es una compra ni una venta, así que no va en los diarios de facturación.</li>
-      <li>Pon <b>Fecha contable</b> 01/01/2026 y en <b>Referencia</b> escribe «Asiento de apertura — ejercicio 2026».</li>
-      <li>Carga las seis líneas en la pestaña <b>Apuntes contables</b>. El importe va en <b>Débito</b> si el caso marca D, y en <b>Crédito</b> si marca H.</li>
-      <li>En las dos líneas que tienen documento (1212 y 4212) selecciona la <b>Empresa</b> — es el equivalente del anexo — y carga la <b>Fecha de vencimiento</b> 15/01/2026. Los anexos ya existen: búscalos por RUC, no crees contactos nuevos.</li>
-      <li>Revisa que la fila <b>Total</b> muestre el mismo importe en Débito y en Crédito. Si no cuadra, Odoo no deja contabilizar.</li>
-      <li>Pulsa <kbd>Contabilizar</kbd>: el asiento pasa de <b>Borrador</b> a <b>Contabilizado</b> y recién ahí toma número definitivo.</li>
-    </ol>
-
-    <div class="check">
-      <b>Comprobación rápida.</b> Activo = 8,500 + 32,000 + 11,800 + 28,000 = <b>S/ 80,300</b>.
-      Pasivo = S/ 14,300 y Patrimonio = S/ 66,000, que suman <b>S/ 80,300</b>. La ecuación contable cuadra,
-      así que el asiento de apertura está bien planteado.
-    </div>
-
-    <h2 style="margin-top:26px; font-size:15px;">Equivalencias del caso en Odoo</h2>
-    <p class="sub">El caso está redactado con vocabulario de CONCAR. Así se traduce a Odoo:</p>
-    <div class="tblwrap">
-      <table class="map-tbl">
-        <thead><tr><th>En el caso</th><th>En Odoo</th><th>En este asiento</th></tr></thead>
-        <tbody>
-          <tr><td>Anexo (RUC)</td><td>Campo <b>Empresa</b> de la línea</td><td>20603383258 → PIRQA CONSTRUCTORES S.A.C.</td></tr>
-          <tr><td>Anexo de banco 104101</td><td>Cuenta 1041 / diario de banco</td><td>Dinero en cuenta corriente</td></tr>
-          <tr><td>Anexo 0001 del capital</td><td>Etiqueta de la línea</td><td>Aporte de los socios A y B</td></tr>
-          <tr><td>D / H</td><td>Columnas <b>Débito</b> / <b>Crédito</b></td><td>4 líneas al debe, 2 al haber</td></tr>
-        </tbody>
-      </table>
     </div>
   </section>
 
@@ -507,165 +311,6 @@
         <iframe width="560" height="315" src="https://www.youtube.com/embed/tRtusloh3NU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
       <p class="cap">Registro de la compra de mercadería</p>
-    </div>
-  </section>
-
-  <div class="o-form">
-    <div class="o-form-body">
-      <div class="o-statusbar">
-        <span class="o-stat">Borrador</span>
-        <span class="o-stat active">Contabilizado</span>
-        <span class="o-stat">Cancelado</span>
-      </div>
-
-      <p class="o-title-label">Factura de proveedor</p>
-      <h1 class="o-title">F001-1180</h1>
-
-      <div class="o-group">
-        <div>
-          <div class="o-field"><span>Proveedor</span><span class="o-val o-link">ADVANCE TECHNOLOGY GROUP S.A.C.</span></div>
-          <div class="o-field"><span>RUC</span><span class="o-val">20562671316</span></div>
-          <div class="o-field"><span>Referencia</span><span class="o-val">F001-1180</span></div>
-          <div class="o-field"><span>Diario</span><span class="o-val o-link">Compras (COM)</span></div>
-        </div>
-        <div>
-          <div class="o-field"><span>Fecha de factura</span><span class="o-val">02/02/2026</span></div>
-          <div class="o-field"><span>Plazo de pago</span><span class="o-val o-link">30 días</span></div>
-          <div class="o-field"><span>Fecha de vencimiento</span><span class="o-val">04/03/2026</span></div>
-          <div class="o-field"><span>Moneda</span><span class="o-val o-link">PEN — Sol</span></div>
-        </div>
-      </div>
-
-      <div class="o-tabs">
-        <span class="o-tab active">Líneas de factura</span>
-        <span class="o-tab">Apuntes contables</span>
-        <span class="o-tab">Otra información</span>
-      </div>
-
-      <div class="tblwrap">
-        <table class="o-list">
-          <thead>
-            <tr><th>Producto</th><th class="num">Cantidad</th><th class="num">Precio unitario</th><th>Impuestos</th><th class="num">Subtotal</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="o-link">LAPTOP CORE I5 16GB RAM 512GB SSD</td>
-              <td class="num">12.00</td><td class="num">1,850.00</td>
-              <td class="o-link">IGV 18% Compras</td><td class="num">22,200.00</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <span class="o-add">Agregar línea</span>
-
-      <div class="o-totals">
-        <div class="box">
-          <div class="row"><span>Base imponible</span><span class="num">S/ 22,200.00</span></div>
-          <div class="row"><span>IGV 18%</span><span class="num">S/ 3,996.00</span></div>
-          <div class="row sep"><span>Total</span><span class="num">S/ 26,196.00</span></div>
-          <div class="row"><span>Importe adeudado</span><span class="num">S/ 26,196.00</span></div>
-        </div>
-      </div>
-
-      <p class="o-subtitle">Apuntes contables que genera Odoo</p>
-      <div class="tblwrap">
-        <table class="o-list">
-          <thead>
-            <tr><th>Cuenta</th><th>Etiqueta</th><th>Empresa</th><th>Fecha vencimiento</th><th class="num">Débito</th><th class="num">Crédito</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="o-link">6011 Mercaderías manufacturadas</td><td>12 laptops Core i5</td>
-              <td class="o-link">ADVANCE TECHNOLOGY GROUP S.A.C.</td><td>—</td>
-              <td class="num">22,200.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">40111 IGV — Cuenta propia</td><td>IGV 18% de la factura</td>
-              <td class="o-link">ADVANCE TECHNOLOGY GROUP S.A.C.</td><td>—</td>
-              <td class="num">3,996.00</td><td class="num">0.00</td>
-            </tr>
-            <tr>
-              <td class="o-link">4212 Facturas por pagar emitidas</td><td>Factura F001-1180</td>
-              <td class="o-link">ADVANCE TECHNOLOGY GROUP S.A.C.</td><td>04/03/2026</td>
-              <td class="num">0.00</td><td class="num">26,196.00</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr><td colspan="4">Total</td><td class="num">26,196.00</td><td class="num">26,196.00</td></tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="o-chatter" style="margin-bottom:18px">
-    <div class="o-chatter-actions">
-      <span>Enviar mensaje</span><span>Registrar una nota</span><span>Actividades</span>
-    </div>
-    <div class="o-msg">
-      <div class="av">EA</div>
-      <div>
-        <div><span class="who">Eduardo A.</span> <span class="when">— 02/02/2026 09:40</span></div>
-        <div class="body">Factura de compra contabilizada. Queda pendiente de pago hasta el 04/03/2026.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="o-form">
-    <div class="o-form-body">
-      <div class="o-statusbar">
-        <span class="o-stat">Borrador</span>
-        <span class="o-stat active">Contabilizado</span>
-        <span class="o-stat">Cancelado</span>
-      </div>
-      <p class="o-title-label">Asiento de destino</p>
-      <h1 class="o-title">OV/2026/02/0001</h1>
-      <div class="o-group">
-        <div>
-          <div class="o-field"><span>Referencia</span><span class="o-val">Destino compra F001-1180</span></div>
-          <div class="o-field"><span>Diario</span><span class="o-val o-link">Operaciones Varias (OV)</span></div>
-        </div>
-        <div>
-          <div class="o-field"><span>Fecha contable</span><span class="o-val">02/02/2026</span></div>
-          <div class="o-field"><span>Moneda</span><span class="o-val o-link">PEN — Sol</span></div>
-        </div>
-      </div>
-      <div class="o-tabs"><span class="o-tab active">Apuntes contables</span></div>
-      <div class="tblwrap">
-        <table class="o-list">
-          <thead><tr><th>Cuenta</th><th>Etiqueta</th><th class="num">Débito</th><th class="num">Crédito</th></tr></thead>
-          <tbody>
-            <tr><td class="o-link">2011 Mercaderías manufacturadas</td><td>Ingreso de mercadería al almacén</td><td class="num">22,200.00</td><td class="num">0.00</td></tr>
-            <tr><td class="o-link">6111 Variación de mercaderías</td><td>Destino de la compra</td><td class="num">0.00</td><td class="num">22,200.00</td></tr>
-          </tbody>
-          <tfoot><tr><td colspan="2">Total</td><td class="num">22,200.00</td><td class="num">22,200.00</td></tr></tfoot>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <section class="sheet" style="margin-top:18px">
-    <p class="eyebrow">Parte 1 · Paso a paso</p>
-    <h2>Cómo se registra la compra en Odoo</h2>
-    <ol class="steps">
-      <li>Entra a <kbd>Contabilidad</kbd> → <kbd>Proveedores</kbd> → <kbd>Facturas</kbd> y pulsa <kbd>Nuevo</kbd>.</li>
-      <li>En <b>Proveedor</b> busca por RUC <b>20562671316</b> y elige ADVANCE TECHNOLOGY GROUP S.A.C. El anexo ya existe: no lo crees de nuevo.</li>
-      <li><b>Referencia</b>: F001-1180. <b>Fecha de factura</b>: 02/02/2026. Como es <b>crédito a 30 días</b>, la fecha de vencimiento sale sola en 04/03/2026 — que es la que dice la observación de la factura.</li>
-      <li>En la línea carga el producto, <b>cantidad 12</b> y <b>precio unitario 1,850.00</b>, con el impuesto <b>IGV 18% Compras</b>. El subtotal debe quedar en 22,200.00 y el total en 26,196.00.</li>
-      <li>Pulsa <kbd>Confirmar</kbd>. Odoo arma solo el asiento: la compra al debe (6011), el IGV al debe (40111) y la deuda al haber (4212).</li>
-      <li>Registra aparte el <b>asiento de destino</b>: 2011 al debe contra 6111 al haber, por el valor de compra sin IGV. Es el que hace que la mercadería entre al inventario.</li>
-      <li>No pagues la factura: el caso dice que al 28/02/2026 sigue <b>pendiente de pago</b>.</li>
-    </ol>
-
-    <div class="check">
-      <b>Comprobación rápida.</b> 12 × S/ 1,850.00 = <b>S/ 22,200.00</b> de valor de compra.
-      El IGV es 18% de eso, o sea <b>S/ 3,996.00</b>, y el total de la factura llega a <b>S/ 26,196.00</b>,
-      que es exactamente lo que queda debiéndose al proveedor.
-    </div>
-
-    <div class="note" style="margin-top:14px">
-      <b>Ojo con el IGV.</b> Va a la cuenta 40111 porque es IGV <b>a favor</b> de la empresa: se usará
-      contra el IGV de las ventas. No es un gasto, es un derecho frente a la SUNAT.
     </div>
   </section>
 
