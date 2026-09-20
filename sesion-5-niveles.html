@@ -106,10 +106,17 @@ details.clave[open]>summary{border-bottom:1px solid var(--border)}
 .clavebody{padding:6px 12px 12px}
 .clavebody table{font-size:13px}
 footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); font-size:11.5px; color:var(--faint); display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px}
+.backbar{display:flex; justify-content:center; margin:0 0 18px}
+.backbar.bottom{margin:18px 0 0}
+.backbtn{display:inline-block; font:inherit; font-weight:700; font-size:13px; letter-spacing:.02em;
+  color:var(--ground); background:var(--accent); border:1px solid var(--accent); border-radius:4px;
+  padding:10px 18px; text-decoration:none; cursor:pointer; transition:filter .15s ease}
+.backbtn:hover{filter:brightness(1.1)}
 </style>
 </head>
 <body>
 <div class="wrap">
+<div class="backbar"><a class="backbtn" href="investigacion-cuantitativa.html">Volver al curso</a></div>
 <div class="sheet">
   <div class="masthead">
     <div class="brand">Investigación Cuantitativa
@@ -232,6 +239,7 @@ footer{margin-top:22px; padding-top:10px; border-top:1px solid var(--border); fo
     <span>Práctica individual · se guarda en Supabase</span>
   </footer>
 </div>
+<div class="backbar bottom"><a class="backbtn" href="investigacion-cuantitativa.html">Volver al curso</a></div>
 </div>
 
 <script>
