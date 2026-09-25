@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Operativo o financiero? — Presupuesto maestro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  :root{ --ope:#12275E; --ope-soft:#E7EAF4; --fin:#00909A; --fin-soft:#E2F3F4; }
+  .juego{ max-width:940px; margin:0 auto; }
+
+  /* ---- tarjetas de referencia (como la lámina) ---- */
+  .refs{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  @media (max-width:640px){ .refs{ grid-template-columns:1fr; } }
+  .ref{ border:1px solid var(--o-border); border-radius:8px; overflow:hidden; }
+  .ref .cab{ padding:12px 14px; color:#fff; font-weight:700; font-size:15px; }
+  .ref.a .cab{ background:var(--ope); }
+  .ref.b .cab{ background:var(--fin); }
+  .ref .cuerpo{ padding:13px 14px; font-size:13.5px; color:var(--o-label); background:#F7F8FB; }
+
+  /* ---- tablero ---- */
+  .marcador{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .marcador .avance{ flex:1 1 180px; min-width:140px; height:8px; border-radius:999px; background:var(--o-line); overflow:hidden; }
+  .marcador .avance span{ display:block; height:100%; width:0; background:var(--o-teal); transition:width .3s ease; }
+  .marcador .dato{ color:var(--o-muted); font-size:12.5px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .marcador .dato b{ color:var(--o-text); }
+
+  .carta{
+    position:relative; border:2px solid var(--o-border); border-radius:12px; background:#fff;
+    padding:26px 24px; text-align:center; min-height:172px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;
+    transition:border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .carta.entra{ animation:cae .3s ease; }
+  @keyframes cae{ from{ opacity:0; transform:translateY(-14px) scale(.98); } to{ opacity:1; transform:none; } }
+  .carta.bien{ border-color:#28A745; box-shadow:0 0 0 4px rgba(40,167,69,.14); }
+  .carta.mal{ border-color:var(--o-red); box-shadow:0 0 0 4px rgba(179,38,30,.12); }
+  .carta .tipo{
+    font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--o-purple); background:var(--o-purple-soft); border:1px solid #D8CBD4;
+    border-radius:999px; padding:3px 12px;
+  }
+  .carta .texto{ font-size:clamp(17px,2.3vw,22px); font-weight:600; line-height:1.4; max-width:34ch; }
+
+  .opciones{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:16px; }
+  @media (max-width:560px){ .opciones{ grid-template-columns:1fr; } }
+  .op{
+    font:inherit; cursor:pointer; color:#fff; border:2px solid transparent; border-radius:10px;
+    padding:16px 14px; text-align:left; display:flex; align-items:center; gap:12px;
+    transition:transform .15s ease, filter .15s ease, opacity .25s ease;
+  }
+  .op .letra{
+    flex:none; width:30px; height:30px; border-radius:7px; background:rgba(255,255,255,.22);
+    display:grid; place-items:center; font-weight:800; font-size:14px;
+  }
+  .op .nombre{ font-weight:700; font-size:15.5px; }
+  .op.a{ background:var(--ope); }
+  .op.b{ background:var(--fin); }
+  .op:hover:not(:disabled){ transform:translateY(-2px); filter:brightness(1.12); }
+  .op:disabled{ cursor:default; opacity:.45; }
+  .op.acierta{ opacity:1; box-shadow:0 0 0 4px rgba(40,167,69,.35); }
+  .op.falla{ opacity:1; box-shadow:0 0 0 4px rgba(179,38,30,.3); }
+
+  .respuesta{ margin-top:16px; border-left:3px solid var(--o-teal); background:var(--o-teal-soft); padding:12px 14px; font-size:14px; line-height:1.6; }
+  .respuesta.no{ border-left-color:var(--o-red); background:#FDEEED; }
+  .respuesta .veredicto{ font-weight:700; }
+
+  .teclas{ color:var(--o-muted); font-size:12.5px; margin-top:14px; }
+  .teclas kbd{
+    font:inherit; font-size:11.5px; font-weight:700; background:var(--o-purple-soft);
+    color:var(--o-purple); border:1px solid #E0DAE3; border-radius:3px; padding:1px 6px;
+  }
+
+  /* ---- cierre ---- */
+  .nota-final{ font-size:clamp(34px,7vw,52px); font-weight:800; line-height:1; }
+  .nota-final small{ display:block; font-size:13px; font-weight:600; color:var(--o-muted); margin-top:6px; letter-spacing:.04em; text-transform:uppercase; }
+  .fallos{ display:grid; gap:10px; margin-top:6px; }
+  .fallo{ display:flex; gap:12px; align-items:flex-start; border:1px solid var(--o-border); border-radius:8px; padding:11px 13px; }
+  .fallo .cual{ flex:none; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; padding:3px 9px; border-radius:999px; color:#fff; }
+  .fallo .cual.a{ background:var(--ope); } .fallo .cual.b{ background:var(--fin); }
+  .fallo .q{ font-size:13.5px; }
+  .fallo .q span{ display:block; color:var(--o-muted); margin-top:2px; }
+  .oculto{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>¿Operativo o financiero?</b></span>
+  <div class="o-cp-right"><span class="o-count" id="estado">Actividad</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap juego">
+
+  <!-- ===== portada ===== -->
+  <div class="o-sheet" id="p-inicio">
+    <div class="o-hero">
+      <div class="ico">⚖️</div>
+      <div class="txt">
+        <h1>¿Operativo o financiero?</h1>
+        <p class="sub">Estructura del presupuesto maestro · clasifica partes, características y ejemplos</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-teal">16 tarjetas</span></div>
+    </div>
+
+    <div class="refs">
+      <div class="ref a">
+        <div class="cab">A. Presupuestos operativos</div>
+        <div class="cuerpo">Representan la parte real o productiva del negocio, es decir, las actividades diarias que generan ingresos y gastos.</div>
+      </div>
+      <div class="ref b">
+        <div class="cab">B. Presupuestos financieros</div>
+        <div class="cuerpo">Reflejan la situación económica y financiera futura de la empresa. Se elaboran a partir de los datos de los presupuestos operativos.</div>
+      </div>
+    </div>
+
+    <p class="o-mt" style="font-size:14px">Van a salir dieciséis tarjetas, en desorden. Cada una es una <b>parte</b>, una <b>característica</b> o un <b>ejemplo</b>, y hay que decidir a cuál de los dos grupos pertenece. Después de cada respuesta aparece el porqué.</p>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary" id="btn-jugar" type="button">Empezar</button>
+    </div>
+  </div>
+
+  <!-- ===== juego ===== -->
+  <div class="o-sheet oculto" id="p-juego">
+    <div class="marcador">
+      <span class="dato" id="m-pos">Tarjeta 1 de 16</span>
+      <div class="avance"><span id="m-avance"></span></div>
+      <span class="dato" id="m-puntos">Aciertos: <b>0</b></span>
+    </div>
+
+    <div class="carta" id="carta">
+      <span class="tipo" id="c-tipo"></span>
+      <span class="texto" id="c-texto"></span>
+    </div>
+
+    <div class="opciones">
+      <button class="op a" id="op-a" type="button">
+        <span class="letra">A</span><span class="nombre">Presupuesto operativo</span>
+      </button>
+      <button class="op b" id="op-b" type="button">
+        <span class="letra">B</span><span class="nombre">Presupuesto financiero</span>
+      </button>
+    </div>
+
+    <div class="respuesta oculto" id="respuesta"></div>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary oculto" id="btn-siguiente" type="button">Siguiente</button>
+    </div>
+    <p class="teclas"><kbd>A</kbd> operativo · <kbd>B</kbd> financiero · <kbd>Enter</kbd> siguiente</p>
+  </div>
+
+  <!-- ===== cierre ===== -->
+  <div class="o-sheet oculto" id="p-final">
+    <div class="o-hero">
+      <div class="ico" id="f-ico">🏁</div>
+      <div class="txt">
+        <h1 id="f-titulo"></h1>
+        <p class="sub" id="f-sub"></p>
+      </div>
+      <div class="acc"><span class="nota-final" id="f-nota"></span></div>
+    </div>
+
+    <div id="f-repaso" class="o-mt"></div>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary" id="btn-otra" type="button">Jugar otra vez</button>
+      <a class="o-btn o-btn-secondary" href="estados-financieros.html">Volver al curso</a>
+    </div>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros · Presupuesto maestro</span>
+    <span>Actividad de clasificación</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var PARTE='Parte', CARAC='Característica', EJEM='Ejemplo';
+  var CARTAS = [
+    { t:PARTE, q:"Presupuesto de ventas", r:"a",
+      why:"Es el primero de los operativos y de él dependen todos los demás: sin la cifra de ventas no se sabe cuánto producir ni cuánto comprar." },
+    { t:PARTE, q:"Presupuesto de producción", r:"a",
+      why:"Traduce las ventas previstas en unidades a fabricar. Es actividad productiva pura." },
+    { t:PARTE, q:"Presupuesto de mano de obra directa", r:"a",
+      why:"Calcula las horas y el costo del personal que interviene en la producción, uno de los gastos de la operación diaria." },
+    { t:PARTE, q:"Presupuesto de gastos de administración y de ventas", r:"a",
+      why:"Son los gastos de la operación del periodo, aunque no se toquen con el producto." },
+    { t:PARTE, q:"Presupuesto de efectivo o de tesorería", r:"b",
+      why:"No proyecta actividad productiva, sino entradas y salidas de dinero para saber si habrá caja suficiente." },
+    { t:PARTE, q:"Presupuesto de inversiones en bienes de capital", r:"b",
+      why:"Programa la compra de activos y su financiamiento: es una decisión financiera, no de la operación diaria." },
+    { t:PARTE, q:"Estado de situación financiera presupuestado", r:"b",
+      why:"Muestra cómo quedará la empresa al cierre del periodo, que es justo lo que hacen los presupuestos financieros." },
+    { t:CARAC, q:"Corresponde a la actividad diaria que genera ingresos y gastos", r:"a",
+      why:"Esa es la definición de la parte real o productiva del negocio." },
+    { t:CARAC, q:"Buena parte de sus cifras se expresa primero en unidades y después en soles", r:"a",
+      why:"Ventas, producción y materiales se presupuestan en cantidades antes de valorizarse." },
+    { t:CARAC, q:"Se elabora a partir de los datos de los presupuestos operativos", r:"b",
+      why:"Los financieros no parten de cero: recogen las cifras que ya salieron de la operación." },
+    { t:CARAC, q:"Permite anticipar si la empresa tendrá el dinero para cumplir sus compromisos", r:"b",
+      why:"Mirar la capacidad de pago hacia adelante es propio del presupuesto financiero." },
+    { t:EJEM, q:"Estimar cuántas laptops se van a vender el próximo trimestre", r:"a",
+      why:"Es el presupuesto de ventas, la puerta de entrada de los operativos." },
+    { t:EJEM, q:"Calcular cuántos kilos de insumo hay que comprar para la producción prevista", r:"a",
+      why:"Es el presupuesto de compras de materiales, derivado del de producción." },
+    { t:EJEM, q:"Proyectar el saldo de caja mes a mes para saber si hará falta un préstamo", r:"b",
+      why:"Es el presupuesto de efectivo: se ocupa del dinero, no de la actividad." },
+    { t:EJEM, q:"Programar la compra de una máquina y decidir cómo se va a financiar", r:"b",
+      why:"Inversión y financiamiento son terreno del presupuesto financiero." },
+    { t:EJEM, q:"Estimar cómo quedarán el activo y el pasivo al cierre del próximo año", r:"b",
+      why:"Eso es armar el estado de situación financiera presupuestado." }
+  ];
+
+  var NOMBRE = { a:"Presupuesto operativo", b:"Presupuesto financiero" };
+
+  // ---------- sonido ----------
+  var ctx=null;
+  function nota(f, dur, vol, tipo){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+      o.type=tipo||'sine'; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(740,0.09,0.07); setTimeout(function(){ nota(1110,0.13,0.06); }, 80); }
+  function mal(){ nota(300,0.20,0.08,'triangle'); }
+  function fanfarria(){ [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ nota(f,0.28,0.07); }, i*120); }); }
+
+  // ---------- estado ----------
+  var mazo=[], i=0, aciertos=0, fallos=[], esperando=false;
+  var $=function(id){ return document.getElementById(id); };
+  var pIni=$('p-inicio'), pJue=$('p-juego'), pFin=$('p-final');
+
+  function ver(el){
+    [pIni,pJue,pFin].forEach(function(p){ p.classList.toggle('oculto', p!==el); });
+    window.scrollTo(0,0);
+  }
+  function barajar(a){
+    var c=a.slice();
+    for(var k=c.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var x=c[k]; c[k]=c[j]; c[j]=x; }
+    return c;
+  }
+
+  function pintar(){
+    var c=mazo[i];
+    $('c-tipo').textContent=c.t;
+    $('c-texto').textContent=c.q;
+    $('m-pos').textContent='Tarjeta '+(i+1)+' de '+mazo.length;
+    $('m-avance').style.width=(i/mazo.length*100)+'%';
+    $('m-puntos').innerHTML='Aciertos: <b>'+aciertos+'</b>';
+    $('estado').textContent='Tarjeta '+(i+1)+' de '+mazo.length;
+    $('respuesta').classList.add('oculto');
+    $('btn-siguiente').classList.add('oculto');
+    ['a','b'].forEach(function(k){
+      var b=$('op-'+k);
+      b.disabled=false;
+      b.classList.remove('acierta','falla');
+    });
+    var carta=$('carta');
+    carta.classList.remove('bien','mal','entra');
+    void carta.offsetWidth;
+    carta.classList.add('entra');
+    esperando=false;
+  }
+
+  function responder(elegida){
+    if(esperando) return;
+    esperando=true;
+    var c=mazo[i], ok=(elegida===c.r);
+    if(ok){ aciertos++; bien(); } else { fallos.push(c); mal(); }
+
+    $('carta').classList.add(ok?'bien':'mal');
+    $('op-'+elegida).classList.add(ok?'acierta':'falla');
+    if(!ok) $('op-'+c.r).classList.add('acierta');
+    ['a','b'].forEach(function(k){ $('op-'+k).disabled=true; });
+
+    var r=$('respuesta');
+    r.className='respuesta'+(ok?'':' no');
+    r.innerHTML='<span class="veredicto">'+(ok?'Correcto.':'Era '+NOMBRE[c.r]+'.')+'</span> '+c.why;
+    $('m-puntos').innerHTML='Aciertos: <b>'+aciertos+'</b>';
+    $('btn-siguiente').classList.remove('oculto');
+    $('btn-siguiente').textContent = (i+1<mazo.length) ? 'Siguiente' : 'Ver resultado';
+    $('btn-siguiente').focus();
+  }
+
+  function siguiente(){
+    if(!esperando) return;
+    i++;
+    if(i<mazo.length) pintar();
+    else terminar();
+  }
+
+  function terminar(){
+    var total=mazo.length, n=aciertos;
+    $('f-nota').innerHTML=n+'/'+total+'<small>aciertos</small>';
+    var tit, sub, ico;
+    if(n===total){ tit='Sin una sola falla'; sub='Tienes clara la estructura del presupuesto maestro'; ico='🏆'; }
+    else if(n>=total*0.75){ tit='Bien encaminado'; sub='Se te escaparon algunas, pero la idea está'; ico='👍'; }
+    else if(n>=total*0.5){ tit='A medio camino'; sub='Conviene repasar qué distingue a cada grupo'; ico='📚'; }
+    else { tit='Toca repasar'; sub='Vuelve a la definición de cada grupo y juégala de nuevo'; ico='🔁'; }
+    $('f-titulo').textContent=tit; $('f-sub').textContent=sub; $('f-ico').textContent=ico;
+
+    var h='';
+    if(fallos.length){
+      h='<h2 class="o-section-title">Las que se escaparon</h2><div class="fallos">';
+      fallos.forEach(function(c){
+        h+='<div class="fallo"><span class="cual '+c.r+'">'+(c.r==='a'?'Operativo':'Financiero')+'</span>'+
+           '<span class="q">'+c.q+'<span>'+c.why+'</span></span></div>';
+      });
+      h+='</div>';
+    } else {
+      h='<p style="font-size:14px">No hubo ninguna equivocada. Nada que repasar.</p>';
+    }
+    $('f-repaso').innerHTML=h;
+    $('estado').textContent='Actividad terminada';
+    fanfarria();
+    ver(pFin);
+  }
+
+  function empezar(){
+    mazo=barajar(CARTAS); i=0; aciertos=0; fallos=[];
+    ver(pJue); pintar();
+  }
+
+  $('btn-jugar').addEventListener('click', function(){ nota(660,0.1,0.07); empezar(); });
+  $('btn-otra').addEventListener('click', empezar);
+  $('op-a').addEventListener('click', function(){ responder('a'); });
+  $('op-b').addEventListener('click', function(){ responder('b'); });
+  $('btn-siguiente').addEventListener('click', siguiente);
+
+  document.addEventListener('keydown', function(ev){
+    if(pJue.classList.contains('oculto')) return;
+    var k=ev.key.toLowerCase();
+    if(k==='a'||k==='1') responder('a');
+    else if(k==='b'||k==='2') responder('b');
+    else if(ev.key==='Enter') siguiente();
+    else return;
+    ev.preventDefault();
+  });
+})();
+</script>
+
+</body>
+</html>
