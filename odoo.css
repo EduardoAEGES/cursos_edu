@@ -164,8 +164,8 @@ a.o-row:hover .t{ color:var(--o-purple); }
   color:var(--o-purple); display:grid; place-items:center; font-weight:700; font-size:13px;
 }
 .o-row .info{ flex:1 1 220px; min-width:0; }
-.o-row .t{ font-weight:600; font-size:14px; overflow-wrap:anywhere; }
-.o-row .d{ color:var(--o-muted); font-size:12.5px; margin-top:1px; overflow-wrap:anywhere; }
+.o-row .t{ display:block; font-weight:600; font-size:14px; overflow-wrap:anywhere; }
+.o-row .d{ display:block; color:var(--o-muted); font-size:12.5px; margin-top:1px; overflow-wrap:anywhere; }
 .o-row .chev{ color:var(--o-muted); font-size:18px; flex:none; }
 
 /* ---------- etiquetas ---------- */
