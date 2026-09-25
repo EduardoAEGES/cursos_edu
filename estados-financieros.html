@@ -8,6 +8,60 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<style>
+  .rm-top{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:6px; }
+  .rm-barra{ flex:1 1 220px; height:8px; border-radius:999px; background:var(--o-line); overflow:hidden; min-width:160px; }
+  .rm-barra span{ display:block; height:100%; width:0; background:var(--o-purple); transition:width .3s ease; }
+  .rm-cuenta{ color:var(--o-muted); font-size:12.5px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  .rm{ position:relative; padding-left:52px; margin-top:16px; }
+  .rm::before{
+    content:""; position:absolute; left:18px; top:14px; bottom:26px;
+    width:3px; background:var(--o-line); border-radius:2px;
+  }
+  .rm-avance{
+    position:absolute; left:18px; top:14px; width:3px; height:0;
+    background:var(--o-purple); border-radius:2px; transition:height .3s ease;
+  }
+  .rm-item{ position:relative; margin-bottom:8px; }
+  .rm-nodo{
+    position:absolute; left:-52px; top:6px; width:38px; height:38px; border-radius:50%;
+    display:grid; place-items:center; font-weight:700; font-size:14px; z-index:1;
+    background:var(--o-sheet); border:3px solid var(--o-border); color:var(--o-muted);
+    transition:background .2s ease, border-color .2s ease, color .2s ease;
+  }
+  .rm-item.vista .rm-nodo{ background:var(--o-purple); border-color:var(--o-purple); color:#fff; }
+  .rm-item.sigue .rm-nodo{ border-color:var(--o-purple); color:var(--o-purple); }
+
+  .rm-cab{
+    width:100%; display:flex; align-items:center; gap:12px; text-align:left;
+    font:inherit; color:inherit; cursor:pointer;
+    background:var(--o-sheet); border:1px solid var(--o-border); border-radius:8px; padding:12px 14px;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .rm-cab:hover{ border-color:var(--o-purple); background:var(--o-purple-soft); }
+  .rm-item.sigue .rm-cab{ border-color:var(--o-purple); }
+  .rm-txt{ flex:1; min-width:0; }
+  .rm-tit{ display:block; font-weight:600; font-size:14.5px; }
+  .rm-res{ display:block; color:var(--o-muted); font-size:13px; margin-top:2px; }
+  .rm-marca{ flex:none; font-size:12px; font-weight:700; color:var(--o-purple); }
+  .rm-chev{ flex:none; color:var(--o-muted); font-size:20px; transition:transform .2s ease; }
+  .rm-item.abierto .rm-chev{ transform:rotate(90deg); }
+
+  .rm-det{ padding:12px 14px 4px 4px; }
+  .rm-det ul{ margin:0; padding-left:18px; }
+  .rm-det li{ margin:6px 0; font-size:13.5px; }
+  .rm-visto{ display:inline-flex; align-items:center; gap:8px; margin:12px 0 4px; cursor:pointer; font-size:13px; }
+  .rm-visto input{ width:16px; height:16px; accent-color:var(--o-purple); cursor:pointer; }
+
+  @media (max-width:520px){
+    .rm{ padding-left:44px; }
+    .rm::before, .rm-avance{ left:14px; }
+    .rm-nodo{ left:-44px; width:32px; height:32px; font-size:13px; border-width:2px; }
+    .rm-res{ display:none; }
+  }
+</style>
+
 </head>
 <body>
 
@@ -43,7 +97,200 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Sesiones</h2>
+    <h2 class="o-section-title">Ruta del curso</h2>
+    <div class="rm-top">
+      <div class="rm-barra"><span id="rm-relleno"></span></div>
+      <span class="rm-cuenta" id="rm-cuenta">0 de 10 sesiones vistas</span>
+      <button class="o-btn o-btn-secondary" id="rm-todo" type="button">Abrir todas</button>
+      <button class="o-btn o-btn-secondary" id="rm-limpiar" type="button">Reiniciar avance</button>
+    </div>
+    <div class="rm" id="rm">
+      <span class="rm-avance" id="rm-avance" aria-hidden="true"></span>
+      <div class="rm-item" data-n="1">
+        <span class="rm-nodo" aria-hidden="true">1</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-1">
+          <span class="rm-txt">
+            <span class="rm-tit">Para qué sirve el estado de flujos de efectivo</span>
+            <span class="rm-res">El punto de partida: entender qué pregunta responde este estado y por qué una empresa con utilidad puede quedarse sin caja.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-1" hidden>
+          <ul><li>De dónde vino y a dónde se fue el efectivo del periodo</li><li>Por qué la utilidad del ejercicio no es lo mismo que el dinero disponible</li><li>Cómo se amarra el saldo final con el estado de situación financiera</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="1">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="2">
+        <span class="rm-nodo" aria-hidden="true">2</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-2">
+          <span class="rm-txt">
+            <span class="rm-tit">Actividades de operación, inversión y financiamiento</span>
+            <span class="rm-res">La clasificación que ordena todo el estado: qué movimiento va en cada bloque y cuáles se prestan a confusión.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-2" hidden>
+          <ul><li>Qué entra en cada una de las tres actividades</li><li>Los casos discutidos: intereses, dividendos e impuestos</li><li>Una regla corta para clasificar un movimiento en segundos</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="2">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="3">
+        <span class="rm-nodo" aria-hidden="true">3</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-3">
+          <span class="rm-txt">
+            <span class="rm-tit">Método directo</span>
+            <span class="rm-res">Armado del flujo de operación mostrando los cobros y los pagos tal como ocurrieron.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-3" hidden>
+          <ul><li>Cobros a clientes y pagos a proveedores</li><li>De qué registros se sacan las cifras</li><li>Construcción paso a paso de la sección de operación</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="3">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="4">
+        <span class="rm-nodo" aria-hidden="true">4</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-4">
+          <span class="rm-txt">
+            <span class="rm-tit">Método indirecto</span>
+            <span class="rm-res">El camino más usado en la práctica: partir del resultado del ejercicio y ajustarlo hasta llegar al efectivo.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-4" hidden>
+          <ul><li>Partidas que no mueven efectivo: depreciación, provisiones, deterioros</li><li>Variaciones del capital de trabajo y cómo afectan el signo</li><li>Por qué el resultado sube y la caja baja</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="4">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="5">
+        <span class="rm-nodo" aria-hidden="true">5</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-5">
+          <span class="rm-txt">
+            <span class="rm-tit">Estado de situación financiera</span>
+            <span class="rm-res">Lectura ordenada del estado que muestra qué tiene y qué debe la empresa en un momento dado.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-5" hidden>
+          <ul><li>Estructura: activo, pasivo y patrimonio</li><li>La separación entre corriente y no corriente</li><li>Qué mirar primero cuando uno abre el estado</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="5">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="6">
+        <span class="rm-nodo" aria-hidden="true">6</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-6">
+          <span class="rm-txt">
+            <span class="rm-tit">Estado de resultados</span>
+            <span class="rm-res">Del ingreso hasta el resultado del ejercicio, con las partidas que explican de dónde sale la ganancia.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-6" hidden>
+          <ul><li>Costo de ventas, gastos de administración y de ventas</li><li>Resultado operativo, resultado financiero e impuesto a la renta</li><li>Los márgenes que conviene calcular al leerlo</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="6">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="7">
+        <span class="rm-nodo" aria-hidden="true">7</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-7">
+          <span class="rm-txt">
+            <span class="rm-tit">Otros resultados integrales</span>
+            <span class="rm-res">Las partidas que cambian el patrimonio sin pasar por el resultado del ejercicio.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-7" hidden>
+          <ul><li>Qué es el ORI y por qué existe</li><li>Partidas que se reciclan a resultados y las que no</li><li>Cómo se llega al resultado integral total</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="7">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="8">
+        <span class="rm-nodo" aria-hidden="true">8</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-8">
+          <span class="rm-txt">
+            <span class="rm-tit">Estado de cambios en el patrimonio neto</span>
+            <span class="rm-res">El movimiento del patrimonio durante el periodo, línea por línea.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-8" hidden>
+          <ul><li>Aportes, resultados del ejercicio y dividendos</li><li>Reservas y ajustes de ejercicios anteriores</li><li>Cómo cuadra el saldo final con el estado de situación</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="8">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="9">
+        <span class="rm-nodo" aria-hidden="true">9</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-9">
+          <span class="rm-txt">
+            <span class="rm-tit">Cómo se amarran los cuatro estados</span>
+            <span class="rm-res">La sesión que junta todo: cada estado alimenta al siguiente y esa conexión sirve para detectar errores.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-9" hidden>
+          <ul><li>El resultado del ejercicio viajando al patrimonio</li><li>El efectivo final del flujo apareciendo en el activo</li><li>Revisión cruzada rápida antes de dar por cerrado un juego de estados</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="9">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+      <div class="rm-item" data-n="10">
+        <span class="rm-nodo" aria-hidden="true">10</span>
+        <button class="rm-cab" type="button" aria-expanded="false" aria-controls="rm-det-10">
+          <span class="rm-txt">
+            <span class="rm-tit">Notas a los estados financieros</span>
+            <span class="rm-res">El cierre del curso: lo que los estados no dicen en las cifras y sí en las notas.</span>
+          </span>
+          <span class="rm-marca"></span>
+          <span class="rm-chev" aria-hidden="true">›</span>
+        </button>
+        <div class="rm-det" id="rm-det-10" hidden>
+          <ul><li>Qué está obligada la empresa a revelar</li><li>Políticas contables, estimaciones y hechos posteriores</li><li>Cómo leer las notas sin perderse en el camino</li></ul>
+          <label class="rm-visto">
+            <input type="checkbox" data-visto="10">
+            <span>Marcar esta sesión como vista</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Sesiones publicadas</h2>
     <div class="o-list">
       <a class="o-row" href="sesion-5-presupuesto.html">
         <span class="n">5</span>
@@ -66,6 +313,98 @@
 
 </div>
 </div>
+
+<script>
+(function(){
+  var LS='ef_ruta_vistas';
+  var rm=document.getElementById('rm');
+  if(!rm) return;
+  var items=[].slice.call(rm.querySelectorAll('.rm-item'));
+  var ctx=null;
+
+  function nota(f, dur, vol){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+
+  function leer(){
+    try{ return JSON.parse(localStorage.getItem(LS)) || []; }catch(e){ return []; }
+  }
+  function guardar(v){
+    try{ localStorage.setItem(LS, JSON.stringify(v)); }catch(e){}
+  }
+
+  function pintar(){
+    var vistas=leer(), sigue=-1;
+    items.forEach(function(it, k){
+      var n=+it.getAttribute('data-n');
+      var esta=vistas.indexOf(n)>=0;
+      it.classList.toggle('vista', esta);
+      it.querySelector('.rm-marca').textContent = esta ? 'Vista' : '';
+      var chk=it.querySelector('input[data-visto]');
+      if(chk) chk.checked=esta;
+      if(!esta && sigue<0) sigue=k;
+    });
+    items.forEach(function(it, k){ it.classList.toggle('sigue', k===sigue); });
+
+    var n=vistas.length, total=items.length;
+    document.getElementById('rm-cuenta').textContent =
+      n+' de '+total+' '+(total===1?'sesión vista':'sesiones vistas');
+    document.getElementById('rm-relleno').style.width = (n/total*100)+'%';
+    var alto = items.length ? (n/total*100) : 0;
+    document.getElementById('rm-avance').style.height = alto+'%';
+  }
+
+  items.forEach(function(it){
+    var cab=it.querySelector('.rm-cab');
+    var det=it.querySelector('.rm-det');
+    cab.addEventListener('click', function(){
+      var abierto=!det.hidden;
+      det.hidden=abierto;
+      it.classList.toggle('abierto', !abierto);
+      cab.setAttribute('aria-expanded', String(!abierto));
+      nota(abierto?520:760, 0.07, 0.05);
+    });
+    var chk=it.querySelector('input[data-visto]');
+    chk.addEventListener('change', function(){
+      var n=+chk.getAttribute('data-visto'), v=leer(), i=v.indexOf(n);
+      if(chk.checked && i<0) v.push(n);
+      if(!chk.checked && i>=0) v.splice(i,1);
+      guardar(v); pintar();
+      if(chk.checked){ nota(660,0.09,0.07); setTimeout(function(){ nota(990,0.11,0.06); }, 70); }
+      else nota(420,0.08,0.05);
+    });
+  });
+
+  document.getElementById('rm-todo').addEventListener('click', function(){
+    var abrir = items.some(function(it){ return it.querySelector('.rm-det').hidden; });
+    items.forEach(function(it){
+      it.querySelector('.rm-det').hidden=!abrir;
+      it.classList.toggle('abierto', abrir);
+      it.querySelector('.rm-cab').setAttribute('aria-expanded', String(abrir));
+    });
+    this.textContent = abrir ? 'Cerrar todas' : 'Abrir todas';
+    nota(abrir?760:520, 0.08, 0.05);
+  });
+
+  document.getElementById('rm-limpiar').addEventListener('click', function(){
+    guardar([]); pintar(); nota(420, 0.1, 0.06);
+  });
+
+  pintar();
+})();
+</script>
 
 <script src="pendiente.js" defer></script>
 
