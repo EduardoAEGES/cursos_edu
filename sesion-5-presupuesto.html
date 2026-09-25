@@ -17,14 +17,21 @@
     border-radius:999px; padding:3px 10px;
   }
   .reloj{ margin-left:auto; color:var(--o-muted); font-variant-numeric:tabular-nums; font-size:12.5px; }
-  .esc-tit{ font-size:clamp(19px,2.6vw,25px); font-weight:700; margin:6px 0 10px; }
+  .esc-head{ display:flex; align-items:center; gap:14px; margin:6px 0 12px; }
+  .esc-arte{ flex:none; width:58px; height:58px; }
+  .esc-arte svg{ width:100%; height:100%; display:block; }
+  .esc-tit{ font-size:clamp(19px,2.6vw,25px); font-weight:700; margin:0; min-width:0; }
+  .cifra{ color:#0B5F63; font-variant-numeric:tabular-nums; }
+  .arte-portada{ max-width:360px; margin:6px auto 2px; }
+  .arte-portada svg{ width:100%; height:auto; display:block; }
+  .o-hero .ico svg{ width:38px; height:38px; display:block; }
   .relato{ font-size:15px; line-height:1.65; max-width:70ch; }
   .relato p{ margin:0 0 10px; }
   .antes{
     border-left:3px solid var(--o-teal); background:var(--o-teal-soft);
     padding:11px 14px; margin:0 0 16px; font-size:14px; line-height:1.6;
   }
-  .antes b{ color:#0B5F63; }
+  .antes .rotulo{ color:#0B5F63; }
   .pregunta{ font-weight:700; font-size:16px; margin:18px 0 12px; }
 
   .puertas{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
@@ -36,7 +43,8 @@
     transition:transform .5s ease, opacity .5s ease, border-color .15s ease, box-shadow .15s ease;
     transform-style:preserve-3d;
   }
-  .puerta .marca{ font-size:30px; line-height:1; }
+  .puerta .marca{ width:38px; height:50px; }
+  .puerta .marca svg{ width:100%; height:100%; display:block; }
   .puerta .op{ font-weight:700; font-size:15.5px; margin:8px 0 4px; }
   .puerta .det{ color:var(--o-muted); font-size:13.5px; }
   .puerta.gana{ border-color:var(--o-purple); box-shadow:0 0 0 4px var(--o-purple-soft); }
@@ -115,10 +123,29 @@
       <div class="acc"><span class="o-chip o-chip-purple">10 minutos</span></div>
     </div>
 
+    <div class="arte-portada o-mt"><svg viewBox="0 0 320 180" role="img" aria-label="Fachada de la cafetería">
+  <rect x="18" y="152" width="284" height="3" rx="1.5" fill="#DEE2E6"/>
+  <rect x="48" y="46" width="224" height="106" rx="4" fill="#FFFFFF" stroke="#DEE2E6" stroke-width="2"/>
+  <rect x="112" y="18" width="96" height="22" rx="6" fill="#017E84"/>
+  <rect x="124" y="26" width="72" height="6" rx="3" fill="#E6F2F3"/>
+  <path d="M40 46h240l-14 26H54z" fill="#714B67" stroke="#5C3D54" stroke-width="2" stroke-linejoin="round"/>
+  <g fill="#F4F1F5" opacity=".5">
+    <path d="M76 46h24l-14 26H62z"/><path d="M124 46h24l-14 26h-24z"/>
+    <path d="M172 46h24l-14 26h-24z"/><path d="M220 46h24l-14 26h-24z"/>
+  </g>
+  <rect x="66" y="86" width="86" height="52" rx="3" fill="#E6F2F3" stroke="#DEE2E6" stroke-width="2"/>
+  <rect x="196" y="86" width="56" height="66" rx="3" fill="#F4F1F5" stroke="#DEE2E6" stroke-width="2"/>
+  <circle cx="206" cy="120" r="3" fill="#714B67"/>
+  <path d="M94 116h28v10a10 10 0 0 1-10 10h-8a10 10 0 0 1-10-10z" fill="#714B67"/>
+  <path d="M122 118h5a7 7 0 0 1 0 14h-1" fill="none" stroke="#714B67" stroke-width="3"/>
+  <path d="M101 108c4-5-4-9 0-14" fill="none" stroke="#017E84" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M113 108c4-5-4-9 0-14" fill="none" stroke="#017E84" stroke-width="2.5" stroke-linecap="round"/>
+</svg></div>
+
     <div class="relato o-mt">
-      <p>Sofía acaba de comprar <b>La Tostaduría</b>, una cafetería en el centro de Arequipa.
-      Tiene <b>S/ 20,000</b> ahorrados, muchas ganas y ninguna idea de si el próximo año le va a alcanzar.</p>
-      <p>Los contrata a ustedes. En los próximos minutos van a tomar <b>cuatro decisiones</b>.
+      <p>Sofía acaba de comprar La Tostaduría, una cafetería en el centro de Arequipa.
+      Tiene <span class="cifra">S/ 20,000</span> ahorrados, muchas ganas y ninguna idea de si el próximo año le va a alcanzar.</p>
+      <p>Los contrata a ustedes. En los próximos minutos van a tomar cuatro decisiones.
       En cada una hay dos puertas y solo se abre la que reciba más votos del salón.
       Lo que pase después depende de la puerta que abran.</p>
     </div>
@@ -137,14 +164,17 @@
       <span class="paso" id="esc-paso">Decisión 1 de 4</span>
       <span class="reloj" id="esc-reloj">00:00</span>
     </div>
-    <h2 class="esc-tit" id="esc-titulo"></h2>
+    <div class="esc-head">
+      <div class="esc-arte" id="esc-arte"></div>
+      <h2 class="esc-tit" id="esc-titulo"></h2>
+    </div>
     <div class="antes oculto" id="esc-antes"></div>
     <div class="relato" id="esc-relato"></div>
     <p class="pregunta" id="esc-pregunta"></p>
 
     <div class="puertas">
       <div class="puerta" id="puerta-a">
-        <span class="marca">🚪</span>
+        <span class="marca"><svg viewBox="0 0 40 52" aria-hidden="true"><rect x="4" y="3" width="32" height="46" rx="3" fill="#F4F1F5" stroke="#714B67" stroke-width="2.5"/><rect x="10" y="10" width="20" height="13" rx="2" fill="#fff" stroke="#714B67" stroke-width="2"/><circle cx="29" cy="34" r="2.6" fill="#714B67"/></svg></span>
         <span class="op" id="op-a"></span>
         <span class="det" id="det-a"></span>
         <span class="marcador">
@@ -158,7 +188,7 @@
       </div>
 
       <div class="puerta" id="puerta-b">
-        <span class="marca">🚪</span>
+        <span class="marca"><svg viewBox="0 0 40 52" aria-hidden="true"><rect x="4" y="3" width="32" height="46" rx="3" fill="#E6F2F3" stroke="#017E84" stroke-width="2.5"/><rect x="10" y="10" width="20" height="13" rx="2" fill="#fff" stroke="#017E84" stroke-width="2"/><circle cx="29" cy="34" r="2.6" fill="#017E84"/></svg></span>
         <span class="op" id="op-b"></span>
         <span class="det" id="det-b"></span>
         <span class="marcador">
@@ -199,9 +229,9 @@
 
     <h2 class="o-section-title o-mt">Lo que hay que llevarse</h2>
     <ul class="claves">
-      <li><b>El presupuesto es un plan expresado en números.</b> No adivina el futuro: decide con anticipación qué se espera vender, gastar y ganar.</li>
-      <li><b>Se empieza por las ventas.</b> Casi todo lo demás depende de cuánto se venda, así que el presupuesto de ventas manda sobre los otros.</li>
-      <li><b>Sirve recién cuando se compara.</b> Presupuesto contra real, mes a mes: la diferencia es la que enseña y la que permite corregir a tiempo.</li>
+      <li>El presupuesto es un plan expresado en números. No adivina el futuro: decide con anticipación qué se espera vender, gastar y ganar.</li>
+      <li>Se empieza por las ventas. Casi todo lo demás depende de cuánto se venda, así que el presupuesto de ventas manda sobre los otros.</li>
+      <li>Sirve recién cuando se compara. Presupuesto contra real, mes a mes: la diferencia es la que enseña y la que permite corregir a tiempo.</li>
     </ul>
 
     <div class="o-acciones o-mt">
@@ -223,72 +253,76 @@
   var ESCENAS = [
     {
       titulo: "El primer encargo",
+      arte: '<svg viewBox="0 0 56 56" aria-hidden="true"><rect x="12" y="7" width="30" height="42" rx="3" fill="#fff" stroke="#714B67" stroke-width="2.5"/><path d="M18 7v42" stroke="#714B67" stroke-width="2"/><path d="M24 18h13M24 26h13M24 34h8" stroke="#DEE2E6" stroke-width="2.5" stroke-linecap="round"/><path d="M36 40l10-10 4 4-10 10-5 1z" fill="#B98B00"/></svg>',
       relato: "<p>Sofía les muestra el local: doce mesas, una máquina de espresso que ya tiene sus años y un cuaderno donde el dueño anterior anotaba las ventas del día.</p>" +
               "<p>«Quiero saber si el próximo año me alcanza», dice. «¿Por dónde empezamos?»</p>",
       pregunta: "¿Por dónde arranca el presupuesto?",
       a: { op:"Calcular cuánto vamos a vender",
            det:"Estimar primero los ingresos del año y de ahí derivar lo demás.",
            bien:true,
-           antes:"<b>Buena decisión.</b> Arrancaron por las ventas, que es de donde cuelga todo lo demás: cuánto café comprar, cuánta gente contratar, cuánto se puede gastar." },
+           antes:"<span class=\"rotulo\">Buena decisión.</span> Arrancaron por las ventas, que es de donde cuelga todo lo demás: cuánto café comprar, cuánta gente contratar, cuánto se puede gastar." },
       b: { op:"Anotar todo lo que hay que gastar",
            det:"Listar primero alquiler, sueldos, insumos y servicios.",
            bien:false,
-           antes:"<b>Se puede, pero se traba.</b> Al llegar a los insumos aparece la pregunta: ¿café para cuántas tazas? No hay forma de saberlo sin estimar antes las ventas. Tocó volver al principio." }
+           antes:"<span class=\"rotulo\">Se puede, pero se traba.</span> Al llegar a los insumos aparece la pregunta: ¿café para cuántas tazas? No hay forma de saberlo sin estimar antes las ventas. Tocó volver al principio." }
     },
     {
       titulo: "¿Cuánto vamos a vender?",
+      arte: '<svg viewBox="0 0 56 56" aria-hidden="true"><rect x="7" y="10" width="42" height="36" rx="3" fill="#fff" stroke="#017E84" stroke-width="2.5"/><rect x="14" y="30" width="6" height="9" rx="1" fill="#DEE2E6"/><rect x="25" y="24" width="6" height="15" rx="1" fill="#017E84"/><rect x="36" y="17" width="6" height="22" rx="1" fill="#714B67"/></svg>',
       relato: "<p>El cuaderno del dueño anterior tiene las ventas de los últimos doce meses. Se nota que en julio y agosto sube, y que enero y febrero son flojos.</p>" +
               "<p>Sofía mira la cifra del año pasado y dice: «Pero yo le voy a meter ganas. Pongamos el doble, total es mi cafetería».</p>",
       pregunta: "¿Sobre qué base proyectan las ventas del año?",
       a: { op:"Sobre el histórico y la temporada",
            det:"Los doce meses del cuaderno, ajustados por temporada alta y baja.",
            bien:true,
-           antes:"<b>El presupuesto queda parado sobre algo.</b> Proyectaron mes a mes con el histórico y la temporada: enero flojo, julio alto. Sofía refunfuñó, pero las cifras se sostienen." },
+           antes:"<span class=\"rotulo\">El presupuesto queda parado sobre algo.</span> Proyectaron mes a mes con el histórico y la temporada: enero flojo, julio alto. Sofía refunfuñó, pero las cifras se sostienen." },
       b: { op:"Sobre la meta que quiere Sofía",
            det:"El doble del año pasado, porque le va a meter ganas.",
            bien:false,
-           antes:"<b>El presupuesto nació inflado.</b> Duplicar las ventas sin una razón que lo explique no es presupuestar: es pedir un deseo. Y sobre esa cifra se calcularon las compras, que ahora también están de más." }
+           antes:"<span class=\"rotulo\">El presupuesto nació inflado.</span> Duplicar las ventas sin una razón que lo explique no es presupuestar: es pedir un deseo. Y sobre esa cifra se calcularon las compras, que ahora también están de más." }
     },
     {
       titulo: "La máquina hace un ruido raro",
-      relato: "<p>Marzo. La máquina de espresso empieza a sonar como un tractor. El técnico es claro: aguanta unos meses más, pero en algún momento de este año hay que cambiarla. Cuesta <b>S/ 4,000</b>.</p>" +
+      arte: '<svg viewBox="0 0 56 56" aria-hidden="true"><rect x="10" y="8" width="30" height="28" rx="3" fill="#fff" stroke="#714B67" stroke-width="2.5"/><rect x="16" y="14" width="18" height="8" rx="2" fill="#F4F1F5" stroke="#714B67" stroke-width="2"/><path d="M22 30h6v4h-6z" fill="#714B67"/><rect x="19" y="38" width="12" height="8" rx="2" fill="#E6F2F3" stroke="#017E84" stroke-width="2"/><path d="M12 48h26" stroke="#DEE2E6" stroke-width="2.5" stroke-linecap="round"/><path d="M45 13l6-5M46 22h7M45 31l6 5" stroke="#B98B00" stroke-width="2.5" stroke-linecap="round"/></svg>',
+      relato: "<p>Marzo. La máquina de espresso empieza a sonar como un tractor. El técnico es claro: aguanta unos meses más, pero en algún momento de este año hay que cambiarla. Cuesta <span class=\"cifra\">S/ 4,000</span>.</p>" +
               "<p>No está en el presupuesto. Todavía no pasó nada.</p>",
       pregunta: "¿Qué hacen con ese gasto que aún no ocurre?",
       a: { op:"Reservar el monto en el presupuesto",
            det:"Dejar previsto ese gasto probable dentro del plan del año.",
            bien:true,
-           antes:"<b>El plan se adelantó al problema.</b> Al reservar los S/ 4,000, cuando la máquina finalmente se malogró el dinero ya estaba contemplado y ningún otro rubro tuvo que recortarse a las apuradas." },
+           antes:"<span class=\"rotulo\">El plan se adelantó al problema.</span> Al reservar los S/ 4,000, cuando la máquina finalmente se malogró el dinero ya estaba contemplado y ningún otro rubro tuvo que recortarse a las apuradas." },
       b: { op:"Pagarla del ahorro cuando falle",
            det:"No tocar el presupuesto y usar los S/ 20,000 si hace falta.",
            bien:false,
-           antes:"<b>El presupuesto se quedó corto.</b> La máquina falló en agosto y los S/ 4,000 salieron del ahorro. El plan decía una cosa y la plata hizo otra, así que dejó de servir para decidir." }
+           antes:"<span class=\"rotulo\">El presupuesto se quedó corto.</span> La máquina falló en agosto y los S/ 4,000 salieron del ahorro. El plan decía una cosa y la plata hizo otra, así que dejó de servir para decidir." }
     },
     {
       titulo: "Cierra el primer mes",
-      relato: "<p>Termina abril. El presupuesto decía <b>S/ 18,000</b> de ventas; la caja dice <b>S/ 15,200</b>. Faltan S/ 2,800.</p>" +
+      arte: '<svg viewBox="0 0 56 56" aria-hidden="true"><rect x="8" y="7" width="28" height="38" rx="3" fill="#fff" stroke="#714B67" stroke-width="2.5"/><path d="M14 17h16M14 25h16M14 33h9" stroke="#DEE2E6" stroke-width="2.5" stroke-linecap="round"/><circle cx="37" cy="35" r="10" fill="#E6F2F3" stroke="#017E84" stroke-width="2.5"/><path d="M44 42l6 6" stroke="#017E84" stroke-width="3" stroke-linecap="round"/></svg>',
+      relato: "<p>Termina abril. El presupuesto decía <span class=\"cifra\">S/ 18,000</span> de ventas; la caja dice <span class=\"cifra\">S/ 15,200</span>. Faltan S/ 2,800.</p>" +
               "<p>Sofía propone: «Cambiemos el número del presupuesto a 15,200 y listo, así queda cuadrado y no se ve feo».</p>",
       pregunta: "¿Qué hacen con esa diferencia?",
       a: { op:"Compararla y explicar por qué pasó",
            det:"Dejar el presupuesto como estaba y analizar la diferencia.",
            bien:true,
-           antes:"<b>Eso es control presupuestal.</b> Al revisar salió que dos semanas llovió y bajó el público de la tarde. Con el dato encima se movió el horario y la promoción, y mayo cerró arriba de lo previsto." },
+           antes:"<span class=\"rotulo\">Eso es control presupuestal.</span> Al revisar salió que dos semanas llovió y bajó el público de la tarde. Con el dato encima se movió el horario y la promoción, y mayo cerró arriba de lo previsto." },
       b: { op:"Ajustar el presupuesto al resultado",
            det:"Reescribir la cifra para que coincida con lo que se vendió.",
            bien:false,
-           antes:"<b>El presupuesto dejó de ser un plan.</b> Si el número se reescribe cada vez que no se cumple, siempre va a cuadrar y nunca va a avisar nada. Se perdió la única señal que tenían." }
+           antes:"<span class=\"rotulo\">El presupuesto dejó de ser un plan.</span> Si el número se reescribe cada vez que no se cumple, siempre va a cuadrar y nunca va a avisar nada. Se perdió la única señal que tenían." }
     }
   ];
 
   var FINALES = [
-    { min:0, ico:"🕳️", chip:"o-chip-wait", titulo:"El presupuesto que nadie usó",
+    { min:0, svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="5" width="26" height="36" rx="3" fill="#fff" stroke="#6C757D" stroke-width="2.5"/><path d="M15 15h14M15 22h14M15 29h9" stroke="#DEE2E6" stroke-width="2.5" stroke-linecap="round"/><path d="M28 26l12 12M40 26L28 38" stroke="#B98B00" stroke-width="3" stroke-linecap="round"/></svg>', chip:"o-chip-wait", titulo:"El presupuesto que nadie usó",
       sub:"Existió en un archivo y nada más",
       txt:"<p>A fin de año Sofía tenía un documento con cifras que ya no se parecían a nada de lo que pasó. Cada vez que la realidad no coincidía, se cambiaba el papel.</p>" +
           "<p>El negocio sobrevivió, pero ninguna decisión se tomó con anticipación: todas fueron reacciones. Un presupuesto que se acomoda a los hechos no es un plan, es un resumen tardío.</p>" },
-    { min:2, ico:"⚖️", chip:"o-chip-purple", titulo:"Un presupuesto a medias",
+    { min:2, svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 8v30M14 40h20" stroke="#714B67" stroke-width="2.5" stroke-linecap="round"/><path d="M9 16h30" stroke="#714B67" stroke-width="2.5" stroke-linecap="round"/><path d="M4 28a8 8 0 0 0 10 0l-5-12z" fill="#F4F1F5" stroke="#714B67" stroke-width="2"/><path d="M34 25a8 8 0 0 0 10 0l-5-9z" fill="#F4F1F5" stroke="#714B67" stroke-width="2"/><circle cx="24" cy="8" r="3" fill="#714B67"/></svg>', chip:"o-chip-purple", titulo:"Un presupuesto a medias",
       sub:"Sirvió para algunas cosas",
       txt:"<p>Hubo plan y en parte se respetó, pero quedaron huecos: algo se estimó sin base o algo se dejó fuera, y esos puntos fueron justo los que trajeron sustos durante el año.</p>" +
           "<p>Sofía terminó el año a flote y con una idea clara de dónde falló la planificación, que ya es bastante más que empezar de cero.</p>" },
-    { min:4, ico:"📈", chip:"o-chip-ok", titulo:"El año que sí cuadró",
+    { min:4, svg:'<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 6v34h34" stroke="#6C757D" stroke-width="2.5" stroke-linecap="round"/><rect x="14" y="26" width="6" height="10" rx="1" fill="#DEE2E6"/><rect x="24" y="20" width="6" height="16" rx="1" fill="#017E84"/><rect x="34" y="13" width="6" height="23" rx="1" fill="#28A745"/><path d="M13 22l9-8 7 5 9-9" fill="none" stroke="#714B67" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 10h7v7" fill="none" stroke="#714B67" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>', chip:"o-chip-ok", titulo:"El año que sí cuadró",
       sub:"El plan sirvió para decidir a tiempo",
       txt:"<p>La Tostaduría cerró el año con las cuentas donde debían estar. No porque las cifras del presupuesto fueran exactas, que nunca lo son, sino porque cada mes se compararon con la realidad y las diferencias se corrigieron cuando todavía había margen.</p>" +
           "<p>Sofía ya no pregunta si le va a alcanzar: abre el cuadro y lo ve venir.</p>" }
@@ -364,6 +398,7 @@
     var e=ESCENAS[i];
     $('esc-paso').textContent='Decisión '+(i+1)+' de '+ESCENAS.length;
     $('esc-titulo').textContent=e.titulo;
+    $('esc-arte').innerHTML=e.arte;
     $('esc-relato').innerHTML=e.relato;
     $('esc-pregunta').textContent=e.pregunta;
     $('op-a').textContent=e.a.op; $('det-a').textContent=e.a.det;
@@ -410,7 +445,7 @@
     if(reloj) clearInterval(reloj);
     var f=FINALES[0];
     FINALES.forEach(function(x){ if(aciertos>=x.min) f=x; });
-    $('fin-ico').textContent=f.ico;
+    $('fin-ico').innerHTML=f.svg;
     $('fin-titulo').textContent=f.titulo;
     $('fin-sub').textContent=f.sub;
     $('fin-chip').className='o-chip '+f.chip;
