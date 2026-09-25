@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 5 — Introducción al presupuesto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .juego{ max-width:980px; margin:0 auto; }
+  .esc-cab{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:4px; }
+  .paso{
+    font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--o-purple); background:var(--o-purple-soft); border:1px solid #D8CBD4;
+    border-radius:999px; padding:3px 10px;
+  }
+  .reloj{ margin-left:auto; color:var(--o-muted); font-variant-numeric:tabular-nums; font-size:12.5px; }
+  .esc-tit{ font-size:clamp(19px,2.6vw,25px); font-weight:700; margin:6px 0 10px; }
+  .relato{ font-size:15px; line-height:1.65; max-width:70ch; }
+  .relato p{ margin:0 0 10px; }
+  .antes{
+    border-left:3px solid var(--o-teal); background:var(--o-teal-soft);
+    padding:11px 14px; margin:0 0 16px; font-size:14px; line-height:1.6;
+  }
+  .antes b{ color:#0B5F63; }
+  .pregunta{ font-weight:700; font-size:16px; margin:18px 0 12px; }
+
+  .puertas{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:700px){ .puertas{ grid-template-columns:1fr; } }
+  .puerta{
+    display:flex; flex-direction:column; min-width:0; text-align:left;
+    background:var(--o-sheet); border:2px solid var(--o-border); border-radius:8px;
+    padding:16px;
+    transition:transform .5s ease, opacity .5s ease, border-color .15s ease, box-shadow .15s ease;
+    transform-style:preserve-3d;
+  }
+  .puerta .marca{ font-size:30px; line-height:1; }
+  .puerta .op{ font-weight:700; font-size:15.5px; margin:8px 0 4px; }
+  .puerta .det{ color:var(--o-muted); font-size:13.5px; }
+  .puerta.gana{ border-color:var(--o-purple); box-shadow:0 0 0 4px var(--o-purple-soft); }
+  .puerta.abre{ transform:perspective(900px) rotateY(-78deg); opacity:0; }
+  .puerta.cierra{ opacity:.25; }
+  .puerta.desempate{ cursor:pointer; }
+  .puerta.desempate:hover{ border-color:var(--o-purple); }
+
+  .marcador{ display:block; margin-top:auto; padding-top:16px; }
+  .barra{ display:block; height:8px; border-radius:999px; background:var(--o-line); overflow:hidden; margin-bottom:10px; }
+  .barra > span{ display:block; height:100%; width:0; background:var(--o-purple); transition:width .25s ease; }
+  .votos{ display:flex; align-items:center; gap:10px; }
+  .votos button{
+    font:inherit; font-size:18px; font-weight:700; line-height:1; cursor:pointer;
+    width:38px; height:38px; border-radius:8px; border:1px solid #CFCFCF; background:#fff; color:#4C4C4C;
+  }
+  .votos button:hover{ border-color:var(--o-purple); color:var(--o-purple); background:var(--o-purple-soft); }
+  .votos .n{
+    flex:1; text-align:center; font-size:30px; font-weight:700; font-variant-numeric:tabular-nums;
+  }
+  .votos .mas{ background:var(--o-purple); border-color:var(--o-purple); color:#fff; font-size:22px; }
+  .votos .mas:hover{ background:var(--o-purple-dk); color:#fff; }
+
+  .aviso-empate{ color:var(--o-amber); font-weight:600; margin:14px 0 0; }
+  .teclas{ color:var(--o-muted); font-size:12.5px; margin:14px 0 0; }
+  .teclas kbd{
+    font:inherit; font-size:11.5px; font-weight:700; background:var(--o-purple-soft);
+    color:var(--o-purple); border:1px solid #E0DAE3; border-radius:3px; padding:1px 6px;
+  }
+
+  .ruta{ display:grid; gap:10px; margin:14px 0 0; }
+  .ruta .hito{ display:flex; gap:12px; align-items:flex-start; }
+  .ruta .hito .p{
+    flex:none; width:26px; height:26px; border-radius:6px; display:grid; place-items:center;
+    font-weight:700; font-size:12px; background:var(--o-purple-soft); color:var(--o-purple);
+  }
+  .ruta .hito .q{ font-size:13.5px; }
+  .ruta .hito .q b{ display:block; }
+  .ruta .hito .q span{ color:var(--o-muted); }
+  .cierre{ font-size:15px; line-height:1.65; max-width:70ch; }
+  .claves{ margin:14px 0 0; padding-left:20px; }
+  .claves li{ margin:7px 0; font-size:14px; }
+  .oculto{ display:none !important; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesión 5</b></span>
+  <div class="o-cp-right"><span class="o-count" id="contador">Actividad en grupo</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap juego">
+
+  <!-- ===== portada ===== -->
+  <div class="o-sheet" id="pantalla-inicio">
+    <div class="o-hero">
+      <div class="ico">☕</div>
+      <div class="txt">
+        <h1>La Tostaduría</h1>
+        <p class="sub">Sesión 5 · Introducción al presupuesto · actividad en grupo</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-purple">10 minutos</span></div>
+    </div>
+
+    <div class="relato o-mt">
+      <p>Sofía acaba de comprar <b>La Tostaduría</b>, una cafetería en el centro de Arequipa.
+      Tiene <b>S/ 20,000</b> ahorrados, muchas ganas y ninguna idea de si el próximo año le va a alcanzar.</p>
+      <p>Los contrata a ustedes. En los próximos minutos van a tomar <b>cuatro decisiones</b>.
+      En cada una hay dos puertas y solo se abre la que reciba más votos del salón.
+      Lo que pase después depende de la puerta que abran.</p>
+    </div>
+
+    <p class="teclas">Para el docente: se vota a mano alzada y el conteo se registra en pantalla.
+      Con el teclado, <kbd>A</kbd> y <kbd>B</kbd> suman votos y <kbd>Enter</kbd> abre la puerta ganadora.</p>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary" id="btn-empezar" type="button">Empezar la historia</button>
+    </div>
+  </div>
+
+  <!-- ===== escena ===== -->
+  <div class="o-sheet oculto" id="pantalla-escena">
+    <div class="esc-cab">
+      <span class="paso" id="esc-paso">Decisión 1 de 4</span>
+      <span class="reloj" id="esc-reloj">00:00</span>
+    </div>
+    <h2 class="esc-tit" id="esc-titulo"></h2>
+    <div class="antes oculto" id="esc-antes"></div>
+    <div class="relato" id="esc-relato"></div>
+    <p class="pregunta" id="esc-pregunta"></p>
+
+    <div class="puertas">
+      <div class="puerta" id="puerta-a">
+        <span class="marca">🚪</span>
+        <span class="op" id="op-a"></span>
+        <span class="det" id="det-a"></span>
+        <span class="marcador">
+          <span class="barra"><span id="barra-a"></span></span>
+          <span class="votos">
+            <button type="button" id="menos-a" aria-label="Quitar un voto a la puerta A">−</button>
+            <span class="n" id="voto-a">0</span>
+            <button type="button" class="mas" id="mas-a" aria-label="Sumar un voto a la puerta A">+</button>
+          </span>
+        </span>
+      </div>
+
+      <div class="puerta" id="puerta-b">
+        <span class="marca">🚪</span>
+        <span class="op" id="op-b"></span>
+        <span class="det" id="det-b"></span>
+        <span class="marcador">
+          <span class="barra"><span id="barra-b"></span></span>
+          <span class="votos">
+            <button type="button" id="menos-b" aria-label="Quitar un voto a la puerta B">−</button>
+            <span class="n" id="voto-b">0</span>
+            <button type="button" class="mas" id="mas-b" aria-label="Sumar un voto a la puerta B">+</button>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <p class="aviso-empate oculto" id="aviso-empate">Hay empate. Toca la puerta que quieras abrir para desempatar.</p>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary" id="btn-abrir" type="button">Abrir la puerta ganadora</button>
+      <button class="o-btn o-btn-secondary" id="btn-ceros" type="button">Poner votos en cero</button>
+    </div>
+    <p class="teclas"><kbd>A</kbd> y <kbd>B</kbd> suman votos · <kbd>Enter</kbd> abre la puerta ganadora</p>
+  </div>
+
+  <!-- ===== final ===== -->
+  <div class="o-sheet oculto" id="pantalla-final">
+    <div class="o-hero">
+      <div class="ico" id="fin-ico">📊</div>
+      <div class="txt">
+        <h1 id="fin-titulo"></h1>
+        <p class="sub" id="fin-sub"></p>
+      </div>
+      <div class="acc"><span class="o-chip" id="fin-chip"></span></div>
+    </div>
+
+    <div class="cierre o-mt" id="fin-texto"></div>
+
+    <h2 class="o-section-title o-mt">El camino que eligió el salón</h2>
+    <div class="ruta" id="fin-ruta"></div>
+
+    <h2 class="o-section-title o-mt">Lo que hay que llevarse</h2>
+    <ul class="claves">
+      <li><b>El presupuesto es un plan expresado en números.</b> No adivina el futuro: decide con anticipación qué se espera vender, gastar y ganar.</li>
+      <li><b>Se empieza por las ventas.</b> Casi todo lo demás depende de cuánto se venda, así que el presupuesto de ventas manda sobre los otros.</li>
+      <li><b>Sirve recién cuando se compara.</b> Presupuesto contra real, mes a mes: la diferencia es la que enseña y la que permite corregir a tiempo.</li>
+    </ul>
+
+    <div class="o-acciones o-mt">
+      <button class="o-btn o-btn-primary" id="btn-otra" type="button">Jugarla otra vez</button>
+      <a class="o-btn o-btn-secondary" href="estados-financieros.html">Volver al curso</a>
+    </div>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros · Sesión 5</span>
+    <span>Introducción al presupuesto</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var ESCENAS = [
+    {
+      titulo: "El primer encargo",
+      relato: "<p>Sofía les muestra el local: doce mesas, una máquina de espresso que ya tiene sus años y un cuaderno donde el dueño anterior anotaba las ventas del día.</p>" +
+              "<p>«Quiero saber si el próximo año me alcanza», dice. «¿Por dónde empezamos?»</p>",
+      pregunta: "¿Por dónde arranca el presupuesto?",
+      a: { op:"Calcular cuánto vamos a vender",
+           det:"Estimar primero los ingresos del año y de ahí derivar lo demás.",
+           bien:true,
+           antes:"<b>Buena decisión.</b> Arrancaron por las ventas, que es de donde cuelga todo lo demás: cuánto café comprar, cuánta gente contratar, cuánto se puede gastar." },
+      b: { op:"Anotar todo lo que hay que gastar",
+           det:"Listar primero alquiler, sueldos, insumos y servicios.",
+           bien:false,
+           antes:"<b>Se puede, pero se traba.</b> Al llegar a los insumos aparece la pregunta: ¿café para cuántas tazas? No hay forma de saberlo sin estimar antes las ventas. Tocó volver al principio." }
+    },
+    {
+      titulo: "¿Cuánto vamos a vender?",
+      relato: "<p>El cuaderno del dueño anterior tiene las ventas de los últimos doce meses. Se nota que en julio y agosto sube, y que enero y febrero son flojos.</p>" +
+              "<p>Sofía mira la cifra del año pasado y dice: «Pero yo le voy a meter ganas. Pongamos el doble, total es mi cafetería».</p>",
+      pregunta: "¿Sobre qué base proyectan las ventas del año?",
+      a: { op:"Sobre el histórico y la temporada",
+           det:"Los doce meses del cuaderno, ajustados por temporada alta y baja.",
+           bien:true,
+           antes:"<b>El presupuesto queda parado sobre algo.</b> Proyectaron mes a mes con el histórico y la temporada: enero flojo, julio alto. Sofía refunfuñó, pero las cifras se sostienen." },
+      b: { op:"Sobre la meta que quiere Sofía",
+           det:"El doble del año pasado, porque le va a meter ganas.",
+           bien:false,
+           antes:"<b>El presupuesto nació inflado.</b> Duplicar las ventas sin una razón que lo explique no es presupuestar: es pedir un deseo. Y sobre esa cifra se calcularon las compras, que ahora también están de más." }
+    },
+    {
+      titulo: "La máquina hace un ruido raro",
+      relato: "<p>Marzo. La máquina de espresso empieza a sonar como un tractor. El técnico es claro: aguanta unos meses más, pero en algún momento de este año hay que cambiarla. Cuesta <b>S/ 4,000</b>.</p>" +
+              "<p>No está en el presupuesto. Todavía no pasó nada.</p>",
+      pregunta: "¿Qué hacen con ese gasto que aún no ocurre?",
+      a: { op:"Reservar el monto en el presupuesto",
+           det:"Dejar previsto ese gasto probable dentro del plan del año.",
+           bien:true,
+           antes:"<b>El plan se adelantó al problema.</b> Al reservar los S/ 4,000, cuando la máquina finalmente se malogró el dinero ya estaba contemplado y ningún otro rubro tuvo que recortarse a las apuradas." },
+      b: { op:"Pagarla del ahorro cuando falle",
+           det:"No tocar el presupuesto y usar los S/ 20,000 si hace falta.",
+           bien:false,
+           antes:"<b>El presupuesto se quedó corto.</b> La máquina falló en agosto y los S/ 4,000 salieron del ahorro. El plan decía una cosa y la plata hizo otra, así que dejó de servir para decidir." }
+    },
+    {
+      titulo: "Cierra el primer mes",
+      relato: "<p>Termina abril. El presupuesto decía <b>S/ 18,000</b> de ventas; la caja dice <b>S/ 15,200</b>. Faltan S/ 2,800.</p>" +
+              "<p>Sofía propone: «Cambiemos el número del presupuesto a 15,200 y listo, así queda cuadrado y no se ve feo».</p>",
+      pregunta: "¿Qué hacen con esa diferencia?",
+      a: { op:"Compararla y explicar por qué pasó",
+           det:"Dejar el presupuesto como estaba y analizar la diferencia.",
+           bien:true,
+           antes:"<b>Eso es control presupuestal.</b> Al revisar salió que dos semanas llovió y bajó el público de la tarde. Con el dato encima se movió el horario y la promoción, y mayo cerró arriba de lo previsto." },
+      b: { op:"Ajustar el presupuesto al resultado",
+           det:"Reescribir la cifra para que coincida con lo que se vendió.",
+           bien:false,
+           antes:"<b>El presupuesto dejó de ser un plan.</b> Si el número se reescribe cada vez que no se cumple, siempre va a cuadrar y nunca va a avisar nada. Se perdió la única señal que tenían." }
+    }
+  ];
+
+  var FINALES = [
+    { min:0, ico:"🕳️", chip:"o-chip-wait", titulo:"El presupuesto que nadie usó",
+      sub:"Existió en un archivo y nada más",
+      txt:"<p>A fin de año Sofía tenía un documento con cifras que ya no se parecían a nada de lo que pasó. Cada vez que la realidad no coincidía, se cambiaba el papel.</p>" +
+          "<p>El negocio sobrevivió, pero ninguna decisión se tomó con anticipación: todas fueron reacciones. Un presupuesto que se acomoda a los hechos no es un plan, es un resumen tardío.</p>" },
+    { min:2, ico:"⚖️", chip:"o-chip-purple", titulo:"Un presupuesto a medias",
+      sub:"Sirvió para algunas cosas",
+      txt:"<p>Hubo plan y en parte se respetó, pero quedaron huecos: algo se estimó sin base o algo se dejó fuera, y esos puntos fueron justo los que trajeron sustos durante el año.</p>" +
+          "<p>Sofía terminó el año a flote y con una idea clara de dónde falló la planificación, que ya es bastante más que empezar de cero.</p>" },
+    { min:4, ico:"📈", chip:"o-chip-ok", titulo:"El año que sí cuadró",
+      sub:"El plan sirvió para decidir a tiempo",
+      txt:"<p>La Tostaduría cerró el año con las cuentas donde debían estar. No porque las cifras del presupuesto fueran exactas, que nunca lo son, sino porque cada mes se compararon con la realidad y las diferencias se corrigieron cuando todavía había margen.</p>" +
+          "<p>Sofía ya no pregunta si le va a alcanzar: abre el cuadro y lo ve venir.</p>" }
+  ];
+
+  // ---------- sonido ----------
+  var ctx=null;
+  function nota(freq, dur, vol, tipo){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+      o.type=tipo||'sine'; o.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function sonVoto(){ nota(880, 0.06, 0.05); }
+  function sonPuerta(){
+    nota(300, 0.35, 0.10, 'triangle');
+    setTimeout(function(){ nota(500, 0.20, 0.07); }, 180);
+    setTimeout(function(){ nota(750, 0.30, 0.06); }, 330);
+  }
+  function sonFinal(){
+    [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){ nota(f, 0.30, 0.08); }, i*130); });
+  }
+
+  // ---------- estado ----------
+  var i=0, votos={a:0,b:0}, ruta=[], aciertos=0, antes=null, t0=0, reloj=null, abriendo=false;
+
+  var $=function(id){ return document.getElementById(id); };
+  var pIni=$('pantalla-inicio'), pEsc=$('pantalla-escena'), pFin=$('pantalla-final');
+
+  function ver(el){
+    [pIni,pEsc,pFin].forEach(function(p){ p.classList.toggle('oculto', p!==el); });
+    window.scrollTo(0,0);
+  }
+  function mmss(s){
+    var m=Math.floor(s/60), r=s%60;
+    return (m<10?'0':'')+m+':'+(r<10?'0':'')+r;
+  }
+  function arrancarReloj(){
+    t0=Date.now();
+    if(reloj) clearInterval(reloj);
+    reloj=setInterval(function(){
+      $('esc-reloj').textContent=mmss(Math.floor((Date.now()-t0)/1000));
+    }, 1000);
+    $('esc-reloj').textContent='00:00';
+  }
+
+  function pintarVotos(){
+    var total=votos.a+votos.b;
+    $('voto-a').textContent=votos.a;
+    $('voto-b').textContent=votos.b;
+    $('barra-a').style.width = total ? (votos.a/total*100)+'%' : '0%';
+    $('barra-b').style.width = total ? (votos.b/total*100)+'%' : '0%';
+    var empate = total>0 && votos.a===votos.b;
+    $('aviso-empate').classList.toggle('oculto', !empate);
+    ['a','b'].forEach(function(c){
+      var el=$('puerta-'+c);
+      el.classList.toggle('desempate', empate);
+      if(empate){ el.setAttribute('role','button'); el.setAttribute('tabindex','0'); }
+      else { el.removeAttribute('role'); el.removeAttribute('tabindex'); }
+    });
+  }
+
+  function pintarEscena(){
+    var e=ESCENAS[i];
+    $('esc-paso').textContent='Decisión '+(i+1)+' de '+ESCENAS.length;
+    $('esc-titulo').textContent=e.titulo;
+    $('esc-relato').innerHTML=e.relato;
+    $('esc-pregunta').textContent=e.pregunta;
+    $('op-a').textContent=e.a.op; $('det-a').textContent=e.a.det;
+    $('op-b').textContent=e.b.op; $('det-b').textContent=e.b.det;
+    if(antes){ $('esc-antes').innerHTML=antes; $('esc-antes').classList.remove('oculto'); }
+    else { $('esc-antes').classList.add('oculto'); }
+    votos={a:0,b:0};
+    ['puerta-a','puerta-b'].forEach(function(id){
+      $(id).classList.remove('abre','cierra','gana','desempate');
+    });
+    abriendo=false;
+    pintarVotos();
+    $('contador').textContent='Decisión '+(i+1)+' de '+ESCENAS.length;
+    ver(pEsc);
+  }
+
+  function abrir(cual){
+    if(abriendo) return;
+    abriendo=true;
+    var e=ESCENAS[i], elegida=e[cual];
+    $('puerta-'+cual).classList.add('gana');
+    sonPuerta();
+    setTimeout(function(){
+      $('puerta-'+cual).classList.add('abre');
+      $('puerta-'+(cual==='a'?'b':'a')).classList.add('cierra');
+    }, 260);
+    setTimeout(function(){
+      ruta.push({ n:i+1, titulo:e.titulo, op:elegida.op, bien:elegida.bien, votos:votos.a+'–'+votos.b });
+      if(elegida.bien) aciertos++;
+      antes=elegida.antes;
+      i++;
+      if(i<ESCENAS.length) pintarEscena();
+      else terminar();
+    }, 1000);
+  }
+
+  function intentarAbrir(){
+    if(abriendo) return;
+    if(votos.a===votos.b){ pintarVotos(); return; }
+    abrir(votos.a>votos.b ? 'a' : 'b');
+  }
+
+  function terminar(){
+    if(reloj) clearInterval(reloj);
+    var f=FINALES[0];
+    FINALES.forEach(function(x){ if(aciertos>=x.min) f=x; });
+    $('fin-ico').textContent=f.ico;
+    $('fin-titulo').textContent=f.titulo;
+    $('fin-sub').textContent=f.sub;
+    $('fin-chip').className='o-chip '+f.chip;
+    $('fin-chip').textContent=aciertos+' de '+ESCENAS.length+' decisiones sólidas';
+    $('fin-texto').innerHTML=f.txt;
+    var h='';
+    ruta.forEach(function(r){
+      h+='<div class="hito"><span class="p">'+r.n+'</span><span class="q"><b>'+r.op+'</b>'+
+         '<span>'+r.titulo+' · votos '+r.votos+'</span></span></div>';
+    });
+    $('fin-ruta').innerHTML=h;
+    $('contador').textContent='Actividad terminada';
+    sonFinal();
+    ver(pFin);
+  }
+
+  function reiniciar(){
+    i=0; votos={a:0,b:0}; ruta=[]; aciertos=0; antes=null;
+    if(reloj) clearInterval(reloj);
+    ver(pIni);
+    $('contador').textContent='Actividad en grupo';
+  }
+
+  // ---------- eventos ----------
+  $('btn-empezar').addEventListener('click', function(){ arrancarReloj(); pintarEscena(); nota(660,0.1,0.08); });
+  $('btn-otra').addEventListener('click', reiniciar);
+  $('btn-abrir').addEventListener('click', intentarAbrir);
+  $('btn-ceros').addEventListener('click', function(){ votos={a:0,b:0}; pintarVotos(); nota(420,0.08,0.05); });
+
+  [['a','mas-a',1],['a','menos-a',-1],['b','mas-b',1],['b','menos-b',-1]].forEach(function(t){
+    $(t[1]).addEventListener('click', function(ev){
+      ev.stopPropagation();
+      if(abriendo) return;
+      votos[t[0]]=Math.max(0, votos[t[0]]+t[2]);
+      pintarVotos(); sonVoto();
+    });
+  });
+
+  ['a','b'].forEach(function(c){
+    $('puerta-'+c).addEventListener('click', function(){
+      if(abriendo) return;
+      if(votos.a===votos.b && votos.a+votos.b>0) abrir(c);
+    });
+  });
+
+  document.addEventListener('keydown', function(ev){
+    if(pEsc.classList.contains('oculto')) return;
+    var k=ev.key.toLowerCase();
+    if(k==='a'||k==='1'){ if(!abriendo){ votos.a++; pintarVotos(); sonVoto(); } }
+    else if(k==='b'||k==='2'){ if(!abriendo){ votos.b++; pintarVotos(); sonVoto(); } }
+    else if(ev.key==='Enter'){ intentarAbrir(); }
+    else return;
+    ev.preventDefault();
+  });
+})();
+</script>
+
+</body>
+</html>
