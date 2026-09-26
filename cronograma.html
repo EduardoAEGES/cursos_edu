@@ -38,6 +38,11 @@
   .cab-dia.hoy{ background:var(--o-purple); }
   .cab-dia.hoy small{ opacity:.95; }
 
+  .franja{
+    grid-column:1 / -1; background:#F2F0F4; color:var(--o-purple);
+    font-size:10.5px; font-weight:800; letter-spacing:.11em; text-transform:uppercase;
+    padding:6px 12px; border-top:1px solid var(--o-border); border-bottom:1px solid var(--o-border);
+  }
   .rail{ position:relative; border-right:1px solid var(--o-border); background:#FAFAFB; }
   .rail .marca{
     position:absolute; right:7px; transform:translateY(-50%);
@@ -146,9 +151,9 @@
       <div class="ico">🗓️</div>
       <div class="txt">
         <h1>Cronograma semanal</h1>
-        <p class="sub">Actividades programadas · turno noche</p>
+        <p class="sub">Actividades programadas de la semana</p>
       </div>
-      <div class="acc"><span class="o-chip o-chip-purple">Turno noche</span></div>
+      <div class="acc"><span class="o-chip o-chip-purple">Mañana y noche</span></div>
     </div>
   </div>
 
@@ -222,6 +227,9 @@
     { id:'ef', nombre:'Estados financieros', color:'#1F5FA8',
       desc:'Sesión corta de la ruta del curso: cada semana se arma una parte del juego de estados.',
       curso:{ t:'Ir a Estados Financieros', h:'estados-financieros.html' } },
+    { id:'repaso', nombre:'Repaso Excel', color:'#147A5C',
+      desc:'Sesión de repaso para afianzar lo visto en Excel empresarial, resolviendo ejercicios en vivo.',
+      curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
     { id:'compro', nombre:'Comprobantes de pago', color:'#B3541E',
       desc:'Factura, boleta, nota de crédito y guía de remisión: cuándo se usa cada uno y qué debe llevar.',
       curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } }
@@ -231,17 +239,26 @@
   var BLOQUES=[
     { tema:'pcge',   dia:0, ini:20*60+15, fin:20*60+30 },
     { tema:'pcge',   dia:2, ini:20*60+10, fin:20*60+30 },
-    { tema:'excel',  dia:0, ini:20*60+35, fin:20*60+55 },
     { tema:'excel',  dia:2, ini:20*60+35, fin:20*60+55 },
+    { tema:'excel',  dia:3, ini:20*60+35, fin:20*60+55 },
+    { tema:'repaso', dia:2, ini:10*60+40, fin:11*60+45 },
+    { tema:'repaso', dia:3, ini:10*60+40, fin:11*60+45 },
     { tema:'ef',     dia:1, ini:21*60+0,  fin:21*60+20 },
     { tema:'ef',     dia:3, ini:20*60+10, fin:20*60+30 },
     { tema:'compro', dia:0, ini:20*60+35, fin:20*60+55 }
   ];
 
-  var DESDE=20*60, HASTA=21*60+30, PX=5.2;   // píxeles por minuto
-  var PAD=12;                                // aire arriba y abajo
-  var ALTO=(HASTA-DESDE)*PX+PAD*2;
-  function y(m){ return (m-DESDE)*PX+PAD; }
+  var FRANJAS=[
+    { nombre:'Mañana', desde:10*60+30, hasta:12*60 },
+    { nombre:'Noche',  desde:20*60,    hasta:21*60+30 }
+  ];
+  var PX=3.4, PAD=12;                        // píxeles por minuto y aire arriba y abajo
+  function alto(f){ return (f.hasta-f.desde)*PX+PAD*2; }
+  function y(f, m){ return (m-f.desde)*PX+PAD; }
+  function franjaDe(b){
+    for(var i=0;i<FRANJAS.length;i++) if(b.ini>=FRANJAS[i].desde && b.fin<=FRANJAS[i].hasta) return i;
+    return 0;
+  }
 
   function tema(id){ for(var i=0;i<TEMAS.length;i++) if(TEMAS[i].id===id) return TEMAS[i]; }
   function hhmm(m){
@@ -277,30 +294,36 @@
     DIAS.forEach(function(d,i){
       h+='<div class="cab-dia'+(i===hoy?' hoy':'')+'">'+d+(i===hoy?'<small>hoy</small>':'')+'</div>';
     });
-    h+='<div class="rail" style="height:'+ALTO+'px">';
-    for(var m=DESDE; m<=HASTA; m+=15){
-      h+='<span class="marca" style="top:'+y(m)+'px">'+hhmm(m)+'</span>';
-    }
-    h+='</div>';
-    DIAS.forEach(function(d,i){
-      h+='<div class="dia'+(i===hoy?' hoy':'')+'" style="height:'+ALTO+'px">';
-      for(var m=DESDE+15; m<HASTA; m+=15){
-        h+='<span class="linea'+((m%60===0)?' fuerte':'')+'" style="top:'+y(m)+'px"></span>';
+
+    FRANJAS.forEach(function(f, fi){
+      var alt=alto(f);
+      h+='<div class="franja">'+f.nombre+'</div>';
+      h+='<div class="rail" style="height:'+alt+'px">';
+      for(var m=f.desde; m<=f.hasta; m+=15){
+        h+='<span class="marca" style="top:'+y(f,m)+'px">'+hhmm(m)+'</span>';
       }
-      BLOQUES.forEach(function(b,k){
-        if(b.dia!==i) return;
-        var t=tema(b.tema);
-        var top=y(b.ini), alto=(b.fin-b.ini)*PX;
-        var ancho=100/b.carriles, izq=b.carril*ancho;
-        h+='<button class="bloque'+(alto<34?' corto':'')+(apagados[b.tema]?' apagado':'')+'" data-k="'+k+'" type="button"'+
-           ' style="top:'+top+'px;height:'+(alto-3)+'px;background:'+t.color+';left:calc('+izq+'% + 4px);width:calc('+ancho+'% - 8px)">'+
-           '<span class="n">'+t.nombre+'</span><span class="h">'+rango(b)+'</span></button>';
-        if(b.choca && b.carril===0 && !apagados[b.tema]){
-          h+='<span class="choque" style="top:'+(top-7)+'px;left:6px">choque</span>';
-        }
-      });
       h+='</div>';
+      DIAS.forEach(function(d,i){
+        h+='<div class="dia'+(i===hoy?' hoy':'')+'" style="height:'+alt+'px">';
+        for(var m=f.desde+15; m<f.hasta; m+=15){
+          h+='<span class="linea'+((m%60===0)?' fuerte':'')+'" style="top:'+y(f,m)+'px"></span>';
+        }
+        BLOQUES.forEach(function(b,k){
+          if(b.dia!==i || franjaDe(b)!==fi) return;
+          var t=tema(b.tema);
+          var top=y(f,b.ini), altoB=(b.fin-b.ini)*PX;
+          var ancho=100/b.carriles, izq=b.carril*ancho;
+          h+='<button class="bloque'+(altoB<34?' corto':'')+(apagados[b.tema]?' apagado':'')+'" data-k="'+k+'" type="button"'+
+             ' style="top:'+top+'px;height:'+(altoB-3)+'px;background:'+t.color+';left:calc('+izq+'% + 4px);width:calc('+ancho+'% - 8px)">'+
+             '<span class="n">'+t.nombre+'</span><span class="h">'+rango(b)+'</span></button>';
+          if(b.choca && b.carril===0 && !apagados[b.tema]){
+            h+='<span class="choque" style="top:'+(top-7)+'px;left:6px">choque</span>';
+          }
+        });
+        h+='</div>';
+      });
     });
+
     $('semana').innerHTML=h;
     [].slice.call($('semana').querySelectorAll('.bloque')).forEach(function(el){
       el.addEventListener('click', function(){ elegir(+el.getAttribute('data-k')); });
@@ -360,7 +383,7 @@
       '<span class="dato"><b>Día</b>'+DIAS[b.dia]+'</span>'+
       '<span class="dato"><b>Hora</b>'+rango(b)+'</span>'+
       '<span class="dato"><b>Duración</b>'+(b.fin-b.ini)+' minutos</span>'+
-      '<span class="dato"><b>Turno</b>Noche</span>'+
+      '<span class="dato"><b>Franja</b>'+FRANJAS[franjaDe(b)].nombre+'</span>'+
       '</div>'+
       '<p class="desc">'+t.desc+'</p>'+
       '<p class="desc" style="margin-top:6px"><b>En la semana:</b> '+mismos+'</p>';
