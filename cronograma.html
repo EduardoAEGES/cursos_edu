@@ -118,6 +118,21 @@
   }
   .aviso-choque b{ display:block; font-size:11px; letter-spacing:.05em; text-transform:uppercase; margin-bottom:3px; }
 
+  .accesos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; }
+  .acceso{
+    display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; min-width:0;
+    border:1px solid var(--o-border); border-radius:9px; padding:13px 15px; background:#fff;
+    transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .acceso:hover{ transform:translateY(-2px); box-shadow:0 7px 16px rgba(0,0,0,.10); border-color:var(--o-purple); }
+  .acceso .ico{ flex:none; width:38px; height:38px; border-radius:9px; display:grid; place-items:center; font-size:18px; }
+  .acceso .q{ flex:1; min-width:0; }
+  .acceso .q b{ display:block; font-size:14px; }
+  .acceso .q span{ display:block; color:var(--o-muted); font-size:12.5px; margin-top:2px; }
+  .acceso .ir{ flex:none; color:var(--o-teal); font-weight:700; font-size:12.5px; white-space:nowrap; }
+  .acceso.meet .ico{ background:#E6F2F3; }
+  .acceso .tira{ flex:none; width:5px; align-self:stretch; border-radius:3px; }
+
   .resumen{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
   .tarjeta-dato{ border:1px solid var(--o-border); border-radius:8px; padding:13px 15px; background:#fff; }
   .tarjeta-dato .v{ font-size:25px; font-weight:800; line-height:1; color:var(--o-purple); font-variant-numeric:tabular-nums; }
@@ -165,6 +180,13 @@
     <div class="agenda o-mt" id="agenda"></div>
 
     <div id="aviso"></div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Enlaces de acceso</h2>
+    <div class="accesos" id="reuniones"></div>
+    <h3 class="o-section-title o-mt">Carpetas de material</h3>
+    <div class="accesos" id="carpetas"></div>
   </div>
 
   <div class="o-sheet">
@@ -220,18 +242,23 @@
   var TEMAS=[
     { id:'pcge', nombre:'Dinámica del PCGE', color:'#714B67',
       desc:'Práctica corta sobre el Plan Contable General Empresarial: ubicar la cuenta que corresponde a cada operación.',
+      drive:'https://drive.google.com/drive/folders/1-fOpCcN7GrfdIwrXRFJsk7SPjH_-1U8c',
       curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } },
     { id:'excel', nombre:'Excel empresarial esencial', color:'#21A366',
       desc:'Lo mínimo de Excel que se necesita para trabajar con información contable y financiera.',
+      drive:'https://drive.google.com/drive/folders/1M2infcFsiMpVAp_vkgYbRphOD1piP-_b',
       curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
     { id:'ef', nombre:'Estados financieros', color:'#1F5FA8',
       desc:'Sesión corta de la ruta del curso: cada semana se arma una parte del juego de estados.',
+      drive:'https://drive.google.com/drive/folders/1retOjKwCvNrsI6v3BtfERV4xv3I40ouC',
       curso:{ t:'Ir a Estados Financieros', h:'estados-financieros.html' } },
     { id:'repaso', nombre:'Repaso Excel', color:'#147A5C',
       desc:'Sesión de repaso para afianzar lo visto en Excel empresarial, resolviendo ejercicios en vivo.',
+      drive:'https://drive.google.com/drive/folders/1IpVn6tgCxuhGVr2DHlQ7SMUKeo_R2z2W',
       curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
     { id:'compro', nombre:'Comprobantes de pago', color:'#B3541E',
       desc:'Factura, boleta, nota de crédito y guía de remisión: cuándo se usa cada uno y qué debe llevar.',
+      drive:'https://drive.google.com/drive/folders/1XjTqQamPePnkMrJc6--cBdgY_5HpRML5',
       curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } }
   ];
 
@@ -249,8 +276,8 @@
   ];
 
   var FRANJAS=[
-    { nombre:'Mañana', desde:10*60+30, hasta:12*60 },
-    { nombre:'Noche',  desde:20*60,    hasta:21*60+30 }
+    { nombre:'Mañana', desde:10*60+30, hasta:12*60, meet:'https://meet.google.com/aqx-aiix-ocv' },
+    { nombre:'Noche',  desde:20*60,    hasta:21*60+30, meet:'https://meet.google.com/xgo-qgtq-bwh' }
   ];
   var PX=3.4, PAD=12;                        // píxeles por minuto y aire arriba y abajo
   function alto(f){ return (f.hasta-f.desde)*PX+PAD*2; }
@@ -388,12 +415,43 @@
       '<p class="desc">'+t.desc+'</p>'+
       '<p class="desc" style="margin-top:6px"><b>En la semana:</b> '+mismos+'</p>';
     if(b.choca) h+='<div class="aviso-choque"><b>Choque de horario</b>Esta actividad comparte franja con otra el mismo día.</div>';
-    if(t.curso) h+='<div class="acc"><a class="o-btn o-btn-secondary" href="'+t.curso.h+'">'+t.curso.t+'</a></div>';
+    var f=FRANJAS[franjaDe(b)];
+    h+='<div class="acc">';
+    if(f.meet) h+='<a class="o-btn o-btn-teal" href="'+f.meet+'" target="_blank" rel="noopener">Entrar a la reunión</a> ';
+    if(t.drive) h+='<a class="o-btn o-btn-secondary" href="'+t.drive+'" target="_blank" rel="noopener">Abrir la carpeta</a> ';
+    if(t.curso) h+='<a class="o-btn o-btn-secondary" href="'+t.curso.h+'">'+t.curso.t+'</a>';
+    h+='</div>';
     var d=$('detalle'); d.className='detalle'; d.innerHTML=h;
     d.style.borderLeftColor=t.color;
     [].slice.call(document.querySelectorAll('.bloque')).forEach(function(el){
       el.classList.toggle('sel', +el.getAttribute('data-k')===k);
     });
+  }
+
+  function pintarAccesos(){
+    var h='';
+    FRANJAS.forEach(function(f, i){
+      if(!f.meet) return;
+      var cuales=[];
+      BLOQUES.forEach(function(b){
+        if(franjaDe(b)===i && cuales.indexOf(tema(b.tema).nombre)<0) cuales.push(tema(b.tema).nombre);
+      });
+      h+='<a class="acceso meet" href="'+f.meet+'" target="_blank" rel="noopener">'+
+         '<span class="ico">📹</span><span class="q"><b>Reunión de la '+f.nombre.toLowerCase()+'</b>'+
+         '<span>'+cuales.join(' · ')+'</span></span><span class="ir">Entrar ↗</span></a>';
+    });
+    $('reuniones').innerHTML=h;
+
+    h='';
+    TEMAS.forEach(function(t){
+      if(!t.drive) return;
+      h+='<a class="acceso" href="'+t.drive+'" target="_blank" rel="noopener">'+
+         '<span class="tira" style="background:'+t.color+'"></span>'+
+         '<span class="ico" style="background:'+t.color+'22">📁</span>'+
+         '<span class="q"><b>'+t.nombre+'</b><span>Material de la actividad</span></span>'+
+         '<span class="ir">Abrir ↗</span></a>';
+    });
+    $('carpetas').innerHTML=h;
   }
 
   function pintarResumen(){
@@ -423,7 +481,7 @@
       'Aparecen una al lado de la otra hasta que se decida cuál se mueve.</div>';
   }
 
-  function todo(){ pintarLeyenda(); pintarSemana(); pintarAgenda(); pintarResumen(); pintarAviso();
+  function todo(){ pintarLeyenda(); pintarSemana(); pintarAgenda(); pintarAccesos(); pintarResumen(); pintarAviso();
                    if(sel!==null && !apagados[BLOQUES[sel].tema]) elegir(sel); }
   todo();
 })();
