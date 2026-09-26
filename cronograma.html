@@ -35,6 +35,7 @@
   }
   .cab-dia:last-child{ border-right:0; }
   .cab-dia small{ display:block; font-weight:500; font-size:11.5px; opacity:.75; margin-top:2px; }
+  .cab-dia .fecha{ display:block; font-weight:600; font-size:12px; opacity:.85; margin-top:3px; font-variant-numeric:tabular-nums; }
   .cab-dia.hoy{ background:var(--o-purple); }
   .cab-dia.hoy small{ opacity:.95; }
 
@@ -64,6 +65,11 @@
   .bloque.sel{ box-shadow:0 0 0 3px rgba(113,75,103,.45); z-index:5; }
   .bloque .n{ display:block; font-weight:700; font-size:12.5px; line-height:1.25; }
   .bloque .h{ display:block; font-size:11px; opacity:.9; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .bloque .ses{
+    display:inline-block; margin-top:4px; font-size:10px; font-weight:700; letter-spacing:.03em;
+    background:rgba(255,255,255,.25); border-radius:999px; padding:1px 7px;
+  }
+  .bloque.fin{ opacity:.5; }
   .bloque.corto{ padding:4px 8px; }
   .bloque.corto .n{ font-size:11.5px; }
   .bloque.corto .h{ display:none; }
@@ -74,6 +80,47 @@
     font-size:9.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
     border-radius:999px; padding:1px 7px; pointer-events:none;
   }
+
+  /* navegador de semana */
+  .nav-semana{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .nav-semana button{
+    font:inherit; font-size:14px; font-weight:700; cursor:pointer; line-height:1;
+    border:1px solid var(--o-border); background:#fff; color:var(--o-label);
+    border-radius:8px; padding:8px 12px; transition:all .15s ease;
+  }
+  .nav-semana button:hover{ border-color:var(--o-purple); color:var(--o-purple); background:var(--o-purple-soft); }
+  .nav-semana .rotulo{ font-weight:700; font-size:14.5px; }
+  .nav-semana .rotulo span{ display:block; font-weight:500; font-size:12px; color:var(--o-muted); margin-top:2px; }
+
+  /* ventana de la actividad */
+  .pop{
+    position:fixed; z-index:40; width:310px; max-width:calc(100vw - 24px);
+    background:#fff; border:1px solid var(--o-border); border-top:4px solid var(--o-purple);
+    border-radius:10px; box-shadow:0 16px 40px rgba(0,0,0,.24); padding:15px 16px 16px;
+    animation:surge .16s ease;
+  }
+  @keyframes surge{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
+  .pop .cerrar{
+    position:absolute; top:7px; right:8px; border:0; background:transparent; cursor:pointer;
+    font:inherit; font-size:19px; line-height:1; color:var(--o-muted); padding:3px 6px; border-radius:6px;
+  }
+  .pop .cerrar:hover{ background:var(--o-line); color:var(--o-text); }
+  .pop .tit{ font-size:15.5px; font-weight:700; padding-right:22px; }
+  .pop .cuando{ font-size:12.5px; color:var(--o-muted); margin-top:3px; font-variant-numeric:tabular-nums; }
+  .pop .chip-ses{
+    display:inline-block; margin-top:8px; font-size:11px; font-weight:700;
+    color:var(--o-purple); background:var(--o-purple-soft); border:1px solid #D8CBD4;
+    border-radius:999px; padding:2px 10px;
+  }
+  .pop .desc{ font-size:13px; color:var(--o-label); line-height:1.55; margin-top:9px; }
+  .pop .acciones{ display:grid; gap:7px; margin-top:12px; }
+  .pop .acciones a{
+    display:flex; align-items:center; justify-content:space-between; gap:8px; text-decoration:none;
+    font-size:13px; font-weight:600; border-radius:8px; padding:9px 12px; border:1px solid var(--o-border); color:var(--o-text);
+  }
+  .pop .acciones a.meet{ background:var(--o-teal); border-color:var(--o-teal); color:#fff; }
+  .pop .acciones a:hover{ filter:brightness(1.06); border-color:var(--o-purple); }
+  .pop .acciones a.meet:hover{ border-color:var(--o-teal); }
 
   /* agenda para móvil */
   .agenda{ display:none; }
@@ -137,6 +184,8 @@
   .tarjeta-dato{ border:1px solid var(--o-border); border-radius:8px; padding:13px 15px; background:#fff; }
   .tarjeta-dato .v{ font-size:25px; font-weight:800; line-height:1; color:var(--o-purple); font-variant-numeric:tabular-nums; }
   .tarjeta-dato .e{ font-size:12px; color:var(--o-muted); margin-top:5px; }
+
+  .oculto{ display:none !important; }
 </style>
 </head>
 <body>
@@ -176,7 +225,14 @@
     <h2 class="o-section-title">Actividades</h2>
     <div class="leyenda" id="leyenda"></div>
 
-    <div class="semana o-mt" id="semana"></div>
+    <div class="nav-semana o-mt" id="nav">
+      <button type="button" id="ant" aria-label="Semana anterior">‹</button>
+      <button type="button" id="hoy-btn">Esta semana</button>
+      <button type="button" id="sig" aria-label="Semana siguiente">›</button>
+      <span class="rotulo" id="rotulo-semana"></span>
+    </div>
+
+    <div class="semana" id="semana"></div>
     <div class="agenda o-mt" id="agenda"></div>
 
     <div id="aviso"></div>
@@ -187,11 +243,6 @@
     <div class="accesos" id="reuniones"></div>
     <h3 class="o-section-title o-mt">Carpetas de material</h3>
     <div class="accesos" id="carpetas"></div>
-  </div>
-
-  <div class="o-sheet">
-    <h2 class="o-section-title">Detalle</h2>
-    <div class="detalle vacio" id="detalle">Toca una actividad del cronograma para ver su detalle.</div>
   </div>
 
   <div class="o-sheet">
@@ -210,6 +261,8 @@
 
 </div>
 </div>
+
+<div class="pop oculto" id="pop" role="dialog" aria-label="Detalle de la actividad"></div>
 
 <script>
 (function(){
@@ -238,31 +291,37 @@
 
   /* ---------------- datos ---------------- */
   var DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+  var MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre'];
 
+  var FRANJAS=[
+    { nombre:'Mañana', desde:10*60+30, hasta:12*60, meet:'https://meet.google.com/aqx-aiix-ocv' },
+    { nombre:'Noche',  desde:20*60,    hasta:21*60+30, meet:'https://meet.google.com/xgo-qgtq-bwh' }
+  ];
+
+  // total: sesiones del curso · inicio: número que le toca a la primera sesión de la semana ancla
   var TEMAS=[
-    { id:'pcge', nombre:'Dinámica del PCGE', color:'#714B67',
+    { id:'pcge', nombre:'Dinámica del PCGE', color:'#714B67', total:10, inicio:1,
       desc:'Práctica corta sobre el Plan Contable General Empresarial: ubicar la cuenta que corresponde a cada operación.',
       drive:'https://drive.google.com/drive/folders/1-fOpCcN7GrfdIwrXRFJsk7SPjH_-1U8c',
       curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } },
-    { id:'excel', nombre:'Excel empresarial esencial', color:'#21A366',
+    { id:'excel', nombre:'Excel empresarial esencial', color:'#21A366', total:10, inicio:6,
       desc:'Lo mínimo de Excel que se necesita para trabajar con información contable y financiera.',
       drive:'https://drive.google.com/drive/folders/1M2infcFsiMpVAp_vkgYbRphOD1piP-_b',
       curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
-    { id:'ef', nombre:'Estados financieros', color:'#1F5FA8',
+    { id:'ef', nombre:'Estados financieros', color:'#1F5FA8', total:10, inicio:1,
       desc:'Sesión corta de la ruta del curso: cada semana se arma una parte del juego de estados.',
       drive:'https://drive.google.com/drive/folders/1retOjKwCvNrsI6v3BtfERV4xv3I40ouC',
       curso:{ t:'Ir a Estados Financieros', h:'estados-financieros.html' } },
-    { id:'repaso', nombre:'Repaso Excel', color:'#147A5C',
+    { id:'repaso', nombre:'Repaso Excel', color:'#147A5C', total:10, inicio:1,
       desc:'Sesión de repaso para afianzar lo visto en Excel empresarial, resolviendo ejercicios en vivo.',
       drive:'https://drive.google.com/drive/folders/1IpVn6tgCxuhGVr2DHlQ7SMUKeo_R2z2W',
       curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
-    { id:'compro', nombre:'Comprobantes de pago', color:'#B3541E',
+    { id:'compro', nombre:'Comprobantes de pago', color:'#B3541E', total:5, inicio:1,
       desc:'Factura, boleta, nota de crédito y guía de remisión: cuándo se usa cada uno y qué debe llevar.',
       drive:'https://drive.google.com/drive/folders/1XjTqQamPePnkMrJc6--cBdgY_5HpRML5',
       curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } }
   ];
 
-  // hora en minutos desde medianoche; todo es turno noche
   var BLOQUES=[
     { tema:'pcge',   dia:0, ini:20*60+10, fin:20*60+30 },
     { tema:'pcge',   dia:2, ini:20*60+10, fin:20*60+30 },
@@ -275,77 +334,117 @@
     { tema:'compro', dia:0, ini:20*60+35, fin:20*60+55 }
   ];
 
-  var FRANJAS=[
-    { nombre:'Mañana', desde:10*60+30, hasta:12*60, meet:'https://meet.google.com/aqx-aiix-ocv' },
-    { nombre:'Noche',  desde:20*60,    hasta:21*60+30, meet:'https://meet.google.com/xgo-qgtq-bwh' }
-  ];
-  var PX=3.4, PAD=12;                        // píxeles por minuto y aire arriba y abajo
+  var PX=3.4, PAD=12;
   function alto(f){ return (f.hasta-f.desde)*PX+PAD*2; }
   function y(f, m){ return (m-f.desde)*PX+PAD; }
   function franjaDe(b){
     for(var i=0;i<FRANJAS.length;i++) if(b.ini>=FRANJAS[i].desde && b.fin<=FRANJAS[i].hasta) return i;
     return 0;
   }
-
   function tema(id){ for(var i=0;i<TEMAS.length;i++) if(TEMAS[i].id===id) return TEMAS[i]; }
-  function hhmm(m){
-    var h=Math.floor(m/60), x=m%60;
-    return (h<10?'0':'')+h+':'+(x<10?'0':'')+x;
-  }
+  function hhmm(m){ var h=Math.floor(m/60), x=m%60; return (h<10?'0':'')+h+':'+(x<10?'0':'')+x; }
   function rango(b){ return hhmm(b.ini)+' – '+hhmm(b.fin); }
+
+  /* ---------------- numeración de sesiones ----------------
+     La semana ancla es aquella en la que cada tema dicta la sesión "inicio".  */
+  var ANCLA=new Date(2026,8,28);            // lunes 28 de setiembre de 2026
+  BLOQUES.sort(function(a,b){ return (a.dia-b.dia) || (a.ini-b.ini); });
+  var orden={};
+  BLOQUES.forEach(function(b){
+    orden[b.tema]=(orden[b.tema]||0);
+    b.idx=orden[b.tema]++;                  // posición dentro de su semana
+  });
+  BLOQUES.forEach(function(b){ b.porSemana=orden[b.tema]; });
+
+  function sesionDe(b, semanas){
+    var t=tema(b.tema);
+    return t.inicio + semanas*b.porSemana + b.idx;
+  }
+
+  /* ---------------- semana mostrada ---------------- */
+  function soloFecha(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function lunesDe(d){
+    var x=soloFecha(d), dow=x.getDay();     // 0 domingo … 6 sábado
+    x.setDate(x.getDate() + (dow===0 ? -6 : 1-dow));
+    return x;
+  }
+  function sumaDias(d, n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+
+  var HOY=soloFecha(new Date());
+  // el fin de semana ya no quedan sesiones, así que se muestra la semana siguiente
+  var LUNES_INICIAL=lunesDe(HOY);
+  if(HOY.getDay()===0 || HOY.getDay()===6) LUNES_INICIAL=sumaDias(lunesDe(HOY), 7);
+
+  var semanaOffset=0;
+  function lunesMostrado(){ return sumaDias(LUNES_INICIAL, semanaOffset*7); }
+  function semanasDesdeAncla(){
+    return Math.round((lunesMostrado()-ANCLA)/(7*24*3600*1000));
+  }
+  function fechaDe(i){ return sumaDias(lunesMostrado(), i); }
+  function ddmm(d){
+    var a=d.getDate(), m=d.getMonth()+1;
+    return (a<10?'0':'')+a+'/'+(m<10?'0':'')+m;
+  }
+  function mismoDia(a,b){ return a.getTime()===b.getTime(); }
+  function indiceHoy(){
+    for(var i=0;i<5;i++) if(mismoDia(fechaDe(i), HOY)) return i;
+    return -1;
+  }
 
   /* ---------------- choques ---------------- */
   BLOQUES.forEach(function(b){ b.carril=0; b.carriles=1; b.choca=false; });
   DIAS.forEach(function(_, d){
-    var delDia=BLOQUES.filter(function(b){ return b.dia===d; })
-                      .sort(function(a,b){ return a.ini-b.ini; });
+    var delDia=BLOQUES.filter(function(b){ return b.dia===d; });
     delDia.forEach(function(b){
       var solapan=delDia.filter(function(o){ return o.ini < b.fin && b.ini < o.fin; });
-      if(solapan.length>1){
-        solapan.forEach(function(o,k){ o.choca=true; o.carril=k; o.carriles=solapan.length; });
-      }
+      if(solapan.length>1) solapan.forEach(function(o,k){ o.choca=true; o.carril=k; o.carriles=solapan.length; });
     });
   });
   var hayChoque=BLOQUES.some(function(b){ return b.choca; });
 
-  /* ---------------- hoy ---------------- */
-  var jsHoy=new Date().getDay();            // 0 domingo … 6 sábado
-  var hoy=(jsHoy>=1 && jsHoy<=5) ? jsHoy-1 : -1;
+  /* ---------------- estado ---------------- */
+  var apagados={};
+
+  function etiquetaSesion(b){
+    var t=tema(b.tema), n=sesionDe(b, semanasDesdeAncla());
+    if(n<1) return null;
+    if(n>t.total) return { txt:'Curso terminado', fin:true };
+    return { txt:'Sesión '+n+' de '+t.total, fin:false, n:n };
+  }
 
   /* ---------------- rejilla ---------------- */
-  var apagados={};
-  var sel=null;
-
   function pintarSemana(){
+    var hoyIdx=indiceHoy();
     var h='<div class="cab-hora">Hora</div>';
     DIAS.forEach(function(d,i){
-      h+='<div class="cab-dia'+(i===hoy?' hoy':'')+'">'+d+(i===hoy?'<small>hoy</small>':'')+'</div>';
+      h+='<div class="cab-dia'+(i===hoyIdx?' hoy':'')+'">'+d+
+         '<span class="fecha">'+ddmm(fechaDe(i))+'</span>'+
+         (i===hoyIdx?'<small>hoy</small>':'')+'</div>';
     });
 
     FRANJAS.forEach(function(f, fi){
       var alt=alto(f);
       h+='<div class="franja">'+f.nombre+'</div>';
       h+='<div class="rail" style="height:'+alt+'px">';
-      for(var m=f.desde; m<=f.hasta; m+=15){
-        h+='<span class="marca" style="top:'+y(f,m)+'px">'+hhmm(m)+'</span>';
-      }
+      for(var m=f.desde; m<=f.hasta; m+=15) h+='<span class="marca" style="top:'+y(f,m)+'px">'+hhmm(m)+'</span>';
       h+='</div>';
       DIAS.forEach(function(d,i){
-        h+='<div class="dia'+(i===hoy?' hoy':'')+'" style="height:'+alt+'px">';
-        for(var m=f.desde+15; m<f.hasta; m+=15){
+        h+='<div class="dia'+(i===hoyIdx?' hoy':'')+'" style="height:'+alt+'px">';
+        for(var m=f.desde+15; m<f.hasta; m+=15)
           h+='<span class="linea'+((m%60===0)?' fuerte':'')+'" style="top:'+y(f,m)+'px"></span>';
-        }
         BLOQUES.forEach(function(b,k){
           if(b.dia!==i || franjaDe(b)!==fi) return;
-          var t=tema(b.tema);
+          var t=tema(b.tema), et=etiquetaSesion(b);
           var top=y(f,b.ini), altoB=(b.fin-b.ini)*PX;
           var ancho=100/b.carriles, izq=b.carril*ancho;
-          h+='<button class="bloque'+(altoB<34?' corto':'')+(apagados[b.tema]?' apagado':'')+'" data-k="'+k+'" type="button"'+
+          var corto=altoB<48;
+          h+='<button class="bloque'+(corto?' corto':'')+(apagados[b.tema]?' apagado':'')+
+             ((et&&et.fin)?' fin':'')+'" data-k="'+k+'" type="button"'+
              ' style="top:'+top+'px;height:'+(altoB-3)+'px;background:'+t.color+';left:calc('+izq+'% + 4px);width:calc('+ancho+'% - 8px)">'+
-             '<span class="n">'+t.nombre+'</span><span class="h">'+rango(b)+'</span></button>';
-          if(b.choca && b.carril===0 && !apagados[b.tema]){
+             '<span class="n">'+t.nombre+'</span><span class="h">'+rango(b)+'</span>'+
+             (et && !corto ? '<span class="ses">'+et.txt+'</span>' : '')+'</button>';
+          if(b.choca && b.carril===0 && !apagados[b.tema])
             h+='<span class="choque" style="top:'+(top-7)+'px;left:6px">choque</span>';
-          }
         });
         h+='</div>';
       });
@@ -353,33 +452,74 @@
 
     $('semana').innerHTML=h;
     [].slice.call($('semana').querySelectorAll('.bloque')).forEach(function(el){
-      el.addEventListener('click', function(){ elegir(+el.getAttribute('data-k')); });
+      el.addEventListener('click', function(ev){ ev.stopPropagation(); abrirPop(+el.getAttribute('data-k'), el); });
     });
   }
 
   function pintarAgenda(){
-    var h='';
+    var hoyIdx=indiceHoy(), h='';
     DIAS.forEach(function(d,i){
       var dd=BLOQUES.map(function(b,k){ return {b:b,k:k}; })
                     .filter(function(x){ return x.b.dia===i && !apagados[x.b.tema]; })
                     .sort(function(a,b){ return a.b.ini-b.b.ini; });
-      h+='<div class="ag-dia'+(i===hoy?' hoy':'')+'"><h3>'+d+(i===hoy?' · hoy':'')+'</h3>';
+      h+='<div class="ag-dia'+(i===hoyIdx?' hoy':'')+'"><h3>'+d+' '+ddmm(fechaDe(i))+(i===hoyIdx?' · hoy':'')+'</h3>';
       if(!dd.length) h+='<p class="ag-vacio">Sin actividades.</p>';
       dd.forEach(function(x){
-        var t=tema(x.b.tema);
+        var t=tema(x.b.tema), et=etiquetaSesion(x.b);
         h+='<button class="ag-item" data-k="'+x.k+'" type="button">'+
            '<span class="tira" style="background:'+t.color+'"></span>'+
            '<span class="q"><b>'+t.nombre+'</b><span>'+rango(x.b)+' · '+(x.b.fin-x.b.ini)+' min'+
-           (x.b.choca?' · choque de horario':'')+'</span></span></button>';
+           (et?' · '+et.txt:'')+(x.b.choca?' · choque de horario':'')+'</span></span></button>';
       });
       h+='</div>';
     });
     $('agenda').innerHTML=h;
     [].slice.call($('agenda').querySelectorAll('.ag-item')).forEach(function(el){
-      el.addEventListener('click', function(){ elegir(+el.getAttribute('data-k')); });
+      el.addEventListener('click', function(ev){ ev.stopPropagation(); abrirPop(+el.getAttribute('data-k'), el); });
     });
   }
 
+  /* ---------------- ventana de la actividad ---------------- */
+  var pop=$('pop');
+  function cerrarPop(){
+    pop.classList.add('oculto');
+    [].slice.call(document.querySelectorAll('.bloque.sel')).forEach(function(e){ e.classList.remove('sel'); });
+  }
+  function abrirPop(k, ancla){
+    var b=BLOQUES[k], t=tema(b.tema), f=FRANJAS[franjaDe(b)], et=etiquetaSesion(b);
+    pick();
+    var h='<button class="cerrar" type="button" aria-label="Cerrar">×</button>'+
+      '<div class="tit">'+t.nombre+'</div>'+
+      '<div class="cuando">'+DIAS[b.dia]+' '+ddmm(fechaDe(b.dia))+' · '+rango(b)+' · '+(b.fin-b.ini)+' min</div>';
+    if(et) h+='<span class="chip-ses">'+et.txt+'</span>';
+    h+='<p class="desc">'+t.desc+'</p><div class="acciones">';
+    if(f.meet) h+='<a class="meet" href="'+f.meet+'" target="_blank" rel="noopener">Entrar a la reunión <span>↗</span></a>';
+    if(t.drive) h+='<a href="'+t.drive+'" target="_blank" rel="noopener">Abrir la carpeta <span>↗</span></a>';
+    if(t.curso) h+='<a href="'+t.curso.h+'">'+t.curso.t+' <span>›</span></a>';
+    h+='</div>';
+    pop.innerHTML=h;
+    pop.style.borderTopColor=t.color;
+    pop.classList.remove('oculto');
+    pop.querySelector('.cerrar').addEventListener('click', function(){ cerrarPop(); off(); });
+
+    var r=ancla.getBoundingClientRect(), pr=pop.getBoundingClientRect();
+    var izq=Math.min(Math.max(8, r.left), window.innerWidth-pr.width-8);
+    var arr=r.bottom+8;
+    if(arr+pr.height > window.innerHeight-8) arr=Math.max(8, r.top-pr.height-8);
+    pop.style.left=izq+'px';
+    pop.style.top=arr+'px';
+
+    [].slice.call(document.querySelectorAll('.bloque')).forEach(function(el){
+      el.classList.toggle('sel', +el.getAttribute('data-k')===k);
+    });
+  }
+  document.addEventListener('click', function(ev){
+    if(!pop.classList.contains('oculto') && !pop.contains(ev.target)) cerrarPop();
+  });
+  document.addEventListener('keydown', function(ev){ if(ev.key==='Escape') cerrarPop(); });
+  window.addEventListener('resize', cerrarPop);
+
+  /* ---------------- leyenda, accesos, resumen, avisos ---------------- */
   function pintarLeyenda(){
     var h='';
     TEMAS.forEach(function(t){
@@ -390,41 +530,13 @@
     });
     $('leyenda').innerHTML=h;
     [].slice.call($('leyenda').querySelectorAll('.ley')).forEach(function(el){
-      el.addEventListener('click', function(){
+      el.addEventListener('click', function(ev){
+        ev.stopPropagation();
         var id=el.getAttribute('data-t');
         apagados[id]=!apagados[id];
         if(apagados[id]) off(); else toc();
-        todo();
+        cerrarPop(); todo();
       });
-    });
-  }
-
-  function elegir(k){
-    sel=k; pick();
-    var b=BLOQUES[k], t=tema(b.tema);
-    var mismos=BLOQUES.filter(function(o){ return o.tema===b.tema; })
-                      .sort(function(a,b){ return a.dia-b.dia; })
-                      .map(function(o){ return DIAS[o.dia]+' '+rango(o); }).join(' · ');
-    var h='<div class="tit">'+t.nombre+'</div>'+
-      '<div class="datos">'+
-      '<span class="dato"><b>Día</b>'+DIAS[b.dia]+'</span>'+
-      '<span class="dato"><b>Hora</b>'+rango(b)+'</span>'+
-      '<span class="dato"><b>Duración</b>'+(b.fin-b.ini)+' minutos</span>'+
-      '<span class="dato"><b>Franja</b>'+FRANJAS[franjaDe(b)].nombre+'</span>'+
-      '</div>'+
-      '<p class="desc">'+t.desc+'</p>'+
-      '<p class="desc" style="margin-top:6px"><b>En la semana:</b> '+mismos+'</p>';
-    if(b.choca) h+='<div class="aviso-choque"><b>Choque de horario</b>Esta actividad comparte franja con otra el mismo día.</div>';
-    var f=FRANJAS[franjaDe(b)];
-    h+='<div class="acc">';
-    if(f.meet) h+='<a class="o-btn o-btn-teal" href="'+f.meet+'" target="_blank" rel="noopener">Entrar a la reunión</a> ';
-    if(t.drive) h+='<a class="o-btn o-btn-secondary" href="'+t.drive+'" target="_blank" rel="noopener">Abrir la carpeta</a> ';
-    if(t.curso) h+='<a class="o-btn o-btn-secondary" href="'+t.curso.h+'">'+t.curso.t+'</a>';
-    h+='</div>';
-    var d=$('detalle'); d.className='detalle'; d.innerHTML=h;
-    d.style.borderLeftColor=t.color;
-    [].slice.call(document.querySelectorAll('.bloque')).forEach(function(el){
-      el.classList.toggle('sel', +el.getAttribute('data-k')===k);
     });
   }
 
@@ -472,17 +584,33 @@
     var lista=[];
     DIAS.forEach(function(d,i){
       var ch=BLOQUES.filter(function(b){ return b.dia===i && b.choca; });
-      if(ch.length){
-        lista.push(d+' '+rango(ch[0])+': '+ch.map(function(b){ return tema(b.tema).nombre; }).join(' y '));
-      }
+      if(ch.length) lista.push(d+' '+rango(ch[0])+': '+ch.map(function(b){ return tema(b.tema).nombre; }).join(' y '));
     });
     $('aviso').innerHTML='<div class="aviso-choque"><b>Choque de horario</b>'+
       'Hay dos actividades en la misma franja: '+lista.join('; ')+'. '+
       'Aparecen una al lado de la otra hasta que se decida cuál se mueve.</div>';
   }
 
-  function todo(){ pintarLeyenda(); pintarSemana(); pintarAgenda(); pintarAccesos(); pintarResumen(); pintarAviso();
-                   if(sel!==null && !apagados[BLOQUES[sel].tema]) elegir(sel); }
+  function pintarNav(){
+    var l=lunesMostrado(), v=fechaDe(4);
+    var txt='Semana del '+l.getDate()+' de '+MESES[l.getMonth()]+
+            ' al '+v.getDate()+' de '+MESES[v.getMonth()]+' de '+v.getFullYear();
+    var sub;
+    if(indiceHoy()>=0) sub='Semana en curso';
+    else if(lunesMostrado().getTime()===LUNES_INICIAL.getTime()) sub='Próxima semana';
+    else sub=(semanaOffset>0?'Dentro de ':'Hace ')+Math.abs(semanaOffset)+(Math.abs(semanaOffset)===1?' semana':' semanas');
+    $('rotulo-semana').innerHTML=txt+'<span>'+sub+'</span>';
+  }
+
+  function todo(){
+    pintarNav(); pintarLeyenda(); pintarSemana(); pintarAgenda();
+    pintarAccesos(); pintarResumen(); pintarAviso();
+  }
+
+  $('ant').addEventListener('click', function(ev){ ev.stopPropagation(); semanaOffset--; cerrarPop(); toc(); todo(); });
+  $('sig').addEventListener('click', function(ev){ ev.stopPropagation(); semanaOffset++; cerrarPop(); toc(); todo(); });
+  $('hoy-btn').addEventListener('click', function(ev){ ev.stopPropagation(); semanaOffset=0; cerrarPop(); toc(); todo(); });
+
   todo();
 })();
 </script>
