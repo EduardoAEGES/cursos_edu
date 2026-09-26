@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="ruta.css">
 </head>
 <body>
 
@@ -43,6 +44,148 @@
   </div>
 
   <div class="o-sheet">
+    <h2 class="o-section-title">Ruta del caso</h2>
+    <div class="ruta-monta" data-ls="spc_ruta" data-meta="Llegada: con el costo de ventas provisionado, el <b>caso queda cerrado</b> y listo para las capturas de la evidencia.">
+      <script type="application/json">
+[
+      {
+            "t": "Pasos previos al registro",
+            "ico": "llave",
+            "d": "Dejar la empresa lista y el Libro Diario sin movimientos.",
+            "p": [
+                  "Eliminar los asientos anteriores",
+                  "Verificar que el diario quede limpio"
+            ],
+            "href": "caso-2-gorriones.html#paso-0",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Asiento de apertura",
+            "ico": "libro",
+            "d": "El saldo con el que arranca el ejercicio 2026.",
+            "p": [
+                  "Seis cuentas por S/ 80,300",
+                  "Anexos ya registrados en el sistema"
+            ],
+            "href": "caso-2-gorriones.html#apertura",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Compras de mercadería",
+            "ico": "carrito",
+            "d": "Las seis facturas de compra del mes de febrero.",
+            "p": [
+                  "Facturas al contado y al crédito",
+                  "IGV como crédito a favor"
+            ],
+            "href": "caso-2-gorriones.html#parte-1",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Gastos de administración",
+            "ico": "edificio",
+            "d": "Servicios recibidos por el área administrativa.",
+            "p": [
+                  "Asesoría contable con detracción del 12%",
+                  "Limpieza sin detracción por no superar S/ 700"
+            ],
+            "href": "caso-2-gorriones.html#parte-2",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Gastos de ventas",
+            "ico": "megafono",
+            "d": "Servicios recibidos por el área comercial.",
+            "p": [
+                  "Publicidad con detracción del 12%",
+                  "Reparto con detracción del 4%"
+            ],
+            "href": "caso-2-gorriones.html#parte-3",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Activos fijos en dólares",
+            "ico": "camion",
+            "d": "Dos compras en moneda extranjera, con su tipo de cambio.",
+            "p": [
+                  "Preparación: cuenta nueva y parámetros",
+                  "Furgoneta y servidor, convertidos a soles"
+            ],
+            "href": "caso-2-gorriones.html#parte-4",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Ventas con factura",
+            "ico": "factura",
+            "d": "Las cuatro facturas emitidas por la empresa.",
+            "p": [
+                  "Dos al crédito, pendientes de cobro",
+                  "Dos cobradas el mismo día"
+            ],
+            "href": "caso-2-gorriones.html#parte-5",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Ventas con boleta",
+            "ico": "ticket",
+            "d": "Cuatro boletas cobradas en efectivo.",
+            "p": [
+                  "El importe ya incluye IGV",
+                  "Sin RUC de cliente"
+            ],
+            "href": "caso-2-gorriones.html#parte-6",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Boletas consolidadas",
+            "ico": "pila",
+            "d": "Los dos resúmenes de ventas menores del mes.",
+            "p": [
+                  "36 boletas por S/ 5,310",
+                  "48 boletas por S/ 6,844"
+            ],
+            "href": "caso-2-gorriones.html#parte-7",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Planillas de remuneraciones",
+            "ico": "personas",
+            "d": "Administración y ventas, con sus aportes y descuentos.",
+            "p": [
+                  "ONP, AFP y EsSalud",
+                  "Pagadas el 28/02, tributos pendientes"
+            ],
+            "href": "caso-2-gorriones.html#parte-8",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Cobros y pagos del mes",
+            "ico": "dinero",
+            "d": "Los quince movimientos de caja y banco.",
+            "p": [
+                  "Efectivo o transferencia según el importe",
+                  "Detracciones al Banco de la Nación"
+            ],
+            "href": "caso-2-gorriones.html#parte-10",
+            "enlace": "Ir a esta parte"
+      },
+      {
+            "t": "Costo de ventas",
+            "ico": "almacen",
+            "d": "El cierre del mes con el inventario final.",
+            "p": [
+                  "Inventario final de S/ 42,000",
+                  "Un solo asiento al cierre"
+            ],
+            "href": "caso-2-gorriones.html#parte-11",
+            "enlace": "Ir a esta parte"
+      }
+]
+      </script>
+    </div>
+  </div>
+
+  <div class="o-sheet">
     <h2 class="o-section-title">Casos</h2>
     <div class="o-list">
       <a class="o-row" href="caso-2-gorriones.html">
@@ -68,6 +211,8 @@
 </div>
 
 <script src="pendiente.js" defer></script>
+
+<script src="ruta.js" defer></script>
 
 </body>
 </html>
