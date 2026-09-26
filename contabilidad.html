@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="ruta.css">
 </head>
 <body>
 
@@ -43,7 +44,97 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Sesiones</h2>
+    <h2 class="o-section-title">Ruta del taller de Dinámica del Plan de Cuentas</h2>
+    <div class="ruta-monta" data-ls="dinamica_ruta" data-meta="Llegada: con las seis operaciones dominadas puedes <b>registrar el día a día</b> de una empresa comercial.">
+      <script type="application/json">
+[
+      {
+            "t": "Venta y cobro",
+            "ico": "factura",
+            "d": "Reconocer el ingreso y después cobrarlo.",
+            "p": [
+                  "Venta de bienes y servicios",
+                  "Reconocimiento del ingreso",
+                  "IGV",
+                  "Cuenta por cobrar",
+                  "Cobranza",
+                  "Dinámica de las cuentas involucradas",
+                  "<b>Aplicación:</b> registro de una venta y su posterior cobranza."
+            ]
+      },
+      {
+            "t": "Compra y pago",
+            "ico": "carrito",
+            "d": "Reconocer la obligación con el proveedor y cancelarla.",
+            "p": [
+                  "Compra de bienes y servicios",
+                  "IGV crédito fiscal",
+                  "Reconocimiento de la obligación",
+                  "Pago de la obligación",
+                  "Dinámica de las cuentas involucradas",
+                  "<b>Aplicación:</b> registro de una compra y su posterior pago."
+            ]
+      },
+      {
+            "t": "Gastos de servicios",
+            "ico": "edificio",
+            "d": "Servicios de terceros y su cancelación.",
+            "p": [
+                  "Reconocimiento de gastos por servicios",
+                  "Servicios de terceros",
+                  "IGV cuando corresponda",
+                  "Cuenta por pagar",
+                  "Cancelación del servicio",
+                  "<b>Aplicación:</b> registro de alquiler, energía, telefonía u otros."
+            ]
+      },
+      {
+            "t": "Detracción",
+            "ico": "desvio",
+            "d": "Parte del pago se deposita y el resto va al proveedor.",
+            "p": [
+                  "Operaciones sujetas a detracción",
+                  "Identificación de la detracción",
+                  "Cálculo del importe",
+                  "Registro de la operación",
+                  "Depósito de la detracción",
+                  "Importe neto a cobrar",
+                  "<b>Aplicación:</b> caso completo de una operación sujeta a detracción."
+            ]
+      },
+      {
+            "t": "Notas de crédito",
+            "ico": "ticket",
+            "d": "Devoluciones, descuentos y anulaciones sobre una venta ya emitida.",
+            "p": [
+                  "Concepto y finalidad",
+                  "Devoluciones",
+                  "Descuentos",
+                  "Anulaciones y ajustes",
+                  "Efecto sobre las ventas y el IGV",
+                  "Dinámica contable",
+                  "<b>Aplicación:</b> registro de una nota de crédito y ajuste de la operación original."
+            ]
+      },
+      {
+            "t": "Pago de impuestos",
+            "ico": "dinero",
+            "d": "De la obligación tributaria al pago a SUNAT.",
+            "p": [
+                  "Reconocimiento de obligaciones tributarias",
+                  "Determinación del importe a pagar",
+                  "Cancelación de la obligación",
+                  "Registro del pago a SUNAT",
+                  "<b>Aplicación:</b> caso de determinación y pago de una obligación tributaria."
+            ]
+      }
+]
+      </script>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Material publicado</h2>
     <div class="o-list">
       <a class="o-row" href="sesion-5-asientos.html">
         <span class="n">5</span>
@@ -68,6 +159,8 @@
 </div>
 
 <script src="pendiente.js" defer></script>
+
+<script src="ruta.js" defer></script>
 
 </body>
 </html>
