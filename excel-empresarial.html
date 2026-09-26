@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="ruta.css">
 <style>
   :root{ --excel:#21A366; }
   .saltos{ display:flex; gap:6px; flex-wrap:wrap; }
@@ -97,6 +98,88 @@
       <div class="acc">
         <nav class="saltos" aria-label="Ir a la sesión"><a href="#sesion-1">1</a><a href="#sesion-2">2</a><a href="#sesion-3">3</a><a href="#sesion-4">4</a><a href="#sesion-5">5</a><a href="#sesion-6">6</a></nav>
       </div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Ruta del curso</h2>
+    <div class="ruta-monta" data-ls="excel_ruta" data-meta="Llegada: con Power Query cierras el curso pudiendo <b>traer, ordenar y resumir</b> datos de varias fuentes.">
+      <script type="application/json">
+[
+      {
+            "t": "Referencias y limpieza de datos",
+            "ico": "tabla",
+            "d": "Referencias relativas, absolutas y mixtas, y una introducción a la limpieza.",
+            "p": [
+                  "Cuándo fijar la fila, la columna o ambas",
+                  "Quitar duplicados y espacios sobrantes",
+                  "Dejar la base lista para trabajar"
+            ],
+            "href": "#sesion-1",
+            "enlace": "Ver la clase 1"
+      },
+      {
+            "t": "Formatos",
+            "ico": "pincel",
+            "d": "Formato de celdas, formato condicional y presentación de la información.",
+            "p": [
+                  "Números, fechas y moneda",
+                  "Formato condicional por reglas",
+                  "Que la tabla se lea de un vistazo"
+            ],
+            "href": "#sesion-2",
+            "enlace": "Ver la clase 2"
+      },
+      {
+            "t": "SUMAR.SI, CONTAR.SI y duplicados",
+            "ico": "formula",
+            "d": "Las funciones condicionales y la detección de duplicados.",
+            "p": [
+                  "SUMAR.SI y CONTAR.SI con un criterio",
+                  "SUMAR.SI.CONJUNTO con varios",
+                  "Encontrar y marcar duplicados"
+            ],
+            "href": "#sesion-3",
+            "enlace": "Ver la clase 3"
+      },
+      {
+            "t": "Función SI y operadores lógicos",
+            "ico": "bifurca",
+            "d": "La función SI y su combinación con Y y O para varias condiciones.",
+            "p": [
+                  "SI con una condición",
+                  "SI anidado",
+                  "Combinar con Y y con O"
+            ],
+            "href": "#sesion-4",
+            "enlace": "Ver la clase 4"
+      },
+      {
+            "t": "Tablas dinámicas y segmentadores",
+            "ico": "filtro",
+            "d": "Construcción de tablas dinámicas y uso de segmentadores para filtrar.",
+            "p": [
+                  "Armar la tabla dinámica desde la base",
+                  "Campos de fila, columna y valor",
+                  "Segmentadores para filtrar sin tocar la tabla"
+            ],
+            "href": "#sesion-5",
+            "enlace": "Ver la clase 5"
+      },
+      {
+            "t": "Campo calculado y Power Query",
+            "ico": "engranaje",
+            "d": "Campos calculados dentro de la dinámica e importación con Power Query.",
+            "p": [
+                  "Crear un campo calculado",
+                  "Importar los archivos fuente",
+                  "Transformar y cargar los datos"
+            ],
+            "href": "#sesion-6",
+            "enlace": "Ver la clase 6"
+      }
+]
+      </script>
     </div>
   </div>
 
@@ -340,6 +423,8 @@
 </div>
 
 <script src="pendiente.js" defer></script>
+
+<script src="ruta.js" defer></script>
 
 </body>
 </html>

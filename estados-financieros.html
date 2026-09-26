@@ -8,121 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
-<style>
-  /* ---------- ruta con forma de carretera ---------- */
-  .ruta-top{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:18px; }
-  .ruta-barra{ flex:1 1 200px; min-width:150px; height:9px; border-radius:999px; background:var(--o-line); overflow:hidden; }
-  .ruta-barra span{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--o-teal),#28A745); transition:width .45s ease; }
-  .ruta-cuenta{ color:var(--o-muted); font-size:12.5px; font-variant-numeric:tabular-nums; white-space:nowrap; }
-
-  .ruta{ --via-x:18px; --via-w:58px; --pad:104px; position:relative; padding-left:var(--pad); }
-  @media (max-width:620px){ .ruta{ --via-x:6px; --via-w:42px; --pad:72px; } }
-
-  .via{
-    position:absolute; left:var(--via-x); top:0; bottom:0; width:var(--via-w);
-    background:#3A3F47; border-radius:8px; overflow:hidden;
-  }
-  .via .bordes{ position:absolute; inset:0 7px; border-left:2px solid rgba(255,255,255,.3); border-right:2px solid rgba(255,255,255,.3); }
-  .via .rayas{
-    position:absolute; left:50%; top:-48px; bottom:-48px; width:5px; margin-left:-2.5px;
-    background:repeating-linear-gradient(to bottom,#fff 0 24px,transparent 24px 48px);
-    animation:rodar 1.2s linear infinite;
-  }
-  @keyframes rodar{ to{ transform:translateY(48px); } }
-  .via .meta{
-    position:absolute; left:0; right:0; bottom:0; height:18px; z-index:2;
-    background:repeating-conic-gradient(#fff 0% 25%, #23272E 0% 50%) 0 0/12px 12px;
-    border-top:2px solid rgba(255,255,255,.5);
-  }
-  .via .hecho-tramo{
-    position:absolute; left:0; right:0; top:0; height:0;
-    background:linear-gradient(180deg,rgba(40,167,69,.55),rgba(1,126,132,.45));
-    transition:height .6s ease;
-  }
-  .carro{
-    position:absolute; left:calc(var(--via-x) + var(--via-w)/2 - 20px); top:0; width:40px;
-    transform:translateY(-50%); z-index:3; transition:top .8s cubic-bezier(.34,1.3,.5,1);
-    filter:drop-shadow(0 3px 5px rgba(0,0,0,.35));
-  }
-  .carro svg{ width:100%; height:auto; display:block; }
-  @media (max-width:620px){ .carro{ width:30px; left:calc(var(--via-x) + var(--via-w)/2 - 15px); } }
-
-  .parada{
-    position:relative; margin-bottom:20px;
-    opacity:0; transform:translateX(28px);
-    transition:opacity .5s ease, transform .5s ease;
-  }
-  .parada.dentro{ opacity:1; transform:none; }
-  .parada::before{
-    content:""; position:absolute; top:27px; height:3px; background:#8B9199;
-    left:calc(var(--via-x) + var(--via-w) - var(--pad));
-    width:calc(var(--pad) - var(--via-x) - var(--via-w));
-  }
-  .bandera{
-    position:absolute; top:10px; width:44px; height:40px; z-index:2;
-    left:calc(var(--via-x) + var(--via-w)/2 - 22px - var(--pad));
-    background:#E8833A; border-radius:7px; color:#fff;
-    display:grid; place-items:center; line-height:1; text-align:center;
-    box-shadow:0 3px 6px rgba(0,0,0,.28);
-    transition:background .25s ease, transform .25s ease;
-  }
-  .bandera small{ display:block; font-size:8.5px; letter-spacing:.09em; text-transform:uppercase; opacity:.95; }
-  .bandera b{ display:block; font-size:17px; font-weight:800; }
-  @media (max-width:620px){
-    .bandera{ width:34px; height:34px; left:calc(var(--via-x) + var(--via-w)/2 - 17px - var(--pad)); }
-    .bandera small{ display:none; }
-    .bandera b{ font-size:15px; }
-  }
-  .parada.vista .bandera{ background:#28A745; }
-  .parada.sigue .bandera{ transform:scale(1.1); }
-  .parada.recien .bandera{ animation:planta .5s ease; }
-  @keyframes planta{ 0%{ transform:scale(1); } 45%{ transform:scale(1.28) rotate(-6deg); } 100%{ transform:scale(1); } }
-
-  .cartel{
-    position:relative; background:#fff; border:1px solid var(--o-border); border-radius:8px;
-    box-shadow:0 1px 2px rgba(0,0,0,.05); transition:transform .18s ease, box-shadow .18s ease;
-  }
-  .parada:hover .cartel{ transform:translateY(-2px); box-shadow:0 8px 18px rgba(0,0,0,.12); }
-  .parada.sigue .cartel{ box-shadow:0 0 0 3px rgba(1,126,132,.22); }
-  .cartel::before{
-    content:""; position:absolute; left:-8px; top:20px; width:16px; height:16px;
-    background:var(--o-teal); transform:rotate(45deg); border-radius:2px;
-  }
-  .parada.vista .cartel::before{ background:#1C6B4A; }
-  .cartel-cab{
-    position:relative; z-index:1; width:100%; display:flex; align-items:center; gap:12px; text-align:left;
-    font:inherit; cursor:pointer; border:0; border-radius:8px 8px 0 0;
-    background:var(--o-teal); color:#fff; padding:13px 15px;
-    transition:background .25s ease;
-  }
-  .parada.vista .cartel-cab{ background:#1C6B4A; }
-  .cartel-cab:hover{ filter:brightness(1.08); }
-  .cartel-txt{ flex:1; min-width:0; }
-  .rotulo{ display:block; font-weight:700; font-size:15.5px; }
-  .sub{ display:block; font-size:13px; opacity:.92; margin-top:3px; }
-  .sello{ flex:none; font-size:11.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
-  .flecha{ flex:none; font-size:20px; transition:transform .25s ease; }
-  .parada.abierta .flecha{ transform:rotate(90deg); }
-
-  .cartel-det{ padding:14px 15px 12px; }
-  .cartel-det ul{ margin:0; padding-left:18px; }
-  .cartel-det li{ margin:6px 0; font-size:13.5px; }
-  .hecho{ display:inline-flex; align-items:center; gap:8px; margin-top:12px; cursor:pointer; font-size:13px; }
-  .hecho input{ width:16px; height:16px; accent-color:var(--o-teal); cursor:pointer; }
-
-  .meta-final{
-    position:relative; margin-top:6px; padding:14px 16px; border-radius:8px;
-    background:var(--o-purple-soft); border:1px dashed #D8CBD4; font-size:13.5px; color:var(--o-label);
-  }
-  .meta-final b{ color:var(--o-purple); }
-
-  @media (prefers-reduced-motion: reduce){
-    .via .rayas{ animation:none; }
-    .parada{ opacity:1; transform:none; transition:none; }
-    .carro, .ruta-barra span, .via .hecho-tramo{ transition:none; }
-    .parada.recien .bandera{ animation:none; }
-  }
-</style>
+<link rel="stylesheet" href="ruta.css">
 
 </head>
 <body>
@@ -160,224 +46,111 @@
 
   <div class="o-sheet">
     <h2 class="o-section-title">Ruta del curso</h2>
-    <div class="ruta-top">
-      <span class="o-chip o-chip-teal">100% práctico</span>
-      <div class="ruta-barra"><span id="ruta-relleno"></span></div>
-      <span class="ruta-cuenta" id="ruta-cuenta">0 de 10 paradas</span>
-      <button class="o-btn o-btn-secondary" id="ruta-todo" type="button">Abrir todas</button>
-      <button class="o-btn o-btn-secondary" id="ruta-limpiar" type="button">Reiniciar</button>
-    </div>
-
-    <div class="ruta" id="ruta">
-      <div class="via" aria-hidden="true">
-        <span class="bordes"></span>
-        <span class="rayas"></span>
-        <span class="hecho-tramo" id="ruta-tramo"></span>
-        <span class="meta"></span>
-      </div>
-      <div class="carro" id="ruta-carro" aria-hidden="true"><svg viewBox="0 0 40 64" aria-hidden="true"><rect x="2" y="13" width="6" height="12" rx="2" fill="#23272E"/><rect x="32" y="13" width="6" height="12" rx="2" fill="#23272E"/><rect x="2" y="39" width="6" height="12" rx="2" fill="#23272E"/><rect x="32" y="39" width="6" height="12" rx="2" fill="#23272E"/><rect x="6" y="4" width="28" height="56" rx="11" fill="#E8833A"/><rect x="11" y="12" width="18" height="9" rx="3" fill="#BCD9E6"/><rect x="9" y="25" width="22" height="14" rx="4" fill="#D0722A"/><path d="M11 43h18a7 7 0 0 1-3 9H14a7 7 0 0 1-3-9z" fill="#BCD9E6"/><circle cx="12" cy="57" r="2.2" fill="#FFF0B8"/><circle cx="28" cy="57" r="2.2" fill="#FFF0B8"/></svg></div>
-
-        <article class="parada" data-n="1">
-          <span class="bandera"><small>Paso</small><b>1</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-1">
-              <span class="cartel-txt">
-                <span class="rotulo">Método directo</span>
-                <span class="sub">Armas el flujo de operación mostrando los cobros y los pagos tal como ocurrieron.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-1" hidden>
-              <ul><li>Cobros del periodo a partir de las ventas y las cuentas por cobrar</li><li>Pagos a proveedores, planilla y tributos</li><li>Cierre de la sección de operación y su saldo</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="1">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="2">
-          <span class="bandera"><small>Paso</small><b>2</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-2">
-              <span class="cartel-txt">
-                <span class="rotulo">Método indirecto</span>
-                <span class="sub">Partes del resultado del ejercicio y lo ajustas hasta llegar al efectivo.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-2" hidden>
-              <ul><li>Partidas que no mueven efectivo: depreciación, provisiones, deterioros</li><li>Variaciones del capital de trabajo y el signo de cada una</li><li>Comprobación contra el resultado del método directo</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="2">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="3">
-          <span class="bandera"><small>Paso</small><b>3</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-3">
-              <span class="cartel-txt">
-                <span class="rotulo">Las partidas que hacen tropezar</span>
-                <span class="sub">Resuelves los movimientos que casi siempre terminan en la actividad equivocada.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-3" hidden>
-              <ul><li>Venta de un activo fijo: qué parte va a inversión y qué parte no</li><li>Préstamo recibido y su amortización</li><li>Intereses, dividendos e impuesto a la renta</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="3">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="4">
-          <span class="bandera"><small>Paso</small><b>4</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-4">
-              <span class="cartel-txt">
-                <span class="rotulo">Estado de situación financiera</span>
-                <span class="sub">Lo armas desde el balance de comprobación, ordenando cada saldo donde va.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-4" hidden>
-              <ul><li>Reclasificación de los saldos del balance</li><li>Separación entre corriente y no corriente</li><li>Cuadre del activo contra pasivo más patrimonio</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="4">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="5">
-          <span class="bandera"><small>Paso</small><b>5</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-5">
-              <span class="cartel-txt">
-                <span class="rotulo">Estado de resultados</span>
-                <span class="sub">Lo construyes desde los saldos hasta llegar al resultado del ejercicio.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-5" hidden>
-              <ul><li>Costo de ventas y gastos por función</li><li>Resultado operativo y resultado financiero</li><li>Impuesto a la renta y resultado del ejercicio</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="5">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="6">
-          <span class="bandera"><small>Paso</small><b>6</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-6">
-              <span class="cartel-txt">
-                <span class="rotulo">Otros resultados integrales</span>
-                <span class="sub">Incorporas las partidas del ORI y llegas al resultado integral total.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-6" hidden>
-              <ul><li>Identificar qué partidas no pasan por resultados</li><li>Las que se reciclan y las que se quedan en patrimonio</li><li>Presentación del resultado integral total</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="6">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="7">
-          <span class="bandera"><small>Paso</small><b>7</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-7">
-              <span class="cartel-txt">
-                <span class="rotulo">Estado de cambios en el patrimonio neto</span>
-                <span class="sub">Armas el cuadro con todos los movimientos del periodo, columna por columna.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-7" hidden>
-              <ul><li>Aportes, resultado del ejercicio y dividendos</li><li>Reservas y ajustes de ejercicios anteriores</li><li>Cuadre del saldo final de cada columna</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="7">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="8">
-          <span class="bandera"><small>Paso</small><b>8</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-8">
-              <span class="cartel-txt">
-                <span class="rotulo">Los cuatro estados amarrados</span>
-                <span class="sub">Pones los cuatro juntos y verificas que las cifras se correspondan.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-8" hidden>
-              <ul><li>El resultado del ejercicio llegando al patrimonio</li><li>El efectivo final del flujo apareciendo en el activo</li><li>Cómo ubicar el error cuando algo no cuadra</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="8">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="9">
-          <span class="bandera"><small>Paso</small><b>9</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-9">
-              <span class="cartel-txt">
-                <span class="rotulo">Un juego completo, de corrido</span>
-                <span class="sub">Del balance de comprobación a los cuatro estados, sin ayuda y contra reloj.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-9" hidden>
-              <ul><li>Orden de armado que evita rehacer trabajo</li><li>Errores que se arrastran de un estado a otro</li><li>Revisión final antes de darlo por cerrado</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="9">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-        <article class="parada" data-n="10">
-          <span class="bandera"><small>Paso</small><b>10</b></span>
-          <div class="cartel">
-            <button class="cartel-cab" type="button" aria-expanded="false" aria-controls="det-10">
-              <span class="cartel-txt">
-                <span class="rotulo">Notas a los estados financieros</span>
-                <span class="sub">Redactas las notas que acompañan al juego de estados que armaste.</span>
-              </span>
-              <span class="sello"></span>
-              <span class="flecha" aria-hidden="true">›</span>
-            </button>
-            <div class="cartel-det" id="det-10" hidden>
-              <ul><li>Nota de políticas contables</li><li>Notas de las partidas significativas</li><li>Hechos posteriores y información a revelar</li></ul>
-              <label class="hecho">
-                <input type="checkbox" data-visto="10">
-                <span>Marcar esta parada como recorrida</span>
-              </label>
-            </div>
-          </div>
-        </article>
-      <p class="meta-final">Llegada: con las notas redactadas tienes un <b>juego completo de estados financieros</b> listo para presentar.</p>
+    <div class="ruta-monta" data-ls="ef_ruta_v2" data-meta="Llegada: con las notas redactadas tienes un <b>juego completo de estados financieros</b> listo para presentar.">
+      <script type="application/json">
+[
+      {
+            "t": "Método directo",
+            "ico": "flujo",
+            "d": "Armas el flujo de operación mostrando los cobros y los pagos tal como ocurrieron.",
+            "p": [
+                  "Cobros del periodo a partir de las ventas y las cuentas por cobrar",
+                  "Pagos a proveedores, planilla y tributos",
+                  "Cierre de la sección de operación y su saldo"
+            ]
+      },
+      {
+            "t": "Método indirecto",
+            "ico": "ajuste",
+            "d": "Partes del resultado del ejercicio y lo ajustas hasta llegar al efectivo.",
+            "p": [
+                  "Partidas que no mueven efectivo: depreciación, provisiones, deterioros",
+                  "Variaciones del capital de trabajo y el signo de cada una",
+                  "Comprobación contra el resultado del método directo"
+            ]
+      },
+      {
+            "t": "Las partidas que hacen tropezar",
+            "ico": "desvio",
+            "d": "Resuelves los movimientos que casi siempre terminan en la actividad equivocada.",
+            "p": [
+                  "Venta de un activo fijo: qué parte va a inversión y qué parte no",
+                  "Préstamo recibido y su amortización",
+                  "Intereses, dividendos e impuesto a la renta"
+            ]
+      },
+      {
+            "t": "Estado de situación financiera",
+            "ico": "balanza",
+            "d": "Lo armas desde el balance de comprobación, ordenando cada saldo donde va.",
+            "p": [
+                  "Reclasificación de los saldos del balance",
+                  "Separación entre corriente y no corriente",
+                  "Cuadre del activo contra pasivo más patrimonio"
+            ]
+      },
+      {
+            "t": "Estado de resultados",
+            "ico": "barras",
+            "d": "Lo construyes desde los saldos hasta llegar al resultado del ejercicio.",
+            "p": [
+                  "Costo de ventas y gastos por función",
+                  "Resultado operativo y resultado financiero",
+                  "Impuesto a la renta y resultado del ejercicio"
+            ]
+      },
+      {
+            "t": "Otros resultados integrales",
+            "ico": "capas",
+            "d": "Incorporas las partidas del ORI y llegas al resultado integral total.",
+            "p": [
+                  "Identificar qué partidas no pasan por resultados",
+                  "Las que se reciclan y las que se quedan en patrimonio",
+                  "Presentación del resultado integral total"
+            ]
+      },
+      {
+            "t": "Estado de cambios en el patrimonio neto",
+            "ico": "columnas",
+            "d": "Armas el cuadro con todos los movimientos del periodo, columna por columna.",
+            "p": [
+                  "Aportes, resultado del ejercicio y dividendos",
+                  "Reservas y ajustes de ejercicios anteriores",
+                  "Cuadre del saldo final de cada columna"
+            ]
+      },
+      {
+            "t": "Los cuatro estados amarrados",
+            "ico": "enlace",
+            "d": "Pones los cuatro juntos y verificas que las cifras se correspondan.",
+            "p": [
+                  "El resultado del ejercicio llegando al patrimonio",
+                  "El efectivo final del flujo apareciendo en el activo",
+                  "Cómo ubicar el error cuando algo no cuadra"
+            ]
+      },
+      {
+            "t": "Un juego completo, de corrido",
+            "ico": "carpeta",
+            "d": "Del balance de comprobación a los cuatro estados, sin ayuda y contra reloj.",
+            "p": [
+                  "Orden de armado que evita rehacer trabajo",
+                  "Errores que se arrastran de un estado a otro",
+                  "Revisión final antes de darlo por cerrado"
+            ]
+      },
+      {
+            "t": "Notas a los estados financieros",
+            "ico": "nota",
+            "d": "Redactas las notas que acompañan al juego de estados que armaste.",
+            "p": [
+                  "Nota de políticas contables",
+                  "Notas de las partidas significativas",
+                  "Hechos posteriores y información a revelar"
+            ]
+      }
+]
+      </script>
     </div>
   </div>
 
@@ -412,118 +185,7 @@
 </div>
 </div>
 
-<script>
-(function(){
-  var LS='ef_ruta_v2';
-  var ruta=document.getElementById('ruta');
-  if(!ruta) return;
-  var paradas=[].slice.call(ruta.querySelectorAll('.parada'));
-  var carro=document.getElementById('ruta-carro');
-  var tramo=document.getElementById('ruta-tramo');
-  var ctx=null;
-
-  function nota(f, dur, vol, tipo){
-    try{
-      var AC=window.AudioContext||window.webkitAudioContext;
-      if(!AC) return;
-      if(!ctx) ctx=new AC();
-      if(ctx.state==='suspended') ctx.resume();
-      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
-      o.type=tipo||'sine'; o.frequency.setValueAtTime(f, t);
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
-      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(t); o.stop(t+dur+0.02);
-    }catch(e){}
-  }
-  function claxon(){ nota(520,0.12,0.07,'triangle'); setTimeout(function(){ nota(780,0.16,0.06,'triangle'); }, 90); }
-
-  function leer(){ try{ return JSON.parse(localStorage.getItem(LS)) || []; }catch(e){ return []; } }
-  function guardar(v){ try{ localStorage.setItem(LS, JSON.stringify(v)); }catch(e){} }
-
-  function centro(el){
-    return el.offsetTop + el.querySelector('.bandera').offsetTop + 20;
-  }
-
-  function pintar(){
-    var vistas=leer(), sigue=-1;
-    paradas.forEach(function(p, k){
-      var n=+p.getAttribute('data-n');
-      var esta=vistas.indexOf(n)>=0;
-      p.classList.toggle('vista', esta);
-      p.querySelector('.sello').textContent = esta ? '✓ Hecho' : '';
-      var chk=p.querySelector('input[data-visto]');
-      if(chk) chk.checked=esta;
-      if(!esta && sigue<0) sigue=k;
-    });
-    paradas.forEach(function(p, k){ p.classList.toggle('sigue', k===sigue); });
-
-    var n=vistas.length, total=paradas.length;
-    document.getElementById('ruta-cuenta').textContent = n+' de '+total+' paradas';
-    document.getElementById('ruta-relleno').style.width = (n/total*100)+'%';
-
-    var destino = (sigue>=0) ? paradas[sigue] : paradas[paradas.length-1];
-    var y = Math.max(26, centro(destino) + (sigue<0 ? 46 : -34));
-    carro.style.top = y+'px';
-    tramo.style.height = y+'px';
-  }
-
-  paradas.forEach(function(p){
-    var cab=p.querySelector('.cartel-cab');
-    var det=p.querySelector('.cartel-det');
-    cab.addEventListener('click', function(){
-      var abierto=!det.hidden;
-      det.hidden=abierto;
-      p.classList.toggle('abierta', !abierto);
-      cab.setAttribute('aria-expanded', String(!abierto));
-      nota(abierto?520:780, 0.07, 0.05);
-      setTimeout(pintar, 30);
-    });
-    var chk=p.querySelector('input[data-visto]');
-    chk.addEventListener('change', function(){
-      var n=+chk.getAttribute('data-visto'), v=leer(), i=v.indexOf(n);
-      if(chk.checked && i<0) v.push(n);
-      if(!chk.checked && i>=0) v.splice(i,1);
-      guardar(v);
-      if(chk.checked){
-        p.classList.add('recien');
-        setTimeout(function(){ p.classList.remove('recien'); }, 520);
-        claxon();
-      } else nota(400,0.09,0.05);
-      pintar();
-    });
-  });
-
-  document.getElementById('ruta-todo').addEventListener('click', function(){
-    var abrir = paradas.some(function(p){ return p.querySelector('.cartel-det').hidden; });
-    paradas.forEach(function(p){
-      p.querySelector('.cartel-det').hidden=!abrir;
-      p.classList.toggle('abierta', abrir);
-      p.querySelector('.cartel-cab').setAttribute('aria-expanded', String(abrir));
-    });
-    this.textContent = abrir ? 'Cerrar todas' : 'Abrir todas';
-    nota(abrir?780:520, 0.08, 0.05);
-    setTimeout(pintar, 30);
-  });
-
-  document.getElementById('ruta-limpiar').addEventListener('click', function(){
-    guardar([]); pintar(); nota(400, 0.1, 0.06);
-  });
-
-  if('IntersectionObserver' in window){
-    var io=new IntersectionObserver(function(ent){
-      ent.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('dentro'); io.unobserve(e.target); } });
-    }, { rootMargin:'0px 0px -40px 0px', threshold:.12 });
-    paradas.forEach(function(p){ io.observe(p); });
-  } else {
-    paradas.forEach(function(p){ p.classList.add('dentro'); });
-  }
-
-  window.addEventListener('resize', pintar);
-  pintar();
-})();
-</script>
+<script src="ruta.js" defer></script>
 
 <script src="pendiente.js" defer></script>
 
