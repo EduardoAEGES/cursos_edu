@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma semanal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .crono{ max-width:1200px; margin:0 auto; }
+
+  /* leyenda */
+  .leyenda{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; }
+  .ley{
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    font:inherit; font-size:12.5px; font-weight:600; color:var(--o-label);
+    background:#fff; border:1px solid var(--o-border); border-radius:999px; padding:6px 13px 6px 9px;
+    transition:all .15s ease;
+  }
+  .ley .punto{ width:11px; height:11px; border-radius:3px; flex:none; }
+  .ley:hover{ border-color:var(--o-purple); }
+  .ley.off{ opacity:.45; text-decoration:line-through; }
+  .ley .cuantas{ color:var(--o-muted); font-weight:500; }
+
+  /* rejilla semanal */
+  .semana{
+    display:grid; grid-template-columns:76px repeat(5, minmax(0,1fr));
+    border:1px solid var(--o-border); border-radius:8px; overflow:hidden; background:#fff;
+  }
+  .cab-dia, .cab-hora{
+    background:#4A3B45; color:#fff; padding:11px 8px; text-align:center;
+    font-weight:700; font-size:13.5px; border-right:1px solid rgba(255,255,255,.12);
+  }
+  .cab-dia:last-child{ border-right:0; }
+  .cab-dia small{ display:block; font-weight:500; font-size:11.5px; opacity:.75; margin-top:2px; }
+  .cab-dia.hoy{ background:var(--o-purple); }
+  .cab-dia.hoy small{ opacity:.95; }
+
+  .rail{ position:relative; border-right:1px solid var(--o-border); background:#FAFAFB; }
+  .rail .marca{
+    position:absolute; right:7px; transform:translateY(-50%);
+    font-size:11px; color:var(--o-muted); font-variant-numeric:tabular-nums; white-space:nowrap;
+  }
+  .dia{ position:relative; border-right:1px solid var(--o-line); }
+  .dia:last-child{ border-right:0; }
+  .dia.hoy{ background:#FBF9FC; }
+  .linea{ position:absolute; left:0; right:0; border-top:1px solid var(--o-line); }
+  .linea.fuerte{ border-top-color:var(--o-border); }
+
+  .bloque{
+    position:absolute; left:4px; right:4px; border-radius:7px; padding:7px 9px;
+    color:#fff; overflow:hidden; cursor:pointer; text-align:left; font:inherit;
+    border:0; border-left:4px solid rgba(0,0,0,.22);
+    transition:transform .14s ease, box-shadow .14s ease, opacity .2s ease;
+  }
+  .bloque:hover{ transform:translateY(-1px); box-shadow:0 5px 14px rgba(0,0,0,.22); z-index:4; }
+  .bloque.sel{ box-shadow:0 0 0 3px rgba(113,75,103,.45); z-index:5; }
+  .bloque .n{ display:block; font-weight:700; font-size:12.5px; line-height:1.25; }
+  .bloque .h{ display:block; font-size:11px; opacity:.9; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .bloque.corto{ padding:4px 8px; }
+  .bloque.corto .n{ font-size:11.5px; }
+  .bloque.corto .h{ display:none; }
+  .bloque.apagado{ display:none; }
+
+  .choque{
+    position:absolute; z-index:6; background:var(--o-amber); color:#fff;
+    font-size:9.5px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+    border-radius:999px; padding:1px 7px; pointer-events:none;
+  }
+
+  /* agenda para móvil */
+  .agenda{ display:none; }
+  .ag-dia{ margin-bottom:16px; }
+  .ag-dia h3{
+    margin:0 0 8px; font-size:12px; font-weight:800; letter-spacing:.09em;
+    text-transform:uppercase; color:var(--o-label);
+  }
+  .ag-dia.hoy h3{ color:var(--o-purple); }
+  .ag-item{
+    display:flex; gap:12px; align-items:stretch; width:100%; text-align:left; font:inherit;
+    background:#fff; border:1px solid var(--o-border); border-radius:8px; padding:11px 13px;
+    margin-bottom:8px; cursor:pointer;
+  }
+  .ag-item .tira{ width:5px; border-radius:3px; flex:none; }
+  .ag-item .q{ flex:1; min-width:0; }
+  .ag-item .q b{ display:block; font-size:14px; }
+  .ag-item .q span{ display:block; color:var(--o-muted); font-size:12.5px; margin-top:2px; font-variant-numeric:tabular-nums; }
+  .ag-vacio{ color:var(--o-muted); font-size:13px; padding:4px 2px 10px; }
+
+  @media (max-width:860px){
+    .semana{ display:none; }
+    .agenda{ display:block; }
+  }
+
+  /* detalle */
+  .detalle{
+    border:1px solid var(--o-border); border-left:5px solid var(--o-purple);
+    border-radius:8px; padding:15px 17px; background:#fff;
+  }
+  .detalle .tit{ font-size:17px; font-weight:700; }
+  .detalle .datos{ display:flex; gap:18px; flex-wrap:wrap; margin-top:9px; }
+  .detalle .dato{ font-size:13px; }
+  .detalle .dato b{ display:block; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--o-muted); font-weight:700; margin-bottom:2px; }
+  .detalle .desc{ margin-top:11px; font-size:13.5px; color:var(--o-label); line-height:1.6; }
+  .detalle .acc{ margin-top:13px; }
+  .detalle.vacio{ border-left-color:var(--o-border); color:var(--o-muted); font-size:13.5px; }
+
+  .aviso-choque{
+    margin-top:14px; border-left:3px solid var(--o-amber); background:#FFF9E8;
+    padding:12px 15px; font-size:13.5px; line-height:1.6; color:#5C4700;
+  }
+  .aviso-choque b{ display:block; font-size:11px; letter-spacing:.05em; text-transform:uppercase; margin-bottom:3px; }
+
+  .resumen{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .tarjeta-dato{ border:1px solid var(--o-border); border-radius:8px; padding:13px 15px; background:#fff; }
+  .tarjeta-dato .v{ font-size:25px; font-weight:800; line-height:1; color:var(--o-purple); font-variant-numeric:tabular-nums; }
+  .tarjeta-dato .e{ font-size:12px; color:var(--o-muted); margin-top:5px; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a href="index.html#cursos">Cursos</a>
+    <a class="activo" href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Herramientas</span> / <b>Cronograma</b></span>
+  <div class="o-cp-right"><span class="o-count" id="cuenta">6 actividades</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap crono">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">🗓️</div>
+      <div class="txt">
+        <h1>Cronograma semanal</h1>
+        <p class="sub">Actividades programadas · turno noche</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-purple">Turno noche</span></div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Actividades</h2>
+    <div class="leyenda" id="leyenda"></div>
+
+    <div class="semana o-mt" id="semana"></div>
+    <div class="agenda o-mt" id="agenda"></div>
+
+    <div id="aviso"></div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Detalle</h2>
+    <div class="detalle vacio" id="detalle">Toca una actividad del cronograma para ver su detalle.</div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Resumen de la semana</h2>
+    <div class="resumen" id="resumen"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Cronograma semanal</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var $=function(id){ return document.getElementById(id); };
+
+  /* ---------------- sonido ---------------- */
+  var ctx=null;
+  function nota(f, dur, vol){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  var toc=function(){ nota(780,0.07,0.05); };
+  var pick=function(){ nota(660,0.09,0.07); setTimeout(function(){ nota(990,0.11,0.05); }, 70); };
+  var off=function(){ nota(430,0.08,0.045); };
+
+  /* ---------------- datos ---------------- */
+  var DIAS=['Lunes','Martes','Miércoles','Jueves','Viernes'];
+
+  var TEMAS=[
+    { id:'pcge', nombre:'Dinámica del PCGE', color:'#714B67',
+      desc:'Práctica corta sobre el Plan Contable General Empresarial: ubicar la cuenta que corresponde a cada operación.',
+      curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } },
+    { id:'excel', nombre:'Excel empresarial esencial', color:'#21A366',
+      desc:'Lo mínimo de Excel que se necesita para trabajar con información contable y financiera.',
+      curso:{ t:'Ir a Excel Empresarial', h:'excel-empresarial.html' } },
+    { id:'ef', nombre:'Estados financieros', color:'#1F5FA8',
+      desc:'Sesión corta de la ruta del curso: cada semana se arma una parte del juego de estados.',
+      curso:{ t:'Ir a Estados Financieros', h:'estados-financieros.html' } },
+    { id:'compro', nombre:'Comprobantes de pago', color:'#B3541E',
+      desc:'Factura, boleta, nota de crédito y guía de remisión: cuándo se usa cada uno y qué debe llevar.',
+      curso:{ t:'Ir a Contabilidad', h:'contabilidad.html' } }
+  ];
+
+  // hora en minutos desde medianoche; todo es turno noche
+  var BLOQUES=[
+    { tema:'pcge',   dia:0, ini:20*60+15, fin:20*60+30 },
+    { tema:'pcge',   dia:2, ini:20*60+10, fin:20*60+30 },
+    { tema:'excel',  dia:0, ini:20*60+35, fin:20*60+55 },
+    { tema:'excel',  dia:2, ini:20*60+35, fin:20*60+55 },
+    { tema:'ef',     dia:1, ini:21*60+0,  fin:21*60+20 },
+    { tema:'ef',     dia:3, ini:20*60+10, fin:20*60+30 },
+    { tema:'compro', dia:0, ini:20*60+35, fin:20*60+55 }
+  ];
+
+  var DESDE=20*60, HASTA=21*60+30, PX=5.2;   // píxeles por minuto
+  var PAD=12;                                // aire arriba y abajo
+  var ALTO=(HASTA-DESDE)*PX+PAD*2;
+  function y(m){ return (m-DESDE)*PX+PAD; }
+
+  function tema(id){ for(var i=0;i<TEMAS.length;i++) if(TEMAS[i].id===id) return TEMAS[i]; }
+  function hhmm(m){
+    var h=Math.floor(m/60), x=m%60;
+    return (h<10?'0':'')+h+':'+(x<10?'0':'')+x;
+  }
+  function rango(b){ return hhmm(b.ini)+' – '+hhmm(b.fin); }
+
+  /* ---------------- choques ---------------- */
+  BLOQUES.forEach(function(b){ b.carril=0; b.carriles=1; b.choca=false; });
+  DIAS.forEach(function(_, d){
+    var delDia=BLOQUES.filter(function(b){ return b.dia===d; })
+                      .sort(function(a,b){ return a.ini-b.ini; });
+    delDia.forEach(function(b){
+      var solapan=delDia.filter(function(o){ return o.ini < b.fin && b.ini < o.fin; });
+      if(solapan.length>1){
+        solapan.forEach(function(o,k){ o.choca=true; o.carril=k; o.carriles=solapan.length; });
+      }
+    });
+  });
+  var hayChoque=BLOQUES.some(function(b){ return b.choca; });
+
+  /* ---------------- hoy ---------------- */
+  var jsHoy=new Date().getDay();            // 0 domingo … 6 sábado
+  var hoy=(jsHoy>=1 && jsHoy<=5) ? jsHoy-1 : -1;
+
+  /* ---------------- rejilla ---------------- */
+  var apagados={};
+  var sel=null;
+
+  function pintarSemana(){
+    var h='<div class="cab-hora">Hora</div>';
+    DIAS.forEach(function(d,i){
+      h+='<div class="cab-dia'+(i===hoy?' hoy':'')+'">'+d+(i===hoy?'<small>hoy</small>':'')+'</div>';
+    });
+    h+='<div class="rail" style="height:'+ALTO+'px">';
+    for(var m=DESDE; m<=HASTA; m+=15){
+      h+='<span class="marca" style="top:'+y(m)+'px">'+hhmm(m)+'</span>';
+    }
+    h+='</div>';
+    DIAS.forEach(function(d,i){
+      h+='<div class="dia'+(i===hoy?' hoy':'')+'" style="height:'+ALTO+'px">';
+      for(var m=DESDE+15; m<HASTA; m+=15){
+        h+='<span class="linea'+((m%60===0)?' fuerte':'')+'" style="top:'+y(m)+'px"></span>';
+      }
+      BLOQUES.forEach(function(b,k){
+        if(b.dia!==i) return;
+        var t=tema(b.tema);
+        var top=y(b.ini), alto=(b.fin-b.ini)*PX;
+        var ancho=100/b.carriles, izq=b.carril*ancho;
+        h+='<button class="bloque'+(alto<34?' corto':'')+(apagados[b.tema]?' apagado':'')+'" data-k="'+k+'" type="button"'+
+           ' style="top:'+top+'px;height:'+(alto-3)+'px;background:'+t.color+';left:calc('+izq+'% + 4px);width:calc('+ancho+'% - 8px)">'+
+           '<span class="n">'+t.nombre+'</span><span class="h">'+rango(b)+'</span></button>';
+        if(b.choca && b.carril===0 && !apagados[b.tema]){
+          h+='<span class="choque" style="top:'+(top-7)+'px;left:6px">choque</span>';
+        }
+      });
+      h+='</div>';
+    });
+    $('semana').innerHTML=h;
+    [].slice.call($('semana').querySelectorAll('.bloque')).forEach(function(el){
+      el.addEventListener('click', function(){ elegir(+el.getAttribute('data-k')); });
+    });
+  }
+
+  function pintarAgenda(){
+    var h='';
+    DIAS.forEach(function(d,i){
+      var dd=BLOQUES.map(function(b,k){ return {b:b,k:k}; })
+                    .filter(function(x){ return x.b.dia===i && !apagados[x.b.tema]; })
+                    .sort(function(a,b){ return a.b.ini-b.b.ini; });
+      h+='<div class="ag-dia'+(i===hoy?' hoy':'')+'"><h3>'+d+(i===hoy?' · hoy':'')+'</h3>';
+      if(!dd.length) h+='<p class="ag-vacio">Sin actividades.</p>';
+      dd.forEach(function(x){
+        var t=tema(x.b.tema);
+        h+='<button class="ag-item" data-k="'+x.k+'" type="button">'+
+           '<span class="tira" style="background:'+t.color+'"></span>'+
+           '<span class="q"><b>'+t.nombre+'</b><span>'+rango(x.b)+' · '+(x.b.fin-x.b.ini)+' min'+
+           (x.b.choca?' · choque de horario':'')+'</span></span></button>';
+      });
+      h+='</div>';
+    });
+    $('agenda').innerHTML=h;
+    [].slice.call($('agenda').querySelectorAll('.ag-item')).forEach(function(el){
+      el.addEventListener('click', function(){ elegir(+el.getAttribute('data-k')); });
+    });
+  }
+
+  function pintarLeyenda(){
+    var h='';
+    TEMAS.forEach(function(t){
+      var n=BLOQUES.filter(function(b){ return b.tema===t.id; }).length;
+      h+='<button class="ley'+(apagados[t.id]?' off':'')+'" data-t="'+t.id+'" type="button">'+
+         '<span class="punto" style="background:'+t.color+'"></span>'+t.nombre+
+         ' <span class="cuantas">· '+n+'</span></button>';
+    });
+    $('leyenda').innerHTML=h;
+    [].slice.call($('leyenda').querySelectorAll('.ley')).forEach(function(el){
+      el.addEventListener('click', function(){
+        var id=el.getAttribute('data-t');
+        apagados[id]=!apagados[id];
+        if(apagados[id]) off(); else toc();
+        todo();
+      });
+    });
+  }
+
+  function elegir(k){
+    sel=k; pick();
+    var b=BLOQUES[k], t=tema(b.tema);
+    var mismos=BLOQUES.filter(function(o){ return o.tema===b.tema; })
+                      .sort(function(a,b){ return a.dia-b.dia; })
+                      .map(function(o){ return DIAS[o.dia]+' '+rango(o); }).join(' · ');
+    var h='<div class="tit">'+t.nombre+'</div>'+
+      '<div class="datos">'+
+      '<span class="dato"><b>Día</b>'+DIAS[b.dia]+'</span>'+
+      '<span class="dato"><b>Hora</b>'+rango(b)+'</span>'+
+      '<span class="dato"><b>Duración</b>'+(b.fin-b.ini)+' minutos</span>'+
+      '<span class="dato"><b>Turno</b>Noche</span>'+
+      '</div>'+
+      '<p class="desc">'+t.desc+'</p>'+
+      '<p class="desc" style="margin-top:6px"><b>En la semana:</b> '+mismos+'</p>';
+    if(b.choca) h+='<div class="aviso-choque"><b>Choque de horario</b>Esta actividad comparte franja con otra el mismo día.</div>';
+    if(t.curso) h+='<div class="acc"><a class="o-btn o-btn-secondary" href="'+t.curso.h+'">'+t.curso.t+'</a></div>';
+    var d=$('detalle'); d.className='detalle'; d.innerHTML=h;
+    d.style.borderLeftColor=t.color;
+    [].slice.call(document.querySelectorAll('.bloque')).forEach(function(el){
+      el.classList.toggle('sel', +el.getAttribute('data-k')===k);
+    });
+  }
+
+  function pintarResumen(){
+    var visibles=BLOQUES.filter(function(b){ return !apagados[b.tema]; });
+    var min=visibles.reduce(function(s,b){ return s+(b.fin-b.ini); }, 0);
+    var dias={}; visibles.forEach(function(b){ dias[b.dia]=1; });
+    var temas={}; visibles.forEach(function(b){ temas[b.tema]=1; });
+    $('resumen').innerHTML=
+      '<div class="tarjeta-dato"><div class="v">'+visibles.length+'</div><div class="e">actividades en la semana</div></div>'+
+      '<div class="tarjeta-dato"><div class="v">'+Object.keys(temas).length+'</div><div class="e">temas distintos</div></div>'+
+      '<div class="tarjeta-dato"><div class="v">'+Object.keys(dias).length+'</div><div class="e">días con actividad</div></div>'+
+      '<div class="tarjeta-dato"><div class="v">'+min+'</div><div class="e">minutos en total</div></div>';
+    $('cuenta').textContent=visibles.length+' actividades';
+  }
+
+  function pintarAviso(){
+    if(!hayChoque){ $('aviso').innerHTML=''; return; }
+    var lista=[];
+    DIAS.forEach(function(d,i){
+      var ch=BLOQUES.filter(function(b){ return b.dia===i && b.choca; });
+      if(ch.length){
+        lista.push(d+' '+rango(ch[0])+': '+ch.map(function(b){ return tema(b.tema).nombre; }).join(' y '));
+      }
+    });
+    $('aviso').innerHTML='<div class="aviso-choque"><b>Choque de horario</b>'+
+      'Hay dos actividades en la misma franja: '+lista.join('; ')+'. '+
+      'Aparecen una al lado de la otra hasta que se decida cuál se mueve.</div>';
+  }
+
+  function todo(){ pintarLeyenda(); pintarSemana(); pintarAgenda(); pintarResumen(); pintarAviso();
+                   if(sel!==null && !apagados[BLOQUES[sel].tema]) elegir(sel); }
+  todo();
+})();
+</script>
+
+</body>
+</html>
