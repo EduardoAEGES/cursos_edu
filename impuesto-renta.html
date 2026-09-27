@@ -12,9 +12,15 @@
   .infog{ max-width:1180px; margin:0 auto; }
 
   /* cinta de etapas */
-  .flujo{ display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; }
+  .flujo{
+    --cf:34px;            /* ancho de la columna del conector */
+    --gx:8px;             /* separacion entre columnas */
+    --lin:#AEB8C6;        /* color de la carretera */
+    --sang:calc(50% - 1.5px);   /* centro de la primera/ultima columna de tarjetas */
+    display:grid; grid-template-columns:1fr; column-gap:var(--gx); row-gap:0;
+  }
   .paso{
-    position:relative; flex:1 1 215px; min-width:0; text-align:left; font:inherit; cursor:pointer;
+    position:relative; min-width:0; text-align:left; font:inherit; cursor:pointer;
     background:#fff; border:2px solid var(--bd); border-radius:12px; padding:14px 15px 12px;
     display:flex; flex-direction:column; gap:8px;
     opacity:0; transform:translateY(14px);
@@ -42,14 +48,88 @@
   .paso .mas{ font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--bd); opacity:.75; }
 
   .fuente{ background:var(--bg2); }
-  .flecha{
-    flex:0 0 22px; display:grid; place-items:center; color:var(--o-muted);
-    font-size:20px; font-weight:800; animation:late 2.2s ease-in-out infinite;
-  }
-  @keyframes late{ 0%,100%{ transform:translateX(0); opacity:.55; } 50%{ transform:translateX(3px); opacity:1; } }
 
-  .fuentes{ display:grid; gap:10px; flex:1 1 200px; min-width:0; }
-  .fuentes .paso{ flex:none; }
+  /* ---- conectores: carretera de trazos que avanza ----
+     cada conector trae tres tramos (.s1 .s2 .s3) y una punta.
+     En linea recta solo se usa .s1; en el giro de fin de fila
+     se usan los tres: bajada derecha, tramo horizontal y bajada
+     izquierda, de modo que la ruta nunca se corta. */
+  .con{ position:relative; }
+  .con i{ position:absolute; display:block; }
+  .con b{
+    position:absolute; width:0; height:0; border-style:solid;
+    animation:latido 1.6s ease-in-out infinite;
+  }
+  .con .s2, .con .s3{ display:none; }
+
+  /* vertical (una sola columna y bajadas del giro) */
+  .con.abajo, .flujo:not(.multi) .con{ height:52px; }
+  .flujo:not(.multi) .con .s1{
+    left:calc(50% - 1.5px); top:0; width:3px; height:36px;
+    background:repeating-linear-gradient(180deg, var(--lin) 0 7px, transparent 7px 14px);
+    animation:fluyeAbajo .9s linear infinite;
+  }
+  .flujo:not(.multi) .con b{
+    left:calc(50% - 7px); top:36px;
+    border-width:10px 7px 0 7px; border-color:var(--lin) transparent transparent transparent;
+  }
+
+  /* horizontal (entre tarjetas de la misma fila) */
+  .flujo.multi .con .s1{
+    left:0; right:10px; top:calc(50% - 1.5px); height:3px;
+    background:repeating-linear-gradient(90deg, var(--lin) 0 7px, transparent 7px 14px);
+    animation:fluyeDer .9s linear infinite;
+  }
+  .flujo.multi .con b{
+    right:0; top:calc(50% - 7px);
+    border-width:7px 0 7px 10px; border-color:transparent transparent transparent var(--lin);
+  }
+
+  /* giro de fin de fila */
+  .flujo.multi .con.giro{ grid-column:1/-1; height:54px; }
+  .flujo.multi .con.giro .s1{
+    left:auto; right:var(--sang); top:0; width:3px; height:28px;
+    background:repeating-linear-gradient(180deg, var(--lin) 0 7px, transparent 7px 14px);
+    animation:fluyeAbajo .9s linear infinite;
+  }
+  .flujo.multi .con.giro .s2{
+    display:block; left:var(--sang); right:var(--sang); top:25px; height:3px;
+    background:repeating-linear-gradient(90deg, var(--lin) 0 7px, transparent 7px 14px);
+    animation:fluyeIzq .9s linear infinite;
+  }
+  .flujo.multi .con.giro .s3{
+    display:block; left:var(--sang); top:25px; width:3px; height:24px;
+    background:repeating-linear-gradient(180deg, var(--lin) 0 7px, transparent 7px 14px);
+    animation:fluyeAbajo .9s linear infinite;
+  }
+  .flujo.multi .con.giro b{
+    left:calc(var(--sang) - 5.5px); right:auto; top:47px;
+    border-width:10px 7px 0 7px; border-color:var(--lin) transparent transparent transparent;
+  }
+
+  @keyframes fluyeDer{   to{ background-position:14px 0; } }
+  @keyframes fluyeIzq{   to{ background-position:-14px 0; } }
+  @keyframes fluyeAbajo{ to{ background-position:0 14px; } }
+  @keyframes latido{ 0%,100%{ opacity:.6; transform:scale(1); } 50%{ opacity:1; transform:scale(1.18); } }
+
+  /* dos columnas */
+  @media (min-width:660px){
+    .flujo.multi{
+      grid-template-columns:1fr var(--cf) 1fr;
+      --sang:calc((100% - var(--cf) - 2*var(--gx))/4 - 1.5px);
+    }
+    .flujo.multi > *:last-child{ grid-column:1/-1; }
+  }
+  /* tres columnas */
+  @media (min-width:1000px){
+    .flujo.multi{
+      grid-template-columns:1fr var(--cf) 1fr var(--cf) 1fr;
+      --sang:calc((100% - 2*var(--cf) - 4*var(--gx))/6 - 1.5px);
+    }
+    .flujo.multi > *:last-child{ grid-column:auto; }
+  }
+
+  .fuentes{ display:grid; gap:10px; min-width:0; align-content:stretch; }
 
   .titulo-infog{
     background:linear-gradient(100deg,#123A63,#1F5FA8); color:#fff; border-radius:12px;
@@ -89,7 +169,7 @@
 
   @media (prefers-reduced-motion: reduce){
     .paso{ opacity:1; transform:none; transition:none; }
-    .flecha{ animation:none; }
+    .con i, .con b{ animation:none; }
     .vent{ animation:none; }
   }
 </style>
@@ -321,13 +401,46 @@
     return h;
   }
 
-  var flechas='<span class="flecha" aria-hidden="true">➜</span>';
-  var h='<div class="fuentes">'+tarjeta(ETAPAS[0])+tarjeta(ETAPAS[1])+'</div>'+flechas;
-  for(var i=2;i<ETAPAS.length;i++){
-    h+=tarjeta(ETAPAS[i]);
-    if(i<ETAPAS.length-1) h+=flechas;
+  function conector(k){
+    return '<span class="con" data-k="'+k+'" aria-hidden="true">'+
+           '<i class="s1"></i><i class="s2"></i><i class="s3"></i><b></b></span>';
   }
-  $('flujo').innerHTML=h;
+
+  /* las dos fuentes van apiladas y cuentan como una sola parada */
+  var CELDAS=['<div class="fuentes">'+tarjeta(ETAPAS[0])+tarjeta(ETAPAS[1])+'</div>'];
+  for(var i=2;i<ETAPAS.length;i++) CELDAS.push(tarjeta(ETAPAS[i]));
+
+  var h='';
+  for(var c=0;c<CELDAS.length;c++){
+    h+=CELDAS[c];
+    if(c<CELDAS.length-1) h+=conector(c);
+  }
+  var flujo=$('flujo');
+  flujo.innerHTML=h;
+
+  /* el conector que cierra una fila se dibuja como giro, para que la
+     ruta baje y regrese a la izquierda sin cortarse */
+  function columnas(){
+    var w=window.innerWidth;
+    return w>=1000 ? 3 : (w>=660 ? 2 : 1);
+  }
+  var colsAhora=0;
+  function acomoda(){
+    var n=columnas();
+    if(n===colsAhora) return;
+    colsAhora=n;
+    flujo.classList.toggle('multi', n>1);
+    var cons=flujo.querySelectorAll('.con');
+    for(var j=0;j<cons.length;j++){
+      var k=parseInt(cons[j].getAttribute('data-k'),10);
+      cons[j].classList.toggle('giro', n>1 && (k+1)%n===0);
+    }
+  }
+  acomoda();
+  var temp=null;
+  window.addEventListener('resize', function(){
+    clearTimeout(temp); temp=setTimeout(acomoda, 120);
+  });
 
   /* ---------------- ventana ---------------- */
   var vent=$('vent');
