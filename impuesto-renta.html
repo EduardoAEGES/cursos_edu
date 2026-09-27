@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cálculo del Impuesto a la Renta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .infog{ max-width:1180px; margin:0 auto; }
+
+  /* cinta de etapas */
+  .flujo{ display:flex; flex-wrap:wrap; align-items:stretch; gap:10px; }
+  .paso{
+    position:relative; flex:1 1 215px; min-width:0; text-align:left; font:inherit; cursor:pointer;
+    background:#fff; border:2px solid var(--bd); border-radius:12px; padding:14px 15px 12px;
+    display:flex; flex-direction:column; gap:8px;
+    opacity:0; transform:translateY(14px);
+    transition:opacity .45s ease, transform .45s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .paso.dentro{ opacity:1; transform:none; }
+  .paso:hover{ box-shadow:0 10px 24px rgba(0,0,0,.13); }
+  .paso:focus-visible{ outline:3px solid var(--bd); outline-offset:2px; }
+  .paso .num{
+    position:absolute; top:-15px; left:13px; width:30px; height:30px; border-radius:50%;
+    display:grid; place-items:center; color:#fff; font-weight:800; font-size:15px;
+    background:var(--bd); box-shadow:0 2px 5px rgba(0,0,0,.22);
+  }
+  .paso.connum{ padding-top:22px; }
+  .paso .tit{ font-weight:800; font-size:14.5px; line-height:1.25; color:var(--bd); }
+  .paso .baj{ font-size:12.5px; color:var(--o-muted); margin-top:-4px; }
+  .paso ul{ margin:0; padding-left:16px; }
+  .paso li{ font-size:12.5px; margin:3px 0; line-height:1.4; }
+  .paso .dibujo{ margin-top:auto; padding-top:6px; align-self:center; }
+  .paso .dibujo svg{ display:block; width:74px; height:60px; }
+  .paso .tasa{
+    text-align:center; font-size:22px; font-weight:800; color:var(--bd);
+    background:var(--bg2); border-radius:8px; padding:6px;
+  }
+  .paso .mas{ font-size:11px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--bd); opacity:.75; }
+
+  .fuente{ background:var(--bg2); }
+  .flecha{
+    flex:0 0 22px; display:grid; place-items:center; color:var(--o-muted);
+    font-size:20px; font-weight:800; animation:late 2.2s ease-in-out infinite;
+  }
+  @keyframes late{ 0%,100%{ transform:translateX(0); opacity:.55; } 50%{ transform:translateX(3px); opacity:1; } }
+
+  .fuentes{ display:grid; gap:10px; flex:1 1 200px; min-width:0; }
+  .fuentes .paso{ flex:none; }
+
+  .titulo-infog{
+    background:linear-gradient(100deg,#123A63,#1F5FA8); color:#fff; border-radius:12px;
+    padding:20px 24px; display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  }
+  .titulo-infog h2{ margin:0; font-size:clamp(21px,3vw,30px); font-weight:800; }
+  .titulo-infog p{ margin:3px 0 0; opacity:.85; font-size:14px; }
+  .titulo-infog .doc{ margin-left:auto; flex:none; }
+  .titulo-infog .doc svg{ display:block; width:76px; height:76px; }
+
+  .pista-infog{ color:var(--o-muted); font-size:13px; margin:14px 0 0; }
+  .pista-infog b{ color:var(--o-text); }
+
+  /* ventana flotante */
+  .vent{
+    position:fixed; z-index:50; width:340px; max-width:calc(100vw - 24px);
+    background:#fff; border:1px solid var(--o-border); border-top:5px solid var(--o-purple);
+    border-radius:12px; box-shadow:0 18px 44px rgba(0,0,0,.26); padding:16px 18px 18px;
+    animation:sale .17s ease;
+  }
+  @keyframes sale{ from{ opacity:0; transform:translateY(-8px) scale(.98); } to{ opacity:1; transform:none; } }
+  .vent .x{
+    position:absolute; top:7px; right:9px; border:0; background:transparent; cursor:pointer;
+    font:inherit; font-size:20px; line-height:1; color:var(--o-muted); padding:3px 7px; border-radius:6px;
+  }
+  .vent .x:hover{ background:var(--o-line); color:var(--o-text); }
+  .vent .vt{ font-size:16px; font-weight:800; padding-right:24px; }
+  .vent .vq{ font-size:13.5px; line-height:1.6; margin-top:8px; }
+  .vent .vq p{ margin:0 0 8px; }
+  .vent .vq ul{ margin:6px 0 8px; padding-left:18px; }
+  .vent .vq li{ margin:4px 0; }
+  .vent .base{
+    margin-top:10px; font-size:11.5px; color:var(--o-muted);
+    border-top:1px dashed var(--o-border); padding-top:8px;
+  }
+  .oculto{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    .paso{ opacity:1; transform:none; transition:none; }
+    .flecha{ animation:none; }
+    .vent{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="sistemas-contables-integrados.html">Sistemas Contables Integrados</a></span> / <b>Impuesto a la Renta</b></span>
+  <div class="o-cp-right"><span class="o-count">Infografía</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap infog">
+
+  <div class="o-sheet">
+    <div class="titulo-infog">
+      <div>
+        <h2>Cálculo del Impuesto a la Renta</h2>
+        <p>Resumen del proceso · rentas de tercera categoría</p>
+      </div>
+      <div class="doc"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="10" y="4" width="40" height="52" rx="4" fill="#fff"/><rect x="10" y="4" width="40" height="14" rx="4" fill="#1F5FA8"/><text x="30" y="15" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="800" fill="#fff">RENTA</text><path d="M17 27h26M17 34h26M17 41h16" stroke="#9FC2E6" stroke-width="2.6" stroke-linecap="round"/><circle cx="45" cy="46" r="12" fill="#E8B84B"/><text x="45" y="51" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="#8A6510">S/</text></svg></div>
+    </div>
+    <p class="pista-infog"><b>Toca cualquier bloque</b> para ver la explicación con su base legal. Las cifras y los plazos salen de la Cartilla de Instrucciones para empresas 2025 de la SUNAT.</p>
+  </div>
+
+  <div class="o-sheet">
+    <div class="flujo" id="flujo"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Sistemas Contables Integrados</span>
+    <span>Cálculo del Impuesto a la Renta</span>
+  </div>
+
+</div>
+</div>
+
+<div class="vent oculto" id="vent" role="dialog" aria-label="Detalle de la etapa"></div>
+
+<script>
+(function(){
+  var $=function(id){ return document.getElementById(id); };
+
+  /* ---------------- sonido ---------------- */
+  var ctx=null;
+  function nota(f, dur, vol){
+    try{
+      var AC=window.AudioContext||window.webkitAudioContext;
+      if(!AC) return;
+      if(!ctx) ctx=new AC();
+      if(ctx.state==='suspended') ctx.resume();
+      var t=ctx.currentTime, o=ctx.createOscillator(), g=ctx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(f, t);
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function abre(){ nota(660,0.09,0.07); setTimeout(function(){ nota(990,0.11,0.05); }, 70); }
+  function cierra(){ nota(430,0.08,0.045); }
+
+  /* ---------------- dibujos ---------------- */
+  var D={
+    balance:'<rect x="10" y="6" width="44" height="52" rx="4" fill="#fff" stroke="#1F5FA8" stroke-width="2.5"/>'+
+      '<path d="M18 16h20M18 23h28" stroke="#9FC2E6" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<rect x="18" y="34" width="6" height="14" fill="#1F5FA8"/><rect x="28" y="28" width="6" height="20" fill="#5B9BD5"/>'+
+      '<path d="m38 34 8-8" stroke="#E8833A" stroke-width="2.5" stroke-linecap="round"/><path d="M41 26h5v5" stroke="#E8833A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    resultados:'<rect x="10" y="6" width="44" height="52" rx="4" fill="#fff" stroke="#2E8B57" stroke-width="2.5"/>'+
+      '<path d="M18 15h22M18 21h28M18 27h18" stroke="#A8D8B0" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<rect x="18" y="42" width="6" height="8" fill="#A8D8B0"/><rect x="27" y="36" width="6" height="14" fill="#2E8B57"/><rect x="36" y="31" width="6" height="19" fill="#1C6B4A"/>',
+    monedas:'<ellipse cx="22" cy="46" rx="14" ry="5" fill="#E8B84B"/><rect x="8" y="34" width="28" height="12" fill="#E8B84B"/>'+
+      '<ellipse cx="22" cy="34" rx="14" ry="5" fill="#F3D27A"/><ellipse cx="22" cy="26" rx="14" ry="5" fill="#E8B84B"/>'+
+      '<rect x="8" y="26" width="28" height="8" fill="#E8B84B"/><ellipse cx="22" cy="26" rx="14" ry="5" fill="#F3D27A"/>'+
+      '<rect x="38" y="16" width="20" height="26" rx="3" fill="#fff" stroke="#1F5FA8" stroke-width="2.2"/>'+
+      '<path d="M43 23h10M43 29h10M43 35h6" stroke="#9FC2E6" stroke-width="2.2" stroke-linecap="round"/>',
+    mas:'<rect x="8" y="8" width="38" height="46" rx="4" fill="#fff" stroke="#2E8B57" stroke-width="2.5"/>'+
+      '<path d="M16 20h20M16 27h20M16 34h12" stroke="#A8D8B0" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<circle cx="47" cy="45" r="12" fill="#2E8B57"/><path d="M47 39v12M41 45h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+    menos:'<rect x="8" y="8" width="38" height="46" rx="4" fill="#fff" stroke="#E07B39" stroke-width="2.5"/>'+
+      '<path d="M16 20h20M16 27h20M16 34h12" stroke="#F3C79E" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<circle cx="47" cy="45" r="12" fill="#C0392B"/><path d="M41 45h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+    sello:'<rect x="12" y="6" width="40" height="52" rx="4" fill="#fff" stroke="#7B5EA7" stroke-width="2.5"/>'+
+      '<circle cx="24" cy="19" r="5" fill="none" stroke="#7B5EA7" stroke-width="2.2"/><path d="M29 19h14" stroke="#7B5EA7" stroke-width="2.2" stroke-linecap="round"/>'+
+      '<path d="M20 31h24M20 38h24M20 45h14" stroke="#C9B8DF" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<text x="38" y="53" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#7B5EA7">S/</text>',
+    credito:'<rect x="8" y="10" width="38" height="44" rx="4" fill="#fff" stroke="#2B7CC4" stroke-width="2.5"/>'+
+      '<path d="M16 21h20M16 28h20M16 35h12" stroke="#A9CCEA" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<circle cx="47" cy="44" r="12" fill="#2E8B57"/><path d="M41 44h12" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+    balanza:'<path d="M32 10v40M20 52h24" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>'+
+      '<path d="M12 20h40" stroke="#B8860B" stroke-width="3" stroke-linecap="round"/>'+
+      '<path d="M6 32a9 9 0 0 0 12 0l-6-12z" fill="#FFF3C4" stroke="#B8860B" stroke-width="2.2"/>'+
+      '<path d="M46 32a9 9 0 0 0 12 0l-6-12z" fill="#FFF3C4" stroke="#B8860B" stroke-width="2.2"/>'+
+      '<circle cx="32" cy="10" r="3.5" fill="#B8860B"/>',
+    mano:'<path d="M14 40c0-4 4-6 8-5l10 3" stroke="#2E8B57" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+      '<path d="M12 40h14a20 20 0 0 0 14-5" stroke="#2E8B57" stroke-width="3" fill="none" stroke-linecap="round"/>'+
+      '<rect x="6" y="38" width="9" height="16" rx="2" fill="#2B7CC4"/>'+
+      '<circle cx="38" cy="18" r="11" fill="#E8B84B"/><text x="38" y="23" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#8A6510">S/</text>',
+    renta:'<rect x="14" y="4" width="40" height="52" rx="4" fill="#fff" stroke="#1F5FA8" stroke-width="2.5"/>'+
+      '<rect x="14" y="4" width="40" height="13" rx="4" fill="#1F5FA8"/>'+
+      '<text x="34" y="14" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" font-weight="800" fill="#fff">RENTA</text>'+
+      '<path d="M21 26h26M21 33h26M21 40h16" stroke="#9FC2E6" stroke-width="2.5" stroke-linecap="round"/>'+
+      '<circle cx="46" cy="46" r="11" fill="#E8B84B"/><text x="46" y="51" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="800" fill="#8A6510">S/</text>'
+  };
+  function dib(n){ return '<svg viewBox="0 0 64 64" aria-hidden="true">'+D[n]+'</svg>'; }
+
+  /* ---------------- etapas ---------------- */
+  var ETAPAS=[
+    { id:'esf', clase:'fuente', color:'#1F5FA8', bg:'#EAF2FB', dibujo:'balance',
+      tit:'Estado de Situación Financiera', fuente:true,
+      vt:'Estado de Situación Financiera',
+      vq:'<p>Es una de las dos fuentes de las que sale todo el cálculo. Muestra qué tiene y qué debe la empresa al cierre del ejercicio: activo, pasivo y patrimonio.</p>'+
+         '<p>De aquí salen los saldos que después sustentan las adiciones y deducciones, y es donde se refleja el impuesto por pagar o el saldo a favor una vez terminado el cálculo.</p>',
+      base:'Cartilla de Instrucciones — Empresas 2025, SUNAT.' },
+    { id:'er', clase:'fuente', color:'#2E8B57', bg:'#EAF7EE', dibujo:'resultados',
+      tit:'Estado de Resultados', fuente:true,
+      vt:'Estado de Resultados',
+      vq:'<p>La otra fuente. Muestra los ingresos, costos y gastos del ejercicio, y termina en la utilidad o pérdida contable.</p>'+
+         '<p>Esa utilidad contable es el punto de partida: todavía no es la base sobre la que se paga el impuesto, porque la contabilidad y la norma tributaria no siempre coinciden.</p>',
+      base:'Cartilla de Instrucciones — Empresas 2025, SUNAT.' },
+    { id:'p1', num:'1', color:'#1F5FA8', bg:'#EAF2FB', dibujo:'monedas',
+      tit:'Obtenemos la Utilidad o Pérdida', baj:'antes de adiciones y deducciones',
+      vt:'Paso 1 · Utilidad o pérdida del ejercicio',
+      vq:'<p>Se parte del resultado contable del ejercicio, tal como quedó en el Estado de Resultados, antes de cualquier ajuste tributario.</p>'+
+         '<p>La renta neta se determina deduciendo de la renta bruta los gastos necesarios para producirla y mantener su fuente:</p>'+
+         '<ul><li><b>Renta neta = Renta bruta − Gastos necesarios</b></li></ul>'+
+         '<p>Sobre esa cifra recién se aplican los ajustes de los pasos siguientes.</p>',
+      base:'Artículo 37° de la Ley del Impuesto a la Renta.' },
+    { id:'p2a', num:'2', color:'#2E8B57', bg:'#EAF7EE', dibujo:'mas',
+      tit:'(+) Adiciones  (−) Deducciones',
+      lista:['Gastos no deducibles','Límites tributarios','Diferencias temporales y permanentes','Otras adiciones y deducciones'],
+      vt:'Paso 2 · Adiciones y deducciones',
+      vq:'<p>Aquí se concilia la utilidad contable con lo que la norma tributaria acepta. Hay deducciones sujetas a límites o condiciones, y otras que la Ley no admite.</p>'+
+         '<ul><li><b>Adiciones:</b> gastos que la contabilidad registró pero la norma no acepta, o acepta solo hasta cierto límite. Se suman de vuelta.</li>'+
+         '<li><b>Deducciones:</b> partidas que la norma permite restar y que la contabilidad no descontó.</li>'+
+         '<li><b>Diferencias temporales:</b> se revierten en ejercicios siguientes.</li>'+
+         '<li><b>Diferencias permanentes:</b> no se revierten nunca.</li></ul>'+
+         '<p>Toda deducción limitada, condicionada o no aceptada <b>incrementa la base</b> sobre la que se calcula el impuesto.</p>',
+      base:'Artículos 37° y 44° de la Ley del Impuesto a la Renta.' },
+    { id:'p2b', num:'2', color:'#E07B39', bg:'#FDF1E7', dibujo:'menos',
+      tit:'(−) Pérdidas compensadas',
+      lista:['Pérdidas de ejercicios anteriores','Dentro del plazo permitido'],
+      vt:'Paso 2 · Compensación de pérdidas',
+      vq:'<p>Las pérdidas de ejercicios anteriores se restan de la renta obtenida, eligiendo uno de dos sistemas:</p>'+
+         '<ul><li><b>Sistema A:</b> se imputa año a año, hasta agotarla, contra las rentas netas de los <b>cuatro ejercicios</b> siguientes. Lo que no se compense en ese plazo se pierde.</li>'+
+         '<li><b>Sistema B:</b> se imputa año a año, sin plazo, pero solo contra el <b>50 %</b> de las rentas netas de cada ejercicio.</li></ul>'+
+         '<p>Excepción: la pérdida del ejercicio 2024 bajo el sistema A se compensa en los <b>cinco ejercicios</b> siguientes, contados desde 2025.</p>'+
+         '<p>En ambos sistemas, quien tenga rentas exoneradas debe incluirlas entre los ingresos para determinar la pérdida compensable.</p>',
+      base:'Artículo 50° de la Ley y artículo 29° del Reglamento; D.L. N° 1481.' },
+    { id:'rni', color:'#7B5EA7', bg:'#F1ECF8', dibujo:'sello',
+      tit:'(=) Renta Neta Imponible',
+      vt:'Renta Neta Imponible',
+      vq:'<p>Es el resultado de los pasos anteriores y la <b>base sobre la que se calcula el impuesto</b>.</p>'+
+         '<p>Si en vez de renta resulta pérdida, no hay impuesto que calcular por esta vía y esa pérdida pasa a compensarse en los ejercicios siguientes, según el sistema elegido.</p>',
+      base:'Esquema de determinación de la renta, Cartilla SUNAT 2025.' },
+    { id:'tasa', color:'#D9455F', bg:'#FDEBEE', dibujo:'renta',
+      tit:'(×) Tasa del Impuesto a la Renta', tasa:'29.5 %', pie:'(=) Impuesto a la Renta',
+      vt:'Tasa del impuesto',
+      vq:'<p>A la renta neta imponible se le aplica la <b>tasa general del 29.5 %</b>. El resultado es el impuesto anual determinado.</p>'+
+         '<p>Además existe una <b>tasa adicional del 5 %</b> para las personas jurídicas, sobre las sumas que califican como disposición indirecta de renta no susceptible de control tributario. Esa tasa adicional:</p>'+
+         '<ul><li>se paga dentro del mes siguiente a la disposición;</li>'+
+         '<li>procede aunque el ejercicio arroje pérdida;</li>'+
+         '<li>no forma parte del impuesto calculado para los pagos a cuenta.</li></ul>',
+      base:'Artículo 55° de la Ley y artículo 95° del Reglamento; inciso g) del artículo 24°-A.' },
+    { id:'cred', num:'3', color:'#2B7CC4', bg:'#EAF3FB', dibujo:'credito',
+      tit:'(−) Créditos',
+      lista:['Pagos a cuenta','Retenciones','Percepciones','Otros créditos'],
+      vt:'Paso 3 · Créditos contra el impuesto',
+      vq:'<p>Los créditos reducen el impuesto anual determinado. Según el tipo, pueden dar derecho a devolución o no, y se aplican en este <b>orden de prelación</b>:</p>'+
+         '<ul><li>Impuesto a la renta de fuente extranjera</li>'+
+         '<li>Créditos por reinversión</li>'+
+         '<li>Saldo a favor de ejercicios anteriores</li>'+
+         '<li>Pagos a cuenta acreditados contra el ITAN</li>'+
+         '<li>Pagos a cuenta mensuales del ejercicio</li>'+
+         '<li>Retenciones de tercera categoría</li></ul>'+
+         '<p>El crédito por impuesto pagado en el exterior que no se use en el ejercicio <b>no se arrastra ni se devuelve</b>.</p>',
+      base:'Artículo 88° de la Ley y artículo 52° del Reglamento.' },
+    { id:'reg', color:'#B8860B', bg:'#FFF8E1', dibujo:'balanza',
+      tit:'Regularización de pagos',
+      lista:['Se compara con los pagos del año','Determina saldo a favor o por pagar'],
+      vt:'Regularización de pagos',
+      vq:'<p>Se enfrenta el impuesto anual determinado con lo que ya se adelantó durante el año mediante los pagos a cuenta y las retenciones.</p>'+
+         '<p>De esa comparación sale una de dos situaciones:</p>'+
+         '<ul><li><b>Impuesto mayor que los pagos:</b> queda un importe por pagar.</li>'+
+         '<li><b>Pagos mayores que el impuesto:</b> queda un saldo a favor del contribuyente.</li></ul>',
+      base:'Artículos 85° y 87° de la Ley; artículo 54° del Reglamento.' },
+    { id:'fin', color:'#2E8B57', bg:'#EAF7EE', dibujo:'mano',
+      tit:'(=) Importe por pagar', baj:'o saldo a favor, según corresponda',
+      vt:'Importe por pagar o saldo a favor',
+      vq:'<p>Es la cifra final de la declaración jurada anual.</p>'+
+         '<p>Si los pagos a cuenta <b>excedieron</b> el impuesto anual, el contribuyente puede elegir entre:</p>'+
+         '<ul><li>solicitar la <b>devolución</b> del exceso, o</li>'+
+         '<li><b>aplicarlo</b> contra los pagos a cuenta mensuales siguientes, desde el mes posterior a la presentación de la declaración.</li></ul>',
+      base:'Inciso b) del artículo 88° de la Ley.' }
+  ];
+
+  /* ---------------- pintar ---------------- */
+  function tarjeta(e){
+    var h='<button class="paso'+(e.num?' connum':'')+(e.clase?' '+e.clase:'')+'" type="button" data-id="'+e.id+'"'+
+          ' style="--bd:'+e.color+';--bg2:'+e.bg+'">';
+    if(e.num) h+='<span class="num">'+e.num+'</span>';
+    h+='<span class="tit">'+e.tit+'</span>';
+    if(e.baj) h+='<span class="baj">'+e.baj+'</span>';
+    if(e.lista){
+      h+='<ul>';
+      e.lista.forEach(function(x){ h+='<li>'+x+'</li>'; });
+      h+='</ul>';
+    }
+    if(e.tasa) h+='<span class="tasa">'+e.tasa+'</span>';
+    if(e.pie) h+='<span class="tit" style="text-align:center">'+e.pie+'</span>';
+    h+='<span class="dibujo">'+dib(e.dibujo)+'</span><span class="mas">Toca para saber más</span></button>';
+    return h;
+  }
+
+  var flechas='<span class="flecha" aria-hidden="true">➜</span>';
+  var h='<div class="fuentes">'+tarjeta(ETAPAS[0])+tarjeta(ETAPAS[1])+'</div>'+flechas;
+  for(var i=2;i<ETAPAS.length;i++){
+    h+=tarjeta(ETAPAS[i]);
+    if(i<ETAPAS.length-1) h+=flechas;
+  }
+  $('flujo').innerHTML=h;
+
+  /* ---------------- ventana ---------------- */
+  var vent=$('vent');
+  function cerrarVent(){ vent.classList.add('oculto'); }
+  function abrirVent(id, ancla){
+    var e=null;
+    ETAPAS.forEach(function(x){ if(x.id===id) e=x; });
+    if(!e) return;
+    abre();
+    vent.innerHTML='<button class="x" type="button" aria-label="Cerrar">×</button>'+
+      '<div class="vt" style="color:'+e.color+'">'+e.vt+'</div>'+
+      '<div class="vq">'+e.vq+'</div>'+
+      '<div class="base">'+e.base+'</div>';
+    vent.style.borderTopColor=e.color;
+    vent.classList.remove('oculto');
+    vent.querySelector('.x').addEventListener('click', function(){ cerrarVent(); cierra(); });
+
+    var r=ancla.getBoundingClientRect(), pr=vent.getBoundingClientRect();
+    var izq=Math.min(Math.max(8, r.left), window.innerWidth-pr.width-8);
+    var arr=r.bottom+8;
+    if(arr+pr.height > window.innerHeight-8) arr=Math.max(8, Math.min(r.top-pr.height-8, window.innerHeight-pr.height-8));
+    vent.style.left=izq+'px';
+    vent.style.top=Math.max(8, arr)+'px';
+  }
+  [].slice.call(document.querySelectorAll('.paso')).forEach(function(el){
+    el.addEventListener('click', function(ev){ ev.stopPropagation(); abrirVent(el.getAttribute('data-id'), el); });
+  });
+  document.addEventListener('click', function(ev){
+    if(!vent.classList.contains('oculto') && !vent.contains(ev.target)) cerrarVent();
+  });
+  document.addEventListener('keydown', function(ev){ if(ev.key==='Escape') cerrarVent(); });
+  window.addEventListener('resize', cerrarVent);
+
+  /* ---------------- aparición al desplazar ---------------- */
+  var pasos=[].slice.call(document.querySelectorAll('.paso'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(ent){
+      ent.forEach(function(x){
+        if(x.isIntersecting){
+          var k=pasos.indexOf(x.target);
+          setTimeout(function(){ x.target.classList.add('dentro'); }, Math.min(k,6)*70);
+          io.unobserve(x.target);
+        }
+      });
+    }, { threshold:.15 });
+    pasos.forEach(function(p){ io.observe(p); });
+  } else pasos.forEach(function(p){ p.classList.add('dentro'); });
+})();
+</script>
+
+</body>
+</html>
