@@ -25,6 +25,23 @@
   .cab-tj .tt p{ margin:2px 0 0; font-size:13.5px; color:var(--o-muted); }
   .cab-tj .son{ margin-left:auto; }
 
+  /* ---------- candado ---------- */
+  .cerrojo{ text-align:center; padding:26px 18px 30px; max-width:430px; margin:0 auto; }
+  .cerrojo .llave{ font-size:40px; line-height:1; }
+  .cerrojo h2{ margin:10px 0 0; font-size:20px; font-weight:800; color:var(--gris); }
+  .cerrojo p{ margin:7px 0 0; font-size:13.5px; color:var(--o-muted); line-height:1.55; }
+  .cerrojo form{ display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+  .cerrojo input{
+    font:inherit; font-size:17px; font-weight:700; text-align:center; letter-spacing:.12em;
+    padding:10px 14px; border-radius:9px; border:2px solid var(--amaBd); background:var(--ama);
+    width:190px; max-width:100%;
+  }
+  .cerrojo input:focus{ outline:2px solid var(--rojo); outline-offset:1px; }
+  .cerrojo .err{ color:var(--rojo); font-weight:700; min-height:19px; margin-top:9px; }
+  .cerrojo .err:empty{ min-height:0; }
+  #btnSalir{ display:none; }
+  body.abierto #btnSalir{ display:inline-block; }
+
   .recuerda{
     background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
     padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15;
@@ -219,15 +236,32 @@
       </div>
       <div class="son">
         <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+        <button class="o-btn" id="btnSalir" type="button">🔒 Bloquear</button>
       </div>
     </div>
-    <p class="recuerda">
+    <p class="recuerda" id="recuerda" hidden>
       Ubica cada dato en su partida. Los subtotales, los totales y los ratios se calculan solos.
       <b>Recuerda:</b> Corriente = se cobra o paga en 12 meses o menos · No corriente = más de 12 meses ·
       Si una partida no tiene monto, escribe 0.
       <br>Arrastra la ficha hasta la partida, o tócala y después toca la partida.
     </p>
   </div>
+
+  <div class="o-sheet" id="puerta">
+    <div class="cerrojo">
+      <div class="llave">🔒</div>
+      <h2>Recurso protegido</h2>
+      <p>Escribe la clave que te dio el docente para abrir los cuatro casos de la Semana 7.</p>
+      <form id="fClave" autocomplete="off">
+        <input id="iClave" type="password" inputmode="numeric" placeholder="Clave"
+               aria-label="Clave de acceso" autocomplete="off">
+        <button class="o-btn o-btn-primary" type="submit">Entrar</button>
+      </form>
+      <p class="err" id="errClave" role="alert" aria-live="polite"></p>
+    </div>
+  </div>
+
+<div id="zona" hidden>
 
   <div class="pest" id="pest" role="tablist" aria-label="Casos"></div>
 
@@ -262,6 +296,8 @@
     </div>
   </div>
 
+</div>
+
   <div class="o-acciones centrado o-mb">
     <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
   </div>
@@ -280,6 +316,43 @@
 (function(){
 'use strict';
 var $=function(id){ return document.getElementById(id); };
+
+/* =================== acceso con clave ===================
+   Es un candado de aula: deja fuera a quien pasa de casualidad,
+   pero la clave viaja en la pagina, asi que quien mire el codigo
+   fuente puede verla.                                            */
+var CLAVE='46069339', LLAVE='mat7_acceso';
+
+function abrePuerta(guardar){
+  $('puerta').hidden=true;
+  $('zona').hidden=false;
+  $('recuerda').hidden=false;
+  document.body.classList.add('abierto');
+  $('errClave').textContent='';
+  if(guardar){ try{ sessionStorage.setItem(LLAVE,'1'); }catch(e){} }
+}
+function cierraPuerta(){
+  $('puerta').hidden=false;
+  $('zona').hidden=true;
+  $('recuerda').hidden=true;
+  document.body.classList.remove('abierto');
+  $('iClave').value='';
+  try{ sessionStorage.removeItem(LLAVE); }catch(e){}
+  window.scrollTo(0,0);
+}
+$('fClave').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  if($('iClave').value.trim()===CLAVE){
+    abrePuerta(true);
+    nota(660,0,0.09,0.07,'sine'); nota(990,0.07,0.12,0.05,'sine');
+  } else {
+    $('errClave').textContent='Clave incorrecta. Vuelve a intentarlo.';
+    $('iClave').value=''; $('iClave').focus();
+    nota(160,0,0.2,0.06,'sawtooth');
+  }
+});
+$('btnSalir').addEventListener('click', cierraPuerta);
+try{ if(sessionStorage.getItem(LLAVE)==='1') abrePuerta(false); }catch(e){}
 
 /* =================== datos de los casos =================== */
 /* Los nombres de partidas y las descripciones de cada ficha estan
