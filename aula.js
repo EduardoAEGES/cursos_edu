@@ -172,7 +172,14 @@ function trae(){
 }
 function falla(e){
   fallos++;
-  if(fallos>=2) estado('malo','Sin conexión con la sala ('+e+') · sigues trabajando en tu equipo');
+  if(fallos<2) return;
+  var m;
+  if(e===404)                  m='la tabla sala_asientos todavía no existe en Supabase';
+  else if(e===401 || e===403)  m='la tabla existe pero le faltan los permisos de lectura y escritura';
+  else if(e===409)             m='falta el índice único (sala, alumno) en la tabla';
+  else if(e===400)             m='la tabla existe pero le falta alguna columna';
+  else                         m='no se pudo conectar ('+e+')';
+  estado('malo','Sala no disponible: '+m+' · sigues trabajando en tu equipo');
 }
 
 /* ---------------- muro ---------------- */
