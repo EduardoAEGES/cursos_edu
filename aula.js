@@ -60,8 +60,8 @@ function pintaControles(){
       '<div class="aula-fila" id="aulaDentro" hidden>'+
         '<span class="aula-rol" id="aulaQuien"></span>'+
         '<button class="o-btn" id="aulaSalir" type="button">Salir</button>'+
-        '<button class="o-btn" id="aulaGrande" type="button">🔍 Ventanas grandes</button>'+
-        '<button class="o-btn" id="aulaRefresca" type="button">↻ Actualizar</button>'+
+        '<button class="o-btn" id="aulaGrande" type="button" hidden>🔍 Ventanas grandes</button>'+
+        '<button class="o-btn" id="aulaRefresca" type="button" hidden>↻ Actualizar</button>'+
       '</div>'+
       '<span class="aula-estado solo" id="aulaEstado">Modo individual</span>'+
     '</div>';
@@ -95,6 +95,8 @@ function dentro(txt){
   $('aulaAlumno').hidden=true; $('aulaDocente').hidden=true;
   $('aulaDentro').hidden=false;
   $('aulaQuien').textContent=txt;
+  $('aulaGrande').hidden=!docente;
+  $('aulaRefresca').hidden=!docente;
 }
 function fuera(){
   $('aulaAlumno').hidden=false; $('aulaDocente').hidden=false;
@@ -110,7 +112,7 @@ function entraAlumno(){
   guardaLocal('nombre',n); guardaLocal('sala',s);
   dentro(n);
   estado('vivo','Conectando…');
-  fallos=0; empuja(true); arranca();
+  fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
 }
 function entraDocente(){
@@ -137,6 +139,7 @@ function sale(){
   if(cfg.alModo) cfg.alModo(false);
 }
 function arranca(){
+  if(!docente) return;              /* el muro es solo del docente */
   trae();
   if(!tSala) tSala=setInterval(trae, 3000);
 }
@@ -152,7 +155,8 @@ function empuja(ya){
                              estado:cfg.resumen(), actualizado:new Date().toISOString() }])
     }).then(function(r){
       if(!r.ok) return Promise.reject(r.status);
-      fallos=0; trae();
+      fallos=0;
+      estado('vivo','En vivo · tu avance se comparte con el docente');
     }).catch(falla);
   }, ya ? 0 : 900);
 }
@@ -184,9 +188,9 @@ function falla(e){
 
 /* ---------------- muro ---------------- */
 function pintaMuro(){
+  if(!docente){ $('muro').innerHTML=''; return; }
   if(!sala){
-    $('muro').innerHTML='<div class="aula-vacio">Entra a una sala para ver el avance del aula aquí.'+
-      '<br>El docente entra con su clave y ve a todos sin ocupar un puesto.</div>';
+    $('muro').innerHTML='<div class="aula-vacio">Entra con tu clave de docente para ver el avance del aula.</div>';
     return;
   }
   if(!gente.length){

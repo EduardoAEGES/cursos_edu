@@ -286,7 +286,7 @@
     </div>
   </div>
 
-  <div class="o-sheet">
+  <div class="o-sheet" id="hojaMuro" hidden>
     <h2 class="o-section-title">Monitoreo del aula</h2>
     <div id="muro"></div>
   </div>
@@ -973,6 +973,7 @@ function ventanaAula(e){
 function empuja(){ if(window.Aula) Aula.empuja(); }
 function modoDocente(esDoc){
   $('btnSol').hidden = !esDoc;
+  $('hojaMuro').hidden = !esDoc;      /* el muro es solo del docente */
   pinta();
 }
 
