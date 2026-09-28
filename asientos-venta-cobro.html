@@ -331,24 +331,24 @@ var CUENTAS=[
   { id:'12-1212',  cta:'12',  ctaN:'Cuentas por cobrar comerciales – Terceros',
     sub:'1212',    subN:'Emitidas en cartera',
     ruta:'121 Facturas, boletas y otros comprobantes por cobrar', el:'1', nat:'Deudora' },
-  { id:'12-1231',  cta:'12',  ctaN:'Cuentas por cobrar comerciales – Terceros',
-    sub:'1231',    subN:'En cartera',
+  { id:'12-1232',  cta:'12',  ctaN:'Cuentas por cobrar comerciales – Terceros',
+    sub:'1232',    subN:'En cartera',
     ruta:'123 Letras por cobrar', el:'1', nat:'Deudora' },
   { id:'20-20111', cta:'20',  ctaN:'Mercaderías',
     sub:'20111',   subN:'Costo',
     ruta:'201 Mercaderías manufacturadas · 2011 Mercaderías manufacturadas', el:'2', nat:'Deudora' },
-  { id:'40-40111', cta:'40',  ctaN:'Tributos, contraprestaciones y aportes al sistema de pensiones y de salud por pagar',
+  { id:'40-40111', cta:'40',  ctaN:'Tributos, contraprestaciones y aportes al sistema público de pensiones y de salud por pagar',
     sub:'40111',   subN:'IGV – Cuenta propia',
     ruta:'401 Gobierno nacional · 4011 Impuesto general a las ventas', el:'4', nat:'Acreedora' },
-  { id:'69-69111', cta:'69',  ctaN:'Costo de ventas',
-    sub:'69111',   subN:'Terceros',
-    ruta:'691 Mercaderías · 6911 Mercaderías manufacturadas', el:'6', nat:'Deudora' },
-  { id:'70-70111', cta:'70',  ctaN:'Ventas',
-    sub:'70111',   subN:'Terceros',
-    ruta:'701 Mercaderías · 7011 Mercaderías manufacturadas', el:'7', nat:'Acreedora' },
-  { id:'709-7091', cta:'709', ctaN:'Devoluciones sobre ventas',
-    sub:'7091',    subN:'Mercaderías',
-    ruta:'Cuenta de signo contrario dentro del elemento 7', el:'7', nat:'Deudora',
+  { id:'69-69121', cta:'69',  ctaN:'Costo de ventas',
+    sub:'69121',   subN:'Terceros',
+    ruta:'691 Mercaderías · 6912 Mercaderías - venta local', el:'6', nat:'Deudora' },
+  { id:'70-70121', cta:'70',  ctaN:'Ventas',
+    sub:'70121',   subN:'Terceros',
+    ruta:'701 Mercaderías · 7012 Mercaderías - venta local', el:'7', nat:'Acreedora' },
+  { id:'709-70921', cta:'709', ctaN:'Devoluciones sobre ventas',
+    sub:'70921',   subN:'Terceros',
+    ruta:'7092 Mercaderías - Venta local · cuenta de signo contrario', el:'7', nat:'Deudora',
     notaEl:'de signo contrario: rebaja las ventas' }
 ];
 var PORID={};
@@ -370,9 +370,9 @@ var CASOS=[
              {e:'Total factura', v:9440}, {e:'Costo de la mercadería', v:5200} ],
     asientos:[
       { t:'Asiento 1 · Por la venta con factura F001-120', sol:[
-        {f:'12-1212', l:'d', m:9440}, {f:'40-40111', l:'h', m:1440}, {f:'70-70111', l:'h', m:8000} ]},
+        {f:'12-1212', l:'d', m:9440}, {f:'40-40111', l:'h', m:1440}, {f:'70-70121', l:'h', m:8000} ]},
       { t:'Asiento 2 · Por el costo de la mercadería vendida', sol:[
-        {f:'69-69111', l:'d', m:5200}, {f:'20-20111', l:'h', m:5200} ]},
+        {f:'69-69121', l:'d', m:5200}, {f:'20-20111', l:'h', m:5200} ]},
       { t:'Asiento 3 · Por el cobro con transferencia a la cuenta corriente', sol:[
         {f:'10-1041', l:'d', m:9440}, {f:'12-1212', l:'h', m:9440} ]}
     ]},
@@ -384,9 +384,9 @@ var CASOS=[
              {e:'Total boleta', v:1770}, {e:'Costo de la mercadería', v:980} ],
     asientos:[
       { t:'Asiento 1 · Por la venta con boleta B001-45', sol:[
-        {f:'12-1212', l:'d', m:1770}, {f:'40-40111', l:'h', m:270}, {f:'70-70111', l:'h', m:1500} ]},
+        {f:'12-1212', l:'d', m:1770}, {f:'40-40111', l:'h', m:270}, {f:'70-70121', l:'h', m:1500} ]},
       { t:'Asiento 2 · Por el costo de la mercadería vendida', sol:[
-        {f:'69-69111', l:'d', m:980}, {f:'20-20111', l:'h', m:980} ]},
+        {f:'69-69121', l:'d', m:980}, {f:'20-20111', l:'h', m:980} ]},
       { t:'Asiento 3 · Por el cobro en efectivo', sol:[
         {f:'10-101', l:'d', m:1770}, {f:'12-1212', l:'h', m:1770} ]}
     ]},
@@ -397,9 +397,9 @@ var CASOS=[
     compro:[ {e:'Valor de venta', v:4000}, {e:'IGV 18 %', v:720}, {e:'Total por cobrar', v:4720} ],
     asientos:[
       { t:'Asiento 1 · Por el canje de la factura por una letra', sol:[
-        {f:'12-1231', l:'d', m:4720}, {f:'12-1212', l:'h', m:4720} ]},
+        {f:'12-1232', l:'d', m:4720}, {f:'12-1212', l:'h', m:4720} ]},
       { t:'Asiento 2 · Por el cobro de la letra en la cuenta corriente', sol:[
-        {f:'10-1041', l:'d', m:4720}, {f:'12-1231', l:'h', m:4720} ]}
+        {f:'10-1041', l:'d', m:4720}, {f:'12-1232', l:'h', m:4720} ]}
     ]},
   { id:'k4', rotulo:'Caso 4', sub:'Devolución con nota de crédito',
     doc:'Nota de crédito NC01-12 · 28/03/2025',
@@ -409,9 +409,9 @@ var CASOS=[
              {e:'Total nota de crédito', v:1180}, {e:'Costo de lo devuelto', v:650} ],
     asientos:[
       { t:'Asiento 1 · Por la devolución con nota de crédito NC01-12', sol:[
-        {f:'709-7091', l:'d', m:1000}, {f:'40-40111', l:'d', m:180}, {f:'12-1212', l:'h', m:1180} ]},
+        {f:'709-70921', l:'d', m:1000}, {f:'40-40111', l:'d', m:180}, {f:'12-1212', l:'h', m:1180} ]},
       { t:'Asiento 2 · Por el retorno de la mercadería al almacén', sol:[
-        {f:'20-20111', l:'d', m:650}, {f:'69-69111', l:'h', m:650} ]}
+        {f:'20-20111', l:'d', m:650}, {f:'69-69121', l:'h', m:650} ]}
     ]}
 ];
 CASOS.forEach(function(c){

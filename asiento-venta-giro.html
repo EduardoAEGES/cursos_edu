@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venta del giro del negocio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .giro{
+    --cod:#1F5FA8; --debe:#C0306B; --haber:#D0561C; --val:#8A6510;
+    --ok:#2E8B57; --mal:#C0392B; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+    max-width:1300px; margin:0 auto;
+  }
+  .cab-act{ display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+            border-bottom:4px solid var(--cod); padding-bottom:14px; }
+  .cab-act .marca svg{ width:84px; height:70px; display:block; }
+  .cab-act .tt h1{ margin:0; font-size:clamp(19px,2.6vw,26px); font-weight:800; color:var(--gris); }
+  .cab-act .tt p{ margin:2px 0 0; font-size:13.5px; color:var(--o-muted); }
+  .cab-act .son{ margin-left:auto; display:flex; gap:7px; flex-wrap:wrap; }
+  .cab-act .son [hidden]{ display:none !important; }
+
+  .recuerda{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+             padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .recuerda b{ color:#3F3208; }
+
+  /* ---------- identificarse ---------- */
+  .sala{ display:flex; gap:9px; align-items:flex-end; flex-wrap:wrap; }
+  .sala label{ display:grid; gap:3px; font-size:11.5px; font-weight:700;
+               letter-spacing:.05em; text-transform:uppercase; color:var(--o-muted); }
+  .sala input{ font:inherit; font-size:14px; padding:8px 10px; border-radius:8px;
+               border:1.5px solid var(--o-border); background:#fff; width:200px; max-width:100%; }
+  .sala input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
+  .sala .falta input{ border-color:var(--mal); background:#FDECEA; }
+  .sala [hidden]{ display:none !important; }
+  .estadoRed{ font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:99px; }
+  .estadoRed.solo{ background:var(--o-line); color:var(--o-muted); }
+  .estadoRed.vivo{ background:#E6F4EA; color:#14532D; }
+  .estadoRed.malo{ background:#FDECEA; color:#8B1A10; }
+
+  /* ---------- pestañas ---------- */
+  .pest{ display:flex; gap:5px; flex-wrap:wrap; }
+  .pest button{ font:inherit; font-size:13px; font-weight:700; cursor:pointer;
+    border:2px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:9px 9px 0 0; padding:8px 12px; border-bottom-width:3px; text-align:left; }
+  .pest button:hover{ background:#F5F7FA; }
+  .pest button[aria-selected="true"]{ color:#fff; border-color:var(--cod); background:var(--cod); }
+  .pest button .p{ display:block; font-size:10.5px; font-weight:600; opacity:.85; }
+  .pest button .tick{ color:var(--ok); font-weight:800; }
+  .pest button[aria-selected="true"] .tick{ color:#B6EFCB; }
+
+  .enunciado{ background:#EAF2FB; border:1px solid #BBD4EE; border-radius:10px;
+              padding:12px 15px; font-size:13.5px; line-height:1.6; }
+  .enunciado b{ color:var(--cod); }
+
+  .tres{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:12px; }
+  .tres .campo{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px; padding:8px 11px; display:grid; gap:3px; }
+  .tres .campo > span{ font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8A7430; }
+  .tres .campo input{ font:inherit; font-size:16px; font-weight:800; text-align:right;
+    font-variant-numeric:tabular-nums; border:1.5px solid var(--amaBd); border-radius:7px;
+    padding:6px 9px; background:#fff; color:#4A3C0E; width:100%; min-width:0; }
+  .tres .campo input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
+  .tres .campo.bien input{ background:#E6F4EA; border-color:var(--ok); color:#14532D; }
+  .tres .campo.mal input{ background:#FDECEA; border-color:var(--mal); color:#8B1A10; }
+
+  /* ---------- plantilla ---------- */
+  .plantilla{ width:100%; border-collapse:collapse; font-size:13px; }
+  .plantilla th{ background:var(--cod); color:#fff; padding:8px 10px; font-size:12px;
+                 letter-spacing:.06em; text-align:center; border:1px solid #16467C; }
+  .plantilla td{ padding:7px 10px; text-align:center; border:1px solid var(--o-border); }
+  .plantilla td.c{ font-weight:800; color:var(--cod); font-variant-numeric:tabular-nums; }
+  .plantilla td.d{ background:var(--debe); color:#fff; font-weight:700; }
+  .plantilla td.h{ background:var(--haber); color:#fff; font-weight:700; }
+  .plantilla td.v{ background:var(--val); color:#fff; font-weight:700; }
+
+  /* ---------- tablero ---------- */
+  .tablero{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width:1060px){
+    .tablero{ grid-template-columns:296px 1fr; align-items:start; }
+    .plan{ position:sticky; top:96px; }
+  }
+  .plan h3, .diario h3{ margin:0 0 9px; font-size:12px; font-weight:800; letter-spacing:.07em;
+                        text-transform:uppercase; color:var(--o-muted); }
+  .buscador{ position:relative; }
+  .buscador input{ font:inherit; font-size:14px; padding:8px 10px; border-radius:8px;
+    border:1.5px solid var(--o-border); background:#fff; width:100%; }
+  .buscador input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
+  .chips{ display:flex; gap:5px; flex-wrap:wrap; margin-top:8px; }
+  .chips button{ font:inherit; font-size:11.5px; font-weight:700; cursor:pointer; border-radius:99px;
+    padding:4px 10px; border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted); }
+  .chips button:hover{ border-color:var(--cod); color:var(--cod); }
+  .chips button[aria-pressed="true"]{ background:var(--cod); border-color:var(--cod); color:#fff; }
+  .cuentas{ display:flex; flex-direction:column; gap:6px; margin-top:9px;
+            max-height:min(60vh,520px); overflow-y:auto; padding-right:2px; }
+  .cta{ border:2px solid var(--cc); border-left-width:6px; border-radius:9px; background:#fff;
+        padding:7px 10px; cursor:grab; touch-action:none; user-select:none; display:grid; gap:1px; }
+  .cta:hover{ box-shadow:0 5px 14px rgba(0,0,0,.12); }
+  .cta.sel{ box-shadow:0 0 0 3px rgba(31,95,168,.3); }
+  .cta.viaja{ opacity:.35; }
+  .cta .c1{ font-size:12.5px; font-weight:800; color:var(--cc); font-variant-numeric:tabular-nums; }
+  .cta .c2{ font-size:11.5px; color:var(--o-text); line-height:1.3; }
+  .cta .c3{ font-size:10.5px; color:var(--o-muted); }
+  .nada-busca{ font-size:12.5px; color:var(--o-muted); font-style:italic; padding:10px 2px; }
+  .fantasma{ position:fixed; z-index:90; pointer-events:none; width:258px; max-width:78vw;
+             box-shadow:0 14px 32px rgba(0,0,0,.3); transform:rotate(-1.5deg); opacity:.96; }
+
+  .asientoT{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .asientoT th{ background:var(--cod); color:#fff; padding:9px 10px; font-size:12px;
+                letter-spacing:.06em; text-align:center; border:1px solid #16467C; }
+  .asientoT th.d{ background:var(--debe); border-color:#96234F; }
+  .asientoT th.h{ background:var(--haber); border-color:#A03F12; }
+  .asientoT td{ border:1px solid var(--o-border); padding:0; vertical-align:middle; }
+  .asientoT td.cel{ width:118px; }
+  .asientoT td.den{ padding:7px 10px; font-size:12.5px; color:var(--o-text); }
+  .asientoT td.den .r{ display:block; font-size:10.5px; color:var(--o-muted); }
+  .celda{ padding:8px 9px; min-height:40px; display:flex; align-items:center; }
+  td.zona{ cursor:pointer; position:relative; width:120px; }
+  td.zona.sobre{ background:#FFF3CD; box-shadow:inset 0 0 0 2px var(--cod); }
+  .vacia{ color:var(--o-muted); font-style:italic; font-size:12px; }
+  .cdg{ font-size:14px; font-weight:800; color:var(--cc); font-variant-numeric:tabular-nums; }
+  .qx{ position:absolute; top:2px; right:3px; border:0; background:transparent; cursor:pointer;
+       font:inherit; font-size:14px; line-height:1; color:var(--o-muted); padding:2px 4px; }
+  .qx:hover{ color:var(--mal); }
+  .asientoT input{ font:inherit; font-size:13.5px; font-weight:700; text-align:right; width:100%;
+    border:0; background:var(--ama); font-variant-numeric:tabular-nums; padding:11px 9px; }
+  .asientoT input:focus{ outline:2px solid var(--cod); outline-offset:-2px; }
+  .grupo td{ background:#EEF2F7; font-size:11.5px; font-weight:800; letter-spacing:.04em;
+             text-transform:uppercase; color:var(--cod); padding:6px 10px; }
+  .asientoT tfoot td{ background:#F3F5F8; font-weight:800; font-variant-numeric:tabular-nums; }
+  .asientoT tfoot .et{ text-align:right; padding:8px 10px; }
+  .asientoT tfoot .n{ text-align:right; padding:8px 9px; }
+  tr.bien td{ background:#F2FAF5; }
+  tr.bien input{ background:#E6F4EA; color:#14532D; }
+  tr.mal td{ background:#FEF6F5; }
+  tr.mal input{ background:#FDECEA; color:#8B1A10; }
+  .pistaFila td{ font-size:11.5px; font-weight:700; padding:5px 10px; }
+  .pistaFila.b td{ color:#14532D; background:#F2FAF5; }
+  .pistaFila.m td{ color:#8B1A10; background:#FEF6F5; }
+
+  .cuadre{ margin-top:11px; border-radius:10px; padding:10px 14px; font-size:13.5px; font-weight:700; }
+  .cuadre.si{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .cuadre.no{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .mandos button{ font:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:8px;
+    padding:9px 14px; border:2px solid var(--o-border); background:#fff; color:var(--o-text); }
+  .mandos button:hover{ background:#F5F7FA; }
+  .mandos .rev{ background:var(--cod); border-color:var(--cod); color:#fff; }
+  .mandos .sol{ border-color:var(--mal); color:var(--mal); }
+
+  .marcador{ margin-top:13px; border-radius:11px; padding:13px 16px; display:flex; gap:12px;
+             align-items:center; flex-wrap:wrap; font-size:14px; font-weight:700; }
+  .marcador.todo{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .marcador.algo{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+  .marcador .big{ font-size:22px; font-weight:800; }
+  .marcador.todo .big{ animation:brinca .55s ease; }
+  @keyframes brinca{ 0%{ transform:scale(.6); } 60%{ transform:scale(1.18); } 100%{ transform:scale(1); } }
+
+  /* ---------- muro de ventanitas ---------- */
+  .muro{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:11px; margin-top:13px; }
+  .muro.grande{ grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); }
+  .vtna{ border:1.5px solid var(--o-border); border-radius:10px; background:#fff; overflow:hidden; }
+  .vtna.yo{ border-color:var(--cod); box-shadow:0 0 0 2px rgba(31,95,168,.16); }
+  .vtna.listo{ border-color:var(--ok); box-shadow:0 0 0 2px rgba(46,139,87,.16); }
+  .vtna .vh{ display:flex; justify-content:space-between; gap:8px; align-items:baseline;
+             padding:8px 11px; background:#F3F5F8; border-bottom:1px solid var(--o-border); }
+  .vtna .vn{ font-size:13px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .vtna .vs{ font-size:10.5px; font-weight:700; color:var(--o-muted); flex:none; }
+  .vtna .ve{ padding:6px 11px 2px; font-size:11px; color:var(--o-muted);
+             display:flex; justify-content:space-between; gap:8px; }
+  .mini{ width:100%; border-collapse:collapse; font-size:11px; }
+  .mini th{ background:#EAF0F7; color:var(--cod); padding:3px 7px; font-size:9.5px;
+            letter-spacing:.04em; border-bottom:1px solid var(--o-border); }
+  .mini th:nth-child(3){ color:var(--debe); }
+  .mini th:nth-child(4){ color:var(--haber); }
+  .mini td{ padding:3px 7px; border-bottom:1px solid #EEF1F5; font-variant-numeric:tabular-nums; }
+  .mini td:first-child{ font-weight:800; color:var(--cod); }
+  .mini td:nth-child(3), .mini td:nth-child(4){ text-align:right; }
+  .mini td:nth-child(2){ color:var(--o-muted); max-width:120px; overflow:hidden;
+                         text-overflow:ellipsis; white-space:nowrap; }
+  .mini tr.b td{ background:#F2FAF5; }
+  .mini tr.m td{ background:#FEF6F5; }
+  .mini .nn{ color:var(--o-muted); font-style:italic; font-weight:400; }
+  .vtna .vp{ padding:6px 11px 9px; font-size:11.5px; display:flex; justify-content:space-between; gap:8px; }
+  .vtna .vp b{ color:var(--o-text); }
+  .vacio-muro{ border:2px dashed var(--o-border); border-radius:10px; padding:18px;
+               text-align:center; font-size:12.5px; color:var(--o-muted); }
+
+  #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
+  @media (prefers-reduced-motion: reduce){ .marcador.todo .big{ animation:none; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="contabilidad.html">Contabilidad</a></span> / <b>Venta del giro del negocio</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesión 1</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap giro">
+
+  <div class="o-sheet">
+    <div class="cab-act">
+      <div class="marca" aria-hidden="true">
+        <svg viewBox="0 0 76 64">
+          <rect x="10" y="6" width="42" height="50" rx="3" fill="#fff" stroke="#1F5FA8" stroke-width="2.5"/>
+          <path d="M10 18h42" stroke="#1F5FA8" stroke-width="2.5"/>
+          <path d="M31 18v38" stroke="#C9D6E6" stroke-width="2"/>
+          <path d="M16 27h11M36 27h11M16 35h11M36 35h11M16 43h11M36 43h11"
+                stroke="#9FC2E6" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="58" cy="45" r="12" fill="#E8B84B"/>
+          <text x="58" y="50" text-anchor="middle" font-family="Inter,sans-serif"
+                font-size="12" font-weight="800" fill="#8A6510">S/</text>
+        </svg>
+      </div>
+      <div class="tt">
+        <h1>Venta del giro del negocio</h1>
+        <p>Registro de la venta de bienes o mercaderías propias de la actividad comercial de la empresa</p>
+      </div>
+      <div class="son">
+        <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+        <button class="o-btn" id="btnMuro" type="button">🔍 Ventanas grandes</button>
+      </div>
+    </div>
+    <p class="recuerda">
+      Primero calcula el <b>valor de venta</b>, el <b>IGV</b> y el <b>importe total</b>.
+      Después arma el asiento: arrastra la cuenta del plan a la columna <b>CÓDIGO</b> y escribe el importe
+      en el <b>DEBE</b> o en el <b>HABER</b>. En celular toca la cuenta y luego la fila.
+      <br>El asiento cuadra cuando la suma del debe es igual a la del haber.
+    </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Mis datos</h2>
+    <div class="sala">
+      <label id="cNom">Mi nombre<input id="iNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>
+      <label>Código de sala<input id="iSala" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>
+      <button class="o-btn o-btn-primary" id="btnEntrar" type="button">Entrar</button>
+      <button class="o-btn" id="btnSalirSala" type="button" hidden>Salir</button>
+      <span class="estadoRed solo" id="estadoRed">Modo individual</span>
+    </div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:10px 0 0;line-height:1.55">
+      Al entrar con tu nombre trabajas en tu propia hoja y el aula ve tu avance en el muro de abajo.
+      Sin entrar también puedes practicar, pero solo tú verás lo que haces.
+    </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">La plantilla del asiento de venta</h2>
+    <div style="overflow-x:auto">
+      <table class="plantilla">
+        <thead><tr><th>CÓDIGO</th><th>DEBE</th><th>HABER</th></tr></thead>
+        <tbody>
+          <tr><td class="c">1212 / 1312</td><td class="d">Importe total</td><td></td></tr>
+          <tr><td class="c">40111</td><td></td><td class="h">IGV</td></tr>
+          <tr><td class="c">70XX</td><td></td><td class="v">Valor de venta</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:10px 0 0;line-height:1.6">
+      <b>1212</b> si el cliente es un tercero y <b>1312</b> si es una empresa relacionada.
+      <b>70XX</b> depende de lo que vende la empresa y de si la venta es local o de exportación:
+      mercaderías, productos terminados o servicios, y dentro de cada una, terceros o relacionadas.
+      En un anticipo, en lugar de la cuenta 70 va la <b>122</b> (terceros) o la <b>132</b> (relacionadas).
+    </p>
+  </div>
+
+  <div class="pest" id="pest" role="tablist" aria-label="Casos"></div>
+
+  <div class="o-sheet" style="border-top-left-radius:0">
+    <div id="enunciado"></div>
+    <div class="tres">
+      <label class="campo" id="cVC"><span>Valor de venta (VC)</span>
+        <input id="iVC" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+      <label class="campo" id="cIGV"><span>IGV</span>
+        <input id="iIGV" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+      <label class="campo" id="cPC"><span>Importe total (PC)</span>
+        <input id="iPC" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <div class="tablero">
+      <div class="plan">
+        <h3>Plan de cuentas PCGE 2019</h3>
+        <div class="buscador">
+          <input id="iBusca" type="search" placeholder="Busca por código o nombre…" autocomplete="off"
+                 aria-label="Buscar cuenta en el plan">
+        </div>
+        <div class="chips" id="chips"></div>
+        <div class="cuentas" id="cuentas"></div>
+      </div>
+      <div class="diario">
+        <h3>Mi asiento</h3>
+        <div style="overflow-x:auto"><div id="diario"></div></div>
+        <div id="cuadre"></div>
+        <div class="mandos">
+          <button class="rev" id="btnRev" type="button">Revisar</button>
+          <button class="sol" id="btnSol" type="button">Ver solución</button>
+          <button id="btnReset" type="button">Reiniciar caso</button>
+        </div>
+        <div id="marcador"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Monitoreo del aula</h2>
+    <div class="muro" id="muro"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Contabilidad · Sesión 1</span>
+    <span>Venta del giro del negocio · PCGE 2019</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="pcge2019.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+
+/* =================== catálogo =================== */
+var CAT = window.PCGE || [];
+var ELEM = window.PCGE_ELEMENTOS || {};
+var COLEL = { 1:'#2E75B6', 2:'#7B5EA7', 3:'#0F766E', 4:'#E07B39', 5:'#B8860B',
+              6:'#C0392B', 7:'#2E8B57', 8:'#5A5A5A', 9:'#5A5A5A' };
+var IX={};
+CAT.forEach(function(f){ if(!IX[f[0]]) IX[f[0]]={cod:f[0], nom:f[1], el:f[2]}; });
+function cta(c){ return IX[c] || {cod:c, nom:'(cuenta fuera del catálogo)', el:0}; }
+function colorDe(c){ return COLEL[cta(c).el] || '#5A5A5A'; }
+/* ruta legible: 40111 → 40 · 401 · 4011 */
+function rutaDe(c){
+  var p=[], i;
+  for(i=2;i<c.length;i++){ var pad=c.slice(0,i); if(IX[pad]) p.push(pad+' '+IX[pad].nom); }
+  return p.join(' · ');
+}
+var FRECUENTES=['1212','1312','40111','70121','70221','70311','70322','101','1032','1041','1061','122','132'];
+
+/* =================== casos (del cuaderno de la sesión) =================== */
+var CASOS=[
+  { id:'c1', tit:'Caso 1', sub:'Venta de mercaderías al crédito',
+    enun:'El 05/11/2025 la empresa vende mercaderías consistentes en café tostado premium a la empresa '+
+         'Comercializadora del Sur S.A.C. (tercero). Se emite la factura FE01-1254 por un valor de venta de '+
+         'S/ 18,500.00 más IGV. La operación se realiza al crédito a 30 días.',
+    vc:18500, igv:3330, pc:21830,
+    grupos:[ { g:'Por la venta de mercaderías según factura FE01-1254', sol:[
+        {c:'1212',  l:'d', m:21830, q:'el importe total'},
+        {c:'40111', l:'h', m:3330,  q:'el IGV'},
+        {c:'70121', l:'h', m:18500, q:'el valor de venta'} ]} ]},
+  { id:'c2', tit:'Caso 2', sub:'Productos terminados cobrados en caja',
+    enun:'El 12/11/2025 la empresa vende productos terminados consistentes en café molido de 250 gramos '+
+         'elaborado por la propia empresa a Supermercados Regionales S.A.C. (tercero). Se emite la factura '+
+         'FE01-1268 por un importe total de S/ 29,500.00 incluido IGV. La operación se cobra al 100 % mediante caja.',
+    vc:25000, igv:4500, pc:29500,
+    grupos:[
+      { g:'Por la venta según factura FE01-1268', sol:[
+        {c:'1212',  l:'d', m:29500, q:'el importe total'},
+        {c:'40111', l:'h', m:4500,  q:'el IGV'},
+        {c:'70221', l:'h', m:25000, q:'el valor de venta'} ]},
+      { g:'Por el cobro en efectivo', sol:[
+        {c:'101',   l:'d', m:29500, q:'el importe cobrado'},
+        {c:'1212',  l:'h', m:29500, q:'la cancelación de la cuenta por cobrar'} ]} ]},
+  { id:'c3', tit:'Caso 3', sub:'Servicios a una relacionada, cobro parcial',
+    enun:'El 18/11/2025 la empresa presta servicios de transporte de personal a Minera Horizonte S.A.C. '+
+         '(relacionada). Se emite la factura FE01-1285 por un valor de venta de S/ 42,000.00 más IGV. '+
+         'El cliente cancela el 40 % mediante transferencia bancaria y el saldo queda pendiente de cobro.',
+    vc:42000, igv:7560, pc:49560,
+    grupos:[
+      { g:'Por el servicio prestado según factura FE01-1285', sol:[
+        {c:'1312',  l:'d', m:49560, q:'el importe total'},
+        {c:'40111', l:'h', m:7560,  q:'el IGV'},
+        {c:'70322', l:'h', m:42000, q:'el valor de venta'} ]},
+      { g:'Por el cobro del 40 % mediante transferencia', sol:[
+        {c:'1041',  l:'d', m:19824, q:'el 40 % del importe total'},
+        {c:'1312',  l:'h', m:19824, q:'la parte cobrada de la cuenta por cobrar'} ]} ]},
+  { id:'c4', tit:'Caso 4', sub:'Exportación de servicios, sin IGV',
+    enun:'El 28/11/2025 la empresa presta servicios de mantenimiento preventivo de maquinaria industrial a '+
+         'la empresa extranjera AKOM (tercero). Se emite la factura FE01-4512 por un importe de '+
+         'S/ 14,420.00 incluido IGV. La operación es al contado mediante transferencia en cuenta corriente. '+
+         'En la exportación el IGV es cero.',
+    vc:14420, igv:0, pc:14420,
+    grupos:[
+      { g:'Por el servicio de exportación según factura FE01-4512', sol:[
+        {c:'1212',  l:'d', m:14420, q:'el importe total'},
+        {c:'70311', l:'h', m:14420, q:'el valor de venta'} ]},
+      { g:'Por el cobro en la cuenta corriente', sol:[
+        {c:'1041',  l:'d', m:14420, q:'el importe cobrado'},
+        {c:'1212',  l:'h', m:14420, q:'la cancelación de la cuenta por cobrar'} ]} ]},
+  { id:'c5', tit:'Caso 5', sub:'Anticipo de un cliente tercero',
+    enun:'El 08/11/2025 la empresa recibe un anticipo por la futura venta de mercaderías de café tostado '+
+         'premium a Supermercados Regionales S.A.C. (tercero). El cliente deposita S/ 11,800.00 incluido IGV '+
+         'en la cuenta de depósitos de ahorro de la empresa para asegurar el abastecimiento de la campaña navideña.',
+    vc:10000, igv:1800, pc:11800,
+    grupos:[
+      { g:'Por el anticipo facturado', sol:[
+        {c:'1212',  l:'d', m:11800, q:'el importe total'},
+        {c:'40111', l:'h', m:1800,  q:'el IGV'},
+        {c:'122',   l:'h', m:10000, q:'el anticipo, que todavía no es venta'} ]},
+      { g:'Por el depósito recibido', sol:[
+        {c:'1061',  l:'d', m:11800, q:'el importe depositado'},
+        {c:'1212',  l:'h', m:11800, q:'la cancelación de la cuenta por cobrar'} ]} ]},
+  { id:'c6', tit:'Caso 6', sub:'Anticipo de una empresa relacionada',
+    enun:'El 15/11/2025 la empresa recibe un anticipo por la futura venta de productos terminados '+
+         'consistentes en tableros eléctricos fabricados por la empresa a Proyectos Industriales del Sur S.A.C. '+
+         '(relacionada). El importe recibido asciende a S/ 23,600.00 incluido IGV y es abonado mediante transferencia bancaria.',
+    vc:20000, igv:3600, pc:23600,
+    grupos:[
+      { g:'Por el anticipo facturado', sol:[
+        {c:'1312',  l:'d', m:23600, q:'el importe total'},
+        {c:'40111', l:'h', m:3600,  q:'el IGV'},
+        {c:'132',   l:'h', m:20000, q:'el anticipo recibido de la relacionada'} ]},
+      { g:'Por la transferencia recibida', sol:[
+        {c:'1041',  l:'d', m:23600, q:'el importe abonado'},
+        {c:'1312',  l:'h', m:23600, q:'la cancelación de la cuenta por cobrar'} ]} ]},
+  { id:'c7', tit:'Caso 7', sub:'Anticipo cobrado con cheque',
+    enun:'El 22/11/2025 la empresa recibe un anticipo por servicios de transporte de personal que serán '+
+         'prestados durante diciembre a Minera Horizonte S.A.C. (tercero). El cliente entrega un cheque por '+
+         'S/ 17,700.00 incluido IGV como adelanto para garantizar la disponibilidad de las unidades.',
+    vc:15000, igv:2700, pc:17700,
+    grupos:[
+      { g:'Por el anticipo facturado', sol:[
+        {c:'1212',  l:'d', m:17700, q:'el importe total'},
+        {c:'40111', l:'h', m:2700,  q:'el IGV'},
+        {c:'122',   l:'h', m:15000, q:'el anticipo, que todavía no es venta'} ]},
+      { g:'Por el cheque recibido', sol:[
+        {c:'1032',  l:'d', m:17700, q:'el cheque, que aún está en tránsito'},
+        {c:'1212',  l:'h', m:17700, q:'la cancelación de la cuenta por cobrar'} ]} ]}
+];
+CASOS.forEach(function(c){
+  c.plano=[];                       /* filas en orden, con su grupo */
+  c.grupos.forEach(function(g, ig){
+    g.sol.forEach(function(s){ c.plano.push({ g:ig, s:s }); });
+  });
+  c.nLineas=c.plano.length;
+  c.total=c.nLineas+3;              /* + valor de venta, IGV e importe total */
+});
+
+/* =================== utilidades =================== */
+function r2(n){ return Math.round(n*100)/100; }
+function miles(n){
+  var neg=n<0, p=Math.abs(n).toFixed(2).split('.');
+  return (neg?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'.'+p[1];
+}
+function soles(n){ return 'S/ '+miles(n); }
+function aNumero(t){
+  if(t===null||t===undefined) return null;
+  var s=String(t).replace(/[\s,]/g,'').replace(/S\/?/gi,'');
+  if(s==='') return null;
+  var n=parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sinTildes(s){
+  return String(s).toLowerCase()
+    .replace(/[áà]/g,'a').replace(/[éè]/g,'e').replace(/[íì]/g,'i')
+    .replace(/[óò]/g,'o').replace(/[úù]/g,'u').replace(/ñ/g,'n');
+}
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('giro_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sPop(){ nota(520,0,0.07,0.09,'square'); nota(780,0.04,0.07,0.05); }
+function sQuita(){ nota(360,0,0.07,0.06); }
+function sCuadra(){ [523.25,659.25,783.99].forEach(function(f,i){ nota(f,i*0.07,0.26,0.06); }); }
+function sMal(){ nota(150,0,0.24,0.07,'sawtooth'); nota(142,0.02,0.24,0.05,'sawtooth'); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  [1046.5,1318.5,1568].forEach(function(f){ nota(f,0.55,0.75,0.07); });
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('giro_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) sPop();
+});
+pintaSon();
+
+/* =================== estado =================== */
+var S={};
+CASOS.forEach(function(c){
+  S[c.id]={ vc:null, igv:null, pc:null,
+            filas:c.plano.map(function(){ return {c:null, d:null, h:null}; }) };
+});
+var activo=CASOS[0], revisado={}, sel=null, arr=null, listo=false, cuadraba={};
+
+function guarda(){
+  try{ localStorage.setItem('giro_avance', JSON.stringify(S)); }catch(e){}
+  empuja();
+}
+function carga(){
+  try{
+    var d=JSON.parse(localStorage.getItem('giro_avance')||'null');
+    if(!d) return;
+    CASOS.forEach(function(c){
+      var x=d[c.id]; if(!x) return;
+      S[c.id].vc=(typeof x.vc==='number')?x.vc:null;
+      S[c.id].igv=(typeof x.igv==='number')?x.igv:null;
+      S[c.id].pc=(typeof x.pc==='number')?x.pc:null;
+      if(x.filas && x.filas.length===c.nLineas){
+        S[c.id].filas=x.filas.map(function(f){
+          return { c:(f.c && IX[f.c]) ? f.c : null,
+                   d:(typeof f.d==='number')?f.d:null,
+                   h:(typeof f.h==='number')?f.h:null };
+        });
+      }
+    });
+  }catch(e){}
+}
+carga();
+
+function sumaD(c){ var s=0; S[c.id].filas.forEach(function(f){ if(typeof f.d==='number') s+=f.d; }); return r2(s); }
+function sumaH(c){ var s=0; S[c.id].filas.forEach(function(f){ if(typeof f.h==='number') s+=f.h; }); return r2(s); }
+function llenas(c){
+  return S[c.id].filas.filter(function(f){ return f.c && (typeof f.d==='number' || typeof f.h==='number'); }).length;
+}
+function hechas(c){
+  var e=S[c.id], n=llenas(c);
+  if(typeof e.vc==='number') n++;
+  if(typeof e.igv==='number') n++;
+  if(typeof e.pc==='number') n++;
+  return n;
+}
+
+/* =================== calificación =================== */
+function califica(c){
+  var e=S[c.id], r={ bien:0, total:c.total, filas:[], cifras:{} };
+  ['vc','igv','pc'].forEach(function(k){
+    var v=e[k], esp=c[k];
+    if(typeof v!=='number'){ r.cifras[k]={ok:false, vacia:true}; return; }
+    var ok=Math.abs(r2(v)-esp)<0.005;
+    r.cifras[k]={ok:ok};
+    if(ok) r.bien++;
+  });
+  /* cada línea se compara dentro de su grupo, sin importar el orden */
+  c.grupos.forEach(function(gr, ig){
+    var idx=[], pend=gr.sol.map(function(s){ return {c:s.c, l:s.l, m:s.m, q:s.q, usado:false}; });
+    c.plano.forEach(function(p, i){ if(p.g===ig) idx.push(i); });
+    idx.forEach(function(i){
+      var f=e.filas[i], j, esp=null;
+      if(!f.c){ r.filas[i]={ok:false, txt:'Falta la cuenta'}; return; }
+      if(typeof f.d==='number' && typeof f.h==='number'){
+        r.filas[i]={ok:false, txt:'Cada línea lleva importe en un solo lado'}; return;
+      }
+      var lado = (typeof f.d==='number') ? 'd' : ((typeof f.h==='number') ? 'h' : null);
+      var m = lado==='d' ? f.d : (lado==='h' ? f.h : null);
+      for(j=0;j<pend.length;j++)
+        if(!pend[j].usado && pend[j].c===f.c && pend[j].l===lado && Math.abs(r2(m)-pend[j].m)<0.005){ esp=pend[j]; break; }
+      if(esp){ esp.usado=true; r.filas[i]={ok:true, txt:'Correcto · '+esp.q}; r.bien++; return; }
+      for(j=0;j<pend.length;j++)
+        if(!pend[j].usado && pend[j].c===f.c && pend[j].l===lado){ esp=pend[j]; break; }
+      if(esp){
+        esp.usado=true;
+        r.filas[i]={ok:false, txt: (lado===null)
+          ? 'Falta el importe: aquí va '+esp.q
+          : 'La cuenta y el lado están bien, revisa el importe: aquí va '+esp.q};
+        return;
+      }
+      for(j=0;j<pend.length;j++) if(!pend[j].usado && pend[j].c===f.c){ esp=pend[j]; break; }
+      if(esp){
+        esp.usado=true;
+        r.filas[i]={ok:false, txt: lado===null
+          ? 'Falta el importe: va '+esp.q+' en el '+(esp.l==='d'?'DEBE':'HABER')
+          : 'Esta cuenta va en el '+(esp.l==='d'?'DEBE':'HABER')};
+        return;
+      }
+      r.filas[i]={ok:false, txt:'Esta cuenta no corresponde a esta parte del asiento'};
+    });
+  });
+  return r;
+}
+
+/* =================== pintado =================== */
+function pintaPestanas(){
+  var h='';
+  CASOS.forEach(function(c){
+    var r=revisado[c.id] ? califica(c) : null;
+    var fin = r && r.bien===c.total;
+    h+='<button type="button" role="tab" data-c="'+c.id+'" aria-selected="'+(c.id===activo.id?'true':'false')+'">'+
+       esc(c.tit)+(fin?' <span class="tick">✓</span>':'')+
+       '<span class="p">'+esc(c.sub)+'</span></button>';
+  });
+  $('pest').innerHTML=h;
+}
+function pintaEnunciado(){
+  var c=activo;
+  $('enunciado').innerHTML='<div class="enunciado">'+esc(c.enun)+'</div>';
+  var e=S[c.id], r=revisado[c.id] ? califica(c) : null;
+  [['vc','iVC','cVC'],['igv','iIGV','cIGV'],['pc','iPC','cPC']].forEach(function(t){
+    var inp=$(t[1]), caja=$(t[2]), v=e[t[0]];
+    if(document.activeElement!==inp) inp.value=(typeof v==='number')?miles(v):'';
+    caja.classList.remove('bien','mal');
+    if(r && !r.cifras[t[0]].vacia) caja.classList.add(r.cifras[t[0]].ok?'bien':'mal');
+    else if(r) caja.classList.add('mal');
+  });
+}
+function pintaCuentas(){
+  var q=sinTildes($('iBusca').value.trim()), lista;
+  if(!q){
+    lista=FRECUENTES.map(function(c){ return IX[c]; }).filter(Boolean);
+  } else {
+    lista=[];
+    for(var i=0;i<CAT.length && lista.length<60;i++){
+      var f=CAT[i];
+      if(f[0].indexOf(q)===0 || sinTildes(f[1]).indexOf(q)>=0) lista.push({cod:f[0], nom:f[1], el:f[2]});
+    }
+  }
+  if(!lista.length){ $('cuentas').innerHTML='<div class="nada-busca">Ninguna cuenta coincide con esa búsqueda.</div>'; return; }
+  var h='';
+  lista.forEach(function(c){
+    var ru=rutaDe(c.cod);
+    h+='<div class="cta'+(sel===c.cod?' sel':'')+'" data-f="'+esc(c.cod)+'" style="--cc:'+colorDe(c.cod)+'"'+
+       ' role="button" tabindex="0">'+
+         '<span class="c1">'+esc(c.cod)+'</span>'+
+         '<span class="c2">'+esc(c.nom)+'</span>'+
+         (ru?'<span class="c3">'+esc(ru)+'</span>':'')+
+       '</div>';
+  });
+  $('cuentas').innerHTML=h;
+}
+function pintaChips(){
+  var h='<button type="button" data-q="" aria-pressed="true">Cuentas del tema</button>';
+  [['Efectivo','10'],['Por cobrar terceros','12'],['Por cobrar relacionadas','13'],
+   ['Tributos','40'],['Ventas','70']].forEach(function(x){
+    h+='<button type="button" data-q="'+x[1]+'" aria-pressed="false">'+esc(x[0])+'</button>';
+  });
+  $('chips').innerHTML=h;
+}
+function pintaAsiento(){
+  var c=activo, e=S[c.id], r=revisado[c.id] ? califica(c) : null;
+  var h='<table class="asientoT"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th>'+
+        '<th class="d">DEBE</th><th class="h">HABER</th></tr></thead><tbody>';
+  var gAct=-1;
+  c.plano.forEach(function(p, i){
+    if(p.g!==gAct){
+      gAct=p.g;
+      h+='<tr class="grupo"><td colspan="4">'+esc(c.grupos[gAct].g)+'</td></tr>';
+    }
+    var f=e.filas[i], d=r?r.filas[i]:null;
+    var cls = d ? (d.ok?' class="bien"':' class="mal"') : '';
+    h+='<tr'+cls+'><td class="zona" data-r="'+i+'">';
+    if(f.c){
+      h+='<div class="celda"><span class="cdg" style="--cc:'+colorDe(f.c)+'">'+esc(f.c)+'</span></div>'+
+         '<button class="qx" type="button" data-r="'+i+'" aria-label="Quitar">×</button>';
+    } else {
+      h+='<div class="celda"><span class="vacia">arrastra</span></div>';
+    }
+    h+='</td><td class="den">'+(f.c ? esc(cta(f.c).nom)+'<span class="r">'+esc(rutaDe(f.c))+'</span>' : '')+'</td>'+
+       '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="d"'+
+       ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
+       '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="h"'+
+       ' aria-label="Haber línea '+(i+1)+'" placeholder="—" value="'+(typeof f.h==='number'?miles(f.h):'')+'"></td></tr>';
+    if(d) h+='<tr class="pistaFila '+(d.ok?'b':'m')+'"><td colspan="4">'+esc(d.txt)+'</td></tr>';
+  });
+  var sd=sumaD(c), sh=sumaH(c);
+  h+='</tbody><tfoot><tr><td class="et" colspan="2">Sumas</td><td class="n">'+miles(sd)+
+     '</td><td class="n">'+miles(sh)+'</td></tr></tfoot></table>';
+  $('diario').innerHTML=h;
+
+  if(!llenas(c)){ $('cuadre').innerHTML=''; }
+  else if(Math.abs(sd-sh)<0.005 && sd>0){
+    $('cuadre').innerHTML='<div class="cuadre si">✓ El asiento cuadra: debe y haber suman '+soles(sd)+'</div>';
+  } else {
+    $('cuadre').innerHTML='<div class="cuadre no">Todavía no cuadra · debe '+soles(sd)+' · haber '+soles(sh)+
+      ' · diferencia '+soles(Math.abs(sd-sh))+'</div>';
+  }
+  conecta();
+}
+function pinta(){ pintaAsiento(); pintaCuentas(); pintaEnunciado(); pintaPestanas(); avisaCuadre(); }
+
+function avisaCuadre(){
+  var c=activo;
+  var ok = llenas(c)>0 && sumaD(c)>0 && Math.abs(sumaD(c)-sumaH(c))<0.005;
+  if(listo && ok && !cuadraba[c.id]) sCuadra();
+  cuadraba[c.id]=ok;
+}
+function limpiaMarcas(){
+  if(revisado[activo.id]){ revisado[activo.id]=false; $('marcador').innerHTML=''; }
+}
+
+/* =================== interacción =================== */
+function coloca(i, cod){
+  S[activo.id].filas[i].c=cod;
+  limpiaMarcas(); pinta(); guarda(); sPop();
+  var inp=$('diario').querySelector('input[data-r="'+i+'"][data-l="d"]');
+  if(inp) inp.focus();
+}
+function quitaFila(i){
+  S[activo.id].filas[i]={c:null,d:null,h:null};
+  limpiaMarcas(); pinta(); guarda(); sQuita();
+}
+function zonaEn(x,y){
+  var el=document.elementFromPoint(x,y);
+  return el ? el.closest('td.zona') : null;
+}
+function resaltar(z){
+  var ya=document.querySelector('td.zona.sobre');
+  if(ya && ya!==z) ya.classList.remove('sobre');
+  if(z) z.classList.add('sobre');
+}
+function sueltaEn(z, cod){
+  resaltar(null);
+  if(!z || !cod) return false;
+  coloca(parseInt(z.getAttribute('data-r'),10), cod);
+  return true;
+}
+function seleccionar(cod){
+  sel = (sel===cod) ? null : cod;
+  pintaCuentas();
+  if(sel) nota(700,0,0.06,0.05);
+}
+document.addEventListener('pointerdown', function(ev){
+  var c = ev.target.closest ? ev.target.closest('.cta') : null;
+  if(!c || ev.button>0) return;
+  ev.preventDefault();
+  arr={ id:c.getAttribute('data-f'), x0:ev.clientX, y0:ev.clientY, mov:false, el:c, gh:null, pid:ev.pointerId };
+  try{ c.setPointerCapture(ev.pointerId); }catch(e){}
+});
+document.addEventListener('pointermove', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  if(!arr.mov && Math.abs(ev.clientX-arr.x0)+Math.abs(ev.clientY-arr.y0) < 7) return;
+  if(!arr.mov){
+    arr.mov=true;
+    var g=arr.el.cloneNode(true);
+    g.classList.add('fantasma'); g.classList.remove('sel');
+    document.body.appendChild(g); arr.gh=g; arr.el.classList.add('viaja');
+  }
+  arr.gh.style.left=(ev.clientX-128)+'px';
+  arr.gh.style.top =(ev.clientY-24)+'px';
+  resaltar(zonaEn(ev.clientX, ev.clientY));
+  if(ev.clientY < 110) window.scrollBy(0,-16);
+  else if(ev.clientY > window.innerHeight-90) window.scrollBy(0,16);
+});
+document.addEventListener('pointerup', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  var a=arr; arr=null;
+  if(a.gh) a.gh.remove();
+  if(a.el) a.el.classList.remove('viaja');
+  if(a.mov){ sueltaEn(zonaEn(ev.clientX, ev.clientY), a.id); sel=null; pintaCuentas(); }
+  else seleccionar(a.id);
+});
+document.addEventListener('pointercancel', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  if(arr.gh) arr.gh.remove();
+  if(arr.el) arr.el.classList.remove('viaja');
+  resaltar(null); arr=null;
+});
+document.addEventListener('keydown', function(ev){
+  var c = ev.target.closest ? ev.target.closest('.cta') : null;
+  if(c && (ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); seleccionar(c.getAttribute('data-f')); }
+  if(ev.key==='Escape' && sel){ sel=null; pintaCuentas(); }
+});
+function conecta(){
+  var zs=$('diario').querySelectorAll('td.zona');
+  Array.prototype.forEach.call(zs, function(z){
+    z.addEventListener('click', function(ev){
+      if(ev.target.closest('.qx')) return;
+      if(!sel) return;
+      var f=sel; sel=null; sueltaEn(z, f);
+    });
+  });
+  Array.prototype.forEach.call($('diario').querySelectorAll('.qx'), function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation(); quitaFila(parseInt(b.getAttribute('data-r'),10));
+    });
+  });
+  Array.prototype.forEach.call($('diario').querySelectorAll('.asientoT input'), function(inp){
+    var i=parseInt(inp.getAttribute('data-r'),10), l=inp.getAttribute('data-l');
+    inp.addEventListener('input', function(){
+      S[activo.id].filas[i][l]=aNumero(inp.value);
+      limpiaMarcas(); actualizaSumas(); guarda();
+    });
+    inp.addEventListener('blur', function(){
+      var v=S[activo.id].filas[i][l];
+      inp.value=(typeof v==='number')?miles(v):'';
+      pintaAsiento(); avisaCuadre();
+    });
+  });
+}
+function actualizaSumas(){
+  var ns=$('diario').querySelectorAll('tfoot .n');
+  if(ns[0]) ns[0].textContent=miles(sumaD(activo));
+  if(ns[1]) ns[1].textContent=miles(sumaH(activo));
+}
+[['iVC','vc'],['iIGV','igv'],['iPC','pc']].forEach(function(t){
+  $(t[0]).addEventListener('input', function(){
+    S[activo.id][t[1]]=aNumero($(t[0]).value);
+    limpiaMarcas(); guarda();
+  });
+  $(t[0]).addEventListener('blur', function(){
+    var v=S[activo.id][t[1]];
+    $(t[0]).value=(typeof v==='number')?miles(v):'';
+  });
+});
+$('iBusca').addEventListener('input', function(){
+  Array.prototype.forEach.call($('chips').querySelectorAll('button'), function(b){
+    b.setAttribute('aria-pressed', (b.getAttribute('data-q')===$('iBusca').value) ? 'true':'false');
+  });
+  pintaCuentas();
+});
+$('chips').addEventListener('click', function(ev){
+  var b=ev.target.closest('button[data-q]');
+  if(!b) return;
+  $('iBusca').value=b.getAttribute('data-q');
+  Array.prototype.forEach.call($('chips').querySelectorAll('button'), function(x){
+    x.setAttribute('aria-pressed', x===b ? 'true':'false');
+  });
+  pintaCuentas(); nota(640,0,0.06,0.05);
+});
+
+/* =================== revisar =================== */
+function revisa(){
+  revisado[activo.id]=true;
+  var c=activo, r=califica(c);
+  pinta();
+  var todo=(r.bien===c.total);
+  $('marcador').innerHTML='<div class="marcador '+(todo?'todo':'algo')+'">'+
+    '<span class="big">'+r.bien+' de '+c.total+'</span>'+
+    '<span>'+(todo
+      ? 'aciertos. ¡Caso resuelto! Las cifras y el asiento están correctos.'
+      : 'aciertos entre las tres cifras y las '+c.nLineas+' líneas del asiento. Revisa lo marcado en rojo.')+
+    '</span></div>';
+  if(todo){ sFin(); confeti(); } else sMal();
+  guarda();
+}
+function verSolucion(){
+  var c=activo, e=S[c.id];
+  e.vc=c.vc; e.igv=c.igv; e.pc=c.pc;
+  e.filas=c.plano.map(function(p){
+    return { c:p.s.c, d:(p.s.l==='d'?p.s.m:null), h:(p.s.l==='h'?p.s.m:null) };
+  });
+  revisado[c.id]=true; pinta();
+  $('marcador').innerHTML='<div class="marcador algo"><span class="big">Solución</span>'+
+    '<span>Asiento completo para revisar en clase.</span></div>';
+  nota(620,0,0.1,0.05); guarda();
+}
+function reinicia(){
+  var c=activo;
+  S[c.id]={ vc:null, igv:null, pc:null, filas:c.plano.map(function(){ return {c:null,d:null,h:null}; }) };
+  revisado[c.id]=false; sel=null; cuadraba[c.id]=false;
+  $('marcador').innerHTML='';
+  pinta(); guarda(); sQuita();
+}
+$('btnRev').addEventListener('click', revisa);
+$('btnSol').addEventListener('click', verSolucion);
+$('btnReset').addEventListener('click', reinicia);
+$('pest').addEventListener('click', function(ev){
+  var b=ev.target.closest('button[data-c]');
+  if(!b) return;
+  CASOS.forEach(function(c){ if(c.id===b.getAttribute('data-c')) activo=c; });
+  sel=null; $('marcador').innerHTML='';
+  cuadraba[activo.id]=false;
+  pinta(); empuja(); nota(700,0,0.06,0.05);
+  try{ localStorage.setItem('giro_caso', activo.id); }catch(e){}
+});
+
+/* =================== confeti =================== */
+function confeti(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv=$('confeti'), g=cv.getContext('2d');
+  cv.width=window.innerWidth; cv.height=window.innerHeight; cv.style.display='block';
+  var tonos=['#1F5FA8','#C0306B','#D0561C','#2E8B57','#7B5EA7','#E8B84B'], ps=[], i;
+  for(i=0;i<110;i++) ps.push({ x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.45,
+    vx:(Math.random()-0.5)*2.4, vy:2.4+Math.random()*3.2, a:Math.random()*Math.PI,
+    va:(Math.random()-0.5)*0.24, w:5+Math.random()*7, h:8+Math.random()*8, c:tonos[i%tonos.length] });
+  var t0=performance.now();
+  (function paso(t){
+    var dt=t-t0;
+    g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.a+=p.va;
+      g.save(); g.translate(p.x,p.y); g.rotate(p.a);
+      g.fillStyle=p.c; g.globalAlpha=Math.max(0,1-dt/2600);
+      g.fillRect(-p.w/2,-p.h/2,p.w,p.h); g.restore();
+    });
+    if(dt<2600) requestAnimationFrame(paso);
+    else { g.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })(t0);
+}
+
+/* =================== muro de ventanitas =================== */
+var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
+var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
+var TABLA=SUPA+'/rest/v1/sala_asientos';
+function hdr(extra){
+  var o={ apikey:ANON, Authorization:'Bearer '+ANON, 'Content-Type':'application/json' };
+  if(extra) for(var k in extra) o[k]=extra[k];
+  return o;
+}
+var sala=null, yo=null, tSala=null, tEnvio=null, gente=[], fallos=0;
+
+function red(clase, txt){
+  var e=$('estadoRed'); e.className='estadoRed '+clase; e.textContent=txt;
+}
+function resumen(){
+  var c=activo, e=S[c.id], r=revisado[c.id] ? califica(c) : null;
+  return {
+    caso:c.id, casoN:c.tit+' · '+c.sub,
+    vc:e.vc, igv:e.igv, pc:e.pc,
+    hechas:hechas(c), total:c.total,
+    bien:(r ? r.bien : null),
+    cuadra:(llenas(c)>0 && sumaD(c)>0 && Math.abs(sumaD(c)-sumaH(c))<0.005),
+    lineas:e.filas.map(function(f, i){
+      return { c:f.c, n:(f.c?cta(f.c).nom:''), d:f.d, h:f.h,
+               ok:(r ? (r.filas[i]?r.filas[i].ok:null) : null) };
+    })
+  };
+}
+function empuja(){
+  if(!sala || !yo) return;
+  clearTimeout(tEnvio);
+  tEnvio=setTimeout(function(){
+    fetch(TABLA+'?on_conflict=sala,alumno', {
+      method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+      body:JSON.stringify([{ sala:'G-'+sala, alumno:yo, caso:activo.id,
+                             estado:resumen(), actualizado:new Date().toISOString() }])
+    }).then(function(r){
+      if(!r.ok) return Promise.reject(r.status);
+      fallos=0; trae();
+    }).catch(falla);
+  }, 900);
+}
+function trae(){
+  if(!sala) return;
+  var desde=new Date(Date.now()-3*3600*1000).toISOString();
+  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent('G-'+sala)+
+        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){
+      fallos=0; gente=rows||[];
+      red('vivo','En vivo · '+gente.length+(gente.length===1?' persona':' personas')+' en la sala '+sala);
+      pintaMuro();
+    })
+    .catch(falla);
+}
+function falla(e){
+  fallos++;
+  if(fallos>=2) red('malo','Sin conexión con la sala ('+e+') · sigues trabajando en tu equipo');
+}
+function pintaMuro(){
+  if(!sala){
+    $('muro').innerHTML='<div class="vacio-muro">Entra con tu nombre y un código de sala '+
+      'para que el aula vea tu avance aquí.</div>';
+    return;
+  }
+  if(!gente.length){
+    $('muro').innerHTML='<div class="vacio-muro">Todavía no hay nadie en la sala <b>'+esc(sala)+'</b>.</div>';
+    return;
+  }
+  var ahora=Date.now(), h='';
+  gente.forEach(function(g){
+    var e=g.estado||{}, tot=e.total||1;
+    var seg=Math.max(0, Math.round((ahora-new Date(g.actualizado).getTime())/1000));
+    var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
+    var fin = (typeof e.bien==='number' && e.bien===tot);
+    var mini='<table class="mini"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th><th>DEBE</th><th>HABER</th></tr></thead><tbody>';
+    (e.lineas||[]).forEach(function(l){
+      var cl = l.ok===true ? ' class="b"' : (l.ok===false ? ' class="m"' : '');
+      mini+='<tr'+cl+'><td>'+(l.c?esc(l.c):'<span class="nn">—</span>')+'</td>'+
+            '<td>'+(l.n?esc(l.n):'')+'</td>'+
+            '<td>'+(typeof l.d==='number'?miles(l.d):'')+'</td>'+
+            '<td>'+(typeof l.h==='number'?miles(l.h):'')+'</td></tr>';
+    });
+    mini+='</tbody></table>';
+    h+='<div class="vtna'+(g.alumno===yo?' yo':'')+(fin?' listo':'')+'">'+
+         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
+         '<span class="vs">'+esc(hace)+'</span></div>'+
+         '<div class="ve"><span>'+esc(e.casoN||'—')+'</span>'+
+         '<span>'+(e.cuadra?'✓ cuadra':'')+'</span></div>'+
+         '<div class="ve"><span>VC '+(typeof e.vc==='number'?miles(e.vc):'—')+'</span>'+
+         '<span>IGV '+(typeof e.igv==='number'?miles(e.igv):'—')+'</span>'+
+         '<span>PC '+(typeof e.pc==='number'?miles(e.pc):'—')+'</span></div>'+
+         mini+
+         '<div class="vp"><span>'+(e.hechas||0)+' de '+tot+'</span>'+
+         '<b>'+(typeof e.bien==='number' ? e.bien+' correctas' : 'sin revisar')+'</b></div>'+
+       '</div>';
+  });
+  $('muro').innerHTML=h;
+}
+function entra(){
+  var n=$('iNombre').value.trim(), s=($('iSala').value.trim()||'PCGE').toUpperCase();
+  $('cNom').classList.toggle('falta', n.length<2);
+  if(n.length<2){ $('iNombre').focus(); red('malo','Escribe tu nombre para entrar'); sMal(); return; }
+  yo=n; sala=s;
+  try{ localStorage.setItem('giro_nombre',n); localStorage.setItem('giro_sala',s); }catch(e){}
+  $('btnEntrar').hidden=true; $('btnSalirSala').hidden=false;
+  $('iNombre').disabled=true; $('iSala').disabled=true;
+  red('vivo','Conectando…'); fallos=0; empuja(); trae();
+  if(!tSala) tSala=setInterval(trae, 3000);
+  nota(700,0,0.08,0.06);
+}
+function sale(){
+  sala=null; yo=null; gente=[];
+  if(tSala){ clearInterval(tSala); tSala=null; }
+  $('btnEntrar').hidden=false; $('btnSalirSala').hidden=true;
+  $('iNombre').disabled=false; $('iSala').disabled=false;
+  try{ localStorage.removeItem('giro_sala'); }catch(e){}
+  red('solo','Modo individual'); pintaMuro();
+}
+$('btnEntrar').addEventListener('click', entra);
+$('btnSalirSala').addEventListener('click', sale);
+$('iNombre').addEventListener('keydown', function(e){ if(e.key==='Enter') entra(); });
+$('iSala').addEventListener('keydown', function(e){ if(e.key==='Enter') entra(); });
+$('btnMuro').addEventListener('click', function(){
+  var g=$('muro').classList.toggle('grande');
+  $('btnMuro').textContent = g ? '🔎 Ventanas pequeñas' : '🔍 Ventanas grandes';
+  nota(640,0,0.06,0.05);
+});
+
+/* =================== arranque =================== */
+(function inicio(){
+  pintaChips();
+  try{
+    $('iNombre').value=localStorage.getItem('giro_nombre')||'';
+    $('iSala').value=localStorage.getItem('giro_sala')||'PCGE';
+    var g=localStorage.getItem('giro_caso');
+    CASOS.forEach(function(c){ if(c.id===g) activo=c; });
+  }catch(e){}
+  pinta(); pintaMuro();
+  listo=true;
+})();
+
+})();
+</script>
+
+</body>
+</html>
