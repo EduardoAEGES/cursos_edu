@@ -193,6 +193,7 @@
           <label class="campo" id="cPC"><span>Importe total</span>
             <input id="iPC" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
         </div>
+        <div id="necesarias" style="margin-top:14px"></div>
         <div style="overflow-x:auto;margin-top:14px"><div id="diario"></div></div>
         <div id="cuadre"></div>
         <div class="mandos">
@@ -203,6 +204,11 @@
         <div id="marcador"></div>
       </div>
     </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
+    <div id="ejemplo"></div>
   </div>
 
   <div class="o-sheet">
@@ -511,7 +517,14 @@ function pintaDiario(){
   }
   conecta(); avisaCuadre();
 }
-function pinta(){ pintaDoc(); pintaCifras(); pintaDiario(); pintaPestanas(); }
+function pintaNecesarias(){
+  var c=activo, vistas={}, orden=[];
+  c.sol.forEach(function(s){ if(!vistas[s.c]){ vistas[s.c]=1; orden.push(s.c); } });
+  orden.sort();
+  $('necesarias').innerHTML=Dinamica.lista(orden,
+    'Cuentas que necesitas en este comprobante (tú decides el lado y el importe)');
+}
+function pinta(){ pintaDoc(); pintaCifras(); pintaNecesarias(); pintaDiario(); pintaPestanas(); }
 function avisaCuadre(){
   var c=activo, ok=sumaD(c)>0 && Math.abs(sumaD(c)-sumaH(c))<0.005;
   if(listo && ok && !cuadraba[c.id]) sCuadra();
@@ -667,6 +680,7 @@ function ventanaAula(e){
 /* =================== arranque =================== */
 (function inicio(){
   $('guia').innerHTML=Dinamica.guia();
+  $('ejemplo').innerHTML=Dinamica.ejemplo();
   try{
     var g=localStorage.getItem('cmp_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
