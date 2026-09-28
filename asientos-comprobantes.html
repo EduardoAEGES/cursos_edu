@@ -56,7 +56,7 @@
   .doc table{ width:100%; border-collapse:collapse; font-size:12.5px; }
   .doc table th{ background:#EAF0F7; color:var(--cod); padding:5px 10px; font-size:10.5px;
                  letter-spacing:.05em; text-align:left; }
-  .doc table th:last-child, .doc table td:last-child{ text-align:right; }
+  .doc table th:last-child, .doc table td.nn{ text-align:right; font-variant-numeric:tabular-nums; }
   .doc table td{ padding:7px 10px; border-bottom:1px solid #EEF1F5; }
   .doc .tot{ padding:10px 14px; display:grid; gap:4px; background:#FAFBFD; }
   .doc .tot .f{ display:flex; justify-content:space-between; gap:10px; font-size:13px; }
@@ -64,10 +64,6 @@
                   padding-top:6px; margin-top:3px; }
   .doc .tot .n{ font-variant-numeric:tabular-nums; font-weight:700; }
   .doc .pie{ padding:9px 14px; font-size:11px; color:var(--o-muted); border-top:1px dashed var(--o-border); }
-  .doc.nc{ border-color:var(--mal); }
-  .doc.nc .dh, .doc.nc .caja{ border-color:var(--mal); }
-  .doc.nc .caja .t, .doc.nc table th{ color:var(--mal); }
-  .doc.nc table th{ background:#FDECEA; }
 
   .tres{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:13px; }
   .tres .campo{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px; padding:8px 11px; display:grid; gap:3px; }
@@ -98,6 +94,7 @@
   .asientoT td.den .pi{ display:block; margin-top:3px; font-size:11px; font-weight:700; }
   .asientoT td.den .pi.b{ color:#14532D; }
   .asientoT td.den .pi.m{ color:#8B1A10; }
+  .asientoT td.den .pq{ display:block; margin-top:3px; font-size:11px; color:#14532D; line-height:1.45; }
   .asientoT td.cel{ width:120px; }
   .asientoT td.cel input{ font:inherit; font-size:13.5px; font-weight:700; text-align:right; width:100%;
     border:0; background:var(--ama); font-variant-numeric:tabular-nums; padding:11px 9px; }
@@ -179,6 +176,11 @@
     <div id="aula"></div>
   </div>
 
+  <div class="o-sheet">
+    <h2 class="o-section-title">Modelo: un comprobante y su asiento</h2>
+    <div id="ejemplo"></div>
+  </div>
+
   <div class="pest" id="pest" role="tablist" aria-label="Comprobantes"></div>
 
   <div class="o-sheet" style="border-top-left-radius:0">
@@ -204,16 +206,6 @@
         <div id="marcador"></div>
       </div>
     </div>
-  </div>
-
-  <div class="o-sheet">
-    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
-    <div id="ejemplo"></div>
-  </div>
-
-  <div class="o-sheet">
-    <h2 class="o-section-title">La dinámica de las cuentas</h2>
-    <div id="guia"></div>
   </div>
 
   <div class="o-sheet">
@@ -275,49 +267,65 @@ function esc(s){
 }
 
 /* =================== comprobantes =================== */
-var EMISOR={ nom:'Comercial Los Andes S.A.C.', ruc:'RUC 20512345678',
-             dir:'Av. Los Precursores 480 — Arequipa' };
+var EMISOR={ nom:'LOS GORRIONES S.A.', ruc:'RUC 20334020184',
+             dir:'Av. Parra 415 — Cercado — Arequipa' };
 var CASOS=[
-  { id:'d1', tit:'Comprobante 1', sub:'Factura por mercaderías',
-    tipo:'FACTURA ELECTRÓNICA', serie:'FE01-1254', fecha:'05/11/2025', fechaISO:'2025-11-05',
-    cliente:'Comercializadora del Sur S.A.C.', ruc:'RUC 20487654321', rel:'Tercero',
-    cond:'Crédito a 30 días',
-    items:[['Café tostado premium en grano, 50 sacos de 25 kg','18,500.00']],
-    vc:18500, igv:3330, pc:21830, muestra:'vc',
-    glosa:'Por la venta de mercaderías según factura FE01-1254',
-    sol:[ {c:'1212', l:'d', m:21830, q:'el cliente nos debe el importe total'},
-          {c:'40111',l:'h', m:3330,  q:'nace la obligación de pagar el IGV a la SUNAT'},
-          {c:'70121',l:'h', m:18500, q:'se reconoce el ingreso por la venta'} ]},
-  { id:'d2', tit:'Comprobante 2', sub:'Boleta con total incluido',
-    tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'BE02-0310', fecha:'09/11/2025', fechaISO:'2025-11-09',
-    cliente:'Rosa Meléndez Cárdenas', ruc:'DNI 45871236', rel:'Tercero',
-    cond:'Contado',
-    items:[['Café tostado premium, 40 bolsas de 1 kg','2,360.00']],
-    vc:2000, igv:360, pc:2360, muestra:'pc',
-    glosa:'Por la venta de mercaderías según boleta BE02-0310',
-    sol:[ {c:'1212', l:'d', m:2360, q:'el cliente nos debe el importe total'},
-          {c:'40111',l:'h', m:360,  q:'nace la obligación de pagar el IGV'},
-          {c:'70121',l:'h', m:2000, q:'se reconoce el ingreso por la venta'} ]},
-  { id:'d3', tit:'Comprobante 3', sub:'Servicio a una relacionada',
-    tipo:'FACTURA ELECTRÓNICA', serie:'FE01-1285', fecha:'18/11/2025', fechaISO:'2025-11-18',
-    cliente:'Minera Horizonte S.A.C.', ruc:'RUC 20100998877', rel:'Empresa relacionada',
-    cond:'Crédito',
-    items:[['Servicio de transporte de personal — noviembre 2025','42,000.00']],
-    vc:42000, igv:7560, pc:49560, muestra:'vc',
-    glosa:'Por el servicio prestado según factura FE01-1285',
-    sol:[ {c:'1312', l:'d', m:49560, q:'la relacionada nos debe el importe total'},
-          {c:'40111',l:'h', m:7560,  q:'nace la obligación de pagar el IGV'},
-          {c:'70322',l:'h', m:42000, q:'se reconoce el ingreso por el servicio local a una relacionada'} ]},
-  { id:'d4', tit:'Comprobante 4', sub:'Nota de crédito por devolución',
-    tipo:'NOTA DE CRÉDITO ELECTRÓNICA', serie:'NC01-0045', fecha:'28/11/2025', fechaISO:'2025-11-28',
-    cliente:'Comercializadora del Sur S.A.C.', ruc:'RUC 20487654321', rel:'Tercero',
-    cond:'Anulación parcial de la factura FE01-1254', nc:true,
-    items:[['Devolución de 3 sacos de café tostado premium','1,000.00']],
-    vc:1000, igv:180, pc:1180, muestra:'vc',
-    glosa:'Por la devolución según nota de crédito NC01-0045',
-    sol:[ {c:'70921',l:'d', m:1000, q:'la devolución rebaja la venta'},
-          {c:'40111',l:'d', m:180,  q:'se reduce el IGV que se debía pagar'},
-          {c:'1212', l:'h', m:1180, q:'el cliente ya no nos debe esa parte'} ]}
+  { id:'d1', tit:'Comprobante 1', sub:'Factura al crédito',
+    tipo:'FACTURA ELECTRÓNICA', serie:'E001-0104', fecha:'06/02/2026', fechaISO:'2026-02-06',
+    cliente:'PIRQA CONSTRUCTORES S.A.C.', ruc:'RUC 20603383258', rel:'Tercero',
+    cond:'Crédito 30 días',
+    items:[['5.00','UNIDAD','MONITOR LED 24 PULGADAS','1,200.00']],
+    vc:6000, igv:1080, pc:7080, costo:4150, muestra:'vc',
+    nota:'Pendiente de cobro. Costo de la mercadería vendida: S/ 4,150.00',
+    glosa:'Por la venta según factura E001-0104',
+    sol:[ {c:'1212', l:'d', m:7080, q:'el cliente nos debe el importe total'},
+          {c:'40111',l:'h', m:1080, q:'el IGV que se debe a la SUNAT'},
+          {c:'70121',l:'h', m:6000, q:'el valor de venta es el ingreso'},
+          {c:'69121',l:'d', m:4150, q:'lo vendido se vuelve costo'},
+          {c:'20111',l:'h', m:4150, q:'la mercadería sale del almacén'} ]},
+  { id:'d2', tit:'Comprobante 2', sub:'Boleta al contado',
+    tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'B001-0233', fecha:'12/02/2026', fechaISO:'2026-02-12',
+    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', rel:'Tercero',
+    cond:'Contado — efectivo',
+    items:[['2.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','800.00']],
+    vc:1600, igv:288, pc:1888, costo:1050, muestra:'pc',
+    nota:'Cobrado en caja. Costo de la mercadería vendida: S/ 1,050.00',
+    glosa:'Por la venta según boleta B001-0233',
+    sol:[ {c:'1212', l:'d', m:1888, q:'el cliente nos debe el importe total'},
+          {c:'40111',l:'h', m:288,  q:'el IGV que se debe a la SUNAT'},
+          {c:'70121',l:'h', m:1600, q:'el valor de venta es el ingreso'},
+          {c:'69121',l:'d', m:1050, q:'lo vendido se vuelve costo'},
+          {c:'20111',l:'h', m:1050, q:'la mercadería sale del almacén'},
+          {c:'101',  l:'d', m:1888, q:'entra el dinero a la caja'},
+          {c:'1212', l:'h', m:1888, q:'se cancela la cuenta por cobrar'} ]},
+  { id:'d3', tit:'Comprobante 3', sub:'Factura cobrada al banco',
+    tipo:'FACTURA ELECTRÓNICA', serie:'E001-0109', fecha:'18/02/2026', fechaISO:'2026-02-18',
+    cliente:'SERVICIOS ANDINOS S.A.C.', ruc:'RUC 20455566677', rel:'Tercero',
+    cond:'Contado — transferencia',
+    items:[['10.00','UNIDAD','IMPRESORA MULTIFUNCIONAL','890.00']],
+    vc:8900, igv:1602, pc:10502, costo:6200, muestra:'vc',
+    nota:'Abonado en la cuenta corriente. Costo de la mercadería vendida: S/ 6,200.00',
+    glosa:'Por la venta según factura E001-0109',
+    sol:[ {c:'1212', l:'d', m:10502, q:'el cliente nos debe el importe total'},
+          {c:'40111',l:'h', m:1602,  q:'el IGV que se debe a la SUNAT'},
+          {c:'70121',l:'h', m:8900,  q:'el valor de venta es el ingreso'},
+          {c:'69121',l:'d', m:6200,  q:'lo vendido se vuelve costo'},
+          {c:'20111',l:'h', m:6200,  q:'la mercadería sale del almacén'},
+          {c:'1041', l:'d', m:10502, q:'entra el dinero al banco'},
+          {c:'1212', l:'h', m:10502, q:'se cancela la cuenta por cobrar'} ]},
+  { id:'d4', tit:'Comprobante 4', sub:'Factura a una relacionada',
+    tipo:'FACTURA ELECTRÓNICA', serie:'E001-0112', fecha:'24/02/2026', fechaISO:'2026-02-24',
+    cliente:'GORRIONES LOGÍSTICA S.A.C.', ruc:'RUC 20511122233', rel:'Empresa relacionada',
+    cond:'Crédito 45 días',
+    items:[['4.00','UNIDAD','SERVIDOR RACK 32GB RAM','7,500.00']],
+    vc:30000, igv:5400, pc:35400, costo:21000, muestra:'vc',
+    nota:'Pendiente de cobro. Costo de la mercadería vendida: S/ 21,000.00',
+    glosa:'Por la venta según factura E001-0112',
+    sol:[ {c:'1312', l:'d', m:35400, q:'la relacionada nos debe el importe total'},
+          {c:'40111',l:'h', m:5400,  q:'el IGV que se debe a la SUNAT'},
+          {c:'70121',l:'h', m:30000, q:'el valor de venta es el ingreso'},
+          {c:'69121',l:'d', m:21000, q:'lo vendido se vuelve costo'},
+          {c:'20111',l:'h', m:21000, q:'la mercadería sale del almacén'} ]}
 ];
 CASOS.forEach(function(c){ c.total=c.sol.length*3+3; });   /* código, debe/haber y monto por línea, + 3 cifras */
 
@@ -439,7 +447,7 @@ function pintaPestanas(){
   $('pest').innerHTML=h;
 }
 function pintaDoc(){
-  var c=activo, h='<div class="doc'+(c.nc?' nc':'')+'">';
+  var c=activo, h='<div class="doc">';
   h+='<div class="dh"><div class="emp">'+esc(EMISOR.nom)+
      '<span>'+esc(EMISOR.ruc)+'</span><span>'+esc(EMISOR.dir)+'</span></div>'+
      '<div class="caja"><div class="t">'+esc(c.tipo)+'</div>'+
@@ -448,23 +456,23 @@ function pintaDoc(){
      '<dt>Señor(es)</dt><dd>'+esc(c.cliente)+'</dd>'+
      '<dt>Documento</dt><dd>'+esc(c.ruc)+'</dd>'+
      '<dt>Vínculo</dt><dd>'+esc(c.rel)+'</dd>'+
-     '<dt>Condición</dt><dd>'+esc(c.cond)+'</dd></dl>';
-  h+='<table><thead><tr><th>Descripción</th><th>Importe S/</th></tr></thead><tbody>';
-  c.items.forEach(function(it){ h+='<tr><td>'+esc(it[0])+'</td><td>'+esc(it[1])+'</td></tr>'; });
-  h+='</tbody></table>';
-  h+='<div class="tot">';
+     '<dt>Forma de pago</dt><dd>'+esc(c.cond)+'</dd></dl>';
+  h+='<table><thead><tr><th>Cant.</th><th>U.M.</th><th>Descripción</th><th>V. unitario</th></tr></thead><tbody>';
+  c.items.forEach(function(it){
+    h+='<tr><td>'+esc(it[0])+'</td><td>'+esc(it[1])+'</td><td>'+esc(it[2])+'</td>'+
+       '<td class="nn">'+esc(it[3])+'</td></tr>';
+  });
+  h+='</tbody></table><div class="tot">';
   if(c.muestra==='vc'){
     h+='<div class="f"><span>Valor de venta</span><span class="n">'+miles(c.vc)+'</span></div>'+
-       '<div class="f"><span>IGV 18 %</span><span class="n">'+(c.igv?miles(c.igv):'—')+'</span></div>'+
+       '<div class="f"><span>IGV 18 %</span><span class="n">'+miles(c.igv)+'</span></div>'+
        '<div class="f g"><span>Importe total</span><span class="n">'+miles(c.pc)+'</span></div>';
   } else {
     h+='<div class="f"><span>Valor de venta</span><span class="n">—</span></div>'+
        '<div class="f"><span>IGV 18 %</span><span class="n">—</span></div>'+
        '<div class="f g"><span>Importe total incluido IGV</span><span class="n">'+miles(c.pc)+'</span></div>';
   }
-  h+='</div><div class="pie">'+(c.muestra==='pc'
-      ? 'El comprobante solo muestra el total. Separa tú el valor de venta y el IGV.'
-      : 'Representación impresa del comprobante electrónico.')+'</div></div>';
+  h+='</div><div class="pie">'+esc(c.nota)+'</div></div>';
   $('docu').innerHTML=h;
 }
 function pintaCifras(){
@@ -497,7 +505,7 @@ function pintaDiario(){
             ? esc(nom(f.c))+'<span class="r">'+esc(ruta(f.c))+'</span>'
             : '<span class="no">Ese código no está en el plan de cuentas</span>') : '')+
          (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
-         (d ? '<div class="dn-por-que">'+Dinamica.explica(esp.c, esp.l, esp.q)+'</div>' : '')+
+         (d ? '<span class="pq">'+Dinamica.motivo(esp.c, esp.l, esp.q)+'</span>' : '')+
        '</td>'+
        '<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="d"'+
        ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
@@ -679,8 +687,7 @@ function ventanaAula(e){
 
 /* =================== arranque =================== */
 (function inicio(){
-  $('guia').innerHTML=Dinamica.guia();
-  $('ejemplo').innerHTML=Dinamica.ejemplo();
+  $('ejemplo').innerHTML=Dinamica.modelo();
   try{
     var g=localStorage.getItem('cmp_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });

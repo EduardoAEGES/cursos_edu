@@ -110,6 +110,7 @@
   .asientoT td.den .pi{ display:block; margin-top:3px; font-size:11px; font-weight:700; }
   .asientoT td.den .pi.b{ color:#14532D; }
   .asientoT td.den .pi.m{ color:#8B1A10; }
+  .asientoT td.den .pq{ display:block; margin-top:3px; font-size:11px; color:#14532D; line-height:1.45; }
   .asientoT td.den{ padding:7px 10px; font-size:12.5px; color:var(--o-text); }
   .asientoT td.den .r{ display:block; font-size:10.5px; color:var(--o-muted); }
   .celda{ padding:8px 9px; min-height:40px; display:flex; align-items:center; }
@@ -219,16 +220,6 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">La dinámica de las cuentas: por qué va al debe o al haber</h2>
-    <div id="guia"></div>
-  </div>
-
-  <div class="o-sheet">
-    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
-    <div id="ejemplo"></div>
-  </div>
-
-  <div class="o-sheet">
     <h2 class="o-section-title">La plantilla del asiento de venta</h2>
     <div style="overflow-x:auto">
       <table class="plantilla">
@@ -246,6 +237,11 @@
       mercaderías, productos terminados o servicios, y dentro de cada una, terceros o relacionadas.
       En un anticipo, en lugar de la cuenta 70 va la <b>122</b> (terceros) o la <b>132</b> (relacionadas).
     </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Modelo: un comprobante y su asiento</h2>
+    <div id="ejemplo"></div>
   </div>
 
   <div class="pest" id="pest" role="tablist" aria-label="Casos"></div>
@@ -696,7 +692,7 @@ function pintaAsiento(){
       h+='</td><td class="den">'+
          (f.c ? esc(cta(f.c).nom)+'<span class="r">'+esc(rutaDe(f.c))+'</span>' : '')+
          (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
-         (d ? '<div class="dn-por-que">'+Dinamica.explica(esp.c, esp.l, esp.q)+'</div>' : '')+'</td>'+
+         (d ? '<span class="pq">'+Dinamica.motivo(esp.c, esp.l, esp.q)+'</span>' : '')+'</td>'+
          '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="d"'+
          ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
          '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="h"'+
@@ -982,8 +978,7 @@ function modoDocente(esDoc){
 
 /* =================== arranque =================== */
 (function inicio(){
-  $('guia').innerHTML=Dinamica.guia();
-  $('ejemplo').innerHTML=Dinamica.ejemplo();
+  $('ejemplo').innerHTML=Dinamica.modelo();
   pintaChips();
   try{
     var g=localStorage.getItem('giro_caso');
