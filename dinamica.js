@@ -198,14 +198,15 @@ var MODELO={
   pago:'Crédito 30 días',
   item:['8.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','2,650.00'],
   cifras:[ ['Valor de venta','21,200.00'], ['IGV 18 %','3,816.00'],
-           ['Importe total','25,016.00'], ['Costo de ventas','14,800.00'] ],
+           ['Importe total','25,016.00'] ],
   lineas:[
     { g:'Por la venta', c:'1212',  l:'d', m:'25,016.00', q:'el cliente nos debe el importe total' },
     { g:'Por la venta', c:'40111', l:'h', m:'3,816.00',  q:'el IGV que se debe a la SUNAT' },
     { g:'Por la venta', c:'70121', l:'h', m:'21,200.00', q:'el valor de venta es el ingreso' },
-    { g:'Por el costo', c:'69121', l:'d', m:'14,800.00', q:'lo vendido se vuelve costo' },
-    { g:'Por el costo', c:'20111', l:'h', m:'14,800.00', q:'la mercadería sale del almacén' }
-  ]
+    { g:'Por el cobro', c:'1041',  l:'d', m:'25,016.00', q:'entra el dinero al banco' },
+    { g:'Por el cobro', c:'1212',  l:'h', m:'25,016.00', q:'ya no nos deben nada' }
+  ],
+  cobro:'Cobrada el 07/03/2026 con transferencia a la cuenta corriente.'
 };
 function modelo(){
   var m=MODELO;
@@ -223,10 +224,10 @@ function modelo(){
      '<td class="n">'+esc(m.item[3])+'</td></tr></tbody></table>'+
      '<div class="dt">';
   m.cifras.forEach(function(c, i){
-    h+='<div class="f'+(i===2?' g':'')+(i===3?' co':'')+'"><span>'+esc(c[0])+'</span>'+
+    h+='<div class="f'+(i===2?' g':'')+'"><span>'+esc(c[0])+'</span>'+
        '<span class="n">'+esc(c[1])+'</span></div>';
   });
-  h+='</div></div>';
+  h+='</div><div class="md-co">'+esc(m.cobro)+'</div></div>';
   /* el asiento tipo */
   h+='<div class="md-as"><div class="md-t">Así queda el asiento</div>'+
      '<table class="md-tabla"><thead><tr><th>Código</th><th>Cuenta</th>'+
