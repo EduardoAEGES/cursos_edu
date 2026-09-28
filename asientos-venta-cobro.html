@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="odoo.css">
 <link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="dinamica.css">
 <style>
   .arr{
     --cod:#1F5FA8; --debe:#C0306B; --haber:#D0561C;
@@ -185,6 +186,11 @@
   </div>
 
   <div class="o-sheet">
+    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
+    <div id="ejemplo"></div>
+  </div>
+
+  <div class="o-sheet">
     <h2 class="o-section-title">Entrar a la sala</h2>
     <div id="aula"></div>
   </div>
@@ -209,8 +215,10 @@
   <div class="o-sheet">
     <div class="tablero">
       <div class="plan">
-        <h3>Cuentas</h3>
+        <h3>Cuentas de este caso</h3>
         <div class="cuentas" id="cuentas"></div>
+        <p style="font-size:11.5px;color:var(--o-muted);margin:8px 0 0;line-height:1.45">
+          Están las cuentas que hacen falta en este caso y alguna parecida, para que tengas que elegir.</p>
       </div>
       <div class="diario">
         <h3>Importes por colocar</h3>
@@ -219,6 +227,11 @@
         <div style="overflow-x:auto"><div id="diario"></div></div>
       </div>
     </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">La dinámica de las cuentas</h2>
+    <div id="guia"></div>
   </div>
 
   <div class="o-sheet">
@@ -267,7 +280,17 @@ var COLEL={ '1':'#2E75B6','2':'#7B5EA7','3':'#0F766E','4':'#E07B39','5':'#B8860B
             '6':'#C0392B','7':'#2E8B57','8':'#5A5A5A','9':'#5A5A5A' };
 function color(c){ return COLEL[String(c).charAt(0)] || '#5A5A5A'; }
 
-var CUENTAS=['101','1041','1212','1232','20111','40111','69121','70121','70921'];
+var VECINAS={ '1212':'1232','1232':'1212','101':'1041','1041':'101',
+              '70121':'70921','70921':'70121','69121':'20111','20111':'69121' };
+function cuentasDelCaso(){
+  var vistas={}, orden=[];
+  activo.plano.forEach(function(p){ if(!vistas[p.s.c]){ vistas[p.s.c]=1; orden.push(p.s.c); } });
+  orden.slice().forEach(function(c){
+    var v=VECINAS[c];
+    if(v && !vistas[v]){ vistas[v]=1; orden.push(v); }
+  });
+  return orden;
+}
 
 /* =================== casos =================== */
 var EMPRESA='Comercial Los Andes S.A.C.';
@@ -482,7 +505,7 @@ function pintaCabecera(){
 }
 function pintaFichas(){
   var c=activo, h='';
-  CUENTAS.forEach(function(cd){
+  cuentasDelCaso().forEach(function(cd){
     h+='<div class="cta'+(sel==='c:'+cd?' sel':'')+'" data-f="c:'+cd+'" style="--cc:'+color(cd)+'"'+
        ' role="button" tabindex="0">'+
          '<span class="c1">'+esc(cd)+'</span>'+
@@ -767,6 +790,8 @@ function ventanaAula(e){
 
 /* =================== arranque =================== */
 (function inicio(){
+  $('ejemplo').innerHTML=Dinamica.ejemplo();
+  $('guia').innerHTML=Dinamica.guia();
   try{
     var g=localStorage.getItem('arr_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });

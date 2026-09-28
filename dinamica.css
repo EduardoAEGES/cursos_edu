@@ -36,3 +36,36 @@
 .dn-por-que .dn-el{ color:var(--o-muted); }
 .dn-por-que .dn-exc{ color:#8A4A1E; background:#FFF4EC; border-radius:6px; padding:5px 7px; }
 .dn-por-que .dn-por{ color:#14532D; font-weight:600; }
+
+/* ejemplo resuelto */
+.dn-pasos{ display:grid; gap:7px; margin:13px 0; }
+.dn-paso{ display:grid; grid-template-columns:28px 1fr auto; gap:10px; align-items:center;
+          border:1px solid var(--amaBd,#E8CE8A); background:#FFF8E1; border-radius:9px; padding:8px 11px; }
+.dn-paso .pn{ display:grid; place-items:center; width:28px; height:28px; border-radius:50%;
+              background:#8A6510; color:#fff; font-weight:800; font-size:13px; }
+.dn-paso .pt{ font-size:13px; color:#4A3C0E; }
+.dn-paso .pd{ display:block; font-size:11.5px; color:#8A7430; }
+.dn-paso .pv{ font-size:16px; font-weight:800; font-variant-numeric:tabular-nums; color:#4A3C0E; }
+.dn-asiento{ width:100%; border-collapse:collapse; font-size:13px; min-width:640px; }
+.dn-asiento th{ background:#1F5FA8; color:#fff; padding:8px 10px; font-size:11px;
+                letter-spacing:.06em; text-transform:uppercase; }
+.dn-asiento th.d{ background:#C0306B; }
+.dn-asiento th.h{ background:#D0561C; }
+.dn-asiento td{ padding:7px 10px; border:1px solid var(--o-border); }
+.dn-asiento td.enc{ background:#FAFBFD; font-size:12px; color:var(--o-muted); vertical-align:top; }
+.dn-asiento td.cc{ font-weight:800; color:#1F5FA8; font-variant-numeric:tabular-nums; }
+.dn-asiento td.n{ text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+.dn-asiento tr.sum td{ background:#F3F5F8; font-weight:800; }
+.dn-asiento tr.sum .et{ text-align:right; }
+.dn-cierre{ font-size:13px; line-height:1.6; margin:14px 0 0; color:var(--o-text);
+            background:#E6F4EA; border:1px solid #9BD3AE; border-radius:9px; padding:10px 13px; }
+
+/* lista de cuentas necesarias */
+.dn-lista{ display:grid; gap:6px; }
+.dn-lista .dl-t{ font-size:11.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+                 color:var(--o-muted); margin-bottom:2px; }
+.dn-lista .dl-i{ display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:start;
+                 border:1px solid var(--o-border); border-radius:8px; padding:7px 10px; background:#fff; }
+.dn-lista .dl-c{ font-weight:800; font-size:13px; color:#1F5FA8; font-variant-numeric:tabular-nums; }
+.dn-lista .dl-n{ font-size:12.5px; line-height:1.4; }
+.dn-lista .dl-e{ display:block; font-size:11px; color:var(--o-muted); }

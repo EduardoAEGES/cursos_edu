@@ -224,6 +224,11 @@
   </div>
 
   <div class="o-sheet">
+    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
+    <div id="ejemplo"></div>
+  </div>
+
+  <div class="o-sheet">
     <h2 class="o-section-title">La plantilla del asiento de venta</h2>
     <div style="overflow-x:auto">
       <table class="plantilla">
@@ -260,12 +265,15 @@
   <div class="o-sheet">
     <div class="tablero">
       <div class="plan">
-        <h3>Plan de cuentas PCGE 2019</h3>
+        <h3>Cuentas de este caso</h3>
         <div class="buscador">
           <input id="iBusca" type="search" placeholder="Busca por código o nombre…" autocomplete="off"
                  aria-label="Buscar cuenta en el plan">
         </div>
         <div class="chips" id="chips"></div>
+        <p style="font-size:11.5px;color:var(--o-muted);margin:8px 0 0;line-height:1.45">
+          Estas son las cuentas que necesitas aquí, más alguna parecida para que tengas que elegir.
+          Busca arriba si quieres ver todo el plan.</p>
         <div class="cuentas" id="cuentas"></div>
       </div>
       <div class="diario">
@@ -323,7 +331,21 @@ function rutaDe(c){
   for(i=2;i<c.length;i++){ var pad=c.slice(0,i); if(IX[pad]) p.push(pad+' '+IX[pad].nom); }
   return p.join(' · ');
 }
-var FRECUENTES=['1212','1312','40111','70121','70221','70311','70322','101','1032','1041','1061','122','132'];
+/* las cuentas que hacen falta en el caso activo, más un par de vecinas para que haya que elegir */
+var VECINAS={ '1212':'1312', '1312':'1212', '101':'1041', '1041':'101',
+              '122':'132', '132':'122', '1061':'1032', '1032':'1061',
+              '70121':'70221', '70221':'70121', '70311':'70322', '70322':'70311' };
+function cuentasDelCaso(){
+  var vistas={}, orden=[];
+  activo.plano.forEach(function(p){
+    if(!vistas[p.s.c]){ vistas[p.s.c]=1; orden.push(p.s.c); }
+  });
+  orden.slice().forEach(function(c){
+    var v=VECINAS[c];
+    if(v && !vistas[v]){ vistas[v]=1; orden.push(v); }
+  });
+  return orden;
+}
 
 /* =================== casos (del cuaderno de la sesión) =================== */
 var CASOS=[
@@ -610,7 +632,7 @@ function pintaEnunciado(){
 function pintaCuentas(){
   var q=sinTildes($('iBusca').value.trim()), lista;
   if(!q){
-    lista=FRECUENTES.map(function(c){ return IX[c]; }).filter(Boolean);
+    lista=cuentasDelCaso().map(function(c){ return IX[c] || {cod:c, nom:'Terceros', el:7}; });
   } else {
     lista=[];
     for(var i=0;i<CAT.length && lista.length<60;i++){
@@ -961,6 +983,7 @@ function modoDocente(esDoc){
 /* =================== arranque =================== */
 (function inicio(){
   $('guia').innerHTML=Dinamica.guia();
+  $('ejemplo').innerHTML=Dinamica.ejemplo();
   pintaChips();
   try{
     var g=localStorage.getItem('giro_caso');

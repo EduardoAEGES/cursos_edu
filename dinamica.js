@@ -189,5 +189,72 @@ function guia(){
   return h;
 }
 
-window.Dinamica={ guia:guia, tabla:tabla, explica:explica, natural:natural };
+/* asiento modelo, resuelto y explicado línea por línea */
+var EJEMPLO={
+  enun:'El 03 de noviembre la empresa vende mercaderías a un cliente tercero y emite la factura '+
+       'FE01-1200 por un valor de venta de S/ 10,000.00 más IGV, al crédito.',
+  fecha:'03/11/2025', glosa:'Por la venta de mercaderías según factura FE01-1200',
+  pasos:[
+    ['Valor de venta', 'es el dato que da la factura', '10,000.00'],
+    ['IGV',            '18 % del valor de venta: 10,000.00 × 0.18', '1,800.00'],
+    ['Importe total',  'valor de venta más IGV: 10,000.00 + 1,800.00', '11,800.00']
+  ],
+  lineas:[
+    { c:'1212',  l:'d', m:'11,800.00', q:'el cliente nos debe el importe total de la factura' },
+    { c:'40111', l:'h', m:'1,800.00',  q:'nace la obligación de pagar ese IGV a la SUNAT' },
+    { c:'70121', l:'h', m:'10,000.00', q:'se reconoce el ingreso por la venta' }
+  ]
+};
+function ejemplo(){
+  var e=EJEMPLO;
+  var h='<p class="dn-intro">'+esc(e.enun)+'</p>';
+  h+='<div class="dn-pasos">';
+  e.pasos.forEach(function(p, i){
+    h+='<div class="dn-paso"><span class="pn">'+(i+1)+'</span>'+
+       '<span class="pt"><b>'+esc(p[0])+'</b><span class="pd">'+esc(p[1])+'</span></span>'+
+       '<span class="pv">'+esc(p[2])+'</span></div>';
+  });
+  h+='</div>';
+  h+='<div class="dn-envoltura"><table class="dn-asiento"><thead><tr>'+
+     '<th>Fecha</th><th>Glosa</th><th>Código</th><th>Denominación</th>'+
+     '<th class="d">Debe</th><th class="h">Haber</th></tr></thead><tbody>';
+  e.lineas.forEach(function(l, i){
+    h+='<tr>';
+    if(i===0) h+='<td class="enc" rowspan="'+e.lineas.length+'">'+esc(e.fecha)+'</td>'+
+                 '<td class="enc" rowspan="'+e.lineas.length+'">'+esc(e.glosa)+'</td>';
+    h+='<td class="cc">'+esc(l.c)+'</td><td>'+esc(cuenta(l.c)||'Terceros')+'</td>'+
+       '<td class="n">'+(l.l==='d'?esc(l.m):'')+'</td>'+
+       '<td class="n">'+(l.l==='h'?esc(l.m):'')+'</td></tr>';
+  });
+  h+='<tr class="sum"><td class="et" colspan="4">Sumas iguales</td>'+
+     '<td class="n">11,800.00</td><td class="n">11,800.00</td></tr>';
+  h+='</tbody></table></div>';
+  h+='<div class="dn-defs">';
+  e.lineas.forEach(function(l){
+    h+='<div class="dn-por-que">'+explica(l.c, l.l, l.q)+'</div>';
+  });
+  h+='</div>';
+  h+='<p class="dn-cierre">Las dos sumas quedan iguales porque lo que el cliente nos debe '+
+     '(11,800.00) es exactamente la venta (10,000.00) más el IGV (1,800.00). '+
+     'Si no cuadran, falta o sobra algo.</p>';
+  return h;
+}
+
+/* lista de referencia con las cuentas que hacen falta en un caso */
+function lista(codigos, titulo){
+  var h='<div class="dn-lista">';
+  if(titulo) h+='<div class="dl-t">'+esc(titulo)+'</div>';
+  codigos.forEach(function(cod){
+    var n=natural(cod), nm=cuenta(cod)||(cod==='70121'?'Terceros':'');
+    h+='<div class="dl-i"><span class="dl-c">'+esc(cod)+'</span>'+
+       '<span class="dl-n"><b>'+esc(nm)+'</b><span class="dl-e">Elemento '+esc(n.el)+' · '+
+       esc(n.elNom)+' · naturaleza '+esc(n.nat.toLowerCase())+
+       (n.excepcion?' (excepción)':'')+', aumenta en el <b>'+esc(n.sube)+'</b></span></span></div>';
+  });
+  h+='</div>';
+  return h;
+}
+
+window.Dinamica={ guia:guia, tabla:tabla, explica:explica, natural:natural,
+                  ejemplo:ejemplo, lista:lista };
 })();
