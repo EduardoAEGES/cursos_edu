@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="dinamica.css">
 <style>
   .giro{
     --cod:#1F5FA8; --debe:#C0306B; --haber:#D0561C; --val:#8A6510;
@@ -25,20 +27,6 @@
   .recuerda{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
              padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
   .recuerda b{ color:#3F3208; }
-
-  /* ---------- identificarse ---------- */
-  .sala{ display:flex; gap:9px; align-items:flex-end; flex-wrap:wrap; }
-  .sala label{ display:grid; gap:3px; font-size:11.5px; font-weight:700;
-               letter-spacing:.05em; text-transform:uppercase; color:var(--o-muted); }
-  .sala input{ font:inherit; font-size:14px; padding:8px 10px; border-radius:8px;
-               border:1.5px solid var(--o-border); background:#fff; width:200px; max-width:100%; }
-  .sala input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
-  .sala .falta input{ border-color:var(--mal); background:#FDECEA; }
-  .sala [hidden]{ display:none !important; }
-  .estadoRed{ font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:99px; }
-  .estadoRed.solo{ background:var(--o-line); color:var(--o-muted); }
-  .estadoRed.vivo{ background:#E6F4EA; color:#14532D; }
-  .estadoRed.malo{ background:#FDECEA; color:#8B1A10; }
 
   /* ---------- pestañas ---------- */
   .pest{ display:flex; gap:5px; flex-wrap:wrap; }
@@ -113,6 +101,15 @@
   .asientoT th.h{ background:var(--haber); border-color:#A03F12; }
   .asientoT td{ border:1px solid var(--o-border); padding:0; vertical-align:middle; }
   .asientoT td.cel{ width:118px; }
+  .asientoT td.enc{ vertical-align:top; padding:6px 7px; background:#FAFBFD; width:118px; }
+  .asientoT td.enc.gl{ width:190px; }
+  .asientoT .enc input{ font:inherit; font-size:12px; font-weight:600; width:100%;
+    border:1.5px solid var(--o-border); border-radius:6px; padding:5px 7px;
+    background:#fff; color:var(--o-text); text-align:left; }
+  .asientoT .enc input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
+  .asientoT td.den .pi{ display:block; margin-top:3px; font-size:11px; font-weight:700; }
+  .asientoT td.den .pi.b{ color:#14532D; }
+  .asientoT td.den .pi.m{ color:#8B1A10; }
   .asientoT td.den{ padding:7px 10px; font-size:12.5px; color:var(--o-text); }
   .asientoT td.den .r{ display:block; font-size:10.5px; color:var(--o-muted); }
   .celda{ padding:8px 9px; min-height:40px; display:flex; align-items:center; }
@@ -135,9 +132,6 @@
   tr.bien input{ background:#E6F4EA; color:#14532D; }
   tr.mal td{ background:#FEF6F5; }
   tr.mal input{ background:#FDECEA; color:#8B1A10; }
-  .pistaFila td{ font-size:11.5px; font-weight:700; padding:5px 10px; }
-  .pistaFila.b td{ color:#14532D; background:#F2FAF5; }
-  .pistaFila.m td{ color:#8B1A10; background:#FEF6F5; }
 
   .cuadre{ margin-top:11px; border-radius:10px; padding:10px 14px; font-size:13.5px; font-weight:700; }
   .cuadre.si{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
@@ -157,36 +151,6 @@
   .marcador .big{ font-size:22px; font-weight:800; }
   .marcador.todo .big{ animation:brinca .55s ease; }
   @keyframes brinca{ 0%{ transform:scale(.6); } 60%{ transform:scale(1.18); } 100%{ transform:scale(1); } }
-
-  /* ---------- muro de ventanitas ---------- */
-  .muro{ display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:11px; margin-top:13px; }
-  .muro.grande{ grid-template-columns:repeat(auto-fill,minmax(360px,1fr)); }
-  .vtna{ border:1.5px solid var(--o-border); border-radius:10px; background:#fff; overflow:hidden; }
-  .vtna.yo{ border-color:var(--cod); box-shadow:0 0 0 2px rgba(31,95,168,.16); }
-  .vtna.listo{ border-color:var(--ok); box-shadow:0 0 0 2px rgba(46,139,87,.16); }
-  .vtna .vh{ display:flex; justify-content:space-between; gap:8px; align-items:baseline;
-             padding:8px 11px; background:#F3F5F8; border-bottom:1px solid var(--o-border); }
-  .vtna .vn{ font-size:13px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .vtna .vs{ font-size:10.5px; font-weight:700; color:var(--o-muted); flex:none; }
-  .vtna .ve{ padding:6px 11px 2px; font-size:11px; color:var(--o-muted);
-             display:flex; justify-content:space-between; gap:8px; }
-  .mini{ width:100%; border-collapse:collapse; font-size:11px; }
-  .mini th{ background:#EAF0F7; color:var(--cod); padding:3px 7px; font-size:9.5px;
-            letter-spacing:.04em; border-bottom:1px solid var(--o-border); }
-  .mini th:nth-child(3){ color:var(--debe); }
-  .mini th:nth-child(4){ color:var(--haber); }
-  .mini td{ padding:3px 7px; border-bottom:1px solid #EEF1F5; font-variant-numeric:tabular-nums; }
-  .mini td:first-child{ font-weight:800; color:var(--cod); }
-  .mini td:nth-child(3), .mini td:nth-child(4){ text-align:right; }
-  .mini td:nth-child(2){ color:var(--o-muted); max-width:120px; overflow:hidden;
-                         text-overflow:ellipsis; white-space:nowrap; }
-  .mini tr.b td{ background:#F2FAF5; }
-  .mini tr.m td{ background:#FEF6F5; }
-  .mini .nn{ color:var(--o-muted); font-style:italic; font-weight:400; }
-  .vtna .vp{ padding:6px 11px 9px; font-size:11.5px; display:flex; justify-content:space-between; gap:8px; }
-  .vtna .vp b{ color:var(--o-text); }
-  .vacio-muro{ border:2px dashed var(--o-border); border-radius:10px; padding:18px;
-               text-align:center; font-size:12.5px; color:var(--o-muted); }
 
   #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
   @media (prefers-reduced-motion: reduce){ .marcador.todo .big{ animation:none; } }
@@ -234,7 +198,6 @@
       </div>
       <div class="son">
         <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
-        <button class="o-btn" id="btnMuro" type="button">🔍 Ventanas grandes</button>
       </div>
     </div>
     <p class="recuerda">
@@ -246,18 +209,18 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Mis datos</h2>
-    <div class="sala">
-      <label id="cNom">Mi nombre<input id="iNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>
-      <label>Código de sala<input id="iSala" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>
-      <button class="o-btn o-btn-primary" id="btnEntrar" type="button">Entrar</button>
-      <button class="o-btn" id="btnSalirSala" type="button" hidden>Salir</button>
-      <span class="estadoRed solo" id="estadoRed">Modo individual</span>
-    </div>
-    <p style="font-size:12.5px;color:var(--o-muted);margin:10px 0 0;line-height:1.55">
-      Al entrar con tu nombre trabajas en tu propia hoja y el aula ve tu avance en el muro de abajo.
-      Sin entrar también puedes practicar, pero solo tú verás lo que haces.
+    <h2 class="o-section-title">Entrar a la sala</h2>
+    <div id="aula"></div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:11px 0 0;line-height:1.55">
+      El alumno entra con su nombre y trabaja en su propia hoja; el aula lo ve en el muro de abajo.
+      El docente entra con su clave, ve a todos y puede mostrar la solución.
+      Sin entrar también se puede practicar, pero solo tú verás lo que haces.
     </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">La dinámica de las cuentas: por qué va al debe o al haber</h2>
+    <div id="guia"></div>
   </div>
 
   <div class="o-sheet">
@@ -321,7 +284,7 @@
 
   <div class="o-sheet">
     <h2 class="o-section-title">Monitoreo del aula</h2>
-    <div class="muro" id="muro"></div>
+    <div id="muro"></div>
   </div>
 
   <div class="o-acciones centrado o-mb">
@@ -338,6 +301,8 @@
 
 <canvas id="confeti"></canvas>
 <script src="pcge2019.js"></script>
+<script src="aula.js"></script>
+<script src="dinamica.js"></script>
 <script>
 (function(){
 'use strict';
@@ -362,7 +327,7 @@ var FRECUENTES=['1212','1312','40111','70121','70221','70311','70322','101','103
 
 /* =================== casos (del cuaderno de la sesión) =================== */
 var CASOS=[
-  { id:'c1', tit:'Caso 1', sub:'Venta de mercaderías al crédito',
+  { id:'c1', fecha:'2025-11-05', tit:'Caso 1', sub:'Venta de mercaderías al crédito',
     enun:'El 05/11/2025 la empresa vende mercaderías consistentes en café tostado premium a la empresa '+
          'Comercializadora del Sur S.A.C. (tercero). Se emite la factura FE01-1254 por un valor de venta de '+
          'S/ 18,500.00 más IGV. La operación se realiza al crédito a 30 días.',
@@ -371,7 +336,7 @@ var CASOS=[
         {c:'1212',  l:'d', m:21830, q:'el importe total'},
         {c:'40111', l:'h', m:3330,  q:'el IGV'},
         {c:'70121', l:'h', m:18500, q:'el valor de venta'} ]} ]},
-  { id:'c2', tit:'Caso 2', sub:'Productos terminados cobrados en caja',
+  { id:'c2', fecha:'2025-11-12', tit:'Caso 2', sub:'Productos terminados cobrados en caja',
     enun:'El 12/11/2025 la empresa vende productos terminados consistentes en café molido de 250 gramos '+
          'elaborado por la propia empresa a Supermercados Regionales S.A.C. (tercero). Se emite la factura '+
          'FE01-1268 por un importe total de S/ 29,500.00 incluido IGV. La operación se cobra al 100 % mediante caja.',
@@ -384,7 +349,7 @@ var CASOS=[
       { g:'Por el cobro en efectivo', sol:[
         {c:'101',   l:'d', m:29500, q:'el importe cobrado'},
         {c:'1212',  l:'h', m:29500, q:'la cancelación de la cuenta por cobrar'} ]} ]},
-  { id:'c3', tit:'Caso 3', sub:'Servicios a una relacionada, cobro parcial',
+  { id:'c3', fecha:'2025-11-18', tit:'Caso 3', sub:'Servicios a una relacionada, cobro parcial',
     enun:'El 18/11/2025 la empresa presta servicios de transporte de personal a Minera Horizonte S.A.C. '+
          '(relacionada). Se emite la factura FE01-1285 por un valor de venta de S/ 42,000.00 más IGV. '+
          'El cliente cancela el 40 % mediante transferencia bancaria y el saldo queda pendiente de cobro.',
@@ -397,7 +362,7 @@ var CASOS=[
       { g:'Por el cobro del 40 % mediante transferencia', sol:[
         {c:'1041',  l:'d', m:19824, q:'el 40 % del importe total'},
         {c:'1312',  l:'h', m:19824, q:'la parte cobrada de la cuenta por cobrar'} ]} ]},
-  { id:'c4', tit:'Caso 4', sub:'Exportación de servicios, sin IGV',
+  { id:'c4', fecha:'2025-11-28', tit:'Caso 4', sub:'Exportación de servicios, sin IGV',
     enun:'El 28/11/2025 la empresa presta servicios de mantenimiento preventivo de maquinaria industrial a '+
          'la empresa extranjera AKOM (tercero). Se emite la factura FE01-4512 por un importe de '+
          'S/ 14,420.00 incluido IGV. La operación es al contado mediante transferencia en cuenta corriente. '+
@@ -410,7 +375,7 @@ var CASOS=[
       { g:'Por el cobro en la cuenta corriente', sol:[
         {c:'1041',  l:'d', m:14420, q:'el importe cobrado'},
         {c:'1212',  l:'h', m:14420, q:'la cancelación de la cuenta por cobrar'} ]} ]},
-  { id:'c5', tit:'Caso 5', sub:'Anticipo de un cliente tercero',
+  { id:'c5', fecha:'2025-11-08', tit:'Caso 5', sub:'Anticipo de un cliente tercero',
     enun:'El 08/11/2025 la empresa recibe un anticipo por la futura venta de mercaderías de café tostado '+
          'premium a Supermercados Regionales S.A.C. (tercero). El cliente deposita S/ 11,800.00 incluido IGV '+
          'en la cuenta de depósitos de ahorro de la empresa para asegurar el abastecimiento de la campaña navideña.',
@@ -423,7 +388,7 @@ var CASOS=[
       { g:'Por el depósito recibido', sol:[
         {c:'1061',  l:'d', m:11800, q:'el importe depositado'},
         {c:'1212',  l:'h', m:11800, q:'la cancelación de la cuenta por cobrar'} ]} ]},
-  { id:'c6', tit:'Caso 6', sub:'Anticipo de una empresa relacionada',
+  { id:'c6', fecha:'2025-11-15', tit:'Caso 6', sub:'Anticipo de una empresa relacionada',
     enun:'El 15/11/2025 la empresa recibe un anticipo por la futura venta de productos terminados '+
          'consistentes en tableros eléctricos fabricados por la empresa a Proyectos Industriales del Sur S.A.C. '+
          '(relacionada). El importe recibido asciende a S/ 23,600.00 incluido IGV y es abonado mediante transferencia bancaria.',
@@ -436,7 +401,7 @@ var CASOS=[
       { g:'Por la transferencia recibida', sol:[
         {c:'1041',  l:'d', m:23600, q:'el importe abonado'},
         {c:'1312',  l:'h', m:23600, q:'la cancelación de la cuenta por cobrar'} ]} ]},
-  { id:'c7', tit:'Caso 7', sub:'Anticipo cobrado con cheque',
+  { id:'c7', fecha:'2025-11-22', tit:'Caso 7', sub:'Anticipo cobrado con cheque',
     enun:'El 22/11/2025 la empresa recibe un anticipo por servicios de transporte de personal que serán '+
          'prestados durante diciembre a Minera Horizonte S.A.C. (tercero). El cliente entrega un cheque por '+
          'S/ 17,700.00 incluido IGV como adelanto para garantizar la disponibilidad de las unidades.',
@@ -522,6 +487,7 @@ pintaSon();
 var S={};
 CASOS.forEach(function(c){
   S[c.id]={ vc:null, igv:null, pc:null,
+            enc:c.grupos.map(function(){ return {fecha:'', glosa:''}; }),
             filas:c.plano.map(function(){ return {c:null, d:null, h:null}; }) };
 });
 var activo=CASOS[0], revisado={}, sel=null, arr=null, listo=false, cuadraba={};
@@ -539,6 +505,11 @@ function carga(){
       S[c.id].vc=(typeof x.vc==='number')?x.vc:null;
       S[c.id].igv=(typeof x.igv==='number')?x.igv:null;
       S[c.id].pc=(typeof x.pc==='number')?x.pc:null;
+      if(x.enc && x.enc.length===c.grupos.length){
+        S[c.id].enc=x.enc.map(function(g){
+          return { fecha:String(g.fecha||'').slice(0,10), glosa:String(g.glosa||'').slice(0,90) };
+        });
+      }
       if(x.filas && x.filas.length===c.nLineas){
         S[c.id].filas=x.filas.map(function(f){
           return { c:(f.c && IX[f.c]) ? f.c : null,
@@ -670,32 +641,48 @@ function pintaChips(){
 }
 function pintaAsiento(){
   var c=activo, e=S[c.id], r=revisado[c.id] ? califica(c) : null;
-  var h='<table class="asientoT"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th>'+
+  var h='<table class="asientoT"><thead><tr>'+
+        '<th>FECHA</th><th>GLOSA</th><th>CÓDIGO</th><th>DENOMINACIÓN</th>'+
         '<th class="d">DEBE</th><th class="h">HABER</th></tr></thead><tbody>';
-  var gAct=-1;
-  c.plano.forEach(function(p, i){
-    if(p.g!==gAct){
-      gAct=p.g;
-      h+='<tr class="grupo"><td colspan="4">'+esc(c.grupos[gAct].g)+'</td></tr>';
-    }
-    var f=e.filas[i], d=r?r.filas[i]:null;
-    var cls = d ? (d.ok?' class="bien"':' class="mal"') : '';
-    h+='<tr'+cls+'><td class="zona" data-r="'+i+'">';
-    if(f.c){
-      h+='<div class="celda"><span class="cdg" style="--cc:'+colorDe(f.c)+'">'+esc(f.c)+'</span></div>'+
-         '<button class="qx" type="button" data-r="'+i+'" aria-label="Quitar">×</button>';
-    } else {
-      h+='<div class="celda"><span class="vacia">arrastra</span></div>';
-    }
-    h+='</td><td class="den">'+(f.c ? esc(cta(f.c).nom)+'<span class="r">'+esc(rutaDe(f.c))+'</span>' : '')+'</td>'+
-       '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="d"'+
-       ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
-       '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="h"'+
-       ' aria-label="Haber línea '+(i+1)+'" placeholder="—" value="'+(typeof f.h==='number'?miles(f.h):'')+'"></td></tr>';
-    if(d) h+='<tr class="pistaFila '+(d.ok?'b':'m')+'"><td colspan="4">'+esc(d.txt)+'</td></tr>';
+  c.grupos.forEach(function(gr, ig){
+    var idx=[];
+    c.plano.forEach(function(p, i){ if(p.g===ig) idx.push(i); });
+    var n=idx.length, enc=e.enc[ig];
+    idx.forEach(function(i, k){
+      var f=e.filas[i], d=r?r.filas[i]:null;
+      var cls = d ? (d.ok?' class="bien"':' class="mal"') : '';
+      h+='<tr'+cls+'>';
+      if(k===0){
+        h+='<td class="enc" rowspan="'+n+'">'+
+             '<input class="fch" type="date" data-g="'+ig+'" data-k="fecha"'+
+             ' aria-label="Fecha del asiento '+(ig+1)+'" value="'+esc(enc.fecha)+'">'+
+           '</td>'+
+           '<td class="enc gl" rowspan="'+n+'">'+
+             '<input class="gls" type="text" maxlength="90" data-g="'+ig+'" data-k="glosa"'+
+             ' placeholder="'+esc(gr.g)+'" aria-label="Glosa del asiento '+(ig+1)+'"'+
+             ' value="'+esc(enc.glosa)+'">'+
+           '</td>';
+      }
+      h+='<td class="zona" data-r="'+i+'">';
+      if(f.c){
+        h+='<div class="celda"><span class="cdg" style="--cc:'+colorDe(f.c)+'">'+esc(f.c)+'</span></div>'+
+           '<button class="qx" type="button" data-r="'+i+'" aria-label="Quitar">×</button>';
+      } else {
+        h+='<div class="celda"><span class="vacia">arrastra</span></div>';
+      }
+      var esp=c.plano[i].s;
+      h+='</td><td class="den">'+
+         (f.c ? esc(cta(f.c).nom)+'<span class="r">'+esc(rutaDe(f.c))+'</span>' : '')+
+         (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
+         (d ? '<div class="dn-por-que">'+Dinamica.explica(esp.c, esp.l, esp.q)+'</div>' : '')+'</td>'+
+         '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="d"'+
+         ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
+         '<td class="cel"><input type="text" inputmode="decimal" autocomplete="off" data-r="'+i+'" data-l="h"'+
+         ' aria-label="Haber línea '+(i+1)+'" placeholder="—" value="'+(typeof f.h==='number'?miles(f.h):'')+'"></td></tr>';
+    });
   });
   var sd=sumaD(c), sh=sumaH(c);
-  h+='</tbody><tfoot><tr><td class="et" colspan="2">Sumas</td><td class="n">'+miles(sd)+
+  h+='</tbody><tfoot><tr><td class="et" colspan="4">Sumas iguales</td><td class="n">'+miles(sd)+
      '</td><td class="n">'+miles(sh)+'</td></tr></tfoot></table>';
   $('diario').innerHTML=h;
 
@@ -806,7 +793,14 @@ function conecta(){
       ev.stopPropagation(); quitaFila(parseInt(b.getAttribute('data-r'),10));
     });
   });
-  Array.prototype.forEach.call($('diario').querySelectorAll('.asientoT input'), function(inp){
+  Array.prototype.forEach.call($('diario').querySelectorAll('.enc input'), function(inp){
+    var g=parseInt(inp.getAttribute('data-g'),10), k=inp.getAttribute('data-k');
+    inp.addEventListener('input', function(){
+      S[activo.id].enc[g][k]=inp.value;
+      guarda();
+    });
+  });
+  Array.prototype.forEach.call($('diario').querySelectorAll('.cel input'), function(inp){
     var i=parseInt(inp.getAttribute('data-r'),10), l=inp.getAttribute('data-l');
     inp.addEventListener('input', function(){
       S[activo.id].filas[i][l]=aNumero(inp.value);
@@ -871,6 +865,7 @@ function verSolucion(){
   e.filas=c.plano.map(function(p){
     return { c:p.s.c, d:(p.s.l==='d'?p.s.m:null), h:(p.s.l==='h'?p.s.m:null) };
   });
+  e.enc=c.grupos.map(function(g){ return { fecha:c.fecha||'', glosa:g.g }; });
   revisado[c.id]=true; pinta();
   $('marcador').innerHTML='<div class="marcador algo"><span class="big">Solución</span>'+
     '<span>Asiento completo para revisar en clase.</span></div>';
@@ -878,7 +873,9 @@ function verSolucion(){
 }
 function reinicia(){
   var c=activo;
-  S[c.id]={ vc:null, igv:null, pc:null, filas:c.plano.map(function(){ return {c:null,d:null,h:null}; }) };
+  S[c.id]={ vc:null, igv:null, pc:null,
+            enc:c.grupos.map(function(){ return {fecha:'', glosa:''}; }),
+            filas:c.plano.map(function(){ return {c:null,d:null,h:null}; }) };
   revisado[c.id]=false; sel=null; cuadraba[c.id]=false;
   $('marcador').innerHTML='';
   pinta(); guarda(); sQuita();
@@ -920,27 +917,15 @@ function confeti(){
   })(t0);
 }
 
-/* =================== muro de ventanitas =================== */
-var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
-var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
-var TABLA=SUPA+'/rest/v1/sala_asientos';
-function hdr(extra){
-  var o={ apikey:ANON, Authorization:'Bearer '+ANON, 'Content-Type':'application/json' };
-  if(extra) for(var k in extra) o[k]=extra[k];
-  return o;
-}
-var sala=null, yo=null, tSala=null, tEnvio=null, gente=[], fallos=0;
-
-function red(clase, txt){
-  var e=$('estadoRed'); e.className='estadoRed '+clase; e.textContent=txt;
-}
-function resumen(){
+/* =================== sala y modo docente =================== */
+function resumenAula(){
   var c=activo, e=S[c.id], r=revisado[c.id] ? califica(c) : null;
   return {
-    caso:c.id, casoN:c.tit+' · '+c.sub,
+    casoN:c.tit+' · '+c.sub,
     vc:e.vc, igv:e.igv, pc:e.pc,
     hechas:hechas(c), total:c.total,
     bien:(r ? r.bien : null),
+    listo:(r ? r.bien===c.total : false),
     cuadra:(llenas(c)>0 && sumaD(c)>0 && Math.abs(sumaD(c)-sumaH(c))<0.005),
     lineas:e.filas.map(function(f, i){
       return { c:f.c, n:(f.c?cta(f.c).nom:''), d:f.d, h:f.h,
@@ -948,117 +933,42 @@ function resumen(){
     })
   };
 }
-function empuja(){
-  if(!sala || !yo) return;
-  clearTimeout(tEnvio);
-  tEnvio=setTimeout(function(){
-    fetch(TABLA+'?on_conflict=sala,alumno', {
-      method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
-      body:JSON.stringify([{ sala:'G-'+sala, alumno:yo, caso:activo.id,
-                             estado:resumen(), actualizado:new Date().toISOString() }])
-    }).then(function(r){
-      if(!r.ok) return Promise.reject(r.status);
-      fallos=0; trae();
-    }).catch(falla);
-  }, 900);
-}
-function trae(){
-  if(!sala) return;
-  var desde=new Date(Date.now()-3*3600*1000).toISOString();
-  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent('G-'+sala)+
-        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
-    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function(rows){
-      fallos=0; gente=rows||[];
-      red('vivo','En vivo · '+gente.length+(gente.length===1?' persona':' personas')+' en la sala '+sala);
-      pintaMuro();
-    })
-    .catch(falla);
-}
-function falla(e){
-  fallos++;
-  if(fallos>=2) red('malo','Sin conexión con la sala ('+e+') · sigues trabajando en tu equipo');
-}
-function pintaMuro(){
-  if(!sala){
-    $('muro').innerHTML='<div class="vacio-muro">Entra con tu nombre y un código de sala '+
-      'para que el aula vea tu avance aquí.</div>';
-    return;
-  }
-  if(!gente.length){
-    $('muro').innerHTML='<div class="vacio-muro">Todavía no hay nadie en la sala <b>'+esc(sala)+'</b>.</div>';
-    return;
-  }
-  var ahora=Date.now(), h='';
-  gente.forEach(function(g){
-    var e=g.estado||{}, tot=e.total||1;
-    var seg=Math.max(0, Math.round((ahora-new Date(g.actualizado).getTime())/1000));
-    var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
-    var fin = (typeof e.bien==='number' && e.bien===tot);
-    var mini='<table class="mini"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th><th>DEBE</th><th>HABER</th></tr></thead><tbody>';
-    (e.lineas||[]).forEach(function(l){
-      var cl = l.ok===true ? ' class="b"' : (l.ok===false ? ' class="m"' : '');
-      mini+='<tr'+cl+'><td>'+(l.c?esc(l.c):'<span class="nn">—</span>')+'</td>'+
-            '<td>'+(l.n?esc(l.n):'')+'</td>'+
-            '<td>'+(typeof l.d==='number'?miles(l.d):'')+'</td>'+
-            '<td>'+(typeof l.h==='number'?miles(l.h):'')+'</td></tr>';
-    });
-    mini+='</tbody></table>';
-    h+='<div class="vtna'+(g.alumno===yo?' yo':'')+(fin?' listo':'')+'">'+
-         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
-         '<span class="vs">'+esc(hace)+'</span></div>'+
-         '<div class="ve"><span>'+esc(e.casoN||'—')+'</span>'+
-         '<span>'+(e.cuadra?'✓ cuadra':'')+'</span></div>'+
+function ventanaAula(e){
+  var mini='<table class="mini"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th>'+
+           '<th>DEBE</th><th>HABER</th></tr></thead><tbody>';
+  (e.lineas||[]).forEach(function(l){
+    var cl = l.ok===true ? ' class="b"' : (l.ok===false ? ' class="m"' : '');
+    mini+='<tr'+cl+'><td class="c">'+(l.c?esc(l.c):'<span class="nn">—</span>')+'</td>'+
+          '<td class="d">'+(l.n?esc(l.n):'')+'</td>'+
+          '<td class="n">'+(typeof l.d==='number'?miles(l.d):'')+'</td>'+
+          '<td class="n">'+(typeof l.h==='number'?miles(l.h):'')+'</td></tr>';
+  });
+  mini+='</tbody></table>';
+  return '<div class="ve"><span>'+esc(e.casoN||'—')+'</span><span>'+(e.cuadra?'✓ cuadra':'')+'</span></div>'+
          '<div class="ve"><span>VC '+(typeof e.vc==='number'?miles(e.vc):'—')+'</span>'+
          '<span>IGV '+(typeof e.igv==='number'?miles(e.igv):'—')+'</span>'+
          '<span>PC '+(typeof e.pc==='number'?miles(e.pc):'—')+'</span></div>'+
          mini+
-         '<div class="vp"><span>'+(e.hechas||0)+' de '+tot+'</span>'+
-         '<b>'+(typeof e.bien==='number' ? e.bien+' correctas' : 'sin revisar')+'</b></div>'+
-       '</div>';
-  });
-  $('muro').innerHTML=h;
+         '<div class="vp"><span>'+(e.hechas||0)+' de '+(e.total||0)+'</span>'+
+         '<b>'+(typeof e.bien==='number' ? e.bien+' correctas' : 'sin revisar')+'</b></div>';
 }
-function entra(){
-  var n=$('iNombre').value.trim(), s=($('iSala').value.trim()||'PCGE').toUpperCase();
-  $('cNom').classList.toggle('falta', n.length<2);
-  if(n.length<2){ $('iNombre').focus(); red('malo','Escribe tu nombre para entrar'); sMal(); return; }
-  yo=n; sala=s;
-  try{ localStorage.setItem('giro_nombre',n); localStorage.setItem('giro_sala',s); }catch(e){}
-  $('btnEntrar').hidden=true; $('btnSalirSala').hidden=false;
-  $('iNombre').disabled=true; $('iSala').disabled=true;
-  red('vivo','Conectando…'); fallos=0; empuja(); trae();
-  if(!tSala) tSala=setInterval(trae, 3000);
-  nota(700,0,0.08,0.06);
+function empuja(){ if(window.Aula) Aula.empuja(); }
+function modoDocente(esDoc){
+  $('btnSol').hidden = !esDoc;
+  pinta();
 }
-function sale(){
-  sala=null; yo=null; gente=[];
-  if(tSala){ clearInterval(tSala); tSala=null; }
-  $('btnEntrar').hidden=false; $('btnSalirSala').hidden=true;
-  $('iNombre').disabled=false; $('iSala').disabled=false;
-  try{ localStorage.removeItem('giro_sala'); }catch(e){}
-  red('solo','Modo individual'); pintaMuro();
-}
-$('btnEntrar').addEventListener('click', entra);
-$('btnSalirSala').addEventListener('click', sale);
-$('iNombre').addEventListener('keydown', function(e){ if(e.key==='Enter') entra(); });
-$('iSala').addEventListener('keydown', function(e){ if(e.key==='Enter') entra(); });
-$('btnMuro').addEventListener('click', function(){
-  var g=$('muro').classList.toggle('grande');
-  $('btnMuro').textContent = g ? '🔎 Ventanas pequeñas' : '🔍 Ventanas grandes';
-  nota(640,0,0.06,0.05);
-});
 
 /* =================== arranque =================== */
 (function inicio(){
+  $('guia').innerHTML=Dinamica.guia();
   pintaChips();
   try{
-    $('iNombre').value=localStorage.getItem('giro_nombre')||'';
-    $('iSala').value=localStorage.getItem('giro_sala')||'PCGE';
     var g=localStorage.getItem('giro_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
   }catch(e){}
-  pinta(); pintaMuro();
+  Aula.iniciar({ sala:'G', resumen:resumenAula, ventana:ventanaAula, alModo:modoDocente });
+  $('btnSol').hidden=true;
+  pinta();
   listo=true;
 })();
 
