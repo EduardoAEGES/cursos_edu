@@ -1,0 +1,38 @@
+/* Guía de la dinámica de cuentas (dinamica.js) */
+.dn-intro{ font-size:13.5px; line-height:1.6; margin:0 0 13px; color:var(--o-text); }
+.dn-envoltura{ overflow-x:auto; }
+.dn-tabla{ width:100%; border-collapse:collapse; font-size:13px; min-width:540px; }
+.dn-tabla th{ background:#1B2340; color:#fff; padding:8px 10px; font-size:11px;
+              letter-spacing:.06em; text-transform:uppercase; text-align:left; }
+.dn-tabla th:nth-child(3), .dn-tabla th:nth-child(4){ text-align:center; }
+.dn-tabla td{ padding:7px 10px; border-bottom:1px solid var(--o-line); }
+.dn-tabla tr.gris td{ color:var(--o-muted); }
+.dn-tabla .ne{ font-weight:800; width:52px; }
+.dn-tabla .de{ font-weight:600; }
+.dn-tabla .mas, .dn-tabla .menos{ text-align:center; font-weight:800; color:#fff; width:64px; }
+.dn-tabla .mas{ background:#2E8B57; }
+.dn-tabla .menos{ background:#C0392B; }
+.dn-tabla .vac{ background:#F3F5F8; }
+.dn-tabla .ex{ font-size:12px; color:var(--o-muted); font-variant-numeric:tabular-nums; }
+
+.dn-sub{ margin:22px 0 10px; font-size:13px; font-weight:800; letter-spacing:.05em;
+         text-transform:uppercase; color:var(--o-muted); }
+.dn-defs{ display:grid; gap:9px; margin-top:14px; }
+.dn-def{ display:grid; grid-template-columns:34px 1fr; gap:10px; align-items:start;
+         border:1px solid var(--o-border); border-radius:9px; padding:9px 11px; background:#fff; }
+.dn-def .dd-n{ display:grid; place-items:center; width:34px; height:34px; border-radius:8px;
+               background:#EAF0F7; color:#1F5FA8; font-weight:800; font-size:13px;
+               font-variant-numeric:tabular-nums; }
+.dn-def .dd-n.exc{ background:#FDEEE6; color:#C0562B; font-size:12px; }
+.dn-def .dd-t{ font-size:13px; line-height:1.55; }
+.dn-def .dd-r{ font-size:12px; color:var(--o-muted); }
+
+/* explicación de una línea del asiento */
+.dn-por-que{ display:grid; gap:3px; margin-top:5px; padding:8px 10px; border-radius:8px;
+             background:#F6F8FB; border:1px solid var(--o-line); }
+.dn-por-que .dn-cta{ font-size:12.5px; font-weight:800; color:#1F5FA8; }
+.dn-por-que .dn-el, .dn-por-que .dn-nat, .dn-por-que .dn-exc, .dn-por-que .dn-por{
+  font-size:11.5px; line-height:1.5; }
+.dn-por-que .dn-el{ color:var(--o-muted); }
+.dn-por-que .dn-exc{ color:#8A4A1E; background:#FFF4EC; border-radius:6px; padding:5px 7px; }
+.dn-por-que .dn-por{ color:#14532D; font-weight:600; }

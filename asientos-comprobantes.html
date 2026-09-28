@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asientos: solo completar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="dinamica.css">
+<style>
+  .cmp{ --cod:#1F5FA8; --debe:#C0306B; --haber:#D0561C; --ok:#2E8B57; --mal:#C0392B;
+        --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A; max-width:1300px; margin:0 auto; }
+  .cab-act{ display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+            border-bottom:4px solid var(--cod); padding-bottom:14px; }
+  .cab-act .marca svg{ width:84px; height:70px; display:block; }
+  .cab-act .tt h1{ margin:0; font-size:clamp(19px,2.6vw,26px); font-weight:800; color:var(--gris); }
+  .cab-act .tt p{ margin:2px 0 0; font-size:13.5px; color:var(--o-muted); }
+  .cab-act .son{ margin-left:auto; }
+  .recuerda{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+             padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .recuerda b{ color:#3F3208; }
+
+  .pest{ display:flex; gap:5px; flex-wrap:wrap; }
+  .pest button{ font:inherit; font-size:13px; font-weight:700; cursor:pointer; text-align:left;
+    border:2px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:9px 9px 0 0; padding:8px 12px; border-bottom-width:3px; }
+  .pest button:hover{ background:#F5F7FA; }
+  .pest button[aria-selected="true"]{ color:#fff; border-color:var(--cod); background:var(--cod); }
+  .pest button .p{ display:block; font-size:10.5px; font-weight:600; opacity:.85; }
+  .pest button .tick{ color:var(--ok); font-weight:800; }
+  .pest button[aria-selected="true"] .tick{ color:#B6EFCB; }
+
+  /* ---------- el comprobante ---------- */
+  .tablero{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width:1080px){
+    .tablero{ grid-template-columns:376px 1fr; align-items:start; }
+    .docu{ position:sticky; top:96px; }
+  }
+  .doc{ border:2px solid var(--cod); border-radius:12px; overflow:hidden; background:#fff;
+        box-shadow:0 8px 22px rgba(0,0,0,.09); }
+  .doc .dh{ display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+            padding:12px 14px; border-bottom:2px solid var(--cod); }
+  .doc .emp{ font-size:14px; font-weight:800; line-height:1.25; }
+  .doc .emp span{ display:block; font-size:11px; font-weight:600; color:var(--o-muted); }
+  .doc .caja{ border:2px solid var(--cod); border-radius:8px; padding:6px 10px; text-align:center; flex:none; }
+  .doc .caja .t{ font-size:10px; font-weight:800; letter-spacing:.06em; color:var(--cod); }
+  .doc .caja .r{ font-size:11px; font-weight:700; color:var(--o-muted); }
+  .doc .caja .n{ font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .doc .dl{ display:grid; grid-template-columns:auto 1fr; gap:3px 10px; padding:11px 14px;
+            font-size:12.5px; border-bottom:1px dashed var(--o-border); }
+  .doc .dl dt{ color:var(--o-muted); font-weight:600; }
+  .doc .dl dd{ margin:0; font-weight:700; }
+  .doc table{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .doc table th{ background:#EAF0F7; color:var(--cod); padding:5px 10px; font-size:10.5px;
+                 letter-spacing:.05em; text-align:left; }
+  .doc table th:last-child, .doc table td:last-child{ text-align:right; }
+  .doc table td{ padding:7px 10px; border-bottom:1px solid #EEF1F5; }
+  .doc .tot{ padding:10px 14px; display:grid; gap:4px; background:#FAFBFD; }
+  .doc .tot .f{ display:flex; justify-content:space-between; gap:10px; font-size:13px; }
+  .doc .tot .f.g{ font-size:15px; font-weight:800; border-top:1.5px solid var(--o-border);
+                  padding-top:6px; margin-top:3px; }
+  .doc .tot .n{ font-variant-numeric:tabular-nums; font-weight:700; }
+  .doc .pie{ padding:9px 14px; font-size:11px; color:var(--o-muted); border-top:1px dashed var(--o-border); }
+  .doc.nc{ border-color:var(--mal); }
+  .doc.nc .dh, .doc.nc .caja{ border-color:var(--mal); }
+  .doc.nc .caja .t, .doc.nc table th{ color:var(--mal); }
+  .doc.nc table th{ background:#FDECEA; }
+
+  .tres{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:13px; }
+  .tres .campo{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px; padding:8px 11px; display:grid; gap:3px; }
+  .tres .campo > span{ font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8A7430; }
+  .tres .campo input{ font:inherit; font-size:16px; font-weight:800; text-align:right;
+    font-variant-numeric:tabular-nums; border:1.5px solid var(--amaBd); border-radius:7px;
+    padding:6px 9px; background:#fff; color:#4A3C0E; width:100%; min-width:0; }
+  .tres .campo input:focus{ outline:2px solid var(--cod); outline-offset:1px; }
+  .tres .campo.bien input{ background:#E6F4EA; border-color:var(--ok); color:#14532D; }
+  .tres .campo.mal input{ background:#FDECEA; border-color:var(--mal); color:#8B1A10; }
+
+  .asientoT{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  .asientoT th{ background:var(--cod); color:#fff; padding:9px 10px; font-size:12px;
+                letter-spacing:.06em; text-align:center; border:1px solid #16467C; }
+  .asientoT th.d{ background:var(--debe); border-color:#96234F; }
+  .asientoT th.h{ background:var(--haber); border-color:#A03F12; }
+  .asientoT td{ border:1px solid var(--o-border); padding:0; vertical-align:middle; }
+  .asientoT td.enc{ vertical-align:top; padding:6px 7px; background:#FAFBFD; width:118px; }
+  .asientoT td.enc.gl{ width:190px; }
+  .asientoT .enc input{ font:inherit; font-size:12px; font-weight:600; width:100%; text-align:left;
+    border:1.5px solid var(--o-border); border-radius:6px; padding:5px 7px; background:#fff; color:var(--o-text); }
+  .asientoT td.cdg{ width:120px; }
+  .asientoT td.cdg input{ font:inherit; font-size:14px; font-weight:800; width:100%; text-align:center;
+    font-variant-numeric:tabular-nums; border:0; background:var(--ama); padding:11px 6px; color:var(--cod); }
+  .asientoT td.den{ padding:7px 10px; font-size:12.5px; }
+  .asientoT td.den .r{ display:block; font-size:10.5px; color:var(--o-muted); }
+  .asientoT td.den .no{ color:var(--mal); font-style:italic; font-size:11.5px; }
+  .asientoT td.den .pi{ display:block; margin-top:3px; font-size:11px; font-weight:700; }
+  .asientoT td.den .pi.b{ color:#14532D; }
+  .asientoT td.den .pi.m{ color:#8B1A10; }
+  .asientoT td.cel{ width:120px; }
+  .asientoT td.cel input{ font:inherit; font-size:13.5px; font-weight:700; text-align:right; width:100%;
+    border:0; background:var(--ama); font-variant-numeric:tabular-nums; padding:11px 9px; }
+  .asientoT input:focus{ outline:2px solid var(--cod); outline-offset:-2px; }
+  tr.bien td{ background:#F2FAF5; }
+  tr.bien input{ background:#E6F4EA; color:#14532D; }
+  tr.mal td{ background:#FEF6F5; }
+  tr.mal input{ background:#FDECEA; color:#8B1A10; }
+  .asientoT tfoot td{ background:#F3F5F8; font-weight:800; font-variant-numeric:tabular-nums; }
+  .asientoT tfoot .et{ text-align:right; padding:8px 10px; }
+  .asientoT tfoot .n{ text-align:right; padding:8px 9px; }
+  .cuadre{ margin-top:11px; border-radius:10px; padding:10px 14px; font-size:13.5px; font-weight:700; }
+  .cuadre.si{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .cuadre.no{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .mandos button{ font:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:8px;
+    padding:9px 14px; border:2px solid var(--o-border); background:#fff; color:var(--o-text); }
+  .mandos .rev{ background:var(--cod); border-color:var(--cod); color:#fff; }
+  .mandos .sol{ border-color:var(--mal); color:var(--mal); }
+  .mandos [hidden]{ display:none !important; }
+  .marcador{ margin-top:13px; border-radius:11px; padding:13px 16px; display:flex; gap:12px;
+             align-items:center; flex-wrap:wrap; font-size:14px; font-weight:700; }
+  .marcador.todo{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .marcador.algo{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+  .marcador .big{ font-size:22px; font-weight:800; }
+  #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="contabilidad.html">Contabilidad</a></span> / <b>Solo completar</b></span>
+  <div class="o-cp-right"><span class="o-count">4 comprobantes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap cmp">
+
+  <div class="o-sheet">
+    <div class="cab-act">
+      <div class="marca" aria-hidden="true">
+        <svg viewBox="0 0 76 64">
+          <rect x="10" y="5" width="36" height="48" rx="3" fill="#fff" stroke="#1F5FA8" stroke-width="2.5"/>
+          <path d="M16 15h24M16 22h24M16 29h16" stroke="#9FC2E6" stroke-width="2.3" stroke-linecap="round"/>
+          <path d="M16 40h24" stroke="#C0306B" stroke-width="2.3" stroke-linecap="round"/>
+          <path d="M50 48l14-14" stroke="#8A6510" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M60 30l6 6-3 3-6-6z" fill="#E8B84B" stroke="#8A6510" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M48 50l-3 4 5-1z" fill="#8A6510"/>
+        </svg>
+      </div>
+      <div class="tt">
+        <h1>Asientos: solo completar</h1>
+        <p>Lee el comprobante y escribe el asiento: código, debe y haber</p>
+      </div>
+      <div class="son"><button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button></div>
+    </div>
+    <p class="recuerda">
+      Aquí no se arrastra nada. Lee el comprobante de la izquierda, saca el <b>valor de venta</b>,
+      el <b>IGV</b> y el <b>importe total</b>, y escribe el asiento a mano: el <b>código</b> de cada cuenta
+      y su importe en el <b>debe</b> o en el <b>haber</b>.
+      <br>Al escribir el código aparece la denominación, así confirmas que es la cuenta que buscabas.
+    </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Entrar a la sala</h2>
+    <div id="aula"></div>
+  </div>
+
+  <div class="pest" id="pest" role="tablist" aria-label="Comprobantes"></div>
+
+  <div class="o-sheet" style="border-top-left-radius:0">
+    <div class="tablero">
+      <div class="docu" id="docu"></div>
+      <div>
+        <div class="tres">
+          <label class="campo" id="cVC"><span>Valor de venta</span>
+            <input id="iVC" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+          <label class="campo" id="cIGV"><span>IGV</span>
+            <input id="iIGV" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+          <label class="campo" id="cPC"><span>Importe total</span>
+            <input id="iPC" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off"></label>
+        </div>
+        <div style="overflow-x:auto;margin-top:14px"><div id="diario"></div></div>
+        <div id="cuadre"></div>
+        <div class="mandos">
+          <button class="rev" id="btnRev" type="button">Revisar</button>
+          <button class="sol" id="btnSol" type="button" hidden>Ver solución</button>
+          <button id="btnReset" type="button">Reiniciar</button>
+        </div>
+        <div id="marcador"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">La dinámica de las cuentas</h2>
+    <div id="guia"></div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Monitoreo del aula</h2>
+    <div id="muro"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Contabilidad</span>
+    <span>Asientos: solo completar · PCGE 2019</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="pcge2019.js"></script>
+<script src="aula.js"></script>
+<script src="dinamica.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+var NOMBRES={ '70121':'Terceros' };
+function nom(c){
+  if(NOMBRES[c]) return NOMBRES[c];
+  if(window.PCGE) for(var i=0;i<window.PCGE.length;i++) if(window.PCGE[i][0]===c) return window.PCGE[i][1];
+  return '';
+}
+function ruta(c){
+  var p=[], i, j;
+  for(i=2;i<c.length;i++){
+    var pad=c.slice(0,i);
+    if(window.PCGE) for(j=0;j<window.PCGE.length;j++)
+      if(window.PCGE[j][0]===pad){ p.push(pad+' '+window.PCGE[j][1]); break; }
+  }
+  return p.join(' · ');
+}
+function existe(c){ return !!nom(c); }
+function r2(n){ return Math.round(n*100)/100; }
+function miles(n){
+  var neg=n<0, p=Math.abs(n).toFixed(2).split('.');
+  return (neg?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'.'+p[1];
+}
+function soles(n){ return 'S/ '+miles(n); }
+function aNumero(t){
+  if(t===null||t===undefined) return null;
+  var s=String(t).replace(/[\s,]/g,'').replace(/S\/?/gi,'');
+  if(s==='') return null;
+  var n=parseFloat(s);
+  return isNaN(n)?null:n;
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* =================== comprobantes =================== */
+var EMISOR={ nom:'Comercial Los Andes S.A.C.', ruc:'RUC 20512345678',
+             dir:'Av. Los Precursores 480 — Arequipa' };
+var CASOS=[
+  { id:'d1', tit:'Comprobante 1', sub:'Factura por mercaderías',
+    tipo:'FACTURA ELECTRÓNICA', serie:'FE01-1254', fecha:'05/11/2025', fechaISO:'2025-11-05',
+    cliente:'Comercializadora del Sur S.A.C.', ruc:'RUC 20487654321', rel:'Tercero',
+    cond:'Crédito a 30 días',
+    items:[['Café tostado premium en grano, 50 sacos de 25 kg','18,500.00']],
+    vc:18500, igv:3330, pc:21830, muestra:'vc',
+    glosa:'Por la venta de mercaderías según factura FE01-1254',
+    sol:[ {c:'1212', l:'d', m:21830, q:'el cliente nos debe el importe total'},
+          {c:'40111',l:'h', m:3330,  q:'nace la obligación de pagar el IGV a la SUNAT'},
+          {c:'70121',l:'h', m:18500, q:'se reconoce el ingreso por la venta'} ]},
+  { id:'d2', tit:'Comprobante 2', sub:'Boleta con total incluido',
+    tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'BE02-0310', fecha:'09/11/2025', fechaISO:'2025-11-09',
+    cliente:'Rosa Meléndez Cárdenas', ruc:'DNI 45871236', rel:'Tercero',
+    cond:'Contado',
+    items:[['Café tostado premium, 40 bolsas de 1 kg','2,360.00']],
+    vc:2000, igv:360, pc:2360, muestra:'pc',
+    glosa:'Por la venta de mercaderías según boleta BE02-0310',
+    sol:[ {c:'1212', l:'d', m:2360, q:'el cliente nos debe el importe total'},
+          {c:'40111',l:'h', m:360,  q:'nace la obligación de pagar el IGV'},
+          {c:'70121',l:'h', m:2000, q:'se reconoce el ingreso por la venta'} ]},
+  { id:'d3', tit:'Comprobante 3', sub:'Servicio a una relacionada',
+    tipo:'FACTURA ELECTRÓNICA', serie:'FE01-1285', fecha:'18/11/2025', fechaISO:'2025-11-18',
+    cliente:'Minera Horizonte S.A.C.', ruc:'RUC 20100998877', rel:'Empresa relacionada',
+    cond:'Crédito',
+    items:[['Servicio de transporte de personal — noviembre 2025','42,000.00']],
+    vc:42000, igv:7560, pc:49560, muestra:'vc',
+    glosa:'Por el servicio prestado según factura FE01-1285',
+    sol:[ {c:'1312', l:'d', m:49560, q:'la relacionada nos debe el importe total'},
+          {c:'40111',l:'h', m:7560,  q:'nace la obligación de pagar el IGV'},
+          {c:'70322',l:'h', m:42000, q:'se reconoce el ingreso por el servicio local a una relacionada'} ]},
+  { id:'d4', tit:'Comprobante 4', sub:'Nota de crédito por devolución',
+    tipo:'NOTA DE CRÉDITO ELECTRÓNICA', serie:'NC01-0045', fecha:'28/11/2025', fechaISO:'2025-11-28',
+    cliente:'Comercializadora del Sur S.A.C.', ruc:'RUC 20487654321', rel:'Tercero',
+    cond:'Anulación parcial de la factura FE01-1254', nc:true,
+    items:[['Devolución de 3 sacos de café tostado premium','1,000.00']],
+    vc:1000, igv:180, pc:1180, muestra:'vc',
+    glosa:'Por la devolución según nota de crédito NC01-0045',
+    sol:[ {c:'70921',l:'d', m:1000, q:'la devolución rebaja la venta'},
+          {c:'40111',l:'d', m:180,  q:'se reduce el IGV que se debía pagar'},
+          {c:'1212', l:'h', m:1180, q:'el cliente ya no nos debe esa parte'} ]}
+];
+CASOS.forEach(function(c){ c.total=c.sol.length*3+3; });   /* código, debe/haber y monto por línea, + 3 cifras */
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('cmp_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sCuadra(){ [523.25,659.25,783.99].forEach(function(f,i){ nota(f,i*0.07,0.26,0.06); }); }
+function sMal(){ nota(150,0,0.24,0.07,'sawtooth'); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  [1046.5,1318.5,1568].forEach(function(f){ nota(f,0.55,0.75,0.07); });
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('cmp_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) nota(520,0,0.07,0.08);
+});
+pintaSon();
+
+/* =================== estado =================== */
+var S={};
+CASOS.forEach(function(c){
+  S[c.id]={ vc:null, igv:null, pc:null, fecha:'', glosa:'',
+            filas:c.sol.map(function(){ return {c:'', d:null, h:null}; }) };
+});
+var activo=CASOS[0], revisado={}, listo=false, cuadraba={};
+function guarda(){
+  try{ localStorage.setItem('cmp_avance', JSON.stringify(S)); }catch(e){}
+  if(window.Aula) Aula.empuja();
+}
+(function carga(){
+  try{
+    var d=JSON.parse(localStorage.getItem('cmp_avance')||'null');
+    if(!d) return;
+    CASOS.forEach(function(c){
+      var x=d[c.id];
+      if(x && x.filas && x.filas.length===c.sol.length) S[c.id]=x;
+    });
+  }catch(e){}
+})();
+function sumaD(c){ var s=0; S[c.id].filas.forEach(function(f){ if(typeof f.d==='number') s+=f.d; }); return r2(s); }
+function sumaH(c){ var s=0; S[c.id].filas.forEach(function(f){ if(typeof f.h==='number') s+=f.h; }); return r2(s); }
+function hechas(c){
+  var e=S[c.id], n=0;
+  ['vc','igv','pc'].forEach(function(k){ if(typeof e[k]==='number') n++; });
+  e.filas.forEach(function(f){
+    if(f.c) n++;
+    if(typeof f.d==='number' || typeof f.h==='number') n+=2;
+  });
+  return n;
+}
+
+/* =================== calificación =================== */
+function califica(c){
+  var e=S[c.id], r={ bien:0, total:c.total, cifras:{}, filas:[] };
+  ['vc','igv','pc'].forEach(function(k){
+    var v=e[k];
+    if(typeof v!=='number'){ r.cifras[k]={ok:false, vacia:true}; return; }
+    var ok=Math.abs(r2(v)-c[k])<0.005;
+    r.cifras[k]={ok:ok};
+    if(ok) r.bien++;
+  });
+  var pend=c.sol.map(function(s){ return {c:s.c, l:s.l, m:s.m, q:s.q, usado:false}; });
+  e.filas.forEach(function(f, i){
+    var lado = (typeof f.d==='number') ? 'd' : ((typeof f.h==='number') ? 'h' : null);
+    var m = lado==='d' ? f.d : (lado==='h' ? f.h : null);
+    var j, esp=null;
+    for(j=0;j<pend.length;j++) if(!pend[j].usado && pend[j].c===f.c){ esp=pend[j]; break; }
+    var okC=!!esp, okL=false, okM=false, txt=[];
+    if(esp) esp.usado=true;
+    if(!f.c) txt.push('Falta el código');
+    else if(!existe(f.c)) txt.push('El código '+f.c+' no está en el plan');
+    else if(!okC) txt.push('Esta cuenta no va en este asiento');
+    if(esp){
+      if(lado===null) txt.push('Falta el importe: va '+esp.q+' en el '+(esp.l==='d'?'DEBE':'HABER'));
+      else {
+        okL=(lado===esp.l);
+        if(!okL) txt.push('Va en el '+(esp.l==='d'?'DEBE':'HABER'));
+        okM=(Math.abs(r2(m)-esp.m)<0.005);
+        if(!okM) txt.push('Revisa el importe');
+      }
+    } else if(lado!==null && typeof f.d==='number' && typeof f.h==='number'){
+      txt.push('Cada línea lleva importe en un solo lado');
+    }
+    if(okC) r.bien++;
+    if(okL) r.bien++;
+    if(okM) r.bien++;
+    r.filas[i]={ ok:(okC&&okL&&okM), txt:(okC&&okL&&okM)?('Correcto · '+esp.q):(txt.join(' · ')||'Revisa esta línea') };
+  });
+  return r;
+}
+
+/* =================== pintado =================== */
+function pintaPestanas(){
+  var h='';
+  CASOS.forEach(function(c){
+    var r=revisado[c.id]?califica(c):null, fin=r&&r.bien===c.total;
+    h+='<button type="button" role="tab" data-c="'+c.id+'" aria-selected="'+(c.id===activo.id?'true':'false')+'">'+
+       esc(c.tit)+(fin?' <span class="tick">✓</span>':'')+'<span class="p">'+esc(c.sub)+'</span></button>';
+  });
+  $('pest').innerHTML=h;
+}
+function pintaDoc(){
+  var c=activo, h='<div class="doc'+(c.nc?' nc':'')+'">';
+  h+='<div class="dh"><div class="emp">'+esc(EMISOR.nom)+
+     '<span>'+esc(EMISOR.ruc)+'</span><span>'+esc(EMISOR.dir)+'</span></div>'+
+     '<div class="caja"><div class="t">'+esc(c.tipo)+'</div>'+
+     '<div class="r">'+esc(EMISOR.ruc)+'</div><div class="n">'+esc(c.serie)+'</div></div></div>';
+  h+='<dl class="dl"><dt>Fecha de emisión</dt><dd>'+esc(c.fecha)+'</dd>'+
+     '<dt>Señor(es)</dt><dd>'+esc(c.cliente)+'</dd>'+
+     '<dt>Documento</dt><dd>'+esc(c.ruc)+'</dd>'+
+     '<dt>Vínculo</dt><dd>'+esc(c.rel)+'</dd>'+
+     '<dt>Condición</dt><dd>'+esc(c.cond)+'</dd></dl>';
+  h+='<table><thead><tr><th>Descripción</th><th>Importe S/</th></tr></thead><tbody>';
+  c.items.forEach(function(it){ h+='<tr><td>'+esc(it[0])+'</td><td>'+esc(it[1])+'</td></tr>'; });
+  h+='</tbody></table>';
+  h+='<div class="tot">';
+  if(c.muestra==='vc'){
+    h+='<div class="f"><span>Valor de venta</span><span class="n">'+miles(c.vc)+'</span></div>'+
+       '<div class="f"><span>IGV 18 %</span><span class="n">'+(c.igv?miles(c.igv):'—')+'</span></div>'+
+       '<div class="f g"><span>Importe total</span><span class="n">'+miles(c.pc)+'</span></div>';
+  } else {
+    h+='<div class="f"><span>Valor de venta</span><span class="n">—</span></div>'+
+       '<div class="f"><span>IGV 18 %</span><span class="n">—</span></div>'+
+       '<div class="f g"><span>Importe total incluido IGV</span><span class="n">'+miles(c.pc)+'</span></div>';
+  }
+  h+='</div><div class="pie">'+(c.muestra==='pc'
+      ? 'El comprobante solo muestra el total. Separa tú el valor de venta y el IGV.'
+      : 'Representación impresa del comprobante electrónico.')+'</div></div>';
+  $('docu').innerHTML=h;
+}
+function pintaCifras(){
+  var c=activo, e=S[c.id], r=revisado[c.id]?califica(c):null;
+  [['vc','iVC','cVC'],['igv','iIGV','cIGV'],['pc','iPC','cPC']].forEach(function(t){
+    var inp=$(t[1]), caja=$(t[2]), v=e[t[0]];
+    if(document.activeElement!==inp) inp.value=(typeof v==='number')?miles(v):'';
+    caja.classList.remove('bien','mal');
+    if(r) caja.classList.add(r.cifras[t[0]].ok?'bien':'mal');
+  });
+}
+function pintaDiario(){
+  var c=activo, e=S[c.id], r=revisado[c.id]?califica(c):null, n=c.sol.length;
+  var h='<table class="asientoT"><thead><tr><th>FECHA</th><th>GLOSA</th><th>CÓDIGO</th>'+
+        '<th>DENOMINACIÓN</th><th class="d">DEBE</th><th class="h">HABER</th></tr></thead><tbody>';
+  e.filas.forEach(function(f, i){
+    var d=r?r.filas[i]:null, esp=c.sol[i];
+    var cls = d ? (d.ok?' class="bien"':' class="mal"') : '';
+    h+='<tr'+cls+'>';
+    if(i===0){
+      h+='<td class="enc" rowspan="'+n+'"><input class="fch" type="date" data-k="fecha"'+
+         ' aria-label="Fecha del asiento" value="'+esc(e.fecha)+'"></td>'+
+         '<td class="enc gl" rowspan="'+n+'"><input class="gls" type="text" maxlength="90" data-k="glosa"'+
+         ' placeholder="Escribe la glosa" aria-label="Glosa" value="'+esc(e.glosa)+'"></td>';
+    }
+    h+='<td class="cdg"><input type="text" inputmode="numeric" maxlength="6" data-r="'+i+'" data-k="c"'+
+       ' aria-label="Código línea '+(i+1)+'" placeholder="0000" value="'+esc(f.c)+'"></td>'+
+       '<td class="den">'+
+         (f.c ? (existe(f.c)
+            ? esc(nom(f.c))+'<span class="r">'+esc(ruta(f.c))+'</span>'
+            : '<span class="no">Ese código no está en el plan de cuentas</span>') : '')+
+         (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
+         (d ? '<div class="dn-por-que">'+Dinamica.explica(esp.c, esp.l, esp.q)+'</div>' : '')+
+       '</td>'+
+       '<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="d"'+
+       ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
+       '<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="h"'+
+       ' aria-label="Haber línea '+(i+1)+'" placeholder="—" value="'+(typeof f.h==='number'?miles(f.h):'')+'"></td></tr>';
+  });
+  var sd=sumaD(c), sh=sumaH(c);
+  h+='</tbody><tfoot><tr><td class="et" colspan="4">Sumas iguales</td><td class="n">'+miles(sd)+
+     '</td><td class="n">'+miles(sh)+'</td></tr></tfoot></table>';
+  $('diario').innerHTML=h;
+  if(sd===0 && sh===0){ $('cuadre').innerHTML=''; }
+  else if(Math.abs(sd-sh)<0.005 && sd>0){
+    $('cuadre').innerHTML='<div class="cuadre si">✓ El asiento cuadra: debe y haber suman '+soles(sd)+'</div>';
+  } else {
+    $('cuadre').innerHTML='<div class="cuadre no">Todavía no cuadra · debe '+soles(sd)+
+      ' · haber '+soles(sh)+' · diferencia '+soles(Math.abs(sd-sh))+'</div>';
+  }
+  conecta(); avisaCuadre();
+}
+function pinta(){ pintaDoc(); pintaCifras(); pintaDiario(); pintaPestanas(); }
+function avisaCuadre(){
+  var c=activo, ok=sumaD(c)>0 && Math.abs(sumaD(c)-sumaH(c))<0.005;
+  if(listo && ok && !cuadraba[c.id]) sCuadra();
+  cuadraba[c.id]=ok;
+}
+function limpiaMarcas(){
+  if(revisado[activo.id]){ revisado[activo.id]=false; $('marcador').innerHTML=''; }
+}
+function conecta(){
+  Array.prototype.forEach.call($('diario').querySelectorAll('.enc input'), function(inp){
+    var k=inp.getAttribute('data-k');
+    inp.addEventListener('input', function(){ S[activo.id][k]=inp.value; guarda(); });
+  });
+  Array.prototype.forEach.call($('diario').querySelectorAll('.cdg input'), function(inp){
+    var i=parseInt(inp.getAttribute('data-r'),10);
+    inp.addEventListener('input', function(){
+      S[activo.id].filas[i].c=inp.value.replace(/\D/g,'');
+      limpiaMarcas(); guarda();
+      var pos=inp.selectionStart;
+      pintaDiario();
+      var nuevo=$('diario').querySelector('.cdg input[data-r="'+i+'"]');
+      if(nuevo){ nuevo.focus(); try{ nuevo.setSelectionRange(pos,pos); }catch(e){} }
+    });
+  });
+  Array.prototype.forEach.call($('diario').querySelectorAll('.cel input'), function(inp){
+    var i=parseInt(inp.getAttribute('data-r'),10), k=inp.getAttribute('data-k');
+    inp.addEventListener('input', function(){
+      S[activo.id].filas[i][k]=aNumero(inp.value);
+      limpiaMarcas();
+      var ns=$('diario').querySelectorAll('tfoot .n');
+      if(ns[0]) ns[0].textContent=miles(sumaD(activo));
+      if(ns[1]) ns[1].textContent=miles(sumaH(activo));
+      guarda();
+    });
+    inp.addEventListener('blur', function(){
+      var v=S[activo.id].filas[i][k];
+      inp.value=(typeof v==='number')?miles(v):'';
+      pintaDiario();
+    });
+  });
+}
+[['iVC','vc'],['iIGV','igv'],['iPC','pc']].forEach(function(t){
+  $(t[0]).addEventListener('input', function(){
+    S[activo.id][t[1]]=aNumero($(t[0]).value); limpiaMarcas(); guarda();
+  });
+  $(t[0]).addEventListener('blur', function(){
+    var v=S[activo.id][t[1]];
+    $(t[0]).value=(typeof v==='number')?miles(v):'';
+  });
+});
+
+/* =================== revisar =================== */
+function revisa(){
+  revisado[activo.id]=true;
+  var c=activo, r=califica(c);
+  pinta();
+  var todo=(r.bien===c.total);
+  $('marcador').innerHTML='<div class="marcador '+(todo?'todo':'algo')+'">'+
+    '<span class="big">'+r.bien+' de '+c.total+'</span>'+
+    '<span>'+(todo
+      ? 'aciertos. ¡Comprobante registrado! Debajo de cada línea tienes por qué va a ese lado.'
+      : 'aciertos entre las cifras, los códigos, los lados y los importes. Lee lo marcado en rojo.')+
+    '</span></div>';
+  if(todo){ sFin(); confeti(); } else sMal();
+  guarda();
+}
+function verSolucion(){
+  var c=activo, e=S[c.id];
+  e.vc=c.vc; e.igv=c.igv; e.pc=c.pc;
+  e.fecha=c.fechaISO; e.glosa=c.glosa;
+  e.filas=c.sol.map(function(s){
+    return { c:s.c, d:(s.l==='d'?s.m:null), h:(s.l==='h'?s.m:null) };
+  });
+  revisado[c.id]=true; pinta();
+  $('marcador').innerHTML='<div class="marcador algo"><span class="big">Solución</span>'+
+    '<span>Asiento completo, con la explicación de cada línea.</span></div>';
+  nota(620,0,0.1,0.05); guarda();
+}
+function reinicia(){
+  var c=activo;
+  S[c.id]={ vc:null, igv:null, pc:null, fecha:'', glosa:'',
+            filas:c.sol.map(function(){ return {c:'',d:null,h:null}; }) };
+  revisado[c.id]=false; cuadraba[c.id]=false;
+  $('marcador').innerHTML='';
+  pinta(); guarda(); nota(360,0,0.07,0.06);
+}
+$('btnRev').addEventListener('click', revisa);
+$('btnSol').addEventListener('click', verSolucion);
+$('btnReset').addEventListener('click', reinicia);
+$('pest').addEventListener('click', function(ev){
+  var b=ev.target.closest('button[data-c]');
+  if(!b) return;
+  CASOS.forEach(function(c){ if(c.id===b.getAttribute('data-c')) activo=c; });
+  $('marcador').innerHTML=''; cuadraba[activo.id]=false;
+  pinta(); if(window.Aula) Aula.empuja();
+  nota(700,0,0.06,0.05);
+  try{ localStorage.setItem('cmp_caso', activo.id); }catch(e){}
+});
+
+/* =================== confeti =================== */
+function confeti(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv=$('confeti'), g=cv.getContext('2d');
+  cv.width=window.innerWidth; cv.height=window.innerHeight; cv.style.display='block';
+  var tonos=['#1F5FA8','#C0306B','#D0561C','#2E8B57','#7B5EA7','#E8B84B'], ps=[], i;
+  for(i=0;i<110;i++) ps.push({ x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.45,
+    vx:(Math.random()-0.5)*2.4, vy:2.4+Math.random()*3.2, a:Math.random()*Math.PI,
+    va:(Math.random()-0.5)*0.24, w:5+Math.random()*7, h:8+Math.random()*8, c:tonos[i%tonos.length] });
+  var t0=performance.now();
+  (function paso(t){
+    var dt=t-t0;
+    g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.a+=p.va;
+      g.save(); g.translate(p.x,p.y); g.rotate(p.a);
+      g.fillStyle=p.c; g.globalAlpha=Math.max(0,1-dt/2600);
+      g.fillRect(-p.w/2,-p.h/2,p.w,p.h); g.restore();
+    });
+    if(dt<2600) requestAnimationFrame(paso);
+    else { g.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })(t0);
+}
+
+/* =================== sala =================== */
+function resumenAula(){
+  var c=activo, r=revisado[c.id]?califica(c):null, e=S[c.id];
+  return { casoN:c.tit+' · '+c.sub, vc:e.vc, igv:e.igv, pc:e.pc,
+    hechas:hechas(c), total:c.total, bien:(r?r.bien:null), listo:(r?r.bien===c.total:false),
+    lineas:e.filas.map(function(f,i){
+      return { c:f.c, n:(f.c&&existe(f.c)?nom(f.c):''), d:f.d, h:f.h,
+               ok:(r?(r.filas[i]?r.filas[i].ok:null):null) };
+    }) };
+}
+function ventanaAula(e){
+  var mini='<table class="mini"><thead><tr><th>CÓDIGO</th><th>DENOMINACIÓN</th>'+
+           '<th>DEBE</th><th>HABER</th></tr></thead><tbody>';
+  (e.lineas||[]).forEach(function(l){
+    var cl = l.ok===true ? ' class="b"' : (l.ok===false ? ' class="m"' : '');
+    mini+='<tr'+cl+'><td class="c">'+(l.c?esc(l.c):'<span class="nn">—</span>')+'</td>'+
+          '<td class="d">'+(l.n?esc(l.n):'')+'</td>'+
+          '<td class="n">'+(typeof l.d==='number'?miles(l.d):'')+'</td>'+
+          '<td class="n">'+(typeof l.h==='number'?miles(l.h):'')+'</td></tr>';
+  });
+  mini+='</tbody></table>';
+  return '<div class="ve"><span>'+esc(e.casoN||'—')+'</span></div>'+
+         '<div class="ve"><span>VC '+(typeof e.vc==='number'?miles(e.vc):'—')+'</span>'+
+         '<span>IGV '+(typeof e.igv==='number'?miles(e.igv):'—')+'</span>'+
+         '<span>PC '+(typeof e.pc==='number'?miles(e.pc):'—')+'</span></div>'+mini+
+         '<div class="vp"><span>'+(e.hechas||0)+' de '+(e.total||0)+'</span>'+
+         '<b>'+(typeof e.bien==='number'?e.bien+' correctas':'sin revisar')+'</b></div>';
+}
+
+/* =================== arranque =================== */
+(function inicio(){
+  $('guia').innerHTML=Dinamica.guia();
+  try{
+    var g=localStorage.getItem('cmp_caso');
+    CASOS.forEach(function(c){ if(c.id===g) activo=c; });
+  }catch(e){}
+  Aula.iniciar({ sala:'C', resumen:resumenAula, ventana:ventanaAula,
+    alModo:function(doc){ $('btnSol').hidden=!doc; } });
+  $('btnSol').hidden=true;
+  pinta();
+  listo=true;
+})();
+
+})();
+</script>
+
+</body>
+</html>
