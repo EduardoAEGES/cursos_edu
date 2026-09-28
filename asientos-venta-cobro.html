@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asientos de venta de mercadería y cobro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .asi{
+    --debe:#2E75B6; --haber:#E07B39; --ok:#2E8B57; --mal:#C0392B;
+    --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+    max-width:1280px; margin:0 auto;
+  }
+
+  /* ---------- cabecera ---------- */
+  .cab-act{ display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+            border-bottom:4px solid var(--o-purple); padding-bottom:14px; }
+  .cab-act .marca svg{ width:86px; height:72px; display:block; }
+  .cab-act .tt h1{ margin:0; font-size:clamp(19px,2.6vw,26px); font-weight:800; color:var(--gris); }
+  .cab-act .tt p{ margin:2px 0 0; font-size:13.5px; color:var(--o-muted); }
+  .cab-act .son{ margin-left:auto; }
+
+  .recuerda{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+             padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .recuerda b{ color:#3F3208; }
+
+  /* ---------- sala en vivo ---------- */
+  .sala{ display:flex; gap:9px; align-items:flex-end; flex-wrap:wrap; }
+  .sala label{ display:grid; gap:3px; font-size:11.5px; font-weight:700;
+               letter-spacing:.05em; text-transform:uppercase; color:var(--o-muted); }
+  .sala input{ font:inherit; font-size:14px; padding:7px 10px; border-radius:8px;
+               border:1.5px solid var(--o-border); background:#fff; width:190px; max-width:100%; }
+  .sala input:focus{ outline:2px solid var(--o-purple); outline-offset:1px; }
+  .sala [hidden]{ display:none !important; }
+  .estadoRed{ font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:99px; }
+  .estadoRed.solo{ background:var(--o-line); color:var(--o-muted); }
+  .estadoRed.vivo{ background:#E6F4EA; color:#14532D; }
+  .estadoRed.malo{ background:#FDECEA; color:#8B1A10; }
+
+  .tablero-vivo{ display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; margin-top:12px; }
+  .alumno{ border:1.5px solid var(--o-border); border-radius:10px; padding:10px 12px; background:#fff;
+           display:grid; gap:5px; cursor:pointer; }
+  .alumno:hover{ box-shadow:0 5px 14px rgba(0,0,0,.1); }
+  .alumno.yo{ border-color:var(--o-purple); box-shadow:0 0 0 2px rgba(113,75,103,.18); }
+  .alumno .nm{ font-size:13.5px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .alumno .cs{ font-size:11.5px; color:var(--o-muted); }
+  .alumno .riel{ height:8px; border-radius:99px; background:var(--o-line); overflow:hidden; }
+  .alumno .lleno{ height:100%; background:var(--debe); border-radius:99px; transition:width .3s ease; }
+  .alumno.termino .lleno{ background:var(--ok); }
+  .alumno .dato{ font-size:11.5px; color:var(--o-muted); display:flex; justify-content:space-between; gap:6px; }
+  .alumno .dato b{ color:var(--o-text); }
+  .vacio-vivo{ border:2px dashed var(--o-border); border-radius:10px; padding:16px;
+               text-align:center; font-size:12.5px; color:var(--o-muted); }
+
+  /* ---------- guia de cuentas ---------- */
+  .guia{ width:100%; border-collapse:collapse; font-size:12.5px; }
+  .guia th{ text-align:left; padding:7px 9px; background:#F3F5F8; font-size:11px;
+            letter-spacing:.05em; text-transform:uppercase; color:var(--o-muted); border-bottom:1px solid var(--o-border); }
+  .guia td{ padding:7px 9px; border-bottom:1px solid #EEF1F5; vertical-align:top; line-height:1.4; }
+  .guia .cc{ font-weight:800; font-variant-numeric:tabular-nums; }
+  .guia .nat{ font-weight:700; }
+  .guia .nat.d{ color:var(--debe); }
+  .guia .nat.h{ color:var(--haber); }
+  .envoltura{ overflow-x:auto; }
+
+  /* ---------- pestañas ---------- */
+  .pest{ display:flex; gap:6px; flex-wrap:wrap; }
+  .pest button{ font:inherit; font-size:13.5px; font-weight:700; cursor:pointer;
+    border:2px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:9px 9px 0 0; padding:9px 14px; border-bottom-width:3px; }
+  .pest button:hover{ background:#F5F7FA; }
+  .pest button[aria-selected="true"]{ color:#fff; border-color:var(--o-purple); background:var(--o-purple); }
+  .pest button .p{ display:block; font-size:11px; font-weight:600; opacity:.85; }
+
+  /* ---------- comprobante ---------- */
+  .compro{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:9px; margin-top:11px; }
+  .compro .c{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px; padding:8px 11px; }
+  .compro .c .e{ font-size:11px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8A7430; }
+  .compro .c .v{ font-size:16px; font-weight:800; font-variant-numeric:tabular-nums; color:#4A3C0E; }
+
+  .avance{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:12px; }
+  .avance .riel{ flex:1 1 200px; height:11px; border-radius:99px; background:var(--o-line); overflow:hidden; min-width:140px; }
+  .avance .lleno{ height:100%; width:0; border-radius:99px; background:var(--o-purple); transition:width .3s ease; }
+  .avance .cuenta{ font-size:12.5px; font-weight:700; color:var(--o-muted); }
+
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .mandos button{ font:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:8px;
+    padding:9px 14px; border:2px solid var(--o-border); background:#fff; color:var(--o-text); }
+  .mandos button:hover{ background:#F5F7FA; }
+  .mandos .rev{ background:var(--o-purple); border-color:var(--o-purple); color:#fff; }
+  .mandos .sol{ border-color:var(--mal); color:var(--mal); }
+
+  /* ---------- tablero ---------- */
+  .tablero{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width:1020px){
+    .tablero{ grid-template-columns:300px 1fr; align-items:start; }
+    .plan{ position:sticky; top:96px; }
+  }
+  .plan h3, .diario h3{ margin:0 0 9px; font-size:12px; font-weight:800; letter-spacing:.07em;
+                        text-transform:uppercase; color:var(--o-muted); }
+  .cuentas{ display:flex; flex-direction:column; gap:7px; }
+  .cta{ border:2px solid var(--cc); border-left-width:6px; border-radius:9px; background:#fff;
+        padding:8px 11px; cursor:grab; touch-action:none; user-select:none; display:grid; gap:1px;
+        transition:box-shadow .15s ease, transform .12s ease; }
+  .cta:hover{ box-shadow:0 5px 14px rgba(0,0,0,.12); }
+  .cta.sel{ box-shadow:0 0 0 3px rgba(113,75,103,.3); transform:translateY(-1px); }
+  .cta.viaja{ opacity:.35; }
+  .cta .c1{ font-size:13px; font-weight:800; color:var(--cc); }
+  .cta .c2{ font-size:11.5px; color:var(--o-muted); line-height:1.35; }
+  .cta .c3{ font-size:11px; font-weight:700; color:var(--o-muted); }
+  .fantasma{ position:fixed; z-index:90; pointer-events:none; width:262px; max-width:78vw;
+             box-shadow:0 14px 32px rgba(0,0,0,.3); transform:rotate(-1.5deg); opacity:.96; }
+
+  .asiento{ border:1px solid var(--o-border); border-radius:11px; overflow:hidden; background:#fff; margin-bottom:14px; }
+  .asiento .cabA{ background:#F3F5F8; padding:9px 13px; font-size:13px; font-weight:800;
+                  display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;
+                  border-bottom:1px solid var(--o-border); }
+  .asiento .est{ font-size:12px; font-weight:700; padding:3px 9px; border-radius:99px; }
+  .asiento .est.si{ background:#E6F4EA; color:#14532D; }
+  .asiento .est.no{ background:#FFF3CD; color:#6B5310; }
+  .lados{ display:grid; grid-template-columns:1fr; }
+  @media (min-width:700px){ .lados{ grid-template-columns:1fr 1fr; } }
+  .lado{ padding:9px 11px 11px; min-height:112px; }
+  .lado + .lado{ border-top:1px solid var(--o-border); }
+  @media (min-width:700px){ .lado + .lado{ border-top:0; border-left:1px solid var(--o-border); } }
+  .lado > .tl{ font-size:11.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+               padding-bottom:7px; border-bottom:2px solid currentColor; margin-bottom:8px; }
+  .lado.d{ --cl:var(--debe); }
+  .lado.h{ --cl:var(--haber); }
+  .lado > .tl{ color:var(--cl); }
+  .lado.sobre{ background:#FFF3CD; box-shadow:inset 0 0 0 2px var(--cl); }
+  .lado .nada{ font-size:12px; color:var(--o-muted); font-style:italic; padding:6px 2px; }
+  .lineas{ display:grid; gap:6px; }
+  .linea{ display:grid; grid-template-columns:1fr 112px 24px; gap:7px; align-items:center;
+          border:1.5px solid var(--o-line); border-radius:8px; padding:6px 8px; }
+  .linea .tx{ min-width:0; }
+  .linea .l1, .linea .l2{ display:block; }
+  .linea .l1{ font-size:12.5px; font-weight:800; color:var(--cl); line-height:1.25; }
+  .linea .l2{ font-size:11px; color:var(--o-muted); line-height:1.3; }
+  .linea input{ font:inherit; font-size:13px; font-weight:700; text-align:right; width:100%;
+    font-variant-numeric:tabular-nums; padding:5px 7px; border-radius:6px;
+    border:1.5px solid var(--amaBd); background:var(--ama); min-width:0; }
+  .linea input:focus{ outline:2px solid var(--cl); outline-offset:1px; }
+  .linea .qx{ border:0; background:transparent; cursor:pointer; font:inherit; font-size:16px;
+              line-height:1; color:var(--o-muted); padding:2px; border-radius:4px; }
+  .linea .qx:hover{ color:var(--mal); }
+  .linea.bien{ border-color:var(--ok); background:#F2FAF5; }
+  .linea.bien input{ background:#E6F4EA; border-color:var(--ok); color:#14532D; }
+  .linea.mal{ border-color:var(--mal); background:#FEF6F5; }
+  .linea.mal input{ background:#FDECEA; border-color:var(--mal); color:#8B1A10; }
+  .linea .pista{ grid-column:1/-1; font-size:11px; font-weight:700; }
+  .linea.bien .pista{ color:#14532D; }
+  .linea.mal .pista{ color:#8B1A10; }
+  .sumaL{ display:flex; justify-content:space-between; gap:8px; margin-top:9px; padding-top:7px;
+          border-top:1px dashed var(--o-border); font-size:12.5px; font-weight:800; }
+  .sumaL .n{ font-variant-numeric:tabular-nums; color:var(--cl); }
+
+  .marcador{ margin-top:14px; border-radius:11px; padding:13px 16px; display:flex; gap:12px;
+             align-items:center; flex-wrap:wrap; font-size:14px; font-weight:700; }
+  .marcador.todo{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .marcador.algo{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+  .marcador .big{ font-size:22px; font-weight:800; }
+  .marcador.todo .big{ animation:brinca .55s ease; }
+  @keyframes brinca{ 0%{ transform:scale(.6); } 60%{ transform:scale(1.18); } 100%{ transform:scale(1); } }
+
+  .vent{ position:fixed; z-index:95; width:340px; max-width:calc(100vw - 24px);
+    background:#fff; border:1px solid var(--o-border); border-top:5px solid var(--o-purple);
+    border-radius:12px; box-shadow:0 18px 44px rgba(0,0,0,.26); padding:15px 17px 17px; }
+  .vent .x{ position:absolute; top:6px; right:8px; border:0; background:transparent; cursor:pointer;
+            font:inherit; font-size:20px; line-height:1; color:var(--o-muted); padding:3px 7px; border-radius:6px; }
+  .vent .vt{ font-size:15.5px; font-weight:800; padding-right:24px; }
+  .vent .vq{ font-size:12.5px; line-height:1.55; margin-top:8px; }
+  .vent .vq .ln{ display:flex; justify-content:space-between; gap:8px; padding:3px 0; border-bottom:1px solid #EEF1F5; }
+  .vent .vq .ln .s{ font-weight:800; }
+  .vent .vq .ln .s.d{ color:var(--debe); }
+  .vent .vq .ln .s.h{ color:var(--haber); }
+  .oculto{ display:none !important; }
+
+  #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .marcador.todo .big{ animation:none; }
+    .avance .lleno, .alumno .lleno{ transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="contabilidad.html">Contabilidad</a></span> / <b>Venta y cobro</b></span>
+  <div class="o-cp-right"><span class="o-count">4 casos</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap asi">
+
+  <div class="o-sheet">
+    <div class="cab-act">
+      <div class="marca" aria-hidden="true">
+        <svg viewBox="0 0 76 64">
+          <rect x="6" y="8" width="30" height="44" rx="3" fill="#fff" stroke="#2E75B6" stroke-width="2.5"/>
+          <rect x="40" y="8" width="30" height="44" rx="3" fill="#fff" stroke="#E07B39" stroke-width="2.5"/>
+          <path d="M12 18h18M12 25h18M12 32h11" stroke="#9FC2E6" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M46 18h18M46 25h18M46 32h11" stroke="#F3C79E" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M12 42h18M46 42h18" stroke="#B9C2CE" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="38" cy="47" r="9" fill="#E8B84B"/>
+          <text x="38" y="51" text-anchor="middle" font-family="Inter,sans-serif"
+                font-size="9" font-weight="800" fill="#8A6510">S/</text>
+        </svg>
+      </div>
+      <div class="tt">
+        <h1>Venta de mercadería y cobro</h1>
+        <p>Asientos contables según el Plan Contable General Empresarial 2019</p>
+      </div>
+      <div class="son"><button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button></div>
+    </div>
+    <p class="recuerda">
+      Arrastra la cuenta del plan hasta la columna <b>DEBE</b> o <b>HABER</b> del asiento y escribe el importe.
+      En celular tócala y luego toca la columna. Cada asiento debe cuadrar: la suma del debe es igual a la del haber.
+      <br>Usa la guía de abajo: una cuenta de naturaleza deudora aumenta en el debe; una de naturaleza acreedora aumenta en el haber.
+    </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Sala en vivo</h2>
+    <div class="sala">
+      <label>Tu nombre<input id="iNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>
+      <label>Código de sala<input id="iSala" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>
+      <button class="o-btn o-btn-primary" id="btnEntrar" type="button">Entrar a la sala</button>
+      <button class="o-btn" id="btnSalirSala" type="button" hidden>Salir</button>
+      <span class="estadoRed solo" id="estadoRed">Modo individual</span>
+    </div>
+    <div class="tablero-vivo" id="vivo"></div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Guía: naturaleza de las cuentas que vas a usar</h2>
+    <div class="envoltura">
+      <table class="guia">
+        <thead><tr>
+          <th>Cuenta</th><th>Denominación</th><th>Elemento</th>
+          <th>Naturaleza</th><th>Aumenta en</th><th>Disminuye en</th>
+        </tr></thead>
+        <tbody id="tGuia"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pest" id="pest" role="tablist" aria-label="Casos"></div>
+
+  <div class="o-sheet" style="border-top-left-radius:0">
+    <div id="cabCaso"></div>
+    <div class="compro" id="compro"></div>
+    <div class="avance">
+      <span class="cuenta" id="cuenta">0 de 0 líneas</span>
+      <span class="riel"><span class="lleno" id="lleno"></span></span>
+    </div>
+    <div class="mandos">
+      <button class="rev" id="btnRev" type="button">Revisar asientos</button>
+      <button class="sol" id="btnSol" type="button">Ver solución</button>
+      <button id="btnReset" type="button">Reiniciar caso</button>
+    </div>
+    <div id="marcador"></div>
+  </div>
+
+  <div class="o-sheet">
+    <div class="tablero">
+      <div class="plan">
+        <h3>Plan de cuentas</h3>
+        <div class="cuentas" id="cuentas"></div>
+      </div>
+      <div class="diario">
+        <h3>Libro diario</h3>
+        <div id="diario"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Contabilidad</span>
+    <span>Venta de mercadería y cobro · PCGE 2019</span>
+  </div>
+
+</div>
+</div>
+
+<div class="vent oculto" id="vent" role="dialog" aria-label="Detalle del alumno"></div>
+<canvas id="confeti"></canvas>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+
+/* =================== plan de cuentas (PCGE 2019) =================== */
+var ELEM={
+  '1':{n:'Activo disponible y exigible', c:'#2E75B6'},
+  '2':{n:'Activo realizable',            c:'#7B5EA7'},
+  '4':{n:'Pasivo',                       c:'#E07B39'},
+  '6':{n:'Gastos por naturaleza',        c:'#C0392B'},
+  '7':{n:'Ingresos',                     c:'#2E8B57'}
+};
+
+/* cada ficha es una divisionaria concreta del plan */
+var CUENTAS=[
+  { id:'10-101',   cta:'10',  ctaN:'Efectivo y equivalentes de efectivo',
+    sub:'101',     subN:'Caja',
+    el:'1', nat:'Deudora' },
+  { id:'10-1041',  cta:'10',  ctaN:'Efectivo y equivalentes de efectivo',
+    sub:'1041',    subN:'Cuentas corrientes operativas',
+    ruta:'104 Cuentas corrientes en instituciones financieras', el:'1', nat:'Deudora' },
+  { id:'12-1212',  cta:'12',  ctaN:'Cuentas por cobrar comerciales – Terceros',
+    sub:'1212',    subN:'Emitidas en cartera',
+    ruta:'121 Facturas, boletas y otros comprobantes por cobrar', el:'1', nat:'Deudora' },
+  { id:'12-1231',  cta:'12',  ctaN:'Cuentas por cobrar comerciales – Terceros',
+    sub:'1231',    subN:'En cartera',
+    ruta:'123 Letras por cobrar', el:'1', nat:'Deudora' },
+  { id:'20-20111', cta:'20',  ctaN:'Mercaderías',
+    sub:'20111',   subN:'Costo',
+    ruta:'201 Mercaderías manufacturadas · 2011 Mercaderías manufacturadas', el:'2', nat:'Deudora' },
+  { id:'40-40111', cta:'40',  ctaN:'Tributos, contraprestaciones y aportes al sistema de pensiones y de salud por pagar',
+    sub:'40111',   subN:'IGV – Cuenta propia',
+    ruta:'401 Gobierno nacional · 4011 Impuesto general a las ventas', el:'4', nat:'Acreedora' },
+  { id:'69-69111', cta:'69',  ctaN:'Costo de ventas',
+    sub:'69111',   subN:'Terceros',
+    ruta:'691 Mercaderías · 6911 Mercaderías manufacturadas', el:'6', nat:'Deudora' },
+  { id:'70-70111', cta:'70',  ctaN:'Ventas',
+    sub:'70111',   subN:'Terceros',
+    ruta:'701 Mercaderías · 7011 Mercaderías manufacturadas', el:'7', nat:'Acreedora' },
+  { id:'709-7091', cta:'709', ctaN:'Devoluciones sobre ventas',
+    sub:'7091',    subN:'Mercaderías',
+    ruta:'Cuenta de signo contrario dentro del elemento 7', el:'7', nat:'Deudora',
+    notaEl:'de signo contrario: rebaja las ventas' }
+];
+var PORID={};
+CUENTAS.forEach(function(c){
+  c.color = ELEM[c.el].c;
+  c.sube  = (c.nat==='Deudora') ? 'DEBE' : 'HABER';
+  c.baja  = (c.nat==='Deudora') ? 'HABER' : 'DEBE';
+  PORID[c.id]=c;
+});
+
+/* =================== casos =================== */
+var EMPRESA='Comercial Los Andes S.A.C.';
+var CASOS=[
+  { id:'k1', rotulo:'Caso 1', sub:'Venta al crédito y su cobro',
+    doc:'Factura F001-120 · 05/03/2025',
+    enunciado:'El 05 de marzo se vende mercadería al crédito y se emite la factura F001-120. '+
+              'El 20 de marzo el cliente paga el total mediante transferencia a la cuenta corriente del banco.',
+    compro:[ {e:'Valor de venta', v:8000}, {e:'IGV 18 %', v:1440},
+             {e:'Total factura', v:9440}, {e:'Costo de la mercadería', v:5200} ],
+    asientos:[
+      { t:'Asiento 1 · Por la venta con factura F001-120', sol:[
+        {f:'12-1212', l:'d', m:9440}, {f:'40-40111', l:'h', m:1440}, {f:'70-70111', l:'h', m:8000} ]},
+      { t:'Asiento 2 · Por el costo de la mercadería vendida', sol:[
+        {f:'69-69111', l:'d', m:5200}, {f:'20-20111', l:'h', m:5200} ]},
+      { t:'Asiento 3 · Por el cobro con transferencia a la cuenta corriente', sol:[
+        {f:'10-1041', l:'d', m:9440}, {f:'12-1212', l:'h', m:9440} ]}
+    ]},
+  { id:'k2', rotulo:'Caso 2', sub:'Venta al contado con boleta',
+    doc:'Boleta B001-45 · 08/03/2025',
+    enunciado:'El 08 de marzo se vende mercadería al contado con la boleta B001-45 y se cobra en efectivo en el mismo acto. '+
+              'La empresa registra primero la venta y después el cobro.',
+    compro:[ {e:'Valor de venta', v:1500}, {e:'IGV 18 %', v:270},
+             {e:'Total boleta', v:1770}, {e:'Costo de la mercadería', v:980} ],
+    asientos:[
+      { t:'Asiento 1 · Por la venta con boleta B001-45', sol:[
+        {f:'12-1212', l:'d', m:1770}, {f:'40-40111', l:'h', m:270}, {f:'70-70111', l:'h', m:1500} ]},
+      { t:'Asiento 2 · Por el costo de la mercadería vendida', sol:[
+        {f:'69-69111', l:'d', m:980}, {f:'20-20111', l:'h', m:980} ]},
+      { t:'Asiento 3 · Por el cobro en efectivo', sol:[
+        {f:'10-101', l:'d', m:1770}, {f:'12-1212', l:'h', m:1770} ]}
+    ]},
+  { id:'k3', rotulo:'Caso 3', sub:'Canje por letra y cobro',
+    doc:'Factura F001-135 · letra a 30 días',
+    enunciado:'La factura F001-135, pendiente de cobro por S/ 4,720, se canjea el 25 de marzo por una letra a 30 días. '+
+              'El 24 de abril el banco cobra la letra y abona el importe en la cuenta corriente.',
+    compro:[ {e:'Valor de venta', v:4000}, {e:'IGV 18 %', v:720}, {e:'Total por cobrar', v:4720} ],
+    asientos:[
+      { t:'Asiento 1 · Por el canje de la factura por una letra', sol:[
+        {f:'12-1231', l:'d', m:4720}, {f:'12-1212', l:'h', m:4720} ]},
+      { t:'Asiento 2 · Por el cobro de la letra en la cuenta corriente', sol:[
+        {f:'10-1041', l:'d', m:4720}, {f:'12-1231', l:'h', m:4720} ]}
+    ]},
+  { id:'k4', rotulo:'Caso 4', sub:'Devolución con nota de crédito',
+    doc:'Nota de crédito NC01-12 · 28/03/2025',
+    enunciado:'El 28 de marzo el cliente devuelve parte de la mercadería vendida al crédito y se emite la nota de crédito NC01-12. '+
+              'La mercadería vuelve al almacén, así que también se revierte su costo.',
+    compro:[ {e:'Valor de venta devuelto', v:1000}, {e:'IGV 18 %', v:180},
+             {e:'Total nota de crédito', v:1180}, {e:'Costo de lo devuelto', v:650} ],
+    asientos:[
+      { t:'Asiento 1 · Por la devolución con nota de crédito NC01-12', sol:[
+        {f:'709-7091', l:'d', m:1000}, {f:'40-40111', l:'d', m:180}, {f:'12-1212', l:'h', m:1180} ]},
+      { t:'Asiento 2 · Por el retorno de la mercadería al almacén', sol:[
+        {f:'20-20111', l:'d', m:650}, {f:'69-69111', l:'h', m:650} ]}
+    ]}
+];
+CASOS.forEach(function(c){
+  c.total=0;
+  c.asientos.forEach(function(a){ c.total+=a.sol.length; });
+});
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('asi_son')==='0') son=false; }catch(e){}
+function ac(){
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return null;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }catch(e){ return null; }
+}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  var c=ac(); if(!c) return;
+  try{
+    var t=c.currentTime+ini, o=c.createOscillator(), g=c.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(c.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sPop(){   nota(520,0,0.07,0.09,'square'); nota(780,0.04,0.07,0.05); }
+function sQuita(){ nota(360,0,0.07,0.06); }
+function sCuadra(){ [523.25,659.25,783.99].forEach(function(f,i){ nota(f,i*0.07,0.26,0.06); }); }
+function sMal(){   nota(150,0,0.24,0.07,'sawtooth'); nota(142,0.02,0.24,0.05,'sawtooth'); }
+function sFanfarria(){
+  [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  [1046.5,1318.5,1568].forEach(function(f){ nota(f,0.55,0.75,0.07); });
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('asi_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) sPop();
+});
+pintaSon();
+
+/* =================== formato =================== */
+function miles(n){
+  var neg=n<0, p=Math.abs(n).toFixed(2).split('.');
+  return (neg?'-':'')+p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'.'+p[1];
+}
+function soles(n){ return 'S/ '+miles(n); }
+function aNumero(t){
+  if(t===null||t===undefined) return null;
+  var s=String(t).replace(/[\s,]/g,'').replace(/S\/?/gi,'');
+  if(s==='') return null;
+  var n=parseFloat(s);
+  return isNaN(n) ? null : n;
+}
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* =================== estado =================== */
+var S={}, seq=1;
+CASOS.forEach(function(c){ S[c.id]={ lineas:[] }; });
+var activo=CASOS[0], revisado=false;
+
+function guarda(){
+  try{ localStorage.setItem('asi_avance', JSON.stringify(S)); }catch(e){}
+  empuja();
+}
+function carga(){
+  try{
+    var d=JSON.parse(localStorage.getItem('asi_avance')||'null');
+    if(!d) return;
+    CASOS.forEach(function(c){
+      if(d[c.id] && d[c.id].lineas && d[c.id].lineas.length){
+        S[c.id].lineas = d[c.id].lineas.filter(function(x){ return PORID[x.f] && x.a<c.asientos.length; })
+          .map(function(x){ return { uid:seq++, f:x.f, a:x.a, l:x.l, m:(typeof x.m==='number'?x.m:null) }; });
+      }
+    });
+  }catch(e){}
+}
+carga();
+
+function lineasDe(a, l){
+  return S[activo.id].lineas.filter(function(x){ return x.a===a && x.l===l; });
+}
+function sumaDe(a, l){
+  var s=0;
+  lineasDe(a,l).forEach(function(x){ if(typeof x.m==='number') s+=x.m; });
+  return s;
+}
+function puestas(){
+  return S[activo.id].lineas.filter(function(x){ return typeof x.m==='number'; }).length;
+}
+
+/* =================== calificacion =================== */
+function califica(c, est){
+  var res={ bien:0, total:c.total, faltan:0, sobran:0, detalle:{} };
+  c.asientos.forEach(function(as, ia){
+    var pend=as.sol.map(function(s){ return {f:s.f, l:s.l, m:s.m, usado:false}; });
+    est.lineas.filter(function(x){ return x.a===ia; }).forEach(function(x){
+      var i, e=null;
+      for(i=0;i<pend.length;i++) if(!pend[i].usado && pend[i].f===x.f && pend[i].l===x.l && pend[i].m===x.m){ e=pend[i]; break; }
+      if(e){ e.usado=true; res.bien++; res.detalle[x.uid]={ok:true, txt:'Correcto'}; return; }
+      for(i=0;i<pend.length;i++) if(!pend[i].usado && pend[i].f===x.f && pend[i].l===x.l){ e=pend[i]; break; }
+      if(e){ e.usado=true; res.detalle[x.uid]={ok:false, txt:'La cuenta y el lado están bien, revisa el importe'}; return; }
+      for(i=0;i<pend.length;i++) if(!pend[i].usado && pend[i].f===x.f){ e=pend[i]; break; }
+      if(e){ e.usado=true; res.detalle[x.uid]={ok:false, txt:'Esta cuenta va al otro lado del asiento'}; return; }
+      res.sobran++;
+      res.detalle[x.uid]={ok:false, txt:'Esta cuenta no corresponde a este asiento'};
+    });
+    pend.forEach(function(p){ if(!p.usado) res.faltan++; });
+  });
+  return res;
+}
+
+/* =================== pintado =================== */
+function pintaGuia(){
+  var h='', vistas={};
+  CUENTAS.forEach(function(c){
+    if(vistas[c.cta]) return;
+    vistas[c.cta]=1;
+    var d=(c.nat==='Deudora');
+    h+='<tr>'+
+       '<td class="cc" style="color:'+ELEM[c.el].c+'">'+esc(c.cta)+'</td>'+
+       '<td>'+esc(c.ctaN)+'</td>'+
+       '<td>'+esc(c.el)+' · '+esc(ELEM[c.el].n)+
+         (c.notaEl?'<br><span style="color:var(--o-muted)">'+esc(c.notaEl)+'</span>':'')+'</td>'+
+       '<td class="nat '+(d?'d':'h')+'">'+esc(c.nat)+'</td>'+
+       '<td class="nat '+(d?'d':'h')+'">'+esc(c.sube)+'</td>'+
+       '<td>'+esc(c.baja)+'</td>'+
+       '</tr>';
+  });
+  $('tGuia').innerHTML=h;
+}
+
+function pintaPestanas(){
+  var h='';
+  CASOS.forEach(function(c){
+    h+='<button type="button" role="tab" data-c="'+c.id+'" aria-selected="'+(c.id===activo.id?'true':'false')+'">'+
+       esc(c.rotulo)+'<span class="p">'+esc(c.sub)+'</span></button>';
+  });
+  $('pest').innerHTML=h;
+}
+
+function pintaCabecera(){
+  var c=activo;
+  $('cabCaso').innerHTML=
+    '<div style="font-size:15px;font-weight:800">'+esc(EMPRESA)+'</div>'+
+    '<div style="font-size:12.5px;font-weight:700;color:var(--o-muted);margin-top:1px">'+esc(c.doc)+'</div>'+
+    '<p style="font-size:13.5px;line-height:1.55;margin:9px 0 0">'+esc(c.enunciado)+'</p>';
+  var hc='';
+  c.compro.forEach(function(x){
+    hc+='<div class="c"><div class="e">'+esc(x.e)+'</div><div class="v">'+soles(x.v)+'</div></div>';
+  });
+  $('compro').innerHTML=hc;
+}
+
+function pintaCuentas(){
+  var h='';
+  CUENTAS.forEach(function(c){
+    h+='<div class="cta'+(sel===c.id?' sel':'')+'" data-f="'+c.id+'" style="--cc:'+c.color+'"'+
+       ' role="button" tabindex="0">'+
+         '<span class="c1">'+esc(c.cta)+' · '+esc(c.ctaN)+'</span>'+
+         '<span class="c2">'+esc(c.sub)+' '+esc(c.subN)+(c.ruta?'<br>'+esc(c.ruta):'')+'</span>'+
+         '<span class="c3">Naturaleza '+esc(c.nat.toLowerCase())+' · aumenta en el '+esc(c.sube)+'</span>'+
+       '</div>';
+  });
+  $('cuentas').innerHTML=h;
+}
+
+function pintaDiario(){
+  var c=activo, cal = revisado ? califica(c, S[c.id]) : null;
+  var h='';
+  c.asientos.forEach(function(as, ia){
+    var sd=sumaDe(ia,'d'), sh=sumaDe(ia,'h');
+    var hay=lineasDe(ia,'d').length+lineasDe(ia,'h').length;
+    var cuadra = hay>0 && Math.abs(sd-sh)<0.005 && sd>0;
+    h+='<div class="asiento" data-a="'+ia+'">'+
+         '<div class="cabA"><span>'+esc(as.t)+'</span>'+
+         '<span class="est '+(cuadra?'si':'no')+'">'+(cuadra?'✓ Cuadra':'Debe '+miles(sd)+' · Haber '+miles(sh))+'</span></div>'+
+         '<div class="lados">'+lado(ia,'d','DEBE',cal)+lado(ia,'h','HABER',cal)+'</div>'+
+       '</div>';
+  });
+  $('diario').innerHTML=h;
+  conecta();
+
+  var n=puestas();
+  $('cuenta').textContent = n+' de '+c.total+' líneas';
+  $('lleno').style.width = Math.min(100, n/c.total*100)+'%';
+}
+
+function lado(ia, l, tit, cal){
+  var ls=lineasDe(ia,l);
+  var h='<div class="lado '+l+' zona" data-a="'+ia+'" data-l="'+l+'">'+
+        '<div class="tl">'+tit+'</div><div class="lineas">';
+  if(!ls.length) h+='<div class="nada">Suelta aquí las cuentas del '+tit.toLowerCase()+'</div>';
+  ls.forEach(function(x){
+    var c=PORID[x.f], d=cal ? cal.detalle[x.uid] : null;
+    h+='<div class="linea'+(d ? (d.ok?' bien':' mal') : '')+'" data-u="'+x.uid+'">'+
+         '<span class="tx"><span class="l1">'+esc(c.cta)+' · '+esc(c.ctaN)+'</span>'+
+         '<span class="l2">'+esc(c.sub)+' '+esc(c.subN)+'</span></span>'+
+         '<input type="text" inputmode="decimal" autocomplete="off" data-u="'+x.uid+'"'+
+         ' aria-label="Importe" placeholder="0.00" value="'+(typeof x.m==='number'?miles(x.m):'')+'">'+
+         '<button class="qx" type="button" data-u="'+x.uid+'" aria-label="Quitar">×</button>'+
+         (d ? '<span class="pista">'+esc(d.txt)+'</span>' : '')+
+       '</div>';
+  });
+  h+='</div><div class="sumaL"><span>Suma '+tit.toLowerCase()+'</span><span class="n">'+miles(sumaDe(ia,l))+'</span></div></div>';
+  return h;
+}
+
+function pinta(){ pintaDiario(); pintaCuentas(); }
+
+/* =================== colocar y quitar =================== */
+var sel=null, arr=null, cuadraba={};
+
+function limpiaMarcas(){
+  if(!revisado) return;
+  revisado=false;
+  $('marcador').innerHTML='';
+}
+function agrega(ia, l, fid){
+  S[activo.id].lineas.push({ uid:seq++, f:fid, a:ia, l:l, m:null });
+  limpiaMarcas(); pinta(); guarda(); sPop();
+  var inp=$('diario').querySelector('.linea[data-u="'+(seq-1)+'"] input');
+  if(inp) inp.focus();
+}
+function quita(uid){
+  S[activo.id].lineas = S[activo.id].lineas.filter(function(x){ return String(x.uid)!==String(uid); });
+  limpiaMarcas(); pinta(); guarda(); sQuita();
+}
+function avisaCuadre(){
+  var c=activo, k;
+  c.asientos.forEach(function(as, ia){
+    var sd=sumaDe(ia,'d'), sh=sumaDe(ia,'h');
+    var hay=lineasDe(ia,'d').length+lineasDe(ia,'h').length;
+    var ok = hay>0 && sd>0 && Math.abs(sd-sh)<0.005;
+    k=c.id+'-'+ia;
+    if(listo && ok && !cuadraba[k]) sCuadra();
+    cuadraba[k]=ok;
+  });
+}
+
+/* =================== arrastre con pointer events =================== */
+function zonaEn(x,y){
+  var el=document.elementFromPoint(x,y);
+  return el ? el.closest('.lado.zona') : null;
+}
+function resaltar(z){
+  var ya=document.querySelector('.lado.sobre');
+  if(ya && ya!==z) ya.classList.remove('sobre');
+  if(z) z.classList.add('sobre');
+}
+function sueltaEn(z, fid){
+  resaltar(null);
+  if(!z || !PORID[fid]) return false;
+  agrega(parseInt(z.getAttribute('data-a'),10), z.getAttribute('data-l'), fid);
+  return true;
+}
+function seleccionar(fid){
+  sel = (sel===fid) ? null : fid;
+  pintaCuentas();
+  if(sel) nota(700,0,0.06,0.05);
+}
+
+document.addEventListener('pointerdown', function(ev){
+  var c = ev.target.closest ? ev.target.closest('.cta') : null;
+  if(!c || ev.button>0) return;
+  ev.preventDefault();
+  arr={ id:c.getAttribute('data-f'), x0:ev.clientX, y0:ev.clientY, mov:false, el:c, gh:null, pid:ev.pointerId };
+  try{ c.setPointerCapture(ev.pointerId); }catch(e){}
+});
+document.addEventListener('pointermove', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  if(!arr.mov && Math.abs(ev.clientX-arr.x0)+Math.abs(ev.clientY-arr.y0) < 7) return;
+  if(!arr.mov){
+    arr.mov=true;
+    var g=arr.el.cloneNode(true);
+    g.classList.add('fantasma'); g.classList.remove('sel');
+    document.body.appendChild(g);
+    arr.gh=g; arr.el.classList.add('viaja');
+  }
+  arr.gh.style.left=(ev.clientX-130)+'px';
+  arr.gh.style.top =(ev.clientY-26)+'px';
+  resaltar(zonaEn(ev.clientX, ev.clientY));
+  var alto=window.innerHeight;
+  if(ev.clientY < 110) window.scrollBy(0,-16);
+  else if(ev.clientY > alto-90) window.scrollBy(0,16);
+});
+document.addEventListener('pointerup', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  var a=arr; arr=null;
+  if(a.gh) a.gh.remove();
+  if(a.el) a.el.classList.remove('viaja');
+  if(a.mov){ sueltaEn(zonaEn(ev.clientX, ev.clientY), a.id); sel=null; pintaCuentas(); }
+  else seleccionar(a.id);
+});
+document.addEventListener('pointercancel', function(ev){
+  if(!arr || ev.pointerId!==arr.pid) return;
+  if(arr.gh) arr.gh.remove();
+  if(arr.el) arr.el.classList.remove('viaja');
+  resaltar(null); arr=null;
+});
+document.addEventListener('keydown', function(ev){
+  var c = ev.target.closest ? ev.target.closest('.cta') : null;
+  if(c && (ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); seleccionar(c.getAttribute('data-f')); }
+  if(ev.key==='Escape'){ if(sel){ sel=null; pintaCuentas(); } cierraVent(); }
+});
+
+function conecta(){
+  var zs=$('diario').querySelectorAll('.lado.zona');
+  Array.prototype.forEach.call(zs, function(z){
+    z.addEventListener('click', function(ev){
+      if(ev.target.closest('input') || ev.target.closest('.qx')) return;
+      if(!sel) return;
+      var f=sel; sel=null; sueltaEn(z, f);
+    });
+  });
+  var inps=$('diario').querySelectorAll('.linea input');
+  Array.prototype.forEach.call(inps, function(inp){
+    var uid=inp.getAttribute('data-u');
+    inp.addEventListener('input', function(){
+      var n=aNumero(inp.value);
+      S[activo.id].lineas.forEach(function(x){ if(String(x.uid)===uid) x.m=n; });
+      limpiaMarcas();
+      actualizaSumas();
+      guarda();
+    });
+    inp.addEventListener('blur', function(){
+      var v=null;
+      S[activo.id].lineas.forEach(function(x){ if(String(x.uid)===uid) v=x.m; });
+      inp.value = (typeof v==='number') ? miles(v) : '';
+      pintaDiario(); avisaCuadre();
+    });
+  });
+  var qs=$('diario').querySelectorAll('.qx');
+  Array.prototype.forEach.call(qs, function(b){
+    b.addEventListener('click', function(ev){ ev.stopPropagation(); quita(b.getAttribute('data-u')); });
+  });
+}
+
+/* actualiza sumas y cuadre sin volver a dibujar (para no perder el foco) */
+function actualizaSumas(){
+  var c=activo;
+  c.asientos.forEach(function(as, ia){
+    var caja=$('diario').querySelector('.asiento[data-a="'+ia+'"]');
+    if(!caja) return;
+    var sd=sumaDe(ia,'d'), sh=sumaDe(ia,'h');
+    var ns=caja.querySelectorAll('.sumaL .n');
+    if(ns[0]) ns[0].textContent=miles(sd);
+    if(ns[1]) ns[1].textContent=miles(sh);
+    var hay=lineasDe(ia,'d').length+lineasDe(ia,'h').length;
+    var ok = hay>0 && sd>0 && Math.abs(sd-sh)<0.005;
+    var est=caja.querySelector('.est');
+    est.className='est '+(ok?'si':'no');
+    est.textContent = ok ? '✓ Cuadra' : 'Debe '+miles(sd)+' · Haber '+miles(sh);
+  });
+  var n=puestas();
+  $('cuenta').textContent = n+' de '+c.total+' líneas';
+  $('lleno').style.width = Math.min(100, n/c.total*100)+'%';
+}
+
+/* =================== revisar, solución, reinicio =================== */
+function revisa(){
+  revisado=true;
+  var c=activo, r=califica(c, S[c.id]);
+  pintaDiario();
+  var todo = (r.bien===c.total && r.sobran===0);
+  var extra=[];
+  if(r.faltan) extra.push(r.faltan+(r.faltan===1?' línea por colocar':' líneas por colocar'));
+  if(r.sobran) extra.push(r.sobran+(r.sobran===1?' línea de más':' líneas de más'));
+  $('marcador').innerHTML=
+    '<div class="marcador '+(todo?'todo':'algo')+'">'+
+      '<span class="big">'+r.bien+' de '+c.total+'</span>'+
+      '<span>'+(todo
+        ? 'líneas correctas. ¡Caso resuelto! Los asientos cuadran y las cuentas están en el lado que les toca.'
+        : 'líneas correctas'+(extra.length?' · '+extra.join(' · '):'')+'. Revisa las marcadas en rojo.')+
+      '</span></div>';
+  if(todo){ sFanfarria(); confeti(); } else sMal();
+  guarda();
+}
+function verSolucion(){
+  var c=activo;
+  S[c.id].lineas=[];
+  c.asientos.forEach(function(as, ia){
+    as.sol.forEach(function(x){ S[c.id].lineas.push({ uid:seq++, f:x.f, a:ia, l:x.l, m:x.m }); });
+  });
+  revisado=true; pinta();
+  $('marcador').innerHTML='<div class="marcador algo"><span class="big">Solución</span>'+
+    '<span>Asientos completos para revisar en clase. Todos cuadran.</span></div>';
+  nota(620,0,0.1,0.05); guarda(); avisaCuadre();
+}
+function reinicia(){
+  S[activo.id].lineas=[]; sel=null; revisado=false;
+  $('marcador').innerHTML='';
+  activo.asientos.forEach(function(a,i){ cuadraba[activo.id+'-'+i]=false; });
+  pinta(); guarda(); sQuita();
+}
+
+/* =================== confeti =================== */
+function confeti(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv=$('confeti'), g=cv.getContext('2d');
+  cv.width=window.innerWidth; cv.height=window.innerHeight; cv.style.display='block';
+  var tonos=['#2E75B6','#E07B39','#2E8B57','#7B5EA7','#C0392B','#E8B84B'], ps=[], i;
+  for(i=0;i<110;i++) ps.push({ x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.45,
+    vx:(Math.random()-0.5)*2.4, vy:2.4+Math.random()*3.2, a:Math.random()*Math.PI,
+    va:(Math.random()-0.5)*0.24, w:5+Math.random()*7, h:8+Math.random()*8, c:tonos[i%tonos.length] });
+  var t0=performance.now();
+  (function paso(t){
+    var dt=t-t0;
+    g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(function(p){
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.a+=p.va;
+      g.save(); g.translate(p.x,p.y); g.rotate(p.a);
+      g.fillStyle=p.c; g.globalAlpha=Math.max(0,1-dt/2600);
+      g.fillRect(-p.w/2,-p.h/2,p.w,p.h); g.restore();
+    });
+    if(dt<2600) requestAnimationFrame(paso);
+    else { g.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })(t0);
+}
+
+/* =================== sala en vivo =================== */
+var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
+var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
+var TABLA=SUPA+'/rest/v1/sala_asientos';
+function hdr(extra){
+  var o={ apikey:ANON, Authorization:'Bearer '+ANON, 'Content-Type':'application/json' };
+  if(extra) for(var k in extra) o[k]=extra[k];
+  return o;
+}
+var sala=null, yo=null, tSala=null, tEnvio=null, filas=[], fallos=0;
+
+function red(clase, txt){
+  var e=$('estadoRed');
+  e.className='estadoRed '+clase;
+  e.textContent=txt;
+}
+function resumen(){
+  var c=activo, r=califica(c, S[c.id]);
+  return {
+    caso:c.id, casoN:c.rotulo+' · '+c.sub,
+    puestas:puestas(), total:c.total,
+    bien:(revisado ? r.bien : null),
+    lineas:S[c.id].lineas.map(function(x){
+      return { c:PORID[x.f].cta+' '+PORID[x.f].sub, a:x.a+1, l:x.l, m:x.m };
+    }).slice(0,40)
+  };
+}
+function empuja(){
+  if(!sala || !yo) return;
+  clearTimeout(tEnvio);
+  tEnvio=setTimeout(function(){
+    var cuerpo=[{ sala:sala, alumno:yo, caso:activo.id, estado:resumen(), actualizado:new Date().toISOString() }];
+    fetch(TABLA+'?on_conflict=sala,alumno', {
+      method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+      body:JSON.stringify(cuerpo)
+    }).then(function(r){
+      if(!r.ok) return Promise.reject(r.status);
+      fallos=0; trae();          /* refresca el tablero apenas se guarda el cambio */
+    }).catch(function(e){ falla(e); });
+  }, 900);
+}
+function trae(){
+  if(!sala) return;
+  var desde=new Date(Date.now()-3*3600*1000).toISOString();
+  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(sala)+
+        '&actualizado=gte.'+desde+'&order=actualizado.desc&limit=80', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){
+      fallos=0; filas=rows||[];
+      red('vivo','En vivo · '+filas.length+(filas.length===1?' persona en la sala ':' personas en la sala ')+sala);
+      pintaVivo();
+    })
+    .catch(function(e){ falla(e); });
+}
+function falla(e){
+  fallos++;
+  if(fallos>=2) red('malo','Sin conexión con la sala ('+e+') · sigues trabajando en tu equipo');
+}
+function pintaVivo(){
+  if(!sala){ $('vivo').innerHTML=''; return; }
+  if(!filas.length){
+    $('vivo').innerHTML='<div class="vacio-vivo">Todavía no hay nadie más en la sala <b>'+esc(sala)+'</b>.</div>';
+    return;
+  }
+  var ahora=Date.now(), h='';
+  filas.forEach(function(f){
+    var e=f.estado||{}, tot=e.total||1, pu=e.puestas||0;
+    var seg=Math.max(0, Math.round((ahora-new Date(f.actualizado).getTime())/1000));
+    var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
+    var fin = (typeof e.bien==='number' && e.bien===tot);
+    h+='<div class="alumno'+(f.alumno===yo?' yo':'')+(fin?' termino':'')+'" data-a="'+esc(f.alumno)+'" role="button" tabindex="0">'+
+         '<span class="nm">'+esc(f.alumno)+(f.alumno===yo?' (tú)':'')+'</span>'+
+         '<span class="cs">'+esc(e.casoN||'—')+'</span>'+
+         '<span class="riel"><span class="lleno" style="width:'+Math.min(100,pu/tot*100)+'%"></span></span>'+
+         '<span class="dato"><span>'+pu+' de '+tot+' líneas</span><b>'+
+           (typeof e.bien==='number' ? e.bien+' correctas' : 'sin revisar')+'</b></span>'+
+         '<span class="dato"><span>'+hace+'</span><span>ver detalle ›</span></span>'+
+       '</div>';
+  });
+  $('vivo').innerHTML=h;
+}
+function entraSala(){
+  var n=$('iNombre').value.trim(), s=($('iSala').value.trim()||'PCGE').toUpperCase();
+  if(n.length<2){ $('iNombre').focus(); red('malo','Escribe tu nombre para entrar'); return; }
+  yo=n; sala=s;
+  try{ localStorage.setItem('asi_nombre',n); localStorage.setItem('asi_sala',s); }catch(e){}
+  $('btnEntrar').hidden=true; $('btnSalirSala').hidden=false;
+  $('iNombre').disabled=true; $('iSala').disabled=true;
+  red('vivo','Conectando…');
+  fallos=0; empuja(); trae();
+  if(!tSala) tSala=setInterval(trae, 3000);
+  nota(700,0,0.08,0.06);
+}
+function salirSala(){
+  sala=null; yo=null; filas=[];
+  if(tSala){ clearInterval(tSala); tSala=null; }
+  $('btnEntrar').hidden=false; $('btnSalirSala').hidden=true;
+  $('iNombre').disabled=false; $('iSala').disabled=false;
+  try{ localStorage.removeItem('asi_sala'); }catch(e){}
+  red('solo','Modo individual');
+  pintaVivo();
+}
+$('btnEntrar').addEventListener('click', entraSala);
+$('btnSalirSala').addEventListener('click', salirSala);
+$('iNombre').addEventListener('keydown', function(e){ if(e.key==='Enter') entraSala(); });
+$('iSala').addEventListener('keydown', function(e){ if(e.key==='Enter') entraSala(); });
+
+/* ventana con el detalle de un alumno */
+var vent=$('vent');
+function cierraVent(){ vent.classList.add('oculto'); }
+$('vivo').addEventListener('click', function(ev){
+  var t=ev.target.closest('.alumno');
+  if(!t) return;
+  var nom=t.getAttribute('data-a'), f=null;
+  filas.forEach(function(x){ if(x.alumno===nom) f=x; });
+  if(!f) return;
+  var e=f.estado||{}, h='';
+  (e.lineas||[]).forEach(function(l){
+    h+='<div class="ln"><span>Asiento '+l.a+' · '+esc(l.c)+'</span>'+
+       '<span><span class="s '+l.l+'">'+(l.l==='d'?'DEBE':'HABER')+'</span> '+
+       (typeof l.m==='number'?miles(l.m):'—')+'</span></div>';
+  });
+  if(!h) h='<p>Todavía no ha colocado ninguna cuenta.</p>';
+  vent.innerHTML='<button class="x" type="button" aria-label="Cerrar">×</button>'+
+    '<div class="vt">'+esc(f.alumno)+'</div>'+
+    '<div class="vq"><p style="margin:0 0 6px;color:var(--o-muted)">'+esc(e.casoN||'')+'</p>'+h+'</div>';
+  var r=t.getBoundingClientRect();
+  vent.classList.remove('oculto');
+  var w=vent.offsetWidth, hh=vent.offsetHeight;
+  vent.style.left=Math.max(12, Math.min(window.innerWidth-w-12, r.left))+'px';
+  vent.style.top =Math.max(12, Math.min(window.innerHeight-hh-12, r.bottom+8))+'px';
+  vent.querySelector('.x').addEventListener('click', cierraVent);
+  nota(660,0,0.07,0.05);
+});
+document.addEventListener('click', function(ev){
+  if(vent.classList.contains('oculto')) return;
+  if(!ev.target.closest('#vent') && !ev.target.closest('.alumno')) cierraVent();
+});
+
+/* =================== arranque =================== */
+var listo=false;
+function cambiaCaso(id){
+  CASOS.forEach(function(c){ if(c.id===id) activo=c; });
+  sel=null; revisado=false; $('marcador').innerHTML='';
+  pintaPestanas(); pintaCabecera(); pinta();
+  activo.asientos.forEach(function(a,i){ cuadraba[activo.id+'-'+i]=false; });
+  avisaCuadre(); empuja();
+  try{ localStorage.setItem('asi_caso', id); }catch(e){}
+}
+$('pest').addEventListener('click', function(ev){
+  var b=ev.target.closest('button[data-c]');
+  if(b){ cambiaCaso(b.getAttribute('data-c')); nota(700,0,0.06,0.05); }
+});
+$('btnRev').addEventListener('click', revisa);
+$('btnSol').addEventListener('click', verSolucion);
+$('btnReset').addEventListener('click', reinicia);
+
+(function inicio(){
+  pintaGuia();
+  var id=CASOS[0].id;
+  try{
+    var g=localStorage.getItem('asi_caso');
+    CASOS.forEach(function(c){ if(c.id===g) id=g; });
+    $('iNombre').value=localStorage.getItem('asi_nombre')||'';
+    $('iSala').value=localStorage.getItem('asi_sala')||'PCGE';
+  }catch(e){}
+  cambiaCaso(id);
+  listo=true;
+})();
+
+})();
+</script>
+
+</body>
+</html>
