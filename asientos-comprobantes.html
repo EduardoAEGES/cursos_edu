@@ -35,6 +35,7 @@
 
   /* ---------- el comprobante ---------- */
   .tablero{ display:grid; grid-template-columns:1fr; gap:16px; }
+  .tablero > *{ min-width:0; }
   @media (min-width:1080px){
     .tablero{ grid-template-columns:376px 1fr; align-items:start; }
     .docu{ position:sticky; top:96px; }
@@ -120,6 +121,34 @@
   .marcador.todo{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
   .marcador.algo{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
   .marcador .big{ font-size:22px; font-weight:800; }
+
+  .asientoT tr.gm{ display:none; }
+  @media (max-width:640px){
+    .asientoT{ display:block; }
+    .asientoT thead{ display:none; }
+    .asientoT tbody, .asientoT tfoot{ display:block; }
+    .asientoT tr{ display:block; border:1.5px solid var(--o-border); border-radius:10px;
+                  margin-bottom:8px; overflow:hidden; background:#fff; }
+    .asientoT tr.gm{ display:block; border:0; background:transparent; margin:14px 0 6px; }
+    .asientoT tr.gm td{ display:block; border:0; background:#EEF2F7; border-radius:8px;
+                        padding:7px 10px; font-size:11.5px; font-weight:800; color:var(--cod); }
+    .asientoT td{ display:block; width:auto !important; border:0; border-top:1px solid var(--o-line); }
+    .asientoT tr > td:first-child{ border-top:0; }
+    .asientoT td.enc{ display:none; }
+    .asientoT td.cel{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+                      padding:0 0 0 10px; }
+    .asientoT td.cel::before{ content:attr(data-et); font-size:10.5px; font-weight:800;
+                              letter-spacing:.06em; color:var(--o-muted); flex:none; }
+    .asientoT td.cel[data-et="DEBE"]::before{ color:var(--debe); }
+    .asientoT td.cel[data-et="HABER"]::before{ color:var(--haber); }
+    .asientoT td.cel .celda, .asientoT td.cel input{ flex:1; min-width:0; text-align:right; }
+    .asientoT tfoot tr{ background:#F3F5F8; }
+    .asientoT tfoot td{ display:flex; justify-content:space-between; gap:10px; padding:7px 10px; }
+    .asientoT tfoot .et{ text-align:left; }
+    .asientoT tfoot .n::before{ content:attr(data-et); font-weight:800; color:var(--o-muted); }
+    .asientoT tfoot .n{ display:flex; justify-content:space-between; }
+  }
+
   #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
 </style>
 </head>
@@ -229,6 +258,7 @@
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
 <script src="dinamica.js"></script>
+<script src="calcigv.js"></script>
 <script>
 (function(){
 'use strict';
@@ -507,9 +537,9 @@ function pintaDiario(){
          (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
          (d ? '<span class="pq">'+Dinamica.motivo(esp.c, esp.l, esp.q)+'</span>' : '')+
        '</td>'+
-       '<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="d"'+
+       '<td class="cel" data-et="DEBE"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="d"'+
        ' aria-label="Debe línea '+(i+1)+'" placeholder="—" value="'+(typeof f.d==='number'?miles(f.d):'')+'"></td>'+
-       '<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="h"'+
+       '<td class="cel" data-et="HABER"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="h"'+
        ' aria-label="Haber línea '+(i+1)+'" placeholder="—" value="'+(typeof f.h==='number'?miles(f.h):'')+'"></td></tr>';
   });
   var sd=sumaD(c), sh=sumaH(c);
