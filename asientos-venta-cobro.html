@@ -56,6 +56,7 @@
   .tres .campo.mal input{ background:#FDECEA; border-color:var(--mal); color:#8B1A10; }
 
   .tablero{ display:grid; grid-template-columns:1fr; gap:15px; }
+  .tablero > *{ min-width:0; }
   @media (min-width:1080px){
     .tablero{ grid-template-columns:280px 1fr; align-items:start; }
     .plan{ position:sticky; top:96px; }
@@ -163,6 +164,42 @@
   .doc .pie{ padding:7px 11px; font-size:11px; color:#8A4A1E; background:#FFF8F2;
              border-top:1px dashed var(--o-border); }
 
+
+  /* ---------- en el teléfono el asiento se apila ---------- */
+  .asientoT tr.gm{ display:none; }
+  @media (max-width:640px){
+    .asientoT{ display:block; }
+    .asientoT thead{ display:none; }
+    .asientoT tbody, .asientoT tfoot{ display:block; }
+    .asientoT tr{ display:block; border:1.5px solid var(--o-border); border-radius:10px;
+                  margin-bottom:8px; overflow:hidden; background:#fff; }
+    .asientoT tr.gm{ display:block; border:0; background:transparent; margin:14px 0 6px; }
+    .asientoT tr.gm td{ display:block; border:0; background:#EEF2F7; border-radius:8px;
+                        padding:7px 10px; font-size:11.5px; font-weight:800; color:var(--cod);
+                        letter-spacing:.03em; }
+    .asientoT tr.gm td .f{ display:block; font-weight:600; color:var(--o-muted); font-size:11px; }
+    .asientoT td{ display:block; width:auto !important; border:0;
+                  border-top:1px solid var(--o-line); }
+    .asientoT tr > td:first-child{ border-top:0; }
+    .asientoT td.enc{ display:none; }
+    .asientoT td.cod, .asientoT td.cel{ width:auto !important; }
+    .asientoT td.cod .celda{ justify-content:flex-start; }
+    .asientoT td.cel{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+                      padding:0 0 0 10px; }
+    .asientoT td.cel::before{ content:attr(data-et); font-size:10.5px; font-weight:800;
+                              letter-spacing:.06em; color:var(--o-muted); flex:none; }
+    .asientoT td.cel[data-et="DEBE"]::before{ color:var(--debe); }
+    .asientoT td.cel[data-et="HABER"]::before{ color:var(--haber); }
+    .asientoT td.cel .celda, .asientoT td.cel input{ flex:1; min-width:0; }
+    .asientoT td.cel input{ text-align:right; }
+    .asientoT tfoot tr{ background:#F3F5F8; }
+    .asientoT tfoot td{ display:flex; justify-content:space-between; gap:10px; padding:7px 10px; }
+    .asientoT tfoot .et{ text-align:left; }
+    .asientoT tfoot .n::before{ content:attr(data-et); font-weight:800; color:var(--o-muted); }
+    .asientoT tfoot .n{ display:flex; justify-content:space-between; }
+    .asientoT td.cel.sinDato{ display:none; }
+  }
+
   #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
 </style>
 </head>
@@ -257,6 +294,7 @@
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
 <script src="dinamica.js"></script>
+<script src="calcigv.js"></script>
 <script>
 (function(){
 'use strict';
@@ -301,19 +339,19 @@ var BASE=[
     cliente:'PIRQA CONSTRUCTORES S.A.C.', ruc:'RUC 20603383258', cond:'Crédito 30 días',
     item:['6.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','2,650.00'] },
   { n:2,  modo:'arr', dar:{cuentas:'todas', importes:'menos3'},
-    vv:8000, cobro:'banco', rel:'t',
+    vv:8000, cobro:'caja', rel:'t',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0103', fecha:'09/02/2026', fIso:'2026-02-09',
-    cliente:'SERVICIOS ANDINOS S.A.C.', ruc:'RUC 20455566677', cond:'Contado — transferencia',
+    cliente:'SERVICIOS ANDINOS S.A.C.', ruc:'RUC 20455566677', cond:'Contado — efectivo',
     item:['4.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','2,000.00'] },
   { n:3,  modo:'arr', dar:{cuentas:'todas', importes:'ninguno'},
-    vv:6000, cobro:'caja', rel:'t',
+    vv:6000, cobro:'yape', rel:'t',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0104', fecha:'11/02/2026', fIso:'2026-02-11',
-    cliente:'PIRQA CONSTRUCTORES S.A.C.', ruc:'RUC 20603383258', cond:'Contado — efectivo',
+    cliente:'PIRQA CONSTRUCTORES S.A.C.', ruc:'RUC 20603383258', cond:'Contado — Yape',
     item:['5.00','UNIDAD','MONITOR LED 24 PULGADAS','1,200.00'] },
   { n:4,  modo:'arr', dar:{cuentas:'primera', importes:'ninguno'},
-    vv:3000, cobro:'caja', rel:'t',
+    vv:3000, cobro:'cheque', parte:0.5, rel:'t',
     tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'B001-0210', fecha:'12/02/2026', fIso:'2026-02-12',
-    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Contado — efectivo',
+    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Crédito — cobro parcial con cheque',
     item:['3.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','1,000.00'] },
   { n:5,  modo:'cmp', dar:{cifras:'todas'},
     vv:8900, cobro:'banco', rel:'t',
@@ -321,37 +359,46 @@ var BASE=[
     cliente:'SERVICIOS ANDINOS S.A.C.', ruc:'RUC 20455566677', cond:'Contado — transferencia',
     item:['10.00','UNIDAD','IMPRESORA MULTIFUNCIONAL','890.00'] },
   { n:6,  modo:'arr', dar:{cuentas:'ninguna', importes:'ninguno'},
-    vv:12500, cobro:'banco', rel:'t',
+    vv:12500, cobro:'caja', parte:0.4, rel:'t',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0110', fecha:'19/02/2026', fIso:'2026-02-19',
-    cliente:'INVERSIONES QUILCA S.A.C.', ruc:'RUC 20477788899', cond:'Crédito 15 días',
+    cliente:'INVERSIONES QUILCA S.A.C.', ruc:'RUC 20477788899', cond:'Crédito — cobro parcial en efectivo',
     item:['5.00','UNIDAD','LAPTOP CORE I7 32GB RAM','2,500.00'] },
   { n:7,  modo:'cmp', dar:{cifras:'vv'},
-    vv:1600, cobro:'caja', rel:'t',
+    vv:1600, cobro:'yape', rel:'t',
     tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'B001-0233', fecha:'21/02/2026', fIso:'2026-02-21',
-    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Contado — efectivo',
+    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Contado — Yape',
     item:['2.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','800.00'] },
   { n:8,  modo:'cmp', dar:{cifras:'pc'},
-    vv:30000, cobro:'banco', rel:'r',
+    vv:30000, cobro:'banco', parte:0.6, rel:'r',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0112', fecha:'24/02/2026', fIso:'2026-02-24',
-    cliente:'GORRIONES LOGÍSTICA S.A.C.', ruc:'RUC 20511122233', cond:'Crédito 45 días',
+    cliente:'GORRIONES LOGÍSTICA S.A.C.', ruc:'RUC 20511122233', cond:'Crédito — cobro parcial por transferencia',
     item:['4.00','UNIDAD','SERVIDOR RACK 32GB RAM','7,500.00'] },
   { n:9,  modo:'cmp', dar:{cifras:'ninguna'},
-    vv:4400, cobro:'caja', rel:'t',
+    vv:4400, cobro:'cheque', rel:'t',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0115', fecha:'26/02/2026', fIso:'2026-02-26',
-    cliente:'COMERCIAL SAN JUAN E.I.R.L.', ruc:'RUC 20422233344', cond:'Contado — efectivo',
+    cliente:'COMERCIAL SAN JUAN E.I.R.L.', ruc:'RUC 20422233344', cond:'Contado — cheque',
     item:['8.00','UNIDAD','DISCO SÓLIDO 1TB','550.00'] },
   { n:10,  modo:'cmp', dar:{cifras:'ninguna'},
-    vv:21200, cobro:'banco', rel:'r',
+    vv:21200, cobro:'banco', parte:0.3, rel:'r',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0118', fecha:'28/02/2026', fIso:'2026-02-28',
-    cliente:'GORRIONES LOGÍSTICA S.A.C.', ruc:'RUC 20511122233', cond:'Contado — transferencia',
+    cliente:'GORRIONES LOGÍSTICA S.A.C.', ruc:'RUC 20511122233', cond:'Crédito — cobro parcial por transferencia',
     item:['8.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','2,650.00'] }
 ];
 
 var CASOS=BASE.map(function(b){
   var igv=r2(b.vv*0.18), pc=r2(b.vv+igv);
   var cxc = b.rel==='t' ? '1212' : '1312';
-  var caja= b.cobro==='caja' ? '101' : '1041';
-  var dCaja = b.cobro==='caja' ? 'entra el dinero a la caja' : 'entra el dinero al banco';
+  var MEDIOS={
+    caja:   { c:'101',  n:'en efectivo',              q:'entra el dinero a la caja' },
+    banco:  { c:'1041', n:'con transferencia bancaria', q:'entra el dinero a la cuenta corriente' },
+    yape:   { c:'1051', n:'por Yape',                 q:'entra el dinero al monedero digital' },
+    cheque: { c:'1032', n:'con un cheque',            q:'el cheque todavía está en tránsito' }
+  };
+  var md=MEDIOS[b.cobro];
+  var cobrado = b.parte ? r2(pc*b.parte) : pc;
+  var gCobro = b.parte
+    ? ('Por el cobro parcial ('+Math.round(b.parte*100)+' %) '+md.n)
+    : ('Por el cobro '+md.n);
   var c={
     id:'p'+b.n, n:b.n, modo:b.modo, dar:b.dar,
     tit:'Caso '+b.n, sub:(b.modo==='arr'?'Arrastrar':'Comprobante'),
@@ -359,15 +406,18 @@ var CASOS=BASE.map(function(b){
     tipo:b.tipo, serie:b.serie, fecha:b.fecha, fIso:b.fIso,
     cliente:b.cliente, ruc:b.ruc, rel:(b.rel==='t'?'Tercero':'Empresa relacionada'),
     cond:b.cond, item:b.item,
-    nota:(b.cobro==='caja' ? 'Cobrada en efectivo.' : 'Cobrada con transferencia a la cuenta corriente.'),
+    nota:(b.parte ? 'Cobrada solo el '+Math.round(b.parte*100)+' % '+md.n+
+                    ' (S/ '+miles(cobrado)+'); el resto queda pendiente.'
+                  : 'Cobrada al 100 % '+md.n+'.'),
     grupos:[
       { g:'Por la venta según '+b.serie, sol:[
         {c:cxc,    l:'d', m:pc,      q:'el cliente nos debe el importe total'},
         {c:'40111',l:'h', m:igv,     q:'el IGV que se debe a la SUNAT'},
         {c:'70121',l:'h', m:b.vv,    q:'el valor de venta es el ingreso'} ]},
-      { g:'Por el cobro', sol:[
-        {c:caja,   l:'d', m:pc,      q:dCaja},
-        {c:cxc,    l:'h', m:pc,      q:'ya no nos deben nada'} ]}
+      { g:gCobro, sol:[
+        {c:md.c,   l:'d', m:cobrado, q:md.q},
+        {c:cxc,    l:'h', m:cobrado, q:(b.parte ? 'baja la deuda del cliente en esa parte'
+                                                : 'ya no nos deben nada')} ]}
     ]
   };
   c.plano=[];
@@ -498,8 +548,8 @@ function montosLibres(c){
 function cuentasDelCaso(c){
   var vistas={}, orden=[];
   c.plano.forEach(function(p, i){ if(!c.dado.cuentas[i] && !vistas[p.s.c]){ vistas[p.s.c]=1; orden.push(p.s.c); } });
-  var VEC={ '1212':'1312','1312':'1212','101':'1041','1041':'101',
-            '70121':'40111','40111':'70121' };
+  var VEC={ '1212':'1312','1312':'1212','101':'1041','1041':'1051',
+            '1051':'1032','1032':'101','70121':'40111','40111':'70121' };
   orden.slice().forEach(function(x){
     var v=VEC[x];
     if(v && !vistas[v]){ vistas[v]=1; orden.push(v); }
@@ -662,6 +712,7 @@ function pintaDiario(){
     sd=r2(sd); sh=r2(sh);
     h+='<table class="asientoT"><thead><tr><th>FECHA</th><th>GLOSA</th><th>CÓDIGO</th>'+
        '<th>DENOMINACIÓN</th><th class="d">DEBE</th><th class="h">HABER</th></tr></thead><tbody>';
+    h+='<tr class="gm"><td colspan="6">'+esc(gr.g)+'<span class="f">'+esc(c.fecha)+'</span></td></tr>';
     idx.forEach(function(i, k){
       var f=e.filas[i], d=r?r.filas[i]:null, esp=c.plano[i].s;
       var cls = d ? (d.ok?' class="bien"':' class="mal"') : '';
@@ -691,24 +742,26 @@ function pintaDiario(){
          (d ? '<span class="pq">'+Dinamica.motivo(esp.c, esp.l, esp.q)+'</span>' : '')+'</td>';
       /* debe y haber */
       ['d','h'].forEach(function(l){
+        var ET=(l==='d'?'DEBE':'HABER');
         if(c.dado.importes[i]){
-          h+='<td class="cel fijo"><div class="celda">'+
-             (typeof f[l]==='number'?miles(f[l]):'')+'</div></td>';
+          h+='<td class="cel fijo'+(typeof f[l]==='number'?'':' sinDato')+'" data-et="'+ET+'">'+
+             '<div class="celda">'+(typeof f[l]==='number'?miles(f[l]):'')+'</div></td>';
         } else if(c.modo==='arr'){
-          h+='<td class="cel zona" data-r="'+i+'" data-t="'+l+'"><div class="celda">'+
+          h+='<td class="cel zona" data-et="'+ET+'" data-r="'+i+'" data-t="'+l+'"><div class="celda">'+
              (typeof f[l]==='number' ? miles(f[l]) : '<span class="vacia">—</span>')+'</div>'+
              (typeof f[l]==='number' ? '<button class="qx" type="button" data-r="'+i+'" data-t="'+l+
               '" aria-label="Quitar">×</button>' : '')+'</td>';
         } else {
-          h+='<td class="cel"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="'+l+'"'+
+          h+='<td class="cel" data-et="'+ET+'"><input type="text" inputmode="decimal" data-r="'+i+'" data-k="'+l+'"'+
              ' aria-label="'+(l==='d'?'Debe':'Haber')+' línea '+(i+1)+'" placeholder="—" value="'+
              (typeof f[l]==='number'?miles(f[l]):'')+'"></td>';
         }
       });
       h+='</tr>';
     });
-    h+='</tbody><tfoot><tr><td class="et" colspan="4">Sumas iguales</td><td class="n">'+miles(sd)+
-       '</td><td class="n">'+miles(sh)+'</td></tr></tfoot></table>';
+    h+='</tbody><tfoot><tr><td class="et" colspan="4">Sumas iguales</td>'+
+       '<td class="n" data-et="Debe">'+miles(sd)+'</td>'+
+       '<td class="n" data-et="Haber">'+miles(sh)+'</td></tr></tfoot></table>';
     var ok=Math.abs(sd-sh)<0.005 && sd>0;
     h+='<div class="cuadre '+(ok?'si':'no')+'" style="margin-bottom:16px">'+(ok
       ? '✓ Cuadra: '+soles(sd)
