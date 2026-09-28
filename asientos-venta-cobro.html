@@ -101,6 +101,7 @@
   .asientoT td.den .pi{ display:block; margin-top:3px; font-size:11px; font-weight:700; }
   .asientoT td.den .pi.b{ color:#14532D; }
   .asientoT td.den .pi.m{ color:#8B1A10; }
+  .asientoT td.den .pq{ display:block; margin-top:3px; font-size:11px; color:#14532D; line-height:1.45; }
   .celda{ padding:8px 9px; min-height:40px; display:flex; align-items:center; }
   td.zona{ cursor:pointer; position:relative; }
   td.zona.cod{ width:118px; }
@@ -186,13 +187,13 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Un asiento resuelto, paso a paso</h2>
-    <div id="ejemplo"></div>
+    <h2 class="o-section-title">Entrar a la sala</h2>
+    <div id="aula"></div>
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Entrar a la sala</h2>
-    <div id="aula"></div>
+    <h2 class="o-section-title">Modelo: un comprobante y su asiento</h2>
+    <div id="ejemplo"></div>
   </div>
 
   <div class="pest" id="pest" role="tablist" aria-label="Casos"></div>
@@ -227,11 +228,6 @@
         <div style="overflow-x:auto"><div id="diario"></div></div>
       </div>
     </div>
-  </div>
-
-  <div class="o-sheet">
-    <h2 class="o-section-title">La dinámica de las cuentas</h2>
-    <div id="guia"></div>
   </div>
 
   <div class="o-sheet">
@@ -280,8 +276,8 @@ var COLEL={ '1':'#2E75B6','2':'#7B5EA7','3':'#0F766E','4':'#E07B39','5':'#B8860B
             '6':'#C0392B','7':'#2E8B57','8':'#5A5A5A','9':'#5A5A5A' };
 function color(c){ return COLEL[String(c).charAt(0)] || '#5A5A5A'; }
 
-var VECINAS={ '1212':'1232','1232':'1212','101':'1041','1041':'101',
-              '70121':'70921','70921':'70121','69121':'20111','20111':'69121' };
+var VECINAS={ '1212':'1312','1312':'1212','101':'1041','1041':'101',
+              '69121':'20111','20111':'69121','70121':'70221','70221':'70121' };
 function cuentasDelCaso(){
   var vistas={}, orden=[];
   activo.plano.forEach(function(p){ if(!vistas[p.s.c]){ vistas[p.s.c]=1; orden.push(p.s.c); } });
@@ -293,63 +289,59 @@ function cuentasDelCaso(){
 }
 
 /* =================== casos =================== */
-var EMPRESA='Comercial Los Andes S.A.C.';
+var EMPRESA='Los Gorriones S.A.';
 var CASOS=[
-  { id:'k1', tit:'Caso 1', sub:'Venta al crédito y su cobro',
-    doc:'Factura F001-120', compro:[['Valor de venta',8000],['IGV 18 %',1440],
-         ['Total factura',9440],['Costo de la mercadería',5200]],
-    enun:'Venta de mercadería al crédito con factura F001-120. El 20 de marzo el cliente paga el total '+
-         'mediante transferencia a la cuenta corriente.',
+  { id:'k1', tit:'Caso 1', sub:'Venta al crédito',
+    doc:'Factura E001-0102 · PIRQA Constructores S.A.C. · crédito 30 días',
+    compro:[['Valor de venta',15900],['IGV 18 %',2862],['Importe total',18762],['Costo de ventas',11100]],
+    enun:'Se venden 6 laptops a S/ 2,650.00 cada una con la factura E001-0102, al crédito a 30 días.',
     grupos:[
-      { f:'05/03/2025', g:'Por la venta de mercadería según factura F001-120', sol:[
+      { f:'05/02/2026', g:'Por la venta según factura E001-0102', sol:[
+        {c:'1212', l:'d', m:18762, q:'el cliente nos debe el importe total'},
+        {c:'40111',l:'h', m:2862,  q:'el IGV que se debe a la SUNAT'},
+        {c:'70121',l:'h', m:15900, q:'el valor de venta es el ingreso'} ]},
+      { f:'05/02/2026', g:'Por el costo de la mercadería vendida', sol:[
+        {c:'69121',l:'d', m:11100, q:'lo vendido se vuelve costo'},
+        {c:'20111',l:'h', m:11100, q:'la mercadería sale del almacén'} ]} ]},
+  { id:'k2', tit:'Caso 2', sub:'Cobro de esa factura',
+    doc:'Factura E001-0102 · cobrada por transferencia',
+    compro:[['Importe cobrado',18762]],
+    enun:'El 07 de marzo el cliente paga la factura E001-0102 con una transferencia a la cuenta corriente.',
+    grupos:[
+      { f:'07/03/2026', g:'Por el cobro de la factura E001-0102', sol:[
+        {c:'1041', l:'d', m:18762, q:'entra el dinero al banco'},
+        {c:'1212', l:'h', m:18762, q:'se cancela la cuenta por cobrar'} ]} ]},
+  { id:'k3', tit:'Caso 3', sub:'Venta al contado en efectivo',
+    doc:'Boleta B001-0210 · cobrada en caja',
+    compro:[['Valor de venta',3000],['IGV 18 %',540],['Importe total',3540],['Costo de ventas',2100]],
+    enun:'Venta con la boleta B001-0210 por S/ 3,540.00 incluido IGV, cobrada en efectivo en el mismo acto.',
+    grupos:[
+      { f:'12/02/2026', g:'Por la venta según boleta B001-0210', sol:[
+        {c:'1212', l:'d', m:3540, q:'el cliente nos debe el importe total'},
+        {c:'40111',l:'h', m:540,  q:'el IGV que se debe a la SUNAT'},
+        {c:'70121',l:'h', m:3000, q:'el valor de venta es el ingreso'} ]},
+      { f:'12/02/2026', g:'Por el costo de la mercadería vendida', sol:[
+        {c:'69121',l:'d', m:2100, q:'lo vendido se vuelve costo'},
+        {c:'20111',l:'h', m:2100, q:'la mercadería sale del almacén'} ]},
+      { f:'12/02/2026', g:'Por el cobro en efectivo', sol:[
+        {c:'101',  l:'d', m:3540, q:'entra el dinero a la caja'},
+        {c:'1212', l:'h', m:3540, q:'se cancela la cuenta por cobrar'} ]} ]},
+  { id:'k4', tit:'Caso 4', sub:'Venta al contado al banco',
+    doc:'Factura E001-0103 · cobrada por transferencia el mismo día',
+    compro:[['Valor de venta',8000],['IGV 18 %',1440],['Importe total',9440],['Costo de ventas',5600]],
+    enun:'Venta con la factura E001-0103 por un valor de venta de S/ 8,000.00 más IGV, '+
+         'cobrada el mismo día con una transferencia a la cuenta corriente.',
+    grupos:[
+      { f:'20/02/2026', g:'Por la venta según factura E001-0103', sol:[
         {c:'1212', l:'d', m:9440, q:'el cliente nos debe el importe total'},
-        {c:'40111',l:'h', m:1440, q:'nace la obligación de pagar el IGV a la SUNAT'},
-        {c:'70121',l:'h', m:8000, q:'se reconoce el ingreso por la venta'} ]},
-      { f:'05/03/2025', g:'Por el costo de la mercadería vendida', sol:[
-        {c:'69121',l:'d', m:5200, q:'el costo de lo vendido se convierte en gasto'},
-        {c:'20111',l:'h', m:5200, q:'la mercadería sale del almacén'} ]},
-      { f:'20/03/2025', g:'Por el cobro con transferencia a la cuenta corriente', sol:[
+        {c:'40111',l:'h', m:1440, q:'el IGV que se debe a la SUNAT'},
+        {c:'70121',l:'h', m:8000, q:'el valor de venta es el ingreso'} ]},
+      { f:'20/02/2026', g:'Por el costo de la mercadería vendida', sol:[
+        {c:'69121',l:'d', m:5600, q:'lo vendido se vuelve costo'},
+        {c:'20111',l:'h', m:5600, q:'la mercadería sale del almacén'} ]},
+      { f:'20/02/2026', g:'Por el cobro en la cuenta corriente', sol:[
         {c:'1041', l:'d', m:9440, q:'entra el dinero al banco'},
-        {c:'1212', l:'h', m:9440, q:'se cancela la cuenta por cobrar'} ]} ]},
-  { id:'k2', tit:'Caso 2', sub:'Venta al contado con boleta',
-    doc:'Boleta B001-45', compro:[['Valor de venta',1500],['IGV 18 %',270],
-         ['Total boleta',1770],['Costo de la mercadería',980]],
-    enun:'Venta de mercadería al contado con boleta B001-45, cobrada en efectivo en el mismo acto.',
-    grupos:[
-      { f:'08/03/2025', g:'Por la venta con boleta B001-45', sol:[
-        {c:'1212', l:'d', m:1770, q:'el cliente nos debe el importe total'},
-        {c:'40111',l:'h', m:270,  q:'nace la obligación de pagar el IGV'},
-        {c:'70121',l:'h', m:1500, q:'se reconoce el ingreso por la venta'} ]},
-      { f:'08/03/2025', g:'Por el costo de la mercadería vendida', sol:[
-        {c:'69121',l:'d', m:980,  q:'el costo de lo vendido se convierte en gasto'},
-        {c:'20111',l:'h', m:980,  q:'la mercadería sale del almacén'} ]},
-      { f:'08/03/2025', g:'Por el cobro en efectivo', sol:[
-        {c:'101',  l:'d', m:1770, q:'entra el dinero a la caja'},
-        {c:'1212', l:'h', m:1770, q:'se cancela la cuenta por cobrar'} ]} ]},
-  { id:'k3', tit:'Caso 3', sub:'Canje por letra y cobro',
-    doc:'Factura F001-135', compro:[['Valor de venta',4000],['IGV 18 %',720],['Total por cobrar',4720]],
-    enun:'La factura F001-135, pendiente por S/ 4,720, se canjea por una letra a 30 días. '+
-         'El 24 de abril el banco cobra la letra y abona el importe en la cuenta corriente.',
-    grupos:[
-      { f:'25/03/2025', g:'Por el canje de la factura por una letra', sol:[
-        {c:'1232', l:'d', m:4720, q:'ahora el derecho está respaldado por una letra'},
-        {c:'1212', l:'h', m:4720, q:'se da de baja la factura por cobrar'} ]},
-      { f:'24/04/2025', g:'Por el cobro de la letra en la cuenta corriente', sol:[
-        {c:'1041', l:'d', m:4720, q:'entra el dinero al banco'},
-        {c:'1232', l:'h', m:4720, q:'se cancela la letra por cobrar'} ]} ]},
-  { id:'k4', tit:'Caso 4', sub:'Devolución con nota de crédito',
-    doc:'Nota de crédito NC01-12', compro:[['Valor de venta devuelto',1000],['IGV 18 %',180],
-         ['Total nota de crédito',1180],['Costo de lo devuelto',650]],
-    enun:'El cliente devuelve parte de la mercadería vendida al crédito y se emite la nota de crédito NC01-12. '+
-         'La mercadería vuelve al almacén, así que también se revierte su costo.',
-    grupos:[
-      { f:'28/03/2025', g:'Por la devolución con nota de crédito NC01-12', sol:[
-        {c:'70921',l:'d', m:1000, q:'la devolución rebaja la venta'},
-        {c:'40111',l:'d', m:180,  q:'se reduce el IGV que se debía pagar'},
-        {c:'1212', l:'h', m:1180, q:'el cliente ya no nos debe esa parte'} ]},
-      { f:'28/03/2025', g:'Por el retorno de la mercadería al almacén', sol:[
-        {c:'20111',l:'d', m:650,  q:'la mercadería vuelve a entrar al almacén'},
-        {c:'69121',l:'h', m:650,  q:'se revierte el costo que se había reconocido'} ]} ]}
+        {c:'1212', l:'h', m:9440, q:'se cancela la cuenta por cobrar'} ]} ]}
 ];
 CASOS.forEach(function(c){
   c.plano=[];
@@ -550,7 +542,7 @@ function pintaDiario(){
       h+='</td><td class="den">'+
          (f.c ? esc(nom(f.c))+'<span class="r">'+esc(ruta(f.c))+'</span>' : '')+
          (d ? '<span class="pi '+(d.ok?'b':'m')+'">'+esc(d.txt)+'</span>' : '')+
-         (d ? '<div class="dn-por-que">'+Dinamica.explica(esp.c, esp.l, esp.q)+'</div>' : '')+'</td>';
+         (d ? '<span class="pq">'+Dinamica.motivo(esp.c, esp.l, esp.q)+'</span>' : '')+'</td>';
       ['d','h'].forEach(function(l){
         h+='<td class="zona cel" data-r="'+i+'" data-t="'+l+'"><div class="celda">'+
            (typeof f[l]==='number' ? miles(f[l]) : '<span class="vacia">—</span>')+'</div>'+
@@ -790,8 +782,7 @@ function ventanaAula(e){
 
 /* =================== arranque =================== */
 (function inicio(){
-  $('ejemplo').innerHTML=Dinamica.ejemplo();
-  $('guia').innerHTML=Dinamica.guia();
+  $('ejemplo').innerHTML=Dinamica.modelo();
   try{
     var g=localStorage.getItem('arr_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });

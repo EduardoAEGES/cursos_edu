@@ -189,55 +189,68 @@ function guia(){
   return h;
 }
 
-/* asiento modelo, resuelto y explicado línea por línea */
-var EJEMPLO={
-  enun:'El 03 de noviembre la empresa vende mercaderías a un cliente tercero y emite la factura '+
-       'FE01-1200 por un valor de venta de S/ 10,000.00 más IGV, al crédito.',
-  fecha:'03/11/2025', glosa:'Por la venta de mercaderías según factura FE01-1200',
-  pasos:[
-    ['Valor de venta', 'es el dato que da la factura', '10,000.00'],
-    ['IGV',            '18 % del valor de venta: 10,000.00 × 0.18', '1,800.00'],
-    ['Importe total',  'valor de venta más IGV: 10,000.00 + 1,800.00', '11,800.00']
-  ],
+/* modelo: un comprobante y su asiento tipo, para guiarse */
+var MODELO={
+  emisor:'LOS GORRIONES S.A.', rucE:'RUC 20334020184',
+  dir:'Av. Parra 415 — Cercado — Arequipa',
+  tipo:'FACTURA ELECTRÓNICA', serie:'E001-0101', fecha:'05/02/2026',
+  cliente:'PIRQA CONSTRUCTORES S.A.C.', rucC:'RUC 20603383258',
+  pago:'Crédito 30 días',
+  item:['8.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','2,650.00'],
+  cifras:[ ['Valor de venta','21,200.00'], ['IGV 18 %','3,816.00'],
+           ['Importe total','25,016.00'], ['Costo de ventas','14,800.00'] ],
   lineas:[
-    { c:'1212',  l:'d', m:'11,800.00', q:'el cliente nos debe el importe total de la factura' },
-    { c:'40111', l:'h', m:'1,800.00',  q:'nace la obligación de pagar ese IGV a la SUNAT' },
-    { c:'70121', l:'h', m:'10,000.00', q:'se reconoce el ingreso por la venta' }
+    { g:'Por la venta', c:'1212',  l:'d', m:'25,016.00', q:'el cliente nos debe el importe total' },
+    { g:'Por la venta', c:'40111', l:'h', m:'3,816.00',  q:'el IGV que se debe a la SUNAT' },
+    { g:'Por la venta', c:'70121', l:'h', m:'21,200.00', q:'el valor de venta es el ingreso' },
+    { g:'Por el costo', c:'69121', l:'d', m:'14,800.00', q:'lo vendido se vuelve costo' },
+    { g:'Por el costo', c:'20111', l:'h', m:'14,800.00', q:'la mercadería sale del almacén' }
   ]
 };
-function ejemplo(){
-  var e=EJEMPLO;
-  var h='<p class="dn-intro">'+esc(e.enun)+'</p>';
-  h+='<div class="dn-pasos">';
-  e.pasos.forEach(function(p, i){
-    h+='<div class="dn-paso"><span class="pn">'+(i+1)+'</span>'+
-       '<span class="pt"><b>'+esc(p[0])+'</b><span class="pd">'+esc(p[1])+'</span></span>'+
-       '<span class="pv">'+esc(p[2])+'</span></div>';
+function modelo(){
+  var m=MODELO;
+  var h='<div class="md">';
+  /* el comprobante */
+  h+='<div class="md-doc"><div class="dh"><div><b>'+esc(m.emisor)+'</b>'+
+     '<span>'+esc(m.rucE)+'</span><span>'+esc(m.dir)+'</span></div>'+
+     '<div class="caja"><div class="t">'+esc(m.tipo)+'</div><div class="n">'+esc(m.serie)+'</div></div></div>'+
+     '<div class="dd"><span>Fecha</span><b>'+esc(m.fecha)+'</b>'+
+     '<span>Señor(es)</span><b>'+esc(m.cliente)+'</b>'+
+     '<span>RUC</span><b>'+esc(m.rucC)+'</b>'+
+     '<span>Forma de pago</span><b>'+esc(m.pago)+'</b></div>'+
+     '<table class="di"><thead><tr><th>Cant.</th><th>U.M.</th><th>Descripción</th><th>V. unitario</th></tr></thead>'+
+     '<tbody><tr><td>'+esc(m.item[0])+'</td><td>'+esc(m.item[1])+'</td><td>'+esc(m.item[2])+'</td>'+
+     '<td class="n">'+esc(m.item[3])+'</td></tr></tbody></table>'+
+     '<div class="dt">';
+  m.cifras.forEach(function(c, i){
+    h+='<div class="f'+(i===2?' g':'')+(i===3?' co':'')+'"><span>'+esc(c[0])+'</span>'+
+       '<span class="n">'+esc(c[1])+'</span></div>';
   });
-  h+='</div>';
-  h+='<div class="dn-envoltura"><table class="dn-asiento"><thead><tr>'+
-     '<th>Fecha</th><th>Glosa</th><th>Código</th><th>Denominación</th>'+
+  h+='</div></div>';
+  /* el asiento tipo */
+  h+='<div class="md-as"><div class="md-t">Así queda el asiento</div>'+
+     '<table class="md-tabla"><thead><tr><th>Código</th><th>Cuenta</th>'+
      '<th class="d">Debe</th><th class="h">Haber</th></tr></thead><tbody>';
-  e.lineas.forEach(function(l, i){
-    h+='<tr>';
-    if(i===0) h+='<td class="enc" rowspan="'+e.lineas.length+'">'+esc(e.fecha)+'</td>'+
-                 '<td class="enc" rowspan="'+e.lineas.length+'">'+esc(e.glosa)+'</td>';
-    h+='<td class="cc">'+esc(l.c)+'</td><td>'+esc(cuenta(l.c)||'Terceros')+'</td>'+
+  var gAct='';
+  m.lineas.forEach(function(l){
+    if(l.g!==gAct){ gAct=l.g; h+='<tr class="g"><td colspan="4">'+esc(l.g)+'</td></tr>'; }
+    h+='<tr><td class="cc">'+esc(l.c)+'</td><td>'+esc(cuenta(l.c)||'Terceros')+
+       '<span class="por">'+esc(l.l==='d'?'al debe':'al haber')+' porque '+
+       (natural(l.c).sube===(l.l==='d'?'DEBE':'HABER')?'aumenta':'disminuye')+': '+esc(l.q)+'</span></td>'+
        '<td class="n">'+(l.l==='d'?esc(l.m):'')+'</td>'+
        '<td class="n">'+(l.l==='h'?esc(l.m):'')+'</td></tr>';
   });
-  h+='<tr class="sum"><td class="et" colspan="4">Sumas iguales</td>'+
-     '<td class="n">11,800.00</td><td class="n">11,800.00</td></tr>';
-  h+='</tbody></table></div>';
-  h+='<div class="dn-defs">';
-  e.lineas.forEach(function(l){
-    h+='<div class="dn-por-que">'+explica(l.c, l.l, l.q)+'</div>';
-  });
-  h+='</div>';
-  h+='<p class="dn-cierre">Las dos sumas quedan iguales porque lo que el cliente nos debe '+
-     '(11,800.00) es exactamente la venta (10,000.00) más el IGV (1,800.00). '+
-     'Si no cuadran, falta o sobra algo.</p>';
+  h+='</tbody></table>'+
+     '<p class="md-p">En cada asiento la suma del <b>debe</b> tiene que ser igual a la del <b>haber</b>.</p>'+
+     '</div></div>';
   return h;
+}
+
+/* una sola línea: a qué lado va y por qué */
+function motivo(cod, lado, q){
+  var n=natural(cod), LADO = lado==='d' ? 'DEBE' : 'HABER';
+  return '<b>'+esc(cod)+'</b> va al <b>'+LADO+'</b> porque '+
+         (LADO===n.sube ? 'aumenta' : 'disminuye')+(q ? ': '+esc(q) : '')+'.';
 }
 
 /* lista de referencia con las cuentas que hacen falta en un caso */
@@ -256,5 +269,5 @@ function lista(codigos, titulo){
 }
 
 window.Dinamica={ guia:guia, tabla:tabla, explica:explica, natural:natural,
-                  ejemplo:ejemplo, lista:lista };
+                  modelo:modelo, motivo:motivo, lista:lista };
 })();
