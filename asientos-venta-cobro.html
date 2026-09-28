@@ -235,7 +235,7 @@
       </div>
     </div>
 
-    <div class="o-sheet">
+    <div class="o-sheet" id="hojaMuro" hidden>
       <h2 class="o-section-title">Monitoreo del aula</h2>
       <div id="muro"></div>
     </div>
@@ -954,7 +954,7 @@ function ventanaAula(e){
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
   }catch(e){}
   Aula.iniciar({ sala:'P', resumen:resumenAula, ventana:ventanaAula,
-    alModo:function(doc){
+    alModo:function(doc){ document.getElementById("hojaMuro").hidden=!doc;
       var dentro=Aula.enSala;
       $('zona').hidden=!dentro;          /* los casos solo se ven al entrar */
       $('hojaModelo').hidden=dentro;     /* y el modelo se guarda */
