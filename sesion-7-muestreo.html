@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Casos de muestreo estadístico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .mue{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --ambar:#B25E09;
+        --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+        max-width:1120px; margin:0 auto; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:12px; }
+  .titulo .marca svg{ width:62px; height:56px; display:block; flex:none; }
+  .titulo .tx{ flex:1; min-width:200px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .puerta{ border:1px solid var(--o-border); border-left:4px solid var(--azul);
+           border-radius:11px; padding:14px 16px; margin-top:16px; background:#F7FAFD; }
+  .puerta h2{ margin:0 0 3px; font-size:16px; font-weight:800; color:var(--azul); }
+  .puerta p{ margin:0 0 12px; font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+
+  .pest{ display:flex; gap:7px; flex-wrap:wrap; margin:16px 0 14px; align-items:center; }
+  .pest button{ font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+                border:1px solid var(--o-border); background:#fff; color:var(--o-muted);
+                border-radius:9px; padding:8px 13px; line-height:1.3; }
+  .pest button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .pest button .pc{ font-weight:800; opacity:.8; margin-left:5px; font-size:11px; }
+  .pest .sep{ flex:1; min-width:4px; }
+  .pest .valora{ background:#FFF3E2; border-color:#E8B172; color:#7A430A; font-weight:800; }
+  .pest .valora:hover{ background:#FFE9CC; }
+
+  .enun{ border:1px solid var(--o-border); border-left:4px solid var(--azul);
+         border-radius:9px; padding:11px 14px; background:#F7FAFD; margin-bottom:14px; }
+  .enun h2{ margin:0 0 4px; font-size:15px; font-weight:800; color:var(--azul); }
+  .enun p{ margin:0; font-size:13px; line-height:1.6; color:var(--gris); }
+
+  .tablero{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:900px){ .tablero.dos{ grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); align-items:start; } }
+  .tablero > *{ min-width:0; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff; overflow:hidden; }
+  .bloque > h3{ margin:0; font-size:12.5px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:8px 12px; }
+  .bloque.datos > h3{ background:var(--azul); }
+  .bloque.res > h3{ background:var(--verde); }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; text-align:left; vertical-align:middle; }
+  thead th{ font-size:11px; text-transform:uppercase; letter-spacing:.3px;
+            color:var(--o-muted); background:#FAFBFC; font-weight:700; }
+  td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  tr.fin td{ font-weight:800; background:#F6FBF8; border-top:2px solid #D8DCE2; }
+  .nota{ display:block; font-size:11.5px; color:var(--o-muted); font-weight:400;
+         line-height:1.45; margin-top:2px; }
+
+  input.cel{ width:112px; max-width:100%; font:inherit; font-size:13px; text-align:right;
+             font-variant-numeric:tabular-nums; border:1px solid var(--amaBd);
+             background:var(--ama); border-radius:6px; padding:5px 8px; color:#3F3208; }
+  input.cel:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  input.cel.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  input.cel.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .calc{ font-variant-numeric:tabular-nums; font-weight:700; color:#16467C; }
+  .calc.vacio{ color:var(--o-muted); font-weight:400; font-style:italic; }
+
+  .pie{ font-size:12.5px; color:var(--o-muted); line-height:1.6; padding:10px 12px;
+        border-top:1px solid #EDEFF2; background:#FAFBFC; }
+  .veredicto{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+              margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .veredicto.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .veredicto.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .acc{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+
+  .zeta{ width:100%; border-collapse:collapse; font-size:13px; }
+  .ficha{ display:grid; gap:9px; grid-template-columns:1fr; }
+  @media (min-width:720px){ .ficha{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .paso{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px; background:#fff; }
+  .paso b{ display:block; font-size:13px; color:var(--azul); margin-bottom:2px; }
+  .paso span{ font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+  .form{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+          background:#F4F6F8; border:1px solid var(--o-border); border-radius:7px;
+          padding:7px 10px; margin:5px 0 0; color:#26303D; overflow-x:auto; }
+
+  .titsec{ margin:0 0 8px; font-size:13px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.3px; color:#5A5A5A; }
+  .aviso{ font-size:12.5px; color:var(--o-muted); line-height:1.55; margin:9px 0 0; }
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+  .vmini .rej{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:7px; }
+  .vmini .cel2{ border:1px solid var(--o-border); border-radius:6px; padding:4px 2px;
+                text-align:center; font-size:10px; color:var(--o-muted); background:#FAFBFC; }
+  .vmini .cel2 b{ display:block; font-size:12px; color:#1F5FA8; }
+  .vmini .cel2.full{ border-color:#7CC29B; background:#E9F7EF; }
+  .vmini .cel2.full b{ color:#14532D; }
+
+  @media (max-width:640px){
+    table, thead, tbody, tr, td, th{ display:block; }
+    thead{ position:absolute; left:-9999px; }
+    tr{ border-bottom:1px solid #EDEFF2; padding:5px 0; }
+    td{ border:0; padding:3px 11px; display:flex; justify-content:space-between;
+        align-items:center; gap:10px; }
+    td::before{ content:attr(data-et); font-size:10.5px; text-transform:uppercase;
+                letter-spacing:.3px; color:var(--o-muted); font-weight:700; flex:none; }
+    td.concepto::before{ display:none; }
+    td.concepto{ display:block; font-weight:600; }
+    td.num{ text-align:right; }
+    td:empty{ display:none; }
+    input.cel{ width:120px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Investigación Cuantitativa</span> / <b>Muestreo</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="mue">
+
+  <div class="titulo">
+    <span class="marca" aria-hidden="true">
+      <svg viewBox="0 0 62 56" fill="none" stroke="#1F5FA8" stroke-width="2.3"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="26" cy="26" r="20"/>
+        <circle cx="19" cy="20" r="2.6" fill="#1F5FA8" stroke="none"/>
+        <circle cx="31" cy="17" r="2.6" fill="#1F5FA8" stroke="none"/>
+        <circle cx="24" cy="32" r="2.6" fill="#147A5C" stroke="none"/>
+        <circle cx="34" cy="30" r="2.6" fill="#147A5C" stroke="none"/>
+        <path d="M40 40l14 12"/>
+      </svg>
+    </span>
+    <span class="tx">
+      <h1>Sesión 7 · Casos de muestreo estadístico</h1>
+      <p>Diseño muestral · completa únicamente las celdas amarillas y el resultado se calcula solo</p>
+    </span>
+  </div>
+
+  <div class="idea">
+    <b>Las cuatro decisiones del diseño muestral:</b> a quiénes (población objetivo), cuántos
+    (tamaño de muestra), cómo (técnica de muestreo) y dónde (captación de encuestados).
+    Cada pestaña es un caso: cambia los valores amarillos y mira cómo se mueve el resultado.
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, di tu nombre</h2>
+    <p>Los casos aparecen cuando entras. Escribe tu nombre y el código de sala que indique el docente.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pest" id="pest"></div>
+    <div id="panel"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function lee(t){
+    if(t===null||t===undefined) return null;
+    var s=String(t).trim().replace(/\s/g,'').replace(/,/g,'.');
+    if(!s) return null;
+    return isNaN(Number(s)) ? NaN : Number(s);
+  }
+  function dec(n, d){
+    if(n===null||n===undefined||isNaN(n)||!isFinite(n)) return null;
+    return Math.round(n*Math.pow(10,d))/Math.pow(10,d);
+  }
+  function miles(n, d){
+    if(n===null||n===undefined||isNaN(n)||!isFinite(n)) return '';
+    return n.toLocaleString('es-PE',{minimumFractionDigits:(d||0), maximumFractionDigits:(d===undefined?2:d)});
+  }
+
+  var ac=null;
+  function nota(f, ini, dur, vol, tipo){
+    try{
+      if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.07,t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+    for(var i=0;i<100;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(q){ q.x+=q.vx; q.y+=q.vy; q.r+=0.08;
+        x.save(); x.translate(q.x,q.y); x.rotate(q.r); x.fillStyle=q.c;
+        x.fillRect(-q.s/2,-q.s/2,q.s,q.s*0.6); x.restore(); });
+      if(Date.now()-t0<2400) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  var ENCUESTA='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
+
+  /* ===== los casos ===== */
+  var CASOS=[
+    { id:'inicio', pest:'Inicio', tipo:'guia' },
+
+    { id:'prop', pest:'Caso 1 · Proporción',
+      titulo:'Caso 1 · Tamaño de muestra para una proporción',
+      enun:'FreshUp quiere estimar el porcentaje de consumidores que comprarían su nueva bebida. '+
+           'La población es de aproximadamente 10 000 personas. Trabaja con 95 % de confianza, '+
+           'un margen de error de 5 % y una proporción esperada desconocida.',
+      campos:[
+        {k:'conf', t:'Nivel de confianza (%)', n:'escribe 90, 95 o 99', esp:95, d:0},
+        {k:'z',    t:'Valor Z',               n:'búscalo en la tabla de Z', esp:1.96, d:3},
+        {k:'p',    t:'Proporción esperada  p', n:'si no la conoces, usa 0.50', esp:0.5, d:2},
+        {k:'e',    t:'Margen de error  E',    n:'en decimal: 5 % = 0.05', esp:0.05, d:3},
+        {k:'n',    t:'Tamaño de población  N', n:'si es enorme o desconocida, déjala vacía', esp:10000, d:0}
+      ],
+      calcula:function(v){
+        var q = (v.p===null||isNaN(v.p)) ? null : 1-v.p;
+        var n0 = (v.z&&v.p!==null&&q!==null&&v.e) ? (v.z*v.z*v.p*q)/(v.e*v.e) : null;
+        var naj = (n0===null) ? null : ((!v.n) ? n0 : n0/(1+(n0-1)/v.n));
+        var fin = (naj===null) ? null : Math.ceil(dec(naj,6));
+        return { q:q, n0:n0, naj:naj, fin:fin };
+      },
+      filas:[
+        {k:'q',   t:'Proporción  q = 1 − p',           d:2},
+        {k:'n0',  t:'n inicial (población infinita)',  d:2},
+        {k:'naj', t:'n ajustado (población finita)',   d:2},
+        {k:'fin', t:'Tamaño de muestra final',         d:0, fin:true, n:'encuestas a realizar'}
+      ],
+      respuesta:{ fin:370 },
+      pie:'¿Por qué p = 0.50? Porque maximiza el tamaño de muestra: es la opción más conservadora '+
+          'cuando todavía no conoces la proporción.' },
+
+    { id:'media', pest:'Caso 2 · Media',
+      titulo:'Caso 2 · Tamaño de muestra para una media',
+      enun:'FreshUp quiere estimar el gasto promedio mensual de sus clientes en bebidas. '+
+           'Trabaja con 95 % de confianza, una desviación estándar estimada de S/ 80 y un margen '+
+           'de error de S/ 10. La población es de aproximadamente 5 000 clientes.',
+      campos:[
+        {k:'conf', t:'Nivel de confianza (%)', n:'escribe 90, 95 o 99', esp:95, d:0},
+        {k:'z',    t:'Valor Z',                n:'búscalo en la tabla de Z', esp:1.96, d:3},
+        {k:'s',    t:'Desviación estándar  σ', n:'de un estudio previo o prueba piloto', esp:80, d:2},
+        {k:'e',    t:'Margen de error  E',     n:'en las mismas unidades que la variable', esp:10, d:2},
+        {k:'n',    t:'Tamaño de población  N', n:'si es enorme o desconocida, déjala vacía', esp:5000, d:0}
+      ],
+      calcula:function(v){
+        var n0 = (v.z&&v.s&&v.e) ? (v.z*v.z*v.s*v.s)/(v.e*v.e) : null;
+        var naj = (n0===null) ? null : ((!v.n) ? n0 : n0/(1+(n0-1)/v.n));
+        var fin = (naj===null) ? null : Math.ceil(dec(naj,6));
+        return { n0:n0, naj:naj, fin:fin };
+      },
+      filas:[
+        {k:'n0',  t:'n inicial (población infinita)', d:2},
+        {k:'naj', t:'n ajustado (población finita)',  d:2},
+        {k:'fin', t:'Tamaño de muestra final',        d:0, fin:true, n:'encuestas a realizar'}
+      ],
+      respuesta:{ fin:235 },
+      pie:'Aquí usamos la varianza (σ²) en lugar de p × q, porque estimamos un promedio y no un porcentaje.' },
+
+    { id:'sist', pest:'Caso 3 · Sistemático',
+      titulo:'Caso 3 · Muestreo sistemático',
+      enun:'Una tienda recibe aproximadamente 2 000 clientes en el periodo y se desea encuestar a 200. '+
+           'Calcula el intervalo y elige al azar un punto de inicio entre 1 y k.',
+      campos:[
+        {k:'N',   t:'Población  N',                  n:'clientes del periodo', esp:2000, d:0},
+        {k:'n',   t:'Muestra deseada  n',            n:'encuestas a realizar', esp:200, d:0},
+        {k:'ini', t:'Punto de inicio (entre 1 y k)', n:'elige un número al azar ≤ k', libre:true, d:0}
+      ],
+      calcula:function(v){
+        var k = (v.N&&v.n) ? Math.floor(v.N/v.n) : null;
+        var ok = (k===null||v.ini===null||isNaN(v.ini)) ? null
+               : (v.ini>=1 && v.ini<=k ? 'Correcto' : 'El inicio debe estar entre 1 y k');
+        var sec=[];
+        if(k!==null && v.ini!==null && !isNaN(v.ini) && ok==='Correcto')
+          for(var i=0;i<8;i++) sec.push(v.ini+i*k);
+        return { k:k, ok:ok, sec:sec };
+      },
+      filas:[
+        {k:'k',  t:'Intervalo  k = N / n', d:0, n:'se redondea hacia abajo'},
+        {k:'ok', t:'Verificación del inicio', texto:true}
+      ],
+      secuencia:true,
+      respuesta:{ k:10 },
+      pie:'Regla: la lista no debe tener un patrón que coincida con k, porque aparecería periodicidad '+
+          'y la muestra dejaría de ser representativa.' },
+
+    { id:'estr', pest:'Caso 4 · Estratificado',
+      titulo:'Caso 4 · Muestreo estratificado proporcional',
+      enun:'Se estudia el consumo por grupos de edad con una muestra proporcional al tamaño de cada grupo. '+
+           'La muestra total es la del caso 1 (370 encuestas) y la población de 10 000 personas se reparte así: '+
+           '18–25 años, 3 000; 26–35 años, 3 500; 36–45 años, 2 200; 46 a más, 1 300.',
+      campos:[
+        {k:'n',  t:'Muestra total deseada  n', n:'puede venir del caso 1', esp:370, d:0},
+        {k:'e1', t:'Tamaño del estrato 18 – 25 años', n:'Nh', esp:3000, d:0},
+        {k:'e2', t:'Tamaño del estrato 26 – 35 años', n:'Nh', esp:3500, d:0},
+        {k:'e3', t:'Tamaño del estrato 36 – 45 años', n:'Nh', esp:2200, d:0},
+        {k:'e4', t:'Tamaño del estrato 46 años a más', n:'Nh', esp:1300, d:0}
+      ],
+      calcula:function(v){
+        var N=(v.e1||0)+(v.e2||0)+(v.e3||0)+(v.e4||0);
+        var r={ N:N||null };
+        var suma=0;
+        [1,2,3,4].forEach(function(i){
+          var Nh=v['e'+i];
+          var pr = (N && Nh!==null && !isNaN(Nh)) ? Nh/N : null;
+          var nh = (pr===null || !v.n) ? null : Math.round(v.n*pr);
+          r['p'+i]=pr; r['n'+i]=nh; if(nh!==null) suma+=nh;
+        });
+        r.suma = (r.n1===null||r.n2===null||r.n3===null||r.n4===null) ? null : suma;
+        return r;
+      },
+      estratos:true,
+      respuesta:{ n1:111, n2:130, n3:81, n4:48, suma:370 },
+      pie:'Los estratos deben ser mutuamente excluyentes y colectivamente exhaustivos. Si por el '+
+          'redondeo la suma de los nh no coincide con el n deseado, se ajusta el estrato más grande en ±1.' }
+  ];
+
+  var ZETA=[['90 %','1.645'],['95 %','1.96'],['99 %','2.576']];
+  var DECISIONES=[
+    ['1. ¿A quiénes?','Definir la población objetivo.'],
+    ['2. ¿Cuántos?','Calcular el tamaño de muestra.'],
+    ['3. ¿Cómo?','Elegir la técnica de muestreo.'],
+    ['4. ¿Dónde y cómo?','Definir la captación de encuestados.']
+  ];
+  var FORMULAS=[
+    ['Tamaño para proporción','n = (Z² × p × q) / E²'],
+    ['Tamaño para media','n = (Z² × σ²) / E²'],
+    ['Corrección por población finita','n = n₀ / (1 + (n₀ − 1) / N)'],
+    ['Muestreo sistemático','k = N / n'],
+    ['Muestreo estratificado','nh = n × (Nh / N)']
+  ];
+
+  /* ===== estado ===== */
+  var LS='inv_muestreo_v1';
+  var G={};
+  try{ G=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ G={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+  var pi=1, festejado={};
+  function $(id){ return document.getElementById(id); }
+
+  function valores(c){
+    var v={};
+    c.campos.forEach(function(f){ v[f.k]=lee(G[c.id+'.'+f.k]); });
+    return v;
+  }
+  function resuelto(c){
+    if(!c.respuesta) return false;
+    var r=c.calcula(valores(c)), ok=true;
+    for(var k in c.respuesta){
+      var x=r[k];
+      if(x===null||x===undefined||isNaN(x)||Math.abs(x-c.respuesta[k])>0.001) ok=false;
+    }
+    return ok;
+  }
+
+  /* ===== dibujo ===== */
+  function guia(){
+    return '<div class="enun"><h2>Cómo usar esta actividad</h2>'+
+      '<p>Cada pestaña es un caso. Las celdas amarillas las llenas tú; el resto se calcula solo, '+
+      'igual que en el archivo de Excel del curso. Cuando termines un caso, pulsa <b>Comprobar</b>.</p></div>'+
+      '<div class="tablero dos">'+
+        '<div class="bloque"><h3>Las cuatro decisiones del diseño muestral</h3>'+
+          '<div style="padding:11px 12px"><div class="ficha">'+
+          DECISIONES.map(function(d){ return '<div class="paso"><b>'+esc(d[0])+'</b><span>'+esc(d[1])+'</span></div>'; }).join('')+
+          '</div></div></div>'+
+        '<div>'+
+          '<div class="bloque"><h3>Valor de Z según el nivel de confianza</h3>'+
+            '<table><thead><tr><th>Nivel de confianza</th><th class="num">Valor de Z</th></tr></thead><tbody>'+
+            ZETA.map(function(z){ return '<tr><td class="concepto">'+esc(z[0])+'</td>'+
+              '<td class="num" data-et="Z">'+esc(z[1])+'</td></tr>'; }).join('')+
+            '</tbody></table></div>'+
+          '<div class="bloque" style="margin-top:14px"><h3>Fórmulas de referencia</h3>'+
+            '<div style="padding:10px 12px">'+
+            FORMULAS.map(function(f){ return '<div style="margin-bottom:8px"><b style="font-size:12.5px;color:#1F5FA8">'+
+              esc(f[0])+'</b><p class="form">'+esc(f[1])+'</p></div>'; }).join('')+
+            '</div></div>'+
+        '</div>'+
+      '</div>';
+  }
+
+  function celda(c, f){
+    var val=G[c.id+'.'+f.k];
+    return '<input class="cel" inputmode="decimal" autocomplete="off" data-k="'+esc(f.k)+'" '+
+           'value="'+(val===undefined?'':esc(val))+'" aria-label="'+esc(f.t)+'">';
+  }
+
+  function caso(c){
+    var v=valores(c), r=c.calcula(v);
+
+    var datos='<div class="bloque datos"><h3>Datos · completa lo amarillo</h3>'+
+      '<table><thead><tr><th>Parámetro</th><th class="num">Valor</th></tr></thead><tbody>';
+    c.campos.forEach(function(f){
+      datos+='<tr><td class="concepto">'+esc(f.t)+
+             (f.n?'<span class="nota">'+esc(f.n)+'</span>':'')+'</td>'+
+             '<td class="num" data-et="Valor">'+celda(c,f)+'</td></tr>';
+    });
+    datos+='</tbody></table></div>';
+
+    var res='<div class="bloque res"><h3>Resultado</h3>'+
+      '<table><thead><tr><th>Concepto</th><th class="num">Valor</th></tr></thead><tbody>';
+    (c.filas||[]).forEach(function(f){
+      var x=r[f.k], txt;
+      if(f.texto) txt = x ? esc(x) : '—';
+      else txt = (x===null||x===undefined||isNaN(x)||!isFinite(x)) ? '—' : miles(dec(x,f.d), f.d);
+      var vacio = (txt==='—') ? ' vacio' : '';
+      res+='<tr class="'+(f.fin?'fin':'')+'"><td class="concepto">'+esc(f.t)+
+           (f.n?'<span class="nota">'+esc(f.n)+'</span>':'')+'</td>'+
+           '<td class="num" data-et="Valor"><span class="calc'+vacio+'">'+txt+'</span></td></tr>';
+    });
+    res+='</tbody></table>';
+
+    if(c.secuencia){
+      res+='<table><thead><tr><th>Secuencia de selección (primeros 8)</th>'+
+           '<th class="num">Cliente n.º</th></tr></thead><tbody>';
+      for(var i=0;i<8;i++){
+        var s=r.sec[i];
+        res+='<tr><td class="concepto">'+(i+1)+'.º seleccionado</td>'+
+             '<td class="num" data-et="Cliente"><span class="calc'+(s===undefined?' vacio':'')+'">'+
+             (s===undefined?'—':miles(s,0))+'</span></td></tr>';
+      }
+      res+='</tbody></table>';
+    }
+
+    if(c.estratos){
+      var nom=['18 – 25 años','26 – 35 años','36 – 45 años','46 años a más'];
+      res+='<table><thead><tr><th>Estrato</th><th class="num">Proporción</th>'+
+           '<th class="num">Muestra (nh)</th></tr></thead><tbody>';
+      [1,2,3,4].forEach(function(i){
+        var pr=r['p'+i], nh=r['n'+i];
+        res+='<tr><td class="concepto">'+esc(nom[i-1])+'</td>'+
+             '<td class="num" data-et="Proporción"><span class="calc'+(pr===null?' vacio':'')+'">'+
+             (pr===null?'—':((pr*100).toFixed(1)+' %'))+'</span></td>'+
+             '<td class="num" data-et="nh"><span class="calc'+(nh===null?' vacio':'')+'">'+
+             (nh===null?'—':miles(nh,0))+'</span></td></tr>';
+      });
+      res+='<tr class="fin"><td class="concepto">Total</td>'+
+           '<td class="num" data-et="Proporción"><span class="calc'+(r.N?'':' vacio')+'">'+
+           (r.N?'100.0 %':'—')+'</span></td>'+
+           '<td class="num" data-et="nh"><span class="calc'+(r.suma===null?' vacio':'')+'">'+
+           (r.suma===null?'—':miles(r.suma,0))+'</span></td></tr>';
+      res+='</tbody></table>';
+    }
+
+    res+='<p class="pie">'+esc(c.pie)+'</p></div>';
+
+    return '<div class="enun"><h2>'+esc(c.titulo)+'</h2><p>'+esc(c.enun)+'</p></div>'+
+           '<div class="tablero dos"><div>'+datos+
+           '<div class="acc"><button type="button" class="o-btn o-btn-primary" id="btnComp">Comprobar</button>'+
+           '<button type="button" class="o-btn" id="btnLimpia">Borrar</button></div>'+
+           '<div class="veredicto" id="ver">Completa los datos y pulsa Comprobar.</div>'+
+           '</div><div>'+res+'</div></div>';
+  }
+
+  function pinta(){
+    var c=CASOS[pi];
+    $('panel').innerHTML = (c.tipo==='guia') ? guia() : caso(c);
+    if(c.tipo!=='guia'){
+      Array.prototype.forEach.call(document.querySelectorAll('input.cel'), function(inp){
+        inp.addEventListener('input', function(){
+          G[c.id+'.'+inp.dataset.k]=inp.value; graba();
+          var foco=document.activeElement===inp ? inp.dataset.k : null;
+          pinta();
+          if(foco){
+            var n=document.querySelector('input.cel[data-k="'+foco+'"]');
+            if(n){ n.focus(); n.setSelectionRange(n.value.length, n.value.length); }
+          }
+          if(window.Aula && Aula.enSala) Aula.empuja();
+        });
+      });
+      $('btnComp').addEventListener('click', function(){ comprueba(c); });
+      $('btnLimpia').addEventListener('click', function(){
+        c.campos.forEach(function(f){ delete G[c.id+'.'+f.k]; });
+        graba(); pinta();
+      });
+      if(G['_v.'+c.id]) comprueba(c, true);
+    }
+    pestPinta();
+  }
+
+  function comprueba(c, callado){
+    var v=valores(c), r=c.calcula(v), ver=$('ver'), faltan=[];
+    c.campos.forEach(function(f){
+      if(f.libre) return;
+      if(v[f.k]===null || isNaN(v[f.k])) faltan.push(f.t);
+    });
+    if(faltan.length){
+      ver.className='veredicto';
+      ver.innerHTML='Todavía falta completar: <b>'+esc(faltan.join(', '))+'</b>.';
+      return;
+    }
+    var malos=[];
+    for(var k in c.respuesta){
+      var x=r[k];
+      if(x===null||x===undefined||isNaN(x)||Math.abs(x-c.respuesta[k])>0.001) malos.push(k);
+    }
+    var inputs={};
+    Array.prototype.forEach.call(document.querySelectorAll('input.cel'), function(i){ inputs[i.dataset.k]=i; });
+    c.campos.forEach(function(f){
+      var i=inputs[f.k]; if(!i) return;
+      i.classList.remove('ok','mal');
+      if(f.libre || f.esp===undefined) return;
+      i.classList.add(Math.abs(v[f.k]-f.esp)<0.0005 ? 'ok' : 'mal');
+    });
+    if(!malos.length){
+      ver.className='veredicto ok';
+      ver.innerHTML='Correcto. '+esc(mensajeOk(c, r));
+      G['_v.'+c.id]='1'; graba();
+      if(!callado && !festejado[c.id]){ festejado[c.id]=true; listo(); confeti(); }
+    }else{
+      ver.className='veredicto mal';
+      ver.innerHTML='Todavía no. Revisa los datos marcados en rojo y vuelve a comprobar.';
+      delete G['_v.'+c.id]; graba();
+    }
+    if(window.Aula && Aula.enSala) Aula.empuja();
+    pestPinta();
+  }
+
+  function mensajeOk(c, r){
+    if(c.id==='prop')  return 'Se necesitan '+r.fin+' encuestas.';
+    if(c.id==='media') return 'Se necesitan '+r.fin+' encuestas.';
+    if(c.id==='sist')  return 'Se encuesta a uno de cada '+r.k+' clientes.';
+    if(c.id==='estr')  return 'Los cuatro estratos suman '+r.suma+' encuestas.';
+    return '';
+  }
+
+  function pestPinta(){
+    $('pest').innerHTML = CASOS.map(function(c,i){
+      var marca = (c.tipo==='guia') ? '' :
+        ' <span class="pc">'+(resuelto(c)?'✓':'·')+'</span>';
+      return '<button type="button" data-p="'+i+'" class="'+(i===pi?'on':'')+'">'+esc(c.pest)+marca+'</button>';
+    }).join('') +
+      '<button type="button" class="valora" id="btnValora">⭐ Valorar</button>'+
+      '<span class="sep"></span>';
+    Array.prototype.forEach.call(document.querySelectorAll('#pest button[data-p]'), function(b){
+      b.addEventListener('click', function(){ pi=+b.dataset.p; pinta(); });
+    });
+    $('btnValora').addEventListener('click', function(){ window.open(ENCUESTA,'_blank','noopener'); });
+  }
+
+  /* ===== sala ===== */
+  function resumenAula(){
+    var rej=[], hechos=0;
+    CASOS.forEach(function(c){
+      if(c.tipo==='guia') return;
+      var ok=resuelto(c);
+      if(ok) hechos++;
+      rej.push({ t:c.pest.split('· ')[1], ok:ok });
+    });
+    var c=CASOS[pi], det='';
+    if(c.tipo!=='guia'){
+      var r=c.calcula(valores(c));
+      if(c.id==='prop'||c.id==='media') det = (r.fin?('n = '+r.fin):'sin resultado');
+      else if(c.id==='sist') det = (r.k?('k = '+r.k):'sin resultado');
+      else if(c.id==='estr') det = (r.suma?('suman '+r.suma):'sin resultado');
+    }
+    return { donde:c.pest, detalle:det, hechos:hechos, listo:(hechos===rej.length), rejilla:rej };
+  }
+  function ventanaAula(e){
+    var h='<div class="vmini">'+
+      '<div class="lin"><span>'+esc(e.donde||'—')+'</span><b>'+esc(e.detalle||'')+'</b></div>'+
+      '<div class="lin"><span>Casos resueltos</span><b>'+(e.hechos||0)+' de 4</b></div>'+
+      '<div class="rej">';
+    (e.rejilla||[]).forEach(function(r){
+      h+='<div class="cel2'+(r.ok?' full':'')+'">'+esc(r.t||'')+'<b>'+(r.ok?'✓':'·')+'</b></div>';
+    });
+    return h+'</div></div>';
+  }
+
+  if(window.Aula){
+    Aula.iniciar({ sala:'MUE', codigo:'INV7', resumen:resumenAula, ventana:ventanaAula,
+      alModo:function(doc){
+        $('hojaMuro').hidden=!doc;
+        var dentro=Aula.enSala;
+        $('zona').hidden=!dentro;
+        $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, di tu nombre';
+        $('puerta').querySelector('p').hidden = dentro;
+        if(dentro) pinta();
+      } });
+  }else{ $('zona').hidden=false; }
+
+  pinta();
+})();
+</script>
+
+</body>
+</html>

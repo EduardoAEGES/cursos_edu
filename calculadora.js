@@ -28,8 +28,12 @@ var css=''+
 '.ca-h button:hover{ background:rgba(240,135,31,.28); }'+
 '.ca-v{ padding:10px 12px 8px; text-align:right; background:#120A1B;'+
 '  border-bottom:1px solid #3A2150; }'+
-'.ca-e{ font-size:15px; color:#B9A7CE; font-variant-numeric:tabular-nums; min-height:20px;'+
-'  overflow-x:auto; white-space:nowrap; direction:rtl; }'+
+'.ca-e{ font-size:16px; color:#D7C9EA; min-height:22px; text-align:left;'+
+'  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing:.5px;'+
+'  overflow-x:auto; overflow-y:hidden; white-space:nowrap; scrollbar-width:none; }'+
+'.ca-e::-webkit-scrollbar{ display:none; }'+
+'.ca-e .cur{ border-left:2px solid #F0871F; margin-left:1px; animation:caLat 1s steps(1) infinite; }'+
+'@keyframes caLat{ 50%{ border-color:transparent; } }'+
 '.ca-n{ font-size:26px; font-weight:800; color:#FFB25C; font-variant-numeric:tabular-nums;'+
 '  text-shadow:0 0 12px rgba(240,135,31,.45);'+
 '  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.25; }'+
@@ -109,6 +113,10 @@ function calcula(txt){
   return r.v;
 }
 
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 function miles(n){
   var neg=n<0, x=Math.abs(n);
   var r=Math.round(x*1e10)/1e10;
@@ -133,9 +141,9 @@ function crea(){
 
   var TECLAS=[
     ['(','fn','('], [')','fn',')'], ['%','fn','%'], ['√','fn','√'], ['C','fn','C'],
-    ['1','','1'],   ['2','','2'],   ['3','','3'],   ['÷','op','/'], ['←','fn','B'],
+    ['7','','7'],   ['8','','8'],   ['9','','9'],   ['÷','op','/'], ['←','fn','B'],
     ['4','','4'],   ['5','','5'],   ['6','','6'],   ['×','op','*'], ['x²','fn','^2'],
-    ['7','','7'],   ['8','','8'],   ['9','','9'],   ['−','op','-'], ['xʸ','fn','^'],
+    ['1','','1'],   ['2','','2'],   ['3','','3'],   ['−','op','-'], ['xʸ','fn','^'],
     ['0','','0'],   ['.','','.'],   ['±','fn','N'], ['+','op','+'], ['=','ig','=']
   ];
   var ht='';
@@ -158,8 +166,10 @@ function crea(){
   function bonita(t){
     return t.replace(/\*/g,'×').replace(/\//g,'÷').replace(/-/g,'−');
   }
+  function alFinal(){ try{ eDiv.scrollLeft=eDiv.scrollWidth; }catch(e){} }
   function muestra(){
-    eDiv.textContent=bonita(exp);
+    eDiv.innerHTML=(exp?esc(bonita(exp)):'')+'<span class="cur"></span>';
+    alFinal();
     if(!exp){ nDiv.textContent='0'; nDiv.className='ca-n'; return; }
     try{
       var v=calcula(exp);
@@ -178,7 +188,7 @@ function crea(){
         var v=calcula(exp);
         if(v===null){ muestra(); return; }
         exp=String(Math.round(v*1e10)/1e10);
-        eDiv.textContent=''; nDiv.textContent=miles(v); nDiv.className='ca-n';
+        eDiv.innerHTML='<span class="cur"></span>'; nDiv.textContent=miles(v); nDiv.className='ca-n';
         return;
       }catch(e){
         nDiv.textContent = e==='cero' ? 'no se puede dividir entre cero'
