@@ -189,6 +189,7 @@
   <div id="zona" hidden>
     <div class="pest" id="pest"></div>
     <div class="casos" id="casos"></div>
+    <div id="reinicio" style="margin:0 0 12px"></div>
     <div id="panel"></div>
   </div>
 
@@ -230,6 +231,7 @@
 </div>
 
 <script src="aula.js"></script>
+<script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
 (function(){
@@ -832,6 +834,12 @@
   }else{
     $('zona').hidden=false;
   }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán tus respuestas de los seis casos.',
+    hecho:function(){ guardado={}; hechoAntes={}; previos={}; mi=0; ci=0; pinta(); }
+  });
 
   pinta();
 })();

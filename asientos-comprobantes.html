@@ -230,7 +230,8 @@
         <div class="mandos">
           <button class="rev" id="btnRev" type="button">Revisar</button>
           <button class="sol" id="btnSol" type="button" hidden>Ver solución</button>
-          <button id="btnReset" type="button">Reiniciar</button>
+          <button id="btnReset" type="button">Reiniciar caso</button>
+          <span id="reinicio"></span>
         </div>
         <div id="marcador"></div>
       </div>
@@ -257,6 +258,7 @@
 <canvas id="confeti"></canvas>
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
+<script src="reiniciar.js"></script>
 <script src="dinamica.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -654,6 +656,19 @@ function reinicia(){
 $('btnRev').addEventListener('click', revisa);
 $('btnSol').addEventListener('click', verSolucion);
 $('btnReset').addEventListener('click', reinicia);
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:['cmp_avance','cmp_caso'], texto:'Reiniciar todo',
+  aviso:'Se borrará tu avance en todos los casos.',
+  hecho:function(){
+    CASOS.forEach(function(c){
+      S[c.id]={ vc:null, igv:null, pc:null, fecha:'', glosa:'',
+                filas:c.sol.map(function(){ return {c:'',d:null,h:null}; }) };
+      revisado[c.id]=false; cuadraba[c.id]=false;
+    });
+    activo=CASOS[0]; sel=null; $('marcador').innerHTML='';
+    pinta(); guarda();
+  }
+});
 $('pest').addEventListener('click', function(ev){
   var b=ev.target.closest('button[data-c]');
   if(!b) return;
