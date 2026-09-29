@@ -294,7 +294,7 @@
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
 <script src="dinamica.js"></script>
-<script src="calcigv.js"></script>
+<script src="calculadora.js"></script>
 <script>
 (function(){
 'use strict';
@@ -351,7 +351,7 @@ var BASE=[
   { n:4,  modo:'arr', dar:{cuentas:'primera', importes:'ninguno'},
     vv:3000, cobro:'cheque', parte:0.5, rel:'t',
     tipo:'BOLETA DE VENTA ELECTRÓNICA', serie:'B001-0210', fecha:'12/02/2026', fIso:'2026-02-12',
-    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Crédito — cobro parcial con cheque',
+    cliente:'ROSA MELÉNDEZ CÁRDENAS', ruc:'DNI 45871236', cond:'Crédito — cobro parcial con cheque en tránsito',
     item:['3.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','1,000.00'] },
   { n:5,  modo:'cmp', dar:{cifras:'todas'},
     vv:8900, cobro:'banco', rel:'t',
@@ -376,7 +376,7 @@ var BASE=[
   { n:9,  modo:'cmp', dar:{cifras:'ninguna'},
     vv:4400, cobro:'cheque', rel:'t',
     tipo:'FACTURA ELECTRÓNICA', serie:'E001-0115', fecha:'26/02/2026', fIso:'2026-02-26',
-    cliente:'COMERCIAL SAN JUAN E.I.R.L.', ruc:'RUC 20422233344', cond:'Contado — cheque',
+    cliente:'COMERCIAL SAN JUAN E.I.R.L.', ruc:'RUC 20422233344', cond:'Contado — cheque en tránsito',
     item:['8.00','UNIDAD','DISCO SÓLIDO 1TB','550.00'] },
   { n:10,  modo:'cmp', dar:{cifras:'ninguna'},
     vv:21200, cobro:'banco', parte:0.3, rel:'r',
@@ -392,7 +392,7 @@ var CASOS=BASE.map(function(b){
     caja:   { c:'101',  n:'en efectivo',              q:'entra el dinero a la caja' },
     banco:  { c:'1041', n:'con transferencia bancaria', q:'entra el dinero a la cuenta corriente' },
     yape:   { c:'1051', n:'por Yape',                 q:'entra el dinero al monedero digital' },
-    cheque: { c:'1032', n:'con un cheque',            q:'el cheque todavía está en tránsito' }
+    cheque: { c:'1032', n:'con cheque en tránsito',  q:'el cheque recibido todavía está en tránsito' }
   };
   var md=MEDIOS[b.cobro];
   var cobrado = b.parte ? r2(pc*b.parte) : pc;
@@ -575,7 +575,7 @@ function califica(c){
       var f=e.filas[i], esp=c.plano[i].s, j, mm=null;
       var lado = (typeof f.d==='number') ? 'd' : ((typeof f.h==='number') ? 'h' : null);
       var m = lado==='d' ? f.d : (lado==='h' ? f.h : null);
-      for(j=0;j<pend.length;j++) if(!pend[j].usado && pend[j].c===f.c){ mm=pend[j]; break; }
+      for(j=0;j<pend.length;j++) if(!pend[j].usado && Dinamica.esLaCuenta(f.c, pend[j].c)){ mm=pend[j]; break; }
       var okC=!!mm, okM=false, txt=[];
       if(mm) mm.usado=true;
       if(!f.c) txt.push('Falta la cuenta');
@@ -617,7 +617,7 @@ function pintaNivel(){
             : 'Las cuentas están puestas: coloca los siete importes.')
          : c.dar.cuentas==='primera' ? 'Hay una cuenta de muestra: completa el resto.'
          : 'Todo por armar: cuentas e importes.')
-      : (c.dar.cifras==='todas' ? 'Las cifras están dadas: escribe el asiento.'
+      : (c.dar.cifras==='todas' ? 'Las cifras están dadas: escribe el asiento. El código vale a cualquier nivel: 12, 121 o 1212.'
          : c.dar.cifras==='vv' ? 'Del comprobante saca el IGV y el total.'
          : c.dar.cifras==='pc' ? 'El comprobante solo trae el total: separa el valor de venta y el IGV.'
          : 'Sin ayudas: saca las tres cifras y escribe todo.'))+
@@ -771,6 +771,32 @@ function pintaDiario(){
   $('cuadre').innerHTML='';
   conecta();
 }
+/* actualiza sumas y cuadre sin volver a dibujar la tabla */
+function refrescaSumas(){
+  var c=activo, e=S[c.id];
+  var tablas=$('diario').querySelectorAll('.asientoT');
+  var cuadres=$('diario').querySelectorAll('.cuadre');
+  c.grupos.forEach(function(gr, ig){
+    var sd=0, sh=0;
+    c.plano.forEach(function(p,i){
+      if(p.g!==ig) return;
+      var f=e.filas[i];
+      if(typeof f.d==='number') sd+=f.d;
+      if(typeof f.h==='number') sh+=f.h;
+    });
+    sd=r2(sd); sh=r2(sh);
+    var ns=tablas[ig] ? tablas[ig].querySelectorAll('tfoot .n') : [];
+    if(ns[0]) ns[0].textContent=miles(sd);
+    if(ns[1]) ns[1].textContent=miles(sh);
+    var cu=cuadres[ig];
+    if(cu){
+      var ok=Math.abs(sd-sh)<0.005 && sd>0;
+      cu.className='cuadre '+(ok?'si':'no');
+      cu.textContent = ok ? '✓ Cuadra: '+soles(sd)
+        : 'Todavía no cuadra · debe '+soles(sd)+' · haber '+soles(sh);
+    }
+  });
+}
 function pinta(){ pintaNivel(); pintaEnunciado(); pintaPanel(); pintaDiario(); pintaPestanas(); }
 function limpiaMarcas(){
   if(revisado[activo.id]){ revisado[activo.id]=false; $('marcador').innerHTML=''; }
@@ -872,23 +898,27 @@ function conecta(){
   Array.prototype.forEach.call($('diario').querySelectorAll('td.cod input'), function(inp){
     var i=parseInt(inp.getAttribute('data-r'),10);
     inp.addEventListener('input', function(){
-      S[activo.id].filas[i].c=inp.value.replace(/\D/g,'');
+      var cod=inp.value.replace(/\D/g,'');
+      if(cod!==inp.value) inp.value=cod;
+      S[activo.id].filas[i].c=cod;
       limpiaMarcas(); guarda();
-      var pos=inp.selectionStart; pintaDiario();
-      var nx=$('diario').querySelector('td.cod input[data-r="'+i+'"]');
-      if(nx){ nx.focus(); try{ nx.setSelectionRange(pos,pos); }catch(e){} }
+      /* solo se refresca la denominación de esta fila, no toda la tabla */
+      var den=inp.closest('tr').querySelector('td.den');
+      if(den) den.innerHTML = cod
+        ? (existe(cod) ? esc(nom(cod)) : '<span class="no">No está en el plan</span>')
+        : '';
     });
   });
   Array.prototype.forEach.call($('diario').querySelectorAll('td.cel input'), function(inp){
     var i=parseInt(inp.getAttribute('data-r'),10), k=inp.getAttribute('data-k');
     inp.addEventListener('input', function(){
       S[activo.id].filas[i][k]=aNumero(inp.value);
-      limpiaMarcas(); guarda();
+      limpiaMarcas(); refrescaSumas(); guarda();
     });
     inp.addEventListener('blur', function(){
       var v=S[activo.id].filas[i][k];
       inp.value=(typeof v==='number')?miles(v):'';
-      pintaDiario();
+      refrescaSumas();
     });
   });
   Array.prototype.forEach.call($('tres').querySelectorAll('input'), function(inp){

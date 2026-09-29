@@ -247,6 +247,17 @@ function modelo(){
   return h;
 }
 
+/* ¿la cuenta escrita sirve para la esperada?
+   Vale el código completo y también cualquier nivel superior:
+   para 1212 valen 12, 121 y 1212.                              */
+function esLaCuenta(escrito, esperado){
+  escrito=String(escrito||'').trim();
+  esperado=String(esperado||'');
+  if(!escrito) return false;
+  if(escrito===esperado) return true;
+  return escrito.length>=2 && escrito.length<esperado.length && esperado.indexOf(escrito)===0;
+}
+
 /* una sola línea: a qué lado va y por qué */
 function motivo(cod, lado, q){
   var n=natural(cod), LADO = lado==='d' ? 'DEBE' : 'HABER';
@@ -270,5 +281,5 @@ function lista(codigos, titulo){
 }
 
 window.Dinamica={ guia:guia, tabla:tabla, explica:explica, natural:natural,
-                  modelo:modelo, motivo:motivo, lista:lista };
+                  modelo:modelo, motivo:motivo, lista:lista, esLaCuenta:esLaCuenta };
 })();
