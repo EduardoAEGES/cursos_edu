@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flujos de efectivo · sesiones 1 y 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .efe{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --ambar:#B25E09;
+        --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+        max-width:1180px; margin:0 auto; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:12px; }
+  .titulo .marca svg{ width:64px; height:58px; display:block; flex:none; }
+  .titulo .tx{ flex:1; min-width:200px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .pest{ display:flex; gap:8px; flex-wrap:wrap; margin:16px 0 4px; }
+  .pest button{ font:inherit; font-size:13.5px; font-weight:600; cursor:pointer;
+                border:1px solid var(--o-border); background:#fff; color:var(--o-muted);
+                border-radius:9px; padding:9px 14px; line-height:1.3; }
+  .pest button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+
+  .casos{ display:flex; gap:7px; flex-wrap:wrap; margin:10px 0 14px; align-items:center; }
+  .casos button{ font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+                 border:1px solid var(--o-border); background:#fff; color:var(--gris);
+                 border-radius:999px; padding:6px 13px; }
+  .casos button.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .casos button .pc{ font-weight:700; opacity:.75; margin-left:5px; font-size:11px; }
+  .casos .sep{ flex:1; }
+
+  .enun{ border:1px solid var(--o-border); border-left:4px solid var(--azul);
+         border-radius:9px; padding:11px 14px; background:#F7FAFD; margin-bottom:14px; }
+  .enun h2{ margin:0 0 4px; font-size:15px; font-weight:800; color:var(--azul); }
+  .enun p{ margin:0; font-size:13px; line-height:1.6; color:var(--gris); }
+
+  .tablero{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:980px){ .tablero{ grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); align-items:start; } }
+  .tablero > *{ min-width:0; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff; overflow:hidden; }
+  .bloque > h3{ margin:0; font-size:12.5px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:8px 12px; }
+  .bloque.paso > h3{ background:var(--azul); }
+  .bloque.arma > h3{ background:var(--verde); }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; text-align:left; vertical-align:middle; }
+  thead th{ font-size:11px; text-transform:uppercase; letter-spacing:.3px;
+            color:var(--o-muted); background:#FAFBFC; font-weight:700; }
+  td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  tr.cab td{ background:#F4F6F8; font-weight:800; font-size:11.5px; letter-spacing:.3px;
+             text-transform:uppercase; color:var(--gris); }
+  tr.tot td{ font-weight:800; border-top:2px solid #D8DCE2; background:#FCFCFD; }
+  tr.sub td{ font-weight:800; background:#F6FBF8; }
+  td.neg{ color:var(--rojo); }
+  .pista{ display:block; font-size:11.5px; color:var(--o-muted); font-weight:400;
+          line-height:1.45; margin-top:2px; }
+
+  input.cel{ width:108px; max-width:100%; font:inherit; font-size:13px; text-align:right;
+             font-variant-numeric:tabular-nums; border:1px solid var(--amaBd);
+             background:var(--ama); border-radius:6px; padding:4px 7px; color:#3F3208; }
+  input.cel:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  input.cel.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  input.cel.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  input.cel.signo{ background:#FFF3E2; border-color:#E8B172; color:#7A430A; }
+  .msg{ display:block; font-size:11.5px; line-height:1.4; margin-top:3px; font-weight:600; }
+  .msg.mal{ color:var(--rojo); } .msg.signo{ color:var(--ambar); }
+
+  .barra{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:14px 0 0; }
+  .barra .crece{ flex:1; min-width:10px; }
+  .prog{ height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; min-width:120px; flex:1; }
+  .prog i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .cuenta{ font-size:12.5px; color:var(--o-muted); font-weight:600; white-space:nowrap; }
+
+  .comp{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px; margin-top:12px;
+         font-size:13px; font-weight:700; display:flex; justify-content:space-between;
+         gap:10px; flex-wrap:wrap; background:#FAFBFC; color:var(--gris); }
+  .comp.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .comp .v{ font-variant-numeric:tabular-nums; }
+
+  .material{ margin-top:16px; }
+  .aviso{ font-size:12.5px; color:var(--o-muted); line-height:1.55; margin:9px 0 0; }
+
+  @media (max-width:640px){
+    table, thead, tbody, tr, td, th{ display:block; }
+    thead{ position:absolute; left:-9999px; }
+    tr{ border-bottom:1px solid #EDEFF2; padding:5px 0; }
+    td{ border:0; padding:3px 11px; display:flex; justify-content:space-between;
+        align-items:center; gap:10px; }
+    td::before{ content:attr(data-et); font-size:10.5px; text-transform:uppercase;
+                letter-spacing:.3px; color:var(--o-muted); font-weight:700; flex:none; }
+    td.concepto::before{ display:none; }
+    td.concepto{ display:block; font-weight:600; }
+    td.num{ text-align:right; }
+    tr.cab td, tr.tot td, tr.sub td{ display:block; }
+    tr.cab td::before, tr.tot td::before, tr.sub td::before{ display:none; }
+    tr.tot td.num::before, tr.sub td.num::before{ display:inline; }
+    tr.tot td.num, tr.sub td.num{ display:flex; }
+    input.cel{ width:120px; }
+    td.num:empty{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Estados Financieros</span> / <b>Flujos de efectivo</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="efe">
+
+  <div class="titulo">
+    <span class="marca" aria-hidden="true">
+      <svg viewBox="0 0 64 58" fill="none" stroke="#1F5FA8" stroke-width="2.4"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="12" width="40" height="26" rx="4"/>
+        <circle cx="24" cy="25" r="6.5"/>
+        <path d="M14 19h.02M34 31h.02"/>
+        <path d="M50 22v22M50 44l-7-7M50 44l7-7"/>
+      </svg>
+    </span>
+    <span class="tx">
+      <h1>Sesiones 1 y 2 · Estado de Flujos de Efectivo</h1>
+      <p>Casos guiados de la carpeta del curso · método directo y método indirecto</p>
+    </span>
+  </div>
+
+  <div class="idea">
+    <b>La idea base es siempre la misma:</b> lo del estado de resultados + saldo al inicio − saldo al final
+    = lo que realmente se cobró o se pagó. Cifras en soles; para simplificar, no se considera IGV.
+    Ejercicio 2025 comparado con 2024. Las salidas de dinero van <b>en negativo</b>: escribe
+    <code>-12000</code> o <code>(12,000)</code>.
+  </div>
+
+  <div class="pest" id="pest"></div>
+  <div class="casos" id="casos"></div>
+  <div id="panel"></div>
+
+  <div class="o-sheet material" style="margin:18px 0 0;padding:14px 16px">
+    <h3 style="margin:0 0 8px;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:#5A5A5A">Material de la sesión</h3>
+    <div class="o-list">
+      <a class="o-row" href="https://docs.google.com/spreadsheets/d/1Qn-lNPt6UiKZ0uE-U3APKk1Kgn2pni-ZtEc4OboBlKI/edit" target="_blank" rel="noopener">
+        <span class="n">📊</span>
+        <span class="info"><span class="t">1_EFE Casos Guiados</span><span class="d">La hoja de cálculo original, con las dos pestañas: método directo y método indirecto</span></span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="https://drive.google.com/drive/folders/1i2op8FWb7QuQ1Mw42E2sX6cc0pfRyULy" target="_blank" rel="noopener">
+        <span class="n">📁</span>
+        <span class="info"><span class="t">Carpeta Sesión 1 y 2</span><span class="d">Todo el material de las dos primeras sesiones del curso</span></span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="https://docs.google.com/spreadsheets/d/1Qn-lNPt6UiKZ0uE-U3APKk1Kgn2pni-ZtEc4OboBlKI/export?format=xlsx" target="_blank" rel="noopener">
+        <span class="n">⬇️</span>
+        <span class="info"><span class="t">Descargar en Excel</span><span class="d">Para resolverlo también en la hoja de cálculo</span></span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <p class="aviso">Los enlaces abren la carpeta y la hoja tal como están compartidas; no cambian ningún permiso.</p>
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="calculadora.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ===== formato y lectura de números ===== */
+  function fmt(n){
+    if(n===null || n===undefined || isNaN(n)) return '';
+    var s = Math.abs(n).toLocaleString('es-PE',{minimumFractionDigits:0, maximumFractionDigits:2});
+    return n<0 ? '('+s+')' : s;
+  }
+  function lee(txt){
+    if(txt===null || txt===undefined) return null;
+    var t=String(txt).trim();
+    if(!t) return null;
+    var neg = /^\(.*\)$/.test(t) || /^-/.test(t);
+    t = t.replace(/[()\s]/g,'').replace(/^-/,'').replace(/,/g,'');
+    if(t==='' || isNaN(Number(t))) return NaN;
+    var v = Number(t);
+    return neg ? -v : v;
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  /* ===== sonido ===== */
+  var ac=null;
+  function nota(f, ini, dur, vol, tipo){
+    try{
+      if(!ac) ac = new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(660,0,.12,.05,'triangle'); }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f, i*0.09, .22, .06, 'triangle'); }); }
+
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+    for(var i=0;i<110;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(q){ q.x+=q.vx; q.y+=q.vy; q.r+=0.08;
+        x.save(); x.translate(q.x,q.y); x.rotate(q.r); x.fillStyle=q.c;
+        x.fillRect(-q.s/2,-q.s/2,q.s,q.s*0.6); x.restore(); });
+      if(Date.now()-t0<2600) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  /* ===== datos: las tres empresas (de la hoja del curso) ===== */
+  var EMPRESAS=[
+    { nombre:'CASO 1 · BODEGA SANTA ROSA E.I.R.L.',
+      desc:'Bodega de barrio en Cayma. La dueña quiere saber por qué ganó S/ 7,050 en el año, pero la caja solo creció un poco. Con los datos, termina el estado de flujos de efectivo.',
+      caja:[9550,8000],
+      esf:[ ['cab','ACTIVO'],
+            ['li','Caja y bancos',9550,8000],
+            ['li','Cuentas por cobrar a clientes',7000,5000],
+            ['li','Mercaderías',10000,12000],
+            ['li','Equipos (costo)',25000,20000],
+            ['li','Depreciación acumulada',-6000,-4000],
+            ['tot','Total activo',45550,41000],
+            ['cab','PASIVO Y PATRIMONIO'],
+            ['li','Cuentas por pagar a proveedores',7500,6000],
+            ['li','Préstamo bancario',6000,10000],
+            ['li','Capital',20000,20000],
+            ['li','Resultados acumulados',12050,5000],
+            ['tot','Total pasivo y patrimonio',45550,41000] ],
+      er:[ ['li','Ventas',60000],
+           ['li','Costo de ventas',-36000],
+           ['tot','Utilidad bruta',24000],
+           ['li','Gastos operativos (sueldos, alquiler; pagados al contado)',-12000],
+           ['li','Depreciación',-2000],
+           ['tot','Utilidad antes de impuestos',10000],
+           ['li','Impuesto a la renta (pagado en el año)',-2950],
+           ['tot','Utilidad neta',7050] ],
+      extra:[ ['Compró una congeladora al contado',5000],
+              ['Pagó (amortizó) parte del préstamo bancario',4000] ] },
+
+    { nombre:'CASO 2 · POLLERÍA EL BUEN SABOR S.A.C.',
+      desc:'Pollería en el Cercado de Arequipa. Tuvo buenas ventas, pero terminó el año casi sin dinero en caja. Arma el estado de flujos y descubre a dónde se fue el efectivo.',
+      caja:[1000,15000],
+      esf:[ ['cab','ACTIVO'],
+            ['li','Caja y bancos',1000,15000],
+            ['li','Cuentas por cobrar a clientes',14000,10000],
+            ['li','Insumos y mercaderías',9000,8000],
+            ['li','Maquinaria (costo)',62000,50000],
+            ['li','Depreciación acumulada',-15000,-10000],
+            ['tot','Total activo',71000,73000],
+            ['cab','PASIVO Y PATRIMONIO'],
+            ['li','Cuentas por pagar a proveedores',7000,9000],
+            ['li','Préstamo bancario',12000,20000],
+            ['li','Capital',35000,35000],
+            ['li','Resultados acumulados',17000,9000],
+            ['tot','Total pasivo y patrimonio',71000,73000] ],
+      er:[ ['li','Ventas',120000],
+           ['li','Costo de ventas',-70000],
+           ['tot','Utilidad bruta',50000],
+           ['li','Gastos operativos (sueldos, luz, gas; pagados al contado)',-28000],
+           ['li','Depreciación',-5000],
+           ['tot','Utilidad antes de impuestos',17000],
+           ['li','Impuesto a la renta (pagado en el año)',-5000],
+           ['tot','Utilidad neta',12000] ],
+      extra:[ ['Compró un horno rotatorio al contado',12000],
+              ['Pagó (amortizó) parte del préstamo bancario',8000],
+              ['Pagó dividendos a los socios',4000] ] },
+
+    { nombre:'CASO 3 · DISTRIBUIDORA CHACHANI S.A.C.',
+      desc:'Distribuidora de abarrotes para bodegas y minimarkets de Arequipa. En el año compró un vehículo, cambió parte de su deuda con el banco y los socios hicieron un aporte. Prepara el estado de flujos de efectivo 2025.',
+      caja:[17000,42000],
+      esf:[ ['cab','ACTIVO'],
+            ['li','Caja y bancos',17000,42000],
+            ['li','Cuentas por cobrar a clientes',110000,85000],
+            ['li','Mercaderías',105000,120000],
+            ['li','Inmuebles, maquinaria y equipo (costo)',370000,300000],
+            ['li','Depreciación acumulada',-90000,-60000],
+            ['tot','Total activo',512000,487000],
+            ['cab','PASIVO Y PATRIMONIO'],
+            ['li','Cuentas por pagar a proveedores',82000,70000],
+            ['li','Remuneraciones por pagar',9000,12000],
+            ['li','Impuesto a la renta por pagar',10930,15000],
+            ['li','Préstamo bancario',130000,150000],
+            ['li','Capital',200000,180000],
+            ['li','Resultados acumulados',80070,60000],
+            ['tot','Total pasivo y patrimonio',512000,487000] ],
+      er:[ ['li','Ventas',640000],
+           ['li','Costo de ventas',-410000],
+           ['tot','Utilidad bruta',230000],
+           ['li','Gastos de personal',-96000],
+           ['li','Otros gastos operativos (alquiler, luz, publicidad; pagados al contado)',-38000],
+           ['li','Depreciación',-30000],
+           ['tot','Utilidad operativa',66000],
+           ['li','Gastos financieros (intereses, pagados en el año)',-12000],
+           ['tot','Utilidad antes de impuestos',54000],
+           ['li','Impuesto a la renta del año (29.5%)',-15930],
+           ['tot','Utilidad neta',38070] ],
+      extra:[ ['Compró un vehículo de reparto al contado',70000],
+              ['Obtuvo un nuevo préstamo bancario',40000],
+              ['Pagó (amortizó) parte de los préstamos',60000],
+              ['Los socios aportaron capital en efectivo',20000],
+              ['Pagó dividendos a los socios',18000] ] }
+  ];
+
+  /* fila: [tipo, texto, valor, fijo, pista]
+     tipo: cab (encabezado), li (línea), sub (subtotal), res (resultado del bloque) */
+  var VENDIDO='← lo vendido + lo que te debían − lo que aún te deben';
+  var COMPRADO='← lo comprado + lo que se debía − lo que aún se debe';
+  var POSITIVO='← entra dinero: va en positivo';
+  var NEGATIVO='← sale dinero: va en negativo';
+  var NODEPRE='← la depreciación NO va: no es salida de dinero';
+  var SUMA3='← operación + inversión + financiamiento';
+
+  var DIRECTO=[
+    { p1:[ { t:'Cobranza a clientes', f:[
+              ['li','Ventas del año',60000,true],
+              ['li','(+) Cuentas por cobrar al inicio (2024)',5000,true],
+              ['li','(−) Cuentas por cobrar al final (2025)',7000,true],
+              ['res','(=) Cobranza a clientes',58000,true,VENDIDO] ] },
+           { t:'Compras del año', f:[
+              ['li','Costo de ventas',36000,true,'← escríbelo en positivo'],
+              ['li','(+) Inventario final (2025)',10000,true],
+              ['li','(−) Inventario inicial (2024)',12000,true],
+              ['res','(=) Compras del año',34000,true] ] },
+           { t:'Pago a proveedores', f:[
+              ['li','Compras del año',34000,true,'↑ sale del cálculo anterior'],
+              ['li','(+) Cuentas por pagar al inicio (2024)',6000,true],
+              ['li','(−) Cuentas por pagar al final (2025)',7500,true],
+              ['res','(=) Pago a proveedores',32500,false,COMPRADO] ] } ],
+      efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Cobranza a clientes',58000,true,POSITIVO],
+            ['li','Pago a proveedores',-32500,false,NEGATIVO],
+            ['li','Pago de gastos operativos',-12000,true,NODEPRE],
+            ['li','Pago de impuesto a la renta',-2950,true],
+            ['sub','Flujo neto de actividades de operación',10550,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-5000,true,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-5000,true],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Amortización (pago) de préstamos',-4000,true],
+            ['sub','Flujo neto de actividades de financiamiento',-4000,true],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',1550,false,SUMA3],
+            ['li','Efectivo al inicio del año',8000,true,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',9550,false,'← debe ser igual a Caja y bancos 2025'] ] },
+
+    { p1:[ { t:'Cobranza a clientes', f:[
+              ['li','Ventas del año',120000,false],
+              ['li','(+) Cuentas por cobrar al inicio (2024)',10000,false],
+              ['li','(−) Cuentas por cobrar al final (2025)',14000,false],
+              ['res','(=) Cobranza a clientes',116000,false,VENDIDO] ] },
+           { t:'Compras del año', f:[
+              ['li','Costo de ventas',70000,false,'← escríbelo en positivo'],
+              ['li','(+) Inventario final (2025)',9000,false],
+              ['li','(−) Inventario inicial (2024)',8000,false],
+              ['res','(=) Compras del año',71000,false] ] },
+           { t:'Pago a proveedores', f:[
+              ['li','Compras del año',71000,false,'↑ sale del cálculo anterior'],
+              ['li','(+) Cuentas por pagar al inicio (2024)',9000,false],
+              ['li','(−) Cuentas por pagar al final (2025)',7000,false],
+              ['res','(=) Pago a proveedores',73000,false,COMPRADO] ] } ],
+      efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Cobranza a clientes',116000,false,POSITIVO],
+            ['li','Pago a proveedores',-73000,false,NEGATIVO],
+            ['li','Pago de gastos operativos',-28000,false,NODEPRE],
+            ['li','Pago de impuesto a la renta',-5000,false],
+            ['sub','Flujo neto de actividades de operación',10000,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-12000,false,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-12000,false],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Amortización (pago) de préstamos',-8000,false],
+            ['li','Pago de dividendos',-4000,false],
+            ['sub','Flujo neto de actividades de financiamiento',-12000,false],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',-14000,false,SUMA3],
+            ['li','Efectivo al inicio del año',15000,false,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',1000,false,'← debe ser igual a Caja y bancos 2025'] ] },
+
+    { p1:[ { t:'Cobranza a clientes', f:[
+              ['li','Ventas del año',640000,false],
+              ['li','(+) Cuentas por cobrar al inicio (2024)',85000,false],
+              ['li','(−) Cuentas por cobrar al final (2025)',110000,false],
+              ['res','(=) Cobranza a clientes',615000,false,VENDIDO] ] },
+           { t:'Compras del año', f:[
+              ['li','Costo de ventas',410000,false,'← escríbelo en positivo'],
+              ['li','(+) Inventario final (2025)',105000,false],
+              ['li','(−) Inventario inicial (2024)',120000,false],
+              ['res','(=) Compras del año',395000,false] ] },
+           { t:'Pago a proveedores', f:[
+              ['li','Compras del año',395000,false,'↑ sale del cálculo anterior'],
+              ['li','(+) Cuentas por pagar al inicio (2024)',70000,false],
+              ['li','(−) Cuentas por pagar al final (2025)',82000,false],
+              ['res','(=) Pago a proveedores',383000,false,COMPRADO] ] },
+           { t:'Pago de remuneraciones', f:[
+              ['li','Gastos de personal',96000,false],
+              ['li','(+) Remuneraciones por pagar al inicio',12000,false],
+              ['li','(−) Remuneraciones por pagar al final',9000,false],
+              ['res','(=) Pago de remuneraciones',99000,false] ] },
+           { t:'Pago de impuesto a la renta', f:[
+              ['li','Impuesto a la renta del año',15930,false],
+              ['li','(+) Impuesto por pagar al inicio',15000,false],
+              ['li','(−) Impuesto por pagar al final',10930,false],
+              ['res','(=) Pago de impuesto a la renta',20000,false] ] } ],
+      efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Cobranza a clientes',615000,false,POSITIVO],
+            ['li','Pago a proveedores',-383000,false,NEGATIVO],
+            ['li','Pago de remuneraciones',-99000,false],
+            ['li','Pago de otros gastos operativos',-38000,false],
+            ['li','Pago de intereses',-12000,false],
+            ['li','Pago de impuesto a la renta',-20000,false],
+            ['sub','Flujo neto de actividades de operación',63000,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-70000,false,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-70000,false],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Préstamo recibido',40000,false,POSITIVO],
+            ['li','Amortización (pago) de préstamos',-60000,false],
+            ['li','Aporte de capital de los socios',20000,false],
+            ['li','Pago de dividendos',-18000,false],
+            ['sub','Flujo neto de actividades de financiamiento',-18000,false],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',-25000,false,SUMA3],
+            ['li','Efectivo al inicio del año',42000,false,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',17000,false,'← debe ser igual a Caja y bancos 2025'] ] }
+  ];
+
+  var NOEFE='← no movió dinero: se vuelve a sumar';
+  var DEBENMAS='← te deben más: ese dinero todavía no entró';
+  var STOCK='← vendiste stock que ya tenías: no volviste a comprarlo';
+  var NOPAG='← todavía no lo pagaste: el dinero sigue en caja';
+
+  var INDIRECTO=[
+    { efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Utilidad neta del ejercicio',7050,true,'← el punto de partida del método indirecto'],
+            ['li','(+) Depreciación del año',2000,true,NOEFE],
+            ['li','Aumento de cuentas por cobrar',-2000,true,DEBENMAS],
+            ['li','Disminución de mercaderías',2000,true,STOCK],
+            ['li','Aumento de cuentas por pagar a proveedores',1500,false,NOPAG],
+            ['sub','Flujo neto de actividades de operación',10550,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-5000,true,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-5000,true],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Amortización (pago) de préstamos',-4000,true],
+            ['sub','Flujo neto de actividades de financiamiento',-4000,true],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',1550,false,SUMA3],
+            ['li','Efectivo al inicio del año',8000,true,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',9550,false,'← debe ser igual a Caja y bancos 2025'] ] },
+
+    { efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Utilidad neta del ejercicio',12000,false,'← el punto de partida del método indirecto'],
+            ['li','(+) Depreciación del año',5000,false,NOEFE],
+            ['li','Aumento de cuentas por cobrar',-4000,false,DEBENMAS],
+            ['li','Aumento de insumos y mercaderías',-1000,false,'← compraste stock que todavía no vendiste'],
+            ['li','Disminución de cuentas por pagar a proveedores',-2000,false,'← pagaste deuda vieja: salió dinero'],
+            ['sub','Flujo neto de actividades de operación',10000,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-12000,false,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-12000,false],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Amortización (pago) de préstamos',-8000,false],
+            ['li','Pago de dividendos',-4000,false],
+            ['sub','Flujo neto de actividades de financiamiento',-12000,false],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',-14000,false,SUMA3],
+            ['li','Efectivo al inicio del año',15000,false,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',1000,false,'← debe ser igual a Caja y bancos 2025'] ] },
+
+    { efe:[ ['cab','ACTIVIDADES DE OPERACIÓN'],
+            ['li','Utilidad neta del ejercicio',38070,false,'← el punto de partida del método indirecto'],
+            ['li','(+) Depreciación del año',30000,false,NOEFE],
+            ['li','Aumento de cuentas por cobrar',-25000,false,DEBENMAS],
+            ['li','Disminución de mercaderías',15000,false,STOCK],
+            ['li','Aumento de cuentas por pagar a proveedores',12000,false,NOPAG],
+            ['li','Disminución de remuneraciones por pagar',-3000,false,'← pagaste sueldos que debías del año pasado'],
+            ['li','Disminución de impuesto a la renta por pagar',-4070,false,'← pagaste impuesto que debías del año pasado'],
+            ['sub','Flujo neto de actividades de operación',63000,false],
+            ['cab','ACTIVIDADES DE INVERSIÓN'],
+            ['li','Compra de activo fijo',-70000,false,NEGATIVO],
+            ['sub','Flujo neto de actividades de inversión',-70000,false],
+            ['cab','ACTIVIDADES DE FINANCIAMIENTO'],
+            ['li','Préstamo recibido',40000,false,POSITIVO],
+            ['li','Amortización (pago) de préstamos',-60000,false],
+            ['li','Aporte de capital de los socios',20000,false],
+            ['li','Pago de dividendos',-18000,false],
+            ['sub','Flujo neto de actividades de financiamiento',-18000,false],
+            ['cab',''],
+            ['sub','Aumento (disminución) neto del efectivo',-25000,false,SUMA3],
+            ['li','Efectivo al inicio del año',42000,false,'← Caja y bancos 2024'],
+            ['sub','Efectivo al final del año',17000,false,'← debe ser igual a Caja y bancos 2025'] ] }
+  ];
+
+  var METODOS=[
+    { id:'directo',   t:'Sesión 1 · Método directo',
+      sub:'Muestra el dinero que realmente entró y salió de caja.', datos:DIRECTO },
+    { id:'indirecto', t:'Sesión 2 · Método indirecto',
+      sub:'Empieza con la utilidad neta y la corrige con lo que no movió dinero y con los cambios en cuentas por cobrar, inventarios y cuentas por pagar.', datos:INDIRECTO }
+  ];
+
+  /* ===== estado guardado ===== */
+  var LS='ef_flujos_v1';
+  var guardado={};
+  try{ guardado = JSON.parse(localStorage.getItem(LS)||'{}') || {}; }catch(e){ guardado={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(guardado)); }catch(e){} }
+
+  var mi=0, ci=0;       /* método actual, caso actual */
+  var celdas=[];        /* celdas editables del panel actual */
+  var hechoAntes={};
+
+  function clave(m,c,k){ return m+'|'+c+'|'+k; }
+
+  /* ===== dibujo ===== */
+  function tablaFija(filas, cols){
+    var h='<table><thead><tr><th>Concepto</th>';
+    cols.forEach(function(c){ h+='<th class="num">'+esc(c)+'</th>'; });
+    h+='</tr></thead><tbody>';
+    filas.forEach(function(f){
+      if(f[0]==='cab'){ h+='<tr class="cab"><td colspan="'+(cols.length+1)+'">'+esc(f[1])+'</td></tr>'; return; }
+      h+='<tr class="'+(f[0]==='tot'?'tot':'')+'"><td class="concepto">'+esc(f[1])+'</td>';
+      for(var i=0;i<cols.length;i++){
+        var v=f[2+i];
+        if(cols[i]==='Variación'){ v = (f[2]===undefined||f[3]===undefined||f[0]==='tot') ? null : f[2]-f[3]; }
+        h+='<td class="num '+(v<0?'neg':'')+'" data-et="'+esc(cols[i])+'">'+(v===null||v===undefined?'':fmt(v))+'</td>';
+      }
+      h+='</tr>';
+    });
+    return h+'</tbody></table>';
+  }
+
+  function filaEdit(f, k){
+    var tipo=f[0], txt=f[1], val=f[2], fijo=f[3], pista=f[4]||'';
+    if(tipo==='cab'){
+      if(!txt) return '<tr class="cab"><td colspan="2" style="background:#fff;border:0;padding:3px"></td></tr>';
+      return '<tr class="cab"><td colspan="2">'+esc(txt)+'</td></tr>';
+    }
+    var cls = tipo==='sub' ? 'sub' : (tipo==='res' ? 'sub' : '');
+    var h='<tr class="'+cls+'"><td class="concepto">'+esc(txt)+
+          (pista?'<span class="pista">'+esc(pista)+'</span>':'')+'</td>';
+    if(fijo){
+      h+='<td class="num '+(val<0?'neg':'')+'" data-et="Importe">'+fmt(val)+'</td>';
+    }else{
+      var prev = guardado[clave(METODOS[mi].id, ci, k)];
+      h+='<td class="num" data-et="Importe">'+
+         '<input class="cel" inputmode="decimal" autocomplete="off" data-k="'+esc(k)+'" '+
+         'data-v="'+val+'" value="'+(prev===undefined?'':esc(prev))+'" aria-label="'+esc(txt)+'">'+
+         '<span class="msg"></span></td>';
+      celdas.push({k:k, v:val});
+    }
+    return h+'</tr>';
+  }
+
+  function tablaEdit(filas, pref){
+    var h='<table><thead><tr><th>Concepto</th><th class="num">Importe (S/)</th></tr></thead><tbody>';
+    filas.forEach(function(f,i){ h+=filaEdit(f, pref+i); });
+    return h+'</tbody></table>';
+  }
+
+  function pinta(){
+    var m=METODOS[mi], emp=EMPRESAS[ci], d=m.datos[ci];
+    celdas=[];
+
+    var izq='<div class="bloque"><h3>Estado de situación financiera al 31 de diciembre (S/)</h3>'+
+            tablaFija(emp.esf, ['2025','2024','Variación'])+'</div>'+
+            '<div class="bloque" style="margin-top:14px"><h3>Estado de resultados 2025 (S/)</h3>'+
+            tablaFija(emp.er, ['2025'])+'</div>'+
+            '<div class="bloque" style="margin-top:14px"><h3>Información adicional 2025 (S/)</h3>'+
+            tablaFija(emp.extra.map(function(x){ return ['li',x[0],x[1]]; }), ['Importe'])+'</div>';
+
+    var der='';
+    if(d.p1){
+      der+='<div class="bloque paso"><h3>Paso 1 · calcula cuánto dinero entró y salió realmente</h3>';
+      d.p1.forEach(function(b,bi){
+        der+='<div style="padding:2px 0"><p style="margin:10px 12px 2px;font-size:12.5px;font-weight:800;color:#1F5FA8">'+esc(b.t)+'</p>'+
+             tablaEdit(b.f,'p'+bi+'_')+'</div>';
+      });
+      der+='</div>';
+    }
+    der+='<div class="bloque arma" style="'+(d.p1?'margin-top:14px':'')+'">'+
+         '<h3>'+(d.p1?'Paso 2 · arma':'Arma')+' el estado de flujos de efectivo 2025 — método '+m.id+' (S/)</h3>'+
+         tablaEdit(d.efe,'e_')+'</div>'+
+         '<div class="comp" id="comp"><span>Comprobación (debe salir 0)</span><span class="v" id="compV">—</span></div>';
+
+    document.getElementById('panel').innerHTML =
+      '<div class="enun"><h2>'+esc(emp.nombre)+'</h2><p>'+esc(emp.desc)+'</p></div>'+
+      '<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
+      '<button type="button" class="o-btn" id="btnLimpia">Borrar mis respuestas</button></div>'+
+      '<div class="tablero" style="margin-top:14px"><div>'+izq+'</div><div>'+der+'</div></div>';
+
+    document.getElementById('btnLimpia').addEventListener('click', function(){
+      celdas.forEach(function(c){ delete guardado[clave(METODOS[mi].id, ci, c.k)]; });
+      graba(); pinta();
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('input.cel'), function(inp){
+      inp.addEventListener('input', function(){
+        guardado[clave(METODOS[mi].id, ci, inp.dataset.k)] = inp.value;
+        graba(); revisa(inp, false); resumen();
+      });
+      inp.addEventListener('blur', function(){ revisa(inp, true); });
+      revisa(inp, false);
+    });
+    resumen();
+  }
+
+  function revisa(inp, alSalir){
+    var msg = inp.parentNode.querySelector('.msg');
+    var esperado = Number(inp.dataset.v);
+    var v = lee(inp.value);
+    inp.classList.remove('ok','mal','signo');
+    msg.textContent=''; msg.className='msg';
+    if(v===null) return false;
+    if(isNaN(v)){ if(alSalir){ inp.classList.add('mal'); msg.textContent='Escribe solo números.'; msg.className='msg mal'; } return false; }
+    if(Math.abs(v-esperado) < 0.5){
+      inp.classList.add('ok');
+      if(alSalir) inp.value = fmt(esperado);
+      return true;
+    }
+    if(Math.abs(Math.abs(v)-Math.abs(esperado)) < 0.5){
+      inp.classList.add('signo');
+      msg.textContent = esperado<0 ? 'El importe está bien, pero aquí sale dinero: va en negativo.'
+                                   : 'El importe está bien, pero aquí entra dinero: va en positivo.';
+      msg.className='msg signo';
+      return false;
+    }
+    if(alSalir){ inp.classList.add('mal'); }
+    return false;
+  }
+
+  function resumen(){
+    var ok=0;
+    Array.prototype.forEach.call(document.querySelectorAll('input.cel'), function(inp){
+      var v=lee(inp.value);
+      if(v!==null && !isNaN(v) && Math.abs(v-Number(inp.dataset.v))<0.5) ok++;
+    });
+    var tot=celdas.length;
+    document.getElementById('progI').style.width = tot? (ok/tot*100)+'%' : '0';
+    document.getElementById('cuenta').textContent = ok+' de '+tot+' correctas';
+
+    /* comprobación: efectivo al final − Caja y bancos 2025 */
+    var fin=null;
+    Array.prototype.forEach.call(document.querySelectorAll('input.cel'), function(inp){
+      if(inp.getAttribute("aria-label")==="Efectivo al final del año") fin=lee(inp.value);
+    });
+    var caja=EMPRESAS[ci].caja[0];
+    var comp=document.getElementById('comp'), cv=document.getElementById('compV');
+    if(fin===null || isNaN(fin)){ comp.classList.remove('ok'); cv.textContent=fmt(-caja); }
+    else{ var dif=fin-caja; cv.textContent=fmt(dif)||'0'; comp.classList.toggle('ok', Math.abs(dif)<0.5); }
+
+    var id=METODOS[mi].id+'|'+ci;
+    if(tot && ok===tot && !hechoAntes[id]){ hechoAntes[id]=true; listo(); confeti(); }
+    else if(tot && ok===tot){ /* ya celebrado */ }
+    else if(ok>0) { /* nada */ }
+
+    pestPinta();
+  }
+
+  /* sonido corto al acertar una celda nueva */
+  var previos={};
+  document.addEventListener('input', function(ev){
+    var inp=ev.target;
+    if(!inp.classList || !inp.classList.contains('cel')) return;
+    var id=METODOS[mi].id+'|'+ci+'|'+inp.dataset.k;
+    var ok = inp.classList.contains('ok');
+    if(ok && !previos[id]) bien();
+    previos[id]=ok;
+  });
+
+  function pestPinta(){
+    document.getElementById('pest').innerHTML = METODOS.map(function(m,i){
+      return '<button type="button" data-m="'+i+'" class="'+(i===mi?'on':'')+'">'+esc(m.t)+'</button>';
+    }).join('');
+    document.getElementById('casos').innerHTML = EMPRESAS.map(function(e,i){
+      var tot=0, ok=0, d=METODOS[mi].datos[i];
+      function cuenta(filas, pref){
+        filas.forEach(function(f,j){
+          if(f[0]==='cab' || f[3]) return;
+          tot++;
+          var v=lee(guardado[clave(METODOS[mi].id,i,pref+j)]);
+          if(v!==null && !isNaN(v) && Math.abs(v-f[2])<0.5) ok++;
+        });
+      }
+      if(d.p1) d.p1.forEach(function(b,bi){ cuenta(b.f,'p'+bi+'_'); });
+      cuenta(d.efe,'e_');
+      var pc = tot? Math.round(ok/tot*100) : 0;
+      return '<button type="button" data-c="'+i+'" class="'+(i===ci?'on':'')+'">Caso '+(i+1)+' '+
+             '<span class="pc">'+pc+'%</span></button>';
+    }).join('') + '<span class="sep"></span>' +
+      '<span class="cuenta">'+esc(METODOS[mi].sub)+'</span>';
+
+    Array.prototype.forEach.call(document.querySelectorAll('#pest button'), function(b){
+      b.addEventListener('click', function(){ mi=+b.dataset.m; pinta(); });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#casos button'), function(b){
+      b.addEventListener('click', function(){ ci=+b.dataset.c; pinta(); });
+    });
+  }
+
+  pinta();
+})();
+</script>
+
+</body>
+</html>
