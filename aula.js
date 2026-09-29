@@ -41,21 +41,15 @@ function leeLocal(k){ try{ return localStorage.getItem('aula_'+k)||''; }catch(e)
 function pintaControles(){
   $('aula').innerHTML=
     '<div class="aula-filas">'+
-      '<div class="aula-fila" id="aulaAlumno">'+
-        '<span class="aula-rol">Alumno</span>'+
+      '<div class="aula-fila" id="aulaEntrada">'+
         '<label class="aula-campo" id="aulaCnom">Tu nombre'+
           '<input id="aulaNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>'+
         '<label class="aula-campo">Código de sala'+
           '<input id="aulaSala" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">Entrar a la sala</button>'+
-      '</div>'+
-      '<div class="aula-fila" id="aulaDocente">'+
-        '<span class="aula-rol doc">Docente</span>'+
-        '<label class="aula-campo">Código de sala'+
-          '<input id="aulaSalaD" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>'+
-        '<label class="aula-campo" id="aulaCclave">Clave'+
-          '<input id="aulaClave" type="password" inputmode="numeric" placeholder="Clave" autocomplete="off"></label>'+
-        '<button class="o-btn" id="aulaEntrarD" type="button">Entrar como docente</button>'+
+        '<label class="aula-sw"><input type="checkbox" id="aulaSw">'+
+          '<span class="riel"><span class="bola"></span></span>'+
+          '<span class="tx">Entrar como docente</span></label>'+
       '</div>'+
       '<div class="aula-fila" id="aulaDentro" hidden>'+
         '<span class="aula-rol" id="aulaQuien"></span>'+
@@ -64,14 +58,25 @@ function pintaControles(){
         '<button class="o-btn" id="aulaRefresca" type="button" hidden>↻ Actualizar</button>'+
       '</div>'+
       '<span class="aula-estado solo" id="aulaEstado">Modo individual</span>'+
+    '</div>'+
+    '<div class="aula-velo" id="aulaVelo" hidden>'+
+      '<div class="aula-modal" role="dialog" aria-modal="true" aria-label="Entrar como docente">'+
+        '<div class="am-h">Entrar como docente</div>'+
+        '<p class="am-p">Escribe la clave para ver el avance del aula y la solución.</p>'+
+        '<label class="aula-campo" id="aulaCclave">Clave'+
+          '<input id="aulaClave" type="password" inputmode="numeric" placeholder="Clave" autocomplete="off"></label>'+
+        '<p class="am-err" id="aulaErr"></p>'+
+        '<div class="am-b">'+
+          '<button class="o-btn" id="aulaCancela" type="button">Cancelar</button>'+
+          '<button class="o-btn o-btn-primary" id="aulaEntrarD" type="button">Entrar</button>'+
+        '</div>'+
+      '</div>'+
     '</div>';
 
   $('aulaNombre').value=leeLocal('nombre');
   $('aulaSala').value=leeLocal('sala')||'PCGE';
-  $('aulaSalaD').value=leeLocal('sala')||'PCGE';
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
-  $('aulaEntrarD').addEventListener('click', entraDocente);
   $('aulaSalir').addEventListener('click', sale);
   $('aulaRefresca').addEventListener('click', trae);
   $('aulaGrande').addEventListener('click', function(){
@@ -82,9 +87,26 @@ function pintaControles(){
   ['aulaNombre','aulaSala'].forEach(function(id){
     $(id).addEventListener('keydown', function(e){ if(e.key==='Enter') entraAlumno(); });
   });
-  ['aulaSalaD','aulaClave'].forEach(function(id){
-    $(id).addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+
+  /* el interruptor abre la ventana de la clave */
+  $('aulaSw').addEventListener('change', function(){
+    if($('aulaSw').checked) abreClave(true); else abreClave(false);
   });
+  $('aulaCancela').addEventListener('click', function(){ $('aulaSw').checked=false; abreClave(false); });
+  $('aulaEntrarD').addEventListener('click', entraDocente);
+  $('aulaClave').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+  $('aulaVelo').addEventListener('click', function(e){
+    if(e.target===$('aulaVelo')){ $('aulaSw').checked=false; abreClave(false); }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape' && !$('aulaVelo').hidden){ $('aulaSw').checked=false; abreClave(false); }
+  });
+}
+function abreClave(v){
+  $('aulaVelo').hidden=!v;
+  $('aulaErr').textContent='';
+  $('aulaCclave').classList.remove('falta');
+  if(v){ $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30); }
 }
 function estado(clase, txt){
   var e=$('aulaEstado');
@@ -92,15 +114,16 @@ function estado(clase, txt){
   e.textContent=txt;
 }
 function dentro(txt){
-  $('aulaAlumno').hidden=true; $('aulaDocente').hidden=true;
+  $('aulaEntrada').hidden=true;
   $('aulaDentro').hidden=false;
   $('aulaQuien').textContent=txt;
   $('aulaGrande').hidden=!docente;
   $('aulaRefresca').hidden=!docente;
 }
 function fuera(){
-  $('aulaAlumno').hidden=false; $('aulaDocente').hidden=false;
+  $('aulaEntrada').hidden=false;
   $('aulaDentro').hidden=true;
+  $('aulaSw').checked=false;
 }
 
 /* ---------------- entrar y salir ---------------- */
@@ -116,15 +139,15 @@ function entraAlumno(){
   if(cfg.alModo) cfg.alModo(false);
 }
 function entraDocente(){
-  var s=($('aulaSalaD').value.trim()||'PCGE').toUpperCase();
+  var s=($('aulaSala').value.trim()||'PCGE').toUpperCase();
   var c=$('aulaClave').value.trim();
   if(c!==CLAVE){
     $('aulaCclave').classList.add('falta');
+    $('aulaErr').textContent='Clave incorrecta. Vuelve a intentarlo.';
     $('aulaClave').value=''; $('aulaClave').focus();
-    estado('malo','Clave incorrecta');
     return;
   }
-  $('aulaCclave').classList.remove('falta');
+  abreClave(false);
   yo=null; sala=s; docente=true;
   guardaLocal('sala',s);
   dentro('Docente');

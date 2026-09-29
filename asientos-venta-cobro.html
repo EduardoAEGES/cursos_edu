@@ -21,7 +21,7 @@
   [hidden]{ display:none !important; }
 
   /* pestañas de los 10 casos */
-  .pest{ display:flex; gap:5px; flex-wrap:wrap; }
+  .pest{ display:flex; gap:5px; flex-wrap:wrap; align-items:stretch; }
   .pest button{ font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-align:left;
     border:2px solid var(--o-border); background:#fff; color:var(--o-muted);
     border-radius:9px 9px 0 0; padding:7px 11px; border-bottom-width:3px; }
@@ -29,6 +29,9 @@
   .pest button[aria-selected="true"]{ color:#fff; border-color:var(--cod); background:var(--cod); }
   .pest button .p{ display:block; font-size:10px; font-weight:600; opacity:.85; }
   .pest button .tick{ color:var(--ok); font-weight:800; }
+  .pest .valora{ margin-left:auto; border-color:#E8CE8A; background:#FFF8E1; color:#8A6510; }
+  .pest .valora:hover{ background:#FDF0C9; }
+  .pest .valora.sinenlace{ border-color:var(--o-border); background:#F5F7FA; color:var(--o-muted); }
   .pest button[aria-selected="true"] .tick{ color:#B6EFCB; }
 
   .nivel{ display:flex; align-items:center; gap:9px; flex-wrap:wrap; font-size:12.5px; margin-bottom:10px; }
@@ -594,6 +597,9 @@ function califica(c){
 }
 
 /* =================== pintado =================== */
+/* enlace de la encuesta del repositorio; en cuanto haya uno, aparece el botón */
+var ENCUESTA='';
+
 function pintaPestanas(){
   var h='';
   CASOS.forEach(function(c){
@@ -601,7 +607,19 @@ function pintaPestanas(){
     h+='<button type="button" role="tab" data-c="'+c.id+'" aria-selected="'+(c.id===activo.id?'true':'false')+'">'+
        esc(c.tit)+(fin?' <span class="tick">✓</span>':'')+'<span class="p">'+esc(c.sub)+'</span></button>';
   });
+  h+='<button type="button" class="valora" id="btnValora">⭐ Valorar'+
+     '<span class="p">Cuéntanos qué te pareció</span></button>';
   $('pest').innerHTML=h;
+  $('btnValora').addEventListener('click', function(){
+    if(ENCUESTA) window.open(ENCUESTA, '_blank', 'noopener');
+    else {
+      var b=$('btnValora');
+      b.classList.add('sinenlace');
+      b.innerHTML='⭐ Valorar<span class="p">La encuesta aún no está publicada</span>';
+      setTimeout(function(){ pintaPestanas(); }, 2600);
+    }
+    nota(700,0,0.07,0.05);
+  });
 }
 function pintaNivel(){
   var c=activo, llenos=Math.max(0, 5-Math.round(c.total/17*5)), i, b='';

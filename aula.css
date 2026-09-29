@@ -45,3 +45,31 @@
 .mini tr.b td{ background:#F2FAF5; }
 .mini tr.m td{ background:#FEF6F5; }
 .mini .nn{ color:var(--o-muted); font-style:italic; font-weight:400; }
+
+/* interruptor de docente */
+.aula-sw{ display:flex; align-items:center; gap:8px; cursor:pointer; user-select:none;
+          font-size:12.5px; font-weight:700; color:var(--o-muted); align-self:center; }
+.aula-sw input{ position:absolute; opacity:0; width:0; height:0; }
+.aula-sw .riel{ width:40px; height:22px; border-radius:99px; background:var(--o-line);
+                position:relative; transition:background .18s ease; flex:none; }
+.aula-sw .bola{ position:absolute; top:3px; left:3px; width:16px; height:16px; border-radius:50%;
+                background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.3); transition:transform .18s ease; }
+.aula-sw input:checked + .riel{ background:var(--o-purple); }
+.aula-sw input:checked + .riel .bola{ transform:translateX(18px); }
+.aula-sw input:focus-visible + .riel{ outline:2px solid var(--o-purple); outline-offset:2px; }
+.aula-sw input:checked ~ .tx{ color:var(--o-purple); }
+
+/* ventana de la clave */
+.aula-velo{ position:fixed; inset:0; z-index:95; background:rgba(20,24,32,.45);
+            display:grid; place-items:center; padding:16px; }
+.aula-velo[hidden]{ display:none !important; }
+.aula-modal{ background:#fff; border-radius:13px; width:320px; max-width:100%;
+             box-shadow:0 22px 50px rgba(0,0,0,.34); padding:18px 20px 16px; }
+.aula-modal .am-h{ font-size:17px; font-weight:800; }
+.aula-modal .am-p{ font-size:13px; color:var(--o-muted); margin:5px 0 13px; line-height:1.5; }
+.aula-modal .aula-campo input{ width:100%; font-size:17px; text-align:center; letter-spacing:.1em; }
+.aula-modal .am-err{ color:#C0392B; font-size:12.5px; font-weight:700; min-height:17px; margin:7px 0 0; }
+.aula-modal .am-b{ display:flex; gap:8px; justify-content:flex-end; margin-top:11px; }
+@media (prefers-reduced-motion: reduce){
+  .aula-sw .riel, .aula-sw .bola{ transition:none; }
+}
