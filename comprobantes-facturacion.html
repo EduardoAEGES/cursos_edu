@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facturación · simulador y casos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .fac{ --azul:#1F5FA8; --gris:#5A5A5A; --ama:#FFF8E1; --amaBd:#E8CE8A;
+        max-width:1220px; margin:0 auto; }
+  .titulo{ display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:12px; }
+  .titulo .marca svg{ width:76px; height:64px; display:block; flex:none; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+  .recuerda{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+             padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .recuerda b{ color:#3F3208; }
+
+  .barra{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:11px; }
+  .barra .crece{ flex:1; }
+  .marco{ position:relative; border:1px solid var(--o-border); border-radius:11px;
+          overflow:hidden; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.08); }
+  .marco iframe{ display:block; width:100%; border:0; }
+  .marco.sim iframe{ height:min(78vh,720px); min-height:480px; }
+  .marco.doc iframe{ height:min(70vh,680px); min-height:430px; }
+  .aviso{ font-size:12.5px; color:var(--o-muted); margin:9px 0 0; line-height:1.55; }
+  .aviso a{ color:var(--azul); }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="comprobantes-pago.html">Volver al taller</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="comprobantes-pago.html">Comprobantes de Pago</a></span> / <b>Facturación</b></span>
+  <div class="o-cp-right"><span class="o-count">Simulador y casos</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap fac">
+
+  <div class="o-sheet">
+    <div class="titulo">
+      <div class="marca" aria-hidden="true">
+        <svg viewBox="0 0 76 64">
+          <rect x="9" y="6" width="38" height="50" rx="3" fill="#fff" stroke="#1F5FA8" stroke-width="2.5"/>
+          <path d="M9 18h38" stroke="#1F5FA8" stroke-width="2.5"/>
+          <path d="M16 27h24M16 34h24M16 41h15" stroke="#9FC2E6" stroke-width="2.3" stroke-linecap="round"/>
+          <rect x="44" y="30" width="24" height="26" rx="3" fill="#EAF2FB" stroke="#1F5FA8" stroke-width="2.2"/>
+          <path d="M49 37h14M49 43h14M49 49h9" stroke="#1F5FA8" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="58" cy="17" r="10" fill="#E8B84B"/>
+          <path d="M54 17l3 3 6-6" fill="none" stroke="#fff" stroke-width="2.6"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Facturación · simulador y casos</h1>
+        <p>Practica la emisión en el simulador y resuelve los casos del taller</p>
+      </div>
+    </div>
+    <p class="recuerda">
+      Abajo tienes el <b>simulador</b> para emitir comprobantes como en SUNAT Operaciones en Línea,
+      y después los <b>casos</b> del taller para descargar o leer aquí mismo.
+      <br>Si el simulador se te queda chico, ábrelo en una ventana nueva.
+    </p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Simulador de emisión</h2>
+    <div class="barra">
+      <span class="crece" style="font-size:12.5px;color:var(--o-muted)">
+        Emite la factura paso a paso, como en el portal.</span>
+      <a class="o-btn o-btn-primary" href="https://laboratorio-tributario.vercel.app/taxlab360/sol.html"
+         target="_blank" rel="noopener">Abrir en ventana nueva ↗</a>
+    </div>
+    <div class="marco sim">
+      <iframe src="https://laboratorio-tributario.vercel.app/taxlab360/sol.html"
+              title="Simulador de emisión de comprobantes" loading="lazy"
+              allow="clipboard-write; fullscreen"></iframe>
+    </div>
+    <p class="aviso">Si no carga aquí dentro, ábrelo en una ventana nueva con el botón de arriba.</p>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Casos del taller</h2>
+    <div class="barra">
+      <span class="crece" style="font-size:12.5px;color:var(--o-muted)">
+        Los casos para trabajar en clase.</span>
+      <a class="o-btn o-btn-teal"
+         href="https://docs.google.com/document/d/1tGB2fpczj5obfs1kLmWKOUYIWsFARZQt/export?format=docx">
+         Descargar Word ↓</a>
+      <a class="o-btn"
+         href="https://docs.google.com/document/d/1tGB2fpczj5obfs1kLmWKOUYIWsFARZQt/export?format=pdf">
+         Descargar PDF ↓</a>
+      <a class="o-btn"
+         href="https://docs.google.com/document/d/1tGB2fpczj5obfs1kLmWKOUYIWsFARZQt/edit?usp=sharing"
+         target="_blank" rel="noopener">Abrir en Google Docs ↗</a>
+    </div>
+    <div class="marco doc">
+      <iframe src="https://docs.google.com/document/d/1tGB2fpczj5obfs1kLmWKOUYIWsFARZQt/preview"
+              title="Casos del taller de comprobantes de pago" loading="lazy"></iframe>
+    </div>
+    <p class="aviso">La vista previa necesita que el documento esté compartido con el enlace.
+      Si a tus alumnos les sale en blanco, revisa que en Compartir diga
+      <b>Cualquier persona con el enlace</b>.</p>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="comprobantes-pago.html">Volver al taller</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Taller de Comprobantes de Pago</span>
+    <span>Facturación · simulador y casos</span>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
