@@ -336,7 +336,7 @@
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
 <script src="dinamica.js"></script>
-<script src="calcigv.js"></script>
+<script src="calculadora.js"></script>
 <script>
 (function(){
 'use strict';
@@ -606,10 +606,10 @@ function califica(c){
       var lado = (typeof f.d==='number') ? 'd' : ((typeof f.h==='number') ? 'h' : null);
       var m = lado==='d' ? f.d : (lado==='h' ? f.h : null);
       for(j=0;j<pend.length;j++)
-        if(!pend[j].usado && pend[j].c===f.c && pend[j].l===lado && Math.abs(r2(m)-pend[j].m)<0.005){ esp=pend[j]; break; }
+        if(!pend[j].usado && Dinamica.esLaCuenta(f.c, pend[j].c) && pend[j].l===lado && Math.abs(r2(m)-pend[j].m)<0.005){ esp=pend[j]; break; }
       if(esp){ esp.usado=true; r.filas[i]={ok:true, txt:'Correcto · '+esp.q}; r.bien++; return; }
       for(j=0;j<pend.length;j++)
-        if(!pend[j].usado && pend[j].c===f.c && pend[j].l===lado){ esp=pend[j]; break; }
+        if(!pend[j].usado && Dinamica.esLaCuenta(f.c, pend[j].c) && pend[j].l===lado){ esp=pend[j]; break; }
       if(esp){
         esp.usado=true;
         r.filas[i]={ok:false, txt: (lado===null)
@@ -617,7 +617,7 @@ function califica(c){
           : 'La cuenta y el lado están bien, revisa el importe: aquí va '+esp.q};
         return;
       }
-      for(j=0;j<pend.length;j++) if(!pend[j].usado && pend[j].c===f.c){ esp=pend[j]; break; }
+      for(j=0;j<pend.length;j++) if(!pend[j].usado && Dinamica.esLaCuenta(f.c, pend[j].c)){ esp=pend[j]; break; }
       if(esp){
         esp.usado=true;
         r.filas[i]={ok:false, txt: lado===null

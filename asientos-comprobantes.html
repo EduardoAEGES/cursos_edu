@@ -258,7 +258,7 @@
 <script src="pcge2019.js"></script>
 <script src="aula.js"></script>
 <script src="dinamica.js"></script>
-<script src="calcigv.js"></script>
+<script src="calculadora.js"></script>
 <script>
 (function(){
 'use strict';
@@ -441,7 +441,7 @@ function califica(c){
     var lado = (typeof f.d==='number') ? 'd' : ((typeof f.h==='number') ? 'h' : null);
     var m = lado==='d' ? f.d : (lado==='h' ? f.h : null);
     var j, esp=null;
-    for(j=0;j<pend.length;j++) if(!pend[j].usado && pend[j].c===f.c){ esp=pend[j]; break; }
+    for(j=0;j<pend.length;j++) if(!pend[j].usado && Dinamica.esLaCuenta(f.c, pend[j].c)){ esp=pend[j]; break; }
     var okC=!!esp, okL=false, okM=false, txt=[];
     if(esp) esp.usado=true;
     if(!f.c) txt.push('Falta el código');
@@ -579,12 +579,15 @@ function conecta(){
   Array.prototype.forEach.call($('diario').querySelectorAll('.cdg input'), function(inp){
     var i=parseInt(inp.getAttribute('data-r'),10);
     inp.addEventListener('input', function(){
-      S[activo.id].filas[i].c=inp.value.replace(/\D/g,'');
+      var cod=inp.value.replace(/\D/g,'');
+      if(cod!==inp.value) inp.value=cod;
+      S[activo.id].filas[i].c=cod;
       limpiaMarcas(); guarda();
-      var pos=inp.selectionStart;
-      pintaDiario();
-      var nuevo=$('diario').querySelector('.cdg input[data-r="'+i+'"]');
-      if(nuevo){ nuevo.focus(); try{ nuevo.setSelectionRange(pos,pos); }catch(e){} }
+      var den=inp.closest('tr').querySelector('td.den');
+      if(den) den.innerHTML = cod
+        ? (existe(cod) ? esc(nom(cod))+'<span class="r">'+esc(ruta(cod))+'</span>'
+                       : '<span class="no">Ese código no está en el plan de cuentas</span>')
+        : '';
     });
   });
   Array.prototype.forEach.call($('diario').querySelectorAll('.cel input'), function(inp){
@@ -600,7 +603,6 @@ function conecta(){
     inp.addEventListener('blur', function(){
       var v=S[activo.id].filas[i][k];
       inp.value=(typeof v==='number')?miles(v):'';
-      pintaDiario();
     });
   });
 }
