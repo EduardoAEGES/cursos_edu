@@ -1031,7 +1031,7 @@ function modoDocente(esDoc){
     var g=localStorage.getItem('giro_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
   }catch(e){}
-  Aula.iniciar({ sala:'G', resumen:resumenAula, ventana:ventanaAula, alModo:modoDocente });
+  Aula.iniciar({ sala:'G', codigo:'GIRO', resumen:resumenAula, ventana:ventanaAula, alModo:modoDocente });
   $('btnSol').hidden=true;
   pinta();
   listo=true;
