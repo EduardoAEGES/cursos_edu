@@ -214,6 +214,7 @@
 
   <div id="zona" hidden>
     <div class="pest" id="pest"></div>
+    <div id="reinicio" style="margin:0 0 12px"></div>
     <div id="panel"></div>
   </div>
 
@@ -243,6 +244,7 @@
 </div>
 
 <script src="aula.js"></script>
+<script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
 (function(){
@@ -754,6 +756,12 @@
         if(dentro) pinta();
       } });
   }else{ $('zona').hidden=false; }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán tus datos de los cuatro casos.',
+    hecho:function(){ G={}; festejado={}; pi=1; pinta(); }
+  });
 
   pinta();
 })();

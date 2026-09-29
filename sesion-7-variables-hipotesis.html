@@ -223,7 +223,8 @@
   <div id="zona" hidden>
     <div class="pest" id="pest"></div>
     <div class="barra"><div class="prog"><i id="progI"></i></div>
-      <span class="cuenta" id="cuenta"></span></div>
+      <span class="cuenta" id="cuenta"></span>
+      <span id="reinicio"></span></div>
     <div id="panel"></div>
   </div>
 
@@ -243,6 +244,7 @@
 </div>
 
 <script src="aula.js"></script>
+<script src="reiniciar.js"></script>
 <script>
 (function(){
   'use strict';
@@ -787,6 +789,12 @@
         if(dentro) pinta();
       } });
   }else{ $('zona').hidden=false; }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán tus variables, tus hipótesis y las respuestas.',
+    hecho:function(){ G={}; festejado=false; pi=0; pinta(); }
+  });
 
   pinta();
 })();
