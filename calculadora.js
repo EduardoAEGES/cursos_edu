@@ -8,36 +8,43 @@
 'use strict';
 
 var css=''+
-'.ca-btn{ position:fixed; right:16px; bottom:16px; z-index:70; width:52px; height:52px;'+
-'  border-radius:50%; border:0; cursor:pointer; background:#1F5FA8; color:#fff; font-size:21px;'+
-'  box-shadow:0 6px 18px rgba(0,0,0,.28); display:grid; place-items:center; }'+
-'.ca-btn:hover{ filter:brightness(1.1); }'+
-'.ca-p{ position:fixed; right:16px; bottom:78px; z-index:71; width:276px; max-width:calc(100vw - 24px);'+
-'  background:#fff; border:1px solid #D6DBE2; border-radius:12px; box-shadow:0 16px 40px rgba(0,0,0,.26);'+
-'  overflow:hidden; font-family:inherit; }'+
+'.ca-btn{ position:fixed; right:16px; bottom:16px; z-index:70; width:54px; height:54px;'+
+'  border-radius:50%; border:1px solid #F0871F; cursor:pointer; color:#FFD9A8; font-size:23px;'+
+'  background:radial-gradient(circle at 34% 28%, #46225E 0%, #21102F 62%, #120A1B 100%);'+
+'  box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 16px rgba(240,135,31,.42);'+
+'  display:grid; place-items:center; }'+
+'.ca-btn:hover{ box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 26px rgba(240,135,31,.75); }'+
+'.ca-p{ position:fixed; right:16px; bottom:82px; z-index:71; width:280px; max-width:calc(100vw - 24px);'+
+'  background:#1A0F26; border:1px solid #4A2A66; border-radius:13px;'+
+'  box-shadow:0 18px 44px rgba(0,0,0,.6), 0 0 0 1px rgba(240,135,31,.18);'+
+'  overflow:hidden; font-family:inherit; color:#EDE6DA; }'+
 '.ca-p[hidden]{ display:none !important; }'+
-'.ca-h{ display:flex; align-items:center; gap:8px; padding:8px 11px; background:#1F5FA8; color:#fff;'+
+'.ca-h{ display:flex; align-items:center; gap:8px; padding:9px 11px; color:#FFD9A8;'+
+'  background:linear-gradient(180deg,#3B1B52 0%,#261236 100%); border-bottom:1px solid #F0871F;'+
 '  cursor:move; touch-action:none; user-select:none; }'+
-'.ca-h b{ font-size:12.5px; flex:1; }'+
-'.ca-h button{ border:0; background:transparent; color:#fff; cursor:pointer; font-size:18px;'+
+'.ca-h b{ font-size:13px; flex:1; letter-spacing:.6px; font-weight:700; }'+
+'.ca-h button{ border:0; background:transparent; color:#FFD9A8; cursor:pointer; font-size:18px;'+
 '  line-height:1; padding:2px 5px; border-radius:5px; }'+
-'.ca-h button:hover{ background:rgba(255,255,255,.18); }'+
-'.ca-v{ padding:9px 12px 7px; text-align:right; background:#F7F9FC; border-bottom:1px solid #E4E8ED; }'+
-'.ca-e{ font-size:15px; color:#26303D; font-variant-numeric:tabular-nums; min-height:20px;'+
+'.ca-h button:hover{ background:rgba(240,135,31,.28); }'+
+'.ca-v{ padding:10px 12px 8px; text-align:right; background:#120A1B;'+
+'  border-bottom:1px solid #3A2150; }'+
+'.ca-e{ font-size:15px; color:#B9A7CE; font-variant-numeric:tabular-nums; min-height:20px;'+
 '  overflow-x:auto; white-space:nowrap; direction:rtl; }'+
-'.ca-n{ font-size:25px; font-weight:800; color:#16467C; font-variant-numeric:tabular-nums;'+
+'.ca-n{ font-size:26px; font-weight:800; color:#FFB25C; font-variant-numeric:tabular-nums;'+
+'  text-shadow:0 0 12px rgba(240,135,31,.45);'+
 '  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:1.25; }'+
-'.ca-n.err{ color:#C0392B; font-size:18px; }'+
-'.ca-t{ display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:#E4E8ED; }'+
-'.ca-t button{ border:0; background:#fff; cursor:pointer; font:inherit; font-size:16px;'+
-'  font-weight:700; color:#26303D; padding:12px 0; }'+
-'.ca-t button:hover{ background:#EEF2F7; }'+
-'.ca-t button:active{ background:#DDE5EE; }'+
-'.ca-t .fn{ background:#F3F5F8; color:#6B7785; font-size:14px; }'+
-'.ca-t .op{ color:#1F5FA8; }'+
-'.ca-t .ig{ background:#1F5FA8; color:#fff; }'+
-'.ca-t .ig:hover{ background:#2A6FBD; }'+
-'.ca-pie{ font-size:10.5px; color:#8A93A0; text-align:center; padding:6px 8px; }';
+'.ca-n.err{ color:#FF7A6B; font-size:18px; text-shadow:none; }'+
+'.ca-t{ display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:#3A2150; }'+
+'.ca-t button{ border:0; background:#241534; cursor:pointer; font:inherit; font-size:16px;'+
+'  font-weight:700; color:#EDE6DA; padding:12px 0; }'+
+'.ca-t button:hover{ background:#33204A; }'+
+'.ca-t button:active{ background:#42285E; }'+
+'.ca-t .fn{ background:#1D1129; color:#A78BC4; font-size:14px; }'+
+'.ca-t .fn:hover{ background:#2A1A3C; }'+
+'.ca-t .op{ color:#FFB25C; }'+
+'.ca-t .ig{ background:linear-gradient(180deg,#F0871F 0%,#C9660B 100%); color:#1A0F26; }'+
+'.ca-t .ig:hover{ filter:brightness(1.12); }'+
+'.ca-pie{ font-size:10.5px; color:#9A86B4; text-align:center; padding:7px 8px; background:#160D20; }';
 
 /* ---------- evaluación ---------- */
 function calcula(txt){
@@ -118,7 +125,7 @@ function crea(){
   var btn=document.createElement('button');
   btn.className='ca-btn'; btn.type='button';
   btn.setAttribute('aria-label','Calculadora');
-  btn.textContent='🧮';
+  btn.textContent='🎃';
 
   var p=document.createElement('div');
   p.className='ca-p'; p.hidden=true;
@@ -126,9 +133,9 @@ function crea(){
 
   var TECLAS=[
     ['(','fn','('], [')','fn',')'], ['%','fn','%'], ['√','fn','√'], ['C','fn','C'],
-    ['7','','7'],   ['8','','8'],   ['9','','9'],   ['÷','op','/'], ['←','fn','B'],
+    ['1','','1'],   ['2','','2'],   ['3','','3'],   ['÷','op','/'], ['←','fn','B'],
     ['4','','4'],   ['5','','5'],   ['6','','6'],   ['×','op','*'], ['x²','fn','^2'],
-    ['1','','1'],   ['2','','2'],   ['3','','3'],   ['−','op','-'], ['xʸ','fn','^'],
+    ['7','','7'],   ['8','','8'],   ['9','','9'],   ['−','op','-'], ['xʸ','fn','^'],
     ['0','','0'],   ['.','','.'],   ['±','fn','N'], ['+','op','+'], ['=','ig','=']
   ];
   var ht='';
@@ -136,7 +143,7 @@ function crea(){
     ht+='<button type="button" class="'+t[1]+'" data-k="'+t[2]+'">'+t[0]+'</button>';
   });
   p.innerHTML=
-    '<div class="ca-h"><b>Calculadora</b><button type="button" data-ca="cerrar" aria-label="Cerrar">×</button></div>'+
+    '<div class="ca-h"><b>🕯️ Calculadora</b><button type="button" data-ca="cerrar" aria-label="Cerrar">×</button></div>'+
     '<div class="ca-v"><div class="ca-e" id="caE"></div>'+
       '<div class="ca-n" id="caN" aria-live="polite">0</div></div>'+
     '<div class="ca-t">'+ht+'</div>'+

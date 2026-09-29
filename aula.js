@@ -11,6 +11,7 @@
          resumen: function(){ ... },      qué se envía de este alumno
          ventana: function(est, quien){ } html de una ventanita
          alModo: function(esDocente){ }   se llama al entrar o salir
+         codigo: 'EFE'                    código de sala sugerido
        });
        Aula.empuja();                     tras cada cambio del alumno
    ===================================================================== */
@@ -74,7 +75,7 @@ function pintaControles(){
     '</div>';
 
   $('aulaNombre').value=leeLocal('nombre');
-  $('aulaSala').value=leeLocal('sala')||'PCGE';
+  $('aulaSala').value=leeLocal('sala')||(cfg&&cfg.codigo)||'PCGE';
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
   $('aulaSalir').addEventListener('click', sale);
