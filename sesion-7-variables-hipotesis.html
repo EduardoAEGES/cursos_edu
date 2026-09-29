@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Variables e hipótesis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .lab{ --azul:#1F5FA8; --verde:#147A5C; --ambar:#B25E09; --morado:#714B67; --rojo:#B42318;
+        --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+        max-width:1060px; margin:0 auto; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:12px; }
+  .titulo .marca svg{ width:62px; height:56px; display:block; flex:none; }
+  .titulo .tx{ flex:1; min-width:200px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .puerta{ border:1px solid var(--o-border); border-left:4px solid var(--azul);
+           border-radius:11px; padding:14px 16px; margin-top:16px; background:#F7FAFD; }
+  .puerta h2{ margin:0 0 3px; font-size:16px; font-weight:800; color:var(--azul); }
+  .puerta p{ margin:0 0 12px; font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+
+  .leyenda{ display:flex; gap:7px; flex-wrap:wrap; margin:14px 0 0; }
+  .lg{ font-size:11.5px; font-weight:700; border-radius:999px; padding:5px 11px; border:1px solid; }
+  .lg.i{ background:#EAF1FA; border-color:#B6CFEA; color:var(--azul); }
+  .lg.d{ background:#E9F7EF; border-color:#7CC29B; color:var(--verde); }
+  .lg.a{ background:#FFF3E2; border-color:#E8B172; color:var(--ambar); }
+  .lg.m{ background:#F5EAF2; border-color:#D4B6CB; color:var(--morado); }
+
+  .pest{ display:flex; gap:7px; flex-wrap:wrap; margin:16px 0 14px; align-items:center; }
+  .pest button{ font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+                border:1px solid var(--o-border); background:#fff; color:var(--o-muted);
+                border-radius:9px; padding:8px 13px; line-height:1.3; }
+  .pest button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .pest button .pc{ font-weight:800; opacity:.8; margin-left:2px; font-size:11px; }
+  .pest .sep{ flex:1; min-width:4px; }
+  .pest .valora{ background:#FFF3E2; border-color:#E8B172; color:#7A430A; font-weight:800; }
+  .pest .valora:hover{ background:#FFE9CC; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+           overflow:hidden; margin-bottom:14px; }
+  .bloque > h3{ margin:0; font-size:12.5px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+                display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .bloque > h3 .t{ font-weight:400; text-transform:none; letter-spacing:0; opacity:.9; font-size:11.5px; }
+  .bloque.act > h3{ background:linear-gradient(90deg,#C77A16,#A65F09); }
+  .bloque.mod > h3{ background:var(--morado); }
+  .bloque .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+  .bloque .cuerpo p{ margin:0 0 9px; }
+  .bloque .cuerpo p:last-child{ margin-bottom:0; }
+
+  .dos{ display:grid; grid-template-columns:1fr; gap:11px; }
+  @media (min-width:760px){ .dos{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .tarj{ border:1px solid var(--o-border); border-radius:9px; padding:11px 13px; background:#FAFBFC; }
+  .tarj.i{ border-left:4px solid var(--azul); }
+  .tarj.d{ border-left:4px solid var(--verde); }
+  .tarj h4{ margin:0 0 5px; font-size:12px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; }
+  .tarj.i h4{ color:var(--azul); } .tarj.d h4{ color:var(--verde); }
+  .tarj ul{ margin:0; padding-left:17px; font-size:12.5px; line-height:1.6; color:#41505F; }
+  .tarj li{ margin-bottom:3px; }
+
+  .pista{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px;
+          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:10px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ padding:7px 10px; border-bottom:1px solid #EDEFF2; text-align:left; vertical-align:top; }
+  thead th{ font-size:11px; text-transform:uppercase; letter-spacing:.3px;
+            color:var(--o-muted); background:#FAFBFC; font-weight:700; }
+  td.et{ font-weight:800; color:var(--gris); width:110px; }
+  td.ej1{ background:#FAFCFF; } td.ej2{ background:#FAFDFB; }
+
+  .fila{ display:flex; gap:10px; align-items:center; padding:8px 12px;
+         border-bottom:1px solid #EDEFF2; flex-wrap:wrap; }
+  .fila:last-child{ border-bottom:0; }
+  .fila .frase{ flex:1; min-width:180px; font-size:13.5px; line-height:1.5; color:#33404E; }
+  .fila .ops{ display:flex; gap:6px; flex:none; }
+  .fila .ops button{ font:inherit; font-size:13px; font-weight:800; cursor:pointer;
+                     border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted);
+                     border-radius:8px; padding:6px 14px; min-width:52px; }
+  .fila .ops button:hover{ border-color:var(--azul); color:var(--azul); }
+  .fila.bien .ops button.sel{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .fila.mal .ops button.sel{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .fila.fijo{ background:#FAFBFC; }
+  .fila .marca2{ flex:none; font-size:11.5px; font-weight:700; color:var(--o-muted); }
+  .fila.bien .marca2{ color:#14532D; } .fila.mal .marca2{ color:var(--rojo); }
+
+  textarea.campo, input.campo{ width:100%; font:inherit; font-size:13.5px; line-height:1.55;
+    border:1px solid var(--amaBd); background:var(--ama); border-radius:8px;
+    padding:9px 11px; color:#3F3208; resize:vertical; }
+  textarea.campo:focus, input.campo:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  textarea.campo.lleno, input.campo.lleno{ background:#fff; border-color:var(--o-border); color:var(--o-text); }
+  .rot{ display:block; font-size:11.5px; font-weight:800; text-transform:uppercase;
+        letter-spacing:.3px; color:var(--o-muted); margin:11px 0 4px; }
+  .rot.i{ color:var(--azul); } .rot.d{ color:var(--verde); }
+  .ayuda{ font-size:11.5px; color:var(--o-muted); line-height:1.5; margin:4px 0 0; }
+  .ayuda.mal{ color:var(--rojo); font-weight:600; }
+  .ayuda.ok{ color:#14532D; font-weight:600; }
+
+  .acc{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:11px; }
+
+  .modelo{ font-size:13px; line-height:1.7; color:#33404E; }
+  .modelo h4{ margin:12px 0 4px; font-size:12.5px; font-weight:800; color:var(--morado);
+              text-transform:uppercase; letter-spacing:.3px; }
+  .modelo h4:first-child{ margin-top:0; }
+  .modelo p{ margin:0; }
+
+  .lista{ list-style:none; margin:0; padding:0; }
+  .lista li{ display:flex; gap:10px; align-items:flex-start; padding:8px 0;
+             border-bottom:1px solid #EDEFF2; font-size:13.5px; line-height:1.5; }
+  .lista li:last-child{ border-bottom:0; }
+  .lista input{ width:19px; height:19px; flex:none; margin-top:1px; accent-color:#147A5C; cursor:pointer; }
+  .lista label{ cursor:pointer; color:#33404E; }
+  .lista li.ya label{ color:var(--o-muted); text-decoration:line-through; }
+
+  .barra{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin:0 0 12px; }
+  .prog{ height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; min-width:120px; flex:1; }
+  .prog i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .cuenta{ font-size:12.5px; color:var(--o-muted); font-weight:600; white-space:nowrap; }
+
+  .titsec{ margin:0 0 8px; font-size:13px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.3px; color:#5A5A5A; }
+  .aviso{ font-size:12.5px; color:var(--o-muted); line-height:1.55; margin:9px 0 0; }
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); }
+  .vmini .txt{ font-size:11.5px; line-height:1.45; color:#41505F; background:#FAFBFC;
+               border:1px solid var(--o-border); border-radius:6px; padding:5px 7px; margin-top:5px; }
+  .vmini .txt em{ color:var(--o-muted); font-style:italic; }
+  .vmini .txt b{ display:block; font-size:10px; text-transform:uppercase; letter-spacing:.3px;
+                 color:var(--o-muted); margin-bottom:1px; }
+
+  @media (max-width:640px){
+    td.et{ width:auto; }
+    .fila .ops button{ padding:8px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Investigación Cuantitativa</span> / <b>Variables e hipótesis</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="lab">
+
+  <div class="titulo">
+    <span class="marca" aria-hidden="true">
+      <svg viewBox="0 0 62 56" fill="none" stroke="#1F5FA8" stroke-width="2.3"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="7" width="20" height="14" rx="3"/>
+        <rect x="37" y="35" width="20" height="14" rx="3" stroke="#147A5C"/>
+        <path d="M25 14h9a5 5 0 0 1 5 5v13" stroke="#B25E09"/>
+        <path d="M35 28l4 5 4-5" stroke="#B25E09"/>
+      </svg>
+    </span>
+    <span class="tx">
+      <h1>Sesión 7 · Guía de laboratorio 1</h1>
+      <p>Las variables y las hipótesis de tu investigación · trabaja solo o en pareja</p>
+    </span>
+  </div>
+
+  <div class="idea">
+    <b>Ya tienes lo más difícil listo:</b> en la guía anterior definiste el problema, el objetivo y
+    las dimensiones de tu producto. Ahora damos el paso que convierte todo eso en un estudio que se
+    puede medir con números: elegir las variables y escribir las hipótesis. Al final verás cómo debe
+    quedar redactado en el informe.
+  </div>
+
+  <div class="leyenda">
+    <span class="lg i">Azul · variable independiente</span>
+    <span class="lg d">Verde · variable dependiente</span>
+    <span class="lg a">Ámbar · actividad para resolver</span>
+    <span class="lg m">Morado · modelo del informe</span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, di tu nombre</h2>
+    <p>La guía aparece cuando entras, y lo que escribas se guarda en este navegador. Escribe tu nombre y el código de sala que indique el docente.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pest" id="pest"></div>
+    <div class="barra"><div class="prog"><i id="progI"></i></div>
+      <span class="cuenta" id="cuenta"></span></div>
+    <div id="panel"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+
+  var ac=null;
+  function nota(f, ini, dur, vol, tipo){
+    try{
+      if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.07,t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(660,0,.12,.05,'triangle'); }
+  function mal(){ nota(196,0,.16,.05,'sawtooth'); }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+    for(var i=0;i<100;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(q){ q.x+=q.vx; q.y+=q.vy; q.r+=0.08;
+        x.save(); x.translate(q.x,q.y); x.rotate(q.r); x.fillStyle=q.c;
+        x.fillRect(-q.s/2,-q.s/2,q.s,q.s*0.6); x.restore(); });
+      if(Date.now()-t0<2400) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  var ENCUESTA='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
+
+  var EJEMPLOS=[
+    ['Ejemplo 1','Shampoo sólido en barra de 80 g, sin envase plástico.'],
+    ['Ejemplo 2','Mochilas y estuches confeccionados con lona reciclada.']
+  ];
+
+  var ACT1=[
+    { f:'Que el empaque sea reciclable', r:'I', fijo:true },
+    { f:'Cuántas personas dicen que sí comprarían el producto', r:'D' },
+    { f:'El aroma del shampoo', r:'I' },
+    { f:'El nivel de satisfacción del cliente', r:'D' },
+    { f:'El diseño único de la mochila', r:'I' }
+  ];
+  var ACT3=[
+    { f:'El aroma no se relaciona con la intención de compra.', r:'H0', fijo:true },
+    { f:'El precio sí se relaciona con la intención de compra.', r:'H1' },
+    { f:'El diseño no se relaciona con la satisfacción del cliente.', r:'H0' }
+  ];
+
+  var PORQUE={
+    'I':'Es la causa: el atributo del producto que suponemos que empuja la decisión.',
+    'D':'Es el efecto: lo que queremos explicar, lo que esperamos que suba o baje.',
+    'H0':'Dice que NO hay relación. Es la hipótesis que se pone a prueba.',
+    'H1':'Dice que SÍ hay relación. Es lo que tú crees que va a pasar.'
+  };
+
+  var CHECK=[
+    'Escribí mi variable independiente y mi dependiente (Actividad 2).',
+    'Escribí mi H0 y mi H1 (Actividad 4).',
+    'Copié el problema, la pregunta y el objetivo a la sección 2.2.1 de la plantilla.',
+    'Vacié mis variables e hipótesis en las Tablas 1 y 2 de la plantilla.'
+  ];
+
+  /* ===== estado ===== */
+  var LS='inv_varhip_v1';
+  var G={};
+  try{ G=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ G={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+  var pi=0, festejado=false;
+
+  function aciertos(lista, pref){
+    var ok=0, tot=0;
+    lista.forEach(function(x,i){
+      if(x.fijo) return;
+      tot++;
+      if(G[pref+i]===x.r) ok++;
+    });
+    return { ok:ok, total:tot };
+  }
+  function texto(k){ return String(G[k]||'').trim(); }
+  function hechoAct2(){ return texto('vi').length>=8 && texto('vd').length>=8; }
+  function revisaH(){
+    var h0=texto('h0').toLowerCase(), h1=texto('h1').toLowerCase();
+    var r={ h0:null, h1:null };
+    if(h0){
+      if(h0.length<15) r.h0='Escríbela completa: menciona tus dos variables.';
+      else if(!/\bno\b/.test(h0)) r.h0='A la H0 le falta el «no»: debe decir que NO hay relación.';
+      else r.h0='ok';
+    }
+    if(h1){
+      if(h1.length<15) r.h1='Escríbela completa: menciona tus dos variables.';
+      else if(/\bno\b/.test(h1)) r.h1='La H1 afirma la relación: aquí sobra el «no».';
+      else r.h1='ok';
+    }
+    return r;
+  }
+  function hechoAct4(){ var r=revisaH(); return r.h0==='ok' && r.h1==='ok'; }
+
+  function avance(){
+    var a1=aciertos(ACT1,'a1.'), a3=aciertos(ACT3,'a3.');
+    var hechos = a1.ok + a3.ok + (hechoAct2()?1:0) + (hechoAct4()?1:0);
+    var total  = a1.total + a3.total + 2;
+    return { ok:hechos, total:total, a1:a1, a3:a3,
+             c2:hechoAct2(), c4:hechoAct4(),
+             pc: total? Math.round(hechos/total*100) : 0 };
+  }
+
+  /* ===== pasos ===== */
+  var PASOS=[
+    { id:'p1', pest:'Paso 1 · ¿Qué es una variable?', dibuja:paso1 },
+    { id:'p2', pest:'Paso 2 · Tus variables',          dibuja:paso2 },
+    { id:'p3', pest:'Paso 3 · Tus hipótesis',          dibuja:paso3 },
+    { id:'p4', pest:'Al final · El informe',           dibuja:paso4 }
+  ];
+
+  function cabecera(tit, tiempo, clase){
+    return '<div class="bloque '+(clase||'')+'"><h3><span>'+esc(tit)+'</span>'+
+           (tiempo?'<span class="t">Tiempo sugerido: '+esc(tiempo)+'</span>':'')+'</h3>';
+  }
+
+  function preguntas(lista, pref, ops){
+    var h='<div class="bloque act"><h3><span>'+
+      (pref==='a1.' ? 'Actividad 1 · ¿Independiente o dependiente?'
+                    : 'Actividad 3 · ¿Es H0 o H1?')+'</span>'+
+      '<span class="t">La primera ya está resuelta como ejemplo</span></h3>';
+    lista.forEach(function(x,i){
+      var val = x.fijo ? x.r : G[pref+i];
+      var cls = x.fijo ? 'fijo bien' : (val ? (val===x.r ? 'bien':'mal') : '');
+      h+='<div class="fila '+cls+'" data-i="'+i+'"><span class="frase">'+esc(x.f)+'</span>'+
+         '<span class="ops">';
+      ops.forEach(function(o){
+        h+='<button type="button" data-o="'+esc(o)+'"'+(val===o?' class="sel"':'')+
+           (x.fijo?' disabled':'')+'>'+esc(o)+'</button>';
+      });
+      h+='</span><span class="marca2">'+
+         (x.fijo ? 'resuelta' : (val ? (val===x.r ? '✓ '+PORQUE[x.r] : 'Todavía no') : ''))+
+         '</span></div>';
+    });
+    return h+'</div>';
+  }
+
+  function paso1(){
+    var h = cabecera('Paso 1 · ¿Qué es una variable?','20 minutos')+
+      '<div class="cuerpo"><p>Una variable es algo que cambia de una persona a otra y que podemos '+
+      'medir en la encuesta. En toda investigación hay dos que nos interesan.</p>'+
+      '<div class="dos">'+
+        '<div class="tarj i"><h4>Variable independiente</h4><ul>'+
+          '<li>Es la causa: el factor que suponemos que influye.</li>'+
+          '<li>Pregúntate: ¿qué hace que la gente compre más o menos?</li>'+
+          '<li>En marketing suele ser un atributo: el precio, el aroma, el material, el diseño.</li>'+
+        '</ul></div>'+
+        '<div class="tarj d"><h4>Variable dependiente</h4><ul>'+
+          '<li>Es el efecto: lo que queremos explicar o predecir.</li>'+
+          '<li>Pregúntate: ¿qué es lo que quiero que suba (o baje)?</li>'+
+          '<li>En marketing suele ser la intención de compra, la satisfacción o cuánto pagarían.</li>'+
+        '</ul></div>'+
+      '</div>'+
+      '<div class="pista"><b>Pista para no confundirte.</b> La independiente empuja; la dependiente '+
+      'responde. Si mejoras el atributo (independiente), esperas que suba la intención de compra '+
+      '(dependiente).</div></div></div>';
+    return h + preguntas(ACT1,'a1.',['I','D']);
+  }
+
+  function paso2(){
+    var h = cabecera('Paso 2 · De tu matriz a tus variables','25 minutos')+
+      '<div class="cuerpo"><p>Mira tu matriz: el atributo del producto que más resaltaste es tu '+
+      'variable <b>independiente</b>, y lo que quieres lograr (que lo compren) es tu variable '+
+      '<b>dependiente</b>. Así quedó en los dos ejemplos:</p>'+
+      '<table><thead><tr><th></th><th>Ejemplo 1 · shampoo sólido</th>'+
+      '<th>Ejemplo 2 · mochilas de lona reciclada</th></tr></thead><tbody>'+
+      '<tr><td class="et">Independiente</td>'+
+      '<td class="ej1">Lo importante que es para la persona que el shampoo no genere envase plástico.</td>'+
+      '<td class="ej2">Lo importante que es para la persona que la mochila sea de material reciclado.</td></tr>'+
+      '<tr><td class="et">Dependiente</td>'+
+      '<td class="ej1">La intención de comprar el shampoo sólido.</td>'+
+      '<td class="ej2">La intención de comprar la mochila.</td></tr>'+
+      '</tbody></table></div></div>';
+
+    h += '<div class="bloque act"><h3><span>Actividad 2 · Completa con tu producto</span>'+
+      '<span class="t">Se guarda solo</span></h3><div class="cuerpo">'+
+      '<span class="rot i">Tu variable independiente · el atributo que empuja</span>'+
+      '<textarea class="campo" rows="2" data-k="vi" placeholder="Lo importante que es para la persona que…">'+
+        esc(texto('vi'))+'</textarea>'+
+      '<span class="rot d">Tu variable dependiente · lo que quieres lograr</span>'+
+      '<textarea class="campo" rows="2" data-k="vd" placeholder="La intención de comprar…">'+
+        esc(texto('vd'))+'</textarea>'+
+      '<p class="ayuda'+(hechoAct2()?' ok':'')+'" id="ay2">'+
+        (hechoAct2() ? 'Listo: con estas dos variables puedes escribir tus hipótesis en el paso 3.'
+                     : 'Escribe las dos en una frase completa, como en los ejemplos de arriba.')+
+      '</p></div></div>';
+    return h;
+  }
+
+  function paso3(){
+    var r=revisaH();
+    var h = cabecera('Paso 3 · Escribe tus hipótesis (H0 y H1)','25 minutos')+
+      '<div class="cuerpo"><p>La hipótesis es tu apuesta sobre si las dos variables están '+
+      'relacionadas. Siempre se escribe en pareja:</p>'+
+      '<table><tbody>'+
+      '<tr><td class="et">H0 · nula</td><td>Dice que <b>no</b> hay relación entre las dos variables. '+
+      'Es la que ponemos a prueba.</td></tr>'+
+      '<tr><td class="et">H1 · alterna</td><td>Dice que <b>sí</b> hay relación. Es lo que tú crees '+
+      'que va a pasar.</td></tr>'+
+      '</tbody></table>'+
+      '<div class="pista"><b>Reglas de oro.</b> Una sola relación por hipótesis: una independiente '+
+      'con una dependiente. H0 y H1 dicen lo mismo, pero una con «no» y la otra sin «no». '+
+      'No se ganan discutiendo: se comprueban con los datos. Si el resultado da un valor p menor '+
+      'que 0.05, se rechaza la H0.</div>'+
+      '<p style="margin-top:11px"><b>Así quedaron en los dos ejemplos:</b></p>'+
+      '<table><thead><tr><th></th><th>Ejemplo 1 · shampoo sólido</th>'+
+      '<th>Ejemplo 2 · mochilas de lona reciclada</th></tr></thead><tbody>'+
+      '<tr><td class="et">H0</td>'+
+      '<td class="ej1">Que el shampoo no genere envase plástico <b>no</b> se relaciona con la intención de comprarlo.</td>'+
+      '<td class="ej2">Que la mochila sea de material reciclado <b>no</b> se relaciona con la intención de comprarla.</td></tr>'+
+      '<tr><td class="et">H1</td>'+
+      '<td class="ej1">Que el shampoo no genere envase plástico se relaciona con la intención de comprarlo.</td>'+
+      '<td class="ej2">Que la mochila sea de material reciclado se relaciona con la intención de comprarla.</td></tr>'+
+      '</tbody></table></div></div>';
+
+    h += preguntas(ACT3,'a3.',['H0','H1']);
+
+    h += '<div class="bloque act"><h3><span>Actividad 4 · Escribe tus dos hipótesis</span>'+
+      '<span class="t">Usa tus variables de la actividad 2</span></h3><div class="cuerpo">'+
+      '<div class="acc" style="margin:0 0 10px"><button type="button" class="o-btn" id="btnArma">'+
+        'Armarlas con mis variables</button>'+
+        '<span class="ayuda" style="margin:0" id="avArma">Genera un borrador que puedes corregir a tu gusto.</span></div>'+
+      '<span class="rot">H0 · hipótesis nula</span>'+
+      '<textarea class="campo" rows="2" data-k="h0" placeholder="… no se relaciona con …">'+esc(texto('h0'))+'</textarea>'+
+      '<p class="ayuda'+(r.h0==='ok'?' ok':(r.h0?' mal':''))+'" id="ayH0">'+
+        (r.h0==='ok'?'Bien: niega la relación.':(r.h0||'Recuerda: la H0 lleva «no».'))+'</p>'+
+      '<span class="rot">H1 · hipótesis alterna</span>'+
+      '<textarea class="campo" rows="2" data-k="h1" placeholder="… se relaciona con …">'+esc(texto('h1'))+'</textarea>'+
+      '<p class="ayuda'+(r.h1==='ok'?' ok':(r.h1?' mal':''))+'" id="ayH1">'+
+        (r.h1==='ok'?'Bien: afirma la relación.':(r.h1||'La H1 es la misma frase, pero sin el «no».'))+'</p>'+
+      '</div></div>';
+    return h;
+  }
+
+  function paso4(){
+    var h = '<div class="bloque mod"><h3><span>Al final · así debe quedar escrito en el informe</span>'+
+      '<span class="t">Tiempo sugerido: 20 minutos</span></h3><div class="cuerpo">'+
+      '<p>Este es un modelo real, redactado como lo haría un profesional de marketing, del '+
+      'ejemplo 1 (shampoo sólido). Cópialo como guía y reemplázalo con tu producto en la '+
+      'sección 2.2.1 de la plantilla.</p>'+
+      '<div class="modelo" id="modelo">'+
+        '<h4>2.2.1 · Planteamiento del problema, variables e hipótesis</h4>'+
+        '<h4>Problema de investigación</h4><p>En Arequipa cada vez más personas dicen preferir '+
+        'productos amigables con el ambiente, pero la marca no sabe si ese discurso se convierte en '+
+        'compra real. Se desconoce con qué frecuencia el público compra shampoo, qué atributos valora '+
+        'al elegirlo y, sobre todo, cuánto pesa que el producto no genere envase plástico en su '+
+        'decisión. Sin esa información, la empresa no puede fijar bien el precio ni orientar la '+
+        'comunicación del nuevo shampoo sólido.</p>'+
+        '<h4>Pregunta general</h4><p>¿En qué medida la importancia que el consumidor da a que el '+
+        'shampoo no genere envase plástico se relaciona con su intención de comprar el shampoo '+
+        'sólido, en personas de 18 a 40 años del Cercado, Yanahuara y Cayma?</p>'+
+        '<h4>Objetivo general</h4><p>Determinar la relación entre la importancia asignada a que el '+
+        'shampoo no genere envase plástico y la intención de compra del shampoo sólido en personas '+
+        'de 18 a 40 años del Cercado, Yanahuara y Cayma, durante el segundo semestre de 2026.</p>'+
+        '<h4>Variables</h4><p>Independiente: la importancia que el consumidor da a que el shampoo no '+
+        'genere envase plástico.<br>Dependiente: la intención de compra del shampoo sólido.</p>'+
+        '<h4>Hipótesis</h4><p>H0: La importancia asignada a que el shampoo no genere envase plástico '+
+        'no se relaciona con la intención de compra del shampoo sólido.<br>'+
+        'H1: La importancia asignada a que el shampoo no genere envase plástico se relaciona con la '+
+        'intención de compra del shampoo sólido.</p>'+
+      '</div>'+
+      '<div class="acc"><button type="button" class="o-btn" id="btnCopia">Copiar el modelo</button>'+
+      '<span class="ayuda" style="margin:0" id="avCopia"></span></div>'+
+      '</div></div>';
+
+    h += '<div class="bloque"><h3><span>Antes de cerrar la sesión</span>'+
+      '<span class="t">Marca lo que ya completaste</span></h3><div class="cuerpo">'+
+      '<ul class="lista">';
+    CHECK.forEach(function(t,i){
+      var ya = G['ck.'+i]==='1';
+      h+='<li class="'+(ya?'ya':'')+'"><input type="checkbox" id="ck'+i+'" data-c="'+i+'"'+
+         (ya?' checked':'')+'><label for="ck'+i+'">'+esc(t)+'</label></li>';
+    });
+    return h+'</ul></div></div>';
+  }
+
+  /* ===== dibujo ===== */
+  function pinta(){
+    $('panel').innerHTML = PASOS[pi].dibuja();
+
+    Array.prototype.forEach.call(document.querySelectorAll('.fila .ops button'), function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var fila=b.closest('.fila'), i=fila.dataset.i;
+        var pref = (pi===0) ? 'a1.' : 'a3.';
+        var lista = (pi===0) ? ACT1 : ACT3;
+        G[pref+i]=b.dataset.o; graba();
+        if(b.dataset.o===lista[i].r) bien(); else mal();
+        pinta();
+        if(window.Aula && Aula.enSala) Aula.empuja();
+      });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('textarea.campo'), function(t){
+      if(texto(t.dataset.k)) t.classList.add('lleno');
+      t.addEventListener('input', function(){
+        G[t.dataset.k]=t.value; graba();
+        t.classList.toggle('lleno', !!t.value.trim());
+        avisos(); resumen(); pestPinta();
+        if(window.Aula && Aula.enSala) Aula.empuja();
+      });
+    });
+
+    var arma=$('btnArma');
+    if(arma) arma.addEventListener('click', function(){
+      var vi=texto('vi'), vd=texto('vd'), av=$('avArma');
+      if(!vi || !vd){
+        av.className='ayuda mal';
+        av.textContent='Primero escribe tus dos variables en la actividad 2.';
+        return;
+      }
+      function pela(s){ return s.trim().replace(/[.;,]+$/,''); }
+      function mayus(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+      function minus(s){ return s.charAt(0).toLowerCase()+s.slice(1); }
+      var A=mayus(pela(vi)), B=minus(pela(vd));
+      G.h0 = A+' no se relaciona con '+B+'.';
+      G.h1 = A+' se relaciona con '+B+'.';
+      graba(); pinta(); resumen();
+      if(window.Aula && Aula.enSala) Aula.empuja();
+    });
+
+    var cop=$('btnCopia');
+    if(cop) cop.addEventListener('click', function(){
+      var t=$('modelo').innerText;
+      var av=$('avCopia');
+      try{
+        navigator.clipboard.writeText(t);
+        av.textContent='Copiado. Pégalo en la sección 2.2.1 de tu plantilla.';
+        av.className='ayuda ok';
+      }catch(e){
+        av.textContent='No se pudo copiar: selecciona el texto y usa Ctrl + C.';
+        av.className='ayuda mal';
+      }
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.lista input'), function(c){
+      c.addEventListener('change', function(){
+        G['ck.'+c.dataset.c] = c.checked ? '1' : '';
+        graba(); pinta();
+        if(window.Aula && Aula.enSala) Aula.empuja();
+      });
+    });
+
+    resumen(); pestPinta();
+  }
+
+  function avisos(){
+    var a2=$('ay2');
+    if(a2){
+      var ok=hechoAct2();
+      a2.className='ayuda'+(ok?' ok':'');
+      a2.textContent = ok ? 'Listo: con estas dos variables puedes escribir tus hipótesis en el paso 3.'
+                          : 'Escribe las dos en una frase completa, como en los ejemplos de arriba.';
+    }
+    var r=revisaH();
+    [['ayH0', r.h0, 'Bien: niega la relación.', 'Recuerda: la H0 lleva «no».'],
+     ['ayH1', r.h1, 'Bien: afirma la relación.', 'La H1 es la misma frase, pero sin el «no».']
+    ].forEach(function(x){
+      var el=$(x[0]); if(!el) return;
+      el.className='ayuda'+(x[1]==='ok'?' ok':(x[1]?' mal':''));
+      el.textContent = (x[1]==='ok') ? x[2] : (x[1] || x[3]);
+    });
+  }
+
+  function resumen(){
+    var a=avance();
+    $('progI').style.width = a.pc+'%';
+    $('cuenta').textContent = a.ok+' de '+a.total+' · '+a.pc+'%';
+    if(a.pc===100 && !festejado){ festejado=true; listo(); confeti(); }
+  }
+
+  function pestPinta(){
+    var a=avance();
+    var marca=[ a.a1.ok+'/'+a.a1.total, a.c2?'✓':'·', (a.a3.ok+'/'+a.a3.total)+(a.c4?' ✓':''), '' ];
+    $('pest').innerHTML = PASOS.map(function(p,i){
+      return '<button type="button" data-p="'+i+'" class="'+(i===pi?'on':'')+'">'+esc(p.pest)+
+             (marca[i]?' <span class="pc">'+esc(marca[i])+'</span>':'')+'</button>';
+    }).join('') +
+      '<button type="button" class="valora" id="btnValora">⭐ Valorar</button>'+
+      '<span class="sep"></span>';
+    Array.prototype.forEach.call(document.querySelectorAll('#pest button[data-p]'), function(b){
+      b.addEventListener('click', function(){ pi=+b.dataset.p; pinta(); });
+    });
+    $('btnValora').addEventListener('click', function(){ window.open(ENCUESTA,'_blank','noopener'); });
+  }
+
+  /* ===== sala ===== */
+  function resumenAula(){
+    var a=avance();
+    return { paso:PASOS[pi].pest, pc:a.pc, ok:a.ok, total:a.total,
+             a1:a.a1.ok+'/'+a.a1.total, a3:a.a3.ok+'/'+a.a3.total,
+             vi:texto('vi'), vd:texto('vd'), h0:texto('h0'), h1:texto('h1'),
+             listo:(a.pc===100) };
+  }
+  function ventanaAula(e){
+    function tx(rot, v){
+      return '<div class="txt"><b>'+rot+'</b>'+(v ? esc(v) : '<em>sin escribir</em>')+'</div>';
+    }
+    return '<div class="vmini">'+
+      '<div class="lin"><span>'+esc(e.paso||'—')+'</span><b>'+(e.pc||0)+' %</b></div>'+
+      '<div class="lin"><span>Actividad 1</span><b>'+esc(e.a1||'—')+'</b></div>'+
+      '<div class="lin"><span>Actividad 3</span><b>'+esc(e.a3||'—')+'</b></div>'+
+      tx('Independiente', e.vi)+tx('Dependiente', e.vd)+
+      tx('H0', e.h0)+tx('H1', e.h1)+'</div>';
+  }
+
+  if(window.Aula){
+    Aula.iniciar({ sala:'VAR', codigo:'INV7', resumen:resumenAula, ventana:ventanaAula,
+      alModo:function(doc){
+        $('hojaMuro').hidden=!doc;
+        var dentro=Aula.enSala;
+        $('zona').hidden=!dentro;
+        $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, di tu nombre';
+        $('puerta').querySelector('p').hidden = dentro;
+        if(dentro) pinta();
+      } });
+  }else{ $('zona').hidden=false; }
+
+  pinta();
+})();
+</script>
+
+</body>
+</html>
