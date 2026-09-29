@@ -739,7 +739,7 @@ function ventanaAula(e){
     var g=localStorage.getItem('cmp_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
   }catch(e){}
-  Aula.iniciar({ sala:'C', resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'C', codigo:'COMPLETA', resumen:resumenAula, ventana:ventanaAula,
     alModo:function(doc){ document.getElementById("hojaMuro").hidden=!doc; $('btnSol').hidden=!doc; } });
   $('btnSol').hidden=true;
   pinta();

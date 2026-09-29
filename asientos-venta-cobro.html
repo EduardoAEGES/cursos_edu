@@ -1065,7 +1065,7 @@ function ventanaAula(e){
     var g=localStorage.getItem('pr_caso');
     CASOS.forEach(function(c){ if(c.id===g) activo=c; });
   }catch(e){}
-  Aula.iniciar({ sala:'P', resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'P', codigo:'CONTA1', resumen:resumenAula, ventana:ventanaAula,
     alModo:function(doc){ document.getElementById("hojaMuro").hidden=!doc;
       var dentro=Aula.enSala;
       $('zona').hidden=!dentro;          /* los casos solo se ven al entrar */

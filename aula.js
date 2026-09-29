@@ -11,7 +11,8 @@
          resumen: function(){ ... },      qué se envía de este alumno
          ventana: function(est, quien){ } html de una ventanita
          alModo: function(esDocente){ }   se llama al entrar o salir
-         codigo: 'EFE'                    código de sala sugerido
+         codigo: 'EEFF'                   código de sala de la clase
+                                          (si falta, se usa el prefijo)
        });
        Aula.empuja();                     tras cada cambio del alumno
    ===================================================================== */
@@ -38,6 +39,13 @@ function hdr(extra){
 function guardaLocal(k,v){ try{ localStorage.setItem('aula_'+k, v); }catch(e){} }
 function leeLocal(k){ try{ return localStorage.getItem('aula_'+k)||''; }catch(e){ return ''; } }
 
+/* código de sala propio de esta clase (nunca el de otra) */
+function codigoClase(){
+  return String((cfg && (cfg.codigo || cfg.sala)) || 'AULA').toUpperCase();
+}
+/* cada clase recuerda su propia sala: no se mezcla con la de otro curso */
+function claveSala(){ return 'sala_' + ((cfg && cfg.sala) || 'x'); }
+
 /* ---------------- controles ---------------- */
 function pintaControles(){
   $('aula').innerHTML=
@@ -46,7 +54,7 @@ function pintaControles(){
         '<label class="aula-campo" id="aulaCnom">Tu nombre'+
           '<input id="aulaNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>'+
         '<label class="aula-campo">Código de sala'+
-          '<input id="aulaSala" type="text" maxlength="20" placeholder="PCGE" autocomplete="off"></label>'+
+          '<input id="aulaSala" type="text" maxlength="20" placeholder="'+esc(codigoClase())+'" autocomplete="off"></label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">Entrar a la sala</button>'+
         '<label class="aula-sw"><input type="checkbox" id="aulaSw">'+
           '<span class="riel"><span class="bola"></span></span>'+
@@ -75,7 +83,7 @@ function pintaControles(){
     '</div>';
 
   $('aulaNombre').value=leeLocal('nombre');
-  $('aulaSala').value=leeLocal('sala')||(cfg&&cfg.codigo)||'PCGE';
+  $('aulaSala').value=leeLocal(claveSala())||codigoClase();
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
   $('aulaSalir').addEventListener('click', sale);
@@ -129,18 +137,18 @@ function fuera(){
 
 /* ---------------- entrar y salir ---------------- */
 function entraAlumno(){
-  var n=$('aulaNombre').value.trim(), s=($('aulaSala').value.trim()||'PCGE').toUpperCase();
+  var n=$('aulaNombre').value.trim(), s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
   $('aulaCnom').classList.toggle('falta', n.length<2);
   if(n.length<2){ $('aulaNombre').focus(); estado('malo','Escribe tu nombre para entrar'); return; }
   yo=n; sala=s; docente=false;
-  guardaLocal('nombre',n); guardaLocal('sala',s);
+  guardaLocal('nombre',n); guardaLocal(claveSala(),s);
   dentro(n);
   estado('vivo','Conectando…');
   fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
 }
 function entraDocente(){
-  var s=($('aulaSala').value.trim()||'PCGE').toUpperCase();
+  var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
   var c=$('aulaClave').value.trim();
   if(c!==CLAVE){
     $('aulaCclave').classList.add('falta');
@@ -150,7 +158,7 @@ function entraDocente(){
   }
   abreClave(false);
   yo=null; sala=s; docente=true;
-  guardaLocal('sala',s);
+  guardaLocal(claveSala(),s);
   dentro('Docente');
   estado('vivo','Conectando…');
   fallos=0; arranca();
