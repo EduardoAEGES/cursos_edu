@@ -105,7 +105,46 @@
   .vmini .cel2.full{ border-color:#7CC29B; background:#E9F7EF; }
   .vmini .cel2.full b{ color:#14532D; }
 
+  .zbtn{ position:fixed; right:78px; bottom:16px; z-index:70; width:52px; height:52px;
+         border-radius:50%; border:0; cursor:pointer; background:#147A5C; color:#fff;
+         font-size:17px; font-weight:800; letter-spacing:.5px;
+         box-shadow:0 6px 18px rgba(0,0,0,.28); display:grid; place-items:center; }
+  .zbtn:hover{ filter:brightness(1.1); }
+  .zpan{ position:fixed; right:78px; bottom:78px; z-index:71; width:236px;
+         max-width:calc(100vw - 24px); background:#fff; border:1px solid #D6DBE2;
+         border-radius:12px; box-shadow:0 16px 40px rgba(0,0,0,.26); overflow:hidden; }
+  .zpan[hidden]{ display:none !important; }
+  .zpan .zh{ display:flex; align-items:center; gap:8px; padding:8px 11px;
+             background:#147A5C; color:#fff; font-size:12.5px; font-weight:700; }
+  .zpan .zh b{ flex:1; }
+  .zpan .zh button{ border:0; background:transparent; color:#fff; cursor:pointer;
+                    font-size:18px; line-height:1; padding:2px 5px; border-radius:5px; }
+  .zpan .zh button:hover{ background:rgba(255,255,255,.2); }
+  .zpan table{ font-size:13px; }
+  .zpan tbody tr{ cursor:pointer; }
+  .zpan tbody tr:hover{ background:#E9F7EF; }
+  .zpan tbody tr td:last-child{ font-weight:800; color:#147A5C; }
+  .zpan .zp{ font-size:11px; color:var(--o-muted); padding:7px 10px; line-height:1.5;
+             border-top:1px solid #EDEFF2; background:#FAFBFC; }
+
+  .bloque.form2 > h3{ background:#714B67; }
+  .fx{ padding:4px 0; }
+  .fx .it{ padding:8px 12px; border-bottom:1px solid #EDEFF2; }
+  .fx .it:last-child{ border-bottom:0; }
+  .fx .it b{ display:block; font-size:12px; font-weight:800; color:#714B67;
+             text-transform:uppercase; letter-spacing:.3px; margin-bottom:3px; }
+  .fx .ge{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px;
+           background:#F4F6F8; border:1px solid var(--o-border); border-radius:7px;
+           padding:6px 9px; color:#26303D; overflow-x:auto; white-space:nowrap; }
+  .fx .su{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12.5px;
+           margin-top:5px; padding:6px 9px; border-radius:7px; overflow-x:auto; white-space:nowrap;
+           background:#E9F7EF; border:1px solid #7CC29B; color:#14532D; }
+  .fx .su.vacio{ background:#FAFBFC; border-color:var(--o-border); color:var(--o-muted);
+                 font-style:italic; white-space:normal; }
+
   @media (max-width:640px){
+    .zpan table, .zpan thead, .zpan tbody, .zpan tr, .zpan td, .zpan th{ display:revert; }
+    .zpan thead{ position:static; left:auto; }
     table, thead, tbody, tr, td, th{ display:block; }
     thead{ position:absolute; left:-9999px; }
     tr{ border-bottom:1px solid #EDEFF2; padding:5px 0; }
@@ -193,6 +232,16 @@
 </div>
 </div>
 
+<button class="zbtn" id="zbtn" type="button" aria-label="Tabla Z">Z</button>
+<div class="zpan" id="zpan" hidden role="dialog" aria-label="Tabla Z">
+  <div class="zh"><b>Tabla Z</b><button type="button" id="zcerrar" aria-label="Cerrar">×</button></div>
+  <table>
+    <thead><tr><th>Confianza</th><th class="num">Z</th></tr></thead>
+    <tbody id="zcuerpo"></tbody>
+  </table>
+  <p class="zp" id="zpie">Toca una fila para copiarla al caso.</p>
+</div>
+
 <script src="aula.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -277,6 +326,17 @@
         {k:'naj', t:'n ajustado (población finita)',   d:2},
         {k:'fin', t:'Tamaño de muestra final',         d:0, fin:true, n:'encuestas a realizar'}
       ],
+      formula:function(v,r){
+        return [
+          ['Tamaño para una proporción','n₀ = (Z² × p × q) / E²',
+           (v.z&&v.p!==null&&v.e) ? '('+v.z+'² × '+v.p+' × '+dec(r.q,2)+') ÷ '+v.e+'² = '+miles(dec(r.n0,2),2) : null],
+          ['Corrección por población finita','n = n₀ / (1 + (n₀ − 1) / N)',
+           (r.n0!==null&&v.n) ? miles(dec(r.n0,2),2)+' ÷ (1 + ('+miles(dec(r.n0,2),2)+' − 1) ÷ '+miles(v.n,0)+') = '+miles(dec(r.naj,2),2)
+                              : (r.n0!==null ? 'sin N no se corrige: n = '+miles(dec(r.n0,2),2) : null)],
+          ['Siempre se redondea hacia arriba','n final = ⌈n⌉',
+           (r.fin!==null) ? '⌈'+miles(dec(r.naj,2),2)+'⌉ = '+miles(r.fin,0)+' encuestas' : null]
+        ];
+      },
       respuesta:{ fin:370 },
       pie:'¿Por qué p = 0.50? Porque maximiza el tamaño de muestra: es la opción más conservadora '+
           'cuando todavía no conoces la proporción.' },
@@ -304,6 +364,17 @@
         {k:'naj', t:'n ajustado (población finita)',  d:2},
         {k:'fin', t:'Tamaño de muestra final',        d:0, fin:true, n:'encuestas a realizar'}
       ],
+      formula:function(v,r){
+        return [
+          ['Tamaño para una media','n₀ = (Z² × σ²) / E²',
+           (v.z&&v.s&&v.e) ? '('+v.z+'² × '+miles(v.s,0)+'²) ÷ '+miles(v.e,0)+'² = '+miles(dec(r.n0,2),2) : null],
+          ['Corrección por población finita','n = n₀ / (1 + (n₀ − 1) / N)',
+           (r.n0!==null&&v.n) ? miles(dec(r.n0,2),2)+' ÷ (1 + ('+miles(dec(r.n0,2),2)+' − 1) ÷ '+miles(v.n,0)+') = '+miles(dec(r.naj,2),2)
+                              : (r.n0!==null ? 'sin N no se corrige: n = '+miles(dec(r.n0,2),2) : null)],
+          ['Siempre se redondea hacia arriba','n final = ⌈n⌉',
+           (r.fin!==null) ? '⌈'+miles(dec(r.naj,2),2)+'⌉ = '+miles(r.fin,0)+' encuestas' : null]
+        ];
+      },
       respuesta:{ fin:235 },
       pie:'Aquí usamos la varianza (σ²) en lugar de p × q, porque estimamos un promedio y no un porcentaje.' },
 
@@ -330,6 +401,14 @@
         {k:'ok', t:'Verificación del inicio', texto:true}
       ],
       secuencia:true,
+      formula:function(v,r){
+        return [
+          ['Intervalo de selección','k = N / n  (se redondea hacia abajo)',
+           (v.N&&v.n) ? miles(v.N,0)+' ÷ '+miles(v.n,0)+' = '+miles(r.k,0) : null],
+          ['Cada encuestado','posición del i-ésimo = inicio + (i − 1) × k',
+           (r.sec&&r.sec.length) ? r.sec.slice(0,4).map(function(x){ return miles(x,0); }).join(', ')+', …' : null]
+        ];
+      },
       respuesta:{ k:10 },
       pie:'Regla: la lista no debe tener un patrón que coincida con k, porque aparecería periodicidad '+
           'y la muestra dejaría de ser representativa.' },
@@ -360,6 +439,17 @@
         return r;
       },
       estratos:true,
+      formula:function(v,r){
+        var nom=['18 – 25','26 – 35','36 – 45','46 a más'];
+        var f=[['Reparto proporcional','nh = n × (Nh / N)',
+                r.N ? 'N = '+miles(r.N,0)+' · n = '+(v.n?miles(v.n,0):'—') : null]];
+        [1,2,3,4].forEach(function(i){
+          f.push(['Estrato '+nom[i-1],'n'+i+' = n × (N'+i+' / N)',
+            (r['n'+i]!==null&&r['n'+i]!==undefined) ?
+              miles(v.n,0)+' × ('+miles(v['e'+i],0)+' ÷ '+miles(r.N,0)+') = '+miles(r['n'+i],0) : null]);
+        });
+        return f;
+      },
       respuesta:{ n1:111, n2:130, n3:81, n4:48, suma:370 },
       pie:'Los estratos deben ser mutuamente excluyentes y colectivamente exhaustivos. Si por el '+
           'redondeo la suma de los nh no coincide con el n deseado, se ajusta el estrato más grande en ±1.' }
@@ -493,6 +583,18 @@
 
     res+='<p class="pie">'+esc(c.pie)+'</p></div>';
 
+    if(c.formula){
+      res+='<div class="bloque form2" style="margin-top:14px"><h3>Fórmula que se aplica</h3><div class="fx">';
+      c.formula(v,r).forEach(function(f){
+        res+='<div class="it"><b>'+esc(f[0])+'</b>'+
+             '<div class="ge">'+esc(f[1])+'</div>'+
+             '<div class="su'+(f[2]?'':' vacio')+'">'+
+               (f[2] ? esc(f[2]) : 'Completa los datos amarillos para ver el reemplazo con tus números.')+
+             '</div></div>';
+      });
+      res+='</div></div>';
+    }
+
     return '<div class="enun"><h2>'+esc(c.titulo)+'</h2><p>'+esc(c.enun)+'</p></div>'+
            '<div class="tablero dos"><div>'+datos+
            '<div class="acc"><button type="button" class="o-btn o-btn-primary" id="btnComp">Comprobar</button>'+
@@ -615,6 +717,31 @@
     });
     return h+'</div></div>';
   }
+
+  /* ===== tabla Z flotante ===== */
+  (function(){
+    var pan=$('zpan'), btn=$('zbtn');
+    $('zcuerpo').innerHTML = ZETA.map(function(z){
+      return '<tr data-c="'+z[0].replace(/[^0-9]/g,'')+'" data-z="'+z[1]+'">'+
+             '<td>'+esc(z[0])+'</td><td class="num">'+esc(z[1])+'</td></tr>';
+    }).join('');
+    function abre(v){ pan.hidden=!v; btn.setAttribute('aria-expanded', v?'true':'false'); }
+    btn.addEventListener('click', function(){ abre(pan.hidden); });
+    $('zcerrar').addEventListener('click', function(){ abre(false); });
+    $('zcuerpo').addEventListener('click', function(ev){
+      var tr=ev.target.closest('tr[data-z]'); if(!tr) return;
+      var puestos=0;
+      [['z', tr.dataset.z], ['conf', tr.dataset.c]].forEach(function(x){
+        var i=document.querySelector('input.cel[data-k="'+x[0]+'"]');
+        if(i){ i.value=x[1]; i.dispatchEvent(new Event('input',{bubbles:true})); puestos++; }
+      });
+      var pie=$('zpie');
+      pie.textContent = puestos
+        ? 'Copiado al caso: confianza '+tr.dataset.c+' % y Z = '+tr.dataset.z+'.'
+        : 'Este caso no usa el valor de Z.';
+    });
+    document.addEventListener('keydown', function(ev){ if(ev.key==='Escape') abre(false); });
+  })();
 
   if(window.Aula){
     Aula.iniciar({ sala:'MUE', codigo:'INV7', resumen:resumenAula, ventana:ventanaAula,

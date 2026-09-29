@@ -108,6 +108,22 @@
 
   .acc{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:11px; }
 
+  .virow{ display:flex; gap:8px; align-items:flex-start; margin-bottom:7px; }
+  .virow textarea{ flex:1; min-width:0; }
+  .virow .quita{ flex:none; font:inherit; font-size:15px; font-weight:700; line-height:1;
+                 cursor:pointer; border:1px solid var(--o-border); background:#fff;
+                 color:var(--o-muted); border-radius:8px; padding:9px 11px; }
+  .virow .quita:hover{ border-color:var(--rojo); color:var(--rojo); background:#FDECEA; }
+  .virow .quita[disabled]{ opacity:.35; cursor:default; }
+  .hpar{ border:1px solid var(--o-border); border-radius:9px; padding:11px 13px;
+         background:#FAFBFC; margin-bottom:11px; }
+  .hpar > b{ display:block; font-size:12px; font-weight:800; text-transform:uppercase;
+             letter-spacing:.3px; color:var(--azul); margin-bottom:2px; }
+  .hpar > i{ display:block; font-style:normal; font-size:12.5px; color:var(--o-muted);
+             line-height:1.5; margin-bottom:8px; }
+  .nada{ border:1px dashed var(--o-border); border-radius:9px; padding:14px;
+         text-align:center; font-size:13px; color:var(--o-muted); line-height:1.6; }
+
   .modelo{ font-size:13px; line-height:1.7; color:#33404E; }
   .modelo h4{ margin:12px 0 4px; font-size:12.5px; font-weight:800; color:var(--morado);
               text-transform:uppercase; letter-spacing:.3px; }
@@ -269,6 +285,16 @@
 
   var ENCUESTA='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
 
+  var VIEJ=[
+    ['La importancia asignada a que el shampoo dure varios meses',
+     'La importancia asignada al aroma del shampoo',
+     'La importancia asignada a que el shampoo no genere envase plástico'],
+    ['La importancia asignada a la resistencia del material',
+     'La importancia asignada a que el diseño sea único',
+     'La importancia asignada a que la mochila esté hecha con material reciclado']
+  ];
+  var VDEJ=['la intención de compra del shampoo sólido','la intención de compra de la mochila'];
+
   var EJEMPLOS=[
     ['Ejemplo 1','Shampoo sólido en barra de 80 g, sin envase plástico.'],
     ['Ejemplo 2','Mochilas y estuches confeccionados con lona reciclada.']
@@ -318,23 +344,59 @@
     return { ok:ok, total:tot };
   }
   function texto(k){ return String(G[k]||'').trim(); }
-  function hechoAct2(){ return texto('vi').length>=8 && texto('vd').length>=8; }
-  function revisaH(){
-    var h0=texto('h0').toLowerCase(), h1=texto('h1').toLowerCase();
-    var r={ h0:null, h1:null };
-    if(h0){
-      if(h0.length<15) r.h0='Escríbela completa: menciona tus dos variables.';
-      else if(!/\bno\b/.test(h0)) r.h0='A la H0 le falta el «no»: debe decir que NO hay relación.';
-      else r.h0='ok';
-    }
-    if(h1){
-      if(h1.length<15) r.h1='Escríbela completa: menciona tus dos variables.';
-      else if(/\bno\b/.test(h1)) r.h1='La H1 afirma la relación: aquí sobra el «no».';
-      else r.h1='ok';
-    }
+
+  /* un estudio suele tener VARIAS variables independientes: una por atributo medido */
+  function vis(){
+    if(!Array.isArray(G.vis)) G.vis = G.vi ? [G.vi] : [''];
+    if(!G.vis.length) G.vis.push('');
+    return G.vis;
+  }
+  function hs(){
+    if(!Array.isArray(G.hs)) G.hs = (G.h0||G.h1) ? [{h0:G.h0||'', h1:G.h1||''}] : [];
+    var v=vis();
+    while(G.hs.length < v.length) G.hs.push({h0:'',h1:''});
+    G.hs.length = v.length;
+    return G.hs;
+  }
+  function llena(t){ return String(t||'').trim().length>=8; }
+  function indices(){
+    var v=vis(), r=[];
+    v.forEach(function(t,i){ if(llena(t)) r.push(i); });
     return r;
   }
-  function hechoAct4(){ var r=revisaH(); return r.h0==='ok' && r.h1==='ok'; }
+  function hechoAct2(){ return indices().length>=1 && texto('vd').length>=8; }
+
+  var REL=/(se\s+relacion\w*|se\s+asocia\w*|se\s+vincula\w*|influy\w*|existe\s+(una\s+)?relaci[oó]n|tiene\s+relaci[oó]n)/i;
+  var NEG=/\bno\s+(se\s+relacion\w*|se\s+asocia\w*|se\s+vincula\w*|influy\w*|existe\s+(una\s+)?relaci[oó]n|tiene\s+relaci[oó]n)/i;
+  var AVISO={
+    corta:'Escríbela completa: la variable independiente, el enlace y la dependiente.',
+    que:'No empieces con «Que»: nombra la variable, como «La importancia asignada a…».',
+    enlace:'Falta el enlace: di que se relaciona (o que no se relaciona) con tu variable dependiente.',
+    falta:'A la H0 le falta el «no»: debe decir que NO se relaciona.',
+    sobra:'La H1 afirma la relación: quita el «no se relaciona».'
+  };
+  function revisaUna(h0, h1){
+    function mira(t, nula){
+      t=String(t||'').trim();
+      if(!t) return null;
+      if(t.length<15) return 'corta';
+      if(/^que\s/i.test(t)) return 'que';
+      if(!REL.test(t)) return 'enlace';
+      if(nula  && !NEG.test(t)) return 'falta';
+      if(!nula &&  NEG.test(t)) return 'sobra';
+      return 'ok';
+    }
+    return { h0:mira(h0,true), h1:mira(h1,false) };
+  }
+  function hechoAct4(){
+    var L=hs(), ix=indices();
+    if(!ix.length) return false;
+    for(var j=0;j<ix.length;j++){
+      var r=revisaUna(L[ix[j]].h0, L[ix[j]].h1);
+      if(r.h0!=='ok' || r.h1!=='ok') return false;
+    }
+    return true;
+  }
 
   function avance(){
     var a1=aciertos(ACT1,'a1.'), a3=aciertos(ACT3,'a3.');
@@ -403,77 +465,102 @@
 
   function paso2(){
     var h = cabecera('Paso 2 · De tu matriz a tus variables','25 minutos')+
-      '<div class="cuerpo"><p>Mira tu matriz: el atributo del producto que más resaltaste es tu '+
-      'variable <b>independiente</b>, y lo que quieres lograr (que lo compren) es tu variable '+
-      '<b>dependiente</b>. Así quedó en los dos ejemplos:</p>'+
+      '<div class="cuerpo"><p>Mira tu matriz y el pilar <b>qué medir</b> de la semana 5: cada atributo '+
+      'cuya importancia vas a medir es una <b>variable independiente</b>. Casi siempre hay <b>varias</b>: '+
+      'en los dos ejemplos se miden tres atributos cada uno. Lo que quieres lograr (que lo compren) es '+
+      'tu única variable <b>dependiente</b>.</p>'+
       '<table><thead><tr><th></th><th>Ejemplo 1 · shampoo sólido</th>'+
       '<th>Ejemplo 2 · mochilas de lona reciclada</th></tr></thead><tbody>'+
-      '<tr><td class="et">Independiente</td>'+
-      '<td class="ej1">Lo importante que es para la persona que el shampoo no genere envase plástico.</td>'+
-      '<td class="ej2">Lo importante que es para la persona que la mochila sea de material reciclado.</td></tr>'+
+      '<tr><td class="et">Independientes</td>'+
+      '<td class="ej1"><ul style="margin:0;padding-left:17px">'+
+        VIEJ[0].map(function(t){ return '<li>'+esc(t)+'.</li>'; }).join('')+'</ul></td>'+
+      '<td class="ej2"><ul style="margin:0;padding-left:17px">'+
+        VIEJ[1].map(function(t){ return '<li>'+esc(t)+'.</li>'; }).join('')+'</ul></td></tr>'+
       '<tr><td class="et">Dependiente</td>'+
-      '<td class="ej1">La intención de comprar el shampoo sólido.</td>'+
-      '<td class="ej2">La intención de comprar la mochila.</td></tr>'+
-      '</tbody></table></div></div>';
+      '<td class="ej1">'+esc(VDEJ[0].charAt(0).toUpperCase()+VDEJ[0].slice(1))+'.</td>'+
+      '<td class="ej2">'+esc(VDEJ[1].charAt(0).toUpperCase()+VDEJ[1].slice(1))+'.</td></tr>'+
+      '</tbody></table>'+
+      '<div class="pista"><b>De dónde salen.</b> Son los atributos que preguntaste en P6, P7 y P8 de tu '+
+      'cuestionario: «Al elegir [tu producto], ¿qué tan importante es [atributo]?». Una variable '+
+      'independiente por cada uno.</div></div></div>';
 
+    var V=vis();
     h += '<div class="bloque act"><h3><span>Actividad 2 · Completa con tu producto</span>'+
       '<span class="t">Se guarda solo</span></h3><div class="cuerpo">'+
-      '<span class="rot i">Tu variable independiente · el atributo que empuja</span>'+
-      '<textarea class="campo" rows="2" data-k="vi" placeholder="Lo importante que es para la persona que…">'+
-        esc(texto('vi'))+'</textarea>'+
+      '<span class="rot i">Tus variables independientes · los atributos que empujan</span>';
+    V.forEach(function(t,i){
+      h+='<div class="virow"><textarea class="campo" rows="2" data-vi="'+i+'" '+
+         'placeholder="La importancia asignada a…">'+esc(String(t||''))+'</textarea>'+
+         '<button type="button" class="quita" data-del="'+i+'" title="Quitar esta variable"'+
+         (V.length<2?' disabled':'')+' aria-label="Quitar la variable '+(i+1)+'">×</button></div>';
+    });
+    h += '<div class="acc" style="margin:2px 0 0"><button type="button" class="o-btn" id="btnMas">'+
+      '+ Añadir otra variable independiente</button>'+
+      '<span class="ayuda" style="margin:0">Los ejemplos tienen tres.</span></div>'+
       '<span class="rot d">Tu variable dependiente · lo que quieres lograr</span>'+
-      '<textarea class="campo" rows="2" data-k="vd" placeholder="La intención de comprar…">'+
+      '<textarea class="campo" rows="2" data-k="vd" placeholder="la intención de compra de…">'+
         esc(texto('vd'))+'</textarea>'+
       '<p class="ayuda'+(hechoAct2()?' ok':'')+'" id="ay2">'+
-        (hechoAct2() ? 'Listo: con estas dos variables puedes escribir tus hipótesis en el paso 3.'
-                     : 'Escribe las dos en una frase completa, como en los ejemplos de arriba.')+
+        (hechoAct2() ? 'Listo: en el paso 3 escribirás una pareja de hipótesis por cada variable independiente.'
+                     : 'Escríbelas como en los ejemplos: «La importancia asignada a…» y «la intención de compra de…».')+
       '</p></div></div>';
     return h;
   }
 
   function paso3(){
-    var r=revisaH();
     var h = cabecera('Paso 3 · Escribe tus hipótesis (H0 y H1)','25 minutos')+
-      '<div class="cuerpo"><p>La hipótesis es tu apuesta sobre si las dos variables están '+
-      'relacionadas. Siempre se escribe en pareja:</p>'+
+      '<div class="cuerpo"><p>La hipótesis es tu apuesta sobre si dos variables están relacionadas. '+
+      'Siempre se escribe en pareja:</p>'+
       '<table><tbody>'+
       '<tr><td class="et">H0 · nula</td><td>Dice que <b>no</b> hay relación entre las dos variables. '+
       'Es la que ponemos a prueba.</td></tr>'+
       '<tr><td class="et">H1 · alterna</td><td>Dice que <b>sí</b> hay relación. Es lo que tú crees '+
       'que va a pasar.</td></tr>'+
       '</tbody></table>'+
-      '<div class="pista"><b>Reglas de oro.</b> Una sola relación por hipótesis: una independiente '+
-      'con una dependiente. H0 y H1 dicen lo mismo, pero una con «no» y la otra sin «no». '+
-      'No se ganan discutiendo: se comprueban con los datos. Si el resultado da un valor p menor '+
-      'que 0.05, se rechaza la H0.</div>'+
-      '<p style="margin-top:11px"><b>Así quedaron en los dos ejemplos:</b></p>'+
-      '<table><thead><tr><th></th><th>Ejemplo 1 · shampoo sólido</th>'+
-      '<th>Ejemplo 2 · mochilas de lona reciclada</th></tr></thead><tbody>'+
-      '<tr><td class="et">H0</td>'+
-      '<td class="ej1">Que el shampoo no genere envase plástico <b>no</b> se relaciona con la intención de comprarlo.</td>'+
-      '<td class="ej2">Que la mochila sea de material reciclado <b>no</b> se relaciona con la intención de comprarla.</td></tr>'+
-      '<tr><td class="et">H1</td>'+
-      '<td class="ej1">Que el shampoo no genere envase plástico se relaciona con la intención de comprarlo.</td>'+
-      '<td class="ej2">Que la mochila sea de material reciclado se relaciona con la intención de comprarla.</td></tr>'+
+      '<div class="pista"><b>Reglas de oro.</b> Una sola relación por hipótesis: una independiente con '+
+      'una dependiente. Por eso, si mides la importancia de tres atributos, escribes <b>tres parejas</b> '+
+      'de hipótesis. H0 y H1 dicen lo mismo, pero una con «no» y la otra sin «no». '+
+      'Empiezan nombrando la variable («La importancia asignada a…»), nunca con «Que». '+
+      'No se ganan discutiendo: se comprueban con los datos. Si el resultado da un valor p menor que '+
+      '0.05, se rechaza la H0.</div>'+
+      '<p style="margin-top:11px"><b>Así quedaron en el ejemplo 1 · shampoo sólido:</b></p>'+
+      '<table><thead><tr><th></th><th>H0 · no hay relación</th><th>H1 · sí hay relación</th></tr></thead><tbody>'+
+      VIEJ[0].map(function(v,i){
+        return '<tr><td class="et">Pareja '+(i+1)+'</td>'+
+          '<td class="ej1">'+esc(v)+' <b>no</b> se relaciona con '+esc(VDEJ[0])+'.</td>'+
+          '<td class="ej2">'+esc(v)+' se relaciona con '+esc(VDEJ[0])+'.</td></tr>';
+      }).join('')+
       '</tbody></table></div></div>';
 
     h += preguntas(ACT3,'a3.',['H0','H1']);
 
-    h += '<div class="bloque act"><h3><span>Actividad 4 · Escribe tus dos hipótesis</span>'+
-      '<span class="t">Usa tus variables de la actividad 2</span></h3><div class="cuerpo">'+
-      '<div class="acc" style="margin:0 0 10px"><button type="button" class="o-btn" id="btnArma">'+
+    var ix=indices(), L=hs(), V=vis();
+    h += '<div class="bloque act"><h3><span>Actividad 4 · Escribe tus parejas de hipótesis</span>'+
+      '<span class="t">Una por cada variable independiente</span></h3><div class="cuerpo">';
+    if(!ix.length){
+      h += '<div class="nada">Primero escribe tus variables en la <b>actividad 2</b>. '+
+           'Aquí aparecerá una pareja de hipótesis por cada variable independiente.</div>';
+    }else{
+      h += '<div class="acc" style="margin:0 0 11px"><button type="button" class="o-btn" id="btnArma">'+
         'Armarlas con mis variables</button>'+
-        '<span class="ayuda" style="margin:0" id="avArma">Genera un borrador que puedes corregir a tu gusto.</span></div>'+
-      '<span class="rot">H0 · hipótesis nula</span>'+
-      '<textarea class="campo" rows="2" data-k="h0" placeholder="… no se relaciona con …">'+esc(texto('h0'))+'</textarea>'+
-      '<p class="ayuda'+(r.h0==='ok'?' ok':(r.h0?' mal':''))+'" id="ayH0">'+
-        (r.h0==='ok'?'Bien: niega la relación.':(r.h0||'Recuerda: la H0 lleva «no».'))+'</p>'+
-      '<span class="rot">H1 · hipótesis alterna</span>'+
-      '<textarea class="campo" rows="2" data-k="h1" placeholder="… se relaciona con …">'+esc(texto('h1'))+'</textarea>'+
-      '<p class="ayuda'+(r.h1==='ok'?' ok':(r.h1?' mal':''))+'" id="ayH1">'+
-        (r.h1==='ok'?'Bien: afirma la relación.':(r.h1||'La H1 es la misma frase, pero sin el «no».'))+'</p>'+
-      '</div></div>';
-    return h;
+        '<span class="ayuda" style="margin:0" id="avArma">Genera un borrador que puedes corregir a tu gusto.</span></div>';
+      ix.forEach(function(i, n){
+        var r=revisaUna(L[i].h0, L[i].h1);
+        h += '<div class="hpar"><b>Pareja '+(n+1)+'</b><i>'+esc(String(V[i]).trim())+'</i>'+
+          '<span class="rot">H0 · hipótesis nula</span>'+
+          '<textarea class="campo" rows="2" data-h0="'+i+'" placeholder="… no se relaciona con …">'+
+            esc(String(L[i].h0||''))+'</textarea>'+
+          '<p class="ayuda'+(r.h0==='ok'?' ok':(r.h0?' mal':''))+'" id="ayH0_'+i+'">'+
+            (r.h0==='ok'?'Bien: niega la relación.':(AVISO[r.h0]||'Recuerda: la H0 lleva «no».'))+'</p>'+
+          '<span class="rot">H1 · hipótesis alterna</span>'+
+          '<textarea class="campo" rows="2" data-h1="'+i+'" placeholder="… se relaciona con …">'+
+            esc(String(L[i].h1||''))+'</textarea>'+
+          '<p class="ayuda'+(r.h1==='ok'?' ok':(r.h1?' mal':''))+'" id="ayH1_'+i+'">'+
+            (r.h1==='ok'?'Bien: afirma la relación.':(AVISO[r.h1]||'La H1 es la misma frase, pero sin el «no».'))+'</p>'+
+          '</div>';
+      });
+    }
+    return h+'</div></div>';
   }
 
   function paso4(){
@@ -490,18 +577,23 @@
         'al elegirlo y, sobre todo, cuánto pesa que el producto no genere envase plástico en su '+
         'decisión. Sin esa información, la empresa no puede fijar bien el precio ni orientar la '+
         'comunicación del nuevo shampoo sólido.</p>'+
-        '<h4>Pregunta general</h4><p>¿En qué medida la importancia que el consumidor da a que el '+
-        'shampoo no genere envase plástico se relaciona con su intención de comprar el shampoo '+
-        'sólido, en personas de 18 a 40 años del Cercado, Yanahuara y Cayma?</p>'+
-        '<h4>Objetivo general</h4><p>Determinar la relación entre la importancia asignada a que el '+
-        'shampoo no genere envase plástico y la intención de compra del shampoo sólido en personas '+
-        'de 18 a 40 años del Cercado, Yanahuara y Cayma, durante el segundo semestre de 2026.</p>'+
-        '<h4>Variables</h4><p>Independiente: la importancia que el consumidor da a que el shampoo no '+
-        'genere envase plástico.<br>Dependiente: la intención de compra del shampoo sólido.</p>'+
-        '<h4>Hipótesis</h4><p>H0: La importancia asignada a que el shampoo no genere envase plástico '+
-        'no se relaciona con la intención de compra del shampoo sólido.<br>'+
-        'H1: La importancia asignada a que el shampoo no genere envase plástico se relaciona con la '+
-        'intención de compra del shampoo sólido.</p>'+
+        '<h4>Pregunta general</h4><p>¿En qué medida la importancia que el consumidor asigna a la '+
+        'duración, al aroma y a que el shampoo no genere envase plástico se relaciona con su '+
+        'intención de comprar el shampoo sólido, en personas de 18 a 40 años del Cercado, '+
+        'Yanahuara y Cayma?</p>'+
+        '<h4>Objetivo general</h4><p>Determinar la relación entre la importancia asignada a la '+
+        'duración, al aroma y a que el shampoo no genere envase plástico y la intención de compra '+
+        'del shampoo sólido en personas de 18 a 40 años del Cercado, Yanahuara y Cayma, durante el '+
+        'segundo semestre de 2026.</p>'+
+        '<h4>Variables</h4><p>Independientes:<br>'+
+        VIEJ[0].map(function(v,i){ return '· '+esc(v)+'.'; }).join('<br>')+
+        '<br>Dependiente: '+esc(VDEJ[0])+'.</p>'+
+        '<h4>Hipótesis</h4><p>'+
+        VIEJ[0].map(function(v,i){
+          var L='abc'.charAt(i);
+          return 'H0'+L+': '+esc(v)+' no se relaciona con '+esc(VDEJ[0])+'.<br>'+
+                 'H1'+L+': '+esc(v)+' se relaciona con '+esc(VDEJ[0])+'.';
+        }).join('<br><br>')+'</p>'+
       '</div>'+
       '<div class="acc"><button type="button" class="o-btn" id="btnCopia">Copiar el modelo</button>'+
       '<span class="ayuda" style="margin:0" id="avCopia"></span></div>'+
@@ -536,29 +628,53 @@
     });
 
     Array.prototype.forEach.call(document.querySelectorAll('textarea.campo'), function(t){
-      if(texto(t.dataset.k)) t.classList.add('lleno');
+      if(t.value.trim()) t.classList.add('lleno');
       t.addEventListener('input', function(){
-        G[t.dataset.k]=t.value; graba();
+        var d=t.dataset;
+        if(d.vi!==undefined)      vis()[+d.vi]=t.value;
+        else if(d.h0!==undefined) hs()[+d.h0].h0=t.value;
+        else if(d.h1!==undefined) hs()[+d.h1].h1=t.value;
+        else                      G[d.k]=t.value;
+        graba();
         t.classList.toggle('lleno', !!t.value.trim());
         avisos(); resumen(); pestPinta();
         if(window.Aula && Aula.enSala) Aula.empuja();
       });
     });
 
+    var mas=$('btnMas');
+    if(mas) mas.addEventListener('click', function(){
+      if(vis().length>=6) return;
+      vis().push(''); hs(); graba(); pinta();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.quita'), function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var i=+b.dataset.del, V=vis(), H=hs();
+        H.splice(i,1); V.splice(i,1);
+        if(!V.length){ V.push(''); H.push({h0:'',h1:''}); }
+        graba(); pinta();
+        if(window.Aula && Aula.enSala) Aula.empuja();
+      });
+    });
+
     var arma=$('btnArma');
     if(arma) arma.addEventListener('click', function(){
-      var vi=texto('vi'), vd=texto('vd'), av=$('avArma');
-      if(!vi || !vd){
+      var vd=texto('vd'), av=$('avArma'), ix=indices();
+      if(!ix.length || !vd){
         av.className='ayuda mal';
-        av.textContent='Primero escribe tus dos variables en la actividad 2.';
+        av.textContent='Primero escribe tus variables en la actividad 2: al menos una independiente y la dependiente.';
         return;
       }
-      function pela(s){ return s.trim().replace(/[.;,]+$/,''); }
-      function mayus(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
-      function minus(s){ return s.charAt(0).toLowerCase()+s.slice(1); }
-      var A=mayus(pela(vi)), B=minus(pela(vd));
-      G.h0 = A+' no se relaciona con '+B+'.';
-      G.h1 = A+' se relaciona con '+B+'.';
+      function pela(x){ return String(x).trim().replace(/[.;,]+$/,''); }
+      function mayus(x){ return x.charAt(0).toUpperCase()+x.slice(1); }
+      function minus(x){ return x.charAt(0).toLowerCase()+x.slice(1); }
+      var B=minus(pela(vd)), L=hs();
+      ix.forEach(function(i){
+        var A=mayus(pela(vis()[i]));
+        L[i].h0 = A+' no se relaciona con '+B+'.';
+        L[i].h1 = A+' se relaciona con '+B+'.';
+      });
       graba(); pinta(); resumen();
       if(window.Aula && Aula.enSala) Aula.empuja();
     });
@@ -593,16 +709,20 @@
     if(a2){
       var ok=hechoAct2();
       a2.className='ayuda'+(ok?' ok':'');
-      a2.textContent = ok ? 'Listo: con estas dos variables puedes escribir tus hipótesis en el paso 3.'
-                          : 'Escribe las dos en una frase completa, como en los ejemplos de arriba.';
+      a2.textContent = ok
+        ? 'Listo: en el paso 3 escribirás una pareja de hipótesis por cada variable independiente.'
+        : 'Escríbelas como en los ejemplos: «La importancia asignada a…» y «la intención de compra de…».';
     }
-    var r=revisaH();
-    [['ayH0', r.h0, 'Bien: niega la relación.', 'Recuerda: la H0 lleva «no».'],
-     ['ayH1', r.h1, 'Bien: afirma la relación.', 'La H1 es la misma frase, pero sin el «no».']
-    ].forEach(function(x){
-      var el=$(x[0]); if(!el) return;
-      el.className='ayuda'+(x[1]==='ok'?' ok':(x[1]?' mal':''));
-      el.textContent = (x[1]==='ok') ? x[2] : (x[1] || x[3]);
+    var L=hs();
+    indices().forEach(function(i){
+      var r=revisaUna(L[i].h0, L[i].h1);
+      [['ayH0_'+i, r.h0, 'Bien: niega la relación.', 'Recuerda: la H0 lleva «no».'],
+       ['ayH1_'+i, r.h1, 'Bien: afirma la relación.', 'La H1 es la misma frase, pero sin el «no».']
+      ].forEach(function(x){
+        var el=$(x[0]); if(!el) return;
+        el.className='ayuda'+(x[1]==='ok'?' ok':(x[1]?' mal':''));
+        el.textContent = (x[1]==='ok') ? x[2] : (AVISO[x[1]] || x[3]);
+      });
     });
   }
 
@@ -630,22 +750,30 @@
 
   /* ===== sala ===== */
   function resumenAula(){
-    var a=avance();
+    var a=avance(), L=hs();
     return { paso:PASOS[pi].pest, pc:a.pc, ok:a.ok, total:a.total,
              a1:a.a1.ok+'/'+a.a1.total, a3:a.a3.ok+'/'+a.a3.total,
-             vi:texto('vi'), vd:texto('vd'), h0:texto('h0'), h1:texto('h1'),
+             vd:texto('vd'),
+             pares: indices().map(function(i){
+               return { vi:String(vis()[i]).trim(), h0:String(L[i].h0||'').trim(),
+                        h1:String(L[i].h1||'').trim() };
+             }),
              listo:(a.pc===100) };
   }
   function ventanaAula(e){
     function tx(rot, v){
       return '<div class="txt"><b>'+rot+'</b>'+(v ? esc(v) : '<em>sin escribir</em>')+'</div>';
     }
-    return '<div class="vmini">'+
+    var h='<div class="vmini">'+
       '<div class="lin"><span>'+esc(e.paso||'—')+'</span><b>'+(e.pc||0)+' %</b></div>'+
       '<div class="lin"><span>Actividad 1</span><b>'+esc(e.a1||'—')+'</b></div>'+
       '<div class="lin"><span>Actividad 3</span><b>'+esc(e.a3||'—')+'</b></div>'+
-      tx('Independiente', e.vi)+tx('Dependiente', e.vd)+
-      tx('H0', e.h0)+tx('H1', e.h1)+'</div>';
+      '<div class="lin"><span>Independientes</span><b>'+((e.pares||[]).length)+'</b></div>'+
+      tx('Dependiente', e.vd);
+    (e.pares||[]).forEach(function(par, i){
+      h += tx('Independiente '+(i+1), par.vi) + tx('H0 '+(i+1), par.h0) + tx('H1 '+(i+1), par.h1);
+    });
+    return h+'</div>';
   }
 
   if(window.Aula){
