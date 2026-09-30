@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Excel: funciones, validación y Power Query</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .xl{ --verde:#217346; --verde2:#1A5C38; --azul:#1F5FA8; --ambar:#B25E09; --rojo:#B42318;
+       --mora:#714B67; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1140px; margin:0 auto; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--verde); padding-bottom:12px; }
+  .titulo .marca svg{ width:60px; height:56px; display:block; flex:none; }
+  .titulo .tx{ flex:1; min-width:200px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .pest{ display:flex; gap:7px; flex-wrap:wrap; margin:16px 0 10px; align-items:center; }
+  .pest button{ font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+                border:1px solid var(--o-border); background:#fff; color:var(--o-muted);
+                border-radius:9px; padding:8px 13px; line-height:1.3; }
+  .pest button:hover{ border-color:var(--verde); color:var(--verde); }
+  .pest button.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .pest button .pc{ font-weight:800; margin-left:5px; font-size:11px; opacity:.85; }
+  .pest .sep{ flex:1; min-width:4px; }
+  .pest .valora{ background:#FFF3E2; border-color:#E8B172; color:#7A430A; font-weight:800; }
+  .pest .valora:hover{ background:#FFE9CC; color:#7A430A; }
+
+  .barra{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin:0 0 14px; }
+  .prog{ height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; min-width:120px; flex:1; }
+  .prog i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .cuenta{ font-size:12.5px; color:var(--o-muted); font-weight:600; white-space:nowrap; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+           overflow:hidden; margin-bottom:14px; }
+  .bloque > h3{ margin:0; font-size:12.5px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+                display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .bloque > h3 .t{ font-weight:400; text-transform:none; letter-spacing:0; opacity:.92; font-size:11.5px; }
+  .bloque.teo > h3{ background:var(--verde); }
+  .bloque.sin > h3{ background:var(--azul); }
+  .bloque.lab > h3{ background:var(--ambar); }
+  .bloque.ojo > h3{ background:var(--rojo); }
+  .bloque.chk > h3{ background:var(--mora); }
+  .bloque .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+  .bloque .cuerpo > p{ margin:0 0 9px; }
+  .bloque .cuerpo > p:last-child{ margin-bottom:0; }
+
+  .ruta{ display:inline-flex; align-items:center; gap:5px; flex-wrap:wrap; font-size:12.5px;
+         background:#F4F6F8; border:1px solid var(--o-border); border-radius:8px;
+         padding:5px 10px; margin:2px 0 9px; color:#41505F; }
+  .ruta b{ color:var(--verde); }
+  .ruta span{ color:var(--o-muted); }
+
+  /* sintaxis interactiva */
+  .sx{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:15px;
+       line-height:2.1; background:#F7F9FC; border:1px solid var(--o-border); border-radius:9px;
+       padding:12px 14px; overflow-x:auto; white-space:nowrap; }
+  .sx .fn{ color:var(--azul); font-weight:800; }
+  .sx .pu{ color:#8A93A0; }
+  .sx .ar{ display:inline-block; cursor:pointer; border-radius:6px; padding:2px 8px;
+           border:1.5px solid transparent; font-weight:700; transition:.15s; }
+  .sx .ar.c0{ background:#EAF1FA; color:#16467C; } .sx .ar.c0:hover{ border-color:#1F5FA8; }
+  .sx .ar.c1{ background:#E9F7EF; color:#14532D; } .sx .ar.c1:hover{ border-color:#217346; }
+  .sx .ar.c2{ background:#FFF3E2; color:#7A430A; } .sx .ar.c2:hover{ border-color:#B25E09; }
+  .sx .ar.c3{ background:#F5EAF2; color:#5B3B52; } .sx .ar.c3:hover{ border-color:#714B67; }
+  .sx .ar.c4{ background:#FDECEA; color:#7A1C12; } .sx .ar.c4:hover{ border-color:#B42318; }
+  .sx .ar.c5{ background:#EDEFF2; color:#41505F; } .sx .ar.c5:hover{ border-color:#5A5A5A; }
+  .sx .ar.on{ border-color:currentColor; box-shadow:0 0 0 3px rgba(31,95,168,.13); }
+  .sx .op{ opacity:.65; font-weight:600; font-style:italic; }
+
+  .expl{ margin-top:10px; border:1px solid var(--o-border); border-radius:9px; overflow:hidden; }
+  .expl .it{ display:none; padding:10px 13px; font-size:13px; line-height:1.6; }
+  .expl .it.on{ display:block; }
+  .expl .it b{ display:block; font-family:ui-monospace,Menlo,Consolas,monospace;
+               font-size:12.5px; margin-bottom:3px; }
+  .expl .it.c0{ background:#F4F8FD; border-left:4px solid #1F5FA8; } .expl .it.c0 b{ color:#16467C; }
+  .expl .it.c1{ background:#F4FBF7; border-left:4px solid #217346; } .expl .it.c1 b{ color:#14532D; }
+  .expl .it.c2{ background:#FFFAF3; border-left:4px solid #B25E09; } .expl .it.c2 b{ color:#7A430A; }
+  .expl .it.c3{ background:#FBF6FA; border-left:4px solid #714B67; } .expl .it.c3 b{ color:#5B3B52; }
+  .expl .it.c4{ background:#FEF7F6; border-left:4px solid #B42318; } .expl .it.c4 b{ color:#7A1C12; }
+  .expl .it.c5{ background:#FAFBFC; border-left:4px solid #8A93A0; } .expl .it.c5 b{ color:#41505F; }
+  .pistita{ font-size:12px; color:var(--o-muted); margin:6px 0 0; }
+
+  /* laboratorio */
+  .lab-f{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; margin-bottom:11px; }
+  .campo{ display:grid; gap:3px; font-size:11px; font-weight:800; letter-spacing:.3px;
+          text-transform:uppercase; color:var(--o-muted); }
+  .campo input, .campo select{ font:inherit; font-size:13.5px; text-transform:none; letter-spacing:0;
+    padding:7px 9px; border-radius:8px; border:1.5px solid var(--amaBd); background:var(--ama);
+    color:#3F3208; min-width:130px; }
+  .campo input:focus, .campo select:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  .campo.ancho input{ min-width:270px; }
+  .campo.num input{ width:88px; min-width:0; text-align:right; }
+
+  .form{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px;
+         background:#26303D; color:#E8EDF3; border-radius:8px; padding:9px 12px;
+         overflow-x:auto; white-space:nowrap; }
+  .form .v{ color:#8FD3A8; } .form .k{ color:#8FC2F0; } .form .e{ color:#FF9A8B; }
+  .res{ margin-top:9px; display:flex; gap:9px; flex-wrap:wrap; align-items:center; }
+  .res .et{ font-size:11px; font-weight:800; letter-spacing:.3px; text-transform:uppercase;
+            color:var(--o-muted); }
+  .res .val{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:14px; font-weight:800;
+             background:#E9F7EF; border:1px solid #7CC29B; color:#14532D;
+             border-radius:7px; padding:5px 11px; }
+  .res .val.err{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .res .val.txt{ background:#EAF1FA; border-color:#B6CFEA; color:#16467C; }
+
+  .cadena{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:15px; letter-spacing:1px;
+           background:#F7F9FC; border:1px solid var(--o-border); border-radius:8px;
+           padding:10px 12px; overflow-x:auto; white-space:nowrap; }
+  .cadena i{ font-style:normal; background:#FFE9B8; border-radius:3px; padding:2px 0;
+             box-shadow:0 2px 0 #E8CE8A; }
+  .cadena u{ text-decoration:none; color:#B6BEC8; }
+
+  table.hoja{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.hoja th, table.hoja td{ border:1px solid #D6DBE2; padding:5px 9px; text-align:left; }
+  table.hoja thead th{ background:#EDF1F5; font-size:11px; text-transform:uppercase;
+                       letter-spacing:.3px; color:var(--o-muted); font-weight:700; }
+  table.hoja td.n{ text-align:right; font-variant-numeric:tabular-nums; }
+  table.hoja tr.hit td{ background:#E9F7EF; box-shadow:inset 0 0 0 1px #7CC29B; }
+  table.hoja td.tx{ color:#B25E09; font-style:italic; }
+  .envuelve{ overflow-x:auto; }
+
+  .chips{ display:flex; gap:7px; flex-wrap:wrap; margin-bottom:11px; }
+  .chips button{ font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+                 border:1px solid var(--o-border); background:#fff; color:#41505F;
+                 border-radius:999px; padding:6px 13px; }
+  .chips button:hover{ border-color:var(--azul); color:var(--azul); }
+  .chips button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+
+  .lista{ margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:#33404E; }
+  .lista li{ margin-bottom:4px; }
+  .lista code, .cuerpo code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+    background:#F0F3F7; border:1px solid #E1E6EC; border-radius:5px; padding:1px 5px; color:#26303D; }
+
+  .aviso{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px;
+          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:10px; }
+
+  /* cuadro de diálogo simulado */
+  .dlg{ border:1px solid #B9C2CC; border-radius:8px; background:#F7F9FC; overflow:hidden;
+        max-width:400px; box-shadow:0 8px 22px rgba(0,0,0,.14); }
+  .dlg .dh{ background:linear-gradient(180deg,#F2F5F8,#E6EBF0); border-bottom:1px solid #D6DBE2;
+            padding:7px 11px; font-size:12.5px; font-weight:700; color:#26303D; }
+  .dlg .db{ padding:12px 14px; font-size:13px; display:flex; gap:11px; align-items:flex-start; }
+  .dlg .db .ic{ font-size:24px; line-height:1; flex:none; }
+  .dlg .dp{ padding:0 14px 12px; display:flex; gap:8px; justify-content:flex-end; }
+  .dlg .dp button{ font:inherit; font-size:12.5px; border:1px solid #B9C2CC; background:#fff;
+                   border-radius:5px; padding:5px 14px; cursor:pointer; }
+
+  .pasos{ display:grid; gap:7px; }
+  .paso{ display:flex; gap:9px; align-items:center; border:1px solid var(--o-border);
+         border-radius:8px; padding:7px 11px; background:#fff; font-size:13px; }
+  .paso .nn{ flex:none; width:22px; height:22px; border-radius:50%; background:#EDF1F5;
+             color:var(--o-muted); font-size:11px; font-weight:800; display:grid; place-items:center; }
+  .paso.ya{ background:#F4FBF7; border-color:#7CC29B; }
+  .paso.ya .nn{ background:var(--verde); color:#fff; }
+  .paso .tt{ flex:1; }
+  .paso button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer; border:1px solid var(--o-border);
+                background:#fff; color:var(--o-muted); border-radius:7px; padding:5px 11px; }
+  .paso button:hover{ border-color:var(--verde); color:var(--verde); }
+  .paso[data-bloq] button{ opacity:.4; cursor:not-allowed; }
+
+  /* compruébalo */
+  .preg{ font-size:13.5px; font-weight:600; color:#33404E; margin:0 0 9px; line-height:1.6; }
+  .ops{ display:grid; gap:7px; }
+  .ops button{ font:inherit; font-size:13px; text-align:left; cursor:pointer; line-height:1.5;
+               border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+               border-radius:9px; padding:9px 12px; }
+  .ops button:hover{ border-color:var(--mora); }
+  .ops button.bien{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; font-weight:700; }
+  .ops button.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .porque{ margin:10px 0 0; font-size:12.5px; line-height:1.6; }
+  .porque.ok{ color:#14532D; font-weight:600; }
+  .porque.no{ color:var(--rojo); font-weight:600; }
+
+  @media (max-width:640px){
+    .campo input, .campo select{ min-width:0; width:100%; }
+    .campo.ancho input{ min-width:0; }
+    .campo{ flex:1; min-width:150px; }
+    .sx{ font-size:13.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="excel-empresarial.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Excel Empresarial</span> / <b>Sesión 7</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="xl">
+
+  <div class="titulo">
+    <span class="marca" aria-hidden="true">
+      <svg viewBox="0 0 60 56" fill="none" stroke="#217346" stroke-width="2.3"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="7" width="38" height="42" rx="4"/>
+        <path d="M4 19h38M17 7v42M29.5 7v42"/>
+        <path d="M40 34l7 7 11-15" stroke="#1F5FA8" stroke-width="3.4"/>
+      </svg>
+    </span>
+    <span class="tx">
+      <h1>Sesión 7 · Teoría viva de Excel</h1>
+      <p>IZQUIERDA · texto × 1 · validación de datos · BUSCARX · SI · formato condicional · Power Query</p>
+    </span>
+  </div>
+
+  <div class="idea">
+    <b>Cada tema trae lo mismo:</b> para qué sirve, la sintaxis con cada argumento explicado al tocarlo,
+    un laboratorio donde cambias los valores y ves el resultado al instante, los errores que más se
+    repiten y una pregunta para comprobar que quedó claro. Nada se instala: todo funciona aquí mismo.
+  </div>
+
+  <div class="pest" id="pest"></div>
+  <div class="barra">
+    <div class="prog"><i id="progI"></i></div>
+    <span class="cuenta" id="cuenta"></span>
+    <span id="reinicio"></span>
+  </div>
+  <div id="panel"></div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="excel-empresarial.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                          .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+  function q(sel, raiz){ return (raiz||document).querySelector(sel); }
+  function qq(sel, raiz){ return Array.prototype.slice.call((raiz||document).querySelectorAll(sel)); }
+
+  var ac=null;
+  function nota(f, ini, dur, vol, tipo){
+    try{
+      if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.06,t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(660,0,.12,.05,'triangle'); }
+  function mal(){ nota(196,0,.16,.05,'sawtooth'); }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#217346','#1F5FA8','#E8CE8A','#714B67','#B42318'], p=[];
+    for(var i=0;i<100;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+        x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+        x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+      if(Date.now()-t0<2400) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  var ENCUESTA='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
+  var LS='xl_sesion7_v1';
+  var G={};
+  try{ G=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ G={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+
+  /* ================= utilidades de formato ================= */
+  function miles(n, d){
+    if(n===null||n===undefined||isNaN(n)) return '';
+    return Number(n).toLocaleString('es-PE',{minimumFractionDigits:(d||0), maximumFractionDigits:(d===undefined?2:d)});
+  }
+  function soles(n){ return 'S/ '+miles(n,2); }
+
+  /* ================= sintaxis interactiva ================= */
+  function sintaxis(fn, args){
+    var h='<div class="sx"><span class="fn">='+esc(fn)+'</span><span class="pu">(</span>';
+    args.forEach(function(a,i){
+      if(i) h+='<span class="pu">; </span>';
+      h+='<span class="ar c'+(i%6)+(a.op?' op':'')+'" data-a="'+i+'" role="button" tabindex="0">'+
+         esc(a.op?('['+a.n+']'):a.n)+'</span>';
+    });
+    h+='<span class="pu">)</span></div><div class="expl">';
+    args.forEach(function(a,i){
+      h+='<div class="it c'+(i%6)+'" data-e="'+i+'"><b>'+esc(a.op?('['+a.n+']'):a.n)+
+         (a.op?'  ·  opcional':'')+'</b>'+a.d+'</div>';
+    });
+    h+='</div><p class="pistita">Toca cada argumento para ver qué hace. Los que van entre corchetes son opcionales.</p>';
+    return h;
+  }
+  function cableaSintaxis(raiz){
+    qq('.sx .ar', raiz).forEach(function(b){
+      function abre(){
+        qq('.sx .ar', raiz).forEach(function(x){ x.classList.remove('on'); });
+        qq('.expl .it', raiz).forEach(function(x){ x.classList.remove('on'); });
+        b.classList.add('on');
+        var it=q('.expl .it[data-e="'+b.dataset.a+'"]', raiz);
+        if(it) it.classList.add('on');
+        nota(760,0,.05,.03);
+      }
+      b.addEventListener('click', abre);
+      b.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); abre(); } });
+    });
+    var pri=q('.sx .ar', raiz);
+    if(pri) pri.click();
+  }
+
+  function caja(clase, titulo, cola, cuerpo){
+    return '<div class="bloque '+clase+'"><h3><span>'+esc(titulo)+'</span>'+
+           (cola?'<span class="t">'+esc(cola)+'</span>':'')+'</h3>'+
+           '<div class="cuerpo">'+cuerpo+'</div></div>';
+  }
+  function ruta(pasos){
+    return '<div class="ruta">'+pasos.map(function(p,i){
+      return (i?'<span>›</span>':'')+(i===pasos.length-1?'<b>'+esc(p)+'</b>':esc(p));
+    }).join('')+'</div>';
+  }
+
+  /* ================= TEMA 1 · IZQUIERDA ================= */
+  var T1={
+    id:'izq', pest:'1 · IZQUIERDA',
+    titulo:'IZQUIERDA · recortar por el comienzo',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','Funciones de texto',
+        '<p>Devuelve los primeros caracteres de un texto, contando desde la izquierda. Es la forma '+
+        'más rápida de separar algo que vino pegado: el RUC de la razón social, el código de la '+
+        'descripción, el año de un código de expediente.</p>'+
+        '<p><b>Devuelve siempre texto</b>, aunque lo que recorte sean puros dígitos. Ese detalle es '+
+        'el que obliga al tema 2 de esta sesión.</p>'+
+        '<ul class="lista">'+
+        '<li><code>DERECHA(texto; n)</code> hace lo mismo desde el final.</li>'+
+        '<li><code>EXTRAE(texto; inicio; n)</code> corta desde una posición cualquiera.</li>'+
+        '<li><code>LARGO(texto)</code> cuenta cuántos caracteres tiene.</li>'+
+        '<li><code>ENCONTRAR</code> y <code>HALLAR</code> dicen en qué posición aparece algo.</li>'+
+        '</ul>');
+
+      h += caja('sin','La sintaxis','', sintaxis('IZQUIERDA', [
+        { n:'texto', d:'La celda o el texto del que se recorta. Puede ser una referencia (<code>A2</code>), '+
+              'un texto entre comillas (<code>"20601030013 SERVICIOS SAC"</code>) o el resultado de otra fórmula.' },
+        { n:'núm_de_caracteres', op:true, d:'Cuántos caracteres se toman desde la izquierda. '+
+              'Si se omite, Excel toma <b>1</b>. Si pides más caracteres de los que hay, devuelve el texto completo, '+
+              'sin error. Si pones un número negativo, sale <code>#¡VALOR!</code>.' }
+      ]));
+
+      h += caja('lab','Laboratorio','Cambia los valores y mira el corte',
+        '<div class="lab-f">'+
+          '<label class="campo ancho">Texto en A2'+
+            '<input id="t1txt" type="text" value="20601030013 SERVICIOS GENERALES SAC"></label>'+
+          '<label class="campo num">Caracteres'+
+            '<input id="t1n" type="number" min="0" max="60" value="11"></label>'+
+        '</div>'+
+        '<div class="cadena" id="t1cad"></div>'+
+        '<div class="form" id="t1for" style="margin-top:10px"></div>'+
+        '<div class="res"><span class="et">Resultado</span><span class="val txt" id="t1res"></span>'+
+          '<span class="et">LARGO(A2)</span><span class="val txt" id="t1largo"></span></div>'+
+        '<div class="aviso"><b>Cuando la longitud cambia.</b> Si el código no siempre mide lo mismo, '+
+        'no cuentes a mano: corta hasta el primer espacio con '+
+        '<code>=IZQUIERDA(A2; ENCONTRAR(" ";A2)-1)</code>. El <code>-1</code> es para no llevarte el '+
+        'espacio. Si el separador es un guion, cambia <code>" "</code> por <code>"-"</code>.</div>');
+
+      h += caja('ojo','Ojo con esto','Los tropiezos de siempre',
+        '<ul class="lista">'+
+        '<li>El resultado es <b>texto</b>: si luego lo sumas, la suma da 0. Se arregla en el tema 2.</li>'+
+        '<li><code>ENCONTRAR</code> distingue mayúsculas de minúsculas; <code>HALLAR</code> no. '+
+        'Para buscar una letra sin importar el caso, usa <code>HALLAR</code>.</li>'+
+        '<li>Si la celda puede venir vacía, <code>ENCONTRAR</code> devuelve <code>#¡VALOR!</code>. '+
+        'Envuélvelo: <code>=SI.ERROR(IZQUIERDA(A2;ENCONTRAR(" ";A2)-1);"")</code>.</li>'+
+        '<li>Los espacios invisibles al inicio corren el corte. Limpia antes con <code>ESPACIOS(A2)</code>.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      function pinta(){
+        var t=$('t1txt').value, n=parseInt($('t1n').value,10);
+        if(isNaN(n)) n=0;
+        var corte=t.slice(0, Math.max(0,n)), resto=t.slice(Math.max(0,n));
+        $('t1cad').innerHTML = '<i>'+esc(corte)+'</i><u>'+esc(resto)+'</u>';
+        $('t1for').innerHTML = '=<span class="k">IZQUIERDA</span>(<span class="v">A2</span>; '+
+                               '<span class="v">'+n+'</span>)';
+        $('t1res').textContent = corte || '(vacío)';
+        $('t1largo').textContent = t.length;
+      }
+      $('t1txt').addEventListener('input', pinta);
+      $('t1n').addEventListener('input', pinta);
+      pinta();
+    },
+    preg:{
+      t:'En A2 está <code>P-2026-00431</code>. Quieres quedarte con <code>P-2026</code>. ¿Cuál lo hace?',
+      ops:['=IZQUIERDA(A2;6)','=IZQUIERDA(A2;7)','=DERECHA(A2;6)','=EXTRAE(A2;1;5)'],
+      ok:0,
+      porque:'<code>P-2026</code> son seis caracteres: la P, el guion y los cuatro dígitos del año. '+
+             'Con 7 te llevarías también el segundo guion.'
+    }
+  };
+
+  /* ================= TEMA 2 · texto × 1 ================= */
+  var MUESTRAS=[
+    { v:'1250', d:'limpio, se convierte sin problema' },
+    { v:'  1250  ', d:'con espacios normales: Excel los ignora' },
+    { v:'1,250.50', d:'coma de miles: aquí sí funciona' },
+    { v:'1 250', d:'espacio como separador de miles: falla' },
+    { v:'S/ 1250', d:'con el símbolo pegado: falla' },
+    { v:'1250 kg', d:'con unidad: falla' },
+    { v:'1250 ', d:'espacio duro copiado de una web: falla' }
+  ];
+  var T2={
+    id:'x1', pest:'2 · Texto × 1',
+    titulo:'Multiplicar por 1 para convertir texto en número',
+    dibuja:function(){
+      var h = caja('teo','El problema','Números que no suman',
+        '<p>Un número puede estar en la celda y aun así no ser un número. Pasa siempre que el dato '+
+        '<b>viene de afuera</b>: de un reporte descargado, de un pegado desde la web, o de una función '+
+        'de texto como <code>IZQUIERDA</code>. Excel lo guarda como texto, y entonces <code>SUMA</code> '+
+        'lo ignora, <code>BUSCARX</code> no lo encuentra y la tabla dinámica lo cuenta en vez de sumarlo.</p>'+
+        '<p><b>Cómo lo reconoces sin fórmulas:</b> los números se pegan a la derecha de la celda y los '+
+        'textos a la izquierda. Si tu columna de importes está alineada a la izquierda, es texto.</p>'+
+        '<p><b>El truco.</b> Multiplica por 1: <code>=A2*1</code>. Como multiplicar es una operación '+
+        'aritmética, Excel intenta leer el texto como número y, si lo consigue, devuelve un número de '+
+        'verdad. Funcionan igual <code>=A2+0</code>, <code>=--A2</code> y <code>=VALOR(A2)</code>.</p>');
+
+      h += caja('sin','La sintaxis','Tres formas de lo mismo',
+        '<div class="sx"><span class="pu">=</span><span class="ar c0" data-a="0" role="button" tabindex="0">A2</span>'+
+        '<span class="pu"> * </span><span class="ar c1" data-a="1" role="button" tabindex="0">1</span></div>'+
+        '<div class="expl">'+
+          '<div class="it c0" data-e="0"><b>A2</b>La celda que se ve como número pero está guardada como '+
+          'texto. Puede ser también una fórmula: <code>=IZQUIERDA(A2;11)*1</code> corta y convierte de un tiro.</div>'+
+          '<div class="it c1" data-e="1"><b>* 1</b>El uno no cambia el valor: lo que hace es forzar a Excel '+
+          'a tratar la celda como número. Por eso sirven igual <code>+0</code>, <code>--</code> (dos signos menos) '+
+          'y <code>VALOR()</code>. Si el texto no se puede leer como número, el resultado es <code>#¡VALOR!</code>.</div>'+
+        '</div><p class="pistita">Toca cada parte para ver qué hace.</p>'+
+        '<div class="aviso"><b>Sin fórmulas, de golpe:</b> selecciona la columna y usa '+
+        '<b>Datos › Texto en columnas › Finalizar</b>. Es el botón que está justo al lado de Validación de '+
+        'datos, y reescribe toda la columna como número en un paso. También sirve pegar un 1 con '+
+        '<b>Pegado especial › Multiplicar</b>.</div>');
+
+      h += caja('lab','Laboratorio','Prueba cuál convierte y cuál no',
+        '<div class="chips" id="t2chips"></div>'+
+        '<div class="lab-f"><label class="campo ancho">Contenido de A2'+
+          '<input id="t2txt" type="text" value="1250"></label></div>'+
+        '<div class="form" id="t2for"></div>'+
+        '<div class="res"><span class="et">=A2*1</span><span class="val" id="t2res"></span>'+
+          '<span class="et">=ESNUMERO(A2)</span><span class="val txt" id="t2esn"></span>'+
+          '<span class="et">=LARGO(A2)</span><span class="val txt" id="t2lar"></span></div>'+
+        '<p class="pistita" id="t2nota" style="margin-top:9px"></p>');
+
+      h += caja('ojo','Cuando falla, límpialo','La receta completa',
+        '<ul class="lista">'+
+        '<li><b>Espacios de sobra:</b> <code>=ESPACIOS(A2)*1</code>.</li>'+
+        '<li><b>Espacio duro</b> (el que viene de páginas web, código 160): '+
+        '<code>=SUSTITUIR(A2;CARACTER(160);"")*1</code>.</li>'+
+        '<li><b>Separador de miles que estorba:</b> <code>=SUSTITUIR(A2;" ";"")*1</code>.</li>'+
+        '<li><b>Símbolo o unidad pegada:</b> quítala con <code>SUSTITUIR</code> o recórtala con '+
+        '<code>IZQUIERDA</code> o <code>DERECHA</code>.</li>'+
+        '<li><b>Todo junto, la fórmula que resuelve el 90 % de los casos:</b><br>'+
+        '<code>=VALOR(SUSTITUIR(SUSTITUIR(ESPACIOS(A2);CARACTER(160);"");" ";""))</code></li>'+
+        '</ul>'+
+        '<div class="aviso">Si al final necesitas que además se vea con dos decimales o con S/, eso ya '+
+        'es <b>formato</b>, no conversión: el valor ya es número y solo cambias cómo se muestra.</div>');
+      return h;
+    },
+    cablea:function(){
+      var chips=$('t2chips');
+      chips.innerHTML = MUESTRAS.map(function(m,i){
+        return '<button type="button" data-m="'+i+'">'+esc(m.v.replace(/ /g,'␣'))+'</button>';
+      }).join('');
+      function pinta(){
+        var t=$('t2txt').value;
+        $('t2for').innerHTML='=<span class="v">A2</span> * <span class="v">1</span>';
+        /* Excel perdona los espacios normales, pero no el espacio duro (código 160) */
+        var limpio=t.replace(/^[ \t]+|[ \t]+$/g,'');
+        var num=(limpio!=='' && !/ /.test(limpio)) ? Number(limpio.replace(/,/g,'')) : NaN;
+        var sirve = limpio!=='' && !isNaN(num) && !/[^\d.,\-+eE]/.test(limpio);
+        var res=$('t2res');
+        if(sirve){ res.className='val'; res.textContent=miles(num,2); }
+        else{ res.className='val err'; res.textContent='#¡VALOR!'; }
+        $('t2esn').textContent='FALSO';
+        $('t2lar').textContent=t.length;
+        $('t2nota').textContent = sirve
+          ? 'Excel pudo leerlo como número, así que ahora sí suma, se busca y se promedia.'
+          : 'Excel no pudo leerlo: hay algo que no es un dígito. Mira la receta de abajo.';
+      }
+      chips.addEventListener('click', function(ev){
+        var b=ev.target.closest('button[data-m]'); if(!b) return;
+        qq('button', chips).forEach(function(x){ x.classList.remove('on'); });
+        b.classList.add('on');
+        $('t2txt').value=MUESTRAS[+b.dataset.m].v;
+        $('t2nota').textContent=MUESTRAS[+b.dataset.m].d;
+        pinta();
+        $('t2nota').textContent=MUESTRAS[+b.dataset.m].d;
+      });
+      $('t2txt').addEventListener('input', pinta);
+      pinta();
+    },
+    preg:{
+      t:'Extrajiste el RUC con <code>=IZQUIERDA(A2;11)</code> y ahora <code>BUSCARX</code> no lo encuentra en la tabla de clientes, donde el RUC sí es número. ¿Qué haces?',
+      ops:['Cambiar el formato de la celda a Número',
+           'Envolverlo: <code>=IZQUIERDA(A2;11)*1</code>',
+           'Ordenar la tabla de clientes',
+           'Poner el RUC entre comillas'],
+      ok:1,
+      porque:'IZQUIERDA devuelve texto y la tabla guarda números: para Excel no son lo mismo. '+
+             'Cambiar el formato solo cambia cómo se ve, no lo que la celda contiene; hay que convertirlo.'
+    }
+  };
+
+  /* ================= TEMA 3 · Validación de datos ================= */
+  var REGLAS=[
+    { id:'lista', n:'Lista', cfg:'Origen: Contado; Crédito; Transferencia',
+      prueba:function(v){ return ['Contado','Crédito','Transferencia'].indexOf(v.trim())>=0; },
+      err:'El valor no está en la lista.' },
+    { id:'entero', n:'Número entero', cfg:'Entre 1 y 100',
+      prueba:function(v){ var n=Number(v); return v.trim()!=='' && !isNaN(n) && n===Math.round(n) && n>=1 && n<=100; },
+      err:'Debe ser un número entero entre 1 y 100.' },
+    { id:'largo', n:'Longitud del texto', cfg:'Igual a 11 (un RUC)',
+      prueba:function(v){ return v.trim().length===11; },
+      err:'El RUC debe tener exactamente 11 caracteres.' },
+    { id:'form', n:'Personalizada', cfg:'=Y(ESNUMERO(A2); LARGO(A2)=11)',
+      prueba:function(v){ var t=v.trim(); return t.length===11 && /^\d+$/.test(t); },
+      err:'Debe ser un RUC de 11 dígitos, sin letras ni guiones.' }
+  ];
+  var T3={
+    id:'val', pest:'3 · Validación',
+    titulo:'Validación de datos · que no entre basura',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','Datos › Herramientas de datos',
+        ruta(['Datos','Herramientas de datos','Validación de datos'])+
+        '<p>Le pone reglas a una celda antes de que alguien escriba en ella. En lugar de corregir la '+
+        'base después, evitas que el error entre. Es lo que convierte una hoja que llenan varias '+
+        'personas en una base con la que se puede trabajar.</p>'+
+        '<p>El cuadro tiene tres pestañas y conviene usar las tres:</p>'+
+        '<ul class="lista">'+
+        '<li><b>Configuración:</b> la regla. En <i>Permitir</i> eliges Lista, Número entero, Decimal, '+
+        'Fecha, Hora, Longitud del texto o Personalizada.</li>'+
+        '<li><b>Mensaje de entrada:</b> el globito que aparece al seleccionar la celda. Aquí escribes '+
+        'qué se espera («RUC de 11 dígitos, sin guiones»). Es lo que más ahorra preguntas.</li>'+
+        '<li><b>Mensaje de error:</b> qué se ve cuando alguien se equivoca, y de qué estilo: '+
+        '<b>Grave</b> no deja pasar, <b>Advertencia</b> deja continuar si insiste, '+
+        '<b>Información</b> solo avisa.</li>'+
+        '</ul>'+
+        '<div class="aviso"><b>Rodear con un círculo datos no válidos.</b> En ese mismo menú desplegable. '+
+        'La validación solo controla lo que se escribe <i>después</i> de ponerla; lo que ya estaba se '+
+        'queda. Esta opción marca con un óvalo rojo las celdas que incumplen la regla, para revisarlas. '+
+        'Se quita con «Borrar círculos de validación».</div>');
+
+      h += caja('sin','Los tipos que más se usan','Qué escribir en cada uno',
+        '<div class="envuelve"><table class="hoja"><thead><tr>'+
+        '<th>Permitir</th><th>Para qué</th><th>Qué se escribe</th></tr></thead><tbody>'+
+        '<tr><td><b>Lista</b></td><td>Que solo se elija de un juego cerrado de opciones</td>'+
+        '<td><code>Contado;Crédito;Transferencia</code> o un rango <code>=$H$2:$H$5</code></td></tr>'+
+        '<tr><td><b>Número entero</b></td><td>Cantidades, edades, meses</td>'+
+        '<td>Entre <code>1</code> y <code>100</code></td></tr>'+
+        '<tr><td><b>Decimal</b></td><td>Importes y porcentajes</td>'+
+        '<td>Mayor o igual que <code>0</code></td></tr>'+
+        '<tr><td><b>Fecha</b></td><td>Que no se cuelen fechas imposibles</td>'+
+        '<td>Entre <code>01/01/2026</code> y <code>=HOY()</code></td></tr>'+
+        '<tr><td><b>Longitud del texto</b></td><td>DNI de 8, RUC de 11</td>'+
+        '<td>Igual a <code>11</code></td></tr>'+
+        '<tr><td><b>Personalizada</b></td><td>Todo lo demás</td>'+
+        '<td>Una fórmula que dé VERDADERO: <code>=CONTAR.SI($A:$A;A2)=1</code> para no repetir</td></tr>'+
+        '</tbody></table></div>'+
+        '<div class="aviso"><b>La lista bien hecha.</b> No escribas las opciones a mano dentro del cuadro: '+
+        'ponlas en una columna aparte, conviértela en tabla y usa ese rango como origen. Así, cuando '+
+        'agregues una opción, el desplegable la toma sola.</div>');
+
+      h += caja('lab','Laboratorio','Elige la regla y prueba a escribir',
+        '<div class="chips" id="t3chips"></div>'+
+        '<p class="pistita" id="t3cfg" style="margin:0 0 10px"></p>'+
+        '<div class="lab-f">'+
+          '<label class="campo ancho">Escribe en la celda validada'+
+            '<input id="t3txt" type="text" placeholder="Escribe un valor y pulsa Enter"></label>'+
+          '<label class="campo">Estilo del error'+
+            '<select id="t3est"><option value="grave">Grave · no deja pasar</option>'+
+            '<option value="adv">Advertencia · deja continuar</option>'+
+            '<option value="info">Información · solo avisa</option></select></label>'+
+          '<button type="button" class="o-btn o-btn-primary" id="t3ok">Aceptar</button>'+
+        '</div>'+
+        '<div id="t3salida"></div>');
+
+      h += caja('ojo','Ojo con esto','',
+        '<ul class="lista">'+
+        '<li>La validación <b>no se aplica a lo pegado</b>. Si alguien copia y pega encima, la regla se '+
+        'salta e incluso puede borrarse. Por eso conviene revisar con «Rodear con un círculo datos no válidos».</li>'+
+        '<li>En la fórmula personalizada, escríbela pensando en la <b>primera celda</b> del rango '+
+        'seleccionado; Excel la ajusta sola para las demás.</li>'+
+        '<li>Si copias una celda validada a otra, se lleva la regla con ella. Para quitarla: '+
+        'Validación de datos › Borrar todos.</li>'+
+        '<li>Marca <i>Omitir blancos</i> si la celda puede quedar vacía.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      var sel=0;
+      var chips=$('t3chips');
+      chips.innerHTML = REGLAS.map(function(r,i){
+        return '<button type="button" data-r="'+i+'" class="'+(i===0?'on':'')+'">'+esc(r.n)+'</button>';
+      }).join('');
+      function cfg(){ $('t3cfg').innerHTML='<b>Configuración:</b> '+esc(REGLAS[sel].cfg); }
+      function juzga(){
+        var v=$('t3txt').value, r=REGLAS[sel], est=$('t3est').value;
+        var ok=r.prueba(v);
+        var s=$('t3salida');
+        if(v.trim()===''){ s.innerHTML='<p class="pistita">Escribe algo y pulsa Aceptar.</p>'; return; }
+        if(ok){
+          s.innerHTML='<div class="res"><span class="et">La celda acepta</span>'+
+                      '<span class="val">'+esc(v)+'</span></div>';
+          bien();
+        }else{
+          var ic = est==='grave' ? '⛔' : (est==='adv' ? '⚠️' : 'ℹ️');
+          var tit= est==='grave' ? 'Microsoft Excel' : (est==='adv' ? 'Advertencia' : 'Información');
+          var bot= est==='grave' ? '<button>Reintentar</button><button>Cancelar</button>'
+                 : (est==='adv' ? '<button>Sí, continuar</button><button>No</button>'
+                                : '<button>Aceptar</button><button>Cancelar</button>');
+          var pie= est==='grave' ? 'No se deja pasar: hay que corregir.'
+                 : (est==='adv' ? 'Si el usuario insiste, el valor entra igual.'
+                                : 'Solo informa; el valor entra al aceptar.');
+          s.innerHTML='<div class="dlg"><div class="dh">'+esc(tit)+'</div>'+
+            '<div class="db"><span class="ic">'+ic+'</span><span>'+esc(r.err)+'</span></div>'+
+            '<div class="dp">'+bot+'</div></div>'+
+            '<p class="pistita" style="margin-top:8px">'+esc(pie)+'</p>';
+          mal();
+        }
+      }
+      chips.addEventListener('click', function(ev){
+        var b=ev.target.closest('button[data-r]'); if(!b) return;
+        qq('button', chips).forEach(function(x){ x.classList.remove('on'); });
+        b.classList.add('on'); sel=+b.dataset.r; cfg();
+        $('t3salida').innerHTML='';
+      });
+      $('t3ok').addEventListener('click', juzga);
+      $('t3txt').addEventListener('keydown', function(ev){ if(ev.key==='Enter'){ ev.preventDefault(); juzga(); } });
+      cfg();
+    },
+    preg:{
+      t:'Quieres que en la columna de RUC no se repita ningún cliente. ¿Qué tipo de validación usas?',
+      ops:['Longitud del texto igual a 11',
+           'Lista con todos los RUC',
+           'Personalizada con <code>=CONTAR.SI($A:$A;A2)=1</code>',
+           'Número entero entre 1 y 99999999999'],
+      ok:2,
+      porque:'La longitud comprueba el formato, no la repetición. Con CONTAR.SI la regla se cumple solo '+
+             'cuando ese RUC aparece una sola vez en la columna.'
+    }
+  };
+
+  /* ================= TEMA 4 · BUSCARX ================= */
+  var CAT=[
+    { cod:'A-100', prod:'Cuaderno A4 cuadriculado', cat:'Papelería', pre:8.50 },
+    { cod:'A-215', prod:'Archivador de palanca',    cat:'Papelería', pre:14.90 },
+    { cod:'B-070', prod:'Tóner negro 26A',          cat:'Cómputo',   pre:189.00 },
+    { cod:'B-118', prod:'Teclado inalámbrico',      cat:'Cómputo',   pre:79.90 },
+    { cod:'C-004', prod:'Silla ergonómica',         cat:'Mobiliario',pre:459.00 }
+  ];
+  var T4={
+    id:'bx', pest:'4 · BUSCARX',
+    titulo:'BUSCARX · traer el dato de otra tabla',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','La que reemplazó a BUSCARV',
+        '<p>Busca un valor en una columna y devuelve lo que le corresponde en otra. Es lo que usas '+
+        'cuando tienes un código y necesitas el nombre, el precio o la categoría que están en otra hoja.</p>'+
+        '<p><b>Por qué se prefiere a BUSCARV:</b></p>'+
+        '<ul class="lista">'+
+        '<li>Puede devolver una columna que está <b>a la izquierda</b> de la que busca. BUSCARV no.</li>'+
+        '<li>No depende de un número de columna, así que si alguien inserta una columna la fórmula '+
+        'sigue funcionando.</li>'+
+        '<li>Trae incorporado el «si no lo encuentro, pon esto», sin necesidad de SI.ERROR.</li>'+
+        '<li>Por defecto busca <b>coincidencia exacta</b>; BUSCARV por defecto hace lo contrario, '+
+        'y de ahí salen la mitad de los errores.</li>'+
+        '</ul>');
+
+      h += caja('sin','La sintaxis','Seis argumentos, cuatro opcionales', sintaxis('BUSCARX', [
+        { n:'valor_buscado', d:'Lo que estás buscando: normalmente una celda con el código. '+
+              'Debe ser <b>del mismo tipo</b> que lo que hay en la matriz: si allí el código es número '+
+              'y aquí es texto, no lo encuentra (ahí vuelve el <code>*1</code> del tema 2).' },
+        { n:'matriz_buscada', d:'La columna donde se busca. Solo <b>una</b> columna: <code>$B$2:$B$200</code> '+
+              'o, mejor, el nombre de la columna de una tabla: <code>Catálogo[Código]</code>.' },
+        { n:'matriz_devuelta', d:'La columna cuyo valor quieres traer. Debe tener el mismo alto que la '+
+              'buscada. Si seleccionas varias columnas, devuelve todas de una vez.' },
+        { n:'si_no_se_encuentra', op:true, d:'Qué poner cuando no hay coincidencia: '+
+              '<code>"No existe"</code>, <code>0</code> o <code>""</code>. Si lo omites, devuelve '+
+              '<code>#N/D</code>.' },
+        { n:'modo_de_coincidencia', op:true, d:'<code>0</code> exacta (por defecto) · '+
+              '<code>-1</code> exacta o el <b>menor</b> más cercano · <code>1</code> exacta o el '+
+              '<b>mayor</b> más cercano · <code>2</code> con comodines <code>*</code> y <code>?</code>. '+
+              'El <code>-1</code> es el que sirve para tablas de rangos, como una escala de descuentos.' },
+        { n:'modo_de_búsqueda', op:true, d:'<code>1</code> del primero al último (por defecto) · '+
+              '<code>-1</code> del último al primero, que es como traes el <b>movimiento más reciente</b> '+
+              'de un cliente · <code>2</code> y <code>-2</code> búsqueda binaria en datos ya ordenados.' }
+      ]));
+
+      h += caja('lab','Laboratorio','Escribe un código y mira qué devuelve',
+        '<div class="envuelve"><table class="hoja" id="t4tab"><thead><tr>'+
+        '<th>Código</th><th>Producto</th><th>Categoría</th><th class="n">Precio</th>'+
+        '</tr></thead><tbody></tbody></table></div>'+
+        '<div class="lab-f" style="margin-top:12px">'+
+          '<label class="campo">Código buscado<input id="t4cod" type="text" value="B-070"></label>'+
+          '<label class="campo">Qué traer<select id="t4col">'+
+            '<option value="prod">Producto</option><option value="cat">Categoría</option>'+
+            '<option value="pre">Precio</option></select></label>'+
+          '<label class="campo">Si no se encuentra<select id="t4sin">'+
+            '<option value="">— omitido (#N/D) —</option>'+
+            '<option value="No existe">"No existe"</option>'+
+            '<option value="0">0</option></select></label>'+
+        '</div>'+
+        '<div class="form" id="t4for"></div>'+
+        '<div class="res"><span class="et">Resultado</span><span class="val" id="t4res"></span></div>'+
+        '<p class="pistita" style="margin-top:9px">Prueba con un código que no exista, por ejemplo '+
+        '<code>Z-999</code>, y cambia el cuarto argumento.</p>');
+
+      h += caja('ojo','Ojo con esto','',
+        '<ul class="lista">'+
+        '<li><b>#N/D</b> casi nunca significa que el dato no exista: suele ser un espacio de más o un '+
+        'código guardado como texto en un lado y como número en el otro.</li>'+
+        '<li>Fija los rangos con <code>$</code> o, mejor, trabaja con <b>tablas</b> '+
+        '(<code>Ctrl + T</code>): los nombres se ajustan solos al crecer la base.</li>'+
+        '<li>Las dos matrices deben tener el <b>mismo alto</b>, o devuelve <code>#¡VALOR!</code>.</li>'+
+        '<li>Si tu Excel no tiene BUSCARX (es de 365 y 2021 en adelante), el equivalente es '+
+        '<code>=INDICE(columna_devuelta; COINCIDIR(valor; columna_buscada; 0))</code>.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      var cuerpo=q('#t4tab tbody');
+      function pinta(){
+        var cod=$('t4cod').value.trim().toUpperCase();
+        var col=$('t4col').value, sin=$('t4sin').value;
+        cuerpo.innerHTML = CAT.map(function(r){
+          var hit = r.cod.toUpperCase()===cod;
+          return '<tr class="'+(hit?'hit':'')+'"><td>'+esc(r.cod)+'</td><td>'+esc(r.prod)+'</td>'+
+                 '<td>'+esc(r.cat)+'</td><td class="n">'+miles(r.pre,2)+'</td></tr>';
+        }).join('');
+        var nom={ prod:'Producto', cat:'Categoría', pre:'Precio' }[col];
+        var letra={ prod:'C', cat:'D', pre:'E' }[col];
+        $('t4for').innerHTML='=<span class="k">BUSCARX</span>(<span class="v">G2</span>; '+
+          '<span class="v">B2:B6</span>; <span class="v">'+letra+'2:'+letra+'6</span>'+
+          (sin!=='' ? '; <span class="v">'+(sin==='0'?'0':'"'+esc(sin)+'"')+'</span>' : '')+')';
+        var f=null;
+        CAT.forEach(function(r){ if(r.cod.toUpperCase()===cod) f=r; });
+        var res=$('t4res');
+        if(f){
+          res.className = col==='pre' ? 'val' : 'val txt';
+          res.textContent = col==='pre' ? soles(f.pre) : f[col];
+        }else if(sin===''){
+          res.className='val err'; res.textContent='#N/D';
+        }else{
+          res.className='val txt'; res.textContent = sin;
+        }
+      }
+      $('t4cod').addEventListener('input', pinta);
+      $('t4col').addEventListener('change', pinta);
+      $('t4sin').addEventListener('change', pinta);
+      pinta();
+    },
+    preg:{
+      t:'Tienes el historial de ventas ordenado por fecha, de la más antigua a la más reciente, y quieres traer <b>la última</b> compra de cada cliente. ¿Qué argumento cambias?',
+      ops:['modo_de_coincidencia = -1',
+           'modo_de_búsqueda = -1',
+           'si_no_se_encuentra = ""',
+           'modo_de_coincidencia = 2'],
+      ok:1,
+      porque:'modo_de_búsqueda = -1 recorre la lista del final hacia el principio, así que la primera '+
+             'coincidencia que encuentra es la más reciente. El modo de coincidencia es otra cosa: '+
+             'decide si la búsqueda es exacta o aproximada.'
+    }
+  };
+
+  /* ================= TEMA 5 · Función SI ================= */
+  var T5={
+    id:'si', pest:'5 · Función SI',
+    titulo:'SI · que la fórmula decida',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','La primera función lógica',
+        '<p>Comprueba una condición y devuelve una cosa si se cumple y otra si no. Con ella clasificas, '+
+        'marcas, calculas comisiones o decides si algo está aprobado, sin revisar fila por fila.</p>'+
+        '<p><b>Los operadores que puedes usar en la condición:</b> '+
+        '<code>=</code> igual · <code>&lt;&gt;</code> distinto · <code>&gt;</code> mayor · '+
+        '<code>&lt;</code> menor · <code>&gt;=</code> mayor o igual · <code>&lt;=</code> menor o igual.</p>');
+
+      h += caja('sin','La sintaxis','', sintaxis('SI', [
+        { n:'prueba_lógica', d:'La condición: algo que Excel pueda responder con VERDADERO o FALSO. '+
+              '<code>C2&gt;=1000</code>, <code>D2="Contado"</code>, <code>ESNUMERO(A2)</code>. '+
+              'Los textos van entre comillas; los números, no.' },
+        { n:'valor_si_verdadero', d:'Lo que devuelve cuando se cumple. Puede ser un texto entre comillas, '+
+              'un número, una referencia u otra fórmula: <code>C2*0.05</code>.' },
+        { n:'valor_si_falso', op:true, d:'Lo que devuelve cuando no se cumple. Si lo omites, Excel '+
+              'devuelve <code>FALSO</code>, que casi nunca es lo que quieres. Para dejar la celda en blanco, '+
+              'pon dos comillas seguidas: <code>""</code>.' }
+      ])+
+        '<div class="aviso"><b>Cuando hay más de dos salidas</b> se anida: se pone otro SI dentro del '+
+        'tercer argumento, y se ordena <b>del caso más exigente al menos exigente</b>.<br>'+
+        '<code>=SI(C2&gt;=1000;"A";SI(C2&gt;=500;"B";"C"))</code><br>'+
+        'En Excel 365 lo mismo se lee mucho mejor con <code>SI.CONJUNTO</code>:<br>'+
+        '<code>=SI.CONJUNTO(C2&gt;=1000;"A";C2&gt;=500;"B";VERDADERO;"C")</code><br>'+
+        'Y para pedir dos condiciones a la vez: <code>=SI(Y(C2&gt;=1000;D2="Contado");"Sí";"No")</code>. '+
+        '<b>Y</b> exige que se cumplan todas; <b>O</b>, que se cumpla al menos una.</div>');
+
+      h += caja('lab','Laboratorio','Mueve el monto y mira cómo cambia',
+        '<div class="lab-f">'+
+          '<label class="campo num">Monto en C2<input id="t5m" type="number" value="1200" step="50"></label>'+
+          '<label class="campo">Condición<select id="t5op">'+
+            '<option value="ge">&gt;=</option><option value="gt">&gt;</option>'+
+            '<option value="le">&lt;=</option><option value="lt">&lt;</option>'+
+            '<option value="eq">=</option><option value="ne">&lt;&gt;</option></select></label>'+
+          '<label class="campo num">Límite<input id="t5l" type="number" value="1000" step="50"></label>'+
+          '<label class="campo">Si se cumple<input id="t5v" type="text" value="Mayorista"></label>'+
+          '<label class="campo">Si no<input id="t5f" type="text" value="Minorista"></label>'+
+        '</div>'+
+        '<div class="form" id="t5for"></div>'+
+        '<div class="res"><span class="et">prueba_lógica</span><span class="val txt" id="t5log"></span>'+
+          '<span class="et">Resultado</span><span class="val" id="t5res"></span></div>'+
+        '<p class="pistita" style="margin-top:12px"><b>Y así se ve anidado</b>, sobre la misma base:</p>'+
+        '<div class="form" style="white-space:normal">=<span class="k">SI</span>(<span class="v">C2&gt;=1000</span>;'+
+        '"A";<span class="k">SI</span>(<span class="v">C2&gt;=500</span>;"B";"C"))</div>'+
+        '<div class="envuelve" style="margin-top:9px"><table class="hoja" id="t5tab"><thead><tr>'+
+        '<th>Cliente</th><th class="n">Monto</th><th>Categoría</th></tr></thead><tbody></tbody></table></div>');
+
+      h += caja('ojo','Ojo con esto','',
+        '<ul class="lista">'+
+        '<li>El orden de los SI anidados importa: si pones primero <code>C2&gt;=500</code>, nadie llega '+
+        'nunca a la A, porque 1200 también es mayor que 500.</li>'+
+        '<li>Comillas solo para texto. <code>"1000"</code> con comillas es texto y no se compara bien '+
+        'con un número.</li>'+
+        '<li><code>VERDADERO</code> y <code>FALSO</code> van sin comillas.</li>'+
+        '<li>Para dejar la celda vacía usa <code>""</code>, no un espacio: un espacio es contenido y '+
+        'ensucia los conteos.</li>'+
+        '<li>Si vas a anidar más de tres, pregúntate si no te conviene una tabla auxiliar con '+
+        '<code>BUSCARX</code> y <code>modo_de_coincidencia = -1</code>.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      var BASE=[['Comercial Andina',1850],['Bodega San Martín',640],['Minimarket El Sol',320],
+                ['Distribuidora Ríos',1000],['Kiosko Central',480]];
+      var SIM={ ge:'>=', gt:'>', le:'<=', lt:'<', eq:'=', ne:'<>' };
+      function pinta(){
+        var m=Number($('t5m').value), l=Number($('t5l').value), op=$('t5op').value;
+        var v=$('t5v').value, f=$('t5f').value;
+        var ok = op==='ge'? m>=l : op==='gt'? m>l : op==='le'? m<=l :
+                 op==='lt'? m<l : op==='eq'? m===l : m!==l;
+        $('t5for').innerHTML='=<span class="k">SI</span>(<span class="v">C2'+esc(SIM[op])+miles(l,0)+'</span>; '+
+          '<span class="v">"'+esc(v)+'"</span>; <span class="v">"'+esc(f)+'"</span>)';
+        $('t5log').textContent = ok ? 'VERDADERO' : 'FALSO';
+        var r=$('t5res'); r.className='val'+(ok?'':' txt'); r.textContent = ok ? v : f;
+        q('#t5tab tbody').innerHTML = BASE.map(function(b){
+          var cat = b[1]>=1000 ? 'A' : (b[1]>=500 ? 'B' : 'C');
+          return '<tr><td>'+esc(b[0])+'</td><td class="n">'+miles(b[1],0)+'</td><td><b>'+cat+'</b></td></tr>';
+        }).join('');
+      }
+      ['t5m','t5l','t5v','t5f'].forEach(function(id){ $(id).addEventListener('input', pinta); });
+      $('t5op').addEventListener('change', pinta);
+      pinta();
+    },
+    preg:{
+      t:'Quieres marcar «Revisar» solo cuando el monto pase de 1000 <b>y además</b> la venta sea al crédito. ¿Cuál es?',
+      ops:['=SI(C2&gt;1000;SI(D2="Crédito";"Revisar";"");"")',
+           '=SI(O(C2&gt;1000;D2="Crédito");"Revisar";"")',
+           '=SI(Y(C2&gt;1000;D2="Crédito");"Revisar";"")',
+           'Las dos primeras dan lo mismo'],
+      ok:2,
+      porque:'<b>Y</b> pide que se cumplan las dos condiciones. Con <b>O</b> bastaría una sola, así que '+
+             'marcarías también ventas al contado de S/ 5000. La primera opción funciona, pero anidar '+
+             'sin necesidad cuesta más de leer.'
+    }
+  };
+
+  /* ================= TEMA 6 · Formato condicional ================= */
+  var VENTAS=[
+    { v:'Comercial Andina', m:1850, z:'Norte' },
+    { v:'Bodega San Martín', m:640, z:'Sur' },
+    { v:'Minimarket El Sol', m:320, z:'Norte' },
+    { v:'Distribuidora Ríos', m:2400, z:'Centro' },
+    { v:'Kiosko Central', m:480, z:'Sur' },
+    { v:'Bodega San Martín', m:1120, z:'Centro' }
+  ];
+  var FC=[
+    { id:'nada', n:'Sin regla', d:'Así se ve la tabla sin nada aplicado.' },
+    { id:'mayor', n:'Es mayor que 1000', d:'Reglas de resaltado › Es mayor que. Pinta solo la celda del monto.' },
+    { id:'top', n:'Los 3 mejores', d:'Reglas superiores e inferiores › 10 mejores, cambiando 10 por 3.' },
+    { id:'dup', n:'Valores duplicados', d:'Reglas de resaltado › Duplicar valores, sobre la columna del vendedor.' },
+    { id:'barras', n:'Barras de datos', d:'La barra es proporcional al valor: se compara de un vistazo.' },
+    { id:'escala', n:'Escala de color', d:'Del rojo al verde según la posición del valor en el rango.' },
+    { id:'formula', n:'Fórmula: fila completa', d:'Nueva regla › Utilice una fórmula: =$C2&gt;1000 pinta toda la fila.' }
+  ];
+  var T6={
+    id:'fc', pest:'6 · Formato condicional',
+    titulo:'Formato condicional · que la tabla hable sola',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','Inicio › Estilos',
+        ruta(['Inicio','Estilos','Formato condicional'])+
+        '<p>Cambia el aspecto de una celda según lo que contenga, y lo vuelve a calcular solo cada vez '+
+        'que el dato cambia. No es pintar a mano: es una regla viva.</p>'+
+        '<p><b>Los cinco grupos del menú:</b></p>'+
+        '<ul class="lista">'+
+        '<li><b>Reglas de resaltado:</b> es mayor que, entre, texto que contiene, una fecha, '+
+        'valores duplicados.</li>'+
+        '<li><b>Reglas superiores e inferiores:</b> los 10 mejores, los 10 % peores, por encima '+
+        'del promedio.</li>'+
+        '<li><b>Barras de datos:</b> una barra dentro de la celda, proporcional al valor.</li>'+
+        '<li><b>Escalas de color:</b> un degradado de dos o tres colores según la posición del valor.</li>'+
+        '<li><b>Conjuntos de iconos:</b> flechas, semáforos o banderas por tramos.</li>'+
+        '</ul>');
+
+      h += caja('sin','La regla con fórmula','La única que hay que entender bien',
+        '<p>Es la que usarás de verdad, porque es la que pinta <b>la fila entera</b> según el valor de '+
+        'una columna. Se hace en <b>Nueva regla › Utilice una fórmula que determine las celdas para '+
+        'aplicar formato</b>.</p>'+
+        '<div class="sx"><span class="pu">=</span>'+
+        '<span class="ar c0" data-a="0" role="button" tabindex="0">$C</span>'+
+        '<span class="ar c1" data-a="1" role="button" tabindex="0">2</span>'+
+        '<span class="ar c2" data-a="2" role="button" tabindex="0">&gt;1000</span></div>'+
+        '<div class="expl">'+
+          '<div class="it c0" data-e="0"><b>$C</b>El signo de dólar delante de la letra <b>fija la columna</b>. '+
+          'Es lo que hace que toda la fila mire siempre la columna C, la del monto, en vez de mirarse a sí misma.</div>'+
+          '<div class="it c1" data-e="1"><b>2</b>El número de fila va <b>sin dólar</b>, y debe ser la '+
+          '<b>primera fila del rango</b> que seleccionaste. Al ser relativo, Excel lo va corriendo: '+
+          'la fila 3 mira C3, la 4 mira C4, y así.</div>'+
+          '<div class="it c2" data-e="2"><b>&gt;1000</b>La condición. La regla se aplica cuando la fórmula '+
+          'da VERDADERO. Puede ser cualquier cosa que devuelva VERDADERO o FALSO, incluso '+
+          '<code>=Y($C2&gt;1000;$D2="Norte")</code>.</div>'+
+        '</div><p class="pistita">Toca cada parte de la fórmula.</p>'+
+        '<div class="aviso"><b>Se aplica a:</b> selecciona <code>$A$2:$D$7</code>, es decir, todas las '+
+        'columnas que quieres pintar y desde la primera fila de datos. Si el rango empieza en la fila 2, '+
+        'la fórmula se escribe pensando en la fila 2.</div>');
+
+      h += caja('lab','Laboratorio','Aplica una regla y mira la tabla',
+        '<div class="chips" id="t6chips"></div>'+
+        '<p class="pistita" id="t6des" style="margin:0 0 10px"></p>'+
+        '<div class="envuelve"><table class="hoja" id="t6tab"><thead><tr>'+
+        '<th>Vendedor</th><th>Zona</th><th class="n">Monto</th></tr></thead><tbody></tbody></table></div>');
+
+      h += caja('ojo','Ojo con esto','',
+        '<ul class="lista">'+
+        '<li>En <b>Administrar reglas</b> se ve el orden. Si dos reglas pintan la misma celda, manda la '+
+        'de arriba; con <b>Detener si es verdadero</b> impides que las de abajo se apliquen.</li>'+
+        '<li>Revisa el campo <b>Se aplica a</b>: al copiar y pegar filas, los rangos se parten en pedazos '+
+        'y la hoja se vuelve lenta. Ahí mismo se vuelven a unir.</li>'+
+        '<li>El formato condicional <b>gana</b> sobre el formato manual de la celda.</li>'+
+        '<li>Para que la regla crezca con los datos, aplícala sobre una <b>tabla</b> (<code>Ctrl + T</code>).</li>'+
+        '<li>Para copiar solo el formato a otra columna: <b>Copiar › Pegado especial › Formatos</b>.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      var sel='nada';
+      var chips=$('t6chips');
+      chips.innerHTML = FC.map(function(r){
+        return '<button type="button" data-f="'+r.id+'" class="'+(r.id==='nada'?'on':'')+'">'+esc(r.n)+'</button>';
+      }).join('');
+      var max=Math.max.apply(null, VENTAS.map(function(v){ return v.m; }));
+      var min=Math.min.apply(null, VENTAS.map(function(v){ return v.m; }));
+      var top3=VENTAS.map(function(v){ return v.m; }).sort(function(a,b){ return b-a; }).slice(0,3);
+      var cuenta={};
+      VENTAS.forEach(function(v){ cuenta[v.v]=(cuenta[v.v]||0)+1; });
+      function pinta(){
+        q('#t6des').textContent = (FC.filter(function(r){ return r.id===sel; })[0]||{}).d || '';
+        q('#t6tab tbody').innerHTML = VENTAS.map(function(v){
+          var eFila='', eMonto='', eVend='', barra='';
+          if(sel==='mayor' && v.m>1000) eMonto='background:#FDECEA;color:#7A1C12;font-weight:700';
+          if(sel==='top' && top3.indexOf(v.m)>=0) eMonto='background:#E9F7EF;color:#14532D;font-weight:700';
+          if(sel==='dup' && cuenta[v.v]>1) eVend='background:#FDECEA;color:#7A1C12;font-weight:700';
+          if(sel==='barras'){
+            var p=Math.round(v.m/max*100);
+            barra='<span style="display:block;height:16px;background:linear-gradient(90deg,#8FC2F0 '+p+'%,transparent '+p+'%);'+
+                  'border-radius:3px;padding-right:4px;text-align:right">'+miles(v.m,0)+'</span>';
+          }
+          if(sel==='escala'){
+            var t=(v.m-min)/(max-min||1);
+            var r2=Math.round(248-(248-129)*t), g=Math.round(105+(199-105)*t), b=Math.round(107+(132-107)*t);
+            eMonto='background:rgb('+r2+','+g+','+b+');color:#1B2B1F;font-weight:700';
+          }
+          if(sel==='formula' && v.m>1000) eFila='background:#FFF4CE';
+          return '<tr style="'+eFila+'"><td style="'+eVend+'">'+esc(v.v)+'</td>'+
+                 '<td>'+esc(v.z)+'</td>'+
+                 '<td class="n" style="'+eMonto+'">'+(barra||miles(v.m,0))+'</td></tr>';
+        }).join('');
+      }
+      chips.addEventListener('click', function(ev){
+        var b=ev.target.closest('button[data-f]'); if(!b) return;
+        qq('button', chips).forEach(function(x){ x.classList.remove('on'); });
+        b.classList.add('on'); sel=b.dataset.f; pinta(); nota(700,0,.06,.04);
+      });
+      pinta();
+    },
+    preg:{
+      t:'Seleccionaste <code>$A$2:$D$50</code> y quieres pintar la fila completa cuando el monto de la columna C pase de 1000. ¿Qué fórmula escribes?',
+      ops:['=C2&gt;1000','=$C$2&gt;1000','=$C2&gt;1000','=C$2&gt;1000'],
+      ok:2,
+      porque:'El dólar va solo en la columna: <code>$C</code> obliga a todas las celdas de la fila a mirar '+
+             'la columna del monto, y la fila <code>2</code> sin dólar se va corriendo sola. '+
+             'Con <code>$C$2</code> las 49 filas mirarían siempre la misma celda.'
+    }
+  };
+
+  /* ================= TEMA 7 · Power Query ================= */
+  var PQ_PASOS=[
+    { n:'Quitar filas superiores (2)', d:'El reporte trae dos líneas de título antes de la tabla.' },
+    { n:'Usar la primera fila como encabezado', d:'Convierte la fila de rótulos en nombres de columna.' },
+    { n:'Quitar filas en blanco', d:'Las filas vacías que dejó el sistema al exportar.' },
+    { n:'Quitar duplicados', d:'El mismo documento vino repetido.' },
+    { n:'Reemplazar valores: quitar "S/"', d:'Deja solo el número en la columna Importe.' },
+    { n:'Cambiar tipo: Importe a Número decimal', d:'Hasta aquí era texto; ahora ya suma.' }
+  ];
+  var PQ_BRUTO=[
+    ['REPORTE DE VENTAS',''      ,''],
+    ['Generado el 29/09/2026','' ,''],
+    ['Documento','Cliente','Importe'],
+    ['F001-120','Comercial Andina','S/ 1,850.00'],
+    ['F001-121','Bodega San Martín','S/ 640.00'],
+    ['',''      ,''],
+    ['F001-121','Bodega San Martín','S/ 640.00'],
+    ['F001-122','Distribuidora Ríos','S/ 2,400.00']
+  ];
+  var T7={
+    id:'pq', pest:'7 · Power Query',
+    titulo:'Power Query · limpiar una vez y actualizar siempre',
+    dibuja:function(){
+      var h = caja('teo','¿Para qué sirve?','Datos › Obtener y transformar datos',
+        ruta(['Datos','Obtener y transformar datos','Obtener datos'])+
+        '<p>Es el brazo de Excel que <b>trae</b> datos de otro archivo, los <b>limpia</b> y los '+
+        '<b>carga</b> a la hoja. Lo que cambia todo es que va anotando cada cosa que haces en una lista '+
+        'de <b>Pasos aplicados</b>: el mes siguiente reemplazas el archivo, pulsas <b>Actualizar</b> y '+
+        'repite la limpieza entera sola.</p>'+
+        '<p>Si alguna vez borraste a mano las filas de título de un reporte descargado, quitaste '+
+        'duplicados y cambiaste el punto por la coma… eso es exactamente lo que Power Query hace una '+
+        'sola vez y no vuelves a repetir nunca.</p>'+
+        '<p><b>Por dónde se entra:</b> <code>Desde tabla o rango</code> para algo que ya está en la hoja, '+
+        '<code>Desde un archivo › Libro de Excel / Texto o CSV</code>, o <code>Desde una carpeta</code> '+
+        'para juntar de golpe todos los archivos de un mes.</p>');
+
+      h += caja('sin','Las piezas del editor','Lo que ves al entrar',
+        '<ul class="lista">'+
+        '<li><b>Consultas</b> (izquierda): cada origen es una consulta con su nombre.</li>'+
+        '<li><b>Vista previa</b> (centro): una muestra de los datos. Lo que ves aquí no está todavía en la hoja.</li>'+
+        '<li><b>Pasos aplicados</b> (derecha): la receta. Se puede borrar un paso, reordenarlos o '+
+        'volver a editar uno con el engranaje.</li>'+
+        '<li><b>Barra de fórmulas</b>: el lenguaje M. No hace falta escribirlo, pero ahí se ve lo que '+
+        'hizo cada paso.</li>'+
+        '</ul>'+
+        '<div class="aviso"><b>Cerrar y cargar</b> vuelve a Excel y deja la tabla lista. '+
+        '<b>Cerrar y cargar en…</b> permite elegir: tabla en una hoja, tabla dinámica, '+
+        '<b>solo crear conexión</b> (cuando esa consulta es un paso intermedio) o cargar al modelo de datos.</div>');
+
+      h += caja('lab','Laboratorio','Aplica los pasos en orden y mira la tabla',
+        '<div class="envuelve"><table class="hoja" id="t7tab"><tbody></tbody></table></div>'+
+        '<p class="pistita" id="t7est" style="margin:10px 0 8px"></p>'+
+        '<p class="pistita" style="margin:0 0 7px"><b>Pasos aplicados</b></p>'+
+        '<div class="pasos" id="t7pasos"></div>'+
+        '<div class="acc" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">'+
+          '<button type="button" class="o-btn" id="t7atras">← Quitar el último paso</button>'+
+          '<button type="button" class="o-btn" id="t7todo">Aplicar todos</button>'+
+        '</div>');
+
+      h += caja('ojo','Ojo con esto','',
+        '<ul class="lista">'+
+        '<li>Power Query <b>no toca el archivo original</b>: la tabla que carga es nueva. Si escribes '+
+        'encima de ella, lo pierdes al actualizar.</li>'+
+        '<li>El <b>tipo de dato</b> de cada columna importa. Si el importe queda como texto, la suma da '+
+        'cero: es el mismo problema del tema 2, pero resuelto en el paso «Cambiar tipo».</li>'+
+        '<li>El paso «Cambiar tipo» guarda los nombres de las columnas. Si el mes siguiente el reporte '+
+        'trae otro rótulo, ese paso se rompe. Se arregla editando el paso, no rehaciendo todo.</li>'+
+        '<li>«Quitar filas superiores» depende de cuántas líneas de título traiga el archivo. Si varía, '+
+        'es mejor filtrar por contenido que quitar un número fijo de filas.</li>'+
+        '<li><b>Anular dinamización de columnas</b> es el paso que convierte una tabla con un mes por '+
+        'columna en una lista larga, que es la forma que las tablas dinámicas necesitan.</li>'+
+        '</ul>');
+      return h;
+    },
+    cablea:function(){
+      var hechos = 0;
+      function datos(){
+        var d = PQ_BRUTO.map(function(f){ return f.slice(); });
+        var enc=null;
+        if(hechos>=1) d=d.slice(2);
+        if(hechos>=2){ enc=d.shift(); }
+        if(hechos>=3) d=d.filter(function(f){ return f.join('')!==''; });
+        if(hechos>=4){
+          var vistos={}, r=[];
+          d.forEach(function(f){ var k=f.join('|'); if(!vistos[k]){ vistos[k]=1; r.push(f); } });
+          d=r;
+        }
+        if(hechos>=5) d=d.map(function(f){ f[2]=String(f[2]).replace(/S\/\s*/,''); return f; });
+        return { enc:enc, filas:d };
+      }
+      function pinta(){
+        var o=datos();
+        var h='';
+        if(o.enc){
+          h+='<thead><tr>'+o.enc.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead>';
+        }
+        h+='<tbody>'+o.filas.map(function(f){
+          return '<tr>'+f.map(function(c,i){
+            var num = (i===2 && hechos>=6 && c!=='');
+            var tx  = (i===2 && hechos<6 && c!=='');
+            return '<td class="'+(num?'n':'')+(tx?' tx':'')+'">'+esc(c)+'</td>';
+          }).join('')+'</tr>';
+        }).join('')+'</tbody>';
+        $('t7tab').innerHTML=h;
+        $('t7est').innerHTML = hechos===0
+          ? 'Así llega el archivo descargado: títulos arriba, una fila en blanco, un documento repetido y los importes como texto.'
+          : (hechos>=6
+             ? '<b>Listo.</b> Los importes ya son números y suman '+soles(4890)+'. Cerrar y cargar, y el mes que viene solo Actualizar.'
+             : 'Van '+hechos+' de '+PQ_PASOS.length+' pasos. Sigue aplicando.');
+        $('t7pasos').innerHTML = PQ_PASOS.map(function(p,i){
+          var ya = i<hechos, toca = i===hechos;
+          return '<div class="paso'+(ya?' ya':'')+'"'+(!ya&&!toca?' data-bloq="1"':'')+'>'+
+                 '<span class="nn">'+(ya?'✓':(i+1))+'</span>'+
+                 '<span class="tt"><b>'+esc(p.n)+'</b><br><span style="font-size:12px;color:#6B7785">'+
+                 esc(p.d)+'</span></span>'+
+                 (toca?'<button type="button" data-p="'+i+'">Aplicar</button>':'')+'</div>';
+        }).join('');
+        qq('#t7pasos button[data-p]').forEach(function(b){
+          b.addEventListener('click', function(){ hechos++; pinta(); nota(640,0,.08,.045,'triangle'); });
+        });
+      }
+      $('t7atras').addEventListener('click', function(){ if(hechos>0){ hechos--; pinta(); nota(330,0,.1,.04); } });
+      $('t7todo').addEventListener('click', function(){ hechos=PQ_PASOS.length; pinta(); bien(); });
+      pinta();
+    },
+    preg:{
+      t:'Limpiaste el reporte de setiembre con Power Query. Llega el de octubre, con el mismo formato. ¿Qué haces?',
+      ops:['Repetir toda la limpieza sobre el archivo nuevo',
+           'Reemplazar el archivo origen y pulsar Actualizar',
+           'Copiar los datos nuevos debajo de la tabla cargada',
+           'Volver a crear la consulta desde cero'],
+      ok:1,
+      porque:'Esa es la razón de ser de Power Query: los pasos quedaron grabados, así que se vuelven a '+
+             'aplicar solos sobre los datos nuevos. Escribir debajo de la tabla cargada es justo lo que '+
+             'no se debe hacer, porque se pierde al actualizar.'
+    }
+  };
+
+  /* ================= armado ================= */
+  var TEMAS=[T1,T2,T3,T4,T5,T6,T7];
+  var pi=0, festejado=false;
+
+  function pinta(){
+    var t=TEMAS[pi];
+    var h=t.dibuja();
+    var res=G['r.'+t.id];
+    h += caja('chk','Compruébalo','Una pregunta y seguimos',
+      '<p class="preg">'+t.preg.t+'</p><div class="ops" id="ops">'+
+      t.preg.ops.map(function(o,i){
+        var cl='';
+        if(res!==undefined) cl = (i===t.preg.ok) ? ' class="bien"' : (i===+res ? ' class="mal"' : '');
+        return '<button type="button" data-o="'+i+'"'+cl+'>'+o+'</button>';
+      }).join('')+'</div>'+
+      (res!==undefined
+        ? '<p class="porque '+(+res===t.preg.ok?'ok':'no')+'">'+
+          (+res===t.preg.ok?'Correcto. ':'No era esa. ')+t.preg.porque+'</p>'
+        : '<p class="pistita" style="margin-top:9px">Elige una opción.</p>'));
+
+    $('panel').innerHTML=h;
+    cableaSintaxis($('panel'));
+    try{ t.cablea(); }catch(e){}
+
+    qq('#ops button').forEach(function(b){
+      b.addEventListener('click', function(){
+        if(G['r.'+t.id]!==undefined) return;
+        G['r.'+t.id]=b.dataset.o; graba();
+        if(+b.dataset.o===t.preg.ok) bien(); else mal();
+        pinta();
+      });
+    });
+    resumen(); pestPinta();
+  }
+
+  function resumen(){
+    var ok=0;
+    TEMAS.forEach(function(t){ if(+G['r.'+t.id]===t.preg.ok) ok++; });
+    $('progI').style.width = (ok/TEMAS.length*100)+'%';
+    $('cuenta').textContent = ok+' de '+TEMAS.length+' comprobaciones';
+    if(ok===TEMAS.length && !festejado){ festejado=true; listo(); confeti(); }
+  }
+
+  function pestPinta(){
+    $('pest').innerHTML = TEMAS.map(function(t,i){
+      var r=G['r.'+t.id];
+      var m = (r===undefined) ? '' : (+r===t.preg.ok ? ' <span class="pc">✓</span>' : ' <span class="pc">·</span>');
+      return '<button type="button" data-p="'+i+'" class="'+(i===pi?'on':'')+'">'+esc(t.pest)+m+'</button>';
+    }).join('') +
+      '<button type="button" class="valora" id="btnValora">⭐ Valorar</button>'+
+      '<span class="sep"></span>';
+    qq('#pest button[data-p]').forEach(function(b){
+      b.addEventListener('click', function(){ pi=+b.dataset.p; pinta(); window.scrollTo({top:0,behavior:'smooth'}); });
+    });
+    $('btnValora').addEventListener('click', function(){ window.open(ENCUESTA,'_blank','noopener'); });
+  }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán tus respuestas de los siete temas.',
+    hecho:function(){ G={}; festejado=false; pi=0; pinta(); }
+  });
+
+  pinta();
+})();
+</script>
+
+</body>
+</html>
