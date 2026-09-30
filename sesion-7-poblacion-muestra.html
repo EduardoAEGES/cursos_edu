@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Población y muestra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .pm{ --azul:#1F5FA8; --verde:#147A5C; --ambar:#B25E09; --mora:#714B67; --rojo:#B42318;
+       --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1100px; margin:0 auto; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:12px; }
+  .titulo .marca svg{ width:62px; height:56px; display:block; flex:none; }
+  .titulo .tx{ flex:1; min-width:200px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,25px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; margin-top:14px; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .puerta{ border:1px solid var(--o-border); border-left:4px solid var(--azul);
+           border-radius:11px; padding:14px 16px; margin-top:16px; background:#F7FAFD; }
+  .puerta h2{ margin:0 0 3px; font-size:16px; font-weight:800; color:var(--azul); }
+  .puerta p{ margin:0 0 12px; font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+
+  .pest{ display:flex; gap:7px; flex-wrap:wrap; margin:16px 0 10px; align-items:center; }
+  .pest button{ font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+                border:1px solid var(--o-border); background:#fff; color:var(--o-muted);
+                border-radius:9px; padding:8px 13px; line-height:1.3; }
+  .pest button:hover{ border-color:var(--azul); color:var(--azul); }
+  .pest button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .pest button .pc{ font-weight:800; margin-left:4px; font-size:11px; opacity:.85; }
+  .pest .sep{ flex:1; min-width:4px; }
+  .pest .valora{ background:#FFF3E2; border-color:#E8B172; color:#7A430A; font-weight:800; }
+  .pest .valora:hover{ background:#FFE9CC; color:#7A430A; }
+
+  .barra{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin:0 0 14px; }
+  .prog{ height:9px; border-radius:99px; background:#E9ECF0; overflow:hidden; min-width:120px; flex:1; }
+  .prog i{ display:block; height:100%; width:0; background:var(--verde); transition:width .4s ease; }
+  .cuenta{ font-size:12.5px; color:var(--o-muted); font-weight:600; white-space:nowrap; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+           overflow:hidden; margin-bottom:14px; }
+  .bloque > h3{ margin:0; font-size:12.5px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+                display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .bloque > h3 .t{ font-weight:400; text-transform:none; letter-spacing:0; opacity:.92; font-size:11.5px; }
+  .bloque.reto > h3{ background:linear-gradient(90deg,#C77A16,#A65F09); }
+  .bloque.teo > h3{ background:var(--azul); }
+  .bloque.mod > h3{ background:var(--mora); }
+  .bloque .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+  .bloque .cuerpo > p{ margin:0 0 9px; }
+  .bloque .cuerpo > p:last-child{ margin-bottom:0; }
+
+  .dos{ display:grid; grid-template-columns:1fr; gap:11px; }
+  @media (min-width:760px){ .dos{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .tarj{ border:1px solid var(--o-border); border-radius:9px; padding:11px 13px; background:#FAFBFC; }
+  .tarj.N{ border-left:4px solid var(--azul); } .tarj.n{ border-left:4px solid var(--verde); }
+  .tarj h4{ margin:0 0 5px; font-size:12px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; }
+  .tarj.N h4{ color:var(--azul); } .tarj.n h4{ color:var(--verde); }
+  .min{ text-transform:none; }   /* la n de la muestra no debe volverse N */
+  .tarj ul{ margin:0; padding-left:17px; font-size:12.5px; line-height:1.6; color:#41505F; }
+
+  .pista{ border:1px solid var(--amaBd); background:var(--ama); border-radius:9px;
+          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:10px; }
+
+  /* fichas y zonas */
+  .fichero{ display:flex; gap:8px; flex-wrap:wrap; min-height:44px;
+            border:2px dashed var(--o-border); border-radius:10px; padding:9px; background:#FAFBFC; }
+  .fichero.vacio::after{ content:'Ya colocaste todas'; font-size:12.5px; color:var(--o-muted);
+                         align-self:center; margin:0 auto; }
+  .ficha{ font:inherit; font-size:13px; font-weight:600; line-height:1.45; cursor:grab;
+          border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+          border-radius:9px; padding:8px 12px; touch-action:none; user-select:none;
+          box-shadow:0 1px 2px rgba(0,0,0,.06); max-width:100%; }
+  .ficha:hover{ border-color:var(--azul); }
+  .ficha.sel{ border-color:var(--ambar); box-shadow:0 0 0 3px rgba(178,94,9,.18); }
+  .ficha.fantasma{ position:fixed; z-index:9999; pointer-events:none; opacity:.92;
+                   box-shadow:0 10px 24px rgba(0,0,0,.22); }
+  .ficha.mini{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:14px; font-weight:800;
+               padding:7px 13px; }
+
+  .zonas{ display:grid; grid-template-columns:1fr; gap:11px; margin-top:12px; }
+  @media (min-width:700px){ .zonas{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .zona{ border:2px dashed var(--o-border); border-radius:11px; padding:10px; background:#fff;
+         min-height:110px; }
+  .zona.N{ border-color:#B6CFEA; background:#F7FAFD; }
+  .zona.n{ border-color:#7CC29B; background:#F5FBF7; }
+  .zona.encima{ border-style:solid; box-shadow:0 0 0 3px rgba(31,95,168,.15); }
+  .zona h5{ margin:0 0 8px; font-size:12px; font-weight:800; letter-spacing:.3px;
+            text-transform:uppercase; display:flex; justify-content:space-between; gap:8px; }
+  .zona.N h5{ color:var(--azul); } .zona.n h5{ color:var(--verde); }
+  .zona .caidas{ display:flex; gap:7px; flex-wrap:wrap; }
+  .zona .ficha.bien{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .zona .ficha.malo{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+
+  /* parejas */
+  .par{ display:grid; grid-template-columns:1fr; gap:10px; }
+  @media (min-width:640px){ .par{ grid-template-columns:auto 1fr; align-items:start; } }
+  .col{ display:grid; gap:7px; align-content:start; }
+  .col button{ font:inherit; font-size:13px; text-align:left; cursor:pointer; line-height:1.45;
+               border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+               border-radius:9px; padding:9px 12px; }
+  .col button:hover{ border-color:var(--mora); }
+  .col button.sel{ border-color:var(--ambar); box-shadow:0 0 0 3px rgba(178,94,9,.18); }
+  .col button.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; cursor:default; }
+  .col button.no{ background:#FDECEA; border-color:#E3A9A2; }
+  .col.sim button{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
+                   font-size:15px; text-align:center; min-width:74px; }
+
+  /* fórmula armable */
+  .formula{ font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:15px;
+            line-height:2.4; background:#F7F9FC; border:1px solid var(--o-border);
+            border-radius:10px; padding:14px; overflow-x:auto; white-space:nowrap; text-align:center; }
+  .hueco{ display:inline-block; min-width:62px; height:32px; line-height:28px; vertical-align:middle;
+          border:2px dashed #B9C2CC; border-radius:8px; background:#fff; margin:0 3px;
+          font-weight:800; color:#B9C2CC; }
+  .hueco.encima{ border-style:solid; border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.15); }
+  .hueco.lleno{ border-style:solid; border-color:#7CC29B; background:#E9F7EF; color:#14532D; cursor:pointer; }
+  .hueco.malo{ border-style:solid; border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; cursor:pointer; }
+
+  /* tablas */
+  table.hoja{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.hoja th, table.hoja td{ border:1px solid #D6DBE2; padding:6px 9px; text-align:left; }
+  table.hoja thead th{ background:#EDF1F5; font-size:11px; text-transform:uppercase;
+                       letter-spacing:.3px; color:var(--o-muted); font-weight:700; }
+  table.hoja td.n{ text-align:right; font-variant-numeric:tabular-nums; }
+  table.hoja tr.tot td{ font-weight:800; background:#F6FBF8; }
+  .envuelve{ overflow-x:auto; }
+
+  input.cel, select.cel{ font:inherit; font-size:13px; text-align:right; font-variant-numeric:tabular-nums;
+    border:1px solid var(--amaBd); background:var(--ama); border-radius:7px; padding:5px 8px;
+    color:#3F3208; width:120px; max-width:100%; }
+  select.cel{ text-align:left; }
+  input.cel:focus, select.cel:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  input.cel.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  input.cel.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+
+  .paso-c{ display:grid; gap:9px; }
+  .linea{ display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+          border:1px solid var(--o-border); border-radius:9px; padding:9px 12px; background:#FAFBFC; }
+  .linea .et{ flex:1; min-width:180px; font-size:13px; }
+  .linea .et code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+                   background:#F0F3F7; border:1px solid #E1E6EC; border-radius:5px; padding:1px 5px; }
+
+  .marcador{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+             margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .marcador.no{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .acc{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+
+  /* quiz */
+  .preg{ font-size:13.5px; font-weight:600; color:#33404E; margin:0 0 9px; line-height:1.6; }
+  .ops{ display:grid; gap:7px; }
+  .ops button{ font:inherit; font-size:13px; text-align:left; cursor:pointer; line-height:1.5;
+               border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+               border-radius:9px; padding:9px 12px; }
+  .ops button:hover{ border-color:var(--mora); }
+  .ops button.bien{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; font-weight:700; }
+  .ops button.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .porque{ margin:10px 0 0; font-size:12.5px; line-height:1.6; }
+  .porque.ok{ color:#14532D; font-weight:600; }
+  .porque.no{ color:var(--rojo); font-weight:600; }
+  .qnav{ display:flex; gap:7px; flex-wrap:wrap; margin-bottom:11px; }
+  .qnav span{ width:26px; height:26px; border-radius:50%; display:grid; place-items:center;
+              font-size:11.5px; font-weight:800; border:1.5px solid var(--o-border);
+              color:var(--o-muted); background:#fff; }
+  .qnav span.ya{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .qnav span.err{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .qnav span.hoy{ border-color:var(--mora); color:var(--mora); box-shadow:0 0 0 3px rgba(113,75,103,.14); }
+
+  .enlaces{ display:grid; gap:7px; }
+  .enlaces a{ display:flex; gap:9px; align-items:flex-start; text-decoration:none;
+              border:1px solid var(--o-border); border-radius:9px; padding:9px 12px; background:#fff; }
+  .enlaces a:hover{ border-color:var(--azul); background:#F7FAFD; }
+  .enlaces .nm{ font-size:13px; font-weight:700; color:var(--azul); }
+  .enlaces .ds{ font-size:12px; color:var(--o-muted); line-height:1.5; }
+  .enlaces .ic{ font-size:16px; flex:none; }
+
+  .lista{ margin:0; padding-left:18px; font-size:13px; line-height:1.7; color:#33404E; }
+  .lista li{ margin-bottom:4px; }
+  .cuerpo code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+    background:#F0F3F7; border:1px solid #E1E6EC; border-radius:5px; padding:1px 5px; color:#26303D; }
+
+  .chk{ list-style:none; margin:0; padding:0; }
+  .chk li{ display:flex; gap:10px; align-items:flex-start; padding:8px 0;
+           border-bottom:1px solid #EDEFF2; font-size:13.5px; line-height:1.5; }
+  .chk li:last-child{ border-bottom:0; }
+  .chk input{ width:19px; height:19px; flex:none; margin-top:1px; accent-color:#147A5C; cursor:pointer; }
+  .chk li.ya label{ color:var(--o-muted); text-decoration:line-through; }
+
+  .titsec{ margin:0 0 8px; font-size:13px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.3px; color:#5A5A5A; }
+  .aviso{ font-size:12.5px; color:var(--o-muted); line-height:1.55; margin:9px 0 0; }
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+  .vmini .rej{ display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin-top:7px; }
+  .vmini .cel2{ border:1px solid var(--o-border); border-radius:6px; padding:4px 2px;
+                text-align:center; font-size:10px; color:var(--o-muted); background:#FAFBFC; }
+  .vmini .cel2 b{ display:block; font-size:12px; color:#1F5FA8; }
+  .vmini .cel2.full{ border-color:#7CC29B; background:#E9F7EF; }
+  .vmini .cel2.full b{ color:#14532D; }
+
+  @media (max-width:640px){
+    .ficha{ font-size:12.5px; padding:9px 11px; }
+    input.cel, select.cel{ width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Investigación Cuantitativa</span> / <b>Población y muestra</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="pm">
+
+  <div class="titulo">
+    <span class="marca" aria-hidden="true">
+      <svg viewBox="0 0 62 56" fill="none" stroke="#1F5FA8" stroke-width="2.2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 40c0-9 7-15 16-15s16 6 16 15" />
+        <circle cx="22" cy="15" r="7"/>
+        <path d="M40 46a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" stroke="#147A5C"/>
+        <path d="M48 44l8 8" stroke="#147A5C"/>
+      </svg>
+    </span>
+    <span class="tx">
+      <h1>Sesión 7 · Población y muestra, jugando</h1>
+      <p>Laboratorio 2 · seis retos: arrastrar, unir parejas, completar y responder</p>
+    </span>
+  </div>
+
+  <div class="idea">
+    <b>La olla y la cucharada.</b> Para saber si la sopa está buena no te tomas toda la olla: pruebas
+    una cucharada bien mezclada. La olla entera es la <b>población (N)</b>; la cucharada es la
+    <b>muestra (n)</b>. En estos seis retos aprendes a distinguirlas, a encontrar tu N en el INEI y a
+    calcular tu n con la fórmula.
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de jugar, di tu nombre</h2>
+    <p>Los retos aparecen cuando entras. Escribe tu nombre y el código de sala que indique el docente.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pest" id="pest"></div>
+    <div class="barra">
+      <div class="prog"><i id="progI"></i></div>
+      <span class="cuenta" id="cuenta"></span>
+      <span id="reinicio"></span>
+    </div>
+    <div id="panel"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                          .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function $(id){ return document.getElementById(id); }
+  function qq(sel, raiz){ return Array.prototype.slice.call((raiz||document).querySelectorAll(sel)); }
+  function miles(n,d){
+    if(n===null||n===undefined||isNaN(n)) return '';
+    return Number(n).toLocaleString('es-PE',{minimumFractionDigits:(d||0),maximumFractionDigits:(d===undefined?2:d)});
+  }
+  function lee(t){
+    if(t===null||t===undefined) return null;
+    var s=String(t).trim().replace(/\s/g,'').replace(/,/g,'');
+    if(!s) return null;
+    return isNaN(Number(s)) ? NaN : Number(s);
+  }
+  function baraja(a){
+    a=a.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+
+  var ac=null;
+  function nota(f, ini, dur, vol, tipo){
+    try{
+      if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.06,t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(660,0,.12,.05,'triangle'); }
+  function mal(){ nota(196,0,.16,.05,'sawtooth'); }
+  function toma(){ nota(520,0,.05,.03); }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+    for(var i=0;i<110;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+        x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+        x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+      if(Date.now()-t0<2600) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  var ENCUESTA='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
+  var LS='inv_pobmue_v1';
+  var G={};
+  try{ G=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ G={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+
+  /* ============ arrastre con puntero, y toque para elegir ============ */
+  function arrastre(raiz, alSoltar){
+    var cogido=null, fantasma=null, movio=false, elegido=null;
+
+    function zonaEn(x,y){
+      var e=document.elementFromPoint(x,y);
+      while(e && e!==document.body){
+        if(e.hasAttribute && e.hasAttribute('data-z')) return e;
+        e=e.parentElement;
+      }
+      return null;
+    }
+    function limpiaEncima(){ qq('[data-z]', raiz).forEach(function(z){ z.classList.remove('encima'); }); }
+
+    qq('.ficha[data-f]', raiz).forEach(function(f){
+      f.addEventListener('pointerdown', function(ev){
+        if(ev.button) return;
+        cogido=f; movio=false;
+        var r=f.getBoundingClientRect();
+        cogido._dx=ev.clientX-r.left; cogido._dy=ev.clientY-r.top;
+        cogido._w=r.width;
+        try{ f.setPointerCapture(ev.pointerId); }catch(e){}
+      });
+      f.addEventListener('pointermove', function(ev){
+        if(cogido!==f) return;
+        if(!movio){
+          if(Math.abs(ev.movementX)+Math.abs(ev.movementY)<2) return;
+          movio=true;
+          fantasma=f.cloneNode(true);
+          fantasma.classList.add('fantasma');
+          fantasma.style.width=cogido._w+'px';
+          document.body.appendChild(fantasma);
+          f.style.opacity='.35';
+          toma();
+        }
+        fantasma.style.left=(ev.clientX-cogido._dx)+'px';
+        fantasma.style.top=(ev.clientY-cogido._dy)+'px';
+        limpiaEncima();
+        var z=zonaEn(ev.clientX, ev.clientY);
+        if(z) z.classList.add('encima');
+      });
+      f.addEventListener('pointerup', function(ev){
+        if(cogido!==f) return;
+        f.style.opacity='';
+        if(fantasma){ fantasma.remove(); fantasma=null; }
+        limpiaEncima();
+        if(movio){
+          var z=zonaEn(ev.clientX, ev.clientY);
+          if(z) alSoltar(f.dataset.f, z.dataset.z);
+        }else{
+          /* toque: se elige y luego se toca la zona */
+          if(elegido===f){ f.classList.remove('sel'); elegido=null; }
+          else{
+            qq('.ficha.sel', raiz).forEach(function(x){ x.classList.remove('sel'); });
+            f.classList.add('sel'); elegido=f; toma();
+          }
+        }
+        cogido=null; movio=false;
+      });
+      f.addEventListener('pointercancel', function(){
+        f.style.opacity='';
+        if(fantasma){ fantasma.remove(); fantasma=null; }
+        limpiaEncima(); cogido=null; movio=false;
+      });
+    });
+
+    qq('[data-z]', raiz).forEach(function(z){
+      z.addEventListener('click', function(ev){
+        if(!elegido) return;           /* sin ficha elegida, manda el manejador de dentro */
+        ev.stopPropagation();          /* con ficha elegida, el toque suelta aquí */
+        var id=elegido.dataset.f;
+        elegido.classList.remove('sel'); elegido=null;
+        alSoltar(id, z.dataset.z);
+      }, true);
+    });
+  }
+
+  function caja(clase, titulo, cola, cuerpo){
+    return '<div class="bloque '+clase+'"><h3><span>'+esc(titulo)+'</span>'+
+           (cola?'<span class="t">'+esc(cola)+'</span>':'')+'</h3>'+
+           '<div class="cuerpo">'+cuerpo+'</div></div>';
+  }
+
+  /* ===================== RETO 1 · arrastrar N o n ===================== */
+  var FRASES=[
+    { id:'f1', t:'Todos los jóvenes de 18 a 30 años de Cayma', r:'N', fijo:true },
+    { id:'f2', t:'Las 384 personas que finalmente respondieron la encuesta', r:'n' },
+    { id:'f3', t:'El total de estudiantes de institutos del Cercado', r:'N' },
+    { id:'f4', t:'El grupo pequeño que sí vas a encuestar', r:'n' },
+    { id:'f5', t:'La olla entera de sopa', r:'N' },
+    { id:'f6', t:'La cucharada bien mezclada', r:'n' },
+    { id:'f7', t:'Se busca en los datos oficiales del INEI', r:'N' },
+    { id:'f8', t:'Se obtiene con una fórmula', r:'n' }
+  ];
+  var R1={
+    id:'r1', pest:'1 · ¿N o n?',
+    dibuja:function(){
+      var st=G.r1||{ f1:'N' };
+      var sueltas=FRASES.filter(function(f){ return !st[f.id]; });
+      var h = caja('teo','La diferencia en una imagen','Paso 1 del laboratorio',
+        '<div class="dos">'+
+          '<div class="tarj N"><h4>Población (N)</h4><ul>'+
+            '<li>Son <b>todas</b> las personas que cumplen tu perfil.</li>'+
+            '<li>Casi siempre es un número muy grande y no se puede encuestar entero.</li>'+
+            '<li>Se busca en datos oficiales del INEI.</li></ul></div>'+
+          '<div class="tarj n"><h4>Muestra <span class="min">(n)</span></h4><ul>'+
+            '<li>Es el grupo, más pequeño, al que sí vas a encuestar.</li>'+
+            '<li>Se calcula con una fórmula para que represente bien a la población.</li>'+
+            '<li>Sale de una cuenta a partir de la población.</li></ul></div>'+
+        '</div>');
+
+      h += caja('reto','Reto 1 · Arrastra cada frase a su casillero','La primera ya está colocada',
+        '<p class="aviso" style="margin:0 0 9px">En el teléfono también puedes <b>tocar la frase</b> y '+
+        'después tocar el casillero.</p>'+
+        '<div class="fichero'+(sueltas.length?'':' vacio')+'" id="r1lote">'+
+          sueltas.map(function(f){
+            return '<div class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</div>';
+          }).join('')+
+        '</div>'+
+        '<div class="zonas">'+
+          ['N','n'].map(function(z){
+            var dentro=FRASES.filter(function(f){ return st[f.id]===z; });
+            return '<div class="zona '+z+'" data-z="'+z+'"><h5><span>'+
+              (z==='N'?'Población (N)':'Muestra <span class="min">(n)</span>')+'</span><span>'+dentro.length+'</span></h5>'+
+              '<div class="caidas">'+dentro.map(function(f){
+                var ok=f.r===z;
+                return '<div class="ficha '+(ok?'bien':'malo')+'" data-q="'+f.id+'">'+esc(f.t)+
+                       (f.fijo?'':' <b style="opacity:.6">×</b>')+'</div>';
+              }).join('')+'</div></div>';
+          }).join('')+
+        '</div>'+
+        '<div class="marcador" id="r1mar"></div>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r1||(G.r1={ f1:'N' });
+      function marca(){
+        var col=0, bien2=0;
+        FRASES.forEach(function(f){ if(st[f.id]){ col++; if(st[f.id]===f.r) bien2++; } });
+        var m=$('r1mar');
+        m.className='marcador'+(bien2===FRASES.length?' ok':(col===FRASES.length?' no':''));
+        m.textContent = bien2===FRASES.length
+          ? '¡Listo! Las ocho frases están en su casillero.'
+          : col+' de '+FRASES.length+' colocadas · '+bien2+' bien. '+
+            (col===FRASES.length?'Toca las que están en rojo para devolverlas.':'Sigue arrastrando.');
+      }
+      arrastre($('panel'), function(id, z){
+        var f=FRASES.filter(function(x){ return x.id===id; })[0];
+        st[id]=z; graba();
+        if(f && f.r===z) bien(); else mal();
+        R1.repinta();
+      });
+      qq('.zona .ficha[data-q]').forEach(function(d){
+        d.addEventListener('click', function(ev){
+          ev.stopPropagation();
+          var f=FRASES.filter(function(x){ return x.id===d.dataset.q; })[0];
+          if(f && f.fijo) return;
+          delete st[d.dataset.q]; graba(); R1.repinta();
+        });
+      });
+      marca();
+    },
+    hecho:function(){
+      var st=G.r1||{};
+      return FRASES.every(function(f){ return st[f.id]===f.r; });
+    }
+  };
+
+  /* ===================== RETO 2 · parejas ===================== */
+  var PAREJAS=[
+    { s:'N', d:'Todas las personas que cumplen tu perfil' },
+    { s:'n', d:'A cuántas personas vas a encuestar de verdad' },
+    { s:'Z', d:'Nivel de confianza: 1.96 cuando trabajas al 95 %' },
+    { s:'p', d:'Proporción esperada: 0.5 cuando no la conoces' },
+    { s:'q', d:'El contrario de p: 0.5, porque q = 1 − p' },
+    { s:'e', d:'Margen de error que aceptas: 0.05 para ±5 %' }
+  ];
+  var R2={
+    id:'r2', pest:'2 · Parejas',
+    dibuja:function(){
+      var st=G.r2||{};
+      if(!G.r2ord){
+        G.r2ord={ izq:baraja(PAREJAS.map(function(p,i){ return i; })),
+                  der:baraja(PAREJAS.map(function(p,i){ return i; })) };
+        graba();
+      }
+      var o=G.r2ord;
+      var h = caja('teo','Los símbolos de la fórmula','Paso 3 del laboratorio',
+        '<p>Antes de calcular hay que saber qué pide cada letra. Con 95 % de confianza y ±5 % de error, '+
+        'los valores que usarás casi siempre son los mismos: <code>Z = 1.96</code>, <code>p = 0.5</code>, '+
+        '<code>q = 0.5</code> y <code>e = 0.05</code>. Lo único que cambia de un proyecto a otro es tu '+
+        '<code>N</code>.</p>');
+
+      h += caja('reto','Reto 2 · Une cada símbolo con lo que significa','Toca uno de cada columna',
+        '<div class="par">'+
+          '<div class="col sim" id="r2izq">'+o.izq.map(function(i){
+            return '<button type="button" data-i="'+i+'" class="'+(st[i]?'ok':'')+'">'+
+                   esc(PAREJAS[i].s)+'</button>'; }).join('')+'</div>'+
+          '<div class="col" id="r2der">'+o.der.map(function(i){
+            return '<button type="button" data-i="'+i+'" class="'+(st[i]?'ok':'')+'">'+
+                   esc(PAREJAS[i].d)+'</button>'; }).join('')+'</div>'+
+        '</div>'+
+        '<div class="marcador" id="r2mar"></div>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r2||(G.r2={});
+      var elegido=null;
+      function marca(){
+        var n=0; PAREJAS.forEach(function(p,i){ if(st[i]) n++; });
+        var m=$('r2mar');
+        m.className='marcador'+(n===PAREJAS.length?' ok':'');
+        m.textContent = n===PAREJAS.length ? '¡Las seis parejas están unidas!'
+                                           : n+' de '+PAREJAS.length+' parejas unidas.';
+      }
+      function pulsa(lado, b){
+        if(b.classList.contains('ok')) return;
+        var i=+b.dataset.i;
+        if(!elegido){ 
+          qq('#r2izq button, #r2der button').forEach(function(x){ x.classList.remove('sel'); });
+          b.classList.add('sel'); elegido={ lado:lado, i:i, b:b }; toma(); return;
+        }
+        if(elegido.lado===lado){
+          elegido.b.classList.remove('sel');
+          b.classList.add('sel'); elegido={ lado:lado, i:i, b:b }; toma(); return;
+        }
+        if(elegido.i===i){
+          elegido.b.classList.remove('sel'); elegido.b.classList.add('ok');
+          b.classList.add('ok');
+          st[i]=1; graba(); bien(); elegido=null; marca(); refresca();
+        }else{
+          var otro=elegido.b;
+          otro.classList.remove('sel'); otro.classList.add('no'); b.classList.add('no');
+          mal(); elegido=null;
+          setTimeout(function(){ otro.classList.remove('no'); b.classList.remove('no'); }, 620);
+        }
+      }
+      qq('#r2izq button').forEach(function(b){ b.addEventListener('click', function(){ pulsa('izq', b); }); });
+      qq('#r2der button').forEach(function(b){ b.addEventListener('click', function(){ pulsa('der', b); }); });
+      marca();
+    },
+    hecho:function(){
+      var st=G.r2||{};
+      return PAREJAS.every(function(p,i){ return st[i]; });
+    }
+  };
+
+  /* ===================== RETO 3 · quinquenios ===================== */
+  var QUIN=[
+    { g:'15 – 19', p:9000, f:'2/5', v:3600, por:'De este grupo solo entran los de 18 y 19: dos de las cinco edades.' },
+    { g:'20 – 24', p:9500, f:'todo', v:9500, por:'Todas estas edades están dentro de 18 a 30.' },
+    { g:'25 – 29', p:8500, f:'todo', v:8500, por:'Igual: el grupo entero cae dentro del rango.' },
+    { g:'30 – 34', p:8000, f:'1/5',  v:1600, por:'Solo los de 30 años: una de las cinco edades.' }
+  ];
+  var FRAC=[['nada','nada (0)'],['1/5','1 de cada 5'],['2/5','2 de cada 5'],['3/5','3 de cada 5'],['todo','todo el grupo']];
+  var R3={
+    id:'r3', pest:'3 · Quinquenios',
+    dibuja:function(){
+      var st=G.r3||{};
+      var h = caja('teo','Tu población está en el INEI','Paso 2 del laboratorio',
+        '<p>El INEI publica cuántas personas viven en cada distrito y de qué edad. Tu <b>N</b> sale de '+
+        'sumar solo las edades de tu público, en tus distritos.</p>'+
+        '<ol class="lista"><li>Elige tu distrito o distritos.</li>'+
+        '<li>Busca la población por edad de ese distrito.</li>'+
+        '<li>Suma solo las edades de tu público. Ese total es tu <b>N</b>.</li></ol>'+
+        '<div class="pista"><b>El truco de los quinquenios.</b> A veces el INEI no da la edad exacta, '+
+        'sino grupos de cinco años. Si tu público va de 18 a 30, de un grupo que va de 15 a 19 solo te '+
+        'sirven dos edades (18 y 19): tomas <b>2 de cada 5</b>. De un grupo que va de 30 a 34 solo te '+
+        'sirve una (30): tomas <b>1 de cada 5</b>. Los grupos que caen enteros dentro del rango se '+
+        'toman completos.</div>');
+
+      h += caja('reto','Reto 3 · Cayma, jóvenes de 18 a 30','Elige cuánto tomas de cada grupo',
+        '<div class="envuelve"><table class="hoja"><thead><tr>'+
+        '<th>Grupo del INEI</th><th class="n">Personas</th><th>Cuánto tomo</th><th class="n">Entran</th>'+
+        '</tr></thead><tbody>'+
+        QUIN.map(function(k,i){
+          return '<tr><td>'+esc(k.g)+'</td><td class="n">'+miles(k.p,0)+'</td>'+
+            '<td><select class="cel" data-q="'+i+'">'+
+              '<option value="">— elige —</option>'+
+              FRAC.map(function(f){
+                return '<option value="'+f[0]+'"'+(st['f'+i]===f[0]?' selected':'')+'>'+esc(f[1])+'</option>';
+              }).join('')+
+            '</select></td>'+
+            '<td class="n" id="r3v'+i+'">—</td></tr>';
+        }).join('')+
+        '<tr class="tot"><td colspan="3">Subtotal Cayma (18 – 30)</td>'+
+        '<td class="n"><input class="cel" id="r3sub" inputmode="numeric" value="'+
+          esc(st.sub||'')+'" placeholder="?"></td></tr>'+
+        '</tbody></table></div>'+
+        '<div class="marcador" id="r3mar"></div>'+
+        '<p class="aviso">Después se hace lo mismo con los otros distritos y se suman. En el ejemplo del '+
+        'laboratorio, Cayma más Alto Selva Alegre daban <b>N ≈ 45 000</b> jóvenes.</p>'+
+        '<div class="pista"><b>Anota siempre la fuente.</b> Va como nota debajo de tu tabla: «INEI, '+
+        'Censos Nacionales 2025 y Estimaciones y proyecciones de población, 2026. Distritos de Cayma y '+
+        'Alto Selva Alegre, población de 18 a 30 años».</div>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r3||(G.r3={});
+      var FR={ nada:0, '1/5':0.2, '2/5':0.4, '3/5':0.6, todo:1 };
+      function pinta(){
+        var suma=0, todas=true, bienTodas=true;
+        QUIN.forEach(function(k,i){
+          var f=st['f'+i];
+          var celda=$('r3v'+i);
+          if(!f){ celda.textContent='—'; todas=false; bienTodas=false; return; }
+          var v=Math.round(k.p*FR[f]);
+          celda.textContent=miles(v,0);
+          celda.style.color = (f===k.f) ? '#14532D' : '#B42318';
+          celda.style.fontWeight='700';
+          suma+=v;
+          if(f!==k.f) bienTodas=false;
+        });
+        var sub=lee($('r3sub').value);
+        var inp=$('r3sub');
+        inp.classList.remove('ok','mal');
+        if(sub!==null && !isNaN(sub)) inp.classList.add(Math.abs(sub-23200)<0.5 ? 'ok' : 'mal');
+        var m=$('r3mar');
+        var ok = bienTodas && sub!==null && Math.abs(sub-23200)<0.5;
+        m.className='marcador'+(ok?' ok':(todas?' no':''));
+        m.innerHTML = ok
+          ? 'Correcto: en Cayma hay <b>23 200</b> jóvenes de 18 a 30 años.'
+          : (todas
+             ? 'Todavía no. Revisa los grupos marcados en rojo; la suma de la columna «Entran» es el subtotal.'
+             : 'Elige cuánto tomas de cada grupo y escribe el subtotal.');
+      }
+      qq('select.cel[data-q]').forEach(function(s){
+        s.addEventListener('change', function(){
+          st['f'+s.dataset.q]=s.value; graba();
+          if(s.value===QUIN[+s.dataset.q].f) bien(); else if(s.value) mal();
+          pinta(); refresca();
+        });
+      });
+      $('r3sub').addEventListener('input', function(){
+        st.sub=$('r3sub').value; graba(); pinta(); refresca();
+      });
+      pinta();
+    },
+    hecho:function(){
+      var st=G.r3||{};
+      var todas=QUIN.every(function(k,i){ return st['f'+i]===k.f; });
+      var sub=lee(st.sub);
+      return todas && sub!==null && !isNaN(sub) && Math.abs(sub-23200)<0.5;
+    }
+  };
+
+  /* ===================== RETO 4 · armar la fórmula ===================== */
+  var PIEZAS=[
+    { id:'p1', t:'N',      h:'h1' },
+    { id:'p2', t:'Z²',     h:'h2' },
+    { id:'p3', t:'p × q',  h:'h3' },
+    { id:'p4', t:'e²',     h:'h4' },
+    { id:'p5', t:'N − 1',  h:'h5' },
+    { id:'p6', t:'Z² × p × q', h:'h6' }
+  ];
+  var R4={
+    id:'r4', pest:'4 · La fórmula',
+    dibuja:function(){
+      var st=G.r4||{};
+      var puestas={};
+      Object.keys(st).forEach(function(k){ puestas[st[k]]=k; });
+      var sueltas=PIEZAS.filter(function(p){ return !st[p.id]; });
+      function hueco(id){
+        var pid=puestas[id];
+        if(!pid) return '<span class="hueco" data-z="'+id+'">?</span>';
+        var p=PIEZAS.filter(function(x){ return x.id===pid; })[0];
+        var ok=p.h===id;
+        return '<span class="hueco '+(ok?'lleno':'malo')+'" data-z="'+id+'" data-quita="'+pid+'">'+
+               esc(p.t)+'</span>';
+      }
+      var h = caja('teo','La fórmula cuando conoces tu población','Paso 3 del laboratorio',
+        '<div class="formula" style="white-space:normal">'+
+        'n = ( <b>N</b> × <b>Z²</b> × <b>p</b> × <b>q</b> ) ÷ [ <b>e²</b> × ( <b>N − 1</b> ) + <b>Z²</b> × <b>p</b> × <b>q</b> ]'+
+        '</div>'+
+        '<p style="margin-top:10px">Arriba multiplicas tu población por el «peso» de la confianza. '+
+        'Abajo corriges por el tamaño de esa población: cuanto más grande es N, menos pesa el ajuste, '+
+        'y por eso la muestra deja de crecer.</p>');
+
+      h += caja('reto','Reto 4 · Arma la fórmula','Arrastra cada pieza a su hueco',
+        '<div class="fichero'+(sueltas.length?'':' vacio')+'">'+
+          baraja(sueltas).map(function(p){
+            return '<div class="ficha mini" data-f="'+p.id+'">'+esc(p.t)+'</div>';
+          }).join('')+
+        '</div>'+
+        '<div class="formula" style="margin-top:12px">n = ( '+hueco('h1')+' × '+hueco('h2')+' × '+
+        hueco('h3')+' ) ÷ [ '+hueco('h4')+' × ( '+hueco('h5')+' ) + '+hueco('h6')+' ]</div>'+
+        '<div class="marcador" id="r4mar"></div>'+
+        '<p class="aviso">Toca una pieza ya colocada para devolverla al montón.</p>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r4||(G.r4={});
+      function marca(){
+        var n=0, b2=0;
+        PIEZAS.forEach(function(p){ if(st[p.id]){ n++; if(st[p.id]===p.h) b2++; } });
+        var m=$('r4mar');
+        m.className='marcador'+(b2===PIEZAS.length?' ok':(n===PIEZAS.length?' no':''));
+        m.textContent = b2===PIEZAS.length ? 'La fórmula quedó completa y correcta.'
+          : n+' de '+PIEZAS.length+' piezas puestas · '+b2+' en su sitio.';
+      }
+      arrastre($('panel'), function(id, z){
+        Object.keys(st).forEach(function(k){ if(st[k]===z) delete st[k]; });
+        st[id]=z; graba();
+        var p=PIEZAS.filter(function(x){ return x.id===id; })[0];
+        if(p && p.h===z) bien(); else mal();
+        R4.repinta();
+      });
+      qq('.hueco[data-quita]').forEach(function(hq){
+        hq.addEventListener('click', function(ev){
+          ev.stopPropagation();
+          delete st[hq.dataset.quita]; graba(); R4.repinta();
+        });
+      });
+      marca();
+    },
+    hecho:function(){
+      var st=G.r4||{};
+      return PIEZAS.every(function(p){ return st[p.id]===p.h; });
+    }
+  };
+
+  /* ===================== RETO 5 · calcula ===================== */
+  function muestra(N){
+    var arriba = N*0.9604;
+    var abajo  = 0.0025*(N-1)+0.9604;
+    return { arriba:arriba, abajo:abajo, n:Math.ceil(arriba/abajo) };
+  }
+  var R5={
+    id:'r5', pest:'5 · Calcula n',
+    dibuja:function(){
+      var st=G.r5||{};
+      var h = caja('teo','Ejemplo resuelto · shampoo, N = 90 000','Paso a paso',
+        '<div class="envuelve"><table class="hoja"><tbody>'+
+        '<tr><td>1</td><td>Datos: N = 90 000 · Z = 1.96 · p = 0.5 · q = 0.5 · e = 0.05.</td></tr>'+
+        '<tr><td>2</td><td>Arriba: 90 000 × 1.96² × 0.5 × 0.5 = 90 000 × 0.9604 = <b>86 436</b></td></tr>'+
+        '<tr><td>3</td><td>Abajo: 0.05² × (90 000 − 1) + 0.9604 = 224.9975 + 0.9604 = <b>225.96</b></td></tr>'+
+        '<tr><td>4</td><td>n = 86 436 ÷ 225.96 = 382.5 → hacia arriba: <b>383 encuestas</b></td></tr>'+
+        '</tbody></table></div>'+
+        '<div class="pista"><b>Atajo para comprobar.</b> Al 95 % de confianza y ±5 % de error, cuando la '+
+        'población pasa de 20 000 la muestra casi siempre queda cerca de <b>384</b>. Si tu resultado sale '+
+        'muy lejos de ese número, revisa la cuenta.</div>');
+
+      h += caja('reto','Reto 5 · Hazlo con N = 15 000','El caso de las mochilas',
+        '<div class="paso-c">'+
+          '<div class="linea"><span class="et">Arriba: <code>N × 0.9604</code></span>'+
+            '<input class="cel" id="r5a" inputmode="decimal" value="'+esc(st.a||'')+'" placeholder="?"></div>'+
+          '<div class="linea"><span class="et">Abajo: <code>0.0025 × (N − 1) + 0.9604</code></span>'+
+            '<input class="cel" id="r5b" inputmode="decimal" value="'+esc(st.b||'')+'" placeholder="?"></div>'+
+          '<div class="linea"><span class="et">n = arriba ÷ abajo, <b>redondeado hacia arriba</b></span>'+
+            '<input class="cel" id="r5n" inputmode="numeric" value="'+esc(st.n||'')+'" placeholder="?"></div>'+
+        '</div>'+
+        '<div class="marcador" id="r5mar"></div>');
+
+      h += caja('teo','Ahora con TU población','Calculadora del proyecto',
+        '<div class="linea"><span class="et">Escribe tu <b>N</b> y mira tu muestra</span>'+
+        '<input class="cel" id="r5N" inputmode="numeric" value="'+esc(st.N||'')+'" placeholder="Tu N"></div>'+
+        '<div class="envuelve" style="margin-top:10px"><table class="hoja" id="r5tab"><tbody></tbody></table></div>'+
+        '<p class="aviso">Este resultado es el que va en la sección 2.2.2 de tu informe, junto con la '+
+        'fuente del INEI.</p>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r5||(G.r5={});
+      var e=muestra(15000);
+      function chk(id, esperado, dec){
+        var inp=$(id), v=lee(inp.value);
+        inp.classList.remove('ok','mal');
+        if(v===null||isNaN(v)) return false;
+        var ok=Math.abs(v-esperado) <= (dec||0.51);
+        inp.classList.add(ok?'ok':'mal');
+        return ok;
+      }
+      function pinta(){
+        var a=chk('r5a', e.arriba, 1), b=chk('r5b', e.abajo, 0.05), n=chk('r5n', e.n, 0.4);
+        var m=$('r5mar');
+        var ok=a&&b&&n;
+        m.className='marcador'+(ok?' ok':'');
+        m.innerHTML = ok
+          ? 'Correcto: con N = 15 000 la muestra es de <b>375 encuestas</b>.'
+          : 'Arriba da '+miles(e.arriba,0)+' si multiplicas bien; abajo es un número pequeño, cerca de 38.';
+        var N=lee($('r5N').value), t=$('r5tab').querySelector('tbody');
+        if(N===null||isNaN(N)||N<2){
+          t.innerHTML='<tr><td colspan="2" style="color:#6B7785">Escribe tu población para ver el cálculo.</td></tr>';
+        }else{
+          var r=muestra(N);
+          t.innerHTML=
+            '<tr><td>Arriba · N × 0.9604</td><td class="n">'+miles(r.arriba,2)+'</td></tr>'+
+            '<tr><td>Abajo · 0.0025 × (N − 1) + 0.9604</td><td class="n">'+miles(r.abajo,4)+'</td></tr>'+
+            '<tr class="tot"><td>Tu muestra (n)</td><td class="n">'+miles(r.n,0)+' encuestas</td></tr>';
+        }
+      }
+      ['r5a','r5b','r5n','r5N'].forEach(function(id){
+        $(id).addEventListener('input', function(){
+          st[id.slice(2)]=$(id).value; graba(); pinta(); refresca();
+        });
+      });
+      pinta();
+    },
+    hecho:function(){
+      var st=G.r5||{}, e=muestra(15000);
+      var a=lee(st.a), b=lee(st.b), n=lee(st.n);
+      return a!==null&&!isNaN(a)&&Math.abs(a-e.arriba)<=1 &&
+             b!==null&&!isNaN(b)&&Math.abs(b-e.abajo)<=0.05 &&
+             n!==null&&!isNaN(n)&&Math.abs(n-e.n)<=0.4;
+    }
+  };
+
+  /* ===================== RETO 6 · quiz ===================== */
+  var QUIZ=[
+    { t:'Un equipo escribe: «La población son las 384 personas encuestadas». ¿Qué está mal?',
+      o:['Nada, está bien','Confunde la muestra con la población','Falta decir el distrito','384 es muy poco'],
+      k:1, p:'384 es el número al que se encuesta, o sea la muestra. La población es el total de personas que cumplen el perfil, que son miles.' },
+    { t:'¿De dónde sacas tu población (N)?',
+      o:['De una encuesta piloto','De datos oficiales del INEI','De la fórmula de la muestra','Del promedio del salón'],
+      k:1, p:'N se busca, no se calcula: el INEI publica cuántas personas viven en cada distrito y de qué edad.' },
+    { t:'Tu público va de 18 a 30 años y el INEI solo te da el grupo 15–19. ¿Cuánto tomas?',
+      o:['Todo el grupo','La mitad','2 de cada 5','Nada, lo descartas'],
+      k:2, p:'De las cinco edades del grupo (15, 16, 17, 18 y 19) solo dos están dentro de tu rango: 18 y 19. Por eso 2/5.' },
+    { t:'¿Qué significa que trabajes con Z = 1.96?',
+      o:['Que aceptas ±1.96 % de error','Que trabajas al 95 % de confianza','Que la población es de 1 960 personas','Que encuestarás a 196 personas'],
+      k:1, p:'Z es el valor asociado al nivel de confianza. Al 95 % corresponde 1.96; al 90 %, 1.645; al 99 %, 2.576.' },
+    { t:'¿Por qué se usa p = 0.5 cuando no conoces la proporción?',
+      o:['Porque es más fácil de multiplicar','Porque es el caso más exigente y da la muestra más grande','Porque siempre la mitad dice que sí','Porque lo pide el INEI'],
+      k:1, p:'Con p = 0.5 el producto p × q es el mayor posible, así que la muestra sale más grande: es la opción conservadora, la que no te deja corto.' },
+    { t:'Bajas el margen de error de ±5 % a ±3 %. ¿Qué le pasa a tu muestra?',
+      o:['Se reduce','Se queda igual','Crece bastante','Depende del distrito'],
+      k:2, p:'El error va al cuadrado y en el denominador: exigir menos error obliga a encuestar a más gente. De unas 384 se pasa a más de mil.' },
+    { t:'Tu población es de 90 000 y la de tu compañero, de 500 000. ¿Cuál necesita una muestra mucho mayor?',
+      o:['La de 500 000, más de cinco veces','Casi la misma para las dos','La de 90 000','No se puede saber'],
+      k:1, p:'Pasadas las 20 000 personas la muestra deja de crecer: ambas quedan cerca de 384. Ese es el atajo de comprobación del laboratorio.' },
+    { t:'En la ficha técnica del informe, ¿qué dato NO puede faltar junto a la población?',
+      o:['El nombre del encuestador','La fuente del INEI con el año','El precio del producto','La marca competidora'],
+      k:1, p:'Un número sin fuente no se puede verificar. Se cita el INEI, la publicación y el año, como nota debajo de la tabla.' }
+  ];
+  var R6={
+    id:'r6', pest:'6 · Quiz',
+    dibuja:function(){
+      var st=G.r6||{};
+      var i = (G.r6i===undefined) ? 0 : G.r6i;
+      if(i>=QUIZ.length) i=QUIZ.length-1;
+      var Q=QUIZ[i], r=st[i];
+      var h = caja('reto','Reto 6 · Quiz de cierre','Ocho preguntas de teoría',
+        '<div class="qnav" id="r6nav">'+QUIZ.map(function(x,j){
+          var cl = (st[j]===undefined) ? '' : (+st[j]===QUIZ[j].k ? 'ya' : 'err');
+          if(j===i) cl+=' hoy';
+          return '<span class="'+cl+'" data-q="'+j+'" role="button" tabindex="0">'+(j+1)+'</span>';
+        }).join('')+'</div>'+
+        '<p class="preg">'+esc(Q.t)+'</p>'+
+        '<div class="ops" id="r6ops">'+Q.o.map(function(o,j){
+          var cl='';
+          if(r!==undefined) cl = (j===Q.k) ? ' class="bien"' : (j===+r ? ' class="mal"' : '');
+          return '<button type="button" data-o="'+j+'"'+cl+'>'+esc(o)+'</button>';
+        }).join('')+'</div>'+
+        (r!==undefined
+          ? '<p class="porque '+(+r===Q.k?'ok':'no')+'">'+(+r===Q.k?'Correcto. ':'No era esa. ')+esc(Q.p)+'</p>'
+          : '<p class="aviso" style="margin-top:9px">Elige una opción.</p>')+
+        '<div class="acc">'+
+          (i>0?'<button type="button" class="o-btn" id="r6ant">← Anterior</button>':'')+
+          (i<QUIZ.length-1?'<button type="button" class="o-btn o-btn-primary" id="r6sig">Siguiente →</button>':'')+
+        '</div>');
+
+      var ok=0; QUIZ.forEach(function(x,j){ if(+st[j]===x.k) ok++; });
+      h += caja('teo','Cómo vas','', '<div class="marcador'+(ok===QUIZ.length?' ok':'')+'">'+
+        ok+' de '+QUIZ.length+' correctas.'+(ok===QUIZ.length?' ¡Quiz completo!':'')+'</div>');
+      return h;
+    },
+    cablea:function(){
+      var st=G.r6||(G.r6={});
+      var i=(G.r6i===undefined)?0:G.r6i;
+      qq('#r6ops button').forEach(function(b){
+        b.addEventListener('click', function(){
+          if(st[i]!==undefined) return;
+          st[i]=b.dataset.o; graba();
+          if(+b.dataset.o===QUIZ[i].k) bien(); else mal();
+          R6.repinta();
+        });
+      });
+      if($('r6ant')) $('r6ant').addEventListener('click', function(){ G.r6i=i-1; graba(); R6.repinta(); });
+      if($('r6sig')) $('r6sig').addEventListener('click', function(){ G.r6i=i+1; graba(); R6.repinta(); });
+      qq('#r6nav span').forEach(function(s){
+        function ir(){ G.r6i=+s.dataset.q; graba(); R6.repinta(); }
+        s.addEventListener('click', ir);
+        s.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ir(); } });
+      });
+    },
+    hecho:function(){
+      var st=G.r6||{};
+      return QUIZ.every(function(x,j){ return +st[j]===x.k; });
+    }
+  };
+
+  /* ===================== cierre ===================== */
+  var FUENTES=[
+    ['Censos Nacionales 2025 · resultados','Población total por departamento, provincia y distrito.','https://censos2025.inei.gob.pe/resultados'],
+    ['INEI · población de Arequipa 2025','El dato oficial: 1 millón 815 mil habitantes en la región.','https://www.gob.pe/institucion/inei/noticias/1420177-censos-nacionales-2025-poblacion-total-de-arequipa-alcanza-1-millon-815-mil-habitantes'],
+    ['Estimaciones y proyecciones de población','Colección nacional, departamental, provincial y distrital.','https://www.gob.pe/institucion/inei/colecciones/71202-estimaciones-y-proyecciones-de-poblacion-nacional-departamental-provincial-y-distrital'],
+    ['Estimaciones y proyecciones · Tomo I','Tablas de población por edad y por distrito.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1544/00TOMO_01.pdf'],
+    ['Población y vivienda · índice temático','Acceso a los cuadros estadísticos de población.','https://www.inei.gob.pe/estadisticas/indice-tematico/poblacion-y-vivienda/'],
+    ['Arequipa · Compendio Estadístico 2025','Cuadros de población por edad y sexo de la región.','https://www.gob.pe/institucion/inei/informes-publicaciones/7662976-arequipa-compendio-estadistico-2025'],
+    ['Arequipa · Compendio Estadístico 2024','La edición anterior, útil para comparar.','https://www.gob.pe/institucion/inei/informes-publicaciones/6453267-compendio-estadistico-arequipa-2024'],
+    ['ENDES 2024 · Arequipa','Estructura de la población por edad.','https://proyectos.inei.gob.pe/endes/2024/departamentales/Endes04/pdf/Arequipa.pdf'],
+    ['Crecimiento y distribución de la población 2017','Incluye cuadros por distrito, por ejemplo Cayma.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1673/libro.pdf'],
+    ['Indicadores demográficos 1995–2030 · Arequipa','Indicadores por grupos de cinco años.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1723/cap03.html']
+  ];
+  var CHECK=[
+    'Encontré mi población (N) y anoté la fuente del INEI.',
+    'Calculé mi muestra (n) paso a paso.',
+    'Escribí el párrafo de población y muestra en la sección 2.2.2 de la plantilla.',
+    'Llené la ficha técnica con la población, la muestra y la fuente.'
+  ];
+  var R7={
+    id:'r7', pest:'Cierre',
+    dibuja:function(){
+      var h = caja('teo','¿Dónde busco mi población?','Fuentes oficiales del INEI',
+        '<div class="enlaces">'+FUENTES.map(function(f){
+          return '<a href="'+esc(f[2])+'" target="_blank" rel="noopener"><span class="ic">🔗</span>'+
+                 '<span><span class="nm">'+esc(f[0])+'</span><br><span class="ds">'+esc(f[1])+'</span></span></a>';
+        }).join('')+'</div>'+
+        '<p class="aviso">Con estas páginas obtienes la población total por distrito y la población por '+
+        'edad. En el informe cita siempre el dato del INEI; las demás fuentes sirven para contrastar.</p>');
+
+      h += caja('mod','Así debe quedar en el informe','Sección 2.2.2',
+        '<div id="modelo" style="font-size:13px;line-height:1.75">'+
+        '<p style="font-weight:800;color:#714B67;margin:0 0 6px">2.2.2 · Técnicas de muestreo y '+
+        'determinación del tamaño de la muestra</p>'+
+        '<p>La población de estudio está conformada por las personas de 18 a 40 años residentes en los '+
+        'distritos del Cercado, Yanahuara y Cayma, que según el INEI suman aproximadamente 90 000 '+
+        'habitantes. Por tratarse de una población amplia, se trabajó con un muestreo probabilístico y '+
+        'se calculó el tamaño de muestra con un nivel de confianza del 95 % (Z = 1.96), una proporción '+
+        'esperada de 0.5 y un margen de error de ±5 %. Aplicando la fórmula para población conocida, el '+
+        'tamaño de muestra resultó en 383 personas, que serán encuestadas de manera repartida entre los '+
+        'tres distritos.</p>'+
+        '<p style="font-weight:700;margin:10px 0 4px">Ficha técnica de la investigación</p>'+
+        '<div class="envuelve"><table class="hoja"><tbody>'+
+        '<tr><td><b>Población</b></td><td>Personas de 18 a 40 años del Cercado, Yanahuara y Cayma (≈ 90 000).</td></tr>'+
+        '<tr><td><b>Muestra</b></td><td>383 personas.</td></tr>'+
+        '<tr><td><b>Tipo de muestreo</b></td><td>Probabilístico.</td></tr>'+
+        '<tr><td><b>Confianza y error</b></td><td>95 % de confianza; margen de error ±5 %.</td></tr>'+
+        '<tr><td><b>Fuente de la población</b></td><td>INEI, Censos Nacionales 2025 y Estimaciones y '+
+        'proyecciones de población, 2026.</td></tr>'+
+        '</tbody></table></div>'+
+        '<p style="font-size:12px;color:#6B7785;margin-top:7px">Nota. Elaboración propia con base en datos del INEI.</p>'+
+        '</div>'+
+        '<div class="acc"><button type="button" class="o-btn" id="btnCopia">Copiar el modelo</button>'+
+        '<span class="aviso" style="margin:0" id="avCopia"></span></div>');
+
+      h += caja('teo','Antes de cerrar la sesión','Marca lo que ya completaste',
+        '<ul class="chk">'+CHECK.map(function(t,i){
+          var ya=G['ck.'+i]==='1';
+          return '<li class="'+(ya?'ya':'')+'"><input type="checkbox" id="ck'+i+'" data-c="'+i+'"'+
+                 (ya?' checked':'')+'><label for="ck'+i+'">'+esc(t)+'</label></li>';
+        }).join('')+'</ul>');
+      return h;
+    },
+    cablea:function(){
+      var cop=$('btnCopia');
+      if(cop) cop.addEventListener('click', function(){
+        var av=$('avCopia');
+        try{
+          navigator.clipboard.writeText($('modelo').innerText);
+          av.textContent='Copiado. Pégalo en la sección 2.2.2 y cambia los datos por los tuyos.';
+          av.style.color='#14532D';
+        }catch(e){
+          av.textContent='No se pudo copiar: selecciona el texto y usa Ctrl + C.';
+          av.style.color='#B42318';
+        }
+      });
+      qq('.chk input').forEach(function(c){
+        c.addEventListener('change', function(){
+          G['ck.'+c.dataset.c]= c.checked ? '1' : '';
+          graba(); R7.repinta();
+        });
+      });
+    },
+    hecho:function(){ return false; }
+  };
+
+  /* ===================== armado ===================== */
+  var RETOS=[R1,R2,R3,R4,R5,R6,R7];
+  RETOS.forEach(function(r){ r.repinta=function(){ pinta(); }; });
+  var pi=0, festejado=false;
+
+  function pinta(){
+    var r=RETOS[pi];
+    $('panel').innerHTML=r.dibuja();
+    try{ r.cablea(); }catch(e){}
+    refresca();
+  }
+  function refresca(){
+    var ok=0, tot=RETOS.length-1;
+    RETOS.forEach(function(r){ if(r.id!=='r7' && r.hecho()) ok++; });
+    $('progI').style.width=(ok/tot*100)+'%';
+    $('cuenta').textContent=ok+' de '+tot+' retos superados';
+    pestPinta();
+    if(ok===tot && !festejado){ festejado=true; listo(); confeti(); }
+    if(window.Aula && Aula.enSala) Aula.empuja();
+  }
+  function pestPinta(){
+    $('pest').innerHTML=RETOS.map(function(r,i){
+      var m = (r.id==='r7') ? '' : (r.hecho() ? ' <span class="pc">✓</span>' : ' <span class="pc">·</span>');
+      return '<button type="button" data-p="'+i+'" class="'+(i===pi?'on':'')+'">'+esc(r.pest)+m+'</button>';
+    }).join('') +
+      '<button type="button" class="valora" id="btnValora">⭐ Valorar</button>'+
+      '<span class="sep"></span>';
+    qq('#pest button[data-p]').forEach(function(b){
+      b.addEventListener('click', function(){
+        pi=+b.dataset.p; pinta(); window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+    $('btnValora').addEventListener('click', function(){ window.open(ENCUESTA,'_blank','noopener'); });
+  }
+
+  /* ===================== sala ===================== */
+  function resumenAula(){
+    var rej=RETOS.filter(function(r){ return r.id!=='r7'; }).map(function(r){
+      return { t:r.pest.split('· ')[1]||r.pest, ok:r.hecho() };
+    });
+    var st=G.r6||{}, q=0;
+    QUIZ.forEach(function(x,j){ if(+st[j]===x.k) q++; });
+    return { donde:RETOS[pi].pest, hechos:rej.filter(function(x){ return x.ok; }).length,
+             quiz:q+'/'+QUIZ.length, miN:String(G.r5&&G.r5.N||''),
+             listo:rej.every(function(x){ return x.ok; }), rejilla:rej };
+  }
+  function ventanaAula(e){
+    var h='<div class="vmini">'+
+      '<div class="lin"><span>'+esc(e.donde||'—')+'</span><b>'+(e.hechos||0)+' de 6</b></div>'+
+      '<div class="lin"><span>Quiz</span><b>'+esc(e.quiz||'—')+'</b></div>'+
+      '<div class="lin"><span>Su población (N)</span><b>'+(e.miN?esc(e.miN):'—')+'</b></div>'+
+      '<div class="rej">';
+    (e.rejilla||[]).forEach(function(r){
+      h+='<div class="cel2'+(r.ok?' full':'')+'">'+esc(String(r.t).slice(0,6))+'<b>'+(r.ok?'✓':'·')+'</b></div>';
+    });
+    return h+'</div></div>';
+  }
+
+  if(window.Aula){
+    Aula.iniciar({ sala:'POB', codigo:'INV7', resumen:resumenAula, ventana:ventanaAula,
+      alModo:function(doc){
+        $('hojaMuro').hidden=!doc;
+        var dentro=Aula.enSala;
+        $('zona').hidden=!dentro;
+        $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de jugar, di tu nombre';
+        $('puerta').querySelector('p').hidden = dentro;
+        if(dentro) pinta();
+      } });
+  }else{ $('zona').hidden=false; }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrará tu avance en los seis retos.',
+    hecho:function(){ G={}; festejado=false; pi=0; pinta(); }
+  });
+
+  pinta();
+})();
+</script>
+
+</body>
+</html>
