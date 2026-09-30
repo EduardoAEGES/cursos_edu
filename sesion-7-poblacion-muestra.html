@@ -101,6 +101,13 @@
   .zona .ficha.bien{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
   .zona .ficha.malo{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
 
+  .chips{ display:flex; gap:7px; flex-wrap:wrap; margin-bottom:11px; }
+  .chips button{ font:inherit; font-size:12.5px; font-weight:600; cursor:pointer;
+                 border:1px solid var(--o-border); background:#fff; color:#41505F;
+                 border-radius:999px; padding:6px 13px; }
+  .chips button:hover{ border-color:var(--azul); color:var(--azul); }
+  .chips button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+
   /* parejas */
   .par{ display:grid; grid-template-columns:1fr; gap:10px; }
   @media (min-width:640px){ .par{ grid-template-columns:auto 1fr; align-items:start; } }
@@ -203,7 +210,7 @@
   .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
                color:var(--o-muted); padding:2px 0; }
   .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
-  .vmini .rej{ display:grid; grid-template-columns:repeat(6,1fr); gap:4px; margin-top:7px; }
+  .vmini .rej{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:7px; }
   .vmini .cel2{ border:1px solid var(--o-border); border-radius:6px; padding:4px 2px;
                 text-align:center; font-size:10px; color:var(--o-muted); background:#FAFBFC; }
   .vmini .cel2 b{ display:block; font-size:12px; color:#1F5FA8; }
@@ -606,31 +613,70 @@
     }
   };
 
-  /* ===================== RETO 3 · quinquenios ===================== */
+  /* ===================== RETO 3 · tu N en el INEI ===================== */
+  var OFICIALES=[
+    ['Censos Nacionales 2025 · resultados','Población total por departamento, provincia y distrito.','https://censos2025.inei.gob.pe/resultados'],
+    ['INEI · población de Arequipa 2025','El dato oficial: 1 millón 815 mil habitantes en la región.','https://www.gob.pe/institucion/inei/noticias/1420177-censos-nacionales-2025-poblacion-total-de-arequipa-alcanza-1-millon-815-mil-habitantes'],
+    ['Estimaciones y proyecciones de población','Colección nacional, departamental, provincial y distrital.','https://www.gob.pe/institucion/inei/colecciones/71202-estimaciones-y-proyecciones-de-poblacion-nacional-departamental-provincial-y-distrital'],
+    ['Estimaciones y proyecciones · Tomo I','Tablas de población por edad y por distrito.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1544/00TOMO_01.pdf'],
+    ['Población y vivienda · índice temático','Acceso a los cuadros estadísticos de población.','https://www.inei.gob.pe/estadisticas/indice-tematico/poblacion-y-vivienda/'],
+    ['Arequipa · Compendio Estadístico 2025','Cuadros de población por edad y sexo de la región.','https://www.gob.pe/institucion/inei/informes-publicaciones/7662976-arequipa-compendio-estadistico-2025'],
+    ['Arequipa · Compendio Estadístico 2024','La edición anterior, útil para comparar.','https://www.gob.pe/institucion/inei/informes-publicaciones/6453267-compendio-estadistico-arequipa-2024'],
+    ['ENDES 2024 · Arequipa','Estructura de la población por edad.','https://proyectos.inei.gob.pe/endes/2024/departamentales/Endes04/pdf/Arequipa.pdf'],
+    ['ENDES 2023 · Arequipa','La edición anterior de la misma encuesta.','https://proyectos.inei.gob.pe/endes/2023/departamentales/Endes04/pdf/Arequipa.pdf'],
+    ['Crecimiento y distribución de la población 2017','Incluye cuadros por distrito, por ejemplo Cayma.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1673/libro.pdf'],
+    ['Indicadores demográficos 1995–2030 · Arequipa','Indicadores por grupos de cinco años.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1723/cap03.html']
+  ];
+  var COMPLEMENTARIAS=[
+    ['Radiografía de la juventud peruana 2026','Arequipa Misti Press · análisis de la población juvenil por distrito.','https://arequipamistipress.com/2026/09/18/cual-es-la-radiografia-de-la-situacion-de-la-juventud-peruana-al-ano-2026/'],
+    ['Población de Cayma 2021','Telencuestas, con base en el INEI · datos del distrito.','https://telencuestas.com/censos-de-poblacion/peru/2021/arequipa/arequipa/cayma']
+  ];
+  function listaEnlaces(a){
+    return '<div class="enlaces">'+a.map(function(f){
+      return '<a href="'+esc(f[2])+'" target="_blank" rel="noopener"><span class="ic">🔗</span>'+
+             '<span><span class="nm">'+esc(f[0])+'</span><br><span class="ds">'+esc(f[1])+'</span></span></a>';
+    }).join('')+'</div>';
+  }
+
   var QUIN=[
-    { g:'15 – 19', p:9000, f:'2/5', v:3600, por:'De este grupo solo entran los de 18 y 19: dos de las cinco edades.' },
-    { g:'20 – 24', p:9500, f:'todo', v:9500, por:'Todas estas edades están dentro de 18 a 30.' },
-    { g:'25 – 29', p:8500, f:'todo', v:8500, por:'Igual: el grupo entero cae dentro del rango.' },
-    { g:'30 – 34', p:8000, f:'1/5',  v:1600, por:'Solo los de 30 años: una de las cinco edades.' }
+    { g:'15 – 19', p:9000, f:'2/5', v:3600 },
+    { g:'20 – 24', p:9500, f:'todo', v:9500 },
+    { g:'25 – 29', p:8500, f:'todo', v:8500 },
+    { g:'30 – 34', p:8000, f:'1/5',  v:1600 }
   ];
   var FRAC=[['nada','nada (0)'],['1/5','1 de cada 5'],['2/5','2 de cada 5'],['3/5','3 de cada 5'],['todo','todo el grupo']];
+  var MIOS=[
+    ['dist','Mi distrito o distritos','Por ejemplo: Cayma y Alto Selva Alegre'],
+    ['edad','Rango de edad de mi público','Por ejemplo: de 18 a 30 años'],
+    ['N','Población de ese rango (N)','El número que sumaste'],
+    ['fuente','Fuente (INEI, tabla, año)','INEI, Censos Nacionales 2025…']
+  ];
   var R3={
-    id:'r3', pest:'3 · Quinquenios',
+    id:'r3', pest:'3 · Tu N en el INEI',
     dibuja:function(){
       var st=G.r3||{};
-      var h = caja('teo','Tu población está en el INEI','Paso 2 del laboratorio',
-        '<p>El INEI publica cuántas personas viven en cada distrito y de qué edad. Tu <b>N</b> sale de '+
-        'sumar solo las edades de tu público, en tus distritos.</p>'+
-        '<ol class="lista"><li>Elige tu distrito o distritos.</li>'+
-        '<li>Busca la población por edad de ese distrito.</li>'+
-        '<li>Suma solo las edades de tu público. Ese total es tu <b>N</b>.</li></ol>'+
-        '<div class="pista"><b>El truco de los quinquenios.</b> A veces el INEI no da la edad exacta, '+
-        'sino grupos de cinco años. Si tu público va de 18 a 30, de un grupo que va de 15 a 19 solo te '+
-        'sirven dos edades (18 y 19): tomas <b>2 de cada 5</b>. De un grupo que va de 30 a 34 solo te '+
-        'sirve una (30): tomas <b>1 de cada 5</b>. Los grupos que caen enteros dentro del rango se '+
-        'toman completos.</div>');
+      var h = caja('teo','Paso 2 · Encuentra tu población (N)','Tiempo sugerido: 30 minutos',
+        '<p>El INEI publica cuántas personas viven en cada distrito y de qué edad. Ahí está tu '+
+        'población. Se hace en tres pasos:</p>'+
+        '<div class="envuelve"><table class="hoja"><tbody>'+
+        '<tr><td style="width:34px"><b>1</b></td><td>Elige tu distrito o distritos (por ejemplo, Cayma y Alto Selva Alegre).</td></tr>'+
+        '<tr><td><b>2</b></td><td>Busca la población por edad de ese distrito (edad simple o grupos quinquenales).</td></tr>'+
+        '<tr><td><b>3</b></td><td>Suma solo las edades de tu público. Ese total es tu población <b>N</b>.</td></tr>'+
+        '</tbody></table></div>');
 
-      h += caja('reto','Reto 3 · Cayma, jóvenes de 18 a 30','Elige cuánto tomas de cada grupo',
+      h += caja('teo','¿Dónde buscar?','Fuentes oficiales del INEI',
+        '<p>Haz clic en cada enlace o cópialo en el navegador. Con estas páginas obtienes la '+
+        '<b>población total por distrito</b> y la <b>población por edad</b>, que es lo que necesitas.</p>'+
+        listaEnlaces(OFICIALES)+
+        '<p style="margin:14px 0 8px"><b>Otras fuentes complementarias</b> · sirven para contrastar; '+
+        'en el informe cita siempre el dato del INEI.</p>'+
+        listaEnlaces(COMPLEMENTARIAS));
+
+      h += caja('reto','Reto 3 · El truco de los quinquenios','Cayma, jóvenes de 18 a 30',
+        '<div class="pista" style="margin:0 0 11px"><b>Si solo hay grupos de cinco años.</b> A veces el '+
+        'INEI no da la edad exacta, sino grupos. Para un público de 18 a 30: del grupo 15–19 tomas '+
+        '<b>2 de cada 5</b> (los de 18 y 19); los grupos 20–24 y 25–29 entran <b>completos</b>; '+
+        'del grupo 30–34 tomas <b>1 de cada 5</b> (solo los de 30).</div>'+
         '<div class="envuelve"><table class="hoja"><thead><tr>'+
         '<th>Grupo del INEI</th><th class="n">Personas</th><th>Cuánto tomo</th><th class="n">Entran</th>'+
         '</tr></thead><tbody>'+
@@ -650,50 +696,69 @@
         '</tbody></table></div>'+
         '<div class="marcador" id="r3mar"></div>'+
         '<p class="aviso">Después se hace lo mismo con los otros distritos y se suman. En el ejemplo del '+
-        'laboratorio, Cayma más Alto Selva Alegre daban <b>N ≈ 45 000</b> jóvenes.</p>'+
-        '<div class="pista"><b>Anota siempre la fuente.</b> Va como nota debajo de tu tabla: «INEI, '+
-        'Censos Nacionales 2025 y Estimaciones y proyecciones de población, 2026. Distritos de Cayma y '+
-        'Alto Selva Alegre, población de 18 a 30 años».</div>');
+        'laboratorio, Cayma más Alto Selva Alegre daban <b>N ≈ 45 000</b> jóvenes.</p>');
+
+      h += caja('reto','Actividad · La población de TU proyecto','Se guarda solo',
+        '<div class="paso-c">'+
+        MIOS.map(function(m){
+          return '<div class="linea"><span class="et">'+esc(m[1])+'</span>'+
+            '<input class="cel" style="width:260px;text-align:left" data-mio="'+m[0]+'" '+
+            'value="'+esc(st['m'+m[0]]||'')+'" placeholder="'+esc(m[2])+'"></div>';
+        }).join('')+
+        '</div>'+
+        '<div class="pista" style="margin-top:11px"><b>Anota siempre de dónde salió el número.</b> '+
+        'Va como nota debajo de tu tabla en el informe: «INEI, Censos Nacionales 2025 y Estimaciones y '+
+        'proyecciones de población, 2026. Distritos de Cayma y Alto Selva Alegre, población de 18 a 30 años».</div>'+
+        '<div class="marcador" id="r3mio"></div>');
+
+      h += caja('teo','Cómo quedó en los dos ejemplos','',
+        '<div class="envuelve"><table class="hoja"><thead><tr><th></th>'+
+        '<th>Ejemplo 1 · shampoo sólido</th><th>Ejemplo 2 · mochilas de lona</th></tr></thead><tbody>'+
+        '<tr><td><b>Fuente</b></td><td>INEI, población de 18 a 40 años del Cercado, Yanahuara y Cayma.</td>'+
+        '<td>Número de estudiantes matriculados en institutos y universidades del Cercado.</td></tr>'+
+        '<tr><td><b>Población (N)</b></td><td>90 000 personas.</td><td>15 000 estudiantes.</td></tr>'+
+        '</tbody></table></div>');
       return h;
     },
     cablea:function(){
       var st=G.r3||(G.r3={});
       var FR={ nada:0, '1/5':0.2, '2/5':0.4, '3/5':0.6, todo:1 };
       function pinta(){
-        var suma=0, todas=true, bienTodas=true;
+        var todas=true, bienTodas=true;
         QUIN.forEach(function(k,i){
-          var f=st['f'+i];
-          var celda=$('r3v'+i);
+          var f=st['f'+i], celda=$('r3v'+i);
           if(!f){ celda.textContent='—'; todas=false; bienTodas=false; return; }
           var v=Math.round(k.p*FR[f]);
           celda.textContent=miles(v,0);
-          celda.style.color = (f===k.f) ? '#14532D' : '#B42318';
+          celda.style.color=(f===k.f)?'#14532D':'#B42318';
           celda.style.fontWeight='700';
-          suma+=v;
           if(f!==k.f) bienTodas=false;
         });
-        var sub=lee($('r3sub').value);
-        var inp=$('r3sub');
+        var sub=lee($('r3sub').value), inp=$('r3sub');
         inp.classList.remove('ok','mal');
-        if(sub!==null && !isNaN(sub)) inp.classList.add(Math.abs(sub-23200)<0.5 ? 'ok' : 'mal');
-        var m=$('r3mar');
-        var ok = bienTodas && sub!==null && Math.abs(sub-23200)<0.5;
+        if(sub!==null && !isNaN(sub)) inp.classList.add(Math.abs(sub-23200)<0.5?'ok':'mal');
+        var m=$('r3mar'), ok=bienTodas && sub!==null && Math.abs(sub-23200)<0.5;
         m.className='marcador'+(ok?' ok':(todas?' no':''));
-        m.innerHTML = ok
-          ? 'Correcto: en Cayma hay <b>23 200</b> jóvenes de 18 a 30 años.'
-          : (todas
-             ? 'Todavía no. Revisa los grupos marcados en rojo; la suma de la columna «Entran» es el subtotal.'
-             : 'Elige cuánto tomas de cada grupo y escribe el subtotal.');
+        m.innerHTML = ok ? 'Correcto: en Cayma hay <b>23 200</b> jóvenes de 18 a 30 años.'
+          : (todas ? 'Todavía no. Revisa los grupos en rojo; la suma de la columna «Entran» es el subtotal.'
+                   : 'Elige cuánto tomas de cada grupo y escribe el subtotal.');
+        var llenos=MIOS.filter(function(x){ return String(st['m'+x[0]]||'').trim().length>=2; }).length;
+        var mm=$('r3mio');
+        mm.className='marcador'+(llenos===MIOS.length?' ok':'');
+        mm.textContent = llenos===MIOS.length
+          ? 'Listo: ya tienes tu N y su fuente. Llévalo al reto 5 para calcular tu muestra.'
+          : llenos+' de '+MIOS.length+' datos anotados.';
       }
-      qq('select.cel[data-q]').forEach(function(s){
-        s.addEventListener('change', function(){
-          st['f'+s.dataset.q]=s.value; graba();
-          if(s.value===QUIN[+s.dataset.q].f) bien(); else if(s.value) mal();
+      qq('select.cel[data-q]').forEach(function(sel){
+        sel.addEventListener('change', function(){
+          st['f'+sel.dataset.q]=sel.value; graba();
+          if(sel.value===QUIN[+sel.dataset.q].f) bien(); else if(sel.value) mal();
           pinta(); refresca();
         });
       });
-      $('r3sub').addEventListener('input', function(){
-        st.sub=$('r3sub').value; graba(); pinta(); refresca();
+      $('r3sub').addEventListener('input', function(){ st.sub=$('r3sub').value; graba(); pinta(); refresca(); });
+      qq('input[data-mio]').forEach(function(i){
+        i.addEventListener('input', function(){ st['m'+i.dataset.mio]=i.value; graba(); pinta(); refresca(); });
       });
       pinta();
     },
@@ -701,43 +766,62 @@
       var st=G.r3||{};
       var todas=QUIN.every(function(k,i){ return st['f'+i]===k.f; });
       var sub=lee(st.sub);
-      return todas && sub!==null && !isNaN(sub) && Math.abs(sub-23200)<0.5;
+      var mios=MIOS.every(function(x){ return String(st['m'+x[0]]||'').trim().length>=2; });
+      return todas && sub!==null && !isNaN(sub) && Math.abs(sub-23200)<0.5 && mios;
     }
   };
 
-  /* ===================== RETO 4 · armar la fórmula ===================== */
-  var PIEZAS=[
-    { id:'p1', t:'N',      h:'h1' },
-    { id:'p2', t:'Z²',     h:'h2' },
-    { id:'p3', t:'p × q',  h:'h3' },
-    { id:'p4', t:'e²',     h:'h4' },
-    { id:'p5', t:'N − 1',  h:'h5' },
-    { id:'p6', t:'Z² × p × q', h:'h6' }
-  ];
+  /* ===================== RETO 4 · armar las dos fórmulas ===================== */
+  var FORMULAS={
+    prop:{ n:'Proporción', sub:'Cuando lo que mides es un porcentaje: cuántos comprarían, qué parte prefiere algo.',
+      piezas:[ {id:'a1',t:'N',h:'h1'}, {id:'a2',t:'Z²',h:'h2'}, {id:'a3',t:'p × q',h:'h3'},
+               {id:'a4',t:'e²',h:'h4'}, {id:'a5',t:'N − 1',h:'h5'}, {id:'a6',t:'Z² × p × q',h:'h6'} ] },
+    media:{ n:'Media', sub:'Cuando lo que mides es un promedio: cuánto gasta, cuántas veces compra, cuánto pagaría.',
+      piezas:[ {id:'b1',t:'N',h:'h1'}, {id:'b2',t:'Z²',h:'h2'}, {id:'b3',t:'σ²',h:'h3'},
+               {id:'b4',t:'e²',h:'h4'}, {id:'b5',t:'N − 1',h:'h5'}, {id:'b6',t:'Z² × σ²',h:'h6'} ] }
+  };
   var R4={
-    id:'r4', pest:'4 · La fórmula',
+    id:'r4', pest:'4 · Las fórmulas',
     dibuja:function(){
       var st=G.r4||{};
+      var cual=G.r4cual||'prop';
+      var F=FORMULAS[cual], piezas=F.piezas;
       var puestas={};
-      Object.keys(st).forEach(function(k){ puestas[st[k]]=k; });
-      var sueltas=PIEZAS.filter(function(p){ return !st[p.id]; });
+      piezas.forEach(function(p){ if(st[p.id]) puestas[st[p.id]]=p.id; });
+      var sueltas=piezas.filter(function(p){ return !st[p.id]; });
       function hueco(id){
         var pid=puestas[id];
         if(!pid) return '<span class="hueco" data-z="'+id+'">?</span>';
-        var p=PIEZAS.filter(function(x){ return x.id===pid; })[0];
-        var ok=p.h===id;
-        return '<span class="hueco '+(ok?'lleno':'malo')+'" data-z="'+id+'" data-quita="'+pid+'">'+
+        var p=piezas.filter(function(x){ return x.id===pid; })[0];
+        return '<span class="hueco '+(p.h===id?'lleno':'malo')+'" data-z="'+id+'" data-quita="'+pid+'">'+
                esc(p.t)+'</span>';
       }
-      var h = caja('teo','La fórmula cuando conoces tu población','Paso 3 del laboratorio',
-        '<div class="formula" style="white-space:normal">'+
-        'n = ( <b>N</b> × <b>Z²</b> × <b>p</b> × <b>q</b> ) ÷ [ <b>e²</b> × ( <b>N − 1</b> ) + <b>Z²</b> × <b>p</b> × <b>q</b> ]'+
-        '</div>'+
-        '<p style="margin-top:10px">Arriba multiplicas tu población por el «peso» de la confianza. '+
-        'Abajo corriges por el tamaño de esa población: cuanto más grande es N, menos pesa el ajuste, '+
-        'y por eso la muestra deja de crecer.</p>');
+      var h = caja('teo','Dos fórmulas, la misma forma','Población conocida',
+        '<p>Cuál usas depende de <b>qué vas a medir</b>. Si preguntas «¿compraría usted?» y vas a '+
+        'informar un <b>porcentaje</b>, es la de proporción. Si preguntas «¿cuánto gasta al mes?» y vas '+
+        'a informar un <b>promedio</b>, es la de media. Todo lo demás es igual: arriba multiplicas tu '+
+        'población, abajo corriges por su tamaño.</p>'+
+        '<div class="envuelve"><table class="hoja"><thead><tr><th>Mides…</th><th>Fórmula</th>'+
+        '<th>Lo que cambia</th></tr></thead><tbody>'+
+        '<tr><td><b>Un porcentaje</b><br><span style="font-size:12px;color:#6B7785">intención de compra, preferencia</span></td>'+
+        '<td><code>n = (N × Z² × p × q) ÷ [e² × (N − 1) + Z² × p × q]</code></td>'+
+        '<td>Usa <b>p × q</b> = 0.5 × 0.5 = 0.25</td></tr>'+
+        '<tr><td><b>Un promedio</b><br><span style="font-size:12px;color:#6B7785">gasto, frecuencia, precio</span></td>'+
+        '<td><code>n = (N × Z² × σ²) ÷ [e² × (N − 1) + Z² × σ²]</code></td>'+
+        '<td>Usa <b>σ²</b>, la varianza, y el error <b>e</b> va en soles, no en decimal</td></tr>'+
+        '</tbody></table></div>'+
+        '<div class="pista"><b>El detalle que más confunde.</b> En proporción el error se escribe en '+
+        'decimal (±5 % → <code>e = 0.05</code>). En media se escribe en las mismas unidades que mides '+
+        '(±S/ 10 → <code>e = 10</code>).</div>');
 
-      h += caja('reto','Reto 4 · Arma la fórmula','Arrastra cada pieza a su hueco',
+      h += caja('reto','Reto 4 · Arma las dos fórmulas','Arrastra cada pieza a su hueco',
+        '<div class="chips" id="r4chips">'+
+          Object.keys(FORMULAS).map(function(k){
+            return '<button type="button" data-c="'+k+'" class="'+(k===cual?'on':'')+'">'+
+                   esc(FORMULAS[k].n)+'</button>';
+          }).join('')+
+        '</div>'+
+        '<p class="aviso" style="margin:0 0 10px">'+esc(F.sub)+'</p>'+
         '<div class="fichero'+(sueltas.length?'':' vacio')+'">'+
           baraja(sueltas).map(function(p){
             return '<div class="ficha mini" data-f="'+p.id+'">'+esc(p.t)+'</div>';
@@ -746,23 +830,32 @@
         '<div class="formula" style="margin-top:12px">n = ( '+hueco('h1')+' × '+hueco('h2')+' × '+
         hueco('h3')+' ) ÷ [ '+hueco('h4')+' × ( '+hueco('h5')+' ) + '+hueco('h6')+' ]</div>'+
         '<div class="marcador" id="r4mar"></div>'+
-        '<p class="aviso">Toca una pieza ya colocada para devolverla al montón.</p>');
+        '<p class="aviso">Toca una pieza ya colocada para devolverla al montón. Hay que armar las dos.</p>');
       return h;
     },
     cablea:function(){
       var st=G.r4||(G.r4={});
+      var cual=G.r4cual||'prop';
+      var piezas=FORMULAS[cual].piezas;
       function marca(){
         var n=0, b2=0;
-        PIEZAS.forEach(function(p){ if(st[p.id]){ n++; if(st[p.id]===p.h) b2++; } });
+        piezas.forEach(function(p){ if(st[p.id]){ n++; if(st[p.id]===p.h) b2++; } });
+        var otra = (cual==='prop') ? 'media' : 'prop';
+        var listaOtra=FORMULAS[otra].piezas.every(function(p){ return st[p.id]===p.h; });
         var m=$('r4mar');
-        m.className='marcador'+(b2===PIEZAS.length?' ok':(n===PIEZAS.length?' no':''));
-        m.textContent = b2===PIEZAS.length ? 'La fórmula quedó completa y correcta.'
-          : n+' de '+PIEZAS.length+' piezas puestas · '+b2+' en su sitio.';
+        m.className='marcador'+(b2===piezas.length?' ok':(n===piezas.length?' no':''));
+        m.textContent = (b2===piezas.length)
+          ? ('La fórmula de '+FORMULAS[cual].n.toLowerCase()+' quedó correcta.'+
+             (listaOtra?' ¡Y la otra también!':' Ahora arma la de '+FORMULAS[otra].n.toLowerCase()+'.'))
+          : n+' de '+piezas.length+' piezas puestas · '+b2+' en su sitio.';
       }
+      qq('#r4chips button[data-c]').forEach(function(b){
+        b.addEventListener('click', function(){ G.r4cual=b.dataset.c; graba(); R4.repinta(); });
+      });
       arrastre($('panel'), function(id, z){
-        Object.keys(st).forEach(function(k){ if(st[k]===z) delete st[k]; });
+        piezas.forEach(function(p){ if(st[p.id]===z) delete st[p.id]; });
         st[id]=z; graba();
-        var p=PIEZAS.filter(function(x){ return x.id===id; })[0];
+        var p=piezas.filter(function(x){ return x.id===id; })[0];
         if(p && p.h===z) bien(); else mal();
         R4.repinta();
       });
@@ -776,97 +869,292 @@
     },
     hecho:function(){
       var st=G.r4||{};
-      return PIEZAS.every(function(p){ return st[p.id]===p.h; });
+      return Object.keys(FORMULAS).every(function(k){
+        return FORMULAS[k].piezas.every(function(p){ return st[p.id]===p.h; });
+      });
     }
   };
 
-  /* ===================== RETO 5 · calcula ===================== */
-  function muestra(N){
-    var arriba = N*0.9604;
-    var abajo  = 0.0025*(N-1)+0.9604;
-    return { arriba:arriba, abajo:abajo, n:Math.ceil(arriba/abajo) };
+  /* ============ cálculo de n por partes: motor compartido ============ */
+  var Z2=3.8416;                       /* 1.96² */
+  function cuentaProp(N, e){
+    var zpq=Z2*0.25, e2=e*e;
+    var arriba=N*zpq, abajo=e2*(N-1)+zpq;
+    return { z2:Z2, zpq:zpq, e2:e2, arriba:arriba, abajo:abajo, n:Math.ceil(arriba/abajo) };
   }
-  var R5={
-    id:'r5', pest:'5 · Calcula n',
+  function cuentaMedia(N, s, e){
+    var s2=s*s, zs2=Z2*s2, e2=e*e;
+    var arriba=N*zs2, abajo=e2*(N-1)+zs2;
+    return { z2:Z2, s2:s2, zs2:zs2, e2:e2, arriba:arriba, abajo:abajo, n:Math.ceil(arriba/abajo) };
+  }
+  function cerca(v, esp){
+    if(v===null||isNaN(v)) return false;
+    return Math.abs(v-esp) <= Math.max(0.5, Math.abs(esp)*0.0006);
+  }
+
+  function motorPartes(cfg){
+    return {
+      id:cfg.id, pest:cfg.pest,
+      dibuja:function(){
+        var st=G[cfg.id]||{};
+        var ci=G[cfg.id+'c']||0;
+        if(ci>=cfg.casos.length) ci=0;
+        var c=cfg.casos[ci], r=cfg.cuenta(c), pasos=cfg.pasos(c, r, ci);
+        var h = caja('teo', cfg.titulo, cfg.cola, cfg.teoria);
+        h += caja('reto', cfg.reto, 'Elige el caso y resuelve paso a paso',
+          '<div class="chips" id="pchips">'+cfg.casos.map(function(x,i){
+            var todo=(st[i]||{}), ok=cfg.pasos(x, cfg.cuenta(x), i).every(function(pz){
+              return cerca(lee(todo[pz.k]), pz.v); });
+            return '<button type="button" data-c="'+i+'" class="'+(i===ci?'on':'')+'">'+
+                   esc(x.t)+(ok?' ✓':'')+'</button>';
+          }).join('')+'</div>'+
+          '<div class="enun" style="border:1px solid var(--o-border);border-left:4px solid var(--azul);'+
+          'border-radius:9px;padding:10px 13px;background:#F7FAFD;margin-bottom:12px;font-size:13px;'+
+          'line-height:1.6">'+c.d+'</div>'+
+          '<div class="paso-c">'+pasos.map(function(pz,j){
+            return '<div class="linea"><span class="et"><b>'+(j+1)+'.</b> '+pz.t+'</span>'+
+              '<input class="cel" data-p="'+pz.k+'" inputmode="decimal" value="'+
+              esc((st[ci]||{})[pz.k]||'')+'" placeholder="?"></div>';
+          }).join('')+'</div>'+
+          '<div class="marcador" id="pmar"></div>'+
+          '<div class="acc"><button type="button" class="o-btn" id="ppista">Ver una pista</button></div>'+
+          '<p class="aviso" id="ptexto"></p>');
+        return h;
+      },
+      cablea:function(){
+        var st=G[cfg.id]||(G[cfg.id]={});
+        var ci=G[cfg.id+'c']||0;
+        if(ci>=cfg.casos.length) ci=0;
+        var c=cfg.casos[ci], r=cfg.cuenta(c), pasos=cfg.pasos(c, r, ci);
+        if(!st[ci]) st[ci]={};
+        function pinta(){
+          var ok=0;
+          pasos.forEach(function(pz){
+            var inp=document.querySelector('input.cel[data-p="'+pz.k+'"]');
+            if(!inp) return;
+            var v=lee(inp.value);
+            inp.classList.remove('ok','mal');
+            if(v===null||isNaN(v)) return;
+            if(cerca(v, pz.v)){ inp.classList.add('ok'); ok++; }
+            else inp.classList.add('mal');
+          });
+          var m=$('pmar');
+          m.className='marcador'+(ok===pasos.length?' ok':'');
+          m.innerHTML = ok===pasos.length
+            ? 'Correcto: para este caso hacen falta <b>'+miles(r.n,0)+' encuestas</b>.'
+            : ok+' de '+pasos.length+' pasos bien.';
+        }
+        qq('#pchips button[data-c]').forEach(function(b){
+          b.addEventListener('click', function(){ G[cfg.id+'c']=+b.dataset.c; graba(); RETOS_repinta(cfg.id); });
+        });
+        qq('input.cel[data-p]').forEach(function(inp){
+          inp.addEventListener('input', function(){
+            st[ci][inp.dataset.p]=inp.value; graba(); pinta(); refresca();
+          });
+        });
+        $('ppista').addEventListener('click', function(){
+          var falta=null;
+          pasos.forEach(function(pz){
+            if(falta) return;
+            var inp=document.querySelector('input.cel[data-p="'+pz.k+'"]');
+            if(!cerca(lee(inp.value), pz.v)) falta=pz;
+          });
+          $('ptexto').innerHTML = falta
+            ? '<b>Paso «'+falta.t.replace(/<[^>]+>/g,'')+'»:</b> '+falta.ayuda
+            : 'No queda nada por resolver en este caso.';
+          toma();
+        });
+        pinta();
+      },
+      hecho:function(){
+        var st=G[cfg.id]||{};
+        return cfg.casos.every(function(c,i){
+          var mio=st[i]||{};
+          return cfg.pasos(c, cfg.cuenta(c), i).every(function(pz){ return cerca(lee(mio[pz.k]), pz.v); });
+        });
+      }
+    };
+  }
+
+  /* ===================== RETO 5 · n por partes, proporción ===================== */
+  var CASOS_P=[
+    { t:'Shampoo · 90 000', N:90000, e:0.05,
+      d:'<b>Ejemplo 1 del laboratorio.</b> Personas de 18 a 40 años del Cercado, Yanahuara y Cayma: '+
+        '<b>N = 90 000</b>. Se mide la <b>intención de compra</b>, o sea un porcentaje. '+
+        'Z = 1.96 (95 %), p = 0.5, q = 0.5, e = 0.05 (±5 %).' },
+    { t:'Mochilas · 15 000', N:15000, e:0.05,
+      d:'<b>Ejemplo 2 del laboratorio.</b> Estudiantes de institutos y universidades del Cercado: '+
+        '<b>N = 15 000</b>. Mismos valores: Z = 1.96, p = q = 0.5, e = 0.05.' },
+    { t:'Barrio · 2 400', N:2400, e:0.05,
+      d:'Una junta vecinal de <b>N = 2 400</b> familias. Con una población chica el ajuste pesa más y '+
+        'la muestra baja. Z = 1.96, p = q = 0.5, e = 0.05.' },
+    { t:'Región · 500 000', N:500000, e:0.05,
+      d:'Toda la provincia: <b>N = 500 000</b>. Fíjate en que la muestra casi no crece respecto al '+
+        'primer caso: por eso el atajo del laboratorio dice «cerca de 384».' }
+  ];
+  var R5=motorPartes({
+    id:'r5', pest:'5 · n por partes · proporción',
+    titulo:'Paso 3 · La muestra cuando mides un porcentaje', cola:'Tiempo sugerido: 25 minutos',
+    teoria:'<div class="formula" style="white-space:normal">n = ( N × Z² × p × q ) ÷ [ e² × ( N − 1 ) + Z² × p × q ]</div>'+
+      '<div class="envuelve" style="margin-top:11px"><table class="hoja"><thead><tr>'+
+      '<th>Símbolo</th><th>Qué es</th><th>Valor que usas</th></tr></thead><tbody>'+
+      '<tr><td><b>N</b></td><td>Tu población (paso 2).</td><td>El número que encontraste.</td></tr>'+
+      '<tr><td><b>Z</b></td><td>Nivel de confianza.</td><td>95 % → 1.96 · Z² = 3.8416</td></tr>'+
+      '<tr><td><b>p y q</b></td><td>Proporción esperada y su contrario.</td><td>0.5 y 0.5 → p × q = 0.25</td></tr>'+
+      '<tr><td><b>e</b></td><td>Margen de error que aceptas.</td><td>±5 % → 0.05 · e² = 0.0025</td></tr>'+
+      '</tbody></table></div>'+
+      '<div class="pista"><b>Atajo para comprobar.</b> Al 95 % y ±5 %, cuando la población pasa de '+
+      '20 000 la muestra queda cerca de <b>384</b>. Si te sale muy lejos, revisa la cuenta.</div>',
+    reto:'Reto 5 · Calcula n por partes',
+    casos:CASOS_P,
+    cuenta:function(c){ return cuentaProp(c.N, c.e); },
+    pasos:function(c, r, i){
+      var base=[
+        { k:'arriba', v:r.arriba, t:'Arriba: <code>N × 0.9604</code>',
+          ayuda:'Multiplica tu población '+miles(c.N,0)+' por 0.9604, que es Z² × p × q.' },
+        { k:'abajo', v:r.abajo, t:'Abajo: <code>0.0025 × (N − 1) + 0.9604</code>',
+          ayuda:'Primero 0.0025 × '+miles(c.N-1,0)+', y a ese resultado le sumas 0.9604.' },
+        { k:'n', v:r.n, t:'n = arriba ÷ abajo, <b>redondeado hacia arriba</b>',
+          ayuda:'Divide y sube al entero siguiente: aunque salga '+miles(r.arriba/r.abajo,2)+', se encuesta a '+miles(r.n,0)+'.' }
+      ];
+      if(i!==0) return base;
+      return [
+        { k:'z2', v:r.z2, t:'Z² · el cuadrado de 1.96',
+          ayuda:'1.96 × 1.96. Sale un número un poco menor que 4.' },
+        { k:'zpq', v:r.zpq, t:'Z² × p × q',
+          ayuda:'Toma el Z² del paso anterior y multiplícalo por 0.5 y otra vez por 0.5, o sea por 0.25.' }
+      ].concat(base);
+    }
+  });
+
+  /* ===================== RETO 6 · n por partes, media ===================== */
+  var CASOS_M=[
+    { t:'Gasto en bebidas · 5 000', N:5000, s:80, e:10,
+      d:'FreshUp quiere estimar el <b>gasto promedio mensual</b> de sus clientes en bebidas. '+
+        '<b>N = 5 000</b> clientes, desviación estándar estimada <b>σ = S/ 80</b> y margen de error '+
+        '<b>e = S/ 10</b>, al 95 % de confianza.' },
+    { t:'Cuota de socios · 1 200', N:1200, s:45, e:6,
+      d:'Un club con <b>N = 1 200</b> socios quiere saber cuánto pagan al mes en promedio. De un '+
+        'estudio anterior, <b>σ = S/ 45</b>. Se acepta un error de <b>e = S/ 6</b>.' },
+    { t:'Ticket promedio · 20 000', N:20000, s:120, e:15,
+      d:'Una cadena con <b>N = 20 000</b> clientes registrados quiere estimar el ticket promedio. '+
+        'La prueba piloto dio <b>σ = S/ 120</b> y se acepta <b>e = S/ 15</b>.' }
+  ];
+  var R6=motorPartes({
+    id:'r6', pest:'6 · n por partes · media',
+    titulo:'Paso 3 bis · La muestra cuando mides un promedio', cola:'La otra mitad del muestreo',
+    teoria:'<p>Cuando la pregunta no es «¿cuántos comprarían?» sino «¿cuánto gasta?», el resultado ya no '+
+      'es un porcentaje sino un <b>promedio</b>. En vez de p × q se usa la <b>varianza σ²</b>, que sale '+
+      'de un estudio previo o de una prueba piloto.</p>'+
+      '<div class="formula" style="white-space:normal">n = ( N × Z² × σ² ) ÷ [ e² × ( N − 1 ) + Z² × σ² ]</div>'+
+      '<div class="envuelve" style="margin-top:11px"><table class="hoja"><thead><tr>'+
+      '<th>Símbolo</th><th>Qué es</th><th>Valor que usas</th></tr></thead><tbody>'+
+      '<tr><td><b>N</b></td><td>Tu población.</td><td>El número que encontraste.</td></tr>'+
+      '<tr><td><b>Z</b></td><td>Nivel de confianza.</td><td>95 % → 1.96 · Z² = 3.8416</td></tr>'+
+      '<tr><td><b>σ</b></td><td>Desviación estándar de la variable.</td><td>De un estudio previo o una prueba piloto.</td></tr>'+
+      '<tr><td><b>e</b></td><td>Margen de error.</td><td><b>En soles</b>, no en decimal: ±S/ 10 → e = 10.</td></tr>'+
+      '</tbody></table></div>'+
+      '<div class="pista"><b>El error más común.</b> Escribir <code>e = 0.05</code> en la fórmula de la '+
+      'media. Aquí el error va en las mismas unidades que mides: si estimas soles, el error es en soles.</div>',
+    reto:'Reto 6 · Calcula n por partes',
+    casos:CASOS_M,
+    cuenta:function(c){ return cuentaMedia(c.N, c.s, c.e); },
+    pasos:function(c, r, i){
+      var base=[
+        { k:'zs2', v:r.zs2, t:'Z² × σ² · <code>3.8416 × σ²</code>',
+          ayuda:'Primero σ² = '+miles(c.s,0)+' × '+miles(c.s,0)+', y ese resultado por 3.8416.' },
+        { k:'arriba', v:r.arriba, t:'Arriba: <code>N × (Z² × σ²)</code>',
+          ayuda:'Multiplica '+miles(c.N,0)+' por el valor del paso anterior. Sale un número grande.' },
+        { k:'abajo', v:r.abajo, t:'Abajo: <code>e² × (N − 1) + Z² × σ²</code>',
+          ayuda:'e² = '+miles(c.e*c.e,0)+'. Multiplícalo por '+miles(c.N-1,0)+' y súmale Z² × σ².' },
+        { k:'n', v:r.n, t:'n = arriba ÷ abajo, <b>redondeado hacia arriba</b>',
+          ayuda:'La división da '+miles(r.arriba/r.abajo,2)+', así que se encuesta a '+miles(r.n,0)+'.' }
+      ];
+      if(i!==0) return base;
+      return [
+        { k:'s2', v:r.s2, t:'σ² · el cuadrado de la desviación',
+          ayuda:miles(c.s,0)+' × '+miles(c.s,0)+'.' },
+        { k:'e2', v:r.e2, t:'e² · el cuadrado del margen de error',
+          ayuda:'Ojo: aquí el error va en soles, '+miles(c.e,0)+', no en decimal.' }
+      ].concat(base);
+    }
+  });
+
+  /* ===================== RETO 7 · calcula el tuyo ===================== */
+  var R7={
+    id:'r7', pest:'7 · Tu muestra',
     dibuja:function(){
-      var st=G.r5||{};
-      var h = caja('teo','Ejemplo resuelto · shampoo, N = 90 000','Paso a paso',
-        '<div class="envuelve"><table class="hoja"><tbody>'+
-        '<tr><td>1</td><td>Datos: N = 90 000 · Z = 1.96 · p = 0.5 · q = 0.5 · e = 0.05.</td></tr>'+
-        '<tr><td>2</td><td>Arriba: 90 000 × 1.96² × 0.5 × 0.5 = 90 000 × 0.9604 = <b>86 436</b></td></tr>'+
-        '<tr><td>3</td><td>Abajo: 0.05² × (90 000 − 1) + 0.9604 = 224.9975 + 0.9604 = <b>225.96</b></td></tr>'+
-        '<tr><td>4</td><td>n = 86 436 ÷ 225.96 = 382.5 → hacia arriba: <b>383 encuestas</b></td></tr>'+
-        '</tbody></table></div>'+
-        '<div class="pista"><b>Atajo para comprobar.</b> Al 95 % de confianza y ±5 % de error, cuando la '+
-        'población pasa de 20 000 la muestra casi siempre queda cerca de <b>384</b>. Si tu resultado sale '+
-        'muy lejos de ese número, revisa la cuenta.</div>');
-
-      h += caja('reto','Reto 5 · Hazlo con N = 15 000','El caso de las mochilas',
-        '<div class="paso-c">'+
-          '<div class="linea"><span class="et">Arriba: <code>N × 0.9604</code></span>'+
-            '<input class="cel" id="r5a" inputmode="decimal" value="'+esc(st.a||'')+'" placeholder="?"></div>'+
-          '<div class="linea"><span class="et">Abajo: <code>0.0025 × (N − 1) + 0.9604</code></span>'+
-            '<input class="cel" id="r5b" inputmode="decimal" value="'+esc(st.b||'')+'" placeholder="?"></div>'+
-          '<div class="linea"><span class="et">n = arriba ÷ abajo, <b>redondeado hacia arriba</b></span>'+
-            '<input class="cel" id="r5n" inputmode="numeric" value="'+esc(st.n||'')+'" placeholder="?"></div>'+
+      var st=G.r7||(G.r7={});
+      if(!st.N && G.r3 && G.r3.mN) { st.N=G.r3.mN; graba(); }
+      return caja('teo','Tu proyecto','Con la N que anotaste en el reto 3',
+        '<div class="chips" id="r7chips">'+
+          [['prop','Mido un porcentaje'],['media','Mido un promedio']].map(function(x){
+            return '<button type="button" data-t="'+x[0]+'" class="'+((st.tipo||'prop')===x[0]?'on':'')+'">'+
+                   esc(x[1])+'</button>'; }).join('')+
         '</div>'+
-        '<div class="marcador" id="r5mar"></div>');
-
-      h += caja('teo','Ahora con TU población','Calculadora del proyecto',
-        '<div class="linea"><span class="et">Escribe tu <b>N</b> y mira tu muestra</span>'+
-        '<input class="cel" id="r5N" inputmode="numeric" value="'+esc(st.N||'')+'" placeholder="Tu N"></div>'+
-        '<div class="envuelve" style="margin-top:10px"><table class="hoja" id="r5tab"><tbody></tbody></table></div>'+
-        '<p class="aviso">Este resultado es el que va en la sección 2.2.2 de tu informe, junto con la '+
-        'fuente del INEI.</p>');
-      return h;
+        '<div class="paso-c">'+
+          '<div class="linea"><span class="et">Tu población <b>N</b></span>'+
+            '<input class="cel" id="r7N" inputmode="numeric" value="'+esc(st.N||'')+'" placeholder="Tu N"></div>'+
+          '<div class="linea" id="r7lp"'+((st.tipo||'prop')==='prop'?'':' hidden')+'>'+
+            '<span class="et">Margen de error <b>e</b> · en decimal</span>'+
+            '<input class="cel" id="r7e" inputmode="decimal" value="'+esc(st.e||'0.05')+'"></div>'+
+          '<div class="linea" id="r7ls"'+((st.tipo||'prop')==='media'?'':' hidden')+'>'+
+            '<span class="et">Desviación <b>σ</b> · en soles</span>'+
+            '<input class="cel" id="r7s" inputmode="decimal" value="'+esc(st.s||'')+'" placeholder="80"></div>'+
+          '<div class="linea" id="r7lm"'+((st.tipo||'prop')==='media'?'':' hidden')+'>'+
+            '<span class="et">Margen de error <b>e</b> · en soles</span>'+
+            '<input class="cel" id="r7em" inputmode="decimal" value="'+esc(st.em||'')+'" placeholder="10"></div>'+
+        '</div>'+
+        '<div class="envuelve" style="margin-top:12px"><table class="hoja" id="r7tab"><tbody></tbody></table></div>'+
+        '<p class="aviso">Este es el número que va en tu sección 2.2.2, junto con la fuente del INEI '+
+        'que anotaste en el reto 3.</p>');
     },
     cablea:function(){
-      var st=G.r5||(G.r5={});
-      var e=muestra(15000);
-      function chk(id, esperado, dec){
-        var inp=$(id), v=lee(inp.value);
-        inp.classList.remove('ok','mal');
-        if(v===null||isNaN(v)) return false;
-        var ok=Math.abs(v-esperado) <= (dec||0.51);
-        inp.classList.add(ok?'ok':'mal');
-        return ok;
-      }
+      var st=G.r7||(G.r7={});
+      if(!st.tipo){ st.tipo='prop'; graba(); }
       function pinta(){
-        var a=chk('r5a', e.arriba, 1), b=chk('r5b', e.abajo, 0.05), n=chk('r5n', e.n, 0.4);
-        var m=$('r5mar');
-        var ok=a&&b&&n;
-        m.className='marcador'+(ok?' ok':'');
-        m.innerHTML = ok
-          ? 'Correcto: con N = 15 000 la muestra es de <b>375 encuestas</b>.'
-          : 'Arriba da '+miles(e.arriba,0)+' si multiplicas bien; abajo es un número pequeño, cerca de 38.';
-        var N=lee($('r5N').value), t=$('r5tab').querySelector('tbody');
+        var N=lee($('r7N').value), t=$('r7tab').querySelector('tbody');
+        $('r7lp').hidden = st.tipo!=='prop';
+        $('r7ls').hidden = st.tipo!=='media';
+        $('r7lm').hidden = st.tipo!=='media';
         if(N===null||isNaN(N)||N<2){
           t.innerHTML='<tr><td colspan="2" style="color:#6B7785">Escribe tu población para ver el cálculo.</td></tr>';
-        }else{
-          var r=muestra(N);
-          t.innerHTML=
-            '<tr><td>Arriba · N × 0.9604</td><td class="n">'+miles(r.arriba,2)+'</td></tr>'+
-            '<tr><td>Abajo · 0.0025 × (N − 1) + 0.9604</td><td class="n">'+miles(r.abajo,4)+'</td></tr>'+
-            '<tr class="tot"><td>Tu muestra (n)</td><td class="n">'+miles(r.n,0)+' encuestas</td></tr>';
+          return;
         }
+        var r, fil;
+        if(st.tipo==='prop'){
+          var e=lee($('r7e').value); if(e===null||isNaN(e)||e<=0) e=0.05;
+          r=cuentaProp(N, e);
+          fil=[['Z² × p × q', miles(r.zpq,4)], ['Arriba · N × Z² × p × q', miles(r.arriba,2)],
+               ['Abajo · e² × (N − 1) + Z² × p × q', miles(r.abajo,4)]];
+        }else{
+          var sg=lee($('r7s').value), em=lee($('r7em').value);
+          if(sg===null||isNaN(sg)||sg<=0 || em===null||isNaN(em)||em<=0){
+            t.innerHTML='<tr><td colspan="2" style="color:#6B7785">Escribe también la desviación y el margen de error, los dos en soles.</td></tr>';
+            return;
+          }
+          r=cuentaMedia(N, sg, em);
+          fil=[['σ²', miles(r.s2,2)], ['Z² × σ²', miles(r.zs2,2)],
+               ['Arriba · N × Z² × σ²', miles(r.arriba,2)],
+               ['Abajo · e² × (N − 1) + Z² × σ²', miles(r.abajo,2)]];
+        }
+        t.innerHTML = fil.map(function(f){
+          return '<tr><td>'+esc(f[0])+'</td><td class="n">'+f[1]+'</td></tr>'; }).join('')+
+          '<tr class="tot"><td>Tu muestra (n)</td><td class="n">'+miles(r.n,0)+' encuestas</td></tr>';
       }
-      ['r5a','r5b','r5n','r5N'].forEach(function(id){
-        $(id).addEventListener('input', function(){
-          st[id.slice(2)]=$(id).value; graba(); pinta(); refresca();
-        });
+      qq('#r7chips button[data-t]').forEach(function(b){
+        b.addEventListener('click', function(){ st.tipo=b.dataset.t; graba(); R7.repinta(); });
+      });
+      [['r7N','N'],['r7e','e'],['r7s','s'],['r7em','em']].forEach(function(x){
+        var el=$(x[0]); if(!el) return;
+        el.addEventListener('input', function(){ st[x[1]]=el.value; graba(); pinta(); refresca(); });
       });
       pinta();
     },
-    hecho:function(){
-      var st=G.r5||{}, e=muestra(15000);
-      var a=lee(st.a), b=lee(st.b), n=lee(st.n);
-      return a!==null&&!isNaN(a)&&Math.abs(a-e.arriba)<=1 &&
-             b!==null&&!isNaN(b)&&Math.abs(b-e.abajo)<=0.05 &&
-             n!==null&&!isNaN(n)&&Math.abs(n-e.n)<=0.4;
-    }
+    hecho:function(){ return false; }
   };
 
-  /* ===================== RETO 6 · quiz ===================== */
+  /* ===================== RETO 8 · quiz ===================== */
   var QUIZ=[
     { t:'Un equipo escribe: «La población son las 384 personas encuestadas». ¿Qué está mal?',
       o:['Nada, está bien','Confunde la muestra con la población','Falta decir el distrito','384 es muy poco'],
@@ -889,25 +1177,31 @@
     { t:'Tu población es de 90 000 y la de tu compañero, de 500 000. ¿Cuál necesita una muestra mucho mayor?',
       o:['La de 500 000, más de cinco veces','Casi la misma para las dos','La de 90 000','No se puede saber'],
       k:1, p:'Pasadas las 20 000 personas la muestra deja de crecer: ambas quedan cerca de 384. Ese es el atajo de comprobación del laboratorio.' },
+    { t:'Vas a preguntar «¿cuánto gasta al mes en shampoo?». ¿Qué fórmula usas?',
+      o:['La de proporción, con p × q','La de la media, con la varianza','Cualquiera, dan lo mismo','Ninguna: eso no se muestrea'],
+      k:1, p:'El resultado será un promedio en soles, no un porcentaje. Cuando estimas un promedio se usa la varianza en lugar de p por q.' },
+    { t:'En la fórmula de la media quieres un error de ±S/ 10. ¿Qué escribes en e?',
+      o:['0.10','10','0.05','1000'],
+      k:1, p:'En la media el error va en las mismas unidades que mides: si estimas soles, el error es en soles. El decimal solo se usa en la de proporción.' },
     { t:'En la ficha técnica del informe, ¿qué dato NO puede faltar junto a la población?',
       o:['El nombre del encuestador','La fuente del INEI con el año','El precio del producto','La marca competidora'],
       k:1, p:'Un número sin fuente no se puede verificar. Se cita el INEI, la publicación y el año, como nota debajo de la tabla.' }
   ];
-  var R6={
-    id:'r6', pest:'6 · Quiz',
+  var R8={
+    id:'r8', pest:'8 · Quiz',
     dibuja:function(){
-      var st=G.r6||{};
-      var i = (G.r6i===undefined) ? 0 : G.r6i;
+      var st=G.r8||{};
+      var i = (G.r8i===undefined) ? 0 : G.r8i;
       if(i>=QUIZ.length) i=QUIZ.length-1;
       var Q=QUIZ[i], r=st[i];
       var h = caja('reto','Reto 6 · Quiz de cierre','Ocho preguntas de teoría',
-        '<div class="qnav" id="r6nav">'+QUIZ.map(function(x,j){
+        '<div class="qnav" id="r8nav">'+QUIZ.map(function(x,j){
           var cl = (st[j]===undefined) ? '' : (+st[j]===QUIZ[j].k ? 'ya' : 'err');
           if(j===i) cl+=' hoy';
           return '<span class="'+cl+'" data-q="'+j+'" role="button" tabindex="0">'+(j+1)+'</span>';
         }).join('')+'</div>'+
         '<p class="preg">'+esc(Q.t)+'</p>'+
-        '<div class="ops" id="r6ops">'+Q.o.map(function(o,j){
+        '<div class="ops" id="r8ops">'+Q.o.map(function(o,j){
           var cl='';
           if(r!==undefined) cl = (j===Q.k) ? ' class="bien"' : (j===+r ? ' class="mal"' : '');
           return '<button type="button" data-o="'+j+'"'+cl+'>'+esc(o)+'</button>';
@@ -916,8 +1210,8 @@
           ? '<p class="porque '+(+r===Q.k?'ok':'no')+'">'+(+r===Q.k?'Correcto. ':'No era esa. ')+esc(Q.p)+'</p>'
           : '<p class="aviso" style="margin-top:9px">Elige una opción.</p>')+
         '<div class="acc">'+
-          (i>0?'<button type="button" class="o-btn" id="r6ant">← Anterior</button>':'')+
-          (i<QUIZ.length-1?'<button type="button" class="o-btn o-btn-primary" id="r6sig">Siguiente →</button>':'')+
+          (i>0?'<button type="button" class="o-btn" id="r8ant">← Anterior</button>':'')+
+          (i<QUIZ.length-1?'<button type="button" class="o-btn o-btn-primary" id="r8sig">Siguiente →</button>':'')+
         '</div>');
 
       var ok=0; QUIZ.forEach(function(x,j){ if(+st[j]===x.k) ok++; });
@@ -926,60 +1220,41 @@
       return h;
     },
     cablea:function(){
-      var st=G.r6||(G.r6={});
-      var i=(G.r6i===undefined)?0:G.r6i;
-      qq('#r6ops button').forEach(function(b){
+      var st=G.r8||(G.r8={});
+      var i=(G.r8i===undefined)?0:G.r8i;
+      qq('#r8ops button').forEach(function(b){
         b.addEventListener('click', function(){
           if(st[i]!==undefined) return;
           st[i]=b.dataset.o; graba();
           if(+b.dataset.o===QUIZ[i].k) bien(); else mal();
-          R6.repinta();
+          R8.repinta();
         });
       });
-      if($('r6ant')) $('r6ant').addEventListener('click', function(){ G.r6i=i-1; graba(); R6.repinta(); });
-      if($('r6sig')) $('r6sig').addEventListener('click', function(){ G.r6i=i+1; graba(); R6.repinta(); });
-      qq('#r6nav span').forEach(function(s){
-        function ir(){ G.r6i=+s.dataset.q; graba(); R6.repinta(); }
+      if($('r8ant')) $('r8ant').addEventListener('click', function(){ G.r8i=i-1; graba(); R8.repinta(); });
+      if($('r8sig')) $('r8sig').addEventListener('click', function(){ G.r8i=i+1; graba(); R8.repinta(); });
+      qq('#r8nav span').forEach(function(s){
+        function ir(){ G.r8i=+s.dataset.q; graba(); R8.repinta(); }
         s.addEventListener('click', ir);
         s.addEventListener('keydown', function(ev){ if(ev.key==='Enter'||ev.key===' '){ ev.preventDefault(); ir(); } });
       });
     },
     hecho:function(){
-      var st=G.r6||{};
+      var st=G.r8||{};
       return QUIZ.every(function(x,j){ return +st[j]===x.k; });
     }
   };
 
   /* ===================== cierre ===================== */
-  var FUENTES=[
-    ['Censos Nacionales 2025 · resultados','Población total por departamento, provincia y distrito.','https://censos2025.inei.gob.pe/resultados'],
-    ['INEI · población de Arequipa 2025','El dato oficial: 1 millón 815 mil habitantes en la región.','https://www.gob.pe/institucion/inei/noticias/1420177-censos-nacionales-2025-poblacion-total-de-arequipa-alcanza-1-millon-815-mil-habitantes'],
-    ['Estimaciones y proyecciones de población','Colección nacional, departamental, provincial y distrital.','https://www.gob.pe/institucion/inei/colecciones/71202-estimaciones-y-proyecciones-de-poblacion-nacional-departamental-provincial-y-distrital'],
-    ['Estimaciones y proyecciones · Tomo I','Tablas de población por edad y por distrito.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1544/00TOMO_01.pdf'],
-    ['Población y vivienda · índice temático','Acceso a los cuadros estadísticos de población.','https://www.inei.gob.pe/estadisticas/indice-tematico/poblacion-y-vivienda/'],
-    ['Arequipa · Compendio Estadístico 2025','Cuadros de población por edad y sexo de la región.','https://www.gob.pe/institucion/inei/informes-publicaciones/7662976-arequipa-compendio-estadistico-2025'],
-    ['Arequipa · Compendio Estadístico 2024','La edición anterior, útil para comparar.','https://www.gob.pe/institucion/inei/informes-publicaciones/6453267-compendio-estadistico-arequipa-2024'],
-    ['ENDES 2024 · Arequipa','Estructura de la población por edad.','https://proyectos.inei.gob.pe/endes/2024/departamentales/Endes04/pdf/Arequipa.pdf'],
-    ['Crecimiento y distribución de la población 2017','Incluye cuadros por distrito, por ejemplo Cayma.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1673/libro.pdf'],
-    ['Indicadores demográficos 1995–2030 · Arequipa','Indicadores por grupos de cinco años.','https://www.inei.gob.pe/media/MenuRecursivo/publicaciones_digitales/Est/Lib1723/cap03.html']
-  ];
   var CHECK=[
     'Encontré mi población (N) y anoté la fuente del INEI.',
     'Calculé mi muestra (n) paso a paso.',
     'Escribí el párrafo de población y muestra en la sección 2.2.2 de la plantilla.',
     'Llené la ficha técnica con la población, la muestra y la fuente.'
   ];
-  var R7={
-    id:'r7', pest:'Cierre',
+  var R9={
+    id:'r9', pest:'Cierre',
     dibuja:function(){
-      var h = caja('teo','¿Dónde busco mi población?','Fuentes oficiales del INEI',
-        '<div class="enlaces">'+FUENTES.map(function(f){
-          return '<a href="'+esc(f[2])+'" target="_blank" rel="noopener"><span class="ic">🔗</span>'+
-                 '<span><span class="nm">'+esc(f[0])+'</span><br><span class="ds">'+esc(f[1])+'</span></span></a>';
-        }).join('')+'</div>'+
-        '<p class="aviso">Con estas páginas obtienes la población total por distrito y la población por '+
-        'edad. En el informe cita siempre el dato del INEI; las demás fuentes sirven para contrastar.</p>');
-
+      var h = '';
       h += caja('mod','Así debe quedar en el informe','Sección 2.2.2',
         '<div id="modelo" style="font-size:13px;line-height:1.75">'+
         '<p style="font-weight:800;color:#714B67;margin:0 0 6px">2.2.2 · Técnicas de muestreo y '+
@@ -1029,7 +1304,7 @@
       qq('.chk input').forEach(function(c){
         c.addEventListener('change', function(){
           G['ck.'+c.dataset.c]= c.checked ? '1' : '';
-          graba(); R7.repinta();
+          graba(); R9.repinta();
         });
       });
     },
@@ -1037,8 +1312,10 @@
   };
 
   /* ===================== armado ===================== */
-  var RETOS=[R1,R2,R3,R4,R5,R6,R7];
+  var RETOS=[R1,R2,R3,R4,R5,R6,R7,R8,R9];
   RETOS.forEach(function(r){ r.repinta=function(){ pinta(); }; });
+  var SUELTOS={ r7:1, r9:1 };          /* estos dos no se puntúan */
+  function RETOS_repinta(){ pinta(); }
   var pi=0, festejado=false;
 
   function pinta(){
@@ -1048,8 +1325,8 @@
     refresca();
   }
   function refresca(){
-    var ok=0, tot=RETOS.length-1;
-    RETOS.forEach(function(r){ if(r.id!=='r7' && r.hecho()) ok++; });
+    var ok=0, tot=0;
+    RETOS.forEach(function(r){ if(SUELTOS[r.id]) return; tot++; if(r.hecho()) ok++; });
     $('progI').style.width=(ok/tot*100)+'%';
     $('cuenta').textContent=ok+' de '+tot+' retos superados';
     pestPinta();
@@ -1058,7 +1335,7 @@
   }
   function pestPinta(){
     $('pest').innerHTML=RETOS.map(function(r,i){
-      var m = (r.id==='r7') ? '' : (r.hecho() ? ' <span class="pc">✓</span>' : ' <span class="pc">·</span>');
+      var m = SUELTOS[r.id] ? '' : (r.hecho() ? ' <span class="pc">✓</span>' : ' <span class="pc">·</span>');
       return '<button type="button" data-p="'+i+'" class="'+(i===pi?'on':'')+'">'+esc(r.pest)+m+'</button>';
     }).join('') +
       '<button type="button" class="valora" id="btnValora">⭐ Valorar</button>'+
@@ -1073,18 +1350,18 @@
 
   /* ===================== sala ===================== */
   function resumenAula(){
-    var rej=RETOS.filter(function(r){ return r.id!=='r7'; }).map(function(r){
+    var rej=RETOS.filter(function(r){ return !SUELTOS[r.id]; }).map(function(r){
       return { t:r.pest.split('· ')[1]||r.pest, ok:r.hecho() };
     });
-    var st=G.r6||{}, q=0;
+    var st=G.r8||{}, q=0;
     QUIZ.forEach(function(x,j){ if(+st[j]===x.k) q++; });
     return { donde:RETOS[pi].pest, hechos:rej.filter(function(x){ return x.ok; }).length,
-             quiz:q+'/'+QUIZ.length, miN:String(G.r5&&G.r5.N||''),
+             quiz:q+'/'+QUIZ.length, miN:String((G.r3&&G.r3.mN)||(G.r7&&G.r7.N)||''),
              listo:rej.every(function(x){ return x.ok; }), rejilla:rej };
   }
   function ventanaAula(e){
     var h='<div class="vmini">'+
-      '<div class="lin"><span>'+esc(e.donde||'—')+'</span><b>'+(e.hechos||0)+' de 6</b></div>'+
+      '<div class="lin"><span>'+esc(e.donde||'—')+'</span><b>'+(e.hechos||0)+' de 7</b></div>'+
       '<div class="lin"><span>Quiz</span><b>'+esc(e.quiz||'—')+'</b></div>'+
       '<div class="lin"><span>Su población (N)</span><b>'+(e.miN?esc(e.miN):'—')+'</b></div>'+
       '<div class="rej">';
@@ -1108,7 +1385,7 @@
 
   if(window.Reinicio) Reinicio.monta({
     donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
-    aviso:'Se borrará tu avance en los seis retos.',
+    aviso:'Se borrará tu avance en los siete retos.',
     hecho:function(){ G={}; festejado=false; pi=0; pinta(); }
   });
 
