@@ -79,6 +79,10 @@ var EXCEPCIONES={
 /* prefijos que se comprueban contra el código, del más largo al más corto */
 var PREFIJOS=['4011','709','122','132','422','432','592','19','29','39','61','74'];
 
+/* 'venta' o 'compra': cambia el lado natural del IGV y de la variación de inventarios */
+var CTX='venta';
+function contexto(c){ CTX = (c==='compra') ? 'compra' : 'venta'; }
+
 function elDe(cod){ return String(cod).charAt(0); }
 function bloque(n){
   var r=null; ELEMENTOS.forEach(function(e){ if(e.n===n) r=e; }); return r;
@@ -102,8 +106,12 @@ function natural(cod){
   for(i=0;i<PREFIJOS.length;i++){
     if(cod.indexOf(PREFIJOS[i])===0){
       /* el IGV y la variación de inventarios dependen de si es compra o venta:
-         en estas prácticas solo aparece la venta, donde no son excepción */
-      if(PREFIJOS[i]==='4011' || PREFIJOS[i]==='61') break;
+         en la venta no son excepción; en la compra sí, y por eso cambian de lado */
+      if(PREFIJOS[i]==='4011' || PREFIJOS[i]==='61'){
+        if(CTX!=='compra') break;          /* en la venta no son excepción */
+        exc=EXCEPCIONES[PREFIJOS[i]+'c'];  /* en la compra sí: 4011c y 61c */
+        break;
+      }
       exc=EXCEPCIONES[PREFIJOS[i]];
       break;
     }
@@ -208,16 +216,16 @@ var MODELO={
   ],
   cobro:'Cobrada el 07/03/2026 con transferencia a la cuenta corriente.'
 };
-function modelo(){
-  var m=MODELO;
+function modelo(propio){
+  var m=propio||MODELO;
   var h='<div class="md">';
   /* el comprobante */
   h+='<div class="md-doc"><div class="dh"><div><b>'+esc(m.emisor)+'</b>'+
      '<span>'+esc(m.rucE)+'</span><span>'+esc(m.dir)+'</span></div>'+
      '<div class="caja"><div class="t">'+esc(m.tipo)+'</div><div class="n">'+esc(m.serie)+'</div></div></div>'+
      '<div class="dd"><span>Fecha</span><b>'+esc(m.fecha)+'</b>'+
-     '<span>Señor(es)</span><b>'+esc(m.cliente)+'</b>'+
-     '<span>RUC</span><b>'+esc(m.rucC)+'</b>'+
+     '<span>'+esc(m.rotParte||'Señor(es)')+'</span><b>'+esc(m.parte||m.cliente)+'</b>'+
+     '<span>RUC</span><b>'+esc(m.rucParte||m.rucC)+'</b>'+
      '<span>Forma de pago</span><b>'+esc(m.pago)+'</b></div>'+
      '<table class="di"><thead><tr><th>Cant.</th><th>U.M.</th><th>Descripción</th><th>V. unitario</th></tr></thead>'+
      '<tbody><tr><td>'+esc(m.item[0])+'</td><td>'+esc(m.item[1])+'</td><td>'+esc(m.item[2])+'</td>'+
@@ -227,7 +235,7 @@ function modelo(){
     h+='<div class="f'+(i===2?' g':'')+'"><span>'+esc(c[0])+'</span>'+
        '<span class="n">'+esc(c[1])+'</span></div>';
   });
-  h+='</div><div class="md-co">'+esc(m.cobro)+'</div></div>';
+  h+='</div><div class="md-co">'+esc(m.pie||m.cobro||'')+'</div></div>';
   /* el asiento tipo */
   h+='<div class="md-as"><div class="md-t">Así queda el asiento</div>'+
      '<table class="md-tabla"><thead><tr><th>Código</th><th>Cuenta</th>'+
@@ -235,7 +243,8 @@ function modelo(){
   var gAct='';
   m.lineas.forEach(function(l){
     if(l.g!==gAct){ gAct=l.g; h+='<tr class="g"><td colspan="4">'+esc(l.g)+'</td></tr>'; }
-    h+='<tr><td class="cc">'+esc(l.c)+'</td><td>'+esc(cuenta(l.c)||'Terceros')+
+    var nomL=(m.nombres && m.nombres[l.c]) || cuenta(l.c) || 'Terceros';
+    h+='<tr><td class="cc">'+esc(l.c)+'</td><td>'+esc(nomL)+
        '<span class="por">'+esc(l.l==='d'?'al debe':'al haber')+' porque '+
        (natural(l.c).sube===(l.l==='d'?'DEBE':'HABER')?'aumenta':'disminuye')+': '+esc(l.q)+'</span></td>'+
        '<td class="n">'+(l.l==='d'?esc(l.m):'')+'</td>'+
@@ -281,5 +290,6 @@ function lista(codigos, titulo){
 }
 
 window.Dinamica={ guia:guia, tabla:tabla, explica:explica, natural:natural,
-                  modelo:modelo, motivo:motivo, lista:lista, esLaCuenta:esLaCuenta };
+                  modelo:modelo, motivo:motivo, lista:lista, esLaCuenta:esLaCuenta,
+                  contexto:contexto };
 })();
