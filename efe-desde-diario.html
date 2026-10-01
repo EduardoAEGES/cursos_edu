@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 2 · Del libro diario al estado de flujos de efectivo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .fd{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --ambar:#B25E09; --mora:#714B67;
+       --debe:#C0306B; --haber:#D0561C; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1300px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,24px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo button{ margin-left:auto; flex:none; }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .pasos{ display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 12px; }
+  .pasos button{ font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-align:left;
+    border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:9px; padding:7px 12px; }
+  .pasos button:hover{ border-color:var(--azul); color:var(--azul); }
+  .pasos button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .pasos button .p{ display:block; font-size:10px; font-weight:600; opacity:.85; }
+  .pasos .valora{ margin-left:auto; border-color:#E8CE8A; background:#FFF8E1; color:#8A6510; }
+  .pasos .valora:hover{ background:#FDF0C9; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin-bottom:13px; }
+  .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
+  .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .avance .reinicio{ flex:none; }
+
+  .caja{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+         overflow:hidden; margin-bottom:14px; }
+  .caja > h3{ margin:0; font-size:12px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+              display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .caja > h3 .st{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.92; font-size:11.5px; }
+  .caja.esf > h3{ background:var(--mora); }
+  .caja.dia > h3{ background:var(--azul); }
+  .caja.efe > h3{ background:var(--verde); }
+  .caja .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.t th{ background:#F4F7FA; font-size:10px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:var(--o-muted); padding:6px 10px;
+              border-bottom:1px solid var(--o-border); text-align:left; }
+  table.t th.n, table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; }
+  table.t tr.tot td{ font-weight:800; background:#FAFBFC; border-top:2px solid #D8DCE2; }
+  table.t tr.sub td{ font-weight:800; background:#F6FBF8; }
+  table.t td.cc{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; color:var(--azul); }
+  .neg{ color:var(--rojo); }
+  .envuelve{ overflow-x:auto; }
+
+  /* asientos del libro diario */
+  .as{ border:1px solid var(--o-border); border-radius:10px; margin-bottom:10px; overflow:hidden;
+       background:#fff; }
+  .as > .ah{ display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+             padding:8px 11px; background:#FAFBFC; border-bottom:1px solid var(--o-border); }
+  .as > .ah .nro{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px;
+                  font-weight:800; color:var(--azul); background:#EAF1FA; border-radius:6px;
+                  padding:3px 8px; flex:none; }
+  .as > .ah .fe{ font-size:12px; color:var(--o-muted); flex:none; }
+  .as > .ah .gl{ font-size:13px; font-weight:700; color:#33404E; flex:1; min-width:160px; }
+  .as table.t td{ font-size:12.5px; padding:4px 10px; }
+  .as.efectivo{ border-color:#7CC29B; box-shadow:0 0 0 2px rgba(124,194,155,.2); }
+  .as.efectivo > .ah{ background:#F2FAF5; border-color:#7CC29B; }
+  .as.noefe{ opacity:.62; }
+  .as.noefe > .ah{ background:#F4F6F8; }
+  .as .lineaEf{ background:#FFF8E1 !important; }
+
+  .filtro{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .filtro button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer;
+                  border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+                  border-radius:8px; padding:5px 11px; }
+  .filtro button:hover{ border-color:var(--azul); }
+  .filtro button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
+                       cursor:not-allowed; opacity:.75; }
+  .filtro .veredicto{ font-size:12px; font-weight:800; padding:4px 10px; border-radius:8px; }
+  .filtro .veredicto.si{ background:#E9F7EF; color:#14532D; border:1.5px solid #7CC29B; }
+  .filtro .veredicto.no{ background:#EDEFF2; color:#51606E; border:1.5px solid var(--o-border); }
+  .porque{ display:block; font-size:11.5px; color:var(--o-muted); line-height:1.45;
+           padding:6px 11px 8px; }
+
+  /* clasificación */
+  .clas{ border:1px solid var(--o-border); border-radius:10px; margin-bottom:10px; background:#fff; }
+  .clas .ch{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:9px 12px;
+             border-bottom:1px solid #EDEFF2; }
+  .clas .ch .gl{ flex:1; min-width:170px; font-size:13px; font-weight:700; color:#33404E; }
+  .clas .ch .im{ font-variant-numeric:tabular-nums; font-weight:800; font-size:13.5px; }
+  .clas .ch .im.ent{ color:var(--verde); } .clas .ch .im.sal{ color:var(--rojo); }
+  .clas .ops{ display:flex; gap:6px; flex-wrap:wrap; padding:9px 12px; }
+  .clas .op{ font:inherit; font-size:12.5px; font-weight:600; cursor:pointer; text-align:left;
+             border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+             border-radius:9px; padding:7px 11px; display:flex; gap:7px; align-items:center;
+             transition:transform .12s ease; }
+  .clas .op:hover{ border-color:var(--azul); background:#F5F9FD; }
+  .clas .op .ic{ font-size:14px; flex:none; }
+  .clas .op.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; cursor:not-allowed; opacity:.7; }
+  .clas .op.temblor{ animation:tiembla .4s; }
+  @keyframes tiembla{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+                      40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+  .clas .puesta{ display:inline-flex; gap:8px; align-items:center; border:1.5px solid #7CC29B;
+                 background:#E9F7EF; border-radius:9px; padding:7px 12px; margin:9px 12px;
+                 font-size:12.5px; color:#14532D; font-weight:700; animation:entra .25s ease; }
+  @keyframes entra{ from{ transform:scale(.94); opacity:0 } to{ transform:scale(1); opacity:1 } }
+
+  .marcador{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+             margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+
+  #confeti{ position:fixed; inset:0; pointer-events:none; z-index:9998; display:none; }
+
+  @media (max-width:640px){
+    .as table.t, .as table.t thead, .as table.t tbody, .as table.t tr, .as table.t td,
+    .as table.t th{ display:block; }
+    .as table.t thead{ display:none; }
+    .as table.t tr{ border-bottom:1px solid #EDEFF2; padding:4px 0; }
+    .as table.t td{ border:0; padding:2px 11px; }
+    .as table.t td.n::before{ content:attr(data-et) ' '; font-size:10px; font-weight:800;
+      text-transform:uppercase; color:var(--o-muted); }
+    .as table.t td.n:empty{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesión 2</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesión 2</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap fd">
+
+  <div class="o-sheet" id="hojaIntro">
+    <div class="titulo">
+      <div>
+        <h1>Sesión 2 · Del libro diario al estado de flujos de efectivo</h1>
+        <p>El flujo de efectivo no se inventa: sale del libro diario. Filtra los asientos que mueven dinero y el estado se arma solo.</p>
+      </div>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+    </div>
+    <div class="idea">
+      <b>La idea.</b> De todos los asientos del mes, solo unos pocos mueven efectivo: los que tocan
+      <b>101 Caja</b>, <b>102 Fondos fijos</b> o <b>1041 Cuentas corrientes</b>. Esos son cobros y pagos;
+      los demás son devengos y no entran. El estado de situación financiera te dice de cuánto partes y
+      a cuánto tienes que llegar: el flujo de efectivo solo explica esa diferencia.
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Entrar para practicar</h2>
+    <div id="aula"></div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:11px 0 0;line-height:1.55">
+      El alumno entra con su nombre y trabaja en su propia hoja; el docente entra con su clave y ve a todos.
+    </p>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pasos" id="pasos"></div>
+    <div class="avance">
+      <span class="cuenta" id="cuenta"></span>
+      <span class="barra"><i id="progI"></i></span>
+      <span class="reinicio" id="reinicio"></span>
+    </div>
+    <div id="panel"></div>
+    <div class="marcador" id="marcador"></div>
+
+    <div class="o-sheet" id="hojaMuro" hidden style="margin-top:16px">
+      <h2 class="o-section-title">Monitoreo del aula</h2>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros</span>
+    <span>NIC 7 · libro diario formato 5.1</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function r2(n){ return Math.round(n*100)/100; }
+function miles(n){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  var p=Math.abs(n).toFixed(2).split('.');
+  return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'.'+p[1];
+}
+function sol(n){ return (n<0?'(':'')+miles(n)+(n<0?')':''); }
+function baraja(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+
+/* =================== el caso =================== */
+var EMP={ nom:'INDUSTRIAS SAN CRISTÓBAL S.A.C.', ruc:'RUC 20123456789', per:'Febrero de 2026' };
+
+/* extracto del estado de situación financiera */
+var ESF=[
+  ['101',  'Caja',                          9500.00,  9500.00],
+  ['102',  'Fondos fijos',                  8000.00,  8000.00],
+  ['1041', 'Cuentas corrientes operativas', 7842.63, 25000.00]
+];
+var SALDO_INI=42500.00, SALDO_FIN=25342.63;
+
+/* cuentas de efectivo: si el asiento toca una de estas, mueve dinero */
+var EFECTIVO={ '101':1, '102':1, '1041':1 };
+
+/* los asientos del mes, en el formato 5.1 del libro diario */
+var DIARIO=[
+  { nro:'00-0001', fecha:'01/02/2026', glosa:'Por el asiento de apertura', mueve:false,
+    por:'Toca las cuentas de efectivo, pero no es un movimiento del mes: es el <b>saldo inicial</b> con el que empieza febrero.',
+    l:[['101','CAJA',9500,null],['102','FONDOS FIJOS',8000,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',25000,null],
+       ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',600,null],
+       ['33411','VEHÍCULOS MOTORIZADOS — COSTO',95420,null],
+       ['21111','PRODUCTOS TERMINADOS — COSTO',4520,null],
+       ['5921','PÉRDIDAS ACUMULADAS',32500,null],
+       ['40111','IGV — CUENTA PROPIA',null,4822],
+       ['5011','ACCIONES',null,170718]] },
+  { nro:'00-0013', fecha:'04/02/2026', glosa:'Por la compra de mercadería', mueve:false,
+    por:'La compra quedó al crédito: nace una cuenta por pagar, pero todavía no sale dinero.',
+    l:[['602','MATERIAS PRIMAS',45139.00,null],['40111','IGV — CUENTA PROPIA',8125.02,null],
+       ['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',null,53264.02]] },
+  { nro:'00-0014', fecha:'07/02/2026', glosa:'Por el pago de la mercadería', mueve:true,
+    efe:'prov', monto:-50600.82,
+    por:'Aquí sí sale el dinero de la cuenta corriente: es un <b>pago a proveedores</b>.',
+    l:[['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',50600.82,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',null,50600.82]] },
+  { nro:'00-0015', fecha:'12/02/2026', glosa:'Por la venta de mercadería', mueve:false,
+    por:'La venta se reconoce cuando se factura, pero el cliente aún no paga: no hay efectivo.',
+    l:[['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',79886.00,null],
+       ['40111','IGV — CUENTA PROPIA',null,12186.00],
+       ['70121','MERCADERÍAS — VENTA LOCAL TERCEROS',null,67700.00]] },
+  { nro:'00-0016', fecha:'13/02/2026', glosa:'Por el cobro de la venta', mueve:true,
+    efe:'cli', monto:75901.23,
+    por:'Entra el dinero a la cuenta corriente: es la <b>cobranza a clientes</b>.',
+    l:[['1041','CUENTAS CORRIENTES OPERATIVAS',75901.23,null],
+       ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',null,75901.23]] },
+  { nro:'00-0017', fecha:'14/02/2026', glosa:'Por el pago de impuestos y aportes del periodo', mueve:true,
+    monto:-13198.35, parte:[
+      { k:'igv',  et:'IGV del periodo (40111)',                 efe:'igv',  monto:-5947.92 },
+      { k:'apo',  et:'ESSALUD y ONP (4031 y 4032)',             efe:'remu', monto:-6506.94 },
+      { k:'ren',  et:'Pago a cuenta del impuesto a la renta (1671)', efe:'ren', monto:-743.49 } ],
+    por:'Un solo asiento puede alimentar <b>tres renglones</b> del flujo: el IGV, los aportes de planilla y el impuesto a la renta van cada uno a su línea.',
+    l:[['1671','PAGOS A CUENTA DEL IMPUESTO A LA RENTA',743.49,null],
+       ['40111','IGV — CUENTA PROPIA',5947.92,null],
+       ['4031','ESSALUD',2661.93,null],['4032','ONP',3845.01,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',null,13198.35]] },
+  { nro:'00-0018', fecha:'15/02/2026', glosa:'Por el servicio de asesoría contable', mueve:false,
+    por:'Se registra el gasto y la obligación, pero el pago viene en otro asiento.',
+    l:[['6323','AUDITORÍA Y CONTABLE',1850.00,null],['40111','IGV — CUENTA PROPIA',333.00,null],
+       ['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',null,2183.00]] },
+  { nro:'00-0019', fecha:'16/02/2026', glosa:'Por el pago del servicio de asesoría', mueve:true,
+    efe:'prov', monto:-2183.00,
+    por:'El servicio también es un proveedor de bienes y servicios.',
+    l:[['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',2183.00,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',null,2183.00]] },
+  { nro:'00-0020', fecha:'17/02/2026', glosa:'Por el servicio de marketing digital', mueve:false,
+    por:'Otro devengo: el gasto ya es del mes, el pago todavía no.',
+    l:[['6371','PUBLICIDAD',1160.00,null],['40111','IGV — CUENTA PROPIA',208.80,null],
+       ['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',null,1368.80]] },
+  { nro:'00-0021', fecha:'18/02/2026', glosa:'Por el pago del servicio de marketing', mueve:true,
+    efe:'prov', monto:-1368.80,
+    por:'Mismo caso que la asesoría: sale dinero hacia un proveedor de servicios.',
+    l:[['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',1368.80,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',null,1368.80]] },
+  { nro:'00-0022', fecha:'28/02/2026', glosa:'Por la planilla del mes', mueve:false,
+    por:'La planilla se devenga: nacen las obligaciones con el trabajador y con ESSALUD y ONP, pero el dinero sale cuando se paga.',
+    l:[['6211','SUELDOS Y SALARIOS',29549.00,null],
+       ['6271','RÉGIMEN DE PRESTACIONES DE SALUD',2659.41,null],
+       ['4031','ESSALUD',null,2659.41],['4032','ONP',null,3841.37],
+       ['4111','SUELDOS Y SALARIOS POR PAGAR',null,25707.63]] },
+  { nro:'00-0023', fecha:'28/02/2026', glosa:'Por el pago de la planilla del mes', mueve:true,
+    efe:'remu', monto:-25707.63,
+    por:'Aquí sí sale el dinero: es el <b>pago de remuneraciones</b>.',
+    l:[['4111','SUELDOS Y SALARIOS POR PAGAR',25707.63,null],
+       ['1041','CUENTAS CORRIENTES OPERATIVAS',null,25707.63]] },
+  { nro:'00-0024', fecha:'28/02/2026', glosa:'Por la depreciación del mes', mueve:false,
+    por:'La depreciación nunca mueve efectivo: es el desgaste del activo, no una salida de dinero.',
+    l:[['68411','DEPRECIACIÓN DE PPE — EDIFICACIONES',1342.33,null],
+       ['39521','DEP. ACUM. PPE — EDIFICACIONES',null,1342.33]] },
+  { nro:'00-0025', fecha:'28/02/2026', glosa:'Por el costo de ventas', mueve:false,
+    por:'El costo de ventas saca mercadería del almacén, no dinero de la caja.',
+    l:[['69111','MERCADERÍAS — TERCEROS',69676.80,null],
+       ['21111','PRODUCTOS TERMINADOS — COSTO',null,69676.80]] }
+];
+
+/* los renglones del estado de flujos de efectivo, con los nombres de la NIC 7 */
+var EFE_LIN=[
+  { k:'cli',  t:'Cobranzas a clientes por venta de bienes', ic:'💰' },
+  { k:'reg',  t:'Cobros de regalías, cuotas, comisiones y otros', ic:'💰' },
+  { k:'prov', t:'Pagos a proveedores de bienes y servicios', ic:'📦' },
+  { k:'remu', t:'Pagos de remuneraciones y beneficios sociales', ic:'👥' },
+  { k:'ren',  t:'Pago de impuesto a las ganancias', ic:'🏛️' },
+  { k:'igv',  t:'Pago de impuestos — IGV', ic:'🧾' },
+  { k:'otr',  t:'Otros (pagos) cobros relativos a la actividad, neto', ic:'↔️' },
+  { k:'ppe',  t:'Pagos por compra de propiedades, planta y equipo', ic:'🏗️' },
+  { k:'ven',  t:'Cobro por venta de propiedades, planta y equipo', ic:'🏗️' },
+  { k:'int',  t:'Intereses pagados', ic:'🏦' },
+  { k:'div',  t:'Dividendos pagados', ic:'🤝' }
+];
+function linEFE(k){ for(var i=0;i<EFE_LIN.length;i++) if(EFE_LIN[i].k===k) return EFE_LIN[i]; return null; }
+/* las dos alternativas falsas de cada renglón correcto */
+var DISTRA={
+  cli:['reg','ven'], prov:['ppe','remu'], remu:['prov','ren'],
+  igv:['ren','otr'], ren:['igv','div'], otr:['cli','prov']
+};
+
+/* lista de movimientos a clasificar: uno por asiento con efectivo,
+   salvo el de impuestos, que se abre en tres                        */
+var MOVS=[];
+DIARIO.forEach(function(a, i){
+  if(!a.mueve) return;
+  if(a.parte){
+    a.parte.forEach(function(p){
+      MOVS.push({ id:a.nro+'/'+p.k, nro:a.nro, fecha:a.fecha,
+                  glosa:a.glosa+' · '+p.et, efe:p.efe, monto:p.monto });
+    });
+  }else{
+    MOVS.push({ id:a.nro, nro:a.nro, fecha:a.fecha, glosa:a.glosa, efe:a.efe, monto:a.monto });
+  }
+});
+MOVS.forEach(function(m){
+  m.ops=baraja([m.efe].concat(DISTRA[m.efe]||['otr','prov']));
+});
+var TOTAL=DIARIO.length+MOVS.length;
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('fd_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
+function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
+function sTec(){ nota(520,0,0.05,0.04); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  nota(1318.5,0.45,0.6,0.07);
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('fd_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) sBien();
+});
+pintaSon();
+
+/* =================== estado =================== */
+var LS='fd_avance_v1';
+var G={ filtro:{}, clas:{}, falloF:{}, falloC:{} };
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object'){
+    G.filtro=d.filtro||{}; G.clas=d.clas||{};
+    G.falloF=d.falloF||{}; G.falloC=d.falloC||{};
+  }
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+var paso=0, festejado=false;
+
+function filtrados(){ var n=0; DIARIO.forEach(function(a){ if(G.filtro[a.nro]) n++; }); return n; }
+function clasificados(){ var n=0; MOVS.forEach(function(m){ if(G.clas[m.id]===m.efe) n++; }); return n; }
+function hechas(){ return filtrados()+clasificados(); }
+function listoTodo(){ return hechas()===TOTAL; }
+function filtroListo(){ return filtrados()===DIARIO.length; }
+
+/* el estado de flujos, con lo que el alumno lleva clasificado */
+function armaEFE(){
+  var r={};
+  EFE_LIN.forEach(function(l){ r[l.k]=0; });
+  MOVS.forEach(function(m){ if(G.clas[m.id]===m.efe) r[m.efe]+=m.monto; });
+  var oper=0;
+  ['cli','reg','prov','remu','ren','igv','otr'].forEach(function(k){ oper+=r[k]; });
+  var inv=r.ppe+r.ven, fin=r.int+r.div;
+  return { r:r, oper:r2(oper), inv:r2(inv), fin:r2(fin), neto:r2(oper+inv+fin) };
+}
+
+/* =================== dibujo =================== */
+function cabecera(){
+  $('pasos').innerHTML=
+    [['1 · El punto de partida','Estado de situación financiera'],
+     ['2 · Filtra el libro diario','¿Qué asientos mueven dinero?'],
+     ['3 · Clasifica los movimientos','¿A qué renglón del flujo va?'],
+     ['4 · El estado de flujos','Se arma solo y se comprueba']]
+    .map(function(p,i){
+      return '<button type="button" data-p="'+i+'" class="'+(i===paso?'on':'')+'">'+
+             esc(p[0])+'<span class="p">'+esc(p[1])+'</span></button>';
+    }).join('')+
+    '<button type="button" class="valora" id="btnValora">⭐ Valorar<span class="p">Cuéntanos qué te pareció</span></button>';
+  qq('#pasos button[data-p]').forEach(function(b){
+    b.addEventListener('click', function(){ paso=+b.dataset.p; sTec(); pinta(); });
+  });
+  $('btnValora').addEventListener('click', function(){
+    window.open('https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html','_blank','noopener');
+  });
+  var n=hechas();
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos';
+  $('progI').style.width=(n/TOTAL*100)+'%';
+}
+
+function vistaESF(){
+  var h='<div class="caja esf"><h3><span>Extracto del estado de situación financiera</span>'+
+    '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.per)+'</span></h3>'+
+    '<div class="envuelve"><table class="t"><thead><tr><th>Código</th><th>Efectivo y equivalentes</th>'+
+    '<th class="n">Al 28/02/2026</th><th class="n">Al 31/01/2026</th></tr></thead><tbody>';
+  ESF.forEach(function(f){
+    h+='<tr><td class="cc">'+esc(f[0])+'</td><td>'+esc(f[1])+'</td>'+
+       '<td class="n">'+miles(f[2])+'</td><td class="n">'+miles(f[3])+'</td></tr>';
+  });
+  h+='<tr class="tot"><td></td><td>Efectivo y equivalentes de efectivo</td>'+
+     '<td class="n">'+miles(SALDO_FIN)+'</td><td class="n">'+miles(SALDO_INI)+'</td></tr>'+
+     '<tr class="sub"><td></td><td>Variación del mes</td>'+
+     '<td class="n neg" colspan="2">'+sol(r2(SALDO_FIN-SALDO_INI))+'</td></tr>'+
+     '</tbody></table></div>'+
+     '<div class="cuerpo"><p style="margin:0">La caja bajó <b>S/ '+miles(SALDO_INI-SALDO_FIN)+'</b> en el mes. '+
+     'Eso es exactamente lo que el estado de flujos de efectivo tiene que explicar, renglón por renglón. '+
+     'Fíjate en que los tres saldos salen del asiento de apertura y de los movimientos de febrero.</p></div></div>';
+  h+='<div class="caja"><h3>Qué sigue</h3><div class="cuerpo"><p style="margin:0">'+
+     'En el paso 2 vas a mirar los '+DIARIO.length+' asientos del mes y marcar cuáles mueven dinero. '+
+     'La regla es sencilla: <b>mueve efectivo el asiento que toca 101, 102 o 1041</b>. '+
+     'Ojo con el asiento de apertura, que las toca pero no es un movimiento del mes.</p></div></div>';
+  return h;
+}
+
+function tablaAsiento(a){
+  var h='<div class="envuelve"><table class="t"><thead><tr><th style="width:15%">Código</th>'+
+        '<th>Denominación</th><th class="n" style="width:17%">Debe</th>'+
+        '<th class="n" style="width:17%">Haber</th></tr></thead><tbody>';
+  a.l.forEach(function(x){
+    var ef=EFECTIVO[x[0]];
+    h+='<tr'+(ef?' class="lineaEf"':'')+'><td class="cc">'+esc(x[0])+'</td><td>'+esc(x[1])+'</td>'+
+       '<td class="n" data-et="Debe">'+(x[2]!==null?miles(x[2]):'')+'</td>'+
+       '<td class="n" data-et="Haber">'+(x[3]!==null?miles(x[3]):'')+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+function vistaDiario(){
+  var h='<div class="caja dia"><h3><span>Libro diario · formato 5.1</span>'+
+    '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.ruc)+' · '+esc(EMP.per)+'</span></h3>'+
+    '<div class="cuerpo" style="padding-bottom:4px"><p style="margin:0 0 10px">'+
+    'Marca cada asiento. Las líneas en amarillo son las cuentas de efectivo: <b>101</b>, <b>102</b> y <b>1041</b>.</p></div>'+
+    '<div style="padding:0 12px 12px">';
+  DIARIO.forEach(function(a){
+    var r=G.filtro[a.nro];
+    var cl = r ? (a.mueve?' efectivo':' noefe') : '';
+    h+='<div class="as'+cl+'"><div class="ah"><span class="nro">'+esc(a.nro)+'</span>'+
+       '<span class="fe">'+esc(a.fecha)+'</span><span class="gl">'+esc(a.glosa)+'</span>';
+    if(r){
+      h+='<span class="veredicto '+(a.mueve?'si':'no')+'">'+
+         (a.mueve?'Mueve efectivo · '+sol(a.monto):'No mueve efectivo')+'</span>';
+    }else{
+      var mal=G.falloF[a.nro];
+      h+='<span class="filtro" data-a="'+esc(a.nro)+'">'+
+         '<button type="button" data-v="si"'+(mal==='si'?' class="mala" disabled':'')+'>Mueve efectivo</button>'+
+         '<button type="button" data-v="no"'+(mal==='no'?' class="mala" disabled':'')+'>No mueve</button></span>';
+    }
+    h+='</div>'+tablaAsiento(a);
+    if(r) h+='<span class="porque">'+a.por+'</span>';
+    h+='</div>';
+  });
+  return h+'</div></div>';
+}
+
+function vistaClas(){
+  if(!filtroListo()){
+    return '<div class="caja"><h3>Todavía no</h3><div class="cuerpo"><p style="margin:0">'+
+      'Primero termina el paso 2: hay que saber qué asientos mueven dinero antes de clasificarlos. '+
+      'Llevas '+filtrados()+' de '+DIARIO.length+'.</p></div></div>';
+  }
+  var h='<div class="caja dia"><h3><span>Los movimientos de efectivo del mes</span>'+
+    '<span class="st">'+MOVS.length+' cobros y pagos</span></h3>'+
+    '<div class="cuerpo" style="padding-bottom:4px"><p style="margin:0 0 10px">'+
+    'Cada uno va a un renglón del estado de flujos. Elige entre las tres alternativas.</p></div>'+
+    '<div style="padding:0 12px 12px">';
+  MOVS.forEach(function(m){
+    var puesta=G.clas[m.id];
+    h+='<div class="clas"><div class="ch"><span class="nro" style="font-family:ui-monospace,Menlo,monospace;'+
+       'font-size:12px;font-weight:800;color:#1F5FA8;background:#EAF1FA;border-radius:6px;padding:3px 8px">'+
+       esc(m.nro)+'</span><span class="gl">'+esc(m.glosa)+'</span>'+
+       '<span class="im '+(m.monto>0?'ent':'sal')+'">'+(m.monto>0?'+ ':'− ')+miles(m.monto)+'</span></div>';
+    if(puesta===m.efe){
+      var L=linEFE(puesta);
+      h+='<div class="puesta"><span>'+L.ic+'</span><span>'+esc(L.t)+'</span></div>';
+    }else{
+      h+='<div class="ops" data-m="'+esc(m.id)+'">'+m.ops.map(function(k){
+        var L=linEFE(k), mala=(G.falloC[m.id]||[]).indexOf(k)>=0;
+        return '<button type="button" class="op'+(mala?' mala':'')+'" data-k="'+esc(k)+'"'+
+               (mala?' disabled':'')+'><span class="ic">'+L.ic+'</span>'+esc(L.t)+'</button>';
+      }).join('')+'</div>';
+    }
+    h+='</div>';
+  });
+  return h+'</div></div>';
+}
+
+function vistaEFE(){
+  var E=armaEFE(), falta=TOTAL-hechas();
+  function fila(k, sangra){
+    var L=linEFE(k), v=E.r[k];
+    return '<tr><td'+(sangra?' style="padding-left:22px"':'')+'>'+L.ic+' '+esc(L.t)+'</td>'+
+           '<td class="n'+(v<0?' neg':'')+'">'+(v===0?'—':sol(r2(v)))+'</td></tr>';
+  }
+  var h='<div class="caja efe"><h3><span>Estado de flujos de efectivo · método directo</span>'+
+    '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.per)+' · en soles</span></h3>'+
+    '<div class="envuelve"><table class="t"><tbody>'+
+    '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de operación</td></tr>'+
+    ['cli','reg','prov','remu','ren','igv','otr'].map(function(k){ return fila(k,true); }).join('')+
+    '<tr class="tot"><td>Efectivo neto proveniente de las actividades de operación</td>'+
+      '<td class="n'+(E.oper<0?' neg':'')+'">'+sol(E.oper)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de inversión</td></tr>'+
+    ['ppe','ven'].map(function(k){ return fila(k,true); }).join('')+
+    '<tr class="tot"><td>Efectivo neto utilizado en las actividades de inversión</td>'+
+      '<td class="n">'+sol(E.inv)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de financiación</td></tr>'+
+    ['int','div'].map(function(k){ return fila(k,true); }).join('')+
+    '<tr class="tot"><td>Efectivo neto utilizado en las actividades de financiación</td>'+
+      '<td class="n">'+sol(E.fin)+'</td></tr>'+
+    '<tr class="tot"><td>Aumento (disminución) neto de efectivo y equivalentes</td>'+
+      '<td class="n'+(E.neto<0?' neg':'')+'">'+sol(E.neto)+'</td></tr>'+
+    '<tr><td>Saldo de efectivo y equivalentes al inicio del mes</td>'+
+      '<td class="n">'+miles(SALDO_INI)+'</td></tr>'+
+    '<tr class="tot"><td>Saldo de efectivo y equivalentes al final del mes</td>'+
+      '<td class="n">'+miles(r2(SALDO_INI+E.neto))+'</td></tr>'+
+    '</tbody></table></div>';
+  var cuadra = Math.abs(r2(SALDO_INI+E.neto)-SALDO_FIN)<0.005 && listoTodo();
+  h+='<div class="cuerpo"><div class="marcador'+(cuadra?' ok':'')+'" style="margin:0">'+
+     (cuadra
+      ? '✓ Cuadra con el estado de situación financiera: S/ '+miles(SALDO_FIN)+'. El flujo quedó explicado.'
+      : (falta>0 ? 'Faltan '+falta+' pasos. El saldo final debe terminar en <b>S/ '+miles(SALDO_FIN)+'</b>, que es lo que dice el estado de situación financiera.'
+                 : 'Revisa: el saldo final todavía no coincide con S/ '+miles(SALDO_FIN)+'.'))+
+     '</div></div></div>';
+  return h;
+}
+
+/* =================== pintado y acciones =================== */
+function pinta(){
+  cabecera();
+  var h = paso===0 ? vistaESF() : paso===1 ? vistaDiario() : paso===2 ? vistaClas() : vistaEFE();
+  $('panel').innerHTML=h;
+
+  qq('#panel .filtro').forEach(function(f){
+    var nro=f.dataset.a;
+    qq('button', f).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var a=null; DIARIO.forEach(function(x){ if(x.nro===nro) a=x; });
+        var dice = b.dataset.v==='si';
+        if(dice===a.mueve){
+          G.filtro[nro]=1; graba(); sBien(); pinta(); revisaFin();
+        }else{
+          G.falloF[nro]=b.dataset.v; graba(); sMal();
+          b.classList.add('mala'); b.disabled=true;
+          pintaMarcador();
+        }
+      });
+    });
+  });
+
+  qq('#panel .ops[data-m]').forEach(function(caja){
+    var id=caja.dataset.m;
+    qq('.op', caja).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var m=null; MOVS.forEach(function(x){ if(x.id===id) m=x; });
+        if(b.dataset.k===m.efe){
+          G.clas[id]=b.dataset.k; graba(); sBien(); pinta(); revisaFin();
+        }else{
+          if(!G.falloC[id]) G.falloC[id]=[];
+          if(G.falloC[id].indexOf(b.dataset.k)<0) G.falloC[id].push(b.dataset.k);
+          graba(); sMal();
+          b.classList.add('temblor','mala'); b.disabled=true;
+          setTimeout(function(){ b.classList.remove('temblor'); }, 420);
+          pintaMarcador();
+        }
+      });
+    });
+  });
+  pintaMarcador();
+}
+
+function pintaMarcador(){
+  var m=$('marcador'), n=hechas();
+  if(listoTodo()){
+    m.className='marcador ok';
+    m.innerHTML='✓ Terminado. Los '+DIARIO.length+' asientos están filtrados y los '+MOVS.length+
+      ' movimientos clasificados: el flujo explica la caída de S/ '+miles(SALDO_INI-SALDO_FIN)+'.';
+    return;
+  }
+  m.className='marcador';
+  m.innerHTML = paso===0
+    ? 'Mira de cuánto parte la caja y a cuánto llega. Cuando lo tengas, pasa al libro diario.'
+    : paso===1
+      ? 'Filtrados '+filtrados()+' de '+DIARIO.length+' asientos. Mueve efectivo el que toca 101, 102 o 1041.'
+      : paso===2
+        ? (filtroListo() ? 'Clasificados '+clasificados()+' de '+MOVS.length+' movimientos.'
+                         : 'Antes termina el filtro del paso 2.')
+        : n+' de '+TOTAL+' pasos · el estado se completa conforme clasificas.';
+}
+
+function revisaFin(){
+  if(listoTodo() && !festejado){ festejado=true; festeja(); }
+}
+
+function festeja(){
+  sFin();
+  var cv=$('confeti'), x=cv.getContext('2d');
+  cv.style.display='block'; cv.width=innerWidth; cv.height=innerHeight;
+  var col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+  for(var i=0;i<110;i++) p.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.4,
+    vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+    c:col[i%col.length], r:Math.random()*6});
+  var t0=Date.now();
+  (function p2(){
+    x.clearRect(0,0,cv.width,cv.height);
+    p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+      x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+      x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+    if(Date.now()-t0<2500) requestAnimationFrame(p2);
+    else { x.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })();
+}
+
+/* =================== sala =================== */
+function resumenAula(){
+  var E=armaEFE();
+  return { paso:['El punto de partida','Filtrar el diario','Clasificar','El estado de flujos'][paso],
+           filtro:filtrados()+'/'+DIARIO.length,
+           clas:clasificados()+'/'+MOVS.length,
+           saldo:r2(SALDO_INI+E.neto),
+           listo:listoTodo(),
+           fallos:Object.keys(G.falloF).length+
+                  Object.keys(G.falloC).reduce(function(n,k){ return n+(G.falloC[k]||[]).length; },0) };
+}
+function ventanaAula(e){
+  return '<div class="vmini">'+
+    '<div class="lin"><span>'+esc(e.paso||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
+    '<div class="lin"><span>Asientos filtrados</span><b>'+esc(e.filtro||'—')+'</b></div>'+
+    '<div class="lin"><span>Movimientos clasificados</span><b>'+esc(e.clas||'—')+'</b></div>'+
+    '<div class="lin"><span>Saldo final que lleva</span><b>'+miles(e.saldo)+'</b></div>'+
+    '<div class="lin"><span>Elecciones falladas</span><b>'+(e.fallos||0)+'</b></div></div>';
+}
+
+/* =================== arranque =================== */
+(function inicio(){
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrará tu avance en el filtro y la clasificación.',
+    hecho:function(){ G={ filtro:{}, clas:{}, falloF:{}, falloC:{} }; paso=0; festejado=false; pinta(); }
+  });
+  Aula.iniciar({ sala:'FD', codigo:'EF2', resumen:resumenAula, ventana:ventanaAula,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('zona').hidden=!dentro;
+      if(dentro) pinta();
+    } });
+})();
+
+})();
+</script>
+
+</body>
+</html>
