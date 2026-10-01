@@ -342,7 +342,7 @@ var MODELO_COMPRA={
   emisor:'IMPORTACIONES DEL SUR S.A.C.', rucE:'RUC 20512233445',
   dir:'Av. Ejército 820 — Yanahuara — Arequipa',
   tipo:'FACTURA ELECTRÓNICA', serie:'F003-2041', fecha:'04/03/2026',
-  rotCliente:'Comprador', cliente:'LOS GORRIONES S.A.', rucC:'RUC 20334020184',
+  rotParte:'Comprador', parte:'LOS GORRIONES S.A.', rucParte:'RUC 20334020184',
   pago:'Crédito 30 días',
   item:['10.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','1,800.00'],
   cifras:[ ['Valor de compra','18,000.00'], ['IGV 18 %','3,240.00'],
@@ -360,7 +360,7 @@ var MODELO_COMPRA={
             '6111':'Mercaderías (variación de inventarios)',
             '2011':'Mercaderías (almacén)',
             '4212':'Facturas por pagar — emitidas' },
-  cobro:'Pagada el 02/04/2026 con transferencia desde la cuenta corriente.'
+  pie:'Pagada el 02/04/2026 con transferencia desde la cuenta corriente.'
 };
 
 /* =================== los diez casos ===================
@@ -380,59 +380,59 @@ var PROVS={
 
 var BASE=[
   { n:1,  modo:'arr', dar:{cuentas:'todas', importes:'menos1'},
-    vv:12000, pago:'banco', prov:'sur',
+    vc:12000, pago:'banco', prov:'sur',
     tipo:'FACTURA ELECTRÓNICA', serie:'F003-2042', fecha:'05/03/2026', fIso:'2026-03-05',
     cond:'Crédito 30 días',
     item:['8.00','UNIDAD','MONITOR LED 24 PULGADAS','1,500.00'] },
   { n:2,  modo:'arr', dar:{cuentas:'todas', importes:'menos3'},
-    vv:6400, pago:'caja', prov:'andina',
+    vc:6400, pago:'caja', prov:'andina',
     tipo:'FACTURA ELECTRÓNICA', serie:'F001-0881', fecha:'07/03/2026', fIso:'2026-03-07',
     cond:'Contado — efectivo',
     item:['8.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','800.00'] },
   { n:3,  modo:'arr', dar:{cuentas:'todas', importes:'ninguno'},
-    vv:4500, pago:'yape', prov:'misti',
+    vc:4500, pago:'yape', prov:'misti',
     tipo:'FACTURA ELECTRÓNICA', serie:'F002-0315', fecha:'09/03/2026', fIso:'2026-03-09',
     cond:'Contado — Yape',
     item:['9.00','UNIDAD','DISCO SÓLIDO 1TB','500.00'] },
   { n:4,  modo:'arr', dar:{cuentas:'primera', importes:'ninguno'},
-    vv:2400, pago:'cheque', parte:0.5, prov:'andina',
+    vc:2400, pago:'cheque', parte:0.5, prov:'andina',
     tipo:'FACTURA ELECTRÓNICA', serie:'F001-0890', fecha:'11/03/2026', fIso:'2026-03-11',
     cond:'Crédito — pago parcial con cheque girado',
     item:['3.00','UNIDAD','IMPRESORA MULTIFUNCIONAL','800.00'] },
   { n:5,  modo:'cmp', dar:{cifras:'todas'},
-    vv:7200, pago:'banco', prov:'tecno',
+    vc:7200, pago:'banco', prov:'tecno',
     tipo:'FACTURA ELECTRÓNICA', serie:'F010-4477', fecha:'13/03/2026', fIso:'2026-03-13',
     cond:'Contado — transferencia',
     item:['6.00','UNIDAD','MONITOR LED 24 PULGADAS','1,200.00'] },
   { n:6,  modo:'arr', dar:{cuentas:'ninguna', importes:'ninguno'},
-    vv:9800, pago:'caja', parte:0.4, prov:'sur',
+    vc:9800, pago:'caja', parte:0.4, prov:'sur',
     tipo:'FACTURA ELECTRÓNICA', serie:'F003-2050', fecha:'16/03/2026', fIso:'2026-03-16',
     cond:'Crédito — pago parcial en efectivo',
     item:['7.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','1,400.00'] },
-  { n:7,  modo:'cmp', dar:{cifras:'vv'},
-    vv:1500, pago:'yape', prov:'misti',
+  { n:7,  modo:'cmp', dar:{cifras:'vc'},
+    vc:1500, pago:'yape', prov:'misti',
     tipo:'FACTURA ELECTRÓNICA', serie:'F002-0330', fecha:'18/03/2026', fIso:'2026-03-18',
     cond:'Contado — Yape',
     item:['3.00','UNIDAD','TECLADO Y MOUSE INALÁMBRICO','500.00'] },
   { n:8,  modo:'cmp', dar:{cifras:'pc'},
-    vv:25000, pago:'banco', parte:0.6, prov:'tecno',
+    vc:25000, pago:'banco', parte:0.6, prov:'tecno',
     tipo:'FACTURA ELECTRÓNICA', serie:'F010-4502', fecha:'20/03/2026', fIso:'2026-03-20',
     cond:'Crédito — pago parcial por transferencia',
     item:['5.00','UNIDAD','SERVIDOR RACK 32GB RAM','5,000.00'] },
   { n:9,  modo:'cmp', dar:{cifras:'ninguna'},
-    vv:3600, pago:'cheque', prov:'andina',
+    vc:3600, pago:'cheque', prov:'andina',
     tipo:'FACTURA ELECTRÓNICA', serie:'F001-0902', fecha:'24/03/2026', fIso:'2026-03-24',
     cond:'Contado — cheque girado',
     item:['4.00','UNIDAD','IMPRESORA MULTIFUNCIONAL','900.00'] },
   { n:10, modo:'cmp', dar:{cifras:'ninguna'},
-    vv:16800, pago:'banco', parte:0.3, prov:'sur',
+    vc:16800, pago:'banco', parte:0.3, prov:'sur',
     tipo:'FACTURA ELECTRÓNICA', serie:'F003-2061', fecha:'27/03/2026', fIso:'2026-03-27',
     cond:'Crédito — pago parcial por transferencia',
     item:['12.00','UNIDAD','LAPTOP CORE I5 16GB RAM 512GB SSD','1,400.00'] }
 ];
 
 var CASOS=BASE.map(function(b){
-  var igv=r2(b.vv*0.18), pc=r2(b.vv+igv);
+  var igv=r2(b.vc*0.18), pc=r2(b.vc+igv);
   var MEDIOS={
     caja:   { c:'101',  n:'en efectivo',                 q:'sale el dinero de la caja' },
     banco:  { c:'1041', n:'con transferencia bancaria',  q:'sale el dinero de la cuenta corriente' },
@@ -451,19 +451,19 @@ var CASOS=BASE.map(function(b){
   var c={
     id:'c'+b.n, n:b.n, modo:b.modo, dar:b.dar,
     tit:'Caso '+b.n, sub:(b.modo==='arr'?'Arrastrar':'Comprobante'),
-    vv:b.vv, igv:igv, pc:pc,
+    vc:b.vc, igv:igv, pc:pc,
     tipo:b.tipo, serie:b.serie, fecha:b.fecha, fIso:b.fIso,
     prov:pr.nom, provRuc:pr.ruc, provDir:pr.dir,
-    cliente:pr.nom, ruc:pr.ruc, rel:'Proveedor',
+    rel:'Proveedor',
     cond:b.cond, item:b.item, nota:nota,
     grupos:[
       { g:'Por la compra según '+b.serie, sol:[
-        {c:'6011', l:'d', m:b.vv, q:'es el valor de la mercadería que compramos'},
+        {c:'6011', l:'d', m:b.vc, q:'es el valor de la mercadería que compramos'},
         {c:'40111',l:'d', m:igv,  q:'el IGV de la compra es crédito fiscal contra la SUNAT'},
         {c:'4212', l:'h', m:pc,   q:'le debemos al proveedor el importe total'} ]},
       { g:'Por el destino al almacén', sol:[
-        {c:'2011', l:'d', m:b.vv, q:'la mercadería entra al almacén'},
-        {c:'6111', l:'h', m:b.vv, q:'se abona la variación para llevar el bien al almacén'} ]},
+        {c:'2011', l:'d', m:b.vc, q:'la mercadería entra al almacén'},
+        {c:'6111', l:'h', m:b.vc, q:'se abona la variación para llevar el bien al almacén'} ]},
       { g:gPago, sol:[
         {c:'4212', l:'d', m:pagado, q:(b.parte ? 'baja la deuda con el proveedor en esa parte'
                                                : 'ya no le debemos nada al proveedor')},
@@ -486,7 +486,7 @@ function dados(c){
     d.cifras={vc:1, igv:1, pc:1};
   } else {
     if(c.dar.cifras==='todas'){ d.cifras={vc:1, igv:1, pc:1}; }
-    else if(c.dar.cifras==='vv'){ d.cifras={vc:1}; }
+    else if(c.dar.cifras==='vc'){ d.cifras={vc:1}; }
     else if(c.dar.cifras==='pc'){ d.cifras={pc:1}; }
   }
   return d;
@@ -541,7 +541,7 @@ pintaSon();
 function vacio(c){
   var e={ vc:null, igv:null, pc:null, glosa:['','',''], filas:[] }, i;
   for(i=0;i<c.nLineas;i++) e.filas.push({c:null, d:null, h:null});
-  if(c.dado.cifras.vc)  e.vc=c.vv;
+  if(c.dado.cifras.vc)  e.vc=c.vc;
   if(c.dado.cifras.igv) e.igv=c.igv;
   if(c.dado.cifras.pc)  e.pc=c.pc;
   c.plano.forEach(function(p, k){
@@ -613,7 +613,7 @@ function califica(c){
   var e=S[c.id], r={ bien:0, total:c.total, cifras:{}, filas:[] };
   ['vc','igv','pc'].forEach(function(k){
     if(c.dado.cifras[k]){ r.cifras[k]={dado:true}; return; }
-    var v=e[k], esp=(k==='vc'?c.vv:(k==='igv'?c.igv:c.pc));
+    var v=e[k], esp=(k==='vc'?c.vc:(k==='igv'?c.igv:c.pc));
     if(typeof v!=='number'){ r.cifras[k]={ok:false}; return; }
     var ok=Math.abs(r2(v)-esp)<0.005;
     r.cifras[k]={ok:ok};
@@ -683,8 +683,8 @@ function pintaNivel(){
             : 'Las cuentas están puestas: coloca los importes.')
          : c.dar.cuentas==='primera' ? 'Hay una cuenta de muestra: completa el resto.'
          : 'Todo por armar: cuentas e importes.')
-      : (c.dar.cifras==='todas' ? 'Las cifras están dadas: escribe el asiento. El código vale a cualquier nivel: 12, 121 o 1212.'
-         : c.dar.cifras==='vv' ? 'Del comprobante saca el IGV y el total.'
+      : (c.dar.cifras==='todas' ? 'Las cifras están dadas: escribe el asiento. El código vale a cualquier nivel: 42, 421 o 4212.'
+         : c.dar.cifras==='vc' ? 'Del comprobante saca el IGV y el total.'
          : c.dar.cifras==='pc' ? 'El comprobante solo trae el total: separa el valor de compra y el IGV.'
          : 'Sin ayudas: saca las tres cifras y escribe todo.'))+
     '</span>';
@@ -756,7 +756,7 @@ function docHTML(c){
     '<td class="nn">'+esc(c.item[3])+'</td></tr></tbody></table><div class="dt">';
   var muestra=c.dar.cifras;
   h+='<div class="f"><span>Valor de compra</span><span class="n">'+
-     (muestra==='todas'||muestra==='vv' ? miles(c.vv) : '—')+'</span></div>'+
+     (muestra==='todas'||muestra==='vc' ? miles(c.vc) : '—')+'</span></div>'+
      '<div class="f"><span>IGV 18 %</span><span class="n">'+
      (muestra==='todas' ? miles(c.igv) : '—')+'</span></div>'+
      '<div class="f g"><span>Importe total'+(muestra==='pc'?' incluido IGV':'')+'</span><span class="n">'+
@@ -1013,7 +1013,7 @@ function revisa(){
 }
 function verSolucion(){
   var c=activo, e=S[c.id];
-  e.vc=c.vv; e.igv=c.igv; e.pc=c.pc;
+  e.vc=c.vc; e.igv=c.igv; e.pc=c.pc;
   e.filas=c.plano.map(function(p){
     return { c:p.s.c, d:(p.s.l==='d'?p.s.m:null), h:(p.s.l==='h'?p.s.m:null) };
   });

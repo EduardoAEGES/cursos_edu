@@ -224,8 +224,8 @@ function modelo(propio){
      '<span>'+esc(m.rucE)+'</span><span>'+esc(m.dir)+'</span></div>'+
      '<div class="caja"><div class="t">'+esc(m.tipo)+'</div><div class="n">'+esc(m.serie)+'</div></div></div>'+
      '<div class="dd"><span>Fecha</span><b>'+esc(m.fecha)+'</b>'+
-     '<span>'+esc(m.rotCliente||'Señor(es)')+'</span><b>'+esc(m.cliente)+'</b>'+
-     '<span>RUC</span><b>'+esc(m.rucC)+'</b>'+
+     '<span>'+esc(m.rotParte||'Señor(es)')+'</span><b>'+esc(m.parte||m.cliente)+'</b>'+
+     '<span>RUC</span><b>'+esc(m.rucParte||m.rucC)+'</b>'+
      '<span>Forma de pago</span><b>'+esc(m.pago)+'</b></div>'+
      '<table class="di"><thead><tr><th>Cant.</th><th>U.M.</th><th>Descripción</th><th>V. unitario</th></tr></thead>'+
      '<tbody><tr><td>'+esc(m.item[0])+'</td><td>'+esc(m.item[1])+'</td><td>'+esc(m.item[2])+'</td>'+
@@ -235,7 +235,7 @@ function modelo(propio){
     h+='<div class="f'+(i===2?' g':'')+'"><span>'+esc(c[0])+'</span>'+
        '<span class="n">'+esc(c[1])+'</span></div>';
   });
-  h+='</div><div class="md-co">'+esc(m.cobro)+'</div></div>';
+  h+='</div><div class="md-co">'+esc(m.pie||m.cobro||'')+'</div></div>';
   /* el asiento tipo */
   h+='<div class="md-as"><div class="md-t">Así queda el asiento</div>'+
      '<table class="md-tabla"><thead><tr><th>Código</th><th>Cuenta</th>'+
