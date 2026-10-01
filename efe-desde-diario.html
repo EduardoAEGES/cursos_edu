@@ -12,7 +12,7 @@
 <style>
   .fd{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --ambar:#B25E09; --mora:#714B67;
        --debe:#C0306B; --haber:#D0561C; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
-       max-width:1300px; margin:0 auto; }
+       max-width:1480px; margin:0 auto; }
   [hidden]{ display:none !important; }
 
   .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
@@ -32,6 +32,9 @@
   .pasos button:hover{ border-color:var(--azul); color:var(--azul); }
   .pasos button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
   .pasos button .p{ display:block; font-size:10px; font-weight:600; opacity:.85; }
+  .pasos button.integral{ border-color:#C9A227; color:#7A5E06; }
+  .pasos button.integral:hover{ background:#FFFBEC; }
+  .pasos button.integral.on{ background:#8A6510; border-color:#8A6510; color:#fff; }
   .pasos .valora{ margin-left:auto; border-color:#E8CE8A; background:#FFF8E1; color:#8A6510; }
   .pasos .valora:hover{ background:#FDF0C9; }
 
@@ -50,6 +53,7 @@
   .caja.dia > h3{ background:var(--azul); }
   .caja.efe > h3{ background:var(--verde); }
   .caja .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+  .caja .cuerpo p{ margin:0 0 9px; } .caja .cuerpo p:last-child{ margin-bottom:0; }
 
   table.t{ width:100%; border-collapse:collapse; font-size:13px; }
   table.t th{ background:#F4F7FA; font-size:10px; font-weight:800; letter-spacing:.05em;
@@ -59,7 +63,10 @@
   table.t td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; }
   table.t tr.tot td{ font-weight:800; background:#FAFBFC; border-top:2px solid #D8DCE2; }
   table.t tr.sub td{ font-weight:800; background:#F6FBF8; }
+  table.t tr.rub td{ font-weight:800; background:#F4F7FA; font-size:10.5px;
+                     letter-spacing:.05em; text-transform:uppercase; color:var(--o-muted); }
   table.t td.cc{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; color:var(--azul); }
+  table.t tr.efeFila td{ background:#FFF8E1; }
   .neg{ color:var(--rojo); }
   .envuelve{ overflow-x:auto; }
 
@@ -72,7 +79,7 @@
                   font-weight:800; color:var(--azul); background:#EAF1FA; border-radius:6px;
                   padding:3px 8px; flex:none; }
   .as > .ah .fe{ font-size:12px; color:var(--o-muted); flex:none; }
-  .as > .ah .gl{ font-size:13px; font-weight:700; color:#33404E; flex:1; min-width:160px; }
+  .as > .ah .gl{ font-size:13px; font-weight:700; color:#33404E; flex:1; min-width:150px; }
   .as table.t td{ font-size:12.5px; padding:4px 10px; }
   .as.efectivo{ border-color:#7CC29B; box-shadow:0 0 0 2px rgba(124,194,155,.2); }
   .as.efectivo > .ah{ background:#F2FAF5; border-color:#7CC29B; }
@@ -120,6 +127,105 @@
              margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
   .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
 
+  /* ---------- resumen de actividades ---------- */
+  .tres{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  @media (max-width:980px){ .tres{ grid-template-columns:1fr; } }
+  .act{ border:1px solid var(--o-border); border-radius:11px; overflow:hidden; background:#fff; min-width:0; }
+  .act h4{ margin:0; font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
+           color:#fff; padding:9px 12px; display:flex; gap:8px; align-items:center; }
+  .act.aOp h4{ background:var(--verde); }
+  .act.aInv h4{ background:var(--azul); }
+  .act.aFin h4{ background:var(--mora); }
+  .act .c{ padding:10px 12px; font-size:12.5px; line-height:1.6; color:#33404E; }
+  .act .c > p{ margin:0 0 9px; }
+  .act .c .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+               letter-spacing:.05em; color:var(--o-muted); margin:9px 0 4px; }
+  .act ul{ margin:0; padding:0; list-style:none; }
+  .act li{ display:flex; gap:7px; padding:2.5px 0; align-items:flex-start; }
+  .act li .s{ flex:none; font-weight:800; font-size:13px; line-height:1.35; }
+  .act li .s.or{ color:var(--verde); } .act li .s.ap{ color:var(--rojo); }
+  .act .cu{ border-top:1px solid #EDEFF2; padding:8px 12px; font-size:11.5px; color:var(--o-muted); }
+  .act .cu b{ color:#33404E; }
+
+  .oa{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:4px; }
+  @media (max-width:760px){ .oa{ grid-template-columns:1fr; } }
+  .oa .lado{ border:1.5px solid var(--o-border); border-radius:10px; padding:10px 12px;
+             font-size:12.5px; line-height:1.6; min-width:0; }
+  .oa .lado.or{ border-color:#7CC29B; background:#F2FAF5; color:#14532D; }
+  .oa .lado.ap{ border-color:#E3A9A2; background:#FDF1EF; color:#7A1C12; }
+  .oa .lado b.t{ display:block; font-size:13.5px; margin-bottom:5px; }
+  .oa .lado ul{ margin:6px 0 0; padding-left:18px; }
+  .oa .lado li{ padding:1.5px 0; }
+
+  .op2{ border:1px solid var(--o-border); border-radius:10px; margin-bottom:9px; background:#fff; }
+  .op2 .q{ padding:9px 12px; font-size:13px; font-weight:700; color:#33404E;
+           border-bottom:1px solid #EDEFF2; display:flex; gap:9px; align-items:center; flex-wrap:wrap; }
+  .op2 .q .ic{ flex:none; font-size:16px; }
+  .op2 .grupos{ display:grid; grid-template-columns:1.4fr 1fr; gap:12px; padding:10px 12px; }
+  @media (max-width:760px){ .op2 .grupos{ grid-template-columns:1fr; } }
+  .op2 .g{ min-width:0; }
+  .op2 .g .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+               letter-spacing:.05em; color:var(--o-muted); margin-bottom:5px; }
+  .bs{ display:flex; gap:6px; flex-wrap:wrap; }
+  .bs button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer;
+              border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+              border-radius:8px; padding:6px 11px; }
+  .bs button:hover{ border-color:var(--azul); background:#F5F9FD; }
+  .bs button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
+                   cursor:not-allowed; opacity:.7; }
+  .bs button.temblor{ animation:tiembla .4s; }
+  .bs .ok{ display:inline-flex; gap:6px; align-items:center; border:1.5px solid #7CC29B;
+           background:#E9F7EF; border-radius:8px; padding:6px 11px; font-size:12px;
+           font-weight:800; color:#14532D; animation:entra .25s ease; }
+  .bs .ok.rojo{ border-color:#E3A9A2; background:#FDF1EF; color:#7A1C12; }
+
+  /* ---------- las tres ventanas del caso integral ---------- */
+  .vents{ display:grid; grid-template-columns:minmax(0,0.95fr) minmax(0,1.45fr) minmax(0,1.2fr);
+          gap:12px; align-items:start; }
+  @media (max-width:1180px){ .vents{ grid-template-columns:1fr; } }
+  .vent{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+         overflow:hidden; display:flex; flex-direction:column; min-width:0; }
+  .vent > h3{ margin:0; font-size:11px; font-weight:800; letter-spacing:.05em; text-transform:uppercase;
+              color:#fff; padding:8px 11px; display:flex; gap:8px; justify-content:space-between;
+              align-items:center; flex-wrap:wrap; }
+  .vent.v1 > h3{ background:var(--mora); }
+  .vent.v2 > h3{ background:var(--azul); }
+  .vent.v3 > h3{ background:var(--verde); }
+  .vent > h3 .st{ font-weight:600; text-transform:none; letter-spacing:0; font-size:10.5px; opacity:.93; }
+  .vent .scroll{ overflow:auto; max-height:min(68vh,620px); padding:10px 11px; }
+  .vent .scroll::-webkit-scrollbar{ width:10px; height:10px; }
+  .vent .scroll::-webkit-scrollbar-thumb{ background:#BFC9D3; border-radius:9px; border:2px solid #F2F4F7; }
+  .vent .scroll::-webkit-scrollbar-track{ background:#F2F4F7; border-radius:9px; }
+  .vent .scroll table.t td{ font-size:12px; padding:4px 8px; }
+  .vent .scroll table.t th{ font-size:9.5px; padding:5px 8px; position:sticky; top:-10px; z-index:2; }
+
+  .bandeja{ border:1.5px dashed #B9C4CF; border-radius:10px; padding:9px 10px;
+            margin-bottom:10px; background:#FBFCFD; }
+  .bandeja .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+                letter-spacing:.05em; color:var(--o-muted); margin-bottom:6px; }
+  .bandeja.vacia{ border-color:#7CC29B; background:#F2FAF5; }
+  .fichas{ display:flex; gap:6px; flex-wrap:wrap; }
+  .ficha{ font:inherit; font-size:11.5px; font-weight:700; cursor:pointer; text-align:left;
+          border:1.5px solid var(--azul); background:#EAF1FA; color:#14365E;
+          border-radius:8px; padding:5px 9px; display:flex; gap:6px; align-items:center; }
+  .ficha .m{ font-variant-numeric:tabular-nums; font-weight:800; }
+  .ficha.sel{ background:var(--azul); color:#fff; box-shadow:0 0 0 3px rgba(31,95,168,.24); }
+  .ficha.ent{ border-color:#7CC29B; background:#E9F7EF; color:#14532D; }
+  .ficha.ent.sel{ background:var(--verde); color:#fff; box-shadow:0 0 0 3px rgba(20,122,92,.24); }
+  .nada{ font-size:11.5px; color:var(--o-muted); }
+
+  table.efeT tr.ren td{ cursor:default; }
+  table.efeT tr.ren.libre td{ cursor:pointer; }
+  table.efeT tr.ren.libre:hover td{ background:#F5F9FD; }
+  table.efeT tr.ren.lista td{ background:#F6FBF8; }
+  table.efeT tr.ren.temblor td{ background:#FDECEA; animation:tiembla .4s; }
+  table.efeT tr.ren .de{ display:block; font-size:10.5px; font-weight:600; color:var(--o-muted);
+                         line-height:1.35; margin-top:2px; }
+  .cuadre{ border-radius:9px; padding:9px 11px; font-size:12.5px; font-weight:700; margin-top:10px;
+           background:#FAFBFC; border:1px solid var(--o-border); color:var(--gris); line-height:1.5; }
+  .cuadre.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .pistas{ font-size:11.5px; color:var(--o-muted); line-height:1.5; margin:9px 0 0; }
+
   .vmini{ padding:8px 11px 11px; }
   .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
                color:var(--o-muted); padding:2px 0; }
@@ -136,6 +242,7 @@
     .as table.t td.n::before{ content:attr(data-et) ' '; font-size:10px; font-weight:800;
       text-transform:uppercase; color:var(--o-muted); }
     .as table.t td.n:empty{ display:none; }
+    .vent .scroll{ max-height:none; }
   }
 </style>
 </head>
@@ -173,6 +280,7 @@
       <b>101 Caja</b>, <b>102 Fondos fijos</b> o <b>1041 Cuentas corrientes</b>. Esos son cobros y pagos;
       los demás son devengos y no entran. El estado de situación financiera te dice de cuánto partes y
       a cuánto tienes que llegar: el flujo de efectivo solo explica esa diferencia.
+      Empieza por el <b>resumen</b> y cierra con los <b>casos integrales 5 y 6</b>, donde ves las tres hojas a la vez.
     </div>
   </div>
 
@@ -206,7 +314,7 @@
 
   <div class="o-footer">
     <span>Estados Financieros</span>
-    <span>NIC 7 · libro diario formato 5.1</span>
+    <span>NIC 7 · libro diario formato 5.1 · PCGE 2019</span>
   </div>
 
 </div>
@@ -236,10 +344,48 @@ function baraja(a){
   return a;
 }
 
-/* =================== el caso =================== */
+/* cuentas de efectivo: si el asiento toca una de estas, mueve dinero */
+var EFECTIVO={ '101':1, '102':1, '1041':1 };
+
+/* =================== renglones del estado de flujos (NIC 7) =================== */
+var EFE_LIN=[
+  { k:'cli',  t:'Cobranzas a clientes por venta de bienes y servicios', ic:'💰', sec:'op' },
+  { k:'reg',  t:'Cobros de regalías, cuotas, comisiones y otros', ic:'🧮', sec:'op' },
+  { k:'prov', t:'Pagos a proveedores de bienes y servicios', ic:'📦', sec:'op' },
+  { k:'remu', t:'Pagos de remuneraciones y beneficios sociales', ic:'👥', sec:'op' },
+  { k:'ren',  t:'Pago de impuesto a las ganancias', ic:'🏛️', sec:'op' },
+  { k:'igv',  t:'Pago de impuestos — IGV', ic:'🧾', sec:'op' },
+  { k:'otr',  t:'Otros (pagos) cobros relativos a la actividad, neto', ic:'↔️', sec:'op' },
+  { k:'ven',  t:'Cobro por venta de propiedades, planta y equipo', ic:'🏗️', sec:'inv' },
+  { k:'ppe',  t:'Pagos por compra de propiedades, planta y equipo', ic:'🛠️', sec:'inv' },
+  { k:'pres', t:'Cobro de préstamos obtenidos', ic:'🏦', sec:'fin' },
+  { k:'amo',  t:'Amortización o pago de préstamos', ic:'📉', sec:'fin' },
+  { k:'int',  t:'Intereses pagados', ic:'💳', sec:'fin' },
+  { k:'div',  t:'Dividendos pagados', ic:'🤝', sec:'fin' }
+];
+var SEC={ op:['cli','reg','prov','remu','ren','igv','otr'],
+          inv:['ven','ppe'],
+          fin:['pres','amo','int','div'] };
+var SECNOM={ op:'actividades de operación', inv:'actividades de inversión', fin:'actividades de financiación' };
+function linEFE(k){ for(var i=0;i<EFE_LIN.length;i++) if(EFE_LIN[i].k===k) return EFE_LIN[i]; return null; }
+
+/* =================== paso 1 · resumen de actividades =================== */
+var RES_ITEMS=[
+  { id:'r1', ic:'💰', t:'Cobranza de las facturas del mes a los clientes',              act:'op',  sig:'or' },
+  { id:'r2', ic:'👥', t:'Pago de la planilla de los trabajadores',                      act:'op',  sig:'ap' },
+  { id:'r3', ic:'🛠️', t:'Compra de una camioneta al contado para el reparto',           act:'inv', sig:'ap' },
+  { id:'r4', ic:'🏗️', t:'Venta de una máquina vieja que ya no se usa',                  act:'inv', sig:'or' },
+  { id:'r5', ic:'🏦', t:'Préstamo que el banco desembolsa en la cuenta corriente',      act:'fin', sig:'or' },
+  { id:'r6', ic:'📉', t:'Amortización de la cuota del préstamo (el capital)',           act:'fin', sig:'ap' },
+  { id:'r7', ic:'🧾', t:'Pago del IGV del mes a la SUNAT',                              act:'op',  sig:'ap' },
+  { id:'r8', ic:'🤝', t:'Pago de dividendos a los accionistas',                         act:'fin', sig:'ap' }
+];
+var ACTNOM={ op:'Operación', inv:'Inversión', fin:'Financiación' };
+var SIGNOM={ or:'Origen (entra)', ap:'Aplicación (sale)' };
+
+/* =================== el caso guiado =================== */
 var EMP={ nom:'INDUSTRIAS SAN CRISTÓBAL S.A.C.', ruc:'RUC 20123456789', per:'Febrero de 2026' };
 
-/* extracto del estado de situación financiera */
 var ESF=[
   ['101',  'Caja',                          9500.00,  9500.00],
   ['102',  'Fondos fijos',                  8000.00,  8000.00],
@@ -247,10 +393,6 @@ var ESF=[
 ];
 var SALDO_INI=42500.00, SALDO_FIN=25342.63;
 
-/* cuentas de efectivo: si el asiento toca una de estas, mueve dinero */
-var EFECTIVO={ '101':1, '102':1, '1041':1 };
-
-/* los asientos del mes, en el formato 5.1 del libro diario */
 var DIARIO=[
   { nro:'00-0001', fecha:'01/02/2026', glosa:'Por el asiento de apertura', mueve:false,
     por:'Toca las cuentas de efectivo, pero no es un movimiento del mes: es el <b>saldo inicial</b> con el que empieza febrero.',
@@ -283,9 +425,9 @@ var DIARIO=[
        ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',null,75901.23]] },
   { nro:'00-0017', fecha:'14/02/2026', glosa:'Por el pago de impuestos y aportes del periodo', mueve:true,
     monto:-13198.35, parte:[
-      { k:'igv',  et:'IGV del periodo (40111)',                 efe:'igv',  monto:-5947.92 },
-      { k:'apo',  et:'ESSALUD y ONP (4031 y 4032)',             efe:'remu', monto:-6506.94 },
-      { k:'ren',  et:'Pago a cuenta del impuesto a la renta (1671)', efe:'ren', monto:-743.49 } ],
+      { k:'igv',  et:'IGV del periodo (40111)',                      efe:'igv',  monto:-5947.92 },
+      { k:'apo',  et:'ESSALUD y ONP (4031 y 4032)',                  efe:'remu', monto:-6506.94 },
+      { k:'ren',  et:'Pago a cuenta del impuesto a la renta (1671)',  efe:'ren',  monto:-743.49 } ],
     por:'Un solo asiento puede alimentar <b>tres renglones</b> del flujo: el IGV, los aportes de planilla y el impuesto a la renta van cada uno a su línea.',
     l:[['1671','PAGOS A CUENTA DEL IMPUESTO A LA RENTA',743.49,null],
        ['40111','IGV — CUENTA PROPIA',5947.92,null],
@@ -330,31 +472,13 @@ var DIARIO=[
        ['21111','PRODUCTOS TERMINADOS — COSTO',null,69676.80]] }
 ];
 
-/* los renglones del estado de flujos de efectivo, con los nombres de la NIC 7 */
-var EFE_LIN=[
-  { k:'cli',  t:'Cobranzas a clientes por venta de bienes', ic:'💰' },
-  { k:'reg',  t:'Cobros de regalías, cuotas, comisiones y otros', ic:'💰' },
-  { k:'prov', t:'Pagos a proveedores de bienes y servicios', ic:'📦' },
-  { k:'remu', t:'Pagos de remuneraciones y beneficios sociales', ic:'👥' },
-  { k:'ren',  t:'Pago de impuesto a las ganancias', ic:'🏛️' },
-  { k:'igv',  t:'Pago de impuestos — IGV', ic:'🧾' },
-  { k:'otr',  t:'Otros (pagos) cobros relativos a la actividad, neto', ic:'↔️' },
-  { k:'ppe',  t:'Pagos por compra de propiedades, planta y equipo', ic:'🏗️' },
-  { k:'ven',  t:'Cobro por venta de propiedades, planta y equipo', ic:'🏗️' },
-  { k:'int',  t:'Intereses pagados', ic:'🏦' },
-  { k:'div',  t:'Dividendos pagados', ic:'🤝' }
-];
-function linEFE(k){ for(var i=0;i<EFE_LIN.length;i++) if(EFE_LIN[i].k===k) return EFE_LIN[i]; return null; }
-/* las dos alternativas falsas de cada renglón correcto */
 var DISTRA={
   cli:['reg','ven'], prov:['ppe','remu'], remu:['prov','ren'],
   igv:['ren','otr'], ren:['igv','div'], otr:['cli','prov']
 };
 
-/* lista de movimientos a clasificar: uno por asiento con efectivo,
-   salvo el de impuestos, que se abre en tres                        */
 var MOVS=[];
-DIARIO.forEach(function(a, i){
+DIARIO.forEach(function(a){
   if(!a.mueve) return;
   if(a.parte){
     a.parte.forEach(function(p){
@@ -365,10 +489,221 @@ DIARIO.forEach(function(a, i){
     MOVS.push({ id:a.nro, nro:a.nro, fecha:a.fecha, glosa:a.glosa, efe:a.efe, monto:a.monto });
   }
 });
-MOVS.forEach(function(m){
-  m.ops=baraja([m.efe].concat(DISTRA[m.efe]||['otr','prov']));
+MOVS.forEach(function(m){ m.ops=baraja([m.efe].concat(DISTRA[m.efe]||['otr','prov'])); });
+
+/* =================== casos integrales 5 y 6 =================== */
+/* cada caso trae su estado de situación financiera completo, su libro diario
+   y el estado de flujos que el alumno arma; las tres hojas se ven a la vez   */
+var CASOS=[
+{ id:'c5', n:'Caso 5',
+  emp:{ nom:'COMERCIAL LOS ANDES E.I.R.L.', ruc:'RUC 20548877231', per:'Marzo de 2026' },
+  rel:'Un mes de pura cobranza y pagos: no hubo ventas ni compras nuevas. Se cobró lo del mes '+
+      'anterior, se pagó a los proveedores, se compró una computadora al contado y el banco '+
+      'desembolsó un préstamo. Fíjate en que la empresa <b>pierde S/ 10,059.46</b> y aun así '+
+      '<b>la caja sube S/ 22,750.00</b>: la utilidad y el efectivo no son lo mismo.',
+  ini:30000.00, fin:52750.00,
+  esf:[
+    ['R','ACTIVO',null,null,0],
+    ['101','Caja',                                       3000.00,  3000.00, 1],
+    ['1041','Cuentas corrientes operativas',            49750.00, 27000.00, 1],
+    ['1212','Facturas por cobrar — terceros',               0.00, 48000.00, 0],
+    ['40111','Tributos por recuperar — IGV',              945.76,     0.00, 0],
+    ['2011','Mercaderías manufacturadas',               18000.00, 18000.00, 0],
+    ['33611','Equipos de procesamiento de información',  5254.24,     0.00, 0],
+    ['39133','Depreciación acumulada',                   -109.46,     0.00, 0],
+    ['T','TOTAL ACTIVO',                                76840.54, 96000.00, 0],
+    ['R','PASIVO',null,null,0],
+    ['4212','Facturas emitidas por pagar — terceros',        0.00, 21000.00, 0],
+    ['40111','Tributos por pagar — IGV',                     0.00,  3100.00, 0],
+    ['4511','Préstamos de instituciones financieras',    15000.00,     0.00, 0],
+    ['T','TOTAL PASIVO',                                 15000.00, 24100.00, 0],
+    ['R','PATRIMONIO',null,null,0],
+    ['5011','Capital — acciones',                        70000.00, 70000.00, 0],
+    ['5911','Resultados acumulados',                      1900.00,  1900.00, 0],
+    ['59','Resultado del ejercicio',                    -10059.46,     0.00, 0],
+    ['T','TOTAL PATRIMONIO',                             61840.54, 71900.00, 0],
+    ['T','TOTAL PASIVO Y PATRIMONIO',                    76840.54, 96000.00, 0]
+  ],
+  dia:[
+    { nro:'A-01', fecha:'01/03/2026', glosa:'Por el asiento de apertura', mueve:false,
+      por:'Toca las cuentas de efectivo, pero es el <b>saldo inicial</b>: no es un movimiento de marzo.',
+      l:[['101','CAJA',3000.00,null],['1041','CUENTAS CORRIENTES OPERATIVAS',27000.00,null],
+         ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',48000.00,null],
+         ['2011','MERCADERÍAS MANUFACTURADAS',18000.00,null],
+         ['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',null,21000.00],
+         ['40111','IGV — CUENTA PROPIA',null,3100.00],
+         ['5011','ACCIONES',null,70000.00],
+         ['5911','UTILIDADES ACUMULADAS',null,1900.00]] },
+    { nro:'A-02', fecha:'03/03/2026', glosa:'Por el cobro de las facturas del mes anterior',
+      mueve:true, efe:'cli', monto:48000.00,
+      por:'Entra efectivo y baja la cuenta por cobrar: <b>cobranza a clientes</b>, actividad de operación.',
+      l:[['1041','CUENTAS CORRIENTES OPERATIVAS',48000.00,null],
+         ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',null,48000.00]] },
+    { nro:'A-03', fecha:'05/03/2026', glosa:'Por el pago a los proveedores de mercadería',
+      mueve:true, efe:'prov', monto:-21000.00,
+      por:'Sale efectivo de la cuenta corriente contra la cuenta por pagar: <b>pago a proveedores</b>.',
+      l:[['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',21000.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,21000.00]] },
+    { nro:'A-04', fecha:'08/03/2026', glosa:'Por la compra de una computadora al contado',
+      mueve:true, efe:'ppe', monto:-6200.00,
+      por:'Comprar un activo fijo es <b>inversión</b>, no operación, aunque se pague con el mismo banco.',
+      l:[['33611','EQUIPOS DE PROCESAMIENTO DE INFORMACIÓN — COSTO',5254.24,null],
+         ['40111','IGV — CUENTA PROPIA',945.76,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,6200.00]] },
+    { nro:'A-05', fecha:'10/03/2026', glosa:'Por el préstamo desembolsado por el banco',
+      mueve:true, efe:'pres', monto:15000.00,
+      por:'El dinero entra porque alguien financia a la empresa: <b>actividad de financiación</b>.',
+      l:[['1041','CUENTAS CORRIENTES OPERATIVAS',15000.00,null],
+         ['4511','PRÉSTAMOS DE INSTITUCIONES FINANCIERAS',null,15000.00]] },
+    { nro:'A-06', fecha:'25/03/2026', glosa:'Por la planilla del mes', mueve:false,
+      por:'Devengo: nace la obligación con el trabajador, el dinero sale cuando se paga.',
+      l:[['6211','SUELDOS Y SALARIOS',9500.00,null],
+         ['4111','SUELDOS Y SALARIOS POR PAGAR',null,9500.00]] },
+    { nro:'A-07', fecha:'28/03/2026', glosa:'Por el pago de la planilla del mes',
+      mueve:true, efe:'remu', monto:-9500.00,
+      por:'Aquí sí sale el dinero: <b>pago de remuneraciones</b>, actividad de operación.',
+      l:[['4111','SUELDOS Y SALARIOS POR PAGAR',9500.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,9500.00]] },
+    { nro:'A-08', fecha:'29/03/2026', glosa:'Por el pago del IGV de febrero a la SUNAT',
+      mueve:true, efe:'igv', monto:-3100.00,
+      por:'Pago de tributos: va al renglón del <b>IGV</b> dentro de operación.',
+      l:[['40111','IGV — CUENTA PROPIA',3100.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,3100.00]] },
+    { nro:'A-09', fecha:'30/03/2026', glosa:'Por los intereses del préstamo bancario',
+      mueve:true, efe:'int', monto:-450.00,
+      por:'El interés es el costo del financiamiento: en el formato que usamos va a <b>financiación</b>.',
+      l:[['6731','PRÉSTAMOS DE INSTITUCIONES FINANCIERAS',450.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,450.00]] },
+    { nro:'A-10', fecha:'31/03/2026', glosa:'Por la depreciación del mes', mueve:false,
+      por:'La depreciación nunca mueve efectivo: es desgaste, no salida de dinero.',
+      l:[['68142','DEPRECIACIÓN DE EQUIPOS DE PROCESAMIENTO',109.46,null],
+         ['39133','DEP. ACUM. — EQUIPOS DE PROCESAMIENTO',null,109.46]] }
+  ] },
+
+{ id:'c6', n:'Caso 6',
+  emp:{ nom:'SERVICIOS YANAHUARA S.A.C.', ruc:'RUC 20601134908', per:'Abril de 2026' },
+  rel:'Mes con las tres actividades completas: se cobró a clientes y se cobraron comisiones en caja, '+
+      'se vendió la camioneta vieja, se compraron equipos, se amortizó el préstamo y se pagaron '+
+      'dividendos. Ojo: el resultado del ejercicio es una <b>pérdida de S/ 11,655.89</b> y la caja '+
+      'igual <b>sube S/ 5,250.00</b>. Aquí también se paga desde <b>101 Caja</b>, no solo del banco.',
+  ini:50000.00, fin:55250.00,
+  esf:[
+    ['R','ACTIVO',null,null,0],
+    ['101','Caja',                                        4250.00,   2500.00, 1],
+    ['102','Fondos fijos',                                1500.00,   1500.00, 1],
+    ['1041','Cuentas corrientes operativas',             49500.00,  46000.00, 1],
+    ['1212','Facturas por cobrar — terceros',                0.00,  62400.00, 0],
+    ['33411','Vehículos motorizados — costo',                0.00,  42000.00, 0],
+    ['33611','Equipos de procesamiento de información',   4025.42,      0.00, 0],
+    ['39','Depreciación acumulada',                        -83.86, -34000.00, 0],
+    ['T','TOTAL ACTIVO',                                 59191.56, 120400.00, 0],
+    ['R','PASIVO',null,null,0],
+    ['40111','Tributos por pagar — IGV',                  1197.45,      0.00, 0],
+    ['4017','Impuesto a la renta por pagar',                 0.00,   1850.00, 0],
+    ['4212','Facturas emitidas por pagar — terceros',        0.00,  28900.00, 0],
+    ['4511','Préstamos de instituciones financieras',        0.00,  12000.00, 0],
+    ['T','TOTAL PASIVO',                                  1197.45,  42750.00, 0],
+    ['R','PATRIMONIO',null,null,0],
+    ['5011','Capital — acciones',                        60000.00,  60000.00, 0],
+    ['5911','Resultados acumulados',                      9650.00,  17650.00, 0],
+    ['59','Resultado del ejercicio',                     -11655.89,     0.00, 0],
+    ['T','TOTAL PATRIMONIO',                             57994.11,  77650.00, 0],
+    ['T','TOTAL PASIVO Y PATRIMONIO',                    59191.56, 120400.00, 0]
+  ],
+  dia:[
+    { nro:'B-01', fecha:'01/04/2026', glosa:'Por el asiento de apertura', mueve:false,
+      por:'Saldo inicial de abril: toca caja, fondos fijos y banco, pero no es movimiento del mes.',
+      l:[['101','CAJA',2500.00,null],['102','FONDOS FIJOS',1500.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',46000.00,null],
+         ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',62400.00,null],
+         ['33411','VEHÍCULOS MOTORIZADOS — COSTO',42000.00,null],
+         ['39131','DEP. ACUM. — VEHÍCULOS MOTORIZADOS',null,34000.00],
+         ['4017','IMPUESTO A LA RENTA',null,1850.00],
+         ['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',null,28900.00],
+         ['4511','PRÉSTAMOS DE INSTITUCIONES FINANCIERAS',null,12000.00],
+         ['5011','ACCIONES',null,60000.00],
+         ['5911','UTILIDADES ACUMULADAS',null,17650.00]] },
+    { nro:'B-02', fecha:'04/04/2026', glosa:'Por el cobro de las facturas a los clientes',
+      mueve:true, efe:'cli', monto:62400.00,
+      por:'Cobranza de la venta de servicios: <b>operación</b>, y es un <b>origen</b> de efectivo.',
+      l:[['1041','CUENTAS CORRIENTES OPERATIVAS',62400.00,null],
+         ['1212','FACTURAS POR COBRAR EMITIDAS EN CARTERA — TERCEROS',null,62400.00]] },
+    { nro:'B-03', fecha:'06/04/2026', glosa:'Por el cobro de comisiones del mes en efectivo',
+      mueve:true, efe:'reg', monto:3600.00,
+      por:'No es la venta principal: va al renglón de <b>comisiones y otros cobros</b>. Entra por <b>101 Caja</b>.',
+      l:[['101','CAJA',3600.00,null],
+         ['40111','IGV — CUENTA PROPIA',null,549.15],
+         ['7041','COMISIONES Y CORRETAJES',null,3050.85]] },
+    { nro:'B-04', fecha:'08/04/2026', glosa:'Por el pago a los proveedores', mueve:true,
+      efe:'prov', monto:-28900.00,
+      por:'Salida de efectivo hacia proveedores de bienes y servicios: <b>operación</b>.',
+      l:[['4212','FACTURAS EMITIDAS POR PAGAR — TERCEROS',28900.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,28900.00]] },
+    { nro:'B-05', fecha:'12/04/2026', glosa:'Por la venta al contado de la camioneta',
+      mueve:true, efe:'ven', monto:9000.00,
+      por:'Vender un activo fijo es <b>inversión</b>. Entran S/ 9,000.00 aunque contablemente haya pérdida.',
+      l:[['1041','CUENTAS CORRIENTES OPERATIVAS',9000.00,null],
+         ['39131','DEP. ACUM. — VEHÍCULOS MOTORIZADOS',34000.00,null],
+         ['6551','COSTO NETO DE ENAJENACIÓN DE ACTIVOS — IME',8000.00,null],
+         ['33411','VEHÍCULOS MOTORIZADOS — COSTO',null,42000.00],
+         ['40111','IGV — CUENTA PROPIA',null,1372.88],
+         ['7561','ENAJENACIÓN DE ACTIVOS INMOVILIZADOS — IME',null,7627.12]] },
+    { nro:'B-06', fecha:'15/04/2026', glosa:'Por la planilla del mes', mueve:false,
+      por:'Devengo de la planilla: todavía no sale el dinero.',
+      l:[['6211','SUELDOS Y SALARIOS',14250.00,null],
+         ['4111','SUELDOS Y SALARIOS POR PAGAR',null,14250.00]] },
+    { nro:'B-07', fecha:'18/04/2026', glosa:'Por el pago del impuesto a la renta desde caja',
+      mueve:true, efe:'ren', monto:-1850.00,
+      por:'Tiene su propio renglón: <b>impuesto a las ganancias</b>, distinto del IGV. Sale de <b>101 Caja</b>.',
+      l:[['4017','IMPUESTO A LA RENTA',1850.00,null],
+         ['101','CAJA',null,1850.00]] },
+    { nro:'B-08', fecha:'20/04/2026', glosa:'Por la compra de equipos de cómputo al contado',
+      mueve:true, efe:'ppe', monto:-4750.00,
+      por:'Compra de activo fijo: <b>inversión</b>, aunque se pague con la cuenta corriente.',
+      l:[['33611','EQUIPOS DE PROCESAMIENTO DE INFORMACIÓN — COSTO',4025.42,null],
+         ['40111','IGV — CUENTA PROPIA',724.58,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,4750.00]] },
+    { nro:'B-09', fecha:'26/04/2026', glosa:'Por la declaración de dividendos de los accionistas',
+      mueve:false,
+      por:'Acordar el dividendo solo mueve patrimonio contra pasivo: el efectivo sale cuando se paga.',
+      l:[['5911','UTILIDADES ACUMULADAS',8000.00,null],
+         ['4412','ACCIONISTAS (O SOCIOS) — DIVIDENDOS',null,8000.00]] },
+    { nro:'B-10', fecha:'28/04/2026', glosa:'Por el pago de la planilla del mes',
+      mueve:true, efe:'remu', monto:-14250.00,
+      por:'Salida por <b>remuneraciones y beneficios sociales</b>: operación.',
+      l:[['4111','SUELDOS Y SALARIOS POR PAGAR',14250.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,14250.00]] },
+    { nro:'B-11', fecha:'29/04/2026', glosa:'Por la amortización del préstamo bancario',
+      mueve:true, efe:'amo', monto:-12000.00,
+      por:'Devolver el capital del préstamo es <b>financiación</b>, no un gasto de operación.',
+      l:[['4511','PRÉSTAMOS DE INSTITUCIONES FINANCIERAS',12000.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,12000.00]] },
+    { nro:'B-12', fecha:'30/04/2026', glosa:'Por el pago de dividendos a los accionistas',
+      mueve:true, efe:'div', monto:-8000.00,
+      por:'Devolver riqueza a los dueños es <b>financiación</b>: el renglón de dividendos pagados.',
+      l:[['4412','ACCIONISTAS (O SOCIOS) — DIVIDENDOS',8000.00,null],
+         ['1041','CUENTAS CORRIENTES OPERATIVAS',null,8000.00]] },
+    { nro:'B-13', fecha:'30/04/2026', glosa:'Por la depreciación del mes', mueve:false,
+      por:'Otra vez: la depreciación no mueve efectivo.',
+      l:[['68142','DEPRECIACIÓN DE EQUIPOS DE PROCESAMIENTO',83.86,null],
+         ['39133','DEP. ACUM. — EQUIPOS DE PROCESAMIENTO',null,83.86]] }
+  ] }
+];
+
+/* movimientos de cada caso integral */
+CASOS.forEach(function(C){
+  C.movs=[];
+  C.dia.forEach(function(a){
+    if(a.mueve) C.movs.push({ id:C.id+'/'+a.nro, nro:a.nro, fecha:a.fecha,
+                              glosa:a.glosa, efe:a.efe, monto:a.monto });
+  });
 });
-var TOTAL=DIARIO.length+MOVS.length;
+function caso(id){ for(var i=0;i<CASOS.length;i++) if(CASOS[i].id===id) return CASOS[i]; return null; }
+
+var TOT_RES=RES_ITEMS.length*2;
+var TOT_GUIA=DIARIO.length+MOVS.length;
+var TOT_CASOS=CASOS.reduce(function(n,C){ return n+C.dia.length+C.movs.length; },0);
+var TOTAL=TOT_RES+TOT_GUIA+TOT_CASOS;
 
 /* =================== sonido =================== */
 var son=true, ctx=null;
@@ -390,6 +725,7 @@ function nota(f, ini, dur, vol, tipo){
 function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
 function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
 function sTec(){ nota(520,0,0.05,0.04); }
+function sCoge(){ nota(880,0,0.05,0.045,'triangle'); }
 function sFin(){
   [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
   nota(1318.5,0.45,0.6,0.07);
@@ -406,13 +742,23 @@ $('btnSon').addEventListener('click', function(){
 pintaSon();
 
 /* =================== estado =================== */
-var LS='fd_avance_v1';
-var G={ filtro:{}, clas:{}, falloF:{}, falloC:{} };
+var LS='fd_avance_v2';
+function vacio(){
+  var cs={};
+  CASOS.forEach(function(C){ cs[C.id]={ f:{}, c:{}, ff:{}, fc:0 }; });
+  return { res:{}, falloR:{}, filtro:{}, clas:{}, falloF:{}, falloC:{}, cs:cs };
+}
+var G=vacio();
 try{
   var d=JSON.parse(localStorage.getItem(LS)||'null');
   if(d && typeof d==='object'){
+    G.res=d.res||{}; G.falloR=d.falloR||{};
     G.filtro=d.filtro||{}; G.clas=d.clas||{};
     G.falloF=d.falloF||{}; G.falloC=d.falloC||{};
+    CASOS.forEach(function(C){
+      var s=(d.cs||{})[C.id]||{};
+      G.cs[C.id]={ f:s.f||{}, c:s.c||{}, ff:s.ff||{}, fc:s.fc||0 };
+    });
   }
 }catch(e){}
 function graba(){
@@ -420,33 +766,72 @@ function graba(){
   if(window.Aula && Aula.enSala) Aula.empuja();
 }
 var paso=0, festejado=false;
+var elegida={};   /* ficha seleccionada por caso, no se guarda */
 
+/* --- contadores --- */
+function resHechas(){
+  var n=0;
+  RES_ITEMS.forEach(function(it){
+    var r=G.res[it.id]||{};
+    if(r.act===it.act) n++;
+    if(r.sig===it.sig) n++;
+  });
+  return n;
+}
+function resListo(){ return resHechas()===TOT_RES; }
 function filtrados(){ var n=0; DIARIO.forEach(function(a){ if(G.filtro[a.nro]) n++; }); return n; }
 function clasificados(){ var n=0; MOVS.forEach(function(m){ if(G.clas[m.id]===m.efe) n++; }); return n; }
-function hechas(){ return filtrados()+clasificados(); }
-function listoTodo(){ return hechas()===TOTAL; }
 function filtroListo(){ return filtrados()===DIARIO.length; }
+function guiaHechas(){ return filtrados()+clasificados(); }
+function csFil(C){ var n=0; C.dia.forEach(function(a){ if(G.cs[C.id].f[a.nro]) n++; }); return n; }
+function csUbi(C){ var n=0; C.movs.forEach(function(m){ if(G.cs[C.id].c[m.id]===m.efe) n++; }); return n; }
+function csHechas(C){ return csFil(C)+csUbi(C); }
+function csListo(C){ return csHechas(C)===(C.dia.length+C.movs.length); }
+function csFiltroListo(C){ return csFil(C)===C.dia.length; }
+function hechas(){
+  return resHechas()+guiaHechas()+CASOS.reduce(function(n,C){ return n+csHechas(C); },0);
+}
+function listoTodo(){ return hechas()===TOTAL; }
 
-/* el estado de flujos, con lo que el alumno lleva clasificado */
+/* el estado de flujos del caso guiado */
 function armaEFE(){
   var r={};
   EFE_LIN.forEach(function(l){ r[l.k]=0; });
   MOVS.forEach(function(m){ if(G.clas[m.id]===m.efe) r[m.efe]+=m.monto; });
-  var oper=0;
-  ['cli','reg','prov','remu','ren','igv','otr'].forEach(function(k){ oper+=r[k]; });
-  var inv=r.ppe+r.ven, fin=r.int+r.div;
+  var oper=0, inv=0, fin=0;
+  SEC.op.forEach(function(k){ oper+=r[k]; });
+  SEC.inv.forEach(function(k){ inv+=r[k]; });
+  SEC.fin.forEach(function(k){ fin+=r[k]; });
   return { r:r, oper:r2(oper), inv:r2(inv), fin:r2(fin), neto:r2(oper+inv+fin) };
 }
+/* el estado de flujos de un caso integral */
+function armaCaso(C){
+  var r={}, dest={};
+  EFE_LIN.forEach(function(l){ r[l.k]=0; dest[l.k]=[]; });
+  C.movs.forEach(function(m){
+    if(G.cs[C.id].c[m.id]===m.efe){ r[m.efe]+=m.monto; dest[m.efe].push(m); }
+  });
+  var oper=0, inv=0, fin=0;
+  SEC.op.forEach(function(k){ oper+=r[k]; });
+  SEC.inv.forEach(function(k){ inv+=r[k]; });
+  SEC.fin.forEach(function(k){ fin+=r[k]; });
+  return { r:r, dest:dest, oper:r2(oper), inv:r2(inv), fin:r2(fin), neto:r2(oper+inv+fin) };
+}
 
-/* =================== dibujo =================== */
+/* =================== cabecera =================== */
+var PASOS=[
+  ['1 · Resumen',                 'Operación, inversión y financiación'],
+  ['2 · El punto de partida',     'Estado de situación financiera'],
+  ['3 · Filtra el libro diario',  '¿Qué asientos mueven dinero?'],
+  ['4 · Clasifica los movimientos','¿A qué renglón del flujo va?'],
+  ['5 · El estado de flujos',     'Se arma solo y se comprueba'],
+  ['Caso 5 · Integral',           'Los Andes · tres ventanas'],
+  ['Caso 6 · Integral',           'Yanahuara · tres ventanas']
+];
 function cabecera(){
-  $('pasos').innerHTML=
-    [['1 · El punto de partida','Estado de situación financiera'],
-     ['2 · Filtra el libro diario','¿Qué asientos mueven dinero?'],
-     ['3 · Clasifica los movimientos','¿A qué renglón del flujo va?'],
-     ['4 · El estado de flujos','Se arma solo y se comprueba']]
-    .map(function(p,i){
-      return '<button type="button" data-p="'+i+'" class="'+(i===paso?'on':'')+'">'+
+  $('pasos').innerHTML= PASOS.map(function(p,i){
+      var cl=(i===paso?'on':'')+(i>=5?' integral':'');
+      return '<button type="button" data-p="'+i+'" class="'+cl.trim()+'">'+
              esc(p[0])+'<span class="p">'+esc(p[1])+'</span></button>';
     }).join('')+
     '<button type="button" class="valora" id="btnValora">⭐ Valorar<span class="p">Cuéntanos qué te pareció</span></button>';
@@ -457,10 +842,132 @@ function cabecera(){
     window.open('https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html','_blank','noopener');
   });
   var n=hechas();
-  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos';
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos de la sesión';
   $('progI').style.width=(n/TOTAL*100)+'%';
 }
 
+/* =================== paso 1 · resumen =================== */
+function vistaResumen(){
+  var h='<div class="caja"><h3><span>Las tres actividades del estado de flujos de efectivo</span>'+
+    '<span class="st">NIC 7</span></h3><div class="cuerpo">'+
+    '<p>Todo cobro y todo pago del mes entra en <b>una</b> de estas tres cajas. La pregunta que decide '+
+    'no es de qué cuenta salió el dinero, sino <b>para qué se movió</b>.</p>'+
+    '<div class="tres">'+
+
+    '<div class="act aOp"><h4>🏭 Operación</h4><div class="c">'+
+    '<p>El dinero del <b>negocio de todos los días</b>: lo que la empresa cobra por vender y lo que paga '+
+    'para poder vender. Es la caja que debería sostener a la empresa sola.</p>'+
+    '<span class="et">Orígenes (entra)</span><ul>'+
+    '<li><span class="s or">+</span><span>Cobranza a clientes por ventas y servicios</span></li>'+
+    '<li><span class="s or">+</span><span>Comisiones, regalías, alquileres y otros cobros del giro</span></li>'+
+    '<li><span class="s or">+</span><span>Devolución de impuestos de la SUNAT</span></li></ul>'+
+    '<span class="et">Aplicaciones (sale)</span><ul>'+
+    '<li><span class="s ap">−</span><span>Pago a proveedores de bienes y servicios</span></li>'+
+    '<li><span class="s ap">−</span><span>Pago de remuneraciones y beneficios sociales</span></li>'+
+    '<li><span class="s ap">−</span><span>Pago de IGV y de impuesto a la renta</span></li></ul>'+
+    '</div><div class="cu"><b>Pista:</b> si la operación sale negativa mes tras mes, la empresa vive '+
+    'de préstamos o de vender sus activos.</div></div>'+
+
+    '<div class="act aInv"><h4>🏗️ Inversión</h4><div class="c">'+
+    '<p>El dinero de los <b>activos de largo plazo</b>: lo que la empresa compra para producir y lo que '+
+    'recupera cuando vende algo que ya no usa. No es el día a día, es la capacidad futura.</p>'+
+    '<span class="et">Orígenes (entra)</span><ul>'+
+    '<li><span class="s or">+</span><span>Cobro por venta de inmuebles, maquinaria y equipo</span></li>'+
+    '<li><span class="s or">+</span><span>Cobro por venta de inversiones en otras empresas</span></li>'+
+    '<li><span class="s or">+</span><span>Cobro de préstamos otorgados a terceros</span></li></ul>'+
+    '<span class="et">Aplicaciones (sale)</span><ul>'+
+    '<li><span class="s ap">−</span><span>Compra de propiedades, planta y equipo</span></li>'+
+    '<li><span class="s ap">−</span><span>Compra de intangibles (software, licencias)</span></li>'+
+    '<li><span class="s ap">−</span><span>Préstamos otorgados a terceros</span></li></ul>'+
+    '</div><div class="cu"><b>Pista:</b> la compra de <b>mercadería</b> no es inversión, es operación. '+
+    'Inversión es lo que se deprecia o amortiza.</div></div>'+
+
+    '<div class="act aFin"><h4>🏦 Financiación</h4><div class="c">'+
+    '<p>El dinero de <b>quienes ponen la plata</b>: los bancos y los dueños. Entra cuando financian a la '+
+    'empresa y sale cuando se les devuelve o se les retribuye.</p>'+
+    '<span class="et">Orígenes (entra)</span><ul>'+
+    '<li><span class="s or">+</span><span>Préstamos recibidos del banco</span></li>'+
+    '<li><span class="s or">+</span><span>Aportes de capital de los socios</span></li>'+
+    '<li><span class="s or">+</span><span>Emisión de bonos y otras obligaciones</span></li></ul>'+
+    '<span class="et">Aplicaciones (sale)</span><ul>'+
+    '<li><span class="s ap">−</span><span>Amortización del capital del préstamo</span></li>'+
+    '<li><span class="s ap">−</span><span>Intereses pagados</span></li>'+
+    '<li><span class="s ap">−</span><span>Dividendos pagados a los accionistas</span></li></ul>'+
+    '</div><div class="cu"><b>Ojo:</b> la NIC 7 deja elegir dónde van los <b>intereses</b>. '+
+    'En clase los ponemos en financiación y lo decimos en las notas.</div></div>'+
+
+    '</div></div></div>';
+
+  h+='<div class="caja"><h3><span>Origen y aplicación: de dónde vino y en qué se usó</span>'+
+    '<span class="st">la otra lectura del mismo estado</span></h3><div class="cuerpo">'+
+    '<p>Las tres actividades dicen <b>a qué área</b> pertenece el movimiento. Origen y aplicación dicen '+
+    '<b>para qué lado</b> va el dinero. Cada renglón del estado de flujos es una de las dos cosas, '+
+    'y por eso los importes negativos se escriben entre paréntesis.</p>'+
+    '<div class="oa">'+
+    '<div class="lado or"><b class="t">↗ Origen de fondos (entrada, signo +)</b>'+
+    'De dónde <b>vino</b> el dinero. Aumenta la caja. Puede ser porque alguien me pagó, porque vendí '+
+    'un activo o porque me financiaron.'+
+    '<ul><li>Cobré una factura al cliente → origen de operación</li>'+
+    '<li>Vendí la camioneta vieja → origen de inversión</li>'+
+    '<li>El banco me desembolsó el préstamo → origen de financiación</li></ul></div>'+
+    '<div class="lado ap"><b class="t">↘ Aplicación de fondos (salida, signo −)</b>'+
+    'En qué se <b>usó</b> el dinero. Disminuye la caja. Puede ser pagando el giro, comprando activos '+
+    'o devolviendo a quien me financió.'+
+    '<ul><li>Pagué la planilla → aplicación de operación</li>'+
+    '<li>Compré la computadora → aplicación de inversión</li>'+
+    '<li>Amorticé la cuota del préstamo → aplicación de financiación</li></ul></div>'+
+    '</div>'+
+    '<p style="margin-top:11px"><b>La regla que cierra todo:</b> <b>total de orígenes − total de '+
+    'aplicaciones = variación de la caja</b>. Y esa variación tiene que ser exactamente la diferencia '+
+    'entre el saldo inicial y el saldo final de efectivo que aparece en el estado de situación '+
+    'financiera. Si no cuadra, falta un movimiento o uno está en el renglón equivocado.</p>'+
+    '<p class="pistas" style="margin:0">Un movimiento que no mueve efectivo (una compra al crédito, '+
+    'la depreciación, la declaración de un dividendo) no es origen ni aplicación: simplemente no entra '+
+    'al estado de flujos.</p>'+
+    '</div></div>';
+
+  h+='<div class="caja dia"><h3><span>Compruébalo: dos decisiones por operación</span>'+
+    '<span class="st">'+resHechas()+' de '+TOT_RES+' aciertos</span></h3>'+
+    '<div class="cuerpo" style="padding-bottom:4px"><p style="margin:0 0 10px">'+
+    'Por cada operación elige <b>la actividad</b> y después si es <b>origen o aplicación</b>.</p></div>'+
+    '<div style="padding:0 12px 12px">';
+  RES_ITEMS.forEach(function(it){
+    var r=G.res[it.id]||{}, mal=G.falloR[it.id]||{};
+    h+='<div class="op2"><div class="q"><span class="ic">'+it.ic+'</span><span>'+esc(it.t)+'</span></div>'+
+       '<div class="grupos">'+
+       '<div class="g"><span class="et">¿Qué actividad es?</span><div class="bs" data-r="'+it.id+'" data-c="act">';
+    if(r.act===it.act){
+      h+='<span class="ok">✓ '+esc(ACTNOM[it.act])+'</span>';
+    }else{
+      ['op','inv','fin'].forEach(function(k){
+        var m=((mal.act||[]).indexOf(k)>=0);
+        h+='<button type="button" data-v="'+k+'"'+(m?' class="mala" disabled':'')+'>'+esc(ACTNOM[k])+'</button>';
+      });
+    }
+    h+='</div></div><div class="g"><span class="et">¿Origen o aplicación?</span><div class="bs" data-r="'+it.id+'" data-c="sig">';
+    if(r.sig===it.sig){
+      h+='<span class="ok'+(it.sig==='ap'?' rojo':'')+'">'+(it.sig==='or'?'✓ ↗ ':'✓ ↘ ')+esc(SIGNOM[it.sig])+'</span>';
+    }else{
+      ['or','ap'].forEach(function(k){
+        var m=((mal.sig||[]).indexOf(k)>=0);
+        h+='<button type="button" data-v="'+k+'"'+(m?' class="mala" disabled':'')+'>'+
+           (k==='or'?'↗ ':'↘ ')+esc(SIGNOM[k])+'</button>';
+      });
+    }
+    h+='</div></div></div></div>';
+  });
+  h+='</div></div>';
+
+  if(resListo()){
+    h+='<div class="caja efe"><h3>Listo el resumen</h3><div class="cuerpo"><p style="margin:0">'+
+       'Ya tienes el mapa. Ahora ve al <b>paso 2</b> para mirar el punto de partida, y cuando termines '+
+       'el caso guiado pásate a los <b>casos integrales 5 y 6</b>, donde armas el estado completo con las '+
+       'tres hojas a la vista.</p></div></div>';
+  }
+  return h;
+}
+
+/* =================== paso 2 · punto de partida =================== */
 function vistaESF(){
   var h='<div class="caja esf"><h3><span>Extracto del estado de situación financiera</span>'+
     '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.per)+'</span></h3>'+
@@ -479,13 +986,14 @@ function vistaESF(){
      'Eso es exactamente lo que el estado de flujos de efectivo tiene que explicar, renglón por renglón. '+
      'Fíjate en que los tres saldos salen del asiento de apertura y de los movimientos de febrero.</p></div></div>';
   h+='<div class="caja"><h3>Qué sigue</h3><div class="cuerpo"><p style="margin:0">'+
-     'En el paso 2 vas a mirar los '+DIARIO.length+' asientos del mes y marcar cuáles mueven dinero. '+
+     'En el paso 3 vas a mirar los '+DIARIO.length+' asientos del mes y marcar cuáles mueven dinero. '+
      'La regla es sencilla: <b>mueve efectivo el asiento que toca 101, 102 o 1041</b>. '+
      'Ojo con el asiento de apertura, que las toca pero no es un movimiento del mes.</p></div></div>';
   return h;
 }
 
-function tablaAsiento(a){
+/* =================== tabla de un asiento =================== */
+function tablaAsiento(a, chico){
   var h='<div class="envuelve"><table class="t"><thead><tr><th style="width:15%">Código</th>'+
         '<th>Denominación</th><th class="n" style="width:17%">Debe</th>'+
         '<th class="n" style="width:17%">Haber</th></tr></thead><tbody>';
@@ -498,6 +1006,7 @@ function tablaAsiento(a){
   return h+'</tbody></table></div>';
 }
 
+/* =================== paso 3 · filtrar =================== */
 function vistaDiario(){
   var h='<div class="caja dia"><h3><span>Libro diario · formato 5.1</span>'+
     '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.ruc)+' · '+esc(EMP.per)+'</span></h3>'+
@@ -525,10 +1034,11 @@ function vistaDiario(){
   return h+'</div></div>';
 }
 
+/* =================== paso 4 · clasificar =================== */
 function vistaClas(){
   if(!filtroListo()){
     return '<div class="caja"><h3>Todavía no</h3><div class="cuerpo"><p style="margin:0">'+
-      'Primero termina el paso 2: hay que saber qué asientos mueven dinero antes de clasificarlos. '+
+      'Primero termina el paso 3: hay que saber qué asientos mueven dinero antes de clasificarlos. '+
       'Llevas '+filtrados()+' de '+DIARIO.length+'.</p></div></div>';
   }
   var h='<div class="caja dia"><h3><span>Los movimientos de efectivo del mes</span>'+
@@ -557,28 +1067,29 @@ function vistaClas(){
   return h+'</div></div>';
 }
 
+/* =================== paso 5 · el estado guiado =================== */
 function vistaEFE(){
-  var E=armaEFE(), falta=TOTAL-hechas();
-  function fila(k, sangra){
+  var E=armaEFE(), falta=TOT_GUIA-guiaHechas();
+  function fila(k){
     var L=linEFE(k), v=E.r[k];
-    return '<tr><td'+(sangra?' style="padding-left:22px"':'')+'>'+L.ic+' '+esc(L.t)+'</td>'+
+    return '<tr><td style="padding-left:22px">'+L.ic+' '+esc(L.t)+'</td>'+
            '<td class="n'+(v<0?' neg':'')+'">'+(v===0?'—':sol(r2(v)))+'</td></tr>';
   }
   var h='<div class="caja efe"><h3><span>Estado de flujos de efectivo · método directo</span>'+
     '<span class="st">'+esc(EMP.nom)+' · '+esc(EMP.per)+' · en soles</span></h3>'+
     '<div class="envuelve"><table class="t"><tbody>'+
     '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de operación</td></tr>'+
-    ['cli','reg','prov','remu','ren','igv','otr'].map(function(k){ return fila(k,true); }).join('')+
+    SEC.op.map(fila).join('')+
     '<tr class="tot"><td>Efectivo neto proveniente de las actividades de operación</td>'+
       '<td class="n'+(E.oper<0?' neg':'')+'">'+sol(E.oper)+'</td></tr>'+
     '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de inversión</td></tr>'+
-    ['ppe','ven'].map(function(k){ return fila(k,true); }).join('')+
+    SEC.inv.map(fila).join('')+
     '<tr class="tot"><td>Efectivo neto utilizado en las actividades de inversión</td>'+
-      '<td class="n">'+sol(E.inv)+'</td></tr>'+
+      '<td class="n'+(E.inv<0?' neg':'')+'">'+sol(E.inv)+'</td></tr>'+
     '<tr class="sub"><td colspan="2">Flujo de efectivo de actividades de financiación</td></tr>'+
-    ['int','div'].map(function(k){ return fila(k,true); }).join('')+
+    SEC.fin.map(fila).join('')+
     '<tr class="tot"><td>Efectivo neto utilizado en las actividades de financiación</td>'+
-      '<td class="n">'+sol(E.fin)+'</td></tr>'+
+      '<td class="n'+(E.fin<0?' neg':'')+'">'+sol(E.fin)+'</td></tr>'+
     '<tr class="tot"><td>Aumento (disminución) neto de efectivo y equivalentes</td>'+
       '<td class="n'+(E.neto<0?' neg':'')+'">'+sol(E.neto)+'</td></tr>'+
     '<tr><td>Saldo de efectivo y equivalentes al inicio del mes</td>'+
@@ -586,30 +1097,216 @@ function vistaEFE(){
     '<tr class="tot"><td>Saldo de efectivo y equivalentes al final del mes</td>'+
       '<td class="n">'+miles(r2(SALDO_INI+E.neto))+'</td></tr>'+
     '</tbody></table></div>';
-  var cuadra = Math.abs(r2(SALDO_INI+E.neto)-SALDO_FIN)<0.005 && listoTodo();
-  h+='<div class="cuerpo"><div class="marcador'+(cuadra?' ok':'')+'" style="margin:0">'+
+  var cuadra = Math.abs(r2(SALDO_INI+E.neto)-SALDO_FIN)<0.005 && guiaHechas()===TOT_GUIA;
+  h+='<div class="cuerpo"><div class="cuadre'+(cuadra?' ok':'')+'" style="margin:0">'+
      (cuadra
-      ? '✓ Cuadra con el estado de situación financiera: S/ '+miles(SALDO_FIN)+'. El flujo quedó explicado.'
-      : (falta>0 ? 'Faltan '+falta+' pasos. El saldo final debe terminar en <b>S/ '+miles(SALDO_FIN)+'</b>, que es lo que dice el estado de situación financiera.'
+      ? '✓ Cuadra con el estado de situación financiera: S/ '+miles(SALDO_FIN)+'. El flujo quedó explicado. '+
+        'Ahora pásate al <b>Caso 5</b>, donde armas el estado completo con las tres hojas a la vista.'
+      : (falta>0 ? 'Faltan '+falta+' pasos de este caso. El saldo final debe terminar en <b>S/ '+miles(SALDO_FIN)+'</b>, '+
+                   'que es lo que dice el estado de situación financiera.'
                  : 'Revisa: el saldo final todavía no coincide con S/ '+miles(SALDO_FIN)+'.'))+
      '</div></div></div>';
   return h;
 }
 
-/* =================== pintado y acciones =================== */
-function pinta(){
-  cabecera();
-  var h = paso===0 ? vistaESF() : paso===1 ? vistaDiario() : paso===2 ? vistaClas() : vistaEFE();
-  $('panel').innerHTML=h;
+/* =================== casos 5 y 6 · las tres ventanas =================== */
+function tablaESFcaso(C){
+  var h='<table class="t"><thead><tr><th>Código</th><th>Cuenta</th>'+
+        '<th class="n">Al cierre</th><th class="n">Al inicio</th></tr></thead><tbody>';
+  C.esf.forEach(function(f){
+    if(f[0]==='R'){ h+='<tr class="rub"><td colspan="4">'+esc(f[1])+'</td></tr>'; return; }
+    var cl = f[0]==='T' ? ' class="tot"' : (f[4]? ' class="efeFila"' : '');
+    h+='<tr'+cl+'><td class="cc">'+(f[0]==='T'?'':esc(f[0]))+'</td><td>'+esc(f[1])+'</td>'+
+       '<td class="n'+(f[2]<0?' neg':'')+'">'+sol(r2(f[2]))+'</td>'+
+       '<td class="n'+(f[3]<0?' neg':'')+'">'+sol(r2(f[3]))+'</td></tr>';
+  });
+  h+='<tr class="sub"><td colspan="2">Efectivo y equivalentes de efectivo</td>'+
+     '<td class="n">'+miles(C.fin)+'</td><td class="n">'+miles(C.ini)+'</td></tr>'+
+     '<tr class="tot"><td colspan="2">Variación del efectivo en el mes</td>'+
+     '<td class="n'+((C.fin-C.ini)<0?' neg':'')+'" colspan="2">'+sol(r2(C.fin-C.ini))+'</td></tr>'+
+     '</tbody></table>'+
+     '<p class="pistas">Las filas en amarillo son el efectivo. De <b>S/ '+miles(C.ini)+'</b> a '+
+     '<b>S/ '+miles(C.fin)+'</b>: esa diferencia de <b>S/ '+miles(Math.abs(C.fin-C.ini))+'</b> es la que '+
+     'el estado de flujos tiene que explicar.</p>';
+  return h;
+}
 
-  qq('#panel .filtro').forEach(function(f){
+function diarioCaso(C){
+  var S=G.cs[C.id], h='';
+  C.dia.forEach(function(a){
+    var r=S.f[a.nro];
+    var cl = r ? (a.mueve?' efectivo':' noefe') : '';
+    h+='<div class="as'+cl+'"><div class="ah"><span class="nro">'+esc(a.nro)+'</span>'+
+       '<span class="fe">'+esc(a.fecha)+'</span><span class="gl">'+esc(a.glosa)+'</span>';
+    if(r){
+      h+='<span class="veredicto '+(a.mueve?'si':'no')+'">'+
+         (a.mueve?'Mueve · '+sol(a.monto):'No mueve')+'</span>';
+    }else{
+      var mal=S.ff[a.nro];
+      h+='<span class="filtro" data-cf="'+esc(C.id)+'" data-a="'+esc(a.nro)+'">'+
+         '<button type="button" data-v="si"'+(mal==='si'?' class="mala" disabled':'')+'>Mueve</button>'+
+         '<button type="button" data-v="no"'+(mal==='no'?' class="mala" disabled':'')+'>No mueve</button></span>';
+    }
+    h+='</div>'+tablaAsiento(a);
+    if(r) h+='<span class="porque">'+a.por+'</span>';
+    h+='</div>';
+  });
+  return h;
+}
+
+function bandejaCaso(C){
+  var S=G.cs[C.id], libres=C.movs.filter(function(m){
+    return S.f[m.nro] && S.c[m.id]!==m.efe;
+  });
+  var pend=C.movs.filter(function(m){ return !S.f[m.nro]; }).length;
+  var h='<div class="bandeja'+(libres.length?'':' vacia')+'"><span class="et">'+
+        'Movimientos por ubicar — elige uno y haz clic en su renglón</span>';
+  if(libres.length){
+    h+='<div class="fichas">'+libres.map(function(m){
+      var sel=(elegida[C.id]===m.id);
+      return '<button type="button" class="ficha'+(m.monto>0?' ent':'')+(sel?' sel':'')+
+             '" data-cm="'+esc(C.id)+'" data-id="'+esc(m.id)+'">'+
+             '<span>'+esc(m.nro)+'</span><span class="m">'+(m.monto>0?'+':'−')+' '+miles(m.monto)+'</span></button>';
+    }).join('')+'</div>';
+  }else{
+    h+='<span class="nada">'+(pend>0
+       ? 'Marca en el libro diario los asientos que mueven efectivo: las fichas aparecen aquí.'
+       : '✓ No queda ninguna ficha: los '+C.movs.length+' movimientos están ubicados.')+'</span>';
+  }
+  return h+'</div>';
+}
+
+function efeCaso(C){
+  var E=armaCaso(C), S=G.cs[C.id];
+  var hay=!!elegida[C.id];
+  function filas(sec){
+    return SEC[sec].map(function(k){
+      var L=linEFE(k), v=E.r[k], ds=E.dest[k];
+      var cl='ren'+(ds.length?' lista':'')+(hay?' libre':'');
+      return '<tr class="'+cl+'" data-cr="'+esc(C.id)+'" data-k="'+esc(k)+'">'+
+        '<td style="padding-left:16px">'+L.ic+' '+esc(L.t)+
+          (ds.length?'<span class="de">'+ds.map(function(m){ return esc(m.nro); }).join(' · ')+'</span>':'')+
+        '</td><td class="n'+(v<0?' neg':'')+'">'+(v===0?'—':sol(r2(v)))+'</td></tr>';
+    }).join('');
+  }
+  var fin=r2(C.ini+E.neto);
+  var cuadra = Math.abs(fin-C.fin)<0.005 && csListo(C);
+  var h='<table class="t efeT"><tbody>'+
+    '<tr class="sub"><td colspan="2">Actividades de operación</td></tr>'+filas('op')+
+    '<tr class="tot"><td>Efectivo neto de actividades de operación</td>'+
+      '<td class="n'+(E.oper<0?' neg':'')+'">'+sol(E.oper)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2">Actividades de inversión</td></tr>'+filas('inv')+
+    '<tr class="tot"><td>Efectivo neto de actividades de inversión</td>'+
+      '<td class="n'+(E.inv<0?' neg':'')+'">'+sol(E.inv)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2">Actividades de financiación</td></tr>'+filas('fin')+
+    '<tr class="tot"><td>Efectivo neto de actividades de financiación</td>'+
+      '<td class="n'+(E.fin<0?' neg':'')+'">'+sol(E.fin)+'</td></tr>'+
+    '<tr class="tot"><td>Aumento (disminución) neto de efectivo</td>'+
+      '<td class="n'+(E.neto<0?' neg':'')+'">'+sol(E.neto)+'</td></tr>'+
+    '<tr><td>Saldo de efectivo al inicio del mes</td><td class="n">'+miles(C.ini)+'</td></tr>'+
+    '<tr class="tot"><td>Saldo de efectivo al final del mes</td>'+
+      '<td class="n">'+miles(fin)+'</td></tr>'+
+    '</tbody></table>';
+  h+='<div class="cuadre'+(cuadra?' ok':'')+'">'+
+     (cuadra
+      ? '✓ Cuadra: S/ '+miles(C.fin)+', igual que el estado de situación financiera de la izquierda. '+
+        'Orígenes menos aplicaciones explican la variación de S/ '+miles(Math.abs(C.fin-C.ini))+'.'
+      : 'Tiene que terminar en <b>S/ '+miles(C.fin)+'</b>. Te falta: '+
+        (csFil(C)<C.dia.length ? (C.dia.length-csFil(C))+' asiento(s) por marcar' : 'nada por marcar')+
+        ' y '+(C.movs.length-csUbi(C))+' movimiento(s) por ubicar.')+
+     '</div>';
+  return h;
+}
+
+function vistaCaso(C){
+  var S=G.cs[C.id];
+  var h='<div class="caja"><h3><span>'+esc(C.n)+' · integral — '+esc(C.emp.nom)+'</span>'+
+    '<span class="st">'+esc(C.emp.ruc)+' · '+esc(C.emp.per)+'</span></h3><div class="cuerpo">'+
+    '<p>'+C.rel+'</p>'+
+    '<p class="pistas" style="margin:0"><b>Cómo trabajarlo:</b> en la ventana del centro marca cada asiento '+
+    'como <b>mueve</b> o <b>no mueve</b> efectivo. Cada asiento que mueve se convierte en una ficha en la '+
+    'ventana de la derecha: elige la ficha y haz clic en el renglón del estado de flujos donde va. '+
+    'La ventana de la izquierda te dice a cuánto tienes que llegar. Las tres se desplazan por separado.</p>'+
+    '</div></div>';
+  h+='<div class="vents">'+
+    '<div class="vent v1"><h3><span>1 · Situación financiera</span>'+
+      '<span class="st">cierre y apertura</span></h3>'+
+      '<div class="scroll" data-sc="'+esc(C.id)+'-1">'+tablaESFcaso(C)+'</div></div>'+
+    '<div class="vent v2"><h3><span>2 · Libro diario</span>'+
+      '<span class="st">'+csFil(C)+' de '+C.dia.length+' marcados</span></h3>'+
+      '<div class="scroll" data-sc="'+esc(C.id)+'-2">'+diarioCaso(C)+'</div></div>'+
+    '<div class="vent v3"><h3><span>3 · Flujos de efectivo</span>'+
+      '<span class="st">'+csUbi(C)+' de '+C.movs.length+' ubicados</span></h3>'+
+      '<div class="scroll" data-sc="'+esc(C.id)+'-3">'+bandejaCaso(C)+efeCaso(C)+'</div></div>'+
+    '</div>';
+  if(csListo(C)){
+    h+='<div class="caja efe" style="margin-top:14px"><h3>'+esc(C.n)+' terminado</h3><div class="cuerpo">'+
+       '<p style="margin:0">Los '+C.dia.length+' asientos están filtrados y los '+C.movs.length+
+       ' movimientos ubicados. El estado cierra en <b>S/ '+miles(C.fin)+'</b>, el mismo saldo de efectivo '+
+       'que muestra el estado de situación financiera al cierre.</p></div></div>';
+  }
+  return h;
+}
+
+/* =================== pintado y acciones =================== */
+var scrolls={};
+function guardaScroll(){
+  qq('#panel .scroll[data-sc]').forEach(function(d){ scrolls[d.dataset.sc]=d.scrollTop; });
+}
+function restaScroll(){
+  qq('#panel .scroll[data-sc]').forEach(function(d){
+    if(scrolls[d.dataset.sc]!==undefined) d.scrollTop=scrolls[d.dataset.sc];
+  });
+}
+
+function pinta(){
+  guardaScroll();
+  cabecera();
+  var h;
+  if(paso===0) h=vistaResumen();
+  else if(paso===1) h=vistaESF();
+  else if(paso===2) h=vistaDiario();
+  else if(paso===3) h=vistaClas();
+  else if(paso===4) h=vistaEFE();
+  else h=vistaCaso(CASOS[paso-5]);
+  $('panel').innerHTML=h;
+  cablea();
+  restaScroll();
+  pintaMarcador();
+}
+
+function cablea(){
+  /* resumen: actividad y origen/aplicación */
+  qq('#panel .bs[data-r]').forEach(function(g){
+    var id=g.dataset.r, campo=g.dataset.c;
+    qq('button', g).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var it=null; RES_ITEMS.forEach(function(x){ if(x.id===id) it=x; });
+        if(b.dataset.v===it[campo]){
+          if(!G.res[id]) G.res[id]={};
+          G.res[id][campo]=b.dataset.v; graba(); sBien(); pinta(); revisaFin();
+        }else{
+          if(!G.falloR[id]) G.falloR[id]={};
+          if(!G.falloR[id][campo]) G.falloR[id][campo]=[];
+          if(G.falloR[id][campo].indexOf(b.dataset.v)<0) G.falloR[id][campo].push(b.dataset.v);
+          graba(); sMal();
+          b.classList.add('temblor','mala'); b.disabled=true;
+          setTimeout(function(){ b.classList.remove('temblor'); }, 420);
+          pintaMarcador();
+        }
+      });
+    });
+  });
+
+  /* filtro del caso guiado */
+  qq('#panel .filtro[data-a]:not([data-cf])').forEach(function(f){
     var nro=f.dataset.a;
     qq('button', f).forEach(function(b){
       if(b.disabled) return;
       b.addEventListener('click', function(){
         var a=null; DIARIO.forEach(function(x){ if(x.nro===nro) a=x; });
-        var dice = b.dataset.v==='si';
-        if(dice===a.mueve){
+        if((b.dataset.v==='si')===a.mueve){
           G.filtro[nro]=1; graba(); sBien(); pinta(); revisaFin();
         }else{
           G.falloF[nro]=b.dataset.v; graba(); sMal();
@@ -620,9 +1317,10 @@ function pinta(){
     });
   });
 
-  qq('#panel .ops[data-m]').forEach(function(caja){
-    var id=caja.dataset.m;
-    qq('.op', caja).forEach(function(b){
+  /* clasificación del caso guiado */
+  qq('#panel .ops[data-m]').forEach(function(cajita){
+    var id=cajita.dataset.m;
+    qq('.op', cajita).forEach(function(b){
       if(b.disabled) return;
       b.addEventListener('click', function(){
         var m=null; MOVS.forEach(function(x){ if(x.id===id) m=x; });
@@ -639,26 +1337,83 @@ function pinta(){
       });
     });
   });
-  pintaMarcador();
+
+  /* filtro de los casos integrales */
+  qq('#panel .filtro[data-cf]').forEach(function(f){
+    var C=caso(f.dataset.cf), nro=f.dataset.a;
+    qq('button', f).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var a=null; C.dia.forEach(function(x){ if(x.nro===nro) a=x; });
+        if((b.dataset.v==='si')===a.mueve){
+          G.cs[C.id].f[nro]=1; graba(); sBien(); pinta(); revisaFin();
+        }else{
+          G.cs[C.id].ff[nro]=b.dataset.v; graba(); sMal();
+          b.classList.add('mala'); b.disabled=true;
+          pintaMarcador();
+        }
+      });
+    });
+  });
+
+  /* fichas: elegir el movimiento */
+  qq('#panel .ficha[data-cm]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var cid=b.dataset.cm;
+      elegida[cid] = (elegida[cid]===b.dataset.id) ? null : b.dataset.id;
+      if(elegida[cid]) sCoge();
+      pinta();
+    });
+  });
+
+  /* renglones del estado: soltar el movimiento elegido */
+  qq('#panel tr.ren[data-cr]').forEach(function(tr){
+    tr.addEventListener('click', function(){
+      var C=caso(tr.dataset.cr), id=elegida[C.id];
+      if(!id) return;
+      var m=null; C.movs.forEach(function(x){ if(x.id===id) m=x; });
+      if(!m) return;
+      if(tr.dataset.k===m.efe){
+        G.cs[C.id].c[id]=m.efe; elegida[C.id]=null; graba(); sBien(); pinta(); revisaFin();
+      }else{
+        G.cs[C.id].fc=(G.cs[C.id].fc||0)+1; graba(); sMal();
+        tr.classList.add('temblor');
+        setTimeout(function(){ tr.classList.remove('temblor'); }, 430);
+        pintaMarcador();
+      }
+    });
+  });
 }
 
 function pintaMarcador(){
-  var m=$('marcador'), n=hechas();
+  var m=$('marcador');
   if(listoTodo()){
     m.className='marcador ok';
-    m.innerHTML='✓ Terminado. Los '+DIARIO.length+' asientos están filtrados y los '+MOVS.length+
-      ' movimientos clasificados: el flujo explica la caída de S/ '+miles(SALDO_INI-SALDO_FIN)+'.';
+    m.innerHTML='✓ Sesión completa: el resumen, el caso guiado de San Cristóbal y los dos casos '+
+      'integrales. '+TOTAL+' de '+TOTAL+' pasos.';
     return;
   }
   m.className='marcador';
-  m.innerHTML = paso===0
-    ? 'Mira de cuánto parte la caja y a cuánto llega. Cuando lo tengas, pasa al libro diario.'
-    : paso===1
-      ? 'Filtrados '+filtrados()+' de '+DIARIO.length+' asientos. Mueve efectivo el que toca 101, 102 o 1041.'
-      : paso===2
-        ? (filtroListo() ? 'Clasificados '+clasificados()+' de '+MOVS.length+' movimientos.'
-                         : 'Antes termina el filtro del paso 2.')
-        : n+' de '+TOTAL+' pasos · el estado se completa conforme clasificas.';
+  if(paso===0){
+    m.innerHTML = resListo()
+      ? '✓ Resumen dominado: '+TOT_RES+' de '+TOT_RES+'. Pasa al punto de partida.'
+      : 'Resumen: '+resHechas()+' de '+TOT_RES+' aciertos. Primero la actividad, después origen o aplicación.';
+  }else if(paso===1){
+    m.innerHTML='Mira de cuánto parte la caja y a cuánto llega. Cuando lo tengas, pasa al libro diario.';
+  }else if(paso===2){
+    m.innerHTML='Filtrados '+filtrados()+' de '+DIARIO.length+' asientos. Mueve efectivo el que toca 101, 102 o 1041.';
+  }else if(paso===3){
+    m.innerHTML = filtroListo() ? 'Clasificados '+clasificados()+' de '+MOVS.length+' movimientos.'
+                                : 'Antes termina el filtro del paso 3.';
+  }else if(paso===4){
+    m.innerHTML=guiaHechas()+' de '+TOT_GUIA+' pasos del caso guiado · el estado se completa conforme clasificas.';
+  }else{
+    var C=CASOS[paso-5];
+    m.innerHTML = csListo(C)
+      ? '✓ '+C.n+' terminado: cierra en S/ '+miles(C.fin)+'.'
+      : C.n+': '+csFil(C)+' de '+C.dia.length+' asientos marcados y '+csUbi(C)+' de '+C.movs.length+
+        ' movimientos ubicados'+(elegida[C.id]?' · ficha elegida, haz clic en su renglón':'')+'.';
+  }
 }
 
 function revisaFin(){
@@ -686,21 +1441,32 @@ function festeja(){
 
 /* =================== sala =================== */
 function resumenAula(){
-  var E=armaEFE();
-  return { paso:['El punto de partida','Filtrar el diario','Clasificar','El estado de flujos'][paso],
-           filtro:filtrados()+'/'+DIARIO.length,
-           clas:clasificados()+'/'+MOVS.length,
+  var E=armaEFE(), c5=CASOS[0], c6=CASOS[1];
+  var fall=Object.keys(G.falloF).length+
+    Object.keys(G.falloC).reduce(function(n,k){ return n+(G.falloC[k]||[]).length; },0)+
+    Object.keys(G.falloR).reduce(function(n,k){
+      var o=G.falloR[k]||{};
+      return n+(o.act||[]).length+(o.sig||[]).length; },0)+
+    CASOS.reduce(function(n,C){
+      return n+Object.keys(G.cs[C.id].ff).length+(G.cs[C.id].fc||0); },0);
+  return { paso:PASOS[paso][0],
+           res:resHechas()+'/'+TOT_RES,
+           guia:guiaHechas()+'/'+TOT_GUIA,
            saldo:r2(SALDO_INI+E.neto),
-           listo:listoTodo(),
-           fallos:Object.keys(G.falloF).length+
-                  Object.keys(G.falloC).reduce(function(n,k){ return n+(G.falloC[k]||[]).length; },0) };
+           c5:csHechas(c5)+'/'+(c5.dia.length+c5.movs.length),
+           c6:csHechas(c6)+'/'+(c6.dia.length+c6.movs.length),
+           total:hechas()+'/'+TOTAL,
+           listo:listoTodo(), fallos:fall };
 }
 function ventanaAula(e){
   return '<div class="vmini">'+
     '<div class="lin"><span>'+esc(e.paso||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
-    '<div class="lin"><span>Asientos filtrados</span><b>'+esc(e.filtro||'—')+'</b></div>'+
-    '<div class="lin"><span>Movimientos clasificados</span><b>'+esc(e.clas||'—')+'</b></div>'+
-    '<div class="lin"><span>Saldo final que lleva</span><b>'+miles(e.saldo)+'</b></div>'+
+    '<div class="lin"><span>Resumen</span><b>'+esc(e.res||'—')+'</b></div>'+
+    '<div class="lin"><span>Caso guiado</span><b>'+esc(e.guia||'—')+'</b></div>'+
+    '<div class="lin"><span>Saldo del caso guiado</span><b>'+miles(e.saldo)+'</b></div>'+
+    '<div class="lin"><span>Caso 5 integral</span><b>'+esc(e.c5||'—')+'</b></div>'+
+    '<div class="lin"><span>Caso 6 integral</span><b>'+esc(e.c6||'—')+'</b></div>'+
+    '<div class="lin"><span>Avance total</span><b>'+esc(e.total||'—')+'</b></div>'+
     '<div class="lin"><span>Elecciones falladas</span><b>'+(e.fallos||0)+'</b></div></div>';
 }
 
@@ -708,8 +1474,8 @@ function ventanaAula(e){
 (function inicio(){
   if(window.Reinicio) Reinicio.monta({
     donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
-    aviso:'Se borrará tu avance en el filtro y la clasificación.',
-    hecho:function(){ G={ filtro:{}, clas:{}, falloF:{}, falloC:{} }; paso=0; festejado=false; pinta(); }
+    aviso:'Se borrará tu avance en el resumen, el caso guiado y los casos 5 y 6.',
+    hecho:function(){ G=vacio(); elegida={}; paso=0; festejado=false; pinta(); }
   });
   Aula.iniciar({ sala:'FD', codigo:'EF2', resumen:resumenAula, ventana:ventanaAula,
     alModo:function(doc){
