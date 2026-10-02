@@ -159,6 +159,22 @@
   .incog:hover{ background:#EDE7F6; border-style:solid; }
   .incog.visto{ border:1.5px solid #7CC29B; background:#E9F7EF; color:#14532D;
                 cursor:default; animation:entra .25s ease; }
+  .porq{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 12px; }
+  @media (max-width:700px){ .porq{ grid-template-columns:1fr; } }
+  .porq .pz{ border:1.5px solid var(--o-border); border-radius:10px; padding:9px 11px;
+             font-size:12.5px; line-height:1.6; min-width:0; }
+  .porq .pz.mas{ border-color:#7CC29B; background:#F2FAF5; color:#14532D; }
+  .porq .pz.menos{ border-color:#E3A9A2; background:#FDF1EF; color:#7A1C12; }
+  .porq .pz b.t{ display:block; font-size:13px; margin-bottom:4px; }
+  .porq .pz .mini{ display:block; font-size:11.5px; opacity:.9; margin-top:5px; }
+  .senal{ border:1.5px solid #B9A9D6; background:#F6F3FB; border-radius:10px;
+          padding:9px 12px; font-size:12.5px; line-height:1.65; color:#3F3357; margin:0 0 12px; }
+  .senal b{ color:#2E2541; }
+  .senal .fl{ display:block; padding:2px 0; }
+  .lee{ margin:0 0 9px; font-size:12.5px; line-height:1.7; color:#33404E; }
+  .lee .vd{ color:var(--verde); font-weight:800; }
+  .lee .rj{ color:var(--rojo); font-weight:800; }
+
   .formulita{ border:1.5px solid var(--amaBd); background:var(--ama); border-radius:10px;
               padding:10px 13px; margin:0 0 12px; font-size:13px; line-height:1.7; color:#5B4A15; }
   .formulita .gr{ display:block; font-size:15px; font-weight:800; color:#3F3208;
@@ -322,6 +338,14 @@
       los demás son devengos y no entran. El estado de situación financiera te dice de cuánto partes y
       a cuánto tienes que llegar: el flujo de efectivo solo explica esa diferencia.
       Empieza por el <b>resumen</b> y cierra con los <b>casos integrales 5 y 6</b>, donde ves las tres hojas a la vez.
+    </div>
+    <div class="o-acciones" style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a class="o-btn o-btn-teal" href="plantilla-efe-libro-diario.xlsx" download>⬇ Descargar la plantilla en Excel</a>
+      <span style="font-size:12.5px;color:var(--o-muted);line-height:1.5">
+        Los mismos casos 5 y 6 para trabajar en hoja de cálculo: el libro diario ya escrito y
+        <b>solo dos columnas por llenar</b> — si mueve efectivo y a qué renglón va.
+        El importe y el estado de flujos se calculan solos y la hoja avisa si cuadra.
+      </span>
     </div>
   </div>
 
@@ -932,17 +956,37 @@ function vistaCapitulo(){
       '<div class="mr tot fin"><span>Saldo final (2025)</span><b>14,000</b></div></div>'+
     '</div></div>'+
 
-    '<p style="margin:0 0 9px">La cuenta empezó con <b>10,000</b> y recibió <b>120,000</b> por las '+
-    'ventas del año: por el Debe pasaron <b>130,000</b>. Terminó con <b>14,000</b>, así que lo que '+
-    'salió por el Haber —los cobros— tiene que ser la diferencia.</p>'+
+    '<p class="lee">Así se lee la cuenta T. La cuenta por cobrar es de <b>naturaleza deudora</b>: '+
+    '<span class="vd">crece por el Debe</span> y <span class="rj">muere por el Haber</span>. '+
+    'Por el Debe le entró lo que te debían del año pasado (<b>10,000</b>) y todo lo que facturaste '+
+    'este año (<b>120,000</b>): por ahí pasaron <b>130,000</b>, que es todo lo que en algún momento '+
+    'el cliente te llegó a deber. Por el Haber solo sale una cosa: <b>cuando te pagan</b>. Y lo que '+
+    'quedó vivo al final son los <b>14,000</b> que todavía te deben. Entonces los cobros son lo único '+
+    'que falta para que la cuenta cierre.</p>'+
+
+    '<div class="porq">'+
+    '<div class="pz mas"><b class="t">↗ Por qué se SUMA la CxC del inicio</b>'+
+    'Esos <b>10,000</b> son una venta <b>del año pasado</b>. Este año no se vuelven a facturar, pero '+
+    'el cliente sí los paga: entra plata a la caja que no aparece en las ventas del ejercicio.'+
+    '<span class="mini">Cobras más de lo que vendiste este año.</span></div>'+
+    '<div class="pz menos"><b class="t">↘ Por qué se RESTA la CxC del final</b>'+
+    'Esos <b>14,000</b> sí se facturaron este año y están dentro de los 120,000 de ventas, pero '+
+    '<b>el cliente todavía no los paga</b>: son venta sin caja, así que hay que sacarlos.'+
+    '<span class="mini">Vendiste más de lo que cobraste.</span></div>'+
+    '</div>'+
 
     '<div class="formulita"><b>La cuenta:</b>'+
     '<span class="gr">X = 10,000 + 120,000 − 14,000 = '+incog('x1')+'</span>'+
     '<b>La fórmula que se queda:</b>'+
     '<span class="gr">Cobranza = Ventas + CxC al inicio − CxC al final</span>'+
-    '<span class="re">Se suma la cuenta por cobrar inicial porque es plata del año pasado que se '+
-    'cobra en este; se resta la final porque es venta de este año que todavía no entra a la caja.</span>'+
+    '<span class="re">En una línea: lo que entró por el Debe menos lo que quedó vivo al final.</span>'+
     '</div>'+
+
+    '<div class="senal"><b>La señal rápida, sin hacer la cuenta.</b>'+
+    '<span class="fl">Si la cuenta por cobrar <b>subió</b> (de 10,000 a 14,000, como aquí): '+
+    '<b>cobraste menos de lo que vendiste</b>, le estás financiando al cliente.</span>'+
+    '<span class="fl">Si la cuenta por cobrar <b>bajó</b>: <b>cobraste más de lo que vendiste</b>, '+
+    'recuperaste deuda vieja.</span></div>'+
 
     '<p style="margin:0 0 7px"><b>El mismo truco al otro lado</b>, con la cuenta 42 del proveedor. '+
     'En el Caso 2 las compras del año fueron 71,000, se debía 9,000 al inicio y quedaron debiendo '+
@@ -956,9 +1000,40 @@ function vistaCapitulo(){
       '<div class="mr"><span>Compras del año</span><b>71,000</b></div>'+
       '<div class="mr tot"><span>Total</span><b>80,000</b></div></div>'+
     '</div></div>'+
+    '<p class="lee">Esta cuenta está <b>volteada</b>, porque es un pasivo: es de <b>naturaleza '+
+    'acreedora</b>, <span class="vd">crece por el Haber</span> y '+
+    '<span class="rj">muere por el Debe</span>. Por el Haber le entró lo que ya debías al empezar '+
+    '(<b>9,000</b>) más todo lo que compraste al crédito este año (<b>71,000</b>): <b>80,000</b> que '+
+    'en algún momento le llegaste a deber al proveedor. Por el Debe sale una sola cosa: '+
+    '<b>cuando le pagas</b>. Y lo que queda vivo son los <b>7,000</b> que todavía le debes.</p>'+
+
+    '<div class="porq">'+
+    '<div class="pz mas"><b class="t">↗ Por qué se SUMA la CxP del inicio</b>'+
+    'Esos <b>9,000</b> son compra <b>del año pasado</b>. No están en las compras de este año, pero '+
+    'este año sí se pagan: sale plata de la caja que no aparece en las compras del ejercicio.'+
+    '<span class="mini">Pagas más de lo que compraste este año.</span></div>'+
+    '<div class="pz menos"><b class="t">↘ Por qué se RESTA la CxP del final</b>'+
+    'Esos <b>7,000</b> sí están dentro de las compras del año, pero <b>todavía no se los pagas</b>: '+
+    'son compra sin salida de caja, así que hay que sacarlos.'+
+    '<span class="mini">Compraste más de lo que pagaste.</span></div>'+
+    '</div>'+
+
     '<div class="formulita" style="margin-bottom:12px">'+
     '<span class="gr">Pago a proveedores = Compras + CxP al inicio − CxP al final</span>'+
     '<span class="gr">X = 71,000 + 9,000 − 7,000 = '+incog('x3')+'</span></div>'+
+
+    '<div class="senal"><b>La señal rápida, también al revés.</b>'+
+    '<span class="fl">Si la cuenta por pagar <b>subió</b>: <b>pagaste menos de lo que compraste</b>, '+
+    'el proveedor te está financiando y te queda más caja.</span>'+
+    '<span class="fl">Si la cuenta por pagar <b>bajó</b> (de 9,000 a 7,000, como aquí): '+
+    '<b>pagaste más de lo que compraste</b>, estás sacando deuda vieja de encima.</span></div>'+
+
+    '<div class="cap-i" style="margin-bottom:12px"><b>Las dos son la misma cuenta T, volteada.</b> '+
+    'La del cliente nace por el Debe y muere por el Haber; la del proveedor nace por el Haber y muere '+
+    'por el Debe. Pero el razonamiento es idéntico en las dos: <b>todo lo que entró a la cuenta, menos '+
+    'lo que quedó vivo al final, es lo que pasó por la caja</b>. Y en las dos el saldo inicial se suma '+
+    'porque es del año pasado y este año sí movió plata, y el saldo final se resta porque es de este '+
+    'año y todavía no movió plata.</div>'+
 
     '<div class="puente"><b>Y ahora, en esta sesión 2, la vida es más fácil.</b> Aquí sí tienes el '+
     '<b>libro diario</b> delante: el cobro ya está escrito en un asiento, con su fecha y su importe. '+
