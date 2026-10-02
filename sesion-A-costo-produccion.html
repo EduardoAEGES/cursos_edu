@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión A · Del presupuesto de producción al costo de ventas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .cp{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --mora:#714B67; --ambar:#B25E09;
+       --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1320px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,24px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo button{ margin-left:auto; flex:none; }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .pasos{ display:flex; gap:5px; flex-wrap:wrap; margin:14px 0 12px; }
+  .pasos button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer; text-align:left;
+    border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:9px; padding:6px 10px; }
+  .pasos button:hover{ border-color:var(--azul); color:var(--azul); }
+  .pasos button.on{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .pasos button.ok{ border-color:#7CC29B; color:#14532D; background:#F2FAF5; }
+  .pasos button.ok.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .pasos button .p{ display:block; font-size:9.5px; font-weight:600; opacity:.85; }
+  .pasos .valora{ margin-left:auto; border-color:#E8CE8A; background:#FFF8E1; color:#8A6510; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin-bottom:13px; }
+  .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
+  .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+
+  .caja{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+         overflow:hidden; margin-bottom:14px; }
+  .caja > h3{ margin:0; font-size:12px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+              display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .caja > h3 .st{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.92; font-size:11.5px; }
+  .caja.az > h3{ background:var(--azul); }
+  .caja.vd > h3{ background:var(--verde); }
+  .caja.mo > h3{ background:var(--mora); }
+  .caja .cuerpo{ padding:12px 14px; font-size:13.5px; line-height:1.65; color:#33404E; }
+  .caja .cuerpo p{ margin:0 0 9px; } .caja .cuerpo p:last-child{ margin-bottom:0; }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.t th{ background:#F4F7FA; font-size:10px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:var(--o-muted); padding:7px 10px;
+              border-bottom:1px solid var(--o-border); text-align:left; }
+  table.t th.n, table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; }
+  table.t tr.sub td{ font-weight:800; background:#FAFBFC; }
+  table.t tr.res td{ font-weight:800; background:#F6FBF8; border-top:2px solid #BFE0CE;
+                     border-bottom:2px solid #BFE0CE; font-size:13.5px; }
+  table.t tr.dato td{ color:#51606E; }
+  table.t td.et{ min-width:220px; }
+  .envuelve{ overflow-x:auto; }
+  .neg{ color:var(--rojo); }
+  .vacio{ color:#B9C4CF; font-weight:800; }
+
+  .ficha{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:10px; margin:0 0 12px; }
+  .fz{ border:1px solid var(--o-border); border-radius:10px; padding:9px 11px; font-size:12.5px;
+       line-height:1.55; min-width:0; }
+  .fz b.t{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.05em; color:var(--o-muted); margin-bottom:4px; }
+  .fz.de{ border-color:#B9C4CF; background:#FAFBFC; }
+  .fz.fo{ border-color:#7CC29B; background:#F2FAF5; color:#14532D; }
+  .fz.fo .gr{ font-weight:800; font-size:13px; display:block; }
+  .ojo{ border:1.5px solid var(--amaBd); background:var(--ama); border-radius:10px;
+        padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin:0 0 12px; }
+  .ojo b{ color:#3F3208; }
+
+  .elige{ display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+  .elige button{ font:inherit; font-size:12.5px; font-weight:800; cursor:pointer;
+                 border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+                 border-radius:8px; padding:5px 11px; font-variant-numeric:tabular-nums; }
+  .elige button:hover{ border-color:var(--azul); background:#F5F9FD; }
+  .elige button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
+                      cursor:not-allowed; opacity:.65; text-decoration:line-through; }
+  .elige button.temblor{ animation:tiembla .4s; }
+  @keyframes tiembla{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+                      40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+  .puesto{ display:inline-flex; gap:6px; align-items:center; border:1.5px solid #7CC29B;
+           background:#E9F7EF; border-radius:8px; padding:4px 10px; font-size:13px;
+           font-weight:800; color:#14532D; font-variant-numeric:tabular-nums;
+           animation:entra .25s ease; }
+  @keyframes entra{ from{ transform:scale(.94); opacity:0 } to{ transform:scale(1); opacity:1 } }
+  .fallo{ display:block; font-size:11.5px; color:#7A1C12; line-height:1.45; margin-top:5px; }
+
+  /* mapa de la cadena */
+  .mapa{ display:flex; gap:7px; flex-wrap:wrap; align-items:stretch; }
+  .mp{ border:1.5px solid var(--o-border); border-radius:10px; padding:8px 11px; background:#fff;
+       font-size:12px; min-width:0; flex:1 1 150px; }
+  .mp .nn{ display:inline-flex; width:19px; height:19px; border-radius:99px; background:#E9ECF0;
+           color:#51606E; font-size:11px; font-weight:800; align-items:center; justify-content:center;
+           margin-right:6px; }
+  .mp b{ display:block; font-size:12.5px; color:#33404E; margin-top:4px; }
+  .mp span.d{ display:block; font-size:11px; color:var(--o-muted); line-height:1.45; margin-top:3px; }
+  .mp.hecho{ border-color:#7CC29B; background:#F2FAF5; }
+  .mp.hecho .nn{ background:var(--verde); color:#fff; }
+  .mp.meta{ border-color:var(--verde); border-width:2px; }
+  .flecha{ align-self:center; color:#B9C4CF; font-size:17px; font-weight:800; flex:none; }
+
+  .marcador{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+             margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+
+  #confeti{ position:fixed; inset:0; pointer-events:none; z-index:9998; display:none; }
+
+  @media (max-width:640px){
+    table.t td.et{ min-width:150px; }
+    .elige{ justify-content:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesión A</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesión A</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap cp">
+
+  <div class="o-sheet" id="hojaIntro">
+    <div class="titulo">
+      <div>
+        <h1>Sesión A · Del presupuesto de producción al costo de ventas</h1>
+        <p>Caso guiado paso a paso · ALIMENTOS ANDINOS DEL SUR S.A.C. · julio a setiembre de 2026</p>
+      </div>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+    </div>
+    <div class="idea">
+      <b>La idea.</b> En una empresa industrial el costo de ventas no es un dato: <b>se construye</b>.
+      Se arma una cadena de presupuestos donde cada uno alimenta al siguiente —ventas manda la
+      producción, la producción manda la materia prima, la mano de obra y los CIF— y recién al
+      final aparecen el <b>costo de producción</b> y el <b>costo de ventas</b>.
+      Aquí la recorremos entera, un paso a la vez, y en cada paso tú eliges el importe correcto
+      entre tres.
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Entrar para practicar</h2>
+    <div id="aula"></div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:11px 0 0;line-height:1.55">
+      El alumno entra con su nombre y trabaja en su propia hoja; el docente entra con su clave y ve a todos.
+    </p>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pasos" id="pasos"></div>
+    <div class="avance">
+      <span class="cuenta" id="cuenta"></span>
+      <span class="barra"><i id="progI"></i></span>
+      <span class="reinicio" id="reinicio"></span>
+    </div>
+    <div id="panel"></div>
+    <div class="marcador" id="marcador"></div>
+
+    <div class="o-sheet" id="hojaMuro" hidden style="margin-top:16px">
+      <h2 class="o-section-title">Monitoreo del aula</h2>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros</span>
+    <span>Presupuesto maestro · parte operativa</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function miles(n, dec){
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  var d=(dec===undefined?2:dec);
+  var p=Math.abs(n).toFixed(d).split('.');
+  var e=p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (n<0?'(':'')+e+(d?'.'+p[1]:'')+(n<0?')':'');
+}
+function baraja(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+var MESES=['Julio 2026','Agosto 2026','Setiembre 2026'];
+var EMP={ nom:'ALIMENTOS ANDINOS DEL SUR S.A.C.', ruc:'RUC 20604471882',
+          giro:'Néctares, mermeladas y pulpas de fruta · Arequipa', per:'Julio a setiembre de 2026' };
+var PASOS=[
+ {
+  "id": "ventas",
+  "n": 1,
+  "t": "Presupuesto de ventas",
+  "st": "El que manda: de aquí sale todo lo demás",
+  "que": "Cuánto se piensa vender, primero en unidades por producto y luego en soles. Es el único presupuesto que no depende de otro: nace de la proyección comercial.",
+  "de": "No viene de ningún presupuesto anterior. Es el punto de partida.",
+  "form": "Total ventas (S/) = unidades vendidas × valor venta promedio",
+  "ojo": "Las unidades que se <b>venden</b> no son las que se <b>producen</b>. Eso lo arregla el paso 2.",
+  "u": "S/",
+  "filas": [
+   [
+    "Néctar de durazno",
+    [
+     18000,
+     17500,
+     19000
+    ],
+    "u"
+   ],
+   [
+    "Néctar de piña",
+    [
+     9500,
+     9200,
+     10000
+    ],
+    "u"
+   ],
+   [
+    "Mermeladas",
+    [
+     5200,
+     5000,
+     5400
+    ],
+    "u"
+   ],
+   [
+    "Pulpas y otros",
+    [
+     3300,
+     3300,
+     3600
+    ],
+    "u"
+   ],
+   [
+    "Unidades vendidas",
+    [
+     36000,
+     35000,
+     38000
+    ],
+    "sub u"
+   ],
+   [
+    "Valor venta promedio (S/)",
+    [
+     46.0,
+     46.0,
+     46.0
+    ],
+    "d"
+   ],
+   [
+    "Total ventas (S/)",
+    null,
+    "res"
+   ]
+  ],
+  "opc": [
+   [
+    1656000.0,
+    1646800.0,
+    1620000
+   ],
+   [
+    1610000.0,
+    1637600.0,
+    1575000
+   ],
+   [
+    1748000.0,
+    1734200.0,
+    1710000
+   ]
+  ],
+  "por": [
+   "Esas son las unidades <b>a producir</b>, no las vendidas. Todavía no toca el inventario.",
+   "El valor venta promedio del caso es <b>S/ 46.00</b>, no 45."
+  ]
+ },
+ {
+  "id": "prod",
+  "n": 2,
+  "t": "Presupuesto de producción",
+  "st": "En unidades, nunca en soles",
+  "que": "Cuántas unidades hay que fabricar. No son las mismas que se venden: hay que dejar el inventario final que pide la empresa y se aprovecha el que ya está en almacén.",
+  "de": "Toma las <b>unidades vendidas</b> del paso 1 y los inventarios de productos terminados del caso.",
+  "form": "Unidades a producir = unidades vendidas + inventario final − inventario inicial",
+  "ojo": "El inventario <b>final</b> se <b>suma</b> porque hay que fabricarlo además de lo que se vende; el <b>inicial</b> se <b>resta</b> porque ya está hecho y no hay que volver a producirlo.",
+  "u": "u",
+  "filas": [
+   [
+    "Unidades vendidas",
+    [
+     36000,
+     35000,
+     38000
+    ],
+    "c u"
+   ],
+   [
+    "(+) Inventario final de productos terminados",
+    [
+     7000,
+     7600,
+     7300
+    ],
+    "d u"
+   ],
+   [
+    "Total necesidad",
+    [
+     43000,
+     42600,
+     45300
+    ],
+    "sub u"
+   ],
+   [
+    "(−) Inventario inicial de productos terminados",
+    [
+     -7200,
+     -7000,
+     -7600
+    ],
+    "d u"
+   ],
+   [
+    "Unidades a producir",
+    null,
+    "res u"
+   ]
+  ],
+  "opc": [
+   [
+    35800,
+    36200,
+    36000
+   ],
+   [
+    35600,
+    34400,
+    35000
+   ],
+   [
+    37700,
+    38300,
+    38000
+   ]
+  ],
+  "por": [
+   "Tienes los inventarios al revés: el final se suma y el inicial se resta.",
+   "Esas son las unidades vendidas: te falta ajustar por los inventarios."
+  ]
+ },
+ {
+  "id": "compras",
+  "n": 3,
+  "t": "Presupuesto de compras de materia prima",
+  "st": "Comprar no es consumir",
+  "que": "Cuánta materia prima hay que comprar. Es la misma lógica del paso 2, pero ahora con el almacén de materia prima.",
+  "de": "Toma las <b>unidades a producir</b> del paso 2. El inventario final de MP es el <b>40 % de la producción del mes siguiente</b>, por eso hace falta saber cuánto se producirá en octubre.",
+  "form": "Compras de MP = requerimiento + inventario final de MP − inventario inicial de MP",
+  "ojo": "El inventario final de julio es el inicial de agosto. Y para el de setiembre hace falta la producción de <b>octubre</b> (37,000 unidades), que el caso da como dato.",
+  "u": "u",
+  "filas": [
+   [
+    "Unidades a producir",
+    [
+     35800,
+     35600,
+     37700
+    ],
+    "c u"
+   ],
+   [
+    "Requerimiento de MP (1 unidad por producto)",
+    [
+     35800.0,
+     35600.0,
+     37700.0
+    ],
+    "c u"
+   ],
+   [
+    "(+) Inventario final de MP (40 % de la producción siguiente)",
+    [
+     14240.0,
+     15080.0,
+     14800.0
+    ],
+    "d u"
+   ],
+   [
+    "Total necesidad",
+    [
+     50040.0,
+     50680.0,
+     52500.0
+    ],
+    "sub u"
+   ],
+   [
+    "(−) Inventario inicial de MP",
+    [
+     -14320.0,
+     -14240.0,
+     -15080.0
+    ],
+    "d u"
+   ],
+   [
+    "Compras de MP (unidades)",
+    null,
+    "res u"
+   ],
+   [
+    "Costo unitario de MP (S/)",
+    [
+     24.0,
+     24.0,
+     24.0
+    ],
+    "d"
+   ],
+   [
+    "Total compras de MP (S/)",
+    [
+     857280.0,
+     874560.0,
+     898080.0
+    ],
+    "c"
+   ]
+  ],
+  "opc": [
+   [
+    35720.0,
+    35880.0,
+    35800.0
+   ],
+   [
+    36440.0,
+    34760.0,
+    35600.0
+   ],
+   [
+    37420.0,
+    37980.0,
+    37700.0
+   ]
+  ],
+  "por": [
+   "Inventarios al revés otra vez: el final se suma y el inicial se resta.",
+   "Ese es el requerimiento para producir. Las compras además reponen el almacén."
+  ]
+ },
+ {
+  "id": "consumo",
+  "n": 4,
+  "t": "Presupuesto de consumo de materia prima",
+  "st": "Lo que se va a la producción",
+  "que": "Cuánta materia prima entra realmente al producto. Esta es la que llega al costo de producción, no las compras.",
+  "de": "Toma las <b>unidades a producir</b> del paso 2 y el costo de MP por unidad del caso.",
+  "form": "Consumo de MP (S/) = unidades producidas × unidades de MP por producto × costo de MP",
+  "ojo": "Compras y consumo <b>casi nunca</b> son iguales: la diferencia se queda en el almacén de materia prima. Al costo de producción va el <b>consumo</b>.",
+  "u": "S/",
+  "filas": [
+   [
+    "Unidades producidas",
+    [
+     35800,
+     35600,
+     37700
+    ],
+    "c u"
+   ],
+   [
+    "MP requerida (unidades)",
+    [
+     35800.0,
+     35600.0,
+     37700.0
+    ],
+    "c u"
+   ],
+   [
+    "Costo unitario de MP (S/)",
+    [
+     24.0,
+     24.0,
+     24.0
+    ],
+    "d"
+   ],
+   [
+    "Total consumo de MP (S/)",
+    null,
+    "res"
+   ]
+  ],
+  "opc": [
+   [
+    859200.0,
+    857280.0,
+    864000.0
+   ],
+   [
+    854400.0,
+    874560.0,
+    840000.0
+   ],
+   [
+    904800.0,
+    898080.0,
+    912000.0
+   ]
+  ],
+  "por": [
+   "Ese es el valor de las <b>compras</b>. Al costo de producción va lo que se consume.",
+   "Multiplicaste por las unidades <b>vendidas</b>. La materia prima se consume al <b>producir</b>."
+  ]
+ },
+ {
+  "id": "mod",
+  "n": 5,
+  "t": "Presupuesto de mano de obra directa",
+  "st": "Primero las horas, después los soles",
+  "que": "Cuánto cuesta la gente que trabaja directamente el producto. Son dos multiplicaciones seguidas, no una.",
+  "de": "Toma las <b>unidades a producir</b> del paso 2, las horas por unidad y el costo por hora del caso.",
+  "form": "MOD (S/) = unidades producidas × horas por unidad × costo por hora",
+  "ojo": "Las horas por unidad y el costo por hora <b>cambian cada mes</b>. Y ojo: las horas totales se vuelven a usar en el paso 6, porque los CIF variables se calculan por hora de MOD.",
+  "u": "S/",
+  "filas": [
+   [
+    "Unidades producidas",
+    [
+     35800,
+     35600,
+     37700
+    ],
+    "c u"
+   ],
+   [
+    "Horas de MOD por unidad",
+    [
+     0.2,
+     0.21,
+     0.19
+    ],
+    "d h"
+   ],
+   [
+    "Total horas de MOD",
+    [
+     7160.0,
+     7476.0,
+     7163.0
+    ],
+    "c h"
+   ],
+   [
+    "Costo por hora (S/)",
+    [
+     14.0,
+     14.2,
+     14.5
+    ],
+    "d"
+   ],
+   [
+    "Total MOD (S/)",
+    null,
+    "res"
+   ]
+  ],
+  "opc": [
+   [
+    100240.0,
+    501200.0,
+    101672.0
+   ],
+   [
+    106159.2,
+    505520.0,
+    108402.0
+   ],
+   [
+    103863.5,
+    546650.0,
+    100282.0
+   ]
+  ],
+  "por": [
+   "Te saltaste las horas por unidad: multiplicaste las unidades por el costo por hora.",
+   "Usaste el costo por hora de otro mes. Cada mes tiene el suyo."
+  ]
+ },
+ {
+  "id": "cif",
+  "n": 6,
+  "t": "Presupuesto de costos indirectos de fabricación",
+  "st": "Fijos más variables",
+  "que": "Todo lo que cuesta la fábrica y no es materia prima ni mano de obra directa. Se parte en dos: los fijos, que son los mismos todos los meses, y los variables, que se calculan por hora de MOD.",
+  "de": "Los fijos son dato del caso. Los variables salen de las <b>horas de MOD</b> del paso 5 por la tasa de S/ 21.00 por hora.",
+  "form": "CIF total = CIF fijos + (horas de MOD × tasa variable por hora)",
+  "ojo": "La <b>depreciación de planta</b> (S/ 34,000) es costo pero <b>no es desembolso</b>: entra al costo de producción y se queda fuera del flujo de caja. El total y el desembolsable no son lo mismo.",
+  "u": "S/",
+  "filas": [
+   [
+    "Total CIF fijos (S/)",
+    [
+     180000,
+     180000,
+     180000
+    ],
+    "d"
+   ],
+   [
+    "Total horas de MOD",
+    [
+     7160.0,
+     7476.0,
+     7163.0
+    ],
+    "c h"
+   ],
+   [
+    "Tasa de CIF variable por hora (S/)",
+    [
+     21.0,
+     21.0,
+     21.0
+    ],
+    "d"
+   ],
+   [
+    "CIF variables (S/)",
+    [
+     150360.0,
+     156996.0,
+     150423.0
+    ],
+    "c"
+   ],
+   [
+    "Total CIF (S/)",
+    null,
+    "res"
+   ],
+   [
+    "(−) Depreciación de planta, no desembolsable",
+    [
+     -34000.0,
+     -34000.0,
+     -34000.0
+    ],
+    "d"
+   ],
+   [
+    "CIF desembolsables (S/)",
+    [
+     296360.0,
+     302996.0,
+     296423.0
+    ],
+    "c"
+   ]
+  ],
+  "opc": [
+   [
+    330360.0,
+    296360.0,
+    150360.0
+   ],
+   [
+    336996.0,
+    302996.0,
+    156996.0
+   ],
+   [
+    330423.0,
+    296423.0,
+    150423.0
+   ]
+  ],
+  "por": [
+   "Ese es el CIF <b>desembolsable</b>: le quitaste la depreciación, que sí es costo.",
+   "Esos son solo los CIF variables. Falta sumar los fijos."
+  ]
+ },
+ {
+  "id": "cprod",
+  "n": 7,
+  "t": "Presupuesto de costo de producción",
+  "st": "Los tres elementos juntos",
+  "que": "Aquí se junta todo: materia prima consumida, mano de obra directa y costos indirectos de fabricación. Es el costo de lo que se fabricó en el mes.",
+  "de": "Suma el <b>consumo de MP</b> del paso 4, la <b>MOD</b> del paso 5 y el <b>CIF total</b> del paso 6.",
+  "form": "Costo de producción = consumo de MP + MOD + CIF",
+  "ojo": "Van las <b>compras</b> no, el <b>consumo</b> sí. Y va el CIF <b>total</b>, con depreciación incluida: estamos calculando costo, no caja.",
+  "u": "S/",
+  "filas": [
+   [
+    "Consumo de materia prima",
+    [
+     859200.0,
+     854400.0,
+     904800.0
+    ],
+    "c"
+   ],
+   [
+    "Mano de obra directa",
+    [
+     100240.0,
+     106159.2,
+     103863.5
+    ],
+    "c"
+   ],
+   [
+    "Costos indirectos de fabricación",
+    [
+     330360.0,
+     336996.0,
+     330423.0
+    ],
+    "c"
+   ],
+   [
+    "Costo de producción (S/)",
+    null,
+    "res"
+   ],
+   [
+    "Unidades producidas",
+    [
+     35800,
+     35600,
+     37700
+    ],
+    "c u"
+   ],
+   [
+    "Costo unitario de producción (S/)",
+    [
+     36.03,
+     36.45,
+     35.52
+    ],
+    "c dec"
+   ]
+  ],
+  "opc": [
+   [
+    1289800.0,
+    1287880.0,
+    1255800.0
+   ],
+   [
+    1297555.2,
+    1317715.2,
+    1263555.2
+   ],
+   [
+    1339086.5,
+    1332366.5,
+    1305086.5
+   ]
+  ],
+  "por": [
+   "Usaste las <b>compras</b> de materia prima en vez del consumo.",
+   "Usaste el CIF <b>desembolsable</b>. Al costo va el CIF total, con depreciación."
+  ]
+ },
+ {
+  "id": "cventas",
+  "n": 8,
+  "t": "Presupuesto de costo de ventas",
+  "st": "Lo fabricado no es lo vendido",
+  "que": "El costo de lo que de verdad se vendió. Se parte del costo de producción y se ajusta por el almacén de productos terminados, igual que en el paso 2 pero ahora en soles.",
+  "de": "Toma el <b>costo de producción</b> del paso 7 y valoriza los inventarios de productos terminados con el <b>costo unitario</b> de cada mes.",
+  "form": "Costo de ventas = costo de producción + inventario inicial de PT − inventario final de PT",
+  "ojo": "Aquí los inventarios van <b>al revés</b> que en el paso 2: el inicial se <b>suma</b> (es costo que ya estaba y hoy sale a la venta) y el final se <b>resta</b> (es costo que se queda en el almacén). El inventario final de un mes es el inicial del siguiente.",
+  "u": "S/",
+  "filas": [
+   [
+    "Costo de producción",
+    [
+     1289800.0,
+     1297555.2,
+     1339086.5
+    ],
+    "c"
+   ],
+   [
+    "(+) Inventario inicial de productos terminados",
+    [
+     244080.0,
+     252195.53,
+     277006.17
+    ],
+    "d"
+   ],
+   [
+    "Unidades en inventario final",
+    [
+     7000,
+     7600,
+     7300
+    ],
+    "d u"
+   ],
+   [
+    "Costo unitario del mes (S/)",
+    [
+     36.03,
+     36.45,
+     35.52
+    ],
+    "c dec"
+   ],
+   [
+    "(−) Inventario final de productos terminados",
+    [
+     -252195.53,
+     -277006.17,
+     -259292.61
+    ],
+    "d"
+   ],
+   [
+    "Costo de ventas (S/)",
+    null,
+    "res"
+   ]
+  ],
+  "opc": [
+   [
+    1281684.47,
+    1297915.53,
+    1289800.0
+   ],
+   [
+    1272744.56,
+    1322365.84,
+    1297555.2
+   ],
+   [
+    1356800.05,
+    1321372.95,
+    1339086.5
+   ]
+  ],
+  "por": [
+   "Inventarios al revés: aquí el <b>inicial se suma</b> y el <b>final se resta</b>.",
+   "Ese es el costo de <b>producción</b>. El de ventas ajusta por el almacén de productos terminados."
+  ]
+ },
+ {
+  "id": "unit",
+  "n": 9,
+  "t": "Costo unitario de producción",
+  "st": "El costo desarmado en sus tres piezas",
+  "que": "El mismo costo de producción, pero por unidad y desarmado. Sirve para ver qué pesa más y por qué el costo sube o baja de un mes a otro.",
+  "de": "Divide cada elemento del paso 7 entre las <b>unidades producidas</b>.",
+  "form": "Costo unitario = MP por unidad + MOD por unidad + CIF por unidad",
+  "ojo": "Se divide entre las unidades <b>producidas</b>, no entre las vendidas. La materia prima por unidad es siempre S/ 24.00; lo que mueve el costo unitario son la MOD y sobre todo el <b>CIF</b>, porque los fijos se reparten entre más o menos unidades.",
+  "u": "S/",
+  "filas": [
+   [
+    "Materia prima por unidad",
+    [
+     24.0,
+     24.0,
+     24.0
+    ],
+    "c dec"
+   ],
+   [
+    "Mano de obra directa por unidad",
+    [
+     2.8,
+     2.98,
+     2.75
+    ],
+    "c dec"
+   ],
+   [
+    "CIF por unidad",
+    [
+     9.23,
+     9.47,
+     8.76
+    ],
+    "c dec"
+   ],
+   [
+    "Costo unitario total (S/)",
+    null,
+    "res dec"
+   ]
+  ],
+  "opc": [
+   [
+    36.03,
+    35.83,
+    35.6
+   ],
+   [
+    36.45,
+    37.07,
+    36.36
+   ],
+   [
+    35.52,
+    35.24,
+    35.71
+   ]
+  ],
+  "por": [
+   "Dividiste entre las unidades <b>vendidas</b>. El costo unitario de producción se divide entre las producidas.",
+   "Ese es el costo de <b>ventas</b> por unidad vendida, otra cosa."
+  ]
+ }
+];
+
+/* orden de las alternativas, fijo por sesión */
+PASOS.forEach(function(p){
+  p.ord=p.opc.map(function(o){ return baraja([0,1,2]); });
+});
+var TOTAL=PASOS.reduce(function(n,p){ return n+p.opc.length; },0);
+function paso(id){ for(var i=0;i<PASOS.length;i++) if(PASOS[i].id===id) return PASOS[i]; return null; }
+
+/* ============ datos del caso, para la pestaña 0 ============ */
+var DATOS=[
+ { t:'1 · Ventas proyectadas (unidades)', cols:['Producto','Julio','Agosto','Setiembre'],
+   f:[['Néctar de durazno','18,000','17,500','19,000'],
+      ['Néctar de piña','9,500','9,200','10,000'],
+      ['Mermeladas','5,200','5,000','5,400'],
+      ['Pulpas y otros','3,300','3,300','3,600'],
+      ['Valor venta promedio','S/ 46.00','S/ 46.00','S/ 46.00']] },
+ { t:'2 · Inventario de productos terminados (unidades)', cols:['Fecha','Unidades','',''],
+   f:[['01 de julio de 2026','7,200','',''],
+      ['31 de julio de 2026','7,000','',''],
+      ['31 de agosto de 2026','7,600','',''],
+      ['30 de setiembre de 2026','7,300','',''],
+      ['Costo del inventario inicial','S/ 244,080.00','','']] },
+ { t:'3 · Materia prima', cols:['Parámetro','Valor','',''],
+   f:[['Unidades de MP por producto terminado','1','',''],
+      ['Costo de MP por unidad','S/ 24.00','',''],
+      ['Inventario final de MP','40 % de la producción del mes siguiente','',''],
+      ['Producción de octubre de 2026','37,000 unidades','','']] },
+ { t:'4 · Mano de obra directa', cols:['Mes','Horas por unidad','Costo por hora',''],
+   f:[['Julio','0.20','S/ 14.00',''],
+      ['Agosto','0.21','S/ 14.20',''],
+      ['Setiembre','0.19','S/ 14.50','']] },
+ { t:'5 · CIF variables (S/ por hora de MOD)', cols:['Concepto','Tasa por hora','',''],
+   f:[['Mano de obra indirecta','6.00','',''],
+      ['Contribuciones de planilla','1.50','',''],
+      ['Mantenimiento','4.00','',''],
+      ['Energía','7.50','',''],
+      ['Suministros varios','2.00','',''],
+      ['Total por hora de MOD','21.00','','']] },
+ { t:'6 · Costos fijos mensuales de fábrica', cols:['Concepto','Importe','¿Desembolsable?',''],
+   f:[['Salarios de planta','S/ 62,000.00','Sí',''],
+      ['Contribuciones de planta','S/ 13,500.00','Sí',''],
+      ['Material indirecto','S/ 21,000.00','Sí',''],
+      ['Supervisión de fábrica','S/ 18,000.00','Sí',''],
+      ['Alquiler de la planta','S/ 25,000.00','Sí',''],
+      ['Seguros de fábrica','S/ 6,500.00','Sí',''],
+      ['Depreciación de planta','S/ 34,000.00','No',''],
+      ['Total CIF fijos','S/ 180,000.00','','']] }
+];
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('cp_son_A')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
+function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
+function sTec(){ nota(520,0,0.05,0.04); }
+function sPaso(){ nota(523.25,0,0.1,0.06,'triangle'); nota(784,0.09,0.16,0.05,'triangle'); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  nota(1318.5,0.45,0.6,0.07);
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('cp_son_A', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) sBien();
+});
+pintaSon();
+
+/* =================== estado =================== */
+var LS='cp_avance_A_v1';
+function vacio(){ return { ok:{}, mal:{} }; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object'){ G.ok=d.ok||{}; G.mal=d.mal||{}; }
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+var vista=0, festejado=false;   /* 0 = datos del caso, 1..9 = pasos */
+
+function clave(p,i){ return p.id+'/'+i; }
+function resuelto(p,i){ return G.ok[clave(p,i)]===1; }
+function hechasP(p){ var n=0; for(var i=0;i<p.opc.length;i++) if(resuelto(p,i)) n++; return n; }
+function listoP(p){ return hechasP(p)===p.opc.length; }
+function hechas(){ return PASOS.reduce(function(n,p){ return n+hechasP(p); },0); }
+function listoTodo(){ return hechas()===TOTAL; }
+/* un paso se abre cuando el anterior está terminado */
+function abierto(k){ return k===0 || listoP(PASOS[k-1]); }
+
+/* =================== cabecera =================== */
+var CORTO=['Ventas','Producción','Compras de MP','Consumo de MP','Mano de obra',
+           'CIF','Costo de producción','Costo de ventas','Costo unitario'];
+function cabecera(){
+  var h='<button type="button" data-v="0" class="'+(vista===0?'on':'')+'">Datos'+
+        '<span class="p">El caso y sus anexos</span></button>';
+  PASOS.forEach(function(p,k){
+    var cl=(vista===k+1?'on':'')+(listoP(p)?' ok':'');
+    h+='<button type="button" data-v="'+(k+1)+'" class="'+cl.trim()+'">'+p.n+' · '+esc(CORTO[k])+
+       '<span class="p">'+hechasP(p)+' de '+p.opc.length+'</span></button>';
+  });
+  h+='<button type="button" class="valora" id="btnValora">⭐ Valorar<span class="p">Cuéntanos qué te pareció</span></button>';
+  $('pasos').innerHTML=h;
+  qq('#pasos button[data-v]').forEach(function(b){
+    b.addEventListener('click', function(){ vista=+b.dataset.v; sTec(); pinta(); });
+  });
+  $('btnValora').addEventListener('click', function(){
+    window.open('https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html','_blank','noopener');
+  });
+  var n=hechas();
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> importes resueltos';
+  $('progI').style.width=(n/TOTAL*100)+'%';
+}
+
+/* =================== el mapa de la cadena =================== */
+function mapa(act){
+  var pasos=[
+    {n:1,t:'Ventas',d:'unidades y soles'},
+    {n:2,t:'Producción',d:'unidades a fabricar'},
+    {n:3,t:'Compras de MP',d:'lo que se compra'},
+    {n:4,t:'Consumo de MP',d:'lo que entra al producto'},
+    {n:5,t:'Mano de obra directa',d:'horas × costo por hora'},
+    {n:6,t:'CIF',d:'fijos + variables'},
+    {n:7,t:'Costo de producción',d:'MP + MOD + CIF'},
+    {n:8,t:'Costo de ventas',d:'ajustado por inventarios'}
+  ];
+  var h='<div class="mapa">';
+  pasos.forEach(function(x,i){
+    var p=PASOS[x.n-1], cl=(listoP(p)?' hecho':'')+(x.n===8?' meta':'');
+    h+='<div class="mp'+cl+(act===x.n?' act':'')+'"><span class="nn">'+x.n+'</span>'+
+       '<b>'+esc(x.t)+'</b><span class="d">'+esc(x.d)+'</span></div>';
+    if(i<pasos.length-1) h+='<span class="flecha">›</span>';
+  });
+  return h+'</div>';
+}
+
+/* =================== pestaña 0 · los datos =================== */
+function vistaDatos(){
+  var h='<div class="caja mo"><h3><span>'+esc(EMP.nom)+'</span>'+
+    '<span class="st">'+esc(EMP.ruc)+' · '+esc(EMP.per)+'</span></h3><div class="cuerpo">'+
+    '<p>'+esc(EMP.giro)+'. La empresa prepara su presupuesto maestro del tercer trimestre y '+
+    'necesita saber en cuánto le va a salir lo que fabrica y lo que vende.</p>'+
+    '<p style="margin:0">Tu trabajo es recorrer la cadena de presupuestos operativos hasta llegar al '+
+    '<b>costo de producción</b> y al <b>costo de ventas</b> de cada mes. Cada paso usa el resultado '+
+    'del anterior: si uno sale mal, todos los que siguen salen mal.</p></div></div>';
+
+  h+='<div class="caja az"><h3><span>La cadena, de un vistazo</span>'+
+     '<span class="st">cada recuadro alimenta al siguiente</span></h3>'+
+     '<div class="cuerpo">'+mapa(0)+
+     '<p class="pistas" style="font-size:12px;color:var(--o-muted);margin:11px 0 0;line-height:1.5">'+
+     'Los recuadros en verde ya están resueltos. El último, en borde grueso, es a donde queremos llegar.</p>'+
+     '</div></div>';
+
+  DATOS.forEach(function(b){
+    h+='<div class="caja"><h3>'+esc(b.t)+'</h3><div class="envuelve"><table class="t"><thead><tr>'+
+       b.cols.map(function(c,i){ return '<th'+(i>0?' class="n"':'')+'>'+esc(c)+'</th>'; }).join('')+
+       '</tr></thead><tbody>'+
+       b.f.map(function(r){
+         return '<tr'+(/Total|Costo del inventario/.test(r[0])?' class="sub"':'')+'>'+
+           r.map(function(c,i){ return '<td'+(i>0?' class="n"':' class="et"')+'>'+esc(c)+'</td>'; }).join('')+'</tr>';
+       }).join('')+'</tbody></table></div></div>';
+  });
+
+  h+='<div class="caja vd"><h3>Empieza por el paso 1</h3><div class="cuerpo"><p style="margin:0">'+
+     'Los pasos se abren en orden: hasta no terminar uno no se habilita el siguiente, '+
+     'porque de verdad el siguiente necesita su resultado.</p></div></div>';
+  return h;
+}
+
+/* =================== una pestaña de paso =================== */
+function celda(p, i){
+  var k=clave(p,i);
+  if(resuelto(p,i)){
+    var dec=(p.filas[p.filas.length-1][2]||'').indexOf('dec')>=0;
+    return '<span class="puesto">'+miles(p.opc[i][0], dec?2:((p.u==='u')?0:2))+'</span>';
+  }
+  var malos=G.mal[k]||[];
+  var dec2=(p.filas[p.filas.length-1][2]||'').indexOf('dec')>=0;
+  var d=dec2?2:((p.u==='u')?0:2);
+  var h='<span class="elige" data-p="'+esc(p.id)+'" data-i="'+i+'">';
+  p.ord[i].forEach(function(o){
+    var mala=malos.indexOf(o)>=0;
+    h+='<button type="button" data-o="'+o+'"'+(mala?' class="mala" disabled':'')+'>'+
+       miles(p.opc[i][o], d)+'</button>';
+  });
+  h+='</span>';
+  if(malos.length) h+='<span class="fallo">'+p.por[malos[malos.length-1]-1]+'</span>';
+  return h;
+}
+
+function vistaPaso(k){
+  var p=PASOS[k];
+  if(!abierto(k)){
+    var ant=PASOS[k-1];
+    return '<div class="caja"><h3>Todavía no</h3><div class="cuerpo"><p style="margin:0">'+
+      'Primero termina el <b>paso '+ant.n+' · '+esc(ant.t)+'</b>: este presupuesto usa su resultado. '+
+      'Llevas '+hechasP(ant)+' de '+ant.opc.length+'.</p></div></div>';
+  }
+  var h='<div class="caja az"><h3><span>Paso '+p.n+' · '+esc(p.t)+'</span>'+
+    '<span class="st">'+esc(p.st)+'</span></h3><div class="cuerpo">'+
+    '<p>'+p.que+'</p>'+
+    '<div class="ficha">'+
+      '<div class="fz de"><b class="t">De dónde sale</b>'+p.de+'</div>'+
+      '<div class="fz fo"><b class="t">La fórmula</b><span class="gr">'+esc(p.form)+'</span></div>'+
+    '</div>'+
+    (p.ojo ? '<div class="ojo"><b>Ojo con esto.</b> '+p.ojo+'</div>' : '')+
+    '</div>'+
+    '<div class="envuelve"><table class="t"><thead><tr><th>Detalle</th>'+
+    MESES.map(function(m){ return '<th class="n">'+esc(m)+'</th>'; }).join('')+
+    '</tr></thead><tbody>';
+
+  p.filas.forEach(function(f){
+    var tipo=f[2]||'', esRes=tipo.indexOf('res')>=0;
+    var cl = esRes ? 'res' : (tipo.indexOf('sub')>=0 ? 'sub' : (tipo.indexOf('d')>=0 && tipo.indexOf('dec')<0 ? 'dato' : ''));
+    var unid = tipo.indexOf('u')>=0 && tipo.indexOf('sub')<0 ? 0 : (tipo.indexOf('u')>=0 ? 0 : 2);
+    if(tipo.indexOf('u')>=0) unid=0;
+    if(tipo.indexOf('h')>=0) unid=0;
+    if(tipo.indexOf('dec')>=0) unid=2;
+    h+='<tr class="'+cl+'"><td class="et">'+esc(f[0])+'</td>';
+    for(var i=0;i<3;i++){
+      if(esRes){
+        h+='<td class="n">'+celda(p,i)+'</td>';
+      }else{
+        var v=f[1][i];
+        h+='<td class="n'+(v<0?' neg':'')+'">'+miles(v, unid)+'</td>';
+      }
+    }
+    h+='</tr>';
+  });
+  h+='</tbody></table></div></div>';
+
+  if(listoP(p)){
+    h+='<div class="caja vd"><h3>Paso '+p.n+' resuelto</h3><div class="cuerpo"><p style="margin:0">'+
+       (k<PASOS.length-1
+         ? 'Ya puedes pasar al <b>paso '+PASOS[k+1].n+' · '+esc(PASOS[k+1].t)+'</b>, que usa este resultado.'
+         : 'Con esto la cadena está completa: desde las unidades que se piensan vender hasta el costo '+
+           'de cada unidad producida.')+
+       '</p></div></div>';
+  }
+  if(k>=6){
+    h+='<div class="caja"><h3><span>Dónde estamos en la cadena</span></h3>'+
+       '<div class="cuerpo">'+mapa(p.n)+'</div></div>';
+  }
+  if(listoTodo() && k===PASOS.length-1) h+=vistaCierre();
+  return h;
+}
+
+/* =================== el cierre =================== */
+function vistaCierre(){
+  var cv=PASOS[7].opc.map(function(o){ return o[0]; });
+  var cp=PASOS[6].opc.map(function(o){ return o[0]; });
+  var vt=PASOS[0].opc.map(function(o){ return o[0]; });
+  var cu=PASOS[8].opc.map(function(o){ return o[0]; });
+  var h='<div class="caja vd"><h3><span>Lo que acabas de construir</span>'+
+    '<span class="st">resumen del trimestre</span></h3>'+
+    '<div class="envuelve"><table class="t"><thead><tr><th>Concepto</th>'+
+    MESES.map(function(m){ return '<th class="n">'+esc(m)+'</th>'; }).join('')+
+    '<th class="n">Trimestre</th></tr></thead><tbody>';
+  function fila(et, v, cl, dec){
+    var s=v[0]+v[1]+v[2];
+    return '<tr'+(cl?' class="'+cl+'"':'')+'><td class="et">'+esc(et)+'</td>'+
+      v.map(function(x){ return '<td class="n">'+miles(x, dec===undefined?2:dec)+'</td>'; }).join('')+
+      '<td class="n">'+(dec===0?'—':miles(s,2))+'</td></tr>';
+  }
+  h+=fila('Ventas', vt)+
+     fila('Costo de producción', cp)+
+     fila('Costo de ventas', cv, 'res')+
+     '<tr class="sub"><td class="et">Margen bruto</td>'+
+     [0,1,2].map(function(i){ return '<td class="n">'+miles(vt[i]-cv[i],2)+'</td>'; }).join('')+
+     '<td class="n">'+miles(vt[0]+vt[1]+vt[2]-cv[0]-cv[1]-cv[2],2)+'</td></tr>'+
+     '<tr class="dato"><td class="et">Margen bruto sobre ventas</td>'+
+     [0,1,2].map(function(i){ return '<td class="n">'+((vt[i]-cv[i])/vt[i]*100).toFixed(1)+' %</td>'; }).join('')+
+     '<td class="n">'+((vt[0]+vt[1]+vt[2]-cv[0]-cv[1]-cv[2])/(vt[0]+vt[1]+vt[2])*100).toFixed(1)+' %</td></tr>'+
+     '<tr class="dato"><td class="et">Costo unitario de producción</td>'+
+     [0,1,2].map(function(i){ return '<td class="n">'+miles(cu[i],2)+'</td>'; }).join('')+
+     '<td class="n">—</td></tr>'+
+     '</tbody></table></div>'+
+     '<div class="cuerpo"><p>Fíjate en setiembre: es el mes de <b>más producción</b> (37,700 unidades) '+
+     'y por eso el <b>costo unitario baja</b> a S/ '+miles(cu[2],2)+'. Los CIF fijos de S/ 180,000 son '+
+     'los mismos todos los meses, así que mientras más unidades se fabriquen, menos le toca a cada una. '+
+     'Esa es toda la gracia del costo unitario.</p>'+
+     '<p style="margin:0">Y fíjate también en que el <b>costo de ventas</b> no sigue al costo de producción: '+
+     'en agosto se produjo por S/ '+miles(cp[1],2)+' pero el costo de ventas fue S/ '+miles(cv[1],2)+', '+
+     'porque parte de lo fabricado se quedó en el almacén.</p></div></div>';
+  return h;
+}
+
+/* =================== pintado =================== */
+function pinta(){
+  cabecera();
+  $('panel').innerHTML = (vista===0) ? vistaDatos() : vistaPaso(vista-1);
+  cablea();
+  pintaMarcador();
+}
+
+function cablea(){
+  qq('#panel .elige[data-p]').forEach(function(g){
+    var p=paso(g.dataset.p), i=+g.dataset.i;
+    qq('button', g).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        var o=+b.dataset.o;
+        if(o===0){
+          G.ok[clave(p,i)]=1; graba();
+          if(listoP(p)) sPaso(); else sBien();
+          pinta(); revisaFin();
+        }else{
+          var k=clave(p,i);
+          if(!G.mal[k]) G.mal[k]=[];
+          if(G.mal[k].indexOf(o)<0) G.mal[k].push(o);
+          graba(); sMal();
+          b.classList.add('temblor','mala'); b.disabled=true;
+          setTimeout(function(){ b.classList.remove('temblor'); }, 420);
+          pinta();
+        }
+      });
+    });
+  });
+}
+
+function pintaMarcador(){
+  var m=$('marcador');
+  if(listoTodo()){
+    m.className='marcador ok';
+    m.innerHTML='✓ Cadena completa: los '+TOTAL+' importes de los nueve presupuestos, '+
+      'desde las ventas hasta el costo unitario de producción.';
+    return;
+  }
+  m.className='marcador';
+  if(vista===0){
+    m.innerHTML='Lee los datos del caso y empieza por el paso 1. Llevas '+hechas()+' de '+TOTAL+' importes.';
+    return;
+  }
+  var p=PASOS[vista-1];
+  if(!abierto(vista-1)){
+    m.innerHTML='Este paso se abre cuando termines el paso '+PASOS[vista-2].n+'.';
+  }else if(listoP(p)){
+    m.innerHTML='✓ Paso '+p.n+' resuelto. Llevas '+hechas()+' de '+TOTAL+' importes de toda la cadena.';
+  }else{
+    m.innerHTML='Paso '+p.n+': '+hechasP(p)+' de '+p.opc.length+' meses. '+esc(p.form);
+  }
+}
+
+function revisaFin(){
+  if(listoTodo() && !festejado){ festejado=true; festeja(); }
+}
+
+function festeja(){
+  sFin();
+  var cv=$('confeti'), x=cv.getContext('2d');
+  cv.style.display='block'; cv.width=innerWidth; cv.height=innerHeight;
+  var col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+  for(var i=0;i<110;i++) p.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.4,
+    vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+    c:col[i%col.length], r:Math.random()*6});
+  var t0=Date.now();
+  (function p2(){
+    x.clearRect(0,0,cv.width,cv.height);
+    p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+      x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+      x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+    if(Date.now()-t0<2500) requestAnimationFrame(p2);
+    else { x.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })();
+}
+
+/* =================== sala =================== */
+function resumenAula(){
+  var ultimo='—';
+  PASOS.forEach(function(p){ if(listoP(p)) ultimo='Paso '+p.n+' · '+p.t; });
+  var fall=0;
+  Object.keys(G.mal).forEach(function(k){ fall+=(G.mal[k]||[]).length; });
+  return { vista:(vista===0?'Datos del caso':'Paso '+PASOS[vista-1].n+' · '+PASOS[vista-1].t),
+           ultimo:ultimo, total:hechas()+'/'+TOTAL,
+           cv: resuelto(PASOS[7],2) ? PASOS[7].opc[2][0] : null,
+           listo:listoTodo(), fallos:fall };
+}
+function ventanaAula(e){
+  return '<div class="vmini">'+
+    '<div class="lin"><span>'+esc(e.vista||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
+    '<div class="lin"><span>Último paso cerrado</span><b>'+esc(e.ultimo||'—')+'</b></div>'+
+    '<div class="lin"><span>Importes resueltos</span><b>'+esc(e.total||'—')+'</b></div>'+
+    '<div class="lin"><span>Costo de ventas de setiembre</span><b>'+(e.cv?miles(e.cv,2):'—')+'</b></div>'+
+    '<div class="lin"><span>Elecciones falladas</span><b>'+(e.fallos||0)+'</b></div></div>';
+}
+
+/* =================== arranque =================== */
+(function inicio(){
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán los importes que ya resolviste en los nueve pasos.',
+    hecho:function(){ G=vacio(); vista=0; festejado=false; pinta(); }
+  });
+  Aula.iniciar({ sala:'CA', codigo:'EEFFA', resumen:resumenAula, ventana:ventanaAula,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('zona').hidden=!dentro;
+      if(dentro) pinta();
+    } });
+})();
+
+})();
+</script>
+
+</body>
+</html>
