@@ -127,6 +127,47 @@
              margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
   .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
 
+  /* ---------- en el capítulo anterior ---------- */
+  .caja.cap > h3{ background:#5B4A78; }
+  .cap-i{ background:#F6F3FB; border:1px solid #D9CFEC; border-radius:10px;
+          padding:10px 13px; font-size:12.5px; line-height:1.6; color:#3F3357; margin:0 0 12px; }
+  .cap-i b{ color:#2E2541; }
+  .asientoC{ border:1px solid var(--o-border); border-radius:9px; overflow:hidden; margin:0 0 12px; }
+  .mayor{ border:1.5px solid #B9A9D6; border-radius:10px; overflow:hidden; background:#fff;
+          margin:0 0 12px; }
+  .mayor .mt{ background:#EDE7F6; border-bottom:1.5px solid #B9A9D6; padding:7px 11px;
+              font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12px; font-weight:800;
+              color:#3F3357; letter-spacing:.03em; text-align:center; }
+  .mayor .mc{ display:grid; grid-template-columns:1fr 1fr; }
+  .mayor .ml{ padding:8px 11px 10px; min-width:0; }
+  .mayor .ml + .ml{ border-left:1.5px solid #B9A9D6; }
+  .mayor .me{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+              letter-spacing:.05em; color:var(--o-muted); margin-bottom:6px; }
+  .mayor .mr{ display:flex; justify-content:space-between; gap:10px; padding:3px 0;
+              font-size:12.5px; color:#33404E; }
+  .mayor .mr b{ font-variant-numeric:tabular-nums; font-weight:700; white-space:nowrap; }
+  .mayor .mr.tot{ border-top:1.5px solid #C9BCE2; margin-top:5px; padding-top:5px; font-weight:800; }
+  .mayor .mr.tot b{ font-weight:800; }
+  .mayor .mr.fin{ color:var(--mora); }
+  @media (max-width:560px){
+    .mayor .mc{ grid-template-columns:1fr; }
+    .mayor .ml + .ml{ border-left:0; border-top:1.5px solid #B9A9D6; }
+  }
+  .incog{ font:inherit; font-size:12.5px; font-weight:800; cursor:pointer;
+          border:1.5px dashed #B9A9D6; background:#F6F3FB; color:#5B4A78;
+          border-radius:7px; padding:1px 9px; font-variant-numeric:tabular-nums; }
+  .incog:hover{ background:#EDE7F6; border-style:solid; }
+  .incog.visto{ border:1.5px solid #7CC29B; background:#E9F7EF; color:#14532D;
+                cursor:default; animation:entra .25s ease; }
+  .formulita{ border:1.5px solid var(--amaBd); background:var(--ama); border-radius:10px;
+              padding:10px 13px; margin:0 0 12px; font-size:13px; line-height:1.7; color:#5B4A15; }
+  .formulita .gr{ display:block; font-size:15px; font-weight:800; color:#3F3208;
+                  font-variant-numeric:tabular-nums; margin:4px 0; }
+  .formulita .re{ display:block; font-size:12px; color:#6B5A25; margin-top:4px; }
+  .puente{ border:1.5px solid #7CC29B; background:#F2FAF5; border-radius:10px;
+           padding:10px 13px; font-size:12.5px; line-height:1.65; color:#14532D; }
+  .puente b{ color:#0C3C22; }
+
   /* ---------- resumen de actividades ---------- */
   .tres{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
   @media (max-width:980px){ .tres{ grid-template-columns:1fr; } }
@@ -846,9 +887,96 @@ function cabecera(){
   $('progI').style.width=(n/TOTAL*100)+'%';
 }
 
+/* =================== en el capítulo anterior =================== */
+/* la deducción de la cobranza que se usó en la sesión 1 (Caso 2 · El Buen Sabor):
+   allá no había libro diario, así que el cobro había que sacarlo mayorizando      */
+var CAP=[
+  { id:'x1', v:'116,000' },   /* cobranzas · cuenta 12 */
+  { id:'x3', v:'73,000'  }    /* pagos a proveedores · cuenta 42 */
+];
+var revelado={};
+function incog(id){
+  var c=null; CAP.forEach(function(x){ if(x.id===id) c=x; });
+  return revelado[id]
+    ? '<b class="incog visto">'+c.v+'</b>'
+    : '<button type="button" class="incog" data-x="'+id+'" title="Haz clic para ver cómo sale">¿X?</button>';
+}
+
+function vistaCapitulo(){
+  var h='<div class="caja cap"><h3><span>📖 En el capítulo anterior · Sesión 1</span>'+
+    '<span class="st">Caso 2 · Pollería El Buen Sabor</span></h3><div class="cuerpo">'+
+
+    '<div class="cap-i">En la sesión 1 <b>no teníamos el libro diario</b>: solo el estado de '+
+    'situación financiera y el estado de resultados. La cobranza del año no aparecía escrita en '+
+    'ningún lado, así que había que <b>deducirla</b>. El estado de resultados decía que se vendió '+
+    'S/ 120,000, pero una parte de esa venta seguía sin cobrarse. ¿Cuánto entró de verdad a la caja? '+
+    'Piénsalo primero y después toca cualquier <b>¿X?</b> para destaparlo.</div>'+
+
+    '<p style="margin:0 0 7px"><b>Cada vez que un cliente paga, el asiento es siempre el mismo:</b></p>'+
+    '<div class="asientoC"><table class="t"><thead><tr><th>Cuenta</th>'+
+    '<th class="n" style="width:22%">Debe</th><th class="n" style="width:22%">Haber</th></tr></thead><tbody>'+
+    '<tr><td><span class="cc" style="font-family:ui-monospace,Menlo,monospace;font-weight:800;'+
+      'color:#1F5FA8">10</span> Caja y bancos</td><td class="n">'+incog('x1')+'</td><td class="n"></td></tr>'+
+    '<tr><td><span class="cc" style="font-family:ui-monospace,Menlo,monospace;font-weight:800;'+
+      'color:#1F5FA8">12</span> Cuentas por cobrar</td><td class="n"></td><td class="n">'+incog('x1')+'</td></tr>'+
+    '</tbody></table></div>'+
+
+    '<p style="margin:0 0 7px"><b>Mayorizando la cuenta 12</b> sale el importe que falta:</p>'+
+    '<div class="mayor"><div class="mt">12 CUENTAS POR COBRAR</div><div class="mc">'+
+    '<div class="ml"><span class="me">Debe</span>'+
+      '<div class="mr"><span>Saldo inicial (2024)</span><b>10,000</b></div>'+
+      '<div class="mr"><span>Ventas del año</span><b>120,000</b></div>'+
+      '<div class="mr tot"><span>Total</span><b>130,000</b></div></div>'+
+    '<div class="ml"><span class="me">Haber</span>'+
+      '<div class="mr"><span>Cobranzas</span>'+incog('x1')+'</div>'+
+      '<div class="mr tot fin"><span>Saldo final (2025)</span><b>14,000</b></div></div>'+
+    '</div></div>'+
+
+    '<p style="margin:0 0 9px">La cuenta empezó con <b>10,000</b> y recibió <b>120,000</b> por las '+
+    'ventas del año: por el Debe pasaron <b>130,000</b>. Terminó con <b>14,000</b>, así que lo que '+
+    'salió por el Haber —los cobros— tiene que ser la diferencia.</p>'+
+
+    '<div class="formulita"><b>La cuenta:</b>'+
+    '<span class="gr">X = 10,000 + 120,000 − 14,000 = '+incog('x1')+'</span>'+
+    '<b>La fórmula que se queda:</b>'+
+    '<span class="gr">Cobranza = Ventas + CxC al inicio − CxC al final</span>'+
+    '<span class="re">Se suma la cuenta por cobrar inicial porque es plata del año pasado que se '+
+    'cobra en este; se resta la final porque es venta de este año que todavía no entra a la caja.</span>'+
+    '</div>'+
+
+    '<p style="margin:0 0 7px"><b>El mismo truco al otro lado</b>, con la cuenta 42 del proveedor. '+
+    'En el Caso 2 las compras del año fueron 71,000, se debía 9,000 al inicio y quedaron debiendo '+
+    '7,000 al final:</p>'+
+    '<div class="mayor"><div class="mt">42 CUENTAS POR PAGAR</div><div class="mc">'+
+    '<div class="ml"><span class="me">Debe</span>'+
+      '<div class="mr"><span>Pagos a proveedores</span>'+incog('x3')+'</div>'+
+      '<div class="mr tot fin"><span>Saldo final (2025)</span><b>7,000</b></div></div>'+
+    '<div class="ml"><span class="me">Haber</span>'+
+      '<div class="mr"><span>Saldo inicial (2024)</span><b>9,000</b></div>'+
+      '<div class="mr"><span>Compras del año</span><b>71,000</b></div>'+
+      '<div class="mr tot"><span>Total</span><b>80,000</b></div></div>'+
+    '</div></div>'+
+    '<div class="formulita" style="margin-bottom:12px">'+
+    '<span class="gr">Pago a proveedores = Compras + CxP al inicio − CxP al final</span>'+
+    '<span class="gr">X = 71,000 + 9,000 − 7,000 = '+incog('x3')+'</span></div>'+
+
+    '<div class="puente"><b>Y ahora, en esta sesión 2, la vida es más fácil.</b> Aquí sí tienes el '+
+    '<b>libro diario</b> delante: el cobro ya está escrito en un asiento, con su fecha y su importe. '+
+    'Ya no hay que deducir nada, solo <b>filtrar</b> los asientos que tocan 101, 102 o 1041 y leer el '+
+    'monto. Mayorizar era el camino largo para cuando no te dan el diario; filtrar es el camino corto '+
+    'para cuando sí te lo dan. Los dos llegan exactamente al mismo número — y los dos tienen que '+
+    'cuadrar con el saldo de caja del estado de situación financiera.'+
+    '<p style="margin:9px 0 0"><a class="o-btn o-btn-teal" href="flujos-efectivo.html">'+
+    'Volver a los casos de la sesión 1</a></p></div>'+
+
+    '</div></div>';
+  return h;
+}
+
 /* =================== paso 1 · resumen =================== */
 function vistaResumen(){
-  var h='<div class="caja"><h3><span>Las tres actividades del estado de flujos de efectivo</span>'+
+  var h=vistaCapitulo();
+  h+='<div class="caja"><h3><span>Las tres actividades del estado de flujos de efectivo</span>'+
     '<span class="st">NIC 7</span></h3><div class="cuerpo">'+
     '<p>Todo cobro y todo pago del mes entra en <b>una</b> de estas tres cajas. La pregunta que decide '+
     'no es de qué cuenta salió el dinero, sino <b>para qué se movió</b>.</p>'+
@@ -1296,6 +1424,13 @@ function cablea(){
           pintaMarcador();
         }
       });
+    });
+  });
+
+  /* "en el capítulo anterior": descubrir los importes */
+  qq('#panel .incog[data-x]').forEach(function(b){
+    b.addEventListener('click', function(){
+      revelado[b.dataset.x]=1; sCoge(); pinta();
     });
   });
 
