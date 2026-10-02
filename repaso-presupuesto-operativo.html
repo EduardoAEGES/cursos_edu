@@ -78,10 +78,37 @@
   @keyframes tiembla{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
                       40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
 
-  .form{ display:flex; flex-wrap:wrap; align-items:center; gap:7px; font-size:13px;
-         font-weight:700; color:#33404E; }
-  .form .fija{ background:#F4F7FA; border:1px solid var(--o-border); border-radius:7px; padding:5px 9px; }
-  .form .zona{ min-width:190px; flex:0 1 auto; }
+  .zona .aviso{ font-size:12px; font-weight:700; line-height:1.4; }
+
+  /* reto 2 · las dos cajas */
+  .cajas{ display:grid; grid-template-columns:1fr; gap:11px; padding:11px 12px; }
+  @media (min-width:640px){ .cajas{ grid-template-columns:1fr 1fr; } }
+  .cj{ border:1.5px solid var(--o-border); border-radius:11px; padding:10px 12px; min-width:0; }
+  .cj.mas{ border-color:#7CC29B; background:#F7FCF9; }
+  .cj.menos{ border-color:#E3A9A2; background:#FDF8F7; }
+  .cj .tt{ font-size:15px; font-weight:800; letter-spacing:.03em; }
+  .cj.mas .tt{ color:var(--verde); } .cj.menos .tt{ color:var(--rojo); }
+  .cj .dd{ display:block; font-size:11.5px; color:var(--o-muted); line-height:1.45; margin:2px 0 8px; }
+  .zona.grande{ min-height:86px; align-items:flex-start; flex-wrap:wrap; gap:6px;
+                padding:9px; background:#fff; }
+  .zona.grande .ph{ font-size:12px; color:var(--o-muted); }
+  .puesta{ display:inline-flex; gap:5px; align-items:center; border:1.5px solid #7CC29B;
+           background:#E9F7EF; color:#14532D; border-radius:8px; padding:5px 9px;
+           font-size:12px; font-weight:700; line-height:1.35; animation:entra .25s ease; }
+  @keyframes entra{ from{ transform:scale(.94); opacity:0 } to{ transform:scale(1); opacity:1 } }
+
+  /* reto 3 · las tres cuentas */
+  .cuentas{ display:grid; grid-template-columns:1fr; gap:10px; padding:4px 12px 13px; }
+  .cta{ display:flex; gap:11px; align-items:center; flex-wrap:wrap;
+        border:1.5px solid var(--o-border); border-radius:10px; padding:10px 12px; background:#fff; }
+  .cta .et{ font-size:12.5px; font-weight:700; color:#33404E; flex:1 1 180px; min-width:0; }
+  .cta .op{ font-size:15px; font-weight:800; color:#14365E; font-variant-numeric:tabular-nums;
+            background:#EAF1FA; border-radius:8px; padding:6px 11px; flex:none; }
+  .cta .val{ font-size:17px; font-weight:800; color:var(--verde);
+             font-variant-numeric:tabular-nums; flex:none; }
+  .cta.bien{ border-color:#7CC29B; background:#F6FBF8; }
+  .cta .hueco{ width:120px; font-size:15px; flex:none; }
+
 
   table.t{ width:100%; border-collapse:collapse; font-size:13px; }
   table.t th{ background:#F4F7FA; font-size:10px; font-weight:800; letter-spacing:.05em;
@@ -146,9 +173,10 @@
       </div>
     </div>
     <div class="idea">
-      <b>Cinco minutos.</b> Arrastra las fichas a su sitio y completa la cédula. Es repaso de la
-      cadena que va de las <b>ventas</b> hasta los <b>CIF</b>, justo antes de calcular el costo
-      de producción. En el móvil también funciona tocando: toca la ficha y después su casilla.
+      <b>Cinco minutos, tres retos cortos.</b> Arrastra las fichas a su sitio y resuelve tres
+      cuentas sencillas. Es repaso de la parte del presupuesto que va de las <b>ventas</b> hasta
+      los <b>CIF</b>, antes de calcular el costo de producción.
+      En el móvil también funciona tocando: toca la ficha y después su casilla.
     </div>
   </div>
 
@@ -195,52 +223,42 @@ function baraja(a){
 
 /* =================== los tres retos =================== */
 
-/* reto 1 · de qué se alimenta cada presupuesto */
+/* reto 1 · qué calcula cada presupuesto */
 var R1=[
-  { z:'a', q:'El presupuesto de <b>producción</b> arranca de…',               f:'uv' },
-  { z:'b', q:'Las <b>compras de MP</b>, el <b>consumo</b> y la <b>MOD</b> arrancan de…', f:'up' },
-  { z:'c', q:'Los <b>CIF variables</b> se calculan sobre…',                   f:'hr' },
-  { z:'d', q:'El <b>inventario final de materia prima</b> se calcula con…',   f:'ps' },
-  { z:'e', q:'Las <b>ventas en soles</b> salen de las unidades por…',         f:'vv' }
+  { z:'a', q:'Cuántas unidades vamos a vender y cuánto dinero es eso',  f:'ven' },
+  { z:'b', q:'Cuántas unidades hay que fabricar en el mes',             f:'pro' },
+  { z:'c', q:'Cuánta materia prima hay que comprar',                    f:'mp'  },
+  { z:'d', q:'Cuánto cuesta la gente que trabaja el producto',          f:'mod' },
+  { z:'e', q:'Los demás costos de la fábrica: luz, alquiler, seguros',  f:'cif' }
 ];
 var F1=[
-  { id:'uv', t:'Unidades vendidas' },
-  { id:'up', t:'Unidades a producir' },
-  { id:'hr', t:'Horas de mano de obra directa' },
-  { id:'ps', t:'Producción del mes siguiente' },
-  { id:'vv', t:'Valor venta promedio' },
-  { id:'cv', t:'Costo de ventas' }
+  { id:'ven', t:'Presupuesto de ventas' },
+  { id:'pro', t:'Presupuesto de producción' },
+  { id:'mp',  t:'Presupuesto de compras de MP' },
+  { id:'mod', t:'Presupuesto de mano de obra directa' },
+  { id:'cif', t:'Presupuesto de CIF' }
 ];
-var POR1={ cv:'El costo de ventas es el <b>final</b> de la cadena, no alimenta a nadie de esta parte.' };
 
-/* reto 2 · armar las fórmulas */
+/* reto 2 · el inventario, ¿se suma o se resta? */
 var R2=[
-  { z:'p1', ini:'Unidades a producir = unidades vendidas', hu:['f1','f2'] },
-  { z:'p2', ini:'Compras de MP = requerimiento del mes',   hu:['f3','f4'] },
-  { z:'p3', ini:'CIF total = CIF fijos',                   hu:['f5'] }
+  { id:'i1', t:'Inventario final de productos terminados', z:'mas' },
+  { id:'i2', t:'Inventario inicial de productos terminados', z:'menos' },
+  { id:'i3', t:'Inventario final de materia prima', z:'mas' },
+  { id:'i4', t:'Inventario inicial de materia prima', z:'menos' }
 ];
-var F2=[
-  { id:'f1', t:'+ inventario final de PT' },
-  { id:'f2', t:'− inventario inicial de PT' },
-  { id:'f3', t:'+ inventario final de MP' },
-  { id:'f4', t:'− inventario inicial de MP' },
-  { id:'f5', t:'+ horas de MOD × tasa variable' },
-  { id:'x1', t:'− inventario final de PT' },
-  { id:'x2', t:'+ inventario inicial de MP' }
+var ZONAS2=[
+  { z:'mas',   t:'SE SUMA',  d:'todavía hay que fabricarlo o comprarlo' },
+  { z:'menos', t:'SE RESTA', d:'eso ya está en el almacén' }
 ];
-var POR2={ x1:'El inventario final se <b>suma</b>: hay que fabricarlo además de lo que se vende.',
-           x2:'El inventario inicial se <b>resta</b>: esa materia prima ya está en el almacén.' };
 
-/* reto 3 · completar la cédula */
+/* reto 3 · tres cuentas, con la operación a la vista */
 var R3=[
-  { id:'v', et:'Ventas del mes (S/)',        p:'900 unidades × S/ 50.00',               v:45000 },
-  { id:'p', et:'Unidades a producir',        p:'900 vendidas + 120 final − 100 inicial', v:920 },
-  { id:'c', et:'Consumo de MP (S/)',         p:'unidades producidas × S/ 20.00',        v:18400 },
-  { id:'m', et:'Mano de obra directa (S/)',  p:'unidades × 0.5 h × S/ 12.00',           v:5520 },
-  { id:'f', et:'CIF total (S/)',             p:'S/ 4,000 fijos + horas × S/ 10.00',     v:8600 }
+  { id:'v', et:'Ventas del mes',       op:'900 unidades × S/ 50',          v:45000 },
+  { id:'p', et:'Unidades a producir',  op:'900 + 120 − 100',               v:920 },
+  { id:'c', et:'Consumo de materia prima', op:'920 unidades × S/ 20',      v:18400 }
 ];
 
-var TOTAL=R1.length+R2.reduce(function(n,p){ return n+p.hu.length; },0)+R3.length;
+var TOTAL=R1.length+R2.length+R3.length;
 
 /* =================== sonido =================== */
 var son=true, ctx=null;
@@ -289,16 +307,15 @@ function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} 
 var festejado=false;
 
 function h1(){ var n=0; R1.forEach(function(x){ if(G.a[x.z]===x.f) n++; }); return n; }
-function h2(){ var n=0; R2.forEach(function(p){ p.hu.forEach(function(id,i){ if(G.b[p.z+'/'+i]===id) n++; }); }); return n; }
+function h2(){ var n=0; R2.forEach(function(x){ if(G.b[x.id]===x.z) n++; }); return n; }
 function h3(){ var n=0; R3.forEach(function(x){ if(G.c[x.id]===1) n++; }); return n; }
 function hechas(){ return h1()+h2()+h3(); }
 function listo1(){ return h1()===R1.length; }
-function listo2(){ return h2()===R2.reduce(function(n,p){ return n+p.hu.length; },0); }
+function listo2(){ return h2()===R2.length; }
 function listoTodo(){ return hechas()===TOTAL; }
 function usada(id){
   var u=false;
   Object.keys(G.a).forEach(function(k){ if(G.a[k]===id) u=true; });
-  Object.keys(G.b).forEach(function(k){ if(G.b[k]===id) u=true; });
   return u;
 }
 
@@ -396,91 +413,87 @@ function arrastre(raiz, alSoltar){
 
 /* =================== dibujo =================== */
 var ORD1=baraja(F1.map(function(x){ return x.id; }));
-var ORD2=baraja(F2.map(function(x){ return x.id; }));
+var ORD2=baraja(R2.map(function(x){ return x.id; }));
 function f1(id){ for(var i=0;i<F1.length;i++) if(F1[i].id===id) return F1[i]; return null; }
-function f2(id){ for(var i=0;i<F2.length;i++) if(F2[i].id===id) return F2[i]; return null; }
+function f2(id){ for(var i=0;i<R2.length;i++) if(R2[i].id===id) return R2[i]; return null; }
 
 function vista1(){
   var libres=ORD1.filter(function(id){ return !usada(id); });
-  var h='<div class="bloque'+(listo1()?' ok':'')+'" id="r1"><h3><span>Reto 1 · ¿De dónde sale cada presupuesto?</span>'+
-    '<span class="t">'+h1()+' de '+R1.length+' · arrastra la ficha a su casilla</span></h3>'+
+  var h='<div class="bloque'+(listo1()?' ok':'')+'" id="r1"><h3><span>Reto 1 · ¿Qué calcula cada presupuesto?</span>'+
+    '<span class="t">'+h1()+' de '+R1.length+' · arrastra el nombre a su descripción</span></h3>'+
     '<div class="banda">'+(libres.length
       ? libres.map(function(id){ return '<button type="button" class="ficha" data-f="'+esc(id)+'">'+esc(f1(id).t)+'</button>'; }).join('')
-      : '<span class="vacia">✓ No quedan fichas: todas están colocadas.</span>')+'</div>'+
+      : '<span class="vacia">✓ Todos colocados.</span>')+'</div>'+
     '<div class="pares">';
   R1.forEach(function(x){
     var p=G.a[x.z], bien=(p===x.f);
-    h+='<div class="par"><span class="q">'+x.q+'</span>'+
+    h+='<div class="par"><span class="q">'+esc(x.q)+'</span>'+
        '<div class="zona'+(bien?' bien':'')+'" data-z="'+esc(x.z)+'">'+
-       (bien ? '✓ '+esc(f1(p).t) : 'Suelta aquí')+'</div></div>';
+       (bien ? '✓ '+esc(f1(p).t) : 'Suelta aquí') +'</div></div>';
   });
   return h+'</div></div>';
 }
 
 function vista2(){
   if(!listo1()){
-    return '<div class="bloque r2"><h3><span>Reto 2 · Arma las fórmulas</span>'+
+    return '<div class="bloque r2"><h3><span>Reto 2 · El inventario, ¿se suma o se resta?</span>'+
       '<span class="t">bloqueado</span></h3><div class="cuerpo"><p style="margin:0">'+
       'Primero termina el reto 1. Llevas '+h1()+' de '+R1.length+'.</p></div></div>';
   }
-  var libres=ORD2.filter(function(id){ return !usada(id); });
-  var h='<div class="bloque r2'+(listo2()?' ok':'')+'" id="r2"><h3><span>Reto 2 · Arma las fórmulas</span>'+
-    '<span class="t">'+h2()+' de 5 · sobran dos fichas, están al revés</span></h3>'+
+  var libres=ORD2.filter(function(id){ return !G.b[id]; });
+  var h='<div class="bloque r2'+(listo2()?' ok':'')+'" id="r2"><h3><span>Reto 2 · El inventario, ¿se suma o se resta?</span>'+
+    '<span class="t">'+h2()+' de '+R2.length+' · lleva cada ficha a su caja</span></h3>'+
     '<div class="banda">'+(libres.length
-      ? libres.map(function(id){ return '<button type="button" class="ficha op" data-f="'+esc(id)+'">'+esc(f2(id).t)+'</button>'; }).join('')
-      : '<span class="vacia">✓ No quedan fichas por colocar.</span>')+'</div>'+
-    '<div class="cuerpo">';
-  R2.forEach(function(p){
-    h+='<div class="form" style="margin-bottom:11px"><span class="fija">'+esc(p.ini)+'</span>';
-    p.hu.forEach(function(id,i){
-      var k=p.z+'/'+i, puesta=G.b[k], bien=(puesta===id);
-      h+='<span class="zona'+(bien?' bien':'')+'" data-z="'+esc(k)+'">'+
-         (bien ? '✓ '+esc(f2(puesta).t) : 'Suelta aquí') +'</span>';
-    });
-    h+='</div>';
+      ? libres.map(function(id){ return '<button type="button" class="ficha" data-f="'+esc(id)+'">'+esc(f2(id).t)+'</button>'; }).join('')
+      : '<span class="vacia">✓ No quedan fichas.</span>')+'</div>'+
+    '<div class="cajas">';
+  ZONAS2.forEach(function(z){
+    var dentro=R2.filter(function(x){ return G.b[x.id]===z.z; });
+    h+='<div class="cj '+esc(z.z)+'"><b class="tt">'+esc(z.t)+'</b>'+
+       '<span class="dd">'+esc(z.d)+'</span>'+
+       '<div class="zona grande" data-z="'+esc(z.z)+'">'+
+       (dentro.length
+         ? dentro.map(function(x){ return '<span class="puesta">✓ '+esc(x.t)+'</span>'; }).join('')
+         : '<span class="ph">Suelta aquí</span>')+
+       '</div></div>';
   });
   return h+'</div></div>';
 }
 
 function vista3(){
   if(!listo2()){
-    return '<div class="bloque r3"><h3><span>Reto 3 · Completa la cédula</span>'+
+    return '<div class="bloque r3"><h3><span>Reto 3 · Haz las tres cuentas</span>'+
       '<span class="t">bloqueado</span></h3><div class="cuerpo"><p style="margin:0">'+
       'Primero termina el reto 2.</p></div></div>';
   }
-  var h='<div class="bloque r3'+(h3()===R3.length?' ok':'')+'" id="r3"><h3><span>Reto 3 · Completa la cédula</span>'+
-    '<span class="t">'+h3()+' de '+R3.length+' · escribe el importe y pulsa Enter</span></h3>'+
-    '<div class="cuerpo"><p><b>Un mes, números redondos.</b> Se venden <b>900 unidades</b> a '+
-    '<b>S/ 50.00</b>. El inventario de productos terminados pasa de <b>100</b> a <b>120</b> unidades. '+
-    'La materia prima es <b>1 unidad</b> por producto a <b>S/ 20.00</b>. La mano de obra toma '+
-    '<b>0.5 horas</b> por unidad a <b>S/ 12.00</b> la hora. Los CIF son <b>S/ 4,000</b> fijos más '+
-    '<b>S/ 10.00</b> por hora de MOD.</p></div>'+
-    '<div class="envuelve"><table class="t"><thead><tr><th>Concepto</th><th class="n" style="width:190px">Importe</th></tr></thead><tbody>';
+  var h='<div class="bloque r3'+(h3()===R3.length?' ok':'')+'" id="r3"><h3><span>Reto 3 · Haz las tres cuentas</span>'+
+    '<span class="t">'+h3()+' de '+R3.length+' · escribe el resultado y pulsa Enter</span></h3>'+
+    '<div class="cuerpo"><p style="margin:0 0 4px"><b>Un mes de una fábrica pequeña.</b> '+
+    'Vende <b>900 unidades</b> a <b>S/ 50</b>, quiere dejar <b>120</b> unidades en almacén y ya tenía '+
+    '<b>100</b>, y cada unidad lleva materia prima por <b>S/ 20</b>. Las operaciones ya están puestas: '+
+    'solo resuélvelas.</p></div>'+
+    '<div class="cuentas">';
   R3.forEach(function(x){
     var bien=(G.c[x.id]===1);
-    h+='<tr'+(bien?' class="res"':'')+'><td>'+esc(x.et)+'<span class="pista">'+esc(x.p)+'</span></td>'+
-       '<td class="n">'+(bien
-         ? '<b>'+miles(x.v)+'</b>'
-         : '<input class="hueco" type="text" inputmode="numeric" data-c="'+esc(x.id)+'" placeholder="—" autocomplete="off">')+
-       '</td></tr>';
+    h+='<div class="cta'+(bien?' bien':'')+'"><span class="et">'+esc(x.et)+'</span>'+
+       '<span class="op">'+esc(x.op)+' =</span>'+
+       (bien ? '<span class="val">'+miles(x.v)+'</span>'
+             : '<input class="hueco" type="text" inputmode="numeric" data-c="'+esc(x.id)+'" placeholder="?" autocomplete="off">')+
+       '</div>';
   });
-  return h+'</tbody></table></div></div>';
+  return h+'</div></div>';
 }
 
 function vistaCierre(){
   var t=(G.tfin && G.t0)? (G.tfin-G.t0) : 0;
   return '<div class="cierre"><span class="tt">✓ Repaso terminado'+(t?' en '+minSeg(t):'')+
     (t && t<=LIM*1000 ? ' · dentro de los cinco minutos' : '')+'</span>'+
-    'Esa es toda la primera parte del presupuesto maestro: <b>las ventas mandan</b>, la producción '+
-    'ajusta por los inventarios de productos terminados, y de la producción salen la materia prima, '+
-    'la mano de obra y los CIF.'+
-    '<ul><li>El inventario <b>final</b> se suma y el <b>inicial</b> se resta, tanto en productos '+
-    'terminados como en materia prima.</li>'+
-    '<li><b>Comprar no es consumir</b>: al costo de producción va el consumo.</li>'+
-    '<li>Las <b>horas de MOD</b> se usan dos veces: para la mano de obra y para los CIF variables.</li></ul>'+
-    '<p style="margin:10px 0 0">Con estos cinco números ya se puede calcular el costo de producción: '+
-    '<b>18,400 + 5,520 + 8,600 = S/ 32,520</b> por 920 unidades, o sea <b>S/ 35.35</b> cada una. '+
-    'Eso es el paso 7, y lo tienes completo en la sesión A.</p></div>';
+    'Eso es la primera parte del presupuesto: <b>las ventas mandan</b>, la producción ajusta por el '+
+    'almacén, y de la producción salen la materia prima, la mano de obra y los CIF.'+
+    '<ul><li>El inventario <b>final se suma</b> y el <b>inicial se resta</b>.</li>'+
+    '<li><b>Comprar no es consumir</b>: al costo va lo que se consume.</li></ul>'+
+    '<p style="margin:10px 0 0">El siguiente paso sería juntar materia prima, mano de obra y CIF para '+
+    'sacar el <b>costo de producción</b>. Eso lo tienes completo en la sesión A.</p></div>';
 }
 
 function pinta(){
@@ -501,18 +514,19 @@ function cablea(){
     var reto=null; R1.forEach(function(x){ if(x.z===zona) reto=x; });
     if(!reto || G.a[zona]===reto.f) return;
     if(ficha===reto.f){ G.a[zona]=ficha; graba(); sBien(); pinta(); revisaFin(); }
-    else{ falla(zona, POR1[ficha]); }
+    else{ falla(zona, 'Ese no. Prueba con otro.'); }
   });
   var r2=$('r2');
   if(r2) arrastre(r2, function(ficha, zona){
     arranca();
-    var pt=zona.split('/'), p=null;
-    R2.forEach(function(x){ if(x.z===pt[0]) p=x; });
-    if(!p) return;
-    var esperado=p.hu[+pt[1]];
-    if(G.b[zona]===esperado) return;
-    if(ficha===esperado){ G.b[zona]=ficha; graba(); sBien(); pinta(); revisaFin(); }
-    else{ falla(zona, POR2[ficha]); }
+    var x=null; R2.forEach(function(y){ if(y.id===ficha) x=y; });
+    if(!x || G.b[ficha]===x.z) return;
+    if(zona===x.z){ G.b[ficha]=zona; graba(); sBien(); pinta(); revisaFin(); }
+    else{
+      falla(zona, zona==='mas'
+        ? 'El <b>inicial</b> no se suma: ese inventario ya está en el almacén.'
+        : 'El <b>final</b> no se resta: todavía hay que fabricarlo o comprarlo.');
+    }
   });
   qq('#panel .hueco[data-c]').forEach(function(inp){
     inp.addEventListener('focus', arranca);
@@ -538,12 +552,13 @@ function falla(zona, porque){
   G.mal++; graba(); sMal();
   var z=document.querySelector('[data-z="'+zona+'"]');
   if(z){
+    var antes=z.innerHTML;
     z.classList.add('mal','temblor');
-    if(porque) z.innerHTML=porque;
+    if(porque) z.innerHTML='<span class="aviso">'+porque+'</span>';
     setTimeout(function(){
       z.classList.remove('mal','temblor');
-      if(porque) z.textContent='Suelta aquí';
-    }, 1600);
+      if(porque) z.innerHTML=antes;
+    }, 1700);
   }
   pintaMarcador();
 }
@@ -556,9 +571,9 @@ function pintaMarcador(){
     return;
   }
   m.className='marcador';
-  if(!listo1()) m.innerHTML='Reto 1: '+h1()+' de '+R1.length+'. Arrastra cada ficha a la casilla que le toca.';
-  else if(!listo2()) m.innerHTML='Reto 2: '+h2()+' de 5. Sobran dos fichas: son las mismas pero con el signo al revés.';
-  else m.innerHTML='Reto 3: '+h3()+' de '+R3.length+'. Escribe el importe y pulsa Enter.';
+  if(!listo1()) m.innerHTML='Reto 1: '+h1()+' de '+R1.length+'. Arrastra cada nombre a lo que ese presupuesto calcula.';
+  else if(!listo2()) m.innerHTML='Reto 2: '+h2()+' de '+R2.length+'. ¿Ese inventario hay que fabricarlo todavía, o ya está en el almacén?';
+  else m.innerHTML='Reto 3: '+h3()+' de '+R3.length+'. La operación ya está puesta: resuélvela y pulsa Enter.';
 }
 
 function revisaFin(){
@@ -589,7 +604,7 @@ if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Empezar de nuevo',
   aviso:'Se borra tu avance y el reloj vuelve a 5:00.',
   hecho:function(){ G=vacio(); festejado=false; ORD1=baraja(F1.map(function(x){ return x.id; }));
-                    ORD2=baraja(F2.map(function(x){ return x.id; })); pinta(); }
+                    ORD2=baraja(R2.map(function(x){ return x.id; })); pinta(); }
 });
 if(listoTodo()) festejado=true;
 pinta();
