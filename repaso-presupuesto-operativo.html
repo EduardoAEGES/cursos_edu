@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repaso · Presupuestos operativos, antes del costo de producción</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .rp{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --mora:#714B67; --ambar:#B25E09;
+       --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1060px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,23px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo .der{ margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+  .reloj{ font-variant-numeric:tabular-nums; font-size:13px; font-weight:800; color:var(--gris);
+          border:1.5px solid var(--o-border); border-radius:8px; padding:5px 11px; background:#fff; }
+  .reloj.corre{ border-color:var(--verde); color:var(--verde); background:#F2FAF5; }
+  .reloj.pasado{ border-color:var(--ambar); color:var(--ambar); background:var(--ama); }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:10px 13px; font-size:12.5px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin:14px 0 13px; }
+  .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
+  .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+           overflow:hidden; margin-bottom:14px; }
+  .bloque > h3{ margin:0; font-size:12px; font-weight:800; letter-spacing:.05em;
+                text-transform:uppercase; color:#fff; background:var(--azul); padding:9px 12px;
+                display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .bloque > h3 .t{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.92; font-size:11.5px; }
+  .bloque.r2 > h3{ background:var(--mora); }
+  .bloque.r3 > h3{ background:var(--verde); }
+  .bloque.ok > h3{ background:var(--verde); }
+  .bloque .cuerpo{ padding:12px 14px; font-size:13px; line-height:1.6; color:#33404E; }
+  .bloque .cuerpo > p{ margin:0 0 10px; }
+
+  .banda{ display:flex; gap:7px; flex-wrap:wrap; padding:10px 12px; background:#FAFBFC;
+          border-bottom:1px solid var(--o-border); min-height:44px; align-items:flex-start; }
+  .banda .vacia{ font-size:12px; color:var(--o-muted); }
+
+  .ficha{ font:inherit; font-size:12.5px; font-weight:700; line-height:1.4; cursor:grab;
+          border:1.5px solid var(--azul); background:#EAF1FA; color:#14365E;
+          border-radius:9px; padding:7px 11px; touch-action:none; user-select:none;
+          display:inline-flex; gap:6px; align-items:center; }
+  .ficha:active{ cursor:grabbing; }
+  .ficha.sel{ border-color:var(--ambar); background:#FDF3E6; color:#7A4A06;
+              box-shadow:0 0 0 3px rgba(178,94,9,.18); }
+  .ficha.fantasma{ position:fixed; z-index:9999; pointer-events:none; opacity:.92;
+                   box-shadow:0 10px 24px rgba(0,0,0,.22); }
+  .ficha.op{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; }
+
+  .pares{ display:grid; grid-template-columns:1fr; gap:9px; padding:11px 12px; }
+  @media (min-width:760px){ .pares{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .par{ border:1px solid var(--o-border); border-radius:10px; padding:9px 11px; min-width:0;
+        display:flex; flex-direction:column; gap:7px; }
+  .par .q{ font-size:12.5px; line-height:1.5; color:#33404E; }
+  .par .q b{ color:#14365E; }
+  .zona{ border:1.5px dashed #B9C4CF; border-radius:9px; min-height:38px; padding:5px 9px;
+         display:flex; align-items:center; gap:7px; font-size:12px; color:var(--o-muted);
+         background:#FBFCFD; }
+  .zona.encima{ border-style:solid; border-color:var(--azul); background:#F0F6FC;
+                box-shadow:0 0 0 3px rgba(31,95,168,.15); }
+  .zona.bien{ border-style:solid; border-color:#7CC29B; background:#E9F7EF; color:#14532D;
+              font-weight:800; font-size:12.5px; }
+  .zona.mal{ border-style:solid; border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; }
+  .zona.temblor{ animation:tiembla .4s; }
+  @keyframes tiembla{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+                      40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+
+  .form{ display:flex; flex-wrap:wrap; align-items:center; gap:7px; font-size:13px;
+         font-weight:700; color:#33404E; }
+  .form .fija{ background:#F4F7FA; border:1px solid var(--o-border); border-radius:7px; padding:5px 9px; }
+  .form .zona{ min-width:190px; flex:0 1 auto; }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.t th{ background:#F4F7FA; font-size:10px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:var(--o-muted); padding:6px 10px;
+              border-bottom:1px solid var(--o-border); text-align:left; }
+  table.t th.n, table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; }
+  table.t tr.res td{ font-weight:800; background:#F6FBF8; }
+  .envuelve{ overflow-x:auto; }
+
+  .hueco{ width:124px; font:inherit; font-size:13px; font-weight:800; text-align:right;
+          border:1.5px solid var(--o-border); border-radius:8px; padding:5px 9px;
+          font-variant-numeric:tabular-nums; background:#fff; color:#33404E; }
+  .hueco:focus{ outline:none; border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.14); }
+  .hueco.bien{ border-color:#7CC29B; background:#E9F7EF; color:#14532D; }
+  .hueco.mal{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; animation:tiembla .4s; }
+  .pista{ display:block; font-size:11px; color:var(--o-muted); line-height:1.4; margin-top:3px; }
+
+  .marcador{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+             margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+
+  .cierre{ border:1.5px solid #7CC29B; background:#F2FAF5; border-radius:11px;
+           padding:13px 15px; font-size:13px; line-height:1.65; color:#14532D; margin-top:14px; }
+  .cierre b{ color:#0C3C22; }
+  .cierre .tt{ font-size:15px; font-weight:800; display:block; margin-bottom:6px; }
+  .cierre ul{ margin:8px 0 0; padding-left:19px; } .cierre li{ padding:2px 0; }
+
+  #confeti{ position:fixed; inset:0; pointer-events:none; z-index:9998; display:none; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Repaso</b></span>
+  <div class="o-cp-right"><span class="o-count">5 minutos</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap rp">
+
+  <div class="o-sheet">
+    <div class="titulo">
+      <div>
+        <h1>Repaso · Los presupuestos antes del costo de producción</h1>
+        <p>Ventas, producción, materia prima, mano de obra y CIF · tres retos cortos</p>
+      </div>
+      <div class="der">
+        <span class="reloj" id="reloj">5:00</span>
+        <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊</button>
+      </div>
+    </div>
+    <div class="idea">
+      <b>Cinco minutos.</b> Arrastra las fichas a su sitio y completa la cédula. Es repaso de la
+      cadena que va de las <b>ventas</b> hasta los <b>CIF</b>, justo antes de calcular el costo
+      de producción. En el móvil también funciona tocando: toca la ficha y después su casilla.
+    </div>
+  </div>
+
+  <div class="avance">
+    <span class="cuenta" id="cuenta"></span>
+    <span class="barra"><i id="progI"></i></span>
+    <span class="reinicio" id="reinicio"></span>
+  </div>
+
+  <div id="panel"></div>
+  <div class="marcador" id="marcador"></div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:16px">
+    <a class="o-btn o-btn-teal" href="sesion-A-costo-produccion.html">Ir a la sesión A completa</a>
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros</span>
+    <span>Presupuesto maestro · parte operativa</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="reiniciar.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function miles(n){
+  var p=Math.abs(n).toFixed(0).split('.');
+  return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function baraja(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+
+/* =================== los tres retos =================== */
+
+/* reto 1 · de qué se alimenta cada presupuesto */
+var R1=[
+  { z:'a', q:'El presupuesto de <b>producción</b> arranca de…',               f:'uv' },
+  { z:'b', q:'Las <b>compras de MP</b>, el <b>consumo</b> y la <b>MOD</b> arrancan de…', f:'up' },
+  { z:'c', q:'Los <b>CIF variables</b> se calculan sobre…',                   f:'hr' },
+  { z:'d', q:'El <b>inventario final de materia prima</b> se calcula con…',   f:'ps' },
+  { z:'e', q:'Las <b>ventas en soles</b> salen de las unidades por…',         f:'vv' }
+];
+var F1=[
+  { id:'uv', t:'Unidades vendidas' },
+  { id:'up', t:'Unidades a producir' },
+  { id:'hr', t:'Horas de mano de obra directa' },
+  { id:'ps', t:'Producción del mes siguiente' },
+  { id:'vv', t:'Valor venta promedio' },
+  { id:'cv', t:'Costo de ventas' }
+];
+var POR1={ cv:'El costo de ventas es el <b>final</b> de la cadena, no alimenta a nadie de esta parte.' };
+
+/* reto 2 · armar las fórmulas */
+var R2=[
+  { z:'p1', ini:'Unidades a producir = unidades vendidas', hu:['f1','f2'] },
+  { z:'p2', ini:'Compras de MP = requerimiento del mes',   hu:['f3','f4'] },
+  { z:'p3', ini:'CIF total = CIF fijos',                   hu:['f5'] }
+];
+var F2=[
+  { id:'f1', t:'+ inventario final de PT' },
+  { id:'f2', t:'− inventario inicial de PT' },
+  { id:'f3', t:'+ inventario final de MP' },
+  { id:'f4', t:'− inventario inicial de MP' },
+  { id:'f5', t:'+ horas de MOD × tasa variable' },
+  { id:'x1', t:'− inventario final de PT' },
+  { id:'x2', t:'+ inventario inicial de MP' }
+];
+var POR2={ x1:'El inventario final se <b>suma</b>: hay que fabricarlo además de lo que se vende.',
+           x2:'El inventario inicial se <b>resta</b>: esa materia prima ya está en el almacén.' };
+
+/* reto 3 · completar la cédula */
+var R3=[
+  { id:'v', et:'Ventas del mes (S/)',        p:'900 unidades × S/ 50.00',               v:45000 },
+  { id:'p', et:'Unidades a producir',        p:'900 vendidas + 120 final − 100 inicial', v:920 },
+  { id:'c', et:'Consumo de MP (S/)',         p:'unidades producidas × S/ 20.00',        v:18400 },
+  { id:'m', et:'Mano de obra directa (S/)',  p:'unidades × 0.5 h × S/ 12.00',           v:5520 },
+  { id:'f', et:'CIF total (S/)',             p:'S/ 4,000 fijos + horas × S/ 10.00',     v:8600 }
+];
+
+var TOTAL=R1.length+R2.reduce(function(n,p){ return n+p.hu.length; },0)+R3.length;
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('rp_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
+function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
+function toma(){ nota(820,0,0.05,0.035,'triangle'); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  nota(1318.5,0.45,0.6,0.07);
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('rp_son', son?'1':'0'); }catch(e){}
+  $('btnSon').textContent = son ? '🔊' : '🔇';
+  $('btnSon').setAttribute('aria-pressed', son?'true':'false');
+  if(son) sBien();
+});
+$('btnSon').textContent = son ? '🔊' : '🔇';
+
+/* =================== estado =================== */
+var LS='rp_presu_v1';
+function vacio(){ return { a:{}, b:{}, c:{}, mal:0, t0:0, tfin:0 }; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object'){
+    G.a=d.a||{}; G.b=d.b||{}; G.c=d.c||{};
+    G.mal=d.mal||0; G.t0=d.t0||0; G.tfin=d.tfin||0;
+  }
+}catch(e){}
+function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+var festejado=false;
+
+function h1(){ var n=0; R1.forEach(function(x){ if(G.a[x.z]===x.f) n++; }); return n; }
+function h2(){ var n=0; R2.forEach(function(p){ p.hu.forEach(function(id,i){ if(G.b[p.z+'/'+i]===id) n++; }); }); return n; }
+function h3(){ var n=0; R3.forEach(function(x){ if(G.c[x.id]===1) n++; }); return n; }
+function hechas(){ return h1()+h2()+h3(); }
+function listo1(){ return h1()===R1.length; }
+function listo2(){ return h2()===R2.reduce(function(n,p){ return n+p.hu.length; },0); }
+function listoTodo(){ return hechas()===TOTAL; }
+function usada(id){
+  var u=false;
+  Object.keys(G.a).forEach(function(k){ if(G.a[k]===id) u=true; });
+  Object.keys(G.b).forEach(function(k){ if(G.b[k]===id) u=true; });
+  return u;
+}
+
+/* =================== reloj =================== */
+var LIM=300;
+function arranca(){ if(!G.t0){ G.t0=Date.now(); graba(); } }
+function pintaReloj(){
+  var r=$('reloj');
+  if(!G.t0){ r.className='reloj'; r.textContent='5:00'; return; }
+  var seg=Math.floor(((G.tfin||Date.now())-G.t0)/1000);
+  var q=Math.max(0, LIM-seg), m=Math.floor(Math.abs(q)/60), s=Math.abs(q)%60;
+  r.className='reloj '+(G.tfin?'':(q>0?'corre':'pasado'));
+  r.textContent=(q<0?'+':'')+m+':'+(s<10?'0':'')+s;
+  if(G.tfin) r.className='reloj corre';
+}
+setInterval(function(){ if(G.t0 && !G.tfin) pintaReloj(); }, 1000);
+function minSeg(ms){
+  var s=Math.round(ms/1000), m=Math.floor(s/60);
+  return m+' min '+(s%60)+' s';
+}
+
+/* =================== arrastre =================== */
+function arrastre(raiz, alSoltar){
+  var cogido=null, fantasma=null, movio=false, elegido=null;
+  function zonaEn(x,y){
+    var e=document.elementFromPoint(x,y);
+    while(e && e!==document.body){
+      if(e.hasAttribute && e.hasAttribute('data-z')) return e;
+      e=e.parentElement;
+    }
+    return null;
+  }
+  function limpiaEncima(){ qq('[data-z]', raiz).forEach(function(z){ z.classList.remove('encima'); }); }
+
+  qq('.ficha[data-f]', raiz).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(ev.button) return;
+      cogido=f; movio=false;
+      var r=f.getBoundingClientRect();
+      cogido._dx=ev.clientX-r.left; cogido._dy=ev.clientY-r.top; cogido._w=r.width;
+      try{ f.setPointerCapture(ev.pointerId); }catch(e){}
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(cogido!==f) return;
+      if(!movio){
+        if(Math.abs(ev.movementX)+Math.abs(ev.movementY)<2) return;
+        movio=true;
+        fantasma=f.cloneNode(true);
+        fantasma.classList.add('fantasma');
+        fantasma.style.width=cogido._w+'px';
+        document.body.appendChild(fantasma);
+        f.style.opacity='.35';
+        toma();
+      }
+      fantasma.style.left=(ev.clientX-cogido._dx)+'px';
+      fantasma.style.top=(ev.clientY-cogido._dy)+'px';
+      limpiaEncima();
+      var z=zonaEn(ev.clientX, ev.clientY);
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(cogido!==f) return;
+      f.style.opacity='';
+      if(fantasma){ fantasma.remove(); fantasma=null; }
+      limpiaEncima();
+      if(movio){
+        var z=zonaEn(ev.clientX, ev.clientY);
+        if(z) alSoltar(f.dataset.f, z.dataset.z);
+      }else{
+        if(elegido===f){ f.classList.remove('sel'); elegido=null; }
+        else{
+          qq('.ficha.sel', raiz).forEach(function(x){ x.classList.remove('sel'); });
+          f.classList.add('sel'); elegido=f; toma();
+        }
+      }
+      cogido=null; movio=false;
+    });
+    f.addEventListener('pointercancel', function(){
+      f.style.opacity='';
+      if(fantasma){ fantasma.remove(); fantasma=null; }
+      limpiaEncima(); cogido=null; movio=false;
+    });
+  });
+
+  qq('[data-z]', raiz).forEach(function(z){
+    z.addEventListener('click', function(ev){
+      if(!elegido) return;
+      ev.stopPropagation();
+      var id=elegido.dataset.f;
+      elegido.classList.remove('sel'); elegido=null;
+      alSoltar(id, z.dataset.z);
+    }, true);
+  });
+}
+
+/* =================== dibujo =================== */
+var ORD1=baraja(F1.map(function(x){ return x.id; }));
+var ORD2=baraja(F2.map(function(x){ return x.id; }));
+function f1(id){ for(var i=0;i<F1.length;i++) if(F1[i].id===id) return F1[i]; return null; }
+function f2(id){ for(var i=0;i<F2.length;i++) if(F2[i].id===id) return F2[i]; return null; }
+
+function vista1(){
+  var libres=ORD1.filter(function(id){ return !usada(id); });
+  var h='<div class="bloque'+(listo1()?' ok':'')+'" id="r1"><h3><span>Reto 1 · ¿De dónde sale cada presupuesto?</span>'+
+    '<span class="t">'+h1()+' de '+R1.length+' · arrastra la ficha a su casilla</span></h3>'+
+    '<div class="banda">'+(libres.length
+      ? libres.map(function(id){ return '<button type="button" class="ficha" data-f="'+esc(id)+'">'+esc(f1(id).t)+'</button>'; }).join('')
+      : '<span class="vacia">✓ No quedan fichas: todas están colocadas.</span>')+'</div>'+
+    '<div class="pares">';
+  R1.forEach(function(x){
+    var p=G.a[x.z], bien=(p===x.f);
+    h+='<div class="par"><span class="q">'+x.q+'</span>'+
+       '<div class="zona'+(bien?' bien':'')+'" data-z="'+esc(x.z)+'">'+
+       (bien ? '✓ '+esc(f1(p).t) : 'Suelta aquí')+'</div></div>';
+  });
+  return h+'</div></div>';
+}
+
+function vista2(){
+  if(!listo1()){
+    return '<div class="bloque r2"><h3><span>Reto 2 · Arma las fórmulas</span>'+
+      '<span class="t">bloqueado</span></h3><div class="cuerpo"><p style="margin:0">'+
+      'Primero termina el reto 1. Llevas '+h1()+' de '+R1.length+'.</p></div></div>';
+  }
+  var libres=ORD2.filter(function(id){ return !usada(id); });
+  var h='<div class="bloque r2'+(listo2()?' ok':'')+'" id="r2"><h3><span>Reto 2 · Arma las fórmulas</span>'+
+    '<span class="t">'+h2()+' de 5 · sobran dos fichas, están al revés</span></h3>'+
+    '<div class="banda">'+(libres.length
+      ? libres.map(function(id){ return '<button type="button" class="ficha op" data-f="'+esc(id)+'">'+esc(f2(id).t)+'</button>'; }).join('')
+      : '<span class="vacia">✓ No quedan fichas por colocar.</span>')+'</div>'+
+    '<div class="cuerpo">';
+  R2.forEach(function(p){
+    h+='<div class="form" style="margin-bottom:11px"><span class="fija">'+esc(p.ini)+'</span>';
+    p.hu.forEach(function(id,i){
+      var k=p.z+'/'+i, puesta=G.b[k], bien=(puesta===id);
+      h+='<span class="zona'+(bien?' bien':'')+'" data-z="'+esc(k)+'">'+
+         (bien ? '✓ '+esc(f2(puesta).t) : 'Suelta aquí') +'</span>';
+    });
+    h+='</div>';
+  });
+  return h+'</div></div>';
+}
+
+function vista3(){
+  if(!listo2()){
+    return '<div class="bloque r3"><h3><span>Reto 3 · Completa la cédula</span>'+
+      '<span class="t">bloqueado</span></h3><div class="cuerpo"><p style="margin:0">'+
+      'Primero termina el reto 2.</p></div></div>';
+  }
+  var h='<div class="bloque r3'+(h3()===R3.length?' ok':'')+'" id="r3"><h3><span>Reto 3 · Completa la cédula</span>'+
+    '<span class="t">'+h3()+' de '+R3.length+' · escribe el importe y pulsa Enter</span></h3>'+
+    '<div class="cuerpo"><p><b>Un mes, números redondos.</b> Se venden <b>900 unidades</b> a '+
+    '<b>S/ 50.00</b>. El inventario de productos terminados pasa de <b>100</b> a <b>120</b> unidades. '+
+    'La materia prima es <b>1 unidad</b> por producto a <b>S/ 20.00</b>. La mano de obra toma '+
+    '<b>0.5 horas</b> por unidad a <b>S/ 12.00</b> la hora. Los CIF son <b>S/ 4,000</b> fijos más '+
+    '<b>S/ 10.00</b> por hora de MOD.</p></div>'+
+    '<div class="envuelve"><table class="t"><thead><tr><th>Concepto</th><th class="n" style="width:190px">Importe</th></tr></thead><tbody>';
+  R3.forEach(function(x){
+    var bien=(G.c[x.id]===1);
+    h+='<tr'+(bien?' class="res"':'')+'><td>'+esc(x.et)+'<span class="pista">'+esc(x.p)+'</span></td>'+
+       '<td class="n">'+(bien
+         ? '<b>'+miles(x.v)+'</b>'
+         : '<input class="hueco" type="text" inputmode="numeric" data-c="'+esc(x.id)+'" placeholder="—" autocomplete="off">')+
+       '</td></tr>';
+  });
+  return h+'</tbody></table></div></div>';
+}
+
+function vistaCierre(){
+  var t=(G.tfin && G.t0)? (G.tfin-G.t0) : 0;
+  return '<div class="cierre"><span class="tt">✓ Repaso terminado'+(t?' en '+minSeg(t):'')+
+    (t && t<=LIM*1000 ? ' · dentro de los cinco minutos' : '')+'</span>'+
+    'Esa es toda la primera parte del presupuesto maestro: <b>las ventas mandan</b>, la producción '+
+    'ajusta por los inventarios de productos terminados, y de la producción salen la materia prima, '+
+    'la mano de obra y los CIF.'+
+    '<ul><li>El inventario <b>final</b> se suma y el <b>inicial</b> se resta, tanto en productos '+
+    'terminados como en materia prima.</li>'+
+    '<li><b>Comprar no es consumir</b>: al costo de producción va el consumo.</li>'+
+    '<li>Las <b>horas de MOD</b> se usan dos veces: para la mano de obra y para los CIF variables.</li></ul>'+
+    '<p style="margin:10px 0 0">Con estos cinco números ya se puede calcular el costo de producción: '+
+    '<b>18,400 + 5,520 + 8,600 = S/ 32,520</b> por 920 unidades, o sea <b>S/ 35.35</b> cada una. '+
+    'Eso es el paso 7, y lo tienes completo en la sesión A.</p></div>';
+}
+
+function pinta(){
+  if(listoTodo() && G.t0 && !G.tfin){ G.tfin=Date.now(); graba(); }
+  $('panel').innerHTML = vista1()+vista2()+vista3()+(listoTodo()?vistaCierre():'');
+  var n=hechas();
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> aciertos';
+  $('progI').style.width=(n/TOTAL*100)+'%';
+  cablea();
+  pintaMarcador();
+  pintaReloj();
+}
+
+function cablea(){
+  var r1=$('r1');
+  if(r1) arrastre(r1, function(ficha, zona){
+    arranca();
+    var reto=null; R1.forEach(function(x){ if(x.z===zona) reto=x; });
+    if(!reto || G.a[zona]===reto.f) return;
+    if(ficha===reto.f){ G.a[zona]=ficha; graba(); sBien(); pinta(); revisaFin(); }
+    else{ falla(zona, POR1[ficha]); }
+  });
+  var r2=$('r2');
+  if(r2) arrastre(r2, function(ficha, zona){
+    arranca();
+    var pt=zona.split('/'), p=null;
+    R2.forEach(function(x){ if(x.z===pt[0]) p=x; });
+    if(!p) return;
+    var esperado=p.hu[+pt[1]];
+    if(G.b[zona]===esperado) return;
+    if(ficha===esperado){ G.b[zona]=ficha; graba(); sBien(); pinta(); revisaFin(); }
+    else{ falla(zona, POR2[ficha]); }
+  });
+  qq('#panel .hueco[data-c]').forEach(function(inp){
+    inp.addEventListener('focus', arranca);
+    function prueba(){
+      var x=null; R3.forEach(function(y){ if(y.id===inp.dataset.c) x=y; });
+      var v=parseFloat(String(inp.value).replace(/[\s,]/g,''));
+      if(isNaN(v)) return;
+      if(Math.abs(v-x.v)<0.5){ G.c[x.id]=1; graba(); sBien(); pinta(); revisaFin(); }
+      else{
+        G.mal++; graba(); sMal();
+        inp.classList.add('mal');
+        setTimeout(function(){ inp.classList.remove('mal'); inp.select(); }, 450);
+      }
+    }
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); prueba(); } });
+    inp.addEventListener('blur', function(){ if(String(inp.value).trim()!=='') prueba(); });
+  });
+  var pri=qq('#panel .hueco[data-c]')[0];
+  if(pri && document.activeElement===document.body && listo2()) pri.focus();
+}
+
+function falla(zona, porque){
+  G.mal++; graba(); sMal();
+  var z=document.querySelector('[data-z="'+zona+'"]');
+  if(z){
+    z.classList.add('mal','temblor');
+    if(porque) z.innerHTML=porque;
+    setTimeout(function(){
+      z.classList.remove('mal','temblor');
+      if(porque) z.textContent='Suelta aquí';
+    }, 1600);
+  }
+  pintaMarcador();
+}
+
+function pintaMarcador(){
+  var m=$('marcador');
+  if(listoTodo()){
+    m.className='marcador ok';
+    m.innerHTML='✓ Los '+TOTAL+' aciertos'+(G.mal?' · '+G.mal+' intento'+(G.mal>1?'s':'')+' fallado'+(G.mal>1?'s':''):' a la primera, sin fallar ninguno')+'.';
+    return;
+  }
+  m.className='marcador';
+  if(!listo1()) m.innerHTML='Reto 1: '+h1()+' de '+R1.length+'. Arrastra cada ficha a la casilla que le toca.';
+  else if(!listo2()) m.innerHTML='Reto 2: '+h2()+' de 5. Sobran dos fichas: son las mismas pero con el signo al revés.';
+  else m.innerHTML='Reto 3: '+h3()+' de '+R3.length+'. Escribe el importe y pulsa Enter.';
+}
+
+function revisaFin(){
+  if(listoTodo() && !festejado){ festejado=true; pintaReloj(); festeja(); }
+}
+
+function festeja(){
+  sFin();
+  var cv=$('confeti'), x=cv.getContext('2d');
+  cv.style.display='block'; cv.width=innerWidth; cv.height=innerHeight;
+  var col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+  for(var i=0;i<110;i++) p.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.4,
+    vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+    c:col[i%col.length], r:Math.random()*6});
+  var t0=Date.now();
+  (function p2(){
+    x.clearRect(0,0,cv.width,cv.height);
+    p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+      x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+      x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+    if(Date.now()-t0<2500) requestAnimationFrame(p2);
+    else { x.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })();
+}
+
+/* =================== arranque =================== */
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Empezar de nuevo',
+  aviso:'Se borra tu avance y el reloj vuelve a 5:00.',
+  hecho:function(){ G=vacio(); festejado=false; ORD1=baraja(F1.map(function(x){ return x.id; }));
+                    ORD2=baraja(F2.map(function(x){ return x.id; })); pinta(); }
+});
+if(listoTodo()) festejado=true;
+pinta();
+
+})();
+</script>
+
+</body>
+</html>
