@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesión 7 · Guía para resolver asientos de compra, pago, venta y cobro</title>
+<title>Sesión 7 · Guía para resolver asientos de venta, cobro, compra y pago</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -12,26 +12,58 @@
 <style>
   .g7{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --mora:#714B67; --ambar:#B25E09;
        --debe:#C0306B; --haber:#D0561C; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       --certus:#16307A;
        max-width:1380px; margin:0 auto; }
   [hidden]{ display:none !important; }
 
   .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
-           border-bottom:3px solid var(--azul); padding-bottom:11px; margin-bottom:14px; }
+           border-bottom:3px solid var(--certus); padding-bottom:11px; margin-bottom:14px; }
   .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,23px); font-weight:800; color:var(--gris); }
   .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
   .titulo button{ margin-left:auto; flex:none; }
+
+  /* personajes */
+  .perso{ display:flex; gap:12px; align-items:flex-end; }
+  .perso img{ flex:none; width:122px; height:auto; display:block; }
+  .perso.chico img{ width:104px; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:#fff;
+                 border:2px solid var(--certus); border-radius:14px; padding:11px 14px;
+                 font-size:13px; line-height:1.6; color:#33404E; margin-bottom:14px; }
+  .perso .globo b{ color:var(--certus); }
+  .perso .globo::before{ content:''; position:absolute; left:-9px; bottom:16px;
+                         width:14px; height:14px; background:#fff; border-left:2px solid var(--certus);
+                         border-bottom:2px solid var(--certus); transform:rotate(45deg); }
+  .perso .globo .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+                     letter-spacing:.06em; color:var(--certus); margin-bottom:3px; }
+  @media (max-width:560px){
+    .perso img{ width:84px; } .perso.chico img{ width:74px; }
+    .perso .globo{ font-size:12.5px; padding:9px 11px; }
+  }
+  .intro2{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .intro2 img{ width:150px; height:auto; flex:none; }
+  .intro2 .tx{ flex:1; min-width:250px; }
 
   .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
          padding:11px 14px; font-size:13px; line-height:1.6; color:#5B4A15; }
   .idea b{ color:#3F3208; }
 
-  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin:14px 0 13px; }
+  /* pestañas */
+  .pest{ display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 12px; }
+  .pest button{ font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-align:left;
+    border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:10px; padding:8px 13px; }
+  .pest button:hover{ border-color:var(--certus); color:var(--certus); }
+  .pest button.on{ background:var(--certus); border-color:var(--certus); color:#fff; }
+  .pest button.ok{ border-color:#7CC29B; color:#14532D; background:#F2FAF5; }
+  .pest button.ok.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .pest button .p{ display:block; font-size:10px; font-weight:600; opacity:.85; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin-bottom:13px; }
   .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
   .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
 
-  /* dos columnas: la hoja y la chuleta */
   .dos{ display:grid; grid-template-columns:minmax(0,1fr); gap:14px; align-items:start; }
-  @media (min-width:1060px){ .dos{ grid-template-columns:minmax(0,1fr) 318px; } }
+  @media (min-width:1060px){ .dos{ grid-template-columns:minmax(0,1fr) 312px; } }
   .lado{ position:sticky; top:12px; display:flex; flex-direction:column; gap:12px; }
   @media (max-width:1059px){ .lado{ position:static; } }
 
@@ -41,25 +73,22 @@
               text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
               display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
   .caja > h3 .st{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.92; font-size:11px; }
-  .caja.az > h3{ background:var(--azul); }
+  .caja.az > h3{ background:var(--certus); }
   .caja.vd > h3{ background:var(--verde); }
-  .caja.mo > h3{ background:var(--mora); }
   .caja .cuerpo{ padding:12px 14px; font-size:13px; line-height:1.6; color:#33404E; }
   .caja .cuerpo p{ margin:0 0 9px; } .caja .cuerpo p:last-child{ margin-bottom:0; }
 
-  /* el método en cuatro preguntas */
-  .cuatro{ display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:10px; }
-  .pq{ border:1px solid var(--o-border); border-radius:10px; padding:9px 11px; min-width:0;
+  .cuatro{ display:grid; grid-template-columns:1fr; gap:9px; }
+  .pq{ border:1px solid var(--o-border); border-radius:10px; padding:8px 11px; min-width:0;
        font-size:12.5px; line-height:1.5; color:#33404E; background:#fff; }
-  .pq b.t{ display:block; font-size:13px; color:var(--azul); margin-bottom:3px; }
-  .pq .nn{ display:inline-flex; width:19px; height:19px; border-radius:99px; background:var(--azul);
-           color:#fff; font-size:11px; font-weight:800; align-items:center; justify-content:center;
+  .pq b.t{ display:block; font-size:12.5px; color:var(--certus); margin-bottom:2px; }
+  .pq .nn{ display:inline-flex; width:18px; height:18px; border-radius:99px; background:var(--certus);
+           color:#fff; font-size:10.5px; font-weight:800; align-items:center; justify-content:center;
            margin-right:6px; vertical-align:1px; }
   .regla{ border:1.5px solid var(--amaBd); background:var(--ama); border-radius:10px;
-          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:11px; }
+          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:10px; }
   .regla b{ color:#3F3208; }
 
-  /* las plantillas */
   .pl{ border:1.5px solid var(--o-border); border-radius:10px; overflow:hidden; margin-bottom:9px; }
   .pl > b{ display:flex; gap:7px; align-items:center; font-size:12px; font-weight:800;
            padding:6px 10px; background:#F4F7FA; color:#33404E; border-bottom:1px solid var(--o-border); }
@@ -67,7 +96,7 @@
   .pl td{ padding:4px 9px; border-bottom:1px solid #F1F3F5; }
   .pl tr:last-child td{ border-bottom:0; }
   .pl td.cc{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
-             color:var(--azul); width:1%; white-space:nowrap; }
+             color:var(--certus); width:1%; white-space:nowrap; }
   .pl td.ld{ width:46px; text-align:right; font-weight:800; font-size:10px;
              letter-spacing:.04em; text-transform:uppercase; }
   .pl td.ld.d{ color:var(--debe); } .pl td.ld.h{ color:var(--haber); }
@@ -75,25 +104,29 @@
   .pl.cmp > b{ background:#EAF1FA; } .pl.des > b{ background:#F6F3FB; }
   .pl.pag > b{ background:#FDF3E6; }
 
-  /* la hoja de trabajo */
   .as{ border:1.5px solid var(--o-border); border-radius:11px; margin-bottom:13px;
        background:#fff; overflow:hidden; }
-  .as.activo{ border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.1); }
+  .as.activo{ border-color:var(--certus); box-shadow:0 0 0 3px rgba(22,48,122,.1); }
   .as.listo{ border-color:#7CC29B; }
+  .as.dado{ border-color:#D8DCE2; background:#FBFCFD; }
   .as > .ah{ display:flex; gap:10px; align-items:center; flex-wrap:wrap;
              padding:9px 12px; background:#FAFBFC; border-bottom:1px solid var(--o-border); }
   .as.listo > .ah{ background:#F2FAF5; border-color:#7CC29B; }
+  .as.dado > .ah{ background:#F4F6F8; }
   .as > .ah .nro{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
-                  font-weight:800; color:#fff; background:var(--azul); border-radius:7px;
+                  font-weight:800; color:#fff; background:var(--certus); border-radius:7px;
                   padding:3px 9px; flex:none; }
   .as.listo > .ah .nro{ background:var(--verde); }
+  .as.dado > .ah .nro{ background:#9AA5B1; }
   .as > .ah .fe{ font-size:12px; color:var(--o-muted); flex:none; }
   .as > .ah .gl{ font-size:13.5px; font-weight:700; color:#33404E; flex:1; min-width:170px; }
+  .as.dado > .ah .gl{ color:#6B7684; font-weight:600; }
   .as > .ah .tip{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
                   border-radius:7px; padding:3px 9px; flex:none; }
   .tip.t-vta{ background:#E9F7EF; color:#14532D; } .tip.t-cob{ background:#E9F7EF; color:#14532D; }
   .tip.t-cmp{ background:#EAF1FA; color:#14365E; } .tip.t-des{ background:#EDE7F6; color:#4A3B66; }
   .tip.t-pag{ background:#FDF3E6; color:#7A4A06; }
+  .tip.t-ya{ background:#EDEFF2; color:#51606E; }
 
   .simple{ font-size:12.5px; line-height:1.6; color:#5B4A15; background:var(--ama);
            border-bottom:1px solid var(--amaBd); padding:9px 12px; }
@@ -109,7 +142,7 @@
   .calc input{ width:132px; font:inherit; font-size:14px; font-weight:800; text-align:right;
                border:1.5px solid var(--o-border); border-radius:8px; padding:5px 9px;
                font-variant-numeric:tabular-nums; color:#33404E; }
-  .calc input:focus{ outline:none; border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.14); }
+  .calc input:focus{ outline:none; border-color:var(--certus); box-shadow:0 0 0 3px rgba(22,48,122,.14); }
   .calc input.mal{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; animation:tiembla .4s; }
   .calc .val{ font-size:15px; font-weight:800; color:var(--verde); font-variant-numeric:tabular-nums; }
 
@@ -122,18 +155,20 @@
   table.t tr.tot td{ font-weight:800; background:#FAFBFC; border-top:2px solid #D8DCE2; }
   table.t tr.tot.cuadra td{ background:#F2FAF5; color:#14532D; }
   .envuelve{ overflow-x:auto; }
-  .ccok{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; color:var(--azul);
+  .ccok{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; color:var(--certus);
          font-size:13px; }
+  .as.dado .ccok{ color:#6B7684; }
   .nomb{ font-size:12.5px; color:#33404E; }
+  .as.dado .nomb{ color:#6B7684; }
   .porq{ display:block; font-size:11px; color:var(--o-muted); line-height:1.4; margin-top:2px; }
 
   .ops{ display:flex; gap:6px; flex-wrap:wrap; }
   .ops button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer; text-align:left;
                border:1.5px solid var(--o-border); background:#fff; color:#33404E;
                border-radius:8px; padding:6px 10px; display:inline-flex; gap:6px; align-items:center; }
-  .ops button:hover{ border-color:var(--azul); background:#F5F9FD; }
+  .ops button:hover{ border-color:var(--certus); background:#F5F7FC; }
   .ops button .cd{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
-                   color:var(--azul); }
+                   color:var(--certus); }
   .ops button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
                     cursor:not-allowed; opacity:.65; }
   .ops button.temblor{ animation:tiembla .4s; }
@@ -194,17 +229,20 @@
   <div class="o-sheet" id="hojaIntro">
     <div class="titulo">
       <div>
-        <h1>Sesión 7 · Cómo resolver asientos de compra, pago, venta y cobro</h1>
-        <p>Guía paso a paso sobre la hoja de trabajo de abril y mayo · nueve asientos del ciclo completo</p>
+        <h1>Sesión 7 · Venta, cobro, compra y pago, bloque por bloque</h1>
+        <p>Cuatro bloques en orden: primero se vende, después se cobra, luego se compra con su destino y al final se paga</p>
       </div>
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
     </div>
-    <div class="idea">
-      <b>La idea.</b> Casi todos los asientos del mes son del mismo puñado de tipos: una
-      <b>venta</b>, un <b>cobro</b>, una <b>compra</b>, su <b>ingreso al almacén</b> y un <b>pago</b>.
-      Cada tipo mueve siempre las mismas cuentas, en el mismo lado. Si reconoces el tipo, el asiento
-      ya está casi escrito. Aquí vas a resolver los nueve de la hoja, de los más guiados a los más
-      libres, con las plantillas siempre a la vista.
+    <div class="intro2">
+      <img src="personajes/profe-completa.webp" alt="" loading="lazy">
+      <div class="tx"><div class="idea">
+        <b>Así se aprende sin enredarse:</b> un tipo de asiento a la vez. En el <b>bloque 1</b> solo
+        vendes. En el <b>bloque 2</b> las ventas ya están puestas y lo único que haces es cobrarlas.
+        En el <b>bloque 3</b> compras, y cada compra lleva su <b>asiento de destino</b> al almacén.
+        En el <b>bloque 4</b> las compras ya están y solo pagas. Al terminar, la cuenta del cliente
+        y la del proveedor quedan en cero.
+      </div></div>
     </div>
   </div>
 
@@ -217,6 +255,7 @@
   </div>
 
   <div id="zona" hidden>
+    <div class="pest" id="pest"></div>
     <div class="avance">
       <span class="cuenta" id="cuenta"></span>
       <span class="barra"><i id="progI"></i></span>
@@ -242,7 +281,7 @@
 
   <div class="o-footer">
     <span>Contabilidad</span>
-    <span>Compra · pago · venta · cobro</span>
+    <span>Venta · cobro · compra · pago</span>
   </div>
 
 </div>
@@ -259,7 +298,6 @@ var $=function(id){ return document.getElementById(id); };
 function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
                         .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function r2(n){ return Math.round(n*100)/100; }
 function miles(n){
   if(n===null||n===undefined||isNaN(n)) return '';
   var p=Math.abs(n).toFixed(2).split('.');
@@ -271,31 +309,30 @@ function baraja(a){
   return a;
 }
 
-/* =================== el plan de cuentas de la hoja =================== */
+/* =================== plan de cuentas =================== */
 var CU={
-  '12': { n:'Cuentas por cobrar comerciales — terceros', ic:'🧍' },
-  '13': { n:'Cuentas por cobrar comerciales — relacionadas', ic:'🧍' },
-  '16': { n:'Cuentas por cobrar diversas — terceros', ic:'🧍' },
-  '40': { n:'Tributos por pagar — IGV', ic:'🧾' },
-  '41': { n:'Remuneraciones por pagar', ic:'👥' },
-  '49': { n:'Pasivo diferido', ic:'🗂️' },
-  '70': { n:'Ventas', ic:'💰' },
-  '73': { n:'Descuentos obtenidos', ic:'💰' },
-  '75': { n:'Otros ingresos de gestión', ic:'💰' },
-  '101':{ n:'Caja', ic:'💵' },
-  '102':{ n:'Fondos fijos', ic:'🪙' },
-  '104':{ n:'Cuentas corrientes en instituciones financieras', ic:'🏦' },
-  '60': { n:'Compras — mercaderías', ic:'🛒' },
-  '63': { n:'Gastos de servicios prestados por terceros', ic:'🔧' },
-  '42': { n:'Cuentas por pagar comerciales — terceros', ic:'🤝' },
-  '46': { n:'Cuentas por pagar diversas — terceros', ic:'🤝' },
-  '20': { n:'Mercaderías (almacén)', ic:'🏬' },
-  '21': { n:'Productos terminados', ic:'🏬' },
-  '25': { n:'Materiales auxiliares y suministros', ic:'🏬' },
-  '61': { n:'Variación de existencias', ic:'🔄' },
-  '69': { n:'Costo de ventas', ic:'📉' }
+  '12': { n:'Cuentas por cobrar comerciales — terceros' },
+  '13': { n:'Cuentas por cobrar comerciales — relacionadas' },
+  '16': { n:'Cuentas por cobrar diversas — terceros' },
+  '40': { n:'Tributos por pagar — IGV' },
+  '41': { n:'Remuneraciones por pagar' },
+  '49': { n:'Pasivo diferido' },
+  '70': { n:'Ventas' },
+  '73': { n:'Descuentos obtenidos' },
+  '75': { n:'Otros ingresos de gestión' },
+  '101':{ n:'Caja' },
+  '102':{ n:'Fondos fijos' },
+  '104':{ n:'Cuentas corrientes en instituciones financieras' },
+  '60': { n:'Compras' },
+  '63': { n:'Gastos de servicios prestados por terceros' },
+  '42': { n:'Cuentas por pagar comerciales — terceros' },
+  '46': { n:'Cuentas por pagar diversas — terceros' },
+  '20': { n:'Mercaderías' },
+  '24': { n:'Materias primas' },
+  '25': { n:'Materiales auxiliares, suministros y repuestos' },
+  '61': { n:'Variación de existencias' },
+  '69': { n:'Costo de ventas' }
 };
-/* por cada familia, la correcta y dos parecidas */
 var OPC={
   cobrar: ['12','13','16'],
   tributo:['40','41','49'],
@@ -304,94 +341,181 @@ var OPC={
   banco:  ['104','101','102'],
   compra: ['60','61','63'],
   pagar:  ['42','40','46'],
-  alma:   ['20','21','25'],
+  alm20:  ['20','24','25'],
+  alm24:  ['24','20','25'],
+  alm25:  ['25','20','24'],
   vari:   ['61','69','60']
 };
 
-/* =================== las cinco plantillas =================== */
-var PLAN=[
-  { k:'vta', ic:'🧍', t:'VENTA de mercadería', l:[
-      ['12','d','el total con IGV'], ['40','h','el IGV'], ['70','h','el valor de la venta'] ] },
-  { k:'cob', ic:'💵', t:'COBRO al cliente', l:[
-      ['101 ó 104','d','el total que entra'], ['12','h','el mismo total'] ] },
-  { k:'cmp', ic:'🛒', t:'COMPRA de mercadería', l:[
+/* =================== plantillas de la chuleta, por bloque =================== */
+var PLAN={
+  vta:[ { k:'vta', ic:'🧍', t:'VENTA', l:[
+      ['12','d','el total con IGV'], ['40','h','el IGV'], ['70','h','el valor de la venta'] ] } ],
+  cob:[ { k:'cob', ic:'💵', t:'COBRO al cliente', l:[
+      ['101 ó 104','d','el total que entra'], ['12','h','el mismo total'] ] } ],
+  cmp:[ { k:'cmp', ic:'🛒', t:'COMPRA', l:[
       ['60','d','el valor de la compra'], ['40','d','el IGV'], ['42','h','el total con IGV'] ] },
-  { k:'des', ic:'🏬', t:'DESTINO al almacén', l:[
-      ['20','d','el valor, sin IGV'], ['61','h','el mismo valor'] ] },
-  { k:'pag', ic:'🤝', t:'PAGO al proveedor', l:[
-      ['42','d','lo que se paga'], ['104','h','el mismo importe'] ] }
-];
+    { k:'des', ic:'🏬', t:'DESTINO al almacén', l:[
+      ['20 · 24 · 25','d','el valor, sin IGV'], ['61','h','el mismo valor'] ] } ],
+  pag:[ { k:'pag', ic:'🤝', t:'PAGO al proveedor', l:[
+      ['42','d','lo que se paga'], ['101 ó 104','h','el mismo importe'] ] } ]
+};
 var NOMT={ vta:'Venta', cob:'Cobro', cmp:'Compra', des:'Destino', pag:'Pago' };
 
-/* =================== los nueve asientos de la hoja =================== */
-var A=[
- { n:1, fe:'15/04/2025', tipo:'vta', pista:'antes',
-   gl:'Venta de mercadería al contado a los clientes nuevos',
-   simple:'Vendimos mercadería por <b>S/ 5,310.00</b>. Primero se anota que el cliente debe pagar ese total (cuenta <b>12</b>). Ese total tiene dos partes: <b>S/ 810.00</b> de IGV, que después se entrega a la SUNAT (cuenta <b>40</b>), y <b>S/ 4,500.00</b>, que es el ingreso real de la venta (cuenta <b>70</b>).',
-   calc:{ et:'El IGV de la venta', op:'4,500.00 × 18 %', v:810 },
-   lin:[ { fam:'cobrar', ok:'12', ld:'d', m:5310, q:'el cliente nos debe el total con IGV' },
-         { fam:'tributo',ok:'40', ld:'h', m:810,  q:'el IGV no es nuestro: se le entrega a la SUNAT' },
-         { fam:'venta',  ok:'70', ld:'h', m:4500, q:'esto sí es el ingreso de la empresa' } ] },
+/* =================== los cuatro bloques =================== */
+var B=[
+{ id:'vtas', t:'1 · Solo ventas', st:'Vender, nada más',
+  per:'personajes/profe-presenta.webp', clase:'', chu:['vta'],
+  dice:'En este primer bloque <b>solo vendemos</b>. Todavía nadie paga nada: la venta se anota '+
+       'cuando se emite la factura. Fíjate en que el cliente queda debiendo el <b>total con IGV</b>, '+
+       'y ese total se abre en dos: el IGV, que es de la SUNAT, y el valor de la venta, que sí es '+
+       'nuestro ingreso.',
+  as:[
+   { n:1, fe:'15/04/2025', tipo:'vta', pista:'antes',
+     gl:'Venta de mercadería al contado a los clientes nuevos',
+     simple:'Vendimos por <b>S/ 5,310.00</b>. Primero se anota que el cliente debe pagar ese total (cuenta <b>12</b>). Ese total tiene dos partes: <b>S/ 810.00</b> de IGV, que después se entrega a la SUNAT (cuenta <b>40</b>), y <b>S/ 4,500.00</b>, que es el ingreso real de la venta (cuenta <b>70</b>).',
+     calc:{ et:'El IGV de la venta', op:'4,500.00 × 18 %', v:810 },
+     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:5310, q:'el cliente nos debe el total con IGV' },
+           { fam:'tributo',ok:'40', ld:'h', m:810,  q:'el IGV no es nuestro: se le entrega a la SUNAT' },
+           { fam:'venta',  ok:'70', ld:'h', m:4500, q:'esto sí es el ingreso de la empresa' } ] },
+   { n:2, fe:'18/04/2025', tipo:'vta', pista:'despues',
+     gl:'Venta de mercadería al crédito a Supermercados del Sur',
+     simple:'Misma estructura, pero al crédito: el cliente debe <b>S/ 33,040.00</b> (cuenta <b>12</b>), de los cuales <b>S/ 5,040.00</b> son IGV (cuenta <b>40</b>) y <b>S/ 28,000.00</b> es la venta (cuenta <b>70</b>). Que sea al crédito no cambia el asiento de la venta.',
+     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:33040, q:'la deuda del cliente, con IGV' },
+           { fam:'tributo',ok:'40', ld:'h', m:5040,  q:'el IGV de la venta' },
+           { fam:'venta',  ok:'70', ld:'h', m:28000, q:'el ingreso del periodo' } ] },
+   { n:3, fe:'25/04/2025', tipo:'vta', pista:'final',
+     gl:'Venta de mercadería al crédito a Bodegas Unidas',
+     simple:'Tercera venta, <b>S/ 23,600.00</b> en total: <b>S/ 3,600.00</b> de IGV y <b>S/ 20,000.00</b> de venta.',
+     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:23600, q:'lo que nos debe Bodegas Unidas' },
+           { fam:'tributo',ok:'40', ld:'h', m:3600,  q:'el IGV de esta venta' },
+           { fam:'venta',  ok:'70', ld:'h', m:20000, q:'el valor de la venta' } ] } ],
+  cierre:'Las tres ventas dejan a los clientes debiendo <b>S/ 61,950.00</b> en la cuenta 12: '+
+         '5,310.00 + 33,040.00 + 23,600.00. Esa es la plata que hay que cobrar en el bloque 2.' },
 
- { n:2, fe:'15/04/2025', tipo:'cob', pista:'antes',
-   gl:'Cobranza en efectivo de la venta a los clientes nuevos',
-   simple:'Los clientes nuevos pagaron en ese momento. Entra dinero a la caja (cuenta <b>101</b>) y la deuda del cliente queda en cero: se descarga de la cuenta <b>12</b>.',
-   lin:[ { fam:'caja',  ok:'101', ld:'d', m:5310, q:'entra el efectivo a la caja' },
-         { fam:'cobrar',ok:'12',  ld:'h', m:5310, q:'el cliente ya no nos debe nada' } ] },
+{ id:'cobs', t:'2 · Los cobros', st:'Las ventas ya están',
+  per:'personajes/tutor-explica.webp', clase:' chico', chu:['cob'],
+  dice:'Las tres ventas <b>ya están puestas</b> arriba, grisadas: ya no las tocas. Ahora los clientes '+
+       'pagan. Un cobro es siempre lo mismo: <b>entra</b> el dinero por caja o por banco y '+
+       '<b>baja</b> la cuenta 12. Ojo: aquí el IGV <b>no aparece</b>, porque ya se registró en la venta.',
+  previo:{ t:'Lo que ya está registrado · las ventas del bloque 1', as:[
+     { n:1, fe:'15/04/2025', gl:'Venta al contado a los clientes nuevos',
+       l:[['12','d',5310],['40','h',810],['70','h',4500]] },
+     { n:2, fe:'18/04/2025', gl:'Venta al crédito a Supermercados del Sur',
+       l:[['12','d',33040],['40','h',5040],['70','h',28000]] },
+     { n:3, fe:'25/04/2025', gl:'Venta al crédito a Bodegas Unidas',
+       l:[['12','d',23600],['40','h',3600],['70','h',20000]] } ],
+    pie:'La cuenta 12 tiene <b>S/ 61,950.00</b> por cobrar. Eso es lo que vas a cancelar ahora.' },
+  as:[
+   { n:4, fe:'15/04/2025', tipo:'cob', pista:'antes',
+     gl:'Cobranza en efectivo de la venta a los clientes nuevos',
+     simple:'Los clientes nuevos pagaron en ese momento. Entra dinero a la caja (cuenta <b>101</b>) y la deuda del cliente queda en cero: se descarga de la cuenta <b>12</b>. Va el total, con IGV incluido.',
+     lin:[ { fam:'caja',  ok:'101', ld:'d', m:5310, q:'entra el efectivo a la caja' },
+           { fam:'cobrar',ok:'12',  ld:'h', m:5310, q:'el cliente ya no nos debe nada' } ] },
+   { n:5, fe:'30/04/2025', tipo:'cob', pista:'despues',
+     gl:'Cobranza de la factura de Supermercados del Sur',
+     simple:'Al cierre de abril el cliente paga por transferencia, <b>S/ 33,040.00</b>. El dinero entra a la cuenta del banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
+     lin:[ { fam:'banco', ok:'104', ld:'d', m:33040, q:'el dinero entra a la cuenta corriente' },
+           { fam:'cobrar',ok:'12',  ld:'h', m:33040, q:'baja lo que el cliente nos debe' } ] },
+   { n:6, fe:'31/05/2025', tipo:'cob', pista:'final',
+     gl:'Cobranza de la factura de Bodegas Unidas',
+     simple:'En mayo paga el último cliente, <b>S/ 23,600.00</b>, también por transferencia: entra al banco (cuenta <b>104</b>) y baja la cuenta <b>12</b>.',
+     lin:[ { fam:'banco', ok:'104', ld:'d', m:23600, q:'entra a la cuenta corriente' },
+           { fam:'cobrar',ok:'12',  ld:'h', m:23600, q:'se cancela la última factura' } ] } ],
+  cierre:'Cobrado <b>S/ 61,950.00</b>, exactamente lo que se había vendido: la cuenta 12 queda en '+
+         '<b>cero</b>. Ningún cobro movió la cuenta 40, porque el IGV ya se había registrado al vender.' },
 
- { n:3, fe:'30/04/2025', tipo:'cob', pista:'antes',
-   gl:'Cobranza de las facturas vencidas de los clientes con crédito',
-   simple:'Al cierre de abril los clientes con crédito pagaron todas sus facturas vencidas, <b>S/ 33,200.00</b>. El dinero entra a la cuenta del banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
-   lin:[ { fam:'banco', ok:'104', ld:'d', m:33200, q:'el dinero entra a la cuenta corriente' },
-         { fam:'cobrar',ok:'12',  ld:'h', m:33200, q:'baja lo que los clientes nos deben' } ] },
+{ id:'cmps', t:'3 · Compras y su destino', st:'20, 24 y 25 contra 61',
+  per:'personajes/profe-idea.webp', clase:'', chu:['cmp'],
+  dice:'Aquí viene lo que más se olvida: <b>toda compra lleva dos asientos</b>. El primero reconoce '+
+       'la compra y la deuda con el proveedor. El segundo, el <b>asiento de destino</b>, mete el bien '+
+       'al almacén. Y el almacén cambia según lo que compres: <b>20</b> mercaderías, <b>24</b> materias '+
+       'primas, <b>25</b> suministros. Los tres van contra la <b>61</b>, y siempre con el valor <b>sin IGV</b>.',
+  as:[
+   { n:7, fe:'30/04/2025', tipo:'cmp', pista:'antes',
+     gl:'Compra de mercadería al Proveedor 1',
+     simple:'Compramos mercadería por <b>S/ 21,240.00</b>. El valor va a compras (cuenta <b>60</b>) y el IGV pagado a la cuenta <b>40</b>, porque se podrá descontar del IGV de las ventas. Lo que le debemos al proveedor se anota en la cuenta <b>42</b>.',
+     calc:{ et:'El IGV de la compra', op:'18,000.00 × 18 %', v:3240 },
+     lin:[ { fam:'compra', ok:'60', ld:'d', m:18000, q:'el valor de lo que compramos, sin IGV' },
+           { fam:'tributo',ok:'40', ld:'d', m:3240,  q:'este IGV sí es nuestro: es crédito fiscal' },
+           { fam:'pagar',  ok:'42', ld:'h', m:21240, q:'le debemos al proveedor el total con IGV' } ] },
+   { n:8, fe:'30/04/2025', tipo:'des', pista:'antes',
+     gl:'Destino: ingreso al almacén de la mercadería del Proveedor 1',
+     simple:'Es el asiento de destino. Lo comprado entra al almacén de <b>mercaderías</b> (cuenta <b>20</b>) contra la cuenta <b>61</b>. Va el valor sin IGV: <b>S/ 18,000.00</b>.',
+     lin:[ { fam:'alm20', ok:'20', ld:'d', m:18000, q:'mercadería comprada para revender: almacén 20' },
+           { fam:'vari',  ok:'61', ld:'h', m:18000, q:'la variación cierra el asiento de destino' } ] },
+   { n:9, fe:'30/04/2025', tipo:'cmp', pista:'despues',
+     gl:'Compra de materia prima al Proveedor 2',
+     simple:'Misma estructura: <b>S/ 11,210.00</b> en total, con <b>S/ 1,710.00</b> de IGV y <b>S/ 9,500.00</b> de valor. El asiento de la compra no cambia aunque lo comprado sea distinto.',
+     lin:[ { fam:'compra', ok:'60', ld:'d', m:9500,  q:'el valor de la compra' },
+           { fam:'tributo',ok:'40', ld:'d', m:1710,  q:'el IGV que podremos descontar' },
+           { fam:'pagar',  ok:'42', ld:'h', m:11210, q:'la deuda con el Proveedor 2' } ] },
+   { n:10, fe:'30/04/2025', tipo:'des', pista:'despues',
+     gl:'Destino: ingreso al almacén de la materia prima del Proveedor 2',
+     simple:'Aquí sí cambia el almacén: no es mercadería para revender, es <b>materia prima</b> para producir, así que va a la cuenta <b>24</b> contra la <b>61</b>.',
+     lin:[ { fam:'alm24', ok:'24', ld:'d', m:9500, q:'materia prima para producir: almacén 24' },
+           { fam:'vari',  ok:'61', ld:'h', m:9500, q:'la misma contrapartida de siempre' } ] },
+   { n:11, fe:'30/04/2025', tipo:'cmp', pista:'final',
+     gl:'Compra de suministros al Proveedor 3',
+     simple:'Tercera compra, <b>S/ 7,080.00</b>: <b>S/ 1,080.00</b> de IGV y <b>S/ 6,000.00</b> de valor.',
+     lin:[ { fam:'compra', ok:'60', ld:'d', m:6000, q:'el valor de los suministros' },
+           { fam:'tributo',ok:'40', ld:'d', m:1080, q:'el IGV de la compra' },
+           { fam:'pagar',  ok:'42', ld:'h', m:7080, q:'la deuda con el Proveedor 3' } ] },
+   { n:12, fe:'30/04/2025', tipo:'des', pista:'final',
+     gl:'Destino: ingreso al almacén de los suministros del Proveedor 3',
+     simple:'No se revende ni se transforma: son <b>suministros</b> que se consumen, así que el almacén es la cuenta <b>25</b> contra la <b>61</b>.',
+     lin:[ { fam:'alm25', ok:'25', ld:'d', m:6000, q:'suministros y repuestos: almacén 25' },
+           { fam:'vari',  ok:'61', ld:'h', m:6000, q:'la contrapartida del destino' } ] } ],
+  cierre:'Tres compras, tres destinos distintos: <b>20</b> para lo que se revende, <b>24</b> para lo '+
+         'que se transforma y <b>25</b> para lo que se consume. Los tres contra la <b>61</b> y con el '+
+         'valor sin IGV. Quedamos debiendo <b>S/ 39,530.00</b> en la cuenta 42.' },
 
- { n:4, fe:'30/04/2025', tipo:'cmp', pista:'despues',
-   gl:'Compra de mercadería al Proveedor 1',
-   simple:'Compramos mercadería al Proveedor 1 por <b>S/ 21,240.00</b>. El valor de la mercadería va a compras (cuenta <b>60</b>) y el IGV pagado va a la cuenta <b>40</b>, porque se podrá descontar del IGV de las ventas. Lo que le debemos al proveedor se anota en la cuenta <b>42</b>.',
-   calc:{ et:'El IGV de la compra', op:'18,000.00 × 18 %', v:3240 },
-   lin:[ { fam:'compra', ok:'60', ld:'d', m:18000, q:'el valor de lo que compramos, sin IGV' },
-         { fam:'tributo',ok:'40', ld:'d', m:3240,  q:'este IGV sí es nuestro: es crédito fiscal' },
-         { fam:'pagar',  ok:'42', ld:'h', m:21240, q:'le debemos al proveedor el total con IGV' } ] },
-
- { n:5, fe:'30/04/2025', tipo:'des', pista:'despues',
-   gl:'Ingreso al almacén de la mercadería comprada al Proveedor 1',
-   simple:'Es el <b>asiento de destino</b>. La mercadería comprada entra al almacén y pasa a formar parte del inventario (cuenta <b>20</b>); la cuenta <b>61</b> es su contrapartida. Va el valor sin IGV.',
-   lin:[ { fam:'alma', ok:'20', ld:'d', m:18000, q:'la mercadería entra al almacén, sin IGV' },
-         { fam:'vari', ok:'61', ld:'h', m:18000, q:'la variación cierra el asiento de destino' } ] },
-
- { n:6, fe:'30/04/2025', tipo:'cmp', pista:'despues',
-   gl:'Compra de mercadería al Proveedor 2',
-   simple:'Igual que con el Proveedor 1, se registra la compra por <b>S/ 11,210.00</b>: valor de la mercadería (cuenta <b>60</b>), IGV (cuenta <b>40</b>) y la deuda con el proveedor (cuenta <b>42</b>).',
-   calc:{ et:'El IGV de la compra', op:'9,500.00 × 18 %', v:1710 },
-   lin:[ { fam:'compra', ok:'60', ld:'d', m:9500,  q:'el valor de la compra' },
-         { fam:'tributo',ok:'40', ld:'d', m:1710,  q:'el IGV que podremos descontar' },
-         { fam:'pagar',  ok:'42', ld:'h', m:11210, q:'la deuda con el Proveedor 2' } ] },
-
- { n:7, fe:'30/04/2025', tipo:'des', pista:'despues',
-   gl:'Ingreso al almacén de la mercadería comprada al Proveedor 2',
-   simple:'La mercadería del Proveedor 2 entra al almacén (cuenta <b>20</b>) contra la cuenta <b>61</b>.',
-   lin:[ { fam:'alma', ok:'20', ld:'d', m:9500, q:'entra al inventario' },
-         { fam:'vari', ok:'61', ld:'h', m:9500, q:'la contrapartida del destino' } ] },
-
- { n:8, fe:'30/04/2025', tipo:'pag', pista:'final',
-   gl:'Pago a proveedores del mes de abril',
-   simple:'En abril se paga a los proveedores <b>S/ 32,450.00</b> por transferencia. Disminuye lo que debemos (cuenta <b>42</b>) y sale dinero del banco (cuenta <b>104</b>).',
-   calc:{ et:'Lo que se paga a los dos proveedores', op:'21,240.00 + 11,210.00', v:32450 },
-   lin:[ { fam:'pagar', ok:'42',  ld:'d', m:32450, q:'baja la deuda con los proveedores' },
-         { fam:'banco', ok:'104', ld:'h', m:32450, q:'sale el dinero de la cuenta corriente' } ] },
-
- { n:9, fe:'31/05/2025', tipo:'cob', pista:'final',
-   gl:'Cobranza de las facturas por vencer de los clientes con crédito',
-   simple:'En mayo los clientes con crédito pagan las facturas que estaban por vencer, <b>S/ 23,800.00</b>. Entra dinero al banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
-   lin:[ { fam:'banco', ok:'104', ld:'d', m:23800, q:'entra a la cuenta corriente' },
-         { fam:'cobrar',ok:'12',  ld:'h', m:23800, q:'baja la cuenta por cobrar' } ] }
+{ id:'pags', t:'4 · Los pagos', st:'Las compras ya están',
+  per:'personajes/tutor-bien.webp', clase:' chico', chu:['pag'],
+  dice:'Último bloque y el más fácil. Las compras <b>ya están registradas</b> arriba, con sus destinos. '+
+       'Pagar es siempre lo mismo: <b>baja</b> la cuenta 42 y <b>sale</b> el dinero de la caja o del '+
+       'banco. Ni IGV ni almacén: eso ya se registró cuando se compró.',
+  previo:{ t:'Lo que ya está registrado · las compras del bloque 3', as:[
+     { n:7, fe:'30/04/2025', gl:'Compra de mercadería al Proveedor 1',
+       l:[['60','d',18000],['40','d',3240],['42','h',21240]] },
+     { n:8, fe:'30/04/2025', gl:'Destino al almacén de mercaderías',
+       l:[['20','d',18000],['61','h',18000]] },
+     { n:9, fe:'30/04/2025', gl:'Compra de materia prima al Proveedor 2',
+       l:[['60','d',9500],['40','d',1710],['42','h',11210]] },
+     { n:10, fe:'30/04/2025', gl:'Destino al almacén de materias primas',
+       l:[['24','d',9500],['61','h',9500]] },
+     { n:11, fe:'30/04/2025', gl:'Compra de suministros al Proveedor 3',
+       l:[['60','d',6000],['40','d',1080],['42','h',7080]] },
+     { n:12, fe:'30/04/2025', gl:'Destino al almacén de suministros',
+       l:[['25','d',6000],['61','h',6000]] } ],
+    pie:'La cuenta 42 debe <b>S/ 39,530.00</b>: 21,240.00 + 11,210.00 + 7,080.00.' },
+  as:[
+   { n:13, fe:'30/04/2025', tipo:'pag', pista:'antes',
+     gl:'Pago al Proveedor 1 por transferencia',
+     simple:'Se le paga todo al Proveedor 1, <b>S/ 21,240.00</b>. Disminuye lo que debemos (cuenta <b>42</b>) y sale dinero del banco (cuenta <b>104</b>).',
+     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:21240, q:'baja la deuda con el proveedor' },
+           { fam:'banco', ok:'104', ld:'h', m:21240, q:'sale el dinero de la cuenta corriente' } ] },
+   { n:14, fe:'30/04/2025', tipo:'pag', pista:'despues',
+     gl:'Pago al Proveedor 2 en efectivo',
+     simple:'Al Proveedor 2 se le paga en efectivo, <b>S/ 11,210.00</b>: baja la cuenta <b>42</b> y sale el dinero de la caja (cuenta <b>101</b>).',
+     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:11210, q:'se cancela la deuda' },
+           { fam:'caja',  ok:'101', ld:'h', m:11210, q:'sale el efectivo de la caja' } ] },
+   { n:15, fe:'31/05/2025', tipo:'pag', pista:'final',
+     gl:'Pago al Proveedor 3 por transferencia',
+     simple:'En mayo se paga al último proveedor, <b>S/ 7,080.00</b>, por transferencia.',
+     calc:{ et:'Lo que quedaba por pagar', op:'39,530.00 − 21,240.00 − 11,210.00', v:7080 },
+     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:7080, q:'queda saldada la cuenta 42' },
+           { fam:'banco', ok:'104', ld:'h', m:7080, q:'sale del banco' } ] } ],
+  cierre:'Pagado <b>S/ 39,530.00</b>, justo lo que se había comprado: la cuenta 42 queda en <b>cero</b>. '+
+         'Con esto el ciclo está cerrado: se vendió, se cobró, se compró y se pagó.' }
 ];
 
-/* las tres alternativas de cada línea, barajadas una vez por sesión */
-A.forEach(function(a){
+/* alternativas barajadas una vez por sesión */
+B.forEach(function(b){ b.as.forEach(function(a){
   a.lin.forEach(function(l){ l.ops=baraja(OPC[l.fam]); });
-});
-var TOTAL=A.reduce(function(n,a){ return n+a.lin.length+(a.calc?1:0); },0);
+}); });
+function totalB(b){ return b.as.reduce(function(n,a){ return n+a.lin.length+(a.calc?1:0); },0); }
+var TOTAL=B.reduce(function(n,b){ return n+totalB(b); },0);
 
 /* =================== sonido =================== */
 var son=true, ctx=null;
@@ -413,6 +537,7 @@ function nota(f, ini, dur, vol, tipo){
 function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
 function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
 function sCuadra(){ nota(523.25,0,0.1,0.06,'triangle'); nota(784,0.09,0.18,0.05,'triangle'); }
+function sTec(){ nota(520,0,0.05,0.04); }
 function sFin(){
   [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
   nota(1318.5,0.45,0.6,0.07);
@@ -429,7 +554,7 @@ $('btnSon').addEventListener('click', function(){
 pintaSon();
 
 /* =================== estado =================== */
-var LS='g7_avance_v1';
+var LS='g7_bloques_v1';
 function vacio(){ return { ok:{}, mal:{}, calc:{}, ayuda:{}, fallos:0 }; }
 var G=vacio();
 try{
@@ -443,63 +568,104 @@ function graba(){
   try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
   if(window.Aula && Aula.enSala) Aula.empuja();
 }
-var festejado=false;
+var bl=0, festejado=false;
 
 function kl(a,i){ return a.n+'/'+i; }
 function puesta(a,i){ return G.ok[kl(a,i)]; }
 function calcOk(a){ return !a.calc || G.calc[a.n]===1; }
 function hechasA(a){
-  var n=calcOk(a)&&a.calc ? 1 : 0;
+  var n=(a.calc && calcOk(a)) ? 1 : 0;
   a.lin.forEach(function(l,i){ if(puesta(a,i)===l.ok) n++; });
   return n;
 }
 function totalA(a){ return a.lin.length+(a.calc?1:0); }
 function listoA(a){ return hechasA(a)===totalA(a); }
-function hechas(){ return A.reduce(function(n,a){ return n+hechasA(a); },0); }
+function hechasB(b){ return b.as.reduce(function(n,a){ return n+hechasA(a); },0); }
+function listoB(b){ return hechasB(b)===totalB(b); }
+function hechas(){ return B.reduce(function(n,b){ return n+hechasB(b); },0); }
 function listoTodo(){ return hechas()===TOTAL; }
-function abierto(k){ return k===0 || listoA(A[k-1]); }
+function abiertoB(k){ return k===0 || listoB(B[k-1]); }
+function abiertoA(b,k){ return k===0 || listoA(b.as[k-1]); }
 function verPista(a){
   if(a.pista==='antes') return true;
-  if(a.pista==='despues') return listoA(a) || G.ayuda[a.n]===1;
-  return listoA(a) || G.ayuda[a.n]===1;   /* 'final' */
+  return listoA(a) || G.ayuda[a.n]===1;
 }
 
-/* =================== la chuleta del costado =================== */
+/* =================== pestañas =================== */
+function cabecera(){
+  $('pest').innerHTML=B.map(function(b,k){
+    var cl=(k===bl?'on':'')+(listoB(b)?' ok':'');
+    return '<button type="button" data-b="'+k+'" class="'+cl.trim()+'">'+esc(b.t)+
+           '<span class="p">'+(abiertoB(k)? hechasB(b)+' de '+totalB(b) : '🔒 '+esc(b.st))+'</span></button>';
+  }).join('');
+  qq('#pest button[data-b]').forEach(function(x){
+    x.addEventListener('click', function(){ bl=+x.dataset.b; sTec(); pinta(); window.scrollTo({top:0,behavior:'smooth'}); });
+  });
+  var n=hechas();
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos de la sesión';
+  $('progI').style.width=(n/TOTAL*100)+'%';
+}
+
+/* =================== la chuleta =================== */
 function pintaChuleta(){
+  var b=B[bl];
   var h='<div class="caja az"><h3><span>El método, en cuatro preguntas</span></h3>'+
     '<div class="cuerpo"><div class="cuatro">'+
     '<div class="pq"><b class="t"><span class="nn">1</span>¿Qué pasó?</b>'+
-    'Ponle nombre: venta, cobro, compra, destino o pago. Esa palabra ya decide casi todo.</div>'+
+    'Ponle nombre: venta, cobro, compra, destino o pago.</div>'+
     '<div class="pq"><b class="t"><span class="nn">2</span>¿Qué cuentas mueve?</b>'+
-    'Cada tipo mueve siempre las mismas. Están en las plantillas de abajo.</div>'+
+    'Cada tipo mueve siempre las mismas. Mira la plantilla de abajo.</div>'+
     '<div class="pq"><b class="t"><span class="nn">3</span>¿De qué lado va?</b>'+
     'Lo que <b>entra</b> o lo que <b>me deben</b>, al Debe. Lo que <b>sale</b> o lo que <b>debo</b>, al Haber.</div>'+
     '<div class="pq"><b class="t"><span class="nn">4</span>¿Cuánto?</b>'+
-    'El <b>total con IGV</b> a la cuenta del cliente o del proveedor. El <b>valor sin IGV</b> a la venta o a la compra. El IGV, aparte.</div>'+
+    'El <b>total con IGV</b> al cliente o al proveedor. El <b>valor sin IGV</b> a la venta, a la compra y al almacén.</div>'+
     '</div><div class="regla"><b>La regla de oro:</b> el Debe y el Haber de cada asiento tienen que '+
-    'dar lo mismo. Si no cuadra, falta una línea o un importe está mal.</div></div></div>';
+    'dar lo mismo.</div></div></div>';
 
-  h+='<div class="caja vd"><h3><span>Las cinco plantillas</span>'+
-     '<span class="st">cópialas tal cual</span></h3><div class="cuerpo">';
-  PLAN.forEach(function(p){
-    h+='<div class="pl '+p.k+'"><b>'+p.ic+' '+esc(p.t)+'</b><table><tbody>'+
-       p.l.map(function(x){
-         return '<tr><td class="cc">'+esc(x[0])+'</td><td>'+esc(x[2])+'</td>'+
-                '<td class="ld '+x[1]+'">'+(x[1]==='d'?'Debe':'Haber')+'</td></tr>';
-       }).join('')+'</tbody></table></div>';
+  h+='<div class="caja vd"><h3><span>La plantilla de este bloque</span>'+
+     '<span class="st">cópiala tal cual</span></h3><div class="cuerpo">';
+  b.chu.forEach(function(k){
+    PLAN[k].forEach(function(p){
+      h+='<div class="pl '+p.k+'"><b>'+p.ic+' '+esc(p.t)+'</b><table><tbody>'+
+         p.l.map(function(x){
+           return '<tr><td class="cc">'+esc(x[0])+'</td><td>'+esc(x[2])+'</td>'+
+                  '<td class="ld '+x[1]+'">'+(x[1]==='d'?'Debe':'Haber')+'</td></tr>';
+         }).join('')+'</tbody></table></div>';
+    });
   });
-  h+='<p style="font-size:11.5px;color:var(--o-muted);line-height:1.5;margin:4px 0 0">'+
-     'Toda compra lleva <b>dos</b> asientos: el de la compra y el del destino al almacén.</p>'+
-     '</div></div>';
+  if(b.id==='cmps'){
+    h+='<div class="regla" style="margin-top:4px"><b>¿Qué almacén?</b><br>'+
+       '<b>20</b> lo que se revende tal cual.<br><b>24</b> lo que se transforma.<br>'+
+       '<b>25</b> lo que se consume en la operación.</div>';
+  }
+  h+='</div></div>';
   $('chuleta').innerHTML=h;
 }
 
-/* =================== la hoja de trabajo =================== */
+/* =================== asientos ya registrados =================== */
+function vistaPrevio(p){
+  var h='<div class="caja"><h3><span>'+esc(p.t)+'</span><span class="st">no se tocan</span></h3></div>';
+  p.as.forEach(function(a){
+    h+='<div class="as dado"><div class="ah"><span class="nro">'+a.n+'</span>'+
+       '<span class="fe">'+esc(a.fe)+'</span><span class="gl">'+esc(a.gl)+'</span>'+
+       '<span class="tip t-ya">Ya registrado</span></div>'+
+       '<div class="envuelve"><table class="t"><tbody>'+
+       a.l.map(function(x){
+         return '<tr><td style="width:56%"><span class="ccok">'+esc(x[0])+'</span> '+
+                '<span class="nomb">'+esc(CU[x[0]].n)+'</span></td>'+
+                '<td class="n" data-et="Debe">'+(x[1]==='d'?miles(x[2]):'')+'</td>'+
+                '<td class="n" data-et="Haber">'+(x[1]==='h'?miles(x[2]):'')+'</td></tr>';
+       }).join('')+'</tbody></table></div></div>';
+  });
+  return h+'<div class="caja"><div class="cuerpo"><p style="margin:0">'+p.pie+'</p></div></div>';
+}
+
+/* =================== un asiento por resolver =================== */
 function filaLinea(a, l, i){
   var p=puesta(a,i), bien=(p===l.ok);
   var h='<tr><td style="width:46%">';
   if(bien){
-    h+='<span class="ccok">'+esc(l.ok)+'</span> <span class="nomb">'+esc(CU[l.ok].ic+' '+CU[l.ok].n)+'</span>'+
+    h+='<span class="ccok">'+esc(l.ok)+'</span> <span class="nomb">'+esc(CU[l.ok].n)+'</span>'+
        '<span class="porq">'+esc(l.q)+'</span>';
   }else{
     var malos=G.mal[kl(a,i)]||[];
@@ -507,7 +673,7 @@ function filaLinea(a, l, i){
        l.ops.map(function(c){
          var m=malos.indexOf(c)>=0;
          return '<button type="button" data-c="'+esc(c)+'"'+(m?' class="mala" disabled':'')+'>'+
-                '<span class="cd">'+esc(c)+'</span>'+esc(CU[c].n.split(' —')[0])+'</button>';
+                '<span class="cd">'+esc(c)+'</span>'+esc(CU[c].n.split(' —')[0].split(',')[0])+'</button>';
        }).join('')+'</div>';
   }
   h+='</td><td class="n" data-et="Debe">'+(l.ld==='d'
@@ -517,21 +683,18 @@ function filaLinea(a, l, i){
   return h;
 }
 
-function vistaAsiento(a, k){
-  var listo=listoA(a), act=(!listo && abierto(k));
+function vistaAsiento(b, a, k){
+  var listo=listoA(a), act=(!listo && abiertoA(b,k));
   var h='<div class="as'+(listo?' listo':(act?' activo':''))+'">'+
     '<div class="ah"><span class="nro">'+a.n+'</span><span class="fe">'+esc(a.fe)+'</span>'+
     '<span class="gl">'+esc(a.gl)+'</span>'+
     '<span class="tip t-'+a.tipo+'">'+esc(NOMT[a.tipo])+'</span></div>';
 
-  if(!abierto(k)){
-    return h+'<div class="bloq">Se abre cuando termines el asiento '+A[k-1].n+'. '+
-      'Llevas '+hechasA(A[k-1])+' de '+totalA(A[k-1])+'.</div></div>';
+  if(!abiertoA(b,k)){
+    return h+'<div class="bloq">Se abre cuando termines el asiento '+b.as[k-1].n+'. '+
+      'Llevas '+hechasA(b.as[k-1])+' de '+totalA(b.as[k-1])+'.</div></div>';
   }
-
-  if(verPista(a)){
-    h+='<div class="simple"><span class="et">En palabras simples</span>'+a.simple+'</div>';
-  }
+  if(verPista(a)) h+='<div class="simple"><span class="et">En palabras simples</span>'+a.simple+'</div>';
 
   if(a.calc){
     var ok=(G.calc[a.n]===1);
@@ -542,10 +705,9 @@ function vistaAsiento(a, k){
        '</div>';
   }
 
-  var puedeLineas = calcOk(a);
   h+='<div class="envuelve"><table class="t"><thead><tr><th>Código y denominación</th>'+
      '<th class="n" style="width:21%">Debe</th><th class="n" style="width:21%">Haber</th></tr></thead><tbody>';
-  if(puedeLineas){
+  if(calcOk(a)){
     a.lin.forEach(function(l,i){ h+=filaLinea(a,l,i); });
     var d=0,hh=0;
     a.lin.forEach(function(l,i){ if(puesta(a,i)===l.ok){ if(l.ld==='d') d+=l.m; else hh+=l.m; } });
@@ -565,50 +727,68 @@ function vistaAsiento(a, k){
 }
 
 function pinta(){
-  var h='';
-  A.forEach(function(a,k){ h+=vistaAsiento(a,k); });
-  if(listoTodo()) h+=vistaCierre();
+  cabecera();
+  var b=B[bl], h='';
+  h+='<div class="perso'+b.clase+'"><img src="'+esc(b.per)+'" alt="" loading="lazy">'+
+     '<div class="globo"><span class="et">Bloque '+esc(b.t.split(' · ')[0])+' · '+esc(b.st)+'</span>'+
+     b.dice+'</div></div>';
+
+  if(!abiertoB(bl)){
+    h+='<div class="caja"><h3>Todavía no</h3><div class="cuerpo"><p style="margin:0">'+
+       'Este bloque se abre cuando termines el <b>'+esc(B[bl-1].t)+'</b>. '+
+       'Llevas '+hechasB(B[bl-1])+' de '+totalB(B[bl-1])+'.</p></div></div>';
+    $('panel').innerHTML=h; pintaChuleta(); pintaMarcador(); return;
+  }
+
+  if(b.previo) h+=vistaPrevio(b.previo);
+  b.as.forEach(function(a,k){ h+=vistaAsiento(b,a,k); });
+  if(listoB(b)){
+    h+='<div class="caja vd"><h3><span>Bloque '+esc(b.t)+' terminado</span></h3>'+
+       '<div class="cuerpo"><p style="margin:0">'+b.cierre+'</p></div></div>';
+    if(bl<B.length-1){
+      h+='<div class="perso chico"><img src="personajes/tutor-bien.webp" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">Listo</span>Perfecto. Pasa al <b>'+esc(B[bl+1].t)+'</b>, '+
+         'que ya está abierto.</div></div>';
+    }
+  }
+  if(listoTodo() && bl===B.length-1) h+=vistaCierre();
   $('panel').innerHTML=h;
-  pintaChuleta();
-  var n=hechas();
-  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos de la hoja';
-  $('progI').style.width=(n/TOTAL*100)+'%';
-  cablea();
-  pintaMarcador();
+  pintaChuleta(); cablea(); pintaMarcador();
 }
 
 function vistaCierre(){
-  return '<div class="caja vd"><h3><span>Los nueve asientos resueltos</span>'+
-    '<span class="st">el ciclo completo de abril y mayo</span></h3><div class="cuerpo">'+
-    '<p>Eso es todo el ciclo: se <b>vende</b>, se <b>cobra</b>, se <b>compra</b>, la mercadería '+
-    '<b>entra al almacén</b> y se <b>paga</b> al proveedor. Nueve asientos, cinco plantillas.</p>'+
-    '<p>Dos cosas para no olvidar. La primera: el <b>IGV de la venta</b> se abona (lo debemos a la '+
-    'SUNAT) y el <b>IGV de la compra</b> se carga (lo podemos descontar); por eso la cuenta 40 '+
-    'aparece a los dos lados. La segunda: toda compra lleva <b>dos asientos</b>, el de la compra y '+
-    'el del ingreso al almacén, y el de destino va con el valor <b>sin IGV</b>.</p>'+
-    '<p style="margin:0">Fíjate también en que el pago de abril, S/ 32,450.00, es exactamente la suma '+
-    'de las dos compras: 21,240.00 + 11,210.00. Al cerrar el mes no queda nada pendiente con los '+
-    'proveedores.</p></div></div>';
+  return '<div class="caja vd"><h3><span>El ciclo completo</span>'+
+    '<span class="st">15 asientos en cuatro bloques</span></h3><div class="cuerpo">'+
+    '<p>Vendiste por <b>S/ 61,950.00</b> y cobraste exactamente eso: la cuenta <b>12</b> quedó en cero. '+
+    'Compraste por <b>S/ 39,530.00</b> y pagaste exactamente eso: la cuenta <b>42</b> quedó en cero.</p>'+
+    '<p>Lo que no se cierra solo es el <b>IGV</b>: la cuenta 40 se abonó con el IGV de las ventas '+
+    '(9,450.00) y se cargó con el de las compras (6,030.00). La diferencia, <b>S/ 3,420.00</b>, es lo que '+
+    'se le paga a la SUNAT. Por eso la cuenta 40 aparece a los dos lados.</p>'+
+    '<p style="margin:0">Y la que más se olvida: <b>toda compra lleva dos asientos</b>. El de la compra '+
+    'y el de destino, que cambia de almacén según lo comprado: 20, 24 o 25, siempre contra la 61 y '+
+    'con el valor sin IGV.</p></div></div>';
 }
 
 function cablea(){
   qq('#panel .ops[data-a]').forEach(function(g){
-    var a=null; A.forEach(function(x){ if(x.n===+g.dataset.a) a=x; });
+    var b=B[bl], a=null;
+    b.as.forEach(function(x){ if(x.n===+g.dataset.a) a=x; });
+    if(!a) return;
     var i=+g.dataset.i, l=a.lin[i];
-    qq('button', g).forEach(function(b){
-      if(b.disabled) return;
-      b.addEventListener('click', function(){
-        if(b.dataset.c===l.ok){
+    qq('button', g).forEach(function(x){
+      if(x.disabled) return;
+      x.addEventListener('click', function(){
+        if(x.dataset.c===l.ok){
           G.ok[kl(a,i)]=l.ok; graba();
           if(listoA(a)) sCuadra(); else sBien();
           pinta(); revisaFin();
         }else{
           var k=kl(a,i);
           if(!G.mal[k]) G.mal[k]=[];
-          if(G.mal[k].indexOf(b.dataset.c)<0) G.mal[k].push(b.dataset.c);
+          if(G.mal[k].indexOf(x.dataset.c)<0) G.mal[k].push(x.dataset.c);
           G.fallos++; graba(); sMal();
-          b.classList.add('temblor','mala'); b.disabled=true;
-          setTimeout(function(){ b.classList.remove('temblor'); }, 420);
+          x.classList.add('temblor','mala'); x.disabled=true;
+          setTimeout(function(){ x.classList.remove('temblor'); }, 420);
           pintaMarcador();
         }
       });
@@ -616,7 +796,8 @@ function cablea(){
   });
 
   qq('#panel .calc input[data-k]').forEach(function(inp){
-    var a=null; A.forEach(function(x){ if(x.n===+inp.dataset.k) a=x; });
+    var a=null; B[bl].as.forEach(function(x){ if(x.n===+inp.dataset.k) a=x; });
+    if(!a) return;
     function prueba(){
       var v=parseFloat(String(inp.value).replace(/[\s,]/g,''));
       if(isNaN(v)) return;
@@ -631,10 +812,8 @@ function cablea(){
     inp.addEventListener('blur', function(){ if(String(inp.value).trim()!=='') prueba(); });
   });
 
-  qq('#panel button[data-ay]').forEach(function(b){
-    b.addEventListener('click', function(){
-      G.ayuda[+b.dataset.ay]=1; graba(); pinta();
-    });
+  qq('#panel button[data-ay]').forEach(function(x){
+    x.addEventListener('click', function(){ G.ayuda[+x.dataset.ay]=1; graba(); pinta(); });
   });
 }
 
@@ -642,14 +821,17 @@ function pintaMarcador(){
   var m=$('marcador');
   if(listoTodo()){
     m.className='marcador ok';
-    m.innerHTML='✓ Hoja terminada: los nueve asientos cuadran'+
-      (G.fallos ? ' · '+G.fallos+(G.fallos>1?' elecciones falladas':' elección fallada') : ' y sin fallar ninguna')+'.';
+    m.innerHTML='✓ Los cuatro bloques resueltos: 15 asientos y todos cuadran'+
+      (G.fallos ? ' · '+G.fallos+(G.fallos>1?' elecciones falladas':' elección fallada') : ' sin fallar ninguna')+'.';
     return;
   }
   m.className='marcador';
-  var k=0; while(k<A.length && listoA(A[k])) k++;
-  var a=A[k];
-  m.innerHTML='Asiento '+a.n+' · '+esc(NOMT[a.tipo])+': '+hechasA(a)+' de '+totalA(a)+'. '+
+  var b=B[bl];
+  if(!abiertoB(bl)){ m.innerHTML='Termina antes el '+esc(B[bl-1].t)+'.'; return; }
+  if(listoB(b)){ m.innerHTML='✓ '+esc(b.t)+' terminado. Pasa al siguiente bloque.'; return; }
+  var k=0; while(k<b.as.length && listoA(b.as[k])) k++;
+  var a=b.as[k];
+  m.innerHTML=esc(b.t)+' · asiento '+a.n+' ('+esc(NOMT[a.tipo])+'): '+hechasA(a)+' de '+totalA(a)+'. '+
     (a.calc && !calcOk(a) ? 'Empieza por el cálculo.' : 'Elige la cuenta de cada línea entre las tres.');
 }
 
@@ -661,7 +843,7 @@ function festeja(){
   sFin();
   var cv=$('confeti'), x=cv.getContext('2d');
   cv.style.display='block'; cv.width=innerWidth; cv.height=innerHeight;
-  var col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+  var col=['#16307A','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
   for(var i=0;i<110;i++) p.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.4,
     vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
     c:col[i%col.length], r:Math.random()*6});
@@ -678,17 +860,16 @@ function festeja(){
 
 /* =================== sala =================== */
 function resumenAula(){
-  var k=0; while(k<A.length && listoA(A[k])) k++;
-  return { asiento:(k<A.length? ('Asiento '+A[k].n+' · '+NOMT[A[k].tipo]) : 'Terminado'),
-           hechos:A.filter(listoA).length+'/'+A.length,
+  return { bloque:B[bl].t,
+           bloques:B.filter(listoB).length+'/'+B.length,
            pasos:hechas()+'/'+TOTAL,
            ayudas:Object.keys(G.ayuda).length,
            listo:listoTodo(), fallos:G.fallos };
 }
 function ventanaAula(e){
   return '<div class="vmini">'+
-    '<div class="lin"><span>'+esc(e.asiento||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
-    '<div class="lin"><span>Asientos cerrados</span><b>'+esc(e.hechos||'—')+'</b></div>'+
+    '<div class="lin"><span>'+esc(e.bloque||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
+    '<div class="lin"><span>Bloques cerrados</span><b>'+esc(e.bloques||'—')+'</b></div>'+
     '<div class="lin"><span>Pasos</span><b>'+esc(e.pasos||'—')+'</b></div>'+
     '<div class="lin"><span>Ayudas abiertas</span><b>'+(e.ayudas||0)+'</b></div>'+
     '<div class="lin"><span>Elecciones falladas</span><b>'+(e.fallos||0)+'</b></div></div>';
@@ -697,16 +878,20 @@ function ventanaAula(e){
 /* =================== arranque =================== */
 (function inicio(){
   if(window.Reinicio) Reinicio.monta({
-    donde:'reinicio', claves:[LS], texto:'Reiniciar la hoja',
-    aviso:'Se borra tu avance en los nueve asientos.',
-    hecho:function(){ G=vacio(); festejado=false; pinta(); }
+    donde:'reinicio', claves:[LS], texto:'Reiniciar la sesión',
+    aviso:'Se borra tu avance en los cuatro bloques.',
+    hecho:function(){ G=vacio(); bl=0; festejado=false; pinta(); }
   });
   Aula.iniciar({ sala:'G7', codigo:'CONTA7', resumen:resumenAula, ventana:ventanaAula,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       var dentro=Aula.enSala;
       $('zona').hidden=!dentro;
-      if(dentro){ if(listoTodo()) festejado=true; pinta(); }
+      if(dentro){
+        if(listoTodo()) festejado=true;
+        var k=0; while(k<B.length-1 && listoB(B[k])) k++;
+        bl=k; pinta();
+      }
     } });
 })();
 
