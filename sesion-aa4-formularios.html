@@ -89,7 +89,7 @@
   .cadena{ display:flex; gap:7px; flex-wrap:wrap; align-items:stretch; margin:4px 0 12px; }
   .ps{ border:1.5px solid var(--o-border); border-radius:10px; padding:9px 11px; background:#fff;
        flex:1 1 150px; min-width:0; font-size:13px; line-height:1.45; color:#33404E; }
-  .ps b{ display:block; font-size:13.5px; color:var(--certus); margin-bottom:2px; }
+  .ps > b:first-child{ display:block; font-size:13.5px; color:var(--certus); margin-bottom:2px; }
   .ps .nn{ display:inline-flex; width:19px; height:19px; border-radius:99px; background:var(--certus);
            color:#fff; font-size:11px; font-weight:800; align-items:center; justify-content:center;
            margin-right:6px; }
@@ -143,6 +143,100 @@
   .ck.si .cx{ border-color:var(--verde); background:var(--verde); color:#fff; }
   .ck .tx{ flex:1; min-width:0; font-size:14px; line-height:1.5; color:#33404E; }
   .ck .tx b{ color:var(--certus); }
+
+  /* número del paso */
+  .pn{ display:inline-flex; width:clamp(32px,4vw,46px); height:clamp(32px,4vw,46px);
+       border-radius:99px; background:var(--certus); color:#fff; align-items:center;
+       justify-content:center; font-size:clamp(17px,2.2vw,24px); font-weight:800;
+       margin-right:11px; vertical-align:2px; }
+
+  /* la tarjeta del simulador */
+  .tarj{ display:block; text-decoration:none; border:2px solid var(--certus); border-radius:14px;
+         overflow:hidden; background:#fff; box-shadow:0 4px 0 rgba(22,48,122,.18);
+         transition:transform .14s ease, box-shadow .14s ease; }
+  .tarj:hover{ transform:translateY(-3px); box-shadow:0 9px 22px rgba(22,48,122,.26); }
+  .tarj:active{ transform:translateY(0); box-shadow:0 2px 0 rgba(22,48,122,.18); }
+  .tarj .bro{ display:flex; gap:6px; align-items:center; padding:8px 12px; background:#E9EDF6;
+              border-bottom:1px solid #C9D3E8; }
+  .tarj .bro i{ width:10px; height:10px; border-radius:99px; background:#C2CCDF; flex:none; }
+  .tarj .bro .url{ flex:1; margin-left:8px; background:#fff; border-radius:99px; padding:4px 12px;
+                   font-size:12px; color:#6B7A95; overflow:hidden; text-overflow:ellipsis;
+                   white-space:nowrap; }
+  .tarj .cu2{ display:flex; gap:13px; align-items:center; padding:16px 18px; }
+  .tarj .cu2 .ic{ font-size:34px; flex:none; animation:late 2.4s ease-in-out infinite; }
+  @keyframes late{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.12) } }
+  .tarj .cu2 .tx{ flex:1; min-width:0; }
+  .tarj .cu2 .tx b{ display:block; font-size:clamp(17px,2.1vw,22px); color:var(--certus); line-height:1.2; }
+  .tarj .cu2 .tx span{ display:block; font-size:13.5px; color:var(--o-muted); margin-top:3px; line-height:1.45; }
+  .tarj .cu2 .ir{ flex:none; font-size:21px; font-weight:800; color:#fff; background:var(--certus);
+                  border-radius:11px; width:44px; height:44px; display:flex; align-items:center;
+                  justify-content:center; }
+  .tarj:hover .cu2 .ir{ background:#0F2258; }
+
+  /* maquetas de la pantalla del simulador */
+  .mock{ border:2px solid #D8DCE2; border-radius:12px; padding:13px 15px; background:#FBFCFD;
+         margin:0 0 13px; }
+  .mock .mk-fila{ display:flex; gap:10px; align-items:center; margin-bottom:8px; }
+  .mock .mk-et{ font-size:14px; font-weight:800; color:#33404E; flex:1; }
+  .mock .mk-sw{ flex:none; width:44px; height:24px; border-radius:99px; background:#9AA5B1;
+                position:relative; }
+  .mock .mk-sw i{ position:absolute; top:3px; right:3px; width:18px; height:18px;
+                  border-radius:99px; background:#fff; }
+  .mock .mk-campo{ border:2px solid #E0A800; background:#FFF8E1; border-radius:9px;
+                   padding:11px 14px; font-size:clamp(14px,1.7vw,17px); font-weight:800;
+                   color:#5B4A15; }
+  .mock .mk-pie{ font-size:12.5px; color:var(--o-muted); margin-top:7px; line-height:1.45; }
+  .mock .mk-pie b{ color:#33404E; }
+  .mock.gato{ display:flex; flex-direction:column; justify-content:center; align-items:center;
+              background:#EEF2FA; border-color:#C9D3E8; }
+  .mock .gt{ display:inline-flex; gap:10px; align-items:center; background:var(--certus);
+             border:3px solid #fff; border-radius:99px; padding:8px 18px 8px 8px;
+             box-shadow:0 5px 16px rgba(0,0,0,.25); }
+  .mock .gt .ava{ flex:none; width:40px; height:40px; border-radius:99px; background:#fff;
+                  display:flex; align-items:center; justify-content:center; font-size:23px; }
+  .mock .gt .tx b{ display:block; font-size:15px; color:#fff; line-height:1.2; }
+  .mock .gt .tx span{ display:block; font-size:12px; color:#C8D4EE; }
+  .mock.rojo{ display:flex; flex-direction:column; align-items:center; background:#FDF6F5;
+              border-color:#E8C4BE; }
+  .mock .btr{ background:#C8102E; color:#fff; border-radius:9px; padding:13px 26px;
+              font-size:clamp(15px,1.9vw,19px); font-weight:800;
+              box-shadow:0 4px 0 #8E0B20; animation:pulso 2.2s ease-in-out infinite; }
+  @keyframes pulso{ 0%,100%{ transform:scale(1) } 50%{ transform:scale(1.04) } }
+
+  /* usuario y contraseña */
+  .claves{ display:grid; grid-template-columns:1fr; gap:11px; margin:0 0 13px; }
+  @media (min-width:560px){ .claves{ grid-template-columns:1fr 1fr; } }
+  .cl{ border:2px solid var(--certus); border-radius:12px; padding:12px 15px; background:#F4F7FD; }
+  .cl .k{ display:block; font-size:11px; font-weight:800; letter-spacing:.07em;
+          text-transform:uppercase; color:var(--certus); margin-bottom:3px; }
+  .cl .v{ display:block; font-family:ui-monospace,Menlo,Consolas,monospace;
+          font-size:clamp(22px,3.4vw,34px); font-weight:800; color:#16307A; letter-spacing:.06em; }
+
+  /* registro de asistencia */
+  .form{ display:grid; grid-template-columns:1fr; gap:11px; max-width:620px; }
+  @media (min-width:620px){ .form .mitad{ grid-column:span 1; } .form{ grid-template-columns:1fr 1fr; } }
+  .form .todo{ grid-column:1/-1; }
+  .cp{ display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .cp span{ font-size:12.5px; font-weight:700; color:#33404E; }
+  .cp span i{ color:var(--rojo); font-style:normal; }
+  .cp input, .cp select, .cp textarea{ font:inherit; font-size:14.5px; color:#33404E;
+    border:1.5px solid var(--o-border); border-radius:9px; padding:9px 11px; background:#fff; }
+  .cp input:focus, .cp select:focus, .cp textarea:focus{ outline:none; border-color:var(--certus);
+    box-shadow:0 0 0 3px rgba(22,48,122,.14); }
+  .cp textarea{ resize:vertical; min-height:62px; }
+  .cp.mal input, .cp.mal select{ border-color:#E3A9A2; background:#FDECEA; }
+  .form button.env{ font:inherit; font-size:15px; font-weight:800; cursor:pointer;
+    border:1.5px solid var(--certus); background:var(--certus); color:#fff;
+    border-radius:11px; padding:12px 22px; justify-self:start; }
+  .form button.env:hover{ background:#0F2258; }
+  .form button.env[disabled]{ opacity:.6; cursor:default; }
+  .aviso{ grid-column:1/-1; border-radius:10px; padding:10px 13px; font-size:13.5px;
+          line-height:1.55; font-weight:700; }
+  .aviso.ok{ background:#E9F7EF; border:1.5px solid #7CC29B; color:#14532D; }
+  .aviso.err{ background:#FDECEA; border:1.5px solid #E3A9A2; color:#7A1C12; }
+  .aviso:not(.ok):not(.err){ background:#F2F5FB; border:1.5px solid #C9D6EE; color:#1F3A6E; }
+  .otravez{ font:inherit; font-size:13px; font-weight:800; cursor:pointer; padding:0;
+            background:none; border:none; color:#14532D; text-decoration:underline; }
 
   /* pie de navegación */
   .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
@@ -249,36 +343,36 @@ var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp'
 var SIM='https://laboratorio-tributario.vercel.app/taxlab360/sol.html';
 var ENC='https://laboratorio-tributario.vercel.app/taxlab360/encuesta.html';
 
+/* sala de Supabase · la misma del aula virtual */
+var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
+var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
+var TABLA='asistencia_aa4';
+var CURSOS=['Cierre Contable Tributario','Sistemas Contables Integrados','Sistemas de Procesos Contables'];
+
 function globo(img, chico, txt, et){
   return '<div class="perso'+(chico?' chico':'')+'"><img src="'+img+'" alt="" loading="lazy">'+
          '<div class="globo">'+(et?'<b>'+esc(et)+'</b> ':'')+txt+'</div></div>';
 }
 
-/* =================== el clasificador 710 / 621 =================== */
+/* =================== la práctica: qué formulario te toca =================== */
 var CLAS=[
-  { q:'Declarar las ventas y las compras <b>del mes de marzo</b>', ok:'621',
-    pq:'El 621 es mensual: IGV y pago a cuenta de renta de ese mes.' },
-  { q:'Declarar la <b>renta anual</b> de tercera categoría del ejercicio', ok:'710',
-    pq:'El 710 es la declaración jurada anual del impuesto a la renta.' },
-  { q:'Informar el <b>balance de comprobación</b> del ejercicio', ok:'710',
-    pq:'El balance de comprobación es una sección del 710 anual.' },
-  { q:'Aplicar el <b>crédito fiscal</b> del mes contra el débito fiscal', ok:'621',
-    pq:'El cruce mensual de IGV se liquida en el 621.' },
-  { q:'Registrar las <b>adiciones y deducciones</b> para la renta neta imponible', ok:'710',
-    pq:'Las adiciones y deducciones tributarias solo aparecen en la declaración anual.' },
-  { q:'Declarar el <b>pago a cuenta</b> del impuesto a la renta del mes', ok:'621',
-    pq:'El pago a cuenta mensual va en el 621; después se usa como crédito en el 710.' }
+  { q:'Estoy en <b>Cierre Contable Tributario</b>', ok:'710',
+    pq:'Declaración anual de renta: Formulario Virtual 710.' },
+  { q:'Estoy en <b>Sistemas Contables Integrados</b>', ok:'710',
+    pq:'También trabaja el 710, pero llegando a él desde el sistema.' },
+  { q:'Estoy en <b>Sistemas de Procesos Contables</b>', ok:'621',
+    pq:'Declaración mensual de IGV y pago a cuenta: Formulario 621.' }
 ];
 
 /* =================== la lista de control =================== */
 var CHECK=[
-  'El estudiante entró al simulador con su usuario y <b>reconoce que no es la SUNAT real</b>.',
-  'Usó el <b>formulario que le toca a su curso</b>: 710 anual o 621 mensual.',
-  'Los importes del formulario <b>salen de sus papeles de trabajo</b>, no están inventados.',
-  'Revisó que el formulario <b>cuadre</b> antes de enviarlo.',
-  'Guardó la <b>constancia o la captura</b> de lo presentado.',
-  'Subió su entregable al aula virtual <b>dentro del plazo</b>.',
-  'Llenó la <b>encuesta del prototipo</b> al terminar.'
+  'Entré al simulador y escribí mis <b>apellidos y nombres</b> en el campo amarillo.',
+  'Usé <b>SIST</b> y <b>NORTON</b> como usuario y contraseña.',
+  'Elegí <b>mi empresa</b> en el botón del gatito.',
+  'Llené el formulario que le toca a mi curso: <b>710</b> o <b>621</b>.',
+  'Presioné el botón rojo <b>Finalizar simulación</b>.',
+  'Respondí la <b>encuesta</b> y descargué el <b>PDF del reporte</b>.',
+  'Subí el PDF al aula virtual y registré mi asistencia.'
 ];
 
 /* =================== las diapositivas =================== */
@@ -286,12 +380,12 @@ var D=[
 { et:'Portada', t:'Evaluación final · AA4',
   h:'<p class="enc">Inducción · Evaluación final</p>'+
     '<p class="sub">Actividad de Aprendizaje 4 · tres cursos, dos formularios y un simulador</p>'+
-    globo(P.full,false,'Buenas tardes. En esta sesión vemos <b>cómo se evalúa la Actividad de '+
-      'Aprendizaje 4</b> en los tres cursos, con qué formulario trabaja cada uno, cómo se usa el '+
-      '<b>simulador</b> y qué tiene que entregar el estudiante.','¡Hola!')+
+    globo(P.full,false,'En esta sesión vemos <b>qué formulario le toca a cada curso</b> y, sobre todo, '+
+      '<b>cómo se trabaja paso a paso en el simulador</b>: desde que entras hasta que descargas tu '+
+      'reporte en PDF.','¡Hola!')+
     '<div class="tres">'+
     '<div class="curso"><b class="t">Cierre Contable Tributario</b>'+
-      '<span class="d">Declaración anual a partir del cierre.</span>'+
+      '<span class="d">Declaración anual de renta.</span>'+
       '<span class="fm f710">Formulario Virtual 710</span></div>'+
     '<div class="curso"><b class="t">Sistemas Contables Integrados</b>'+
       '<span class="d">El mismo 710, desde el sistema.</span>'+
@@ -301,239 +395,164 @@ var D=[
       '<span class="fm f621">Formulario 621</span></div>'+
     '</div>'+
     '<div class="nota" style="margin-top:13px"><b>Sesión de inducción:</b> sábado 3 de octubre, '+
-    '4:00 p. m., modalidad virtual. El enlace de la reunión se envió por correo.</div>' },
+    '4:00 p. m., modalidad virtual.</div>' },
 
-{ et:'Agenda', t:'Qué vamos a ver',
-  h:'<p class="enc">Qué vamos a ver</p>'+
-    '<p class="sub">Seis cosas, en este orden</p>'+
-    '<div class="cadena">'+
-    '<div class="ps"><b><span class="nn">1</span>El formulario de cada curso</b>Quién usa el 710 y quién el 621.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">2</span>De dónde salen los datos</b>La cadena hasta el formulario.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">3</span>El simulador</b>Cómo se entra y qué se hace.</div>'+
-    '</div><div class="cadena">'+
-    '<div class="ps"><b><span class="nn">4</span>Qué se entrega</b>El producto por curso.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">5</span>Cómo se evalúa</b>Qué miramos al calificar.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">6</span>La encuesta</b>Obligatoria al terminar.</div>'+
-    '</div>'+
-    globo(P.expl,true,'La idea es que los tres cursos cierren con <b>la misma experiencia</b>: '+
-      'el estudiante llena un formulario de verdad, en un simulador, con datos que él mismo trabajó.') },
-
-{ et:'Los cursos', t:'Cada curso con su formulario',
-  h:'<p class="enc">Cada curso con su formulario</p>'+
-    '<p class="sub">Dos formularios distintos, una misma lógica: del dato contable al formulario</p>'+
+{ et:'Formularios', t:'Qué formulario usa cada curso',
+  h:'<p class="enc">Qué formulario usa cada curso</p>'+
+    '<p class="sub">Es lo primero que hay que tener claro: no todos llenan lo mismo</p>'+
     '<div class="dos">'+
-    '<div class="fc f710"><h4>📘 Formulario Virtual 710 — Renta Anual</h4><div class="c">'+
-      '<p>Lo usan <b>Cierre Contable Tributario</b> y <b>Sistemas Contables Integrados</b>.</p>'+
-      '<ul><li>Es <b>anual</b>: se declara el ejercicio completo.</li>'+
-      '<li>Parte del <b>cierre contable</b> ya terminado.</li>'+
-      '<li>Lleva balance de comprobación, estados financieros y la determinación de la renta neta.</li></ul>'+
-      '</div><div class="pie">Renta de tercera categoría</div></div>'+
-    '<div class="fc f621"><h4>📙 Formulario 621 — IGV y Renta mensual</h4><div class="c">'+
-      '<p>Lo usa <b>Sistemas de Procesos Contables</b>.</p>'+
-      '<ul><li>Es <b>mensual</b>: se declara un solo mes.</li>'+
-      '<li>Parte de los <b>registros de ventas y de compras</b> de ese mes.</li>'+
-      '<li>Liquida el IGV del mes y el pago a cuenta del impuesto a la renta.</li></ul>'+
-      '</div><div class="pie">Declaración mensual</div></div>'+
+    '<div class="fc f710"><h4>📘 Formulario Virtual 710</h4><div class="c">'+
+      '<p><b>Cierre Contable Tributario</b><br><b>Sistemas Contables Integrados</b></p>'+
+      '<ul><li>Es la declaración <b>anual</b> de renta de tercera categoría.</li>'+
+      '<li>Se trabaja sobre el <b>ejercicio completo</b>.</li></ul>'+
+      '</div><div class="pie">Dos cursos, el mismo formulario</div></div>'+
+    '<div class="fc f621"><h4>📙 Formulario 621</h4><div class="c">'+
+      '<p><b>Sistemas de Procesos Contables</b></p>'+
+      '<ul><li>Es la declaración <b>mensual</b> de IGV y pago a cuenta de renta.</li>'+
+      '<li>Se trabaja sobre <b>un solo mes</b>.</li></ul>'+
+      '</div><div class="pie">Un curso, el formulario mensual</div></div>'+
     '</div>'+
-    '<div class="av" style="margin-top:12px"><b>La diferencia de fondo:</b> el <b>621</b> es la foto '+
-    'de <b>un mes</b> y el <b>710</b> es la película de <b>todo el año</b>. Lo que se declaró mes a '+
-    'mes en los 621 reaparece en el 710 como <b>crédito</b>: los pagos a cuenta.</div>' },
+    '<div class="av" style="margin-top:12px"><b>La regla corta:</b> si es del <b>mes</b>, es el '+
+    '<b>621</b>. Si es del <b>ejercicio</b>, es el <b>710</b>.</div>' },
 
-{ et:'FV 710', t:'El 710, por dentro',
-  h:'<p class="enc">El Formulario Virtual 710, por dentro</p>'+
-    '<p class="sub">Qué secciones tiene y de dónde sale cada una</p>'+
-    '<div class="envuelve"><table class="t"><thead><tr><th style="width:38%">Sección del formulario</th>'+
-    '<th>De dónde sale</th></tr></thead><tbody>'+
-    '<tr><td><b>Datos del contribuyente</b></td><td>RUC, régimen y actividad de la empresa del caso.</td></tr>'+
-    '<tr><td><b>Balance de comprobación</b></td><td>Del cierre: sumas y saldos de todas las cuentas.</td></tr>'+
-    '<tr><td><b>Estado de situación financiera</b></td><td>Del balance de comprobación, ya clasificado.</td></tr>'+
-    '<tr><td><b>Estado de resultados</b></td><td>Ingresos y gastos del ejercicio.</td></tr>'+
-    '<tr><td><b>Adiciones y deducciones</b></td><td>Los reparos tributarios: lo que la ley no acepta como gasto, o acepta de más.</td></tr>'+
-    '<tr><td><b>Renta neta imponible e impuesto</b></td><td>Resultado contable ± reparos, por la tasa del impuesto.</td></tr>'+
-    '<tr><td><b>Créditos contra el impuesto</b></td><td>Pagos a cuenta del año, ITAN y saldos a favor de ejercicios anteriores.</td></tr>'+
-    '<tr><td><b>Saldo por regularizar</b></td><td>Impuesto menos créditos: lo que se paga o queda a favor.</td></tr>'+
-    '</tbody></table></div>'+
-    globo(P.idea,false,'Lo que de verdad se evalúa no es teclear: es que el estudiante sepa '+
-      '<b>de dónde sale cada cifra</b>. Si no puede decir de qué papel de trabajo salió un número, '+
-      'ese número no vale.') },
+{ et:'Práctica', t:'¿Qué formulario te toca?', tipo:'clas',
+  h:'<p class="enc">¿Qué formulario te toca?</p>'+
+    '<p class="sub">Para que nadie empiece con el formulario equivocado</p>' },
 
-{ et:'Cadena 710', t:'Del cierre al 710',
-  h:'<p class="enc">Del cierre contable al 710</p>'+
-    '<p class="sub">Cada paso alimenta al siguiente: si uno falla, el formulario sale mal</p>'+
-    '<div class="cadena">'+
-    '<div class="ps"><b><span class="nn">1</span>Libro diario y mayor</b>Las operaciones del año, ya registradas.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">2</span>Balance de comprobación</b>Sumas y saldos de todas las cuentas.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">3</span>Estados financieros</b>Situación financiera y resultados.</div>'+
-    '</div><div class="cadena">'+
-    '<div class="ps"><b><span class="nn">4</span>Reparos tributarios</b>Adiciones y deducciones a la utilidad contable.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">5</span>Renta neta e impuesto</b>La base imponible por la tasa.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">6</span>Créditos y saldo</b>Pagos a cuenta, ITAN y lo que queda por pagar.</div>'+
-    '</div>'+
-    '<div class="nota"><b>El punto crítico son los reparos.</b> Es donde se separa la utilidad '+
-    '<b>contable</b> de la <b>tributaria</b>, y donde más se equivocan. Pide siempre el detalle de '+
-    'cada adición y cada deducción, con su base legal.</div>' },
-
-{ et:'F 621', t:'El 621, por dentro',
-  h:'<p class="enc">El Formulario 621, por dentro</p>'+
-    '<p class="sub">Un mes, dos liquidaciones: el IGV y el pago a cuenta de renta</p>'+
-    '<div class="dos">'+
-    '<div class="fc f621"><h4>IGV del mes</h4><div class="c">'+
-      '<ul><li><b>Ventas del mes</b> sin IGV — casilla 100 — del <b>registro de ventas</b>.</li>'+
-      '<li><b>IGV de las ventas</b>: el débito fiscal.</li>'+
-      '<li><b>Compras del mes</b> sin IGV — casilla 107 — del <b>registro de compras</b>.</li>'+
-      '<li><b>IGV de las compras</b>: el crédito fiscal.</li>'+
-      '<li><b>IGV resultante</b>: débito menos crédito. Si el crédito es mayor, queda saldo a favor para el mes siguiente.</li></ul>'+
+{ et:'Paso 1', t:'Entra al simulador',
+  h:'<p class="enc"><span class="pn">1</span> Entra al simulador</p>'+
+    '<p class="sub">Laboratorio Contable · TaxLab 360 · funciona en computadora y en celular</p>'+
+    '<a class="tarj" href="'+esc(SIM)+'" target="_blank" rel="noopener">'+
+      '<span class="bro"><i></i><i></i><i></i><span class="url">laboratorio-tributario.vercel.app</span></span>'+
+      '<span class="cu2"><span class="ic">🧪</span>'+
+      '<span class="tx"><b>Abrir el simulador</b>'+
+      '<span>Entra con tu Clave SOL de práctica · se abre en otra pestaña</span></span>'+
+      '<span class="ir">↗</span></span></a>'+
+    '<div class="dos" style="margin-top:12px">'+
+    '<div class="fc f710"><h4>💻 En la computadora</h4><div class="c">'+
+      '<p>Se ve igual que SUNAT Operaciones en Línea. Es lo más cómodo para llenar el formulario.</p>'+
       '</div></div>'+
-    '<div class="fc f621"><h4>Pago a cuenta de renta</h4><div class="c">'+
-      '<ul><li><b>Ingresos netos del mes</b> — casilla 301.</li>'+
-      '<li>Por el <b>coeficiente</b> o el <b>porcentaje</b>, según corresponda a la empresa.</li>'+
-      '<li>Resultado: el <b>pago a cuenta</b> del mes.</li>'+
-      '<li>Ese pago a cuenta se acumula y al cierre del año entra al <b>710</b> como crédito.</li></ul>'+
+    '<div class="fc f621"><h4>📱 En el celular</h4><div class="c">'+
+      '<p>También funciona. Si no tienes computadora a la mano, puedes hacer toda la actividad desde el teléfono.</p>'+
       '</div></div>'+
     '</div>'+
-    '<div class="av" style="margin-top:12px"><b>Ojo con las casillas.</b> Aquí van las tres más '+
-    'citadas, pero el número exacto de cada casilla se confirma en el propio formulario: que el '+
-    'estudiante las lea ahí, no de memoria.</div>' },
+    '<div class="av" style="margin-top:12px"><b>No es la SUNAT real.</b> Es un prototipo con fines '+
+    'educativos: no tiene efectos tributarios y puedes equivocarte todas las veces que quieras.</div>' },
 
-{ et:'Cadena 621', t:'De los registros al 621',
-  h:'<p class="enc">De los registros al 621</p>'+
-    '<p class="sub">Todo sale de dos registros del mes</p>'+
-    '<div class="cadena">'+
-    '<div class="ps"><b><span class="nn">1</span>Comprobantes del mes</b>Facturas emitidas y recibidas.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">2</span>Registro de ventas</b>Base imponible y IGV de las ventas.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">3</span>Registro de compras</b>Base imponible y IGV de las compras.</div>'+
-    '</div><div class="cadena">'+
-    '<div class="ps"><b><span class="nn">4</span>Liquidación del IGV</b>Débito menos crédito fiscal.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">5</span>Pago a cuenta</b>Ingresos netos por el coeficiente.</div>'+
-    '<span class="fl">›</span>'+
-    '<div class="ps"><b><span class="nn">6</span>Formulario 621</b>Se declara y queda la constancia.</div>'+
+{ et:'Paso 2', t:'Pon tus apellidos y nombres',
+  h:'<p class="enc"><span class="pn">2</span> Pon tus apellidos y nombres</p>'+
+    '<p class="sub">Esto es lo más importante de toda la actividad</p>'+
+    globo(P.idea,false,'En la pantalla de entrada hay un campo amarillo que dice <b>Apellidos y '+
+      'Nombres del estudiante</b>. <b>Escríbelo ahí</b>. Ese nombre es el que sale en el PDF y en '+
+      'los reportes. Si lo dejas oculto, el PDF saldrá a nombre de <b>USER</b> y <b>no se podrá '+
+      'saber que es tuyo</b>.','¡Ojo con esto!')+
+    '<div class="mock">'+
+      '<div class="mk-fila"><span class="mk-et">👤 Apellidos y Nombres del estudiante</span>'+
+      '<span class="mk-sw"><i></i></span></div>'+
+      '<div class="mk-campo">MAMANI ROQUE, EDUARDO LUIS</div>'+
+      '<div class="mk-pie">Aparecerá en los PDF y reportes que generes. Si lo ocultas, se usará <b>USER</b>.</div>'+
     '</div>'+
-    globo(P.expl,true,'El error clásico: llevar al 621 el <b>importe total con IGV</b> en vez de la '+
-      '<b>base imponible</b>. En el formulario van las bases; el IGV se declara aparte.') },
+    '<div class="av"><b>Sin nombre no hay nota.</b> Un PDF que dice USER no se puede calificar: '+
+    'no hay forma de saber de quién es.</div>' },
 
-{ et:'Práctica', t:'¿710 o 621?', tipo:'clas',
-  h:'<p class="enc">¿710 o 621?</p>'+
-    '<p class="sub">Para tenerlo claro antes de empezar · elige el formulario de cada caso</p>' },
-
-{ et:'Simulador', t:'El simulador TaxLab 360',
-  h:'<p class="enc">Dónde se trabaja: el simulador</p>'+
-    '<p class="sub">Un entorno que imita SUNAT Operaciones en Línea, para practicar sin riesgo</p>'+
-    globo(P.pres,false,'La actividad <b>no se hace en la SUNAT real</b>. Se hace en el simulador, '+
-      'que reproduce la pantalla de SOL y los formularios. Así el estudiante se equivoca, corrige y '+
-      'vuelve a intentar sin ninguna consecuencia.','Importante:')+
-    '<div class="dos">'+
-    '<div class="fc f710"><h4>🔗 Cómo se entra</h4><div class="c">'+
-      '<p>Se abre el enlace del simulador y se ingresa como en SOL: RUC, usuario y clave del caso.</p>'+
-      '<p style="word-break:break-all"><b>'+esc(SIM)+'</b></p>'+
-      '<p><a class="o-btn o-btn-teal" href="'+esc(SIM)+'" target="_blank" rel="noopener">↗ Abrir el simulador</a></p>'+
-      '</div></div>'+
-    '<div class="fc f621"><h4>✅ Qué se espera de la sesión</h4><div class="c">'+
-      '<ul><li>Que ubique el formulario que le toca.</li>'+
-      '<li>Que llene las casillas con <b>sus</b> datos.</li>'+
-      '<li>Que revise el cuadre antes de enviar.</li>'+
-      '<li>Que guarde la <b>constancia</b> de lo presentado.</li></ul>'+
-      '</div></div>'+
+{ et:'Paso 3', t:'Usuario y contraseña',
+  h:'<p class="enc"><span class="pn">3</span> Entra con la clave de práctica</p>'+
+    '<p class="sub">La misma para todos · no es una clave real de la SUNAT</p>'+
+    '<div class="claves">'+
+      '<div class="cl"><span class="k">Usuario</span><span class="v">SIST</span></div>'+
+      '<div class="cl"><span class="k">Contraseña</span><span class="v">NORTON</span></div>'+
     '</div>'+
-    '<div class="av" style="margin-top:12px"><b>Dilo en voz alta en clase:</b> es un <b>prototipo</b> '+
-    'con fines educativos, no tiene efectos tributarios y no reemplaza a la SUNAT. Por eso al final '+
-    'se pide la encuesta.</div>' },
+    '<p>El <b>RUC</b> es el de la empresa que te toque trabajar. El usuario y la contraseña son '+
+    'siempre los mismos: <b>SIST</b> y <b>NORTON</b>.</p>'+
+    globo(P.expl,true,'Si alguien no logra entrar, que revise que no haya quedado un espacio al '+
+      'escribir. Y recuerda: esta clave es solo del simulador, <b>no sirve ni se parece a una Clave '+
+      'SOL real</b>.') },
 
-{ et:'Entregable', t:'Qué entrega el estudiante',
-  h:'<p class="enc">Qué entrega el estudiante</p>'+
-    '<p class="sub">Lo mismo en los tres cursos, cambiando el formulario</p>'+
-    '<div class="envuelve"><table class="t"><thead><tr><th style="width:34%">Curso</th>'+
-    '<th style="width:20%">Formulario</th><th>Entregable</th></tr></thead><tbody>'+
-    '<tr class="f710"><td><b>Cierre Contable Tributario</b></td><td>FV <b>710</b></td>'+
-      '<td>Papeles de trabajo del cierre, detalle de adiciones y deducciones, y la constancia del 710 presentado en el simulador.</td></tr>'+
-    '<tr class="f710"><td><b>Sistemas Contables Integrados</b></td><td>FV <b>710</b></td>'+
-      '<td>Reportes del sistema que sustentan las cifras, y la constancia del 710 presentado en el simulador.</td></tr>'+
-    '<tr class="f621"><td><b>Sistemas de Procesos Contables</b></td><td><b>621</b></td>'+
-      '<td>Registro de ventas y de compras del mes, la liquidación del IGV y la constancia del 621 presentado.</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="nota" style="margin-top:12px"><b>Y en los tres:</b> la <b>encuesta del prototipo</b> '+
-    'llenada. Sin encuesta, la entrega se considera incompleta.</div>'+
-    '<p class="pie" style="margin-top:10px">La fecha de entrega, el formato del archivo y si es '+
-    'individual o en grupo son los que estén publicados en el aula virtual de cada curso.</p>' },
-
-{ et:'Evaluación', t:'Qué miramos al calificar',
-  h:'<p class="enc">Qué miramos al calificar</p>'+
-    '<p class="sub">Para que los tres cursos corrijan parecido</p>'+
-    '<div class="envuelve"><table class="t"><thead><tr><th style="width:32%">Criterio</th>'+
-    '<th>Qué se espera ver</th></tr></thead><tbody>'+
-    '<tr><td><b>Origen de los datos</b></td><td>Cada cifra del formulario se puede rastrear hasta un papel de trabajo o un reporte. Nada inventado.</td></tr>'+
-    '<tr><td><b>Formulario correcto</b></td><td>Usó el que le toca a su curso y ubicó bien las casillas.</td></tr>'+
-    '<tr><td><b>Exactitud del cálculo</b></td><td>El IGV, los reparos y el impuesto están bien determinados y el formulario cuadra.</td></tr>'+
-    '<tr><td><b>Sustento</b></td><td>Puede explicar por qué una partida es adición o deducción, o por qué un IGV no da crédito fiscal.</td></tr>'+
-    '<tr><td><b>Presentación y plazo</b></td><td>Entregó completo, ordenado y dentro de la fecha, con la constancia.</td></tr>'+
-    '</tbody></table></div>'+
-    globo(P.idea,false,'Un consejo para corregir: antes de mirar los importes, pregunta '+
-      '<b>«¿de dónde sacaste este número?»</b>. Esa sola pregunta separa al que entendió del que copió.')+
-    '<p class="pie">Los pesos de cada criterio son los de la rúbrica publicada en el aula virtual; '+
-    'esta lámina es la guía de criterio común.</p>' },
-
-{ et:'Errores', t:'Los errores que más se repiten',
-  h:'<p class="enc">Los errores que más se repiten</p>'+
-    '<p class="sub">Avísalos antes, no después de corregir</p>'+
+{ et:'Paso 4', t:'Elige tu empresa',
+  h:'<p class="enc"><span class="pn">4</span> Elige tu empresa</p>'+
+    '<p class="sub">Está en el botón del gatito, abajo a la derecha</p>'+
     '<div class="dos">'+
-    '<div class="fc f621"><h4>En el 621</h4><div class="c"><ul>'+
-      '<li>Poner el <b>importe total con IGV</b> donde va la base imponible.</li>'+
-      '<li>Tomar como crédito fiscal un IGV de compras <b>que no da derecho</b>.</li>'+
-      '<li>Olvidar el <b>saldo a favor</b> del mes anterior.</li>'+
-      '<li>Confundir el coeficiente con el porcentaje en el pago a cuenta.</li>'+
-      '</ul></div></div>'+
-    '<div class="fc f710"><h4>En el 710</h4><div class="c"><ul>'+
-      '<li>Declarar la <b>utilidad contable</b> como si fuera la renta neta imponible.</li>'+
-      '<li>Adiciones y deducciones <b>sin sustento</b> ni base legal.</li>'+
-      '<li>No aplicar los <b>pagos a cuenta</b> del año como crédito.</li>'+
-      '<li>Que el balance de comprobación <b>no cuadre</b> con los estados financieros.</li>'+
-      '</ul></div></div>'+
+    '<div><p>Abajo a la derecha de la pantalla hay un botón redondo con un <b>gatito</b> que dice '+
+      '<b>Opciones</b>. Ahí adentro están <b>Empresas</b> y <b>Encuesta</b>.</p>'+
+      '<p>Entra a <b>Empresas</b> y elige la que te corresponde trabajar. Si te equivocas de empresa, '+
+      'todos los datos saldrán mal.</p>'+
+      '<div class="nota"><b>Ese mismo botón</b> es el que usarás al final para la encuesta.</div></div>'+
+    '<div class="mock gato">'+
+      '<div class="gt"><span class="ava">🐱</span><span class="tx"><b>Opciones</b>'+
+      '<span>Empresas · Encuesta</span></span></div>'+
+      '<div class="mk-pie" style="text-align:center">Así se ve, abajo a la derecha</div>'+
     '</div>'+
-    '<div class="av" style="margin-top:12px"><b>Y el de siempre, en los dos:</b> entregar la captura '+
-    'del formulario sin los papeles de trabajo. La captura sola no prueba que entendió.</div>' },
-
-{ et:'Encuesta', t:'La encuesta del prototipo',
-  h:'<p class="enc">La encuesta del prototipo</p>'+
-    '<p class="sub">Es parte de la actividad, no un extra</p>'+
-    globo(P.pres,false,'Al terminar, cada estudiante llena una <b>encuesta corta</b> sobre cómo '+
-      'funcionó el simulador: qué le resultó claro, qué se trabó, qué le faltó. Eso es lo que nos '+
-      'permite mejorarlo para el próximo ciclo.','Último paso:')+
-    '<div class="dos">'+
-    '<div class="fc f710"><h4>📝 Qué se pregunta</h4><div class="c"><ul>'+
-      '<li>Si el simulador se parece a lo que esperaba encontrar.</li>'+
-      '<li>Si pudo completar el formulario sin trabarse.</li>'+
-      '<li>Qué parte le costó más.</li>'+
-      '<li>Qué agregaría o quitaría.</li>'+
-      '</ul></div></div>'+
-    '<div class="fc f621"><h4>🔗 Dónde está</h4><div class="c">'+
-      '<p style="word-break:break-all"><b>'+esc(ENC)+'</b></p>'+
-      '<p><a class="o-btn o-btn-teal" href="'+esc(ENC)+'" target="_blank" rel="noopener">↗ Abrir la encuesta</a></p>'+
-      '<p>Toma menos de tres minutos. Conviene pedirla <b>en la misma sesión</b>, antes de que se vayan.</p>'+
-      '</div></div>'+
     '</div>' },
 
-{ et:'Cierre', t:'Antes de cerrar la sesión', tipo:'check',
-  h:'<p class="enc">Antes de cerrar la sesión</p>'+
-    '<p class="sub">Repasa esta lista con el grupo · márcala a medida que la cumplan</p>' }
+{ et:'Paso 5', t:'Llena tu formulario',
+  h:'<p class="enc"><span class="pn">5</span> Llena tu formulario</p>'+
+    '<p class="sub">El que le toca a tu curso, con los datos que tú trabajaste</p>'+
+    '<div class="dos">'+
+    '<div class="fc f710"><h4>📘 Si te toca el 710</h4><div class="c">'+
+      '<ul><li>Es la declaración <b>anual</b>.</li>'+
+      '<li>Los importes salen de tu <b>cierre contable</b> y de tus papeles de trabajo.</li>'+
+      '<li>Revisa que cuadre antes de enviarlo.</li></ul></div></div>'+
+    '<div class="fc f621"><h4>📙 Si te toca el 621</h4><div class="c">'+
+      '<ul><li>Es la declaración <b>mensual</b>.</li>'+
+      '<li>Los importes salen de tus <b>registros de ventas y de compras</b> del mes.</li>'+
+      '<li>Van las bases imponibles; el IGV se declara aparte.</li></ul></div></div>'+
+    '</div>'+
+    globo(P.idea,false,'Lo que se evalúa no es teclear rápido: es que puedas decir <b>de dónde salió '+
+      'cada número</b>. Si no sabes de qué papel de trabajo viene una cifra, esa cifra no vale.') },
+
+{ et:'Paso 6', t:'Finaliza la simulación',
+  h:'<p class="enc"><span class="pn">6</span> Presiona el botón rojo</p>'+
+    '<p class="sub">Sin este paso no hay reporte, y sin reporte no hay entrega</p>'+
+    '<div class="mock rojo"><div class="btr">🏁 Finalizar simulación</div>'+
+      '<div class="mk-pie" style="text-align:center">Está al final de la pantalla</div></div>'+
+    '<div class="cadena" style="margin-top:4px">'+
+    '<div class="ps"><b><span class="nn">1</span>Botón rojo</b>Presionas <b>Finalizar simulación</b>.</div>'+
+    '<span class="fl">›</span>'+
+    '<div class="ps"><b><span class="nn">2</span>La encuesta</b>Aparece sola y la respondes.</div>'+
+    '<span class="fl">›</span>'+
+    '<div class="ps"><b><span class="nn">3</span>El PDF</b>Se genera el reporte de simulación.</div>'+
+    '</div>'+
+    '<div class="av"><b>El orden importa:</b> primero el botón rojo, después la encuesta, y recién '+
+    'ahí sale el PDF. Si cierras la ventana antes, te quedas sin reporte y hay que volver a hacerlo.</div>' },
+
+{ et:'Encuesta', t:'La encuesta y el PDF',
+  h:'<p class="enc">La encuesta y el reporte en PDF</p>'+
+    '<p class="sub">La encuesta es obligatoria · el PDF es tu entregable</p>'+
+    globo(P.pres,false,'La encuesta sale sola al presionar el botón rojo. Son pocas preguntas: qué '+
+      'módulo usaste, qué tan fácil te resultó, si te ayudó a entender y si lo recomendarías. '+
+      '<b>Responderla con sinceridad es lo que nos permite mejorar el simulador.</b>','Muy importante:')+
+    '<div class="dos">'+
+    '<div class="fc f621"><h4>📝 La encuesta</h4><div class="c"><ul>'+
+      '<li>Aparece al presionar <b>Finalizar simulación</b>.</li>'+
+      '<li>Elige el <b>módulo</b> que usaste: FV 710 o FV 621.</li>'+
+      '<li>Califica con estrellas y responde las preguntas.</li>'+
+      '<li>También puedes abrirla desde el botón del gatito.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc f710"><h4>📄 El reporte en PDF</h4><div class="c"><ul>'+
+      '<li>Se genera después de la encuesta.</li>'+
+      '<li>Trae el <b>resumen de todo lo que hiciste</b> en la simulación.</li>'+
+      '<li>Lleva <b>tu nombre</b>, si lo escribiste al entrar.</li>'+
+      '<li>Ese PDF es lo que subes al aula virtual.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+{ et:'Control', t:'Lista de control', tipo:'check',
+  h:'<p class="enc">Antes de dar por terminado</p>'+
+    '<p class="sub">Siete puntos · márcalos a medida que los cumplas</p>' },
+
+{ et:'Asistencia', t:'Registro de asistencia', tipo:'asis',
+  h:'<p class="enc">Registro de asistencia</p>'+
+    '<p class="sub">Déjanos tus datos para dejar constancia de que participaste</p>' }
 ];
 
 /* =================== estado =================== */
 var LS='aa4_v1';
-var G={ clas:{}, mal:{}, check:{}, visto:{} };
+var G={ clas:{}, mal:{}, check:{}, visto:{}, asis:{}, firma:null };
 try{
   var d=JSON.parse(localStorage.getItem(LS)||'null');
   if(d && typeof d==='object'){
     G.clas=d.clas||{}; G.mal=d.mal||{}; G.check=d.check||{}; G.visto=d.visto||{};
+    G.asis=d.asis||{}; G.firma=d.firma||null;
   }
 }catch(e){}
 function graba(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
@@ -560,10 +579,10 @@ function vistaClas(){
   });
   var n=0; CLAS.forEach(function(c,k){ if(G.clas[k]===c.ok) n++; });
   h+='<div class="nota" style="margin-top:12px">'+(n===CLAS.length
-      ? '<b>Los seis bien.</b> La regla corta: si la pregunta dice <b>«del mes»</b>, es 621; si dice '+
-        '<b>«del ejercicio»</b> o <b>«anual»</b>, es 710.'
-      : 'Llevas <b>'+n+' de '+CLAS.length+'</b>. Pista: fíjate si el caso habla de un <b>mes</b> o de '+
-        'todo el <b>año</b>.')+'</div>';
+      ? '<b>Los tres bien.</b> Regla corta: declaración <b>anual</b> de renta &rarr; <b>FV 710</b>; '+
+        'declaración <b>mensual</b> de IGV y pago a cuenta &rarr; <b>FV 621</b>.'
+      : 'Llevas <b>'+n+' de '+CLAS.length+'</b>. Pista: fíjate si el curso declara el <b>mes</b> '+
+        'o todo el <b>año</b>.')+'</div>';
   return h;
 }
 
@@ -584,6 +603,108 @@ function vistaCheck(){
   return h;
 }
 
+function vistaAsis(){
+  if(G.firma){
+    var f=G.firma;
+    return globo(P.bien,false,'Tu asistencia quedó registrada a nombre de <b>'+esc(f.nombre)+'</b> '+
+        'en <b>'+esc(f.curso)+'</b>. Ya puedes cerrar la clase: lo que falta es subir el PDF del '+
+        'reporte al aula virtual.','¡Registrado!')+
+      '<div class="aviso ok" style="max-width:620px">Registrado el <b>'+esc(f.cuando)+'</b> &middot; '+
+      'si te equivocaste en algún dato, <button type="button" class="otravez">regístrate de nuevo</button>.</div>';
+  }
+  var a=G.asis||{};
+  var h=globo(P.expl,true,'Escribe tus <b>apellidos y nombres igual que en el simulador</b>. '+
+      'Así podemos cruzar tu asistencia con el reporte en PDF que subas.','Último paso:');
+  h+='<form class="form" id="fAsis" novalidate>'+
+     '<label class="cp todo"><span>Apellidos y nombres <i>*</i></span>'+
+       '<input type="text" name="nombre" autocomplete="name" maxlength="90" '+
+       'placeholder="Ramírez Quispe, Ana Lucía" value="'+esc(a.nombre||'')+'"></label>'+
+     '<label class="cp"><span>Correo institucional <i>*</i></span>'+
+       '<input type="email" name="correo" autocomplete="email" maxlength="90" '+
+       'placeholder="usuario@certus.edu.pe" value="'+esc(a.correo||'')+'"></label>'+
+     '<label class="cp"><span>Curso <i>*</i></span><select name="curso">'+
+       '<option value="">— elige tu curso —</option>'+
+       CURSOS.map(function(c){
+         return '<option value="'+esc(c)+'"'+(a.curso===c?' selected':'')+'>'+esc(c)+'</option>';
+       }).join('')+
+       '</select></label>'+
+     '<label class="cp"><span>Formulario que llenaste</span><select name="formulario">'+
+       ['','FV 710 · renta anual','FV 621 · IGV mensual','Todavía no lo llené'].map(function(o){
+         return '<option value="'+esc(o)+'"'+(a.formulario===o?' selected':'')+'>'+
+                (o||'— elige —')+'</option>';
+       }).join('')+
+       '</select></label>'+
+     '<label class="cp"><span>¿Desde dónde trabajaste?</span><select name="equipo">'+
+       ['','Computadora','Celular','Las dos'].map(function(o){
+         return '<option value="'+esc(o)+'"'+(a.equipo===o?' selected':'')+'>'+(o||'— elige —')+'</option>';
+       }).join('')+
+       '</select></label>'+
+     '<label class="cp todo"><span>¿Algo que informar del simulador? (opcional)</span>'+
+       '<textarea name="comentario" maxlength="400" placeholder="Si algo no cargó, si una casilla no '+
+       'calculó, si el PDF no salió… cuéntalo aquí.">'+esc(a.comentario||'')+'</textarea></label>'+
+     '<div class="aviso err" id="avAsis" hidden></div>'+
+     '<button type="submit" class="env todo">Registrar mi asistencia</button>'+
+     '</form>'+
+     '<p class="nota" style="margin-top:12px;max-width:620px">Se guarda solo lo que escribes aquí: '+
+     'nombre, correo, curso y tu comentario. No se guarda nada más.</p>';
+  return h;
+}
+
+function guardaCampos(f){
+  G.asis={};
+  qq('input,select,textarea', f).forEach(function(c){
+    if(c.name) G.asis[c.name]=c.value;
+  });
+  graba();
+}
+
+function enviaAsis(f){
+  var av=$('avAsis'), bt=qq('button.env', f)[0];
+  guardaCampos(f);
+  var a=G.asis;
+  function falla(msg, campo){
+    qq('.cp', f).forEach(function(x){ x.classList.remove('mal'); });
+    if(campo){
+      var c=qq('[name="'+campo+'"]', f)[0];
+      if(c){ c.parentNode.classList.add('mal'); c.focus(); }
+    }
+    av.className='aviso err'; av.innerHTML=msg; av.hidden=false;
+  }
+  var nom=(a.nombre||'').trim();
+  if(nom.length<6 || nom.indexOf(' ')<0) return falla('Escribe tus <b>apellidos y nombres</b> completos.','nombre');
+  var cor=(a.correo||'').trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cor)) return falla('Revisa tu <b>correo</b>: falta el @ o el punto.','correo');
+  if(!a.curso) return falla('Elige el <b>curso</b> en el que estás.','curso');
+
+  qq('.cp', f).forEach(function(x){ x.classList.remove('mal'); });
+  av.className='aviso'; av.innerHTML='Registrando…'; av.hidden=false;
+  bt.disabled=true;
+
+  var fila={ nombre:nom, correo:cor, curso:a.curso,
+             formulario:a.formulario||null, equipo:a.equipo||null,
+             comentario:(a.comentario||'').trim()||null };
+
+  fetch(SUPA+'/rest/v1/'+TABLA, { method:'POST',
+    headers:{ apikey:ANON, Authorization:'Bearer '+ANON,
+              'Content-Type':'application/json', Prefer:'return=minimal' },
+    body:JSON.stringify(fila) })
+  .then(function(r){
+    if(!r.ok) return r.text().then(function(t){ throw new Error(t||('HTTP '+r.status)); });
+    var ahora=new Date();
+    G.firma={ nombre:nom, curso:a.curso,
+              cuando:ahora.toLocaleDateString('es-PE')+' a las '+
+                     ahora.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit',hour12:false}) };
+    graba(); pinta();
+  })
+  .catch(function(e){
+    bt.disabled=false;
+    av.className='aviso err';
+    av.innerHTML='No se pudo registrar. Revisa tu conexión y vuelve a presionar el botón. '+
+                 'Si sigue fallando, avísale al docente.<br><span style="font-size:12px;opacity:.75">'+
+                 esc(String(e && e.message || e)).slice(0,160)+'</span>';
+  });
+}
+
 function pinta(){
   var s=D[i];
   G.visto[i]=1; graba();
@@ -593,6 +714,7 @@ function pinta(){
   var h=s.h||'';
   if(s.tipo==='clas') h+=vistaClas();
   if(s.tipo==='check') h+=vistaCheck();
+  if(s.tipo==='asis') h+=vistaAsis();
   $('lam').innerHTML=h;
   $('lam').scrollTop=0;
   $('ant').disabled=(i===0);
@@ -621,6 +743,16 @@ function cablea(){
         }
       });
     });
+  });
+  var f=$('fAsis');
+  if(f){
+    f.addEventListener('submit', function(e){ e.preventDefault(); enviaAsis(f); });
+    qq('input,select,textarea', f).forEach(function(c){
+      c.addEventListener('change', function(){ guardaCampos(f); });
+    });
+  }
+  qq('#lam .otravez').forEach(function(b){
+    b.addEventListener('click', function(){ G.firma=null; graba(); pinta(); });
   });
   qq('#lam .ck[data-c]').forEach(function(x){
     function alterna(){ var k=+x.dataset.c; G.check[k]=G.check[k]?0:1; graba(); pinta(); }
