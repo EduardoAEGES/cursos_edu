@@ -192,6 +192,65 @@
                color:var(--o-muted); padding:2px 0; }
   .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
 
+  /* botón y ventana flotante de ayuda */
+  .bAy{ font:inherit; font-size:11.5px; font-weight:800; cursor:pointer; flex:none;
+        border:1.5px solid #B08D4F; background:#FBF3DF; color:#7A5A1E;
+        border-radius:8px; padding:4px 10px; }
+  .bAy:hover{ background:#F6E9CC; border-color:#8A6B32; }
+
+  .velo{ position:fixed; inset:0; background:rgba(28,22,12,.55); z-index:9990;
+         display:flex; align-items:flex-start; justify-content:center; padding:18px 14px;
+         overflow:auto; animation:aparece .18s ease; }
+  @keyframes aparece{ from{opacity:0} to{opacity:1} }
+  .ficha{ width:min(720px,100%); background:#FBF6E8; border:3px solid #3B2E18;
+          border-radius:6px; box-shadow:0 18px 50px rgba(0,0,0,.4);
+          animation:sube .22s ease; margin:auto; }
+  @keyframes sube{ from{ transform:translateY(14px); opacity:.6 } to{ transform:none; opacity:1 } }
+  .ficha .fh{ display:flex; gap:11px; align-items:center; padding:13px 16px;
+              border-bottom:3px double #3B2E18; }
+  .ficha .fh .ic{ font-size:26px; flex:none; }
+  .ficha .fh h4{ margin:0; font-size:27px; font-weight:800; letter-spacing:.04em;
+                 color:#241B0C; line-height:1; }
+  .ficha .fh p{ margin:4px 0 0; font-size:12.5px; line-height:1.5; color:#5B4A2A; }
+  .ficha .fh .x{ margin-left:auto; flex:none; font:inherit; font-size:18px; font-weight:800;
+                 cursor:pointer; border:2px solid #3B2E18; background:#F0E6CE; color:#3B2E18;
+                 border-radius:6px; width:32px; height:32px; line-height:1; }
+  .ficha .fh .x:hover{ background:#E4D6B4; }
+  .ficha .fc{ padding:14px 16px 16px; }
+  .ficha .sub{ font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+               color:#5B4A2A; margin:0 0 6px; }
+  .ficha table{ width:100%; border-collapse:collapse; font-size:13px; margin:0 0 13px;
+                border:2px solid #3B2E18; background:#fff; }
+  .ficha th{ background:#241B0C; color:#F7F1E1; font-size:10.5px; font-weight:800;
+             letter-spacing:.06em; text-transform:uppercase; padding:7px 10px; text-align:center;
+             border-right:1px solid #5B4A2A; }
+  .ficha th:last-child{ border-right:0; }
+  .ficha td{ padding:7px 10px; border-top:1px solid #CBBD9B; border-right:1px solid #CBBD9B;
+             text-align:center; color:#33281A; }
+  .ficha td:last-child{ border-right:0; }
+  .ficha td.cc{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
+                color:#241B0C; white-space:nowrap; }
+  .ficha td.vd{ color:#8A2B12; font-weight:700; }
+  .ficha .cols{ display:grid; grid-template-columns:1fr; gap:11px; }
+  @media (min-width:580px){ .ficha .cols{ grid-template-columns:1fr 1fr; } }
+  .ficha .rec{ border:2px solid #8A6B32; border-radius:5px; padding:9px 12px;
+               background:#F5EBD2; font-size:12.5px; line-height:1.6; color:#4A3A1C; }
+  .ficha .rec b.t{ display:block; font-size:13px; color:#241B0C; margin-bottom:4px; }
+  .ficha .rec ul{ margin:4px 0 0; padding-left:18px; } .ficha .rec li{ padding:1.5px 0; }
+  .ficha .rec.ej{ background:#FBEDE4; border-color:#A8542E; }
+  .ficha .rec.ej .fil{ display:flex; justify-content:space-between; gap:10px; padding:2px 0; }
+  .ficha .rec.ej .fil b{ color:#8A2B12; }
+  .ficha .nota{ border:2px dashed #8A6B32; border-radius:5px; padding:9px 12px; background:#F7F0DC;
+                font-size:12.5px; line-height:1.6; color:#4A3A1C; margin-top:11px; }
+  .ficha .nota b{ color:#241B0C; }
+  .ficha .tres3{ display:grid; grid-template-columns:1fr; gap:8px; align-items:stretch; margin-top:4px; }
+  @media (min-width:600px){ .ficha .tres3{ grid-template-columns:1fr 1fr 1fr; } }
+  .ficha .tj{ border:2px solid #3B2E18; border-radius:5px; padding:8px 10px; text-align:center;
+              font-size:12px; line-height:1.45; color:#33281A; }
+  .ficha .tj b{ display:block; font-size:12.5px; margin-bottom:3px; }
+  .ficha .tj.deb{ background:#F6DDD8; } .ficha .tj.cre{ background:#FBEFD2; }
+  .ficha .tj.pag{ background:#DEE3EC; }
+
   #confeti{ position:fixed; inset:0; pointer-events:none; z-index:9998; display:none; }
 
   @media (max-width:640px){
@@ -309,59 +368,144 @@ function baraja(a){
   return a;
 }
 
-/* =================== plan de cuentas =================== */
+/* =================== plan de cuentas · catálogo del curso =================== */
 var CU={
-  '12': { n:'Cuentas por cobrar comerciales — terceros' },
-  '13': { n:'Cuentas por cobrar comerciales — relacionadas' },
-  '16': { n:'Cuentas por cobrar diversas — terceros' },
-  '40': { n:'Tributos por pagar — IGV' },
-  '41': { n:'Remuneraciones por pagar' },
-  '49': { n:'Pasivo diferido' },
-  '70': { n:'Ventas' },
-  '73': { n:'Descuentos obtenidos' },
-  '75': { n:'Otros ingresos de gestión' },
-  '101':{ n:'Caja' },
-  '102':{ n:'Fondos fijos' },
-  '104':{ n:'Cuentas corrientes en instituciones financieras' },
-  '60': { n:'Compras' },
-  '63': { n:'Gastos de servicios prestados por terceros' },
-  '42': { n:'Cuentas por pagar comerciales — terceros' },
-  '46': { n:'Cuentas por pagar diversas — terceros' },
-  '20': { n:'Mercaderías' },
-  '24': { n:'Materias primas' },
-  '25': { n:'Materiales auxiliares, suministros y repuestos' },
-  '61': { n:'Variación de existencias' },
-  '69': { n:'Costo de ventas' }
+  /* elemento 1 */
+  '101':  'Caja',
+  '102':  'Fondos fijos',
+  '1031': 'Efectivo en tránsito',
+  '1041': 'Cuentas corrientes operativas',
+  '1042': 'Cuentas corrientes para fines específicos',
+  '1051': 'Otros equivalentes al efectivo',
+  '1211': 'Facturas, boletas y otros comprobantes por cobrar — No emitidas',
+  '1212': 'Facturas, boletas y otros comprobantes por cobrar — En cartera',
+  '1213': 'Facturas, boletas y otros comprobantes por cobrar — En cobranza',
+  '1312': 'Facturas por cobrar — relacionadas, en cartera',
+  /* elemento 2 */
+  '20111':'Mercaderías — Costo',
+  '21111':'Productos terminados — Costo',
+  '24111':'Materias primas — Costo',
+  '251':  'Materiales auxiliares',
+  '2524': 'Otros suministros',
+  '253':  'Repuestos',
+  '261':  'Envases',
+  /* elemento 4 */
+  '40111':'IGV — Cuenta propia',
+  '40113':'IGV — Régimen de percepciones',
+  '40114':'IGV — Régimen de retenciones',
+  '40115':'IGV — Importaciones',
+  '4211': 'Facturas, boletas y otros comprobantes por pagar — No emitidas',
+  '4212': 'Facturas, boletas y otros comprobantes por pagar — Emitidas',
+  '4312': 'Facturas por pagar — relacionadas, emitidas',
+  '422':  'Anticipos otorgados',
+  '423':  'Letras por pagar',
+  /* elemento 6 */
+  '6011': 'Mercaderías',
+  '602':  'Materias primas',
+  '6031': 'Materiales auxiliares',
+  '6032': 'Suministros',
+  '6041': 'Envases',
+  '6111': 'Variación de existencias — mercaderías',
+  '612':  'Variación de existencias — materias primas',
+  '6132': 'Variación de existencias — suministros',
+  /* elemento 7 */
+  '70111':'Mercaderías — venta de exportación, terceros',
+  '70121':'Mercaderías — venta local, terceros',
+  '70122':'Mercaderías — venta local, relacionadas',
+  '70221':'Productos terminados — venta local, terceros'
 };
+function cuenta(c){ return CU[c]||c; }
+function corto(c){ return (CU[c]||c).split(' —')[0].split(',')[0]; }
+
+/* las tres alternativas de cada familia: la correcta primero */
 var OPC={
-  cobrar: ['12','13','16'],
-  tributo:['40','41','49'],
-  venta:  ['70','73','75'],
-  caja:   ['101','102','104'],
-  banco:  ['104','101','102'],
-  compra: ['60','61','63'],
-  pagar:  ['42','40','46'],
-  alm20:  ['20','24','25'],
-  alm24:  ['24','20','25'],
-  alm25:  ['25','20','24'],
-  vari:   ['61','69','60']
+  cobrar: ['1212','1211','1213'],
+  igv:    ['40111','40113','40114'],
+  venta:  ['70121','70111','70221'],
+  caja:   ['101','102','1031'],
+  banco:  ['1041','1042','1051'],
+  cpMerc: ['6011','602','6032'],
+  cpMp:   ['602','6011','6032'],
+  cpSum:  ['6032','6011','602'],
+  pagar:  ['4212','4211','4312'],
+  alMerc: ['20111','24111','2524'],
+  alMp:   ['24111','20111','2524'],
+  alSum:  ['2524','20111','24111'],
+  vaMerc: ['6111','612','6132'],
+  vaMp:   ['612','6111','6132'],
+  vaSum:  ['6132','6111','612']
 };
 
 /* =================== plantillas de la chuleta, por bloque =================== */
 var PLAN={
   vta:[ { k:'vta', ic:'🧍', t:'VENTA', l:[
-      ['12','d','el total con IGV'], ['40','h','el IGV'], ['70','h','el valor de la venta'] ] } ],
+      ['1212','d','el importe total'], ['40111','h','el IGV'], ['70121','h','el valor de venta'] ] } ],
   cob:[ { k:'cob', ic:'💵', t:'COBRO al cliente', l:[
-      ['101 ó 104','d','el total que entra'], ['12','h','el mismo total'] ] } ],
-  cmp:[ { k:'cmp', ic:'🛒', t:'COMPRA', l:[
-      ['60','d','el valor de la compra'], ['40','d','el IGV'], ['42','h','el total con IGV'] ] },
-    { k:'des', ic:'🏬', t:'DESTINO al almacén', l:[
-      ['20 · 24 · 25','d','el valor, sin IGV'], ['61','h','el mismo valor'] ] } ],
+      ['101 · 1041','d','el importe total'], ['1212','h','el mismo importe'] ] } ],
+  cmp:[ { k:'cmp', ic:'🛒', t:'COMPRA · asiento de naturaleza', l:[
+      ['60XX','d','el valor de compra'], ['40111','d','el IGV'], ['4212','h','el importe total'] ] },
+    { k:'des', ic:'🏬', t:'COMPRA · asiento de destino', l:[
+      ['20111 · 24111 · 2524','d','el valor de compra'], ['61XX','h','el mismo valor'] ] } ],
   pag:[ { k:'pag', ic:'🤝', t:'PAGO al proveedor', l:[
-      ['42','d','lo que se paga'], ['101 ó 104','h','el mismo importe'] ] } ]
+      ['4212','d','el importe total'], ['101 · 1041','h','el mismo importe'] ] } ]
 };
 var NOMT={ vta:'Venta', cob:'Cobro', cmp:'Compra', des:'Destino', pag:'Pago' };
 
+/* =================== la guía flotante, por operación =================== */
+var GUIA={
+ vta:{ t:'VENTA', ic:'🧾',
+   d:'Se reconoce el derecho de cobro, el ingreso por la venta y el IGV generado.',
+   tabs:[ { t:'Asiento de la venta', f:[
+       ['1212 / 1312','Importe total',''],
+       ['40111','','IGV'],
+       ['70XX','','Valor venta'] ] } ],
+   form:{ t:'Fórmulas del IGV en la venta', l:[
+       'Valor venta = Importe total ÷ 1.18',
+       'IGV = Importe total − Valor venta',
+       'Importe total = Valor venta × 1.18' ] },
+   ej:{ t:'Ejemplo', l:[['Importe total','S/ 1,180'],['Valor venta','S/ 1,000'],['IGV','S/ 180']] },
+   nota:'La cuenta <b>1212</b> (clientes) aumenta porque nace el derecho de cobro. El <b>40111</b> '+
+        'se abona: ese IGV no es de la empresa, se le debe a la SUNAT. Y la <b>70XX</b> recoge solo '+
+        'el valor de venta, que es el ingreso real.' },
+
+ cob:{ t:'COBRO', ic:'💵',
+   d:'Se recibe el dinero del cliente y se cancela la cuenta por cobrar.',
+   tabs:[ { t:'Asiento del cobro', f:[
+       ['10XX','Importe total',''],
+       ['12XX','','Importe total'] ] } ],
+   nota:'La cuenta <b>10XX</b> (caja o bancos) aumenta porque se recibe el dinero, y la <b>12XX</b> '+
+        '(clientes) disminuye porque se cancela el derecho de cobro. Va el <b>importe total</b>, '+
+        'con IGV incluido: el IGV ya se registró al vender, así que aquí <b>no vuelve a aparecer</b>.' },
+
+ cmp:{ t:'COMPRA', ic:'🛒',
+   d:'Se reconoce la adquisición, el IGV como crédito fiscal y la obligación con el proveedor.',
+   tabs:[ { t:'Asiento de naturaleza', f:[
+       ['60XX','Valor compra',''],
+       ['40111','IGV',''],
+       ['4212 / 4312','','Importe total'] ] },
+     { t:'Asiento de destino', f:[
+       ['20XX','Valor compra',''],
+       ['61XX','','Valor compra'] ] } ],
+   cajita:{ t:'% Crédito fiscal',
+     x:'Es el IGV de las compras que cumple los requisitos de la SUNAT para ser utilizado contra el '+
+       'IGV de las ventas. Por eso en la compra el <b>40111</b> va al Debe.' },
+   nota:'El asiento de destino traslada el valor de la compra a la cuenta de inventarios, costos o '+
+        'gastos <b>según su destino</b>: <b>20111</b> si se revende, <b>24111</b> si se transforma, '+
+        '<b>2524</b> si se consume. Siempre con el valor <b>sin IGV</b>.' },
+
+ pag:{ t:'PAGO', ic:'🤝',
+   d:'Se cancela la deuda con el proveedor y sale el dinero.',
+   tabs:[ { t:'Asiento del pago', f:[
+       ['42XX / 43XX','Importe total',''],
+       ['10XX','','Importe total'] ] } ],
+   igv:{ t:'El IGV en las operaciones', l:[
+       ['Débito fiscal','IGV generado por las ventas','deb'],
+       ['Crédito fiscal','IGV de las compras que cumple los requisitos','cre'],
+       ['IGV por pagar','Débito fiscal − Crédito fiscal','pag'] ] },
+   nota:'Baja la <b>42XX</b> porque ya no se le debe al proveedor, y sale el dinero de la <b>10XX</b>. '+
+        'Ni IGV ni almacén: todo eso se registró cuando se compró.' }
+};
+function guiaDe(tipo){ return GUIA[tipo==='des'?'cmp':tipo]; }
 /* =================== los cuatro bloques =================== */
 var B=[
 { id:'vtas', t:'1 · Solo ventas', st:'Vender, nada más',
@@ -373,23 +517,23 @@ var B=[
   as:[
    { n:1, fe:'15/04/2025', tipo:'vta', pista:'antes',
      gl:'Venta de mercadería al contado a los clientes nuevos',
-     simple:'Vendimos por <b>S/ 5,310.00</b>. Primero se anota que el cliente debe pagar ese total (cuenta <b>12</b>). Ese total tiene dos partes: <b>S/ 810.00</b> de IGV, que después se entrega a la SUNAT (cuenta <b>40</b>), y <b>S/ 4,500.00</b>, que es el ingreso real de la venta (cuenta <b>70</b>).',
+     simple:'Vendimos por <b>S/ 5,310.00</b>. Primero se anota que el cliente debe pagar ese total (cuenta <b>1212</b>). Ese total tiene dos partes: <b>S/ 810.00</b> de IGV, que después se entrega a la SUNAT (cuenta <b>40111</b>), y <b>S/ 4,500.00</b>, que es el ingreso real de la venta (cuenta <b>70121</b>).',
      calc:{ et:'El IGV de la venta', op:'4,500.00 × 18 %', v:810 },
-     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:5310, q:'el cliente nos debe el total con IGV' },
-           { fam:'tributo',ok:'40', ld:'h', m:810,  q:'el IGV no es nuestro: se le entrega a la SUNAT' },
-           { fam:'venta',  ok:'70', ld:'h', m:4500, q:'esto sí es el ingreso de la empresa' } ] },
+     lin:[ { fam:'cobrar', ok:'1212', ld:'d', m:5310, q:'el cliente nos debe el total con IGV' },
+           { fam:'igv',    ok:'40111', ld:'h', m:810,  q:'el IGV no es nuestro: se le entrega a la SUNAT' },
+           { fam:'venta',  ok:'70121', ld:'h', m:4500, q:'esto sí es el ingreso de la empresa' } ] },
    { n:2, fe:'18/04/2025', tipo:'vta', pista:'despues',
      gl:'Venta de mercadería al crédito a Supermercados del Sur',
-     simple:'Misma estructura, pero al crédito: el cliente debe <b>S/ 33,040.00</b> (cuenta <b>12</b>), de los cuales <b>S/ 5,040.00</b> son IGV (cuenta <b>40</b>) y <b>S/ 28,000.00</b> es la venta (cuenta <b>70</b>). Que sea al crédito no cambia el asiento de la venta.',
-     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:33040, q:'la deuda del cliente, con IGV' },
-           { fam:'tributo',ok:'40', ld:'h', m:5040,  q:'el IGV de la venta' },
-           { fam:'venta',  ok:'70', ld:'h', m:28000, q:'el ingreso del periodo' } ] },
+     simple:'Misma estructura, pero al crédito: el cliente debe <b>S/ 33,040.00</b> (cuenta <b>1212</b>), de los cuales <b>S/ 5,040.00</b> son IGV (cuenta <b>40111</b>) y <b>S/ 28,000.00</b> es la venta (cuenta <b>70121</b>). Que sea al crédito no cambia el asiento de la venta.',
+     lin:[ { fam:'cobrar', ok:'1212', ld:'d', m:33040, q:'la deuda del cliente, con IGV' },
+           { fam:'igv',    ok:'40111', ld:'h', m:5040,  q:'el IGV de la venta' },
+           { fam:'venta',  ok:'70121', ld:'h', m:28000, q:'el ingreso del periodo' } ] },
    { n:3, fe:'25/04/2025', tipo:'vta', pista:'final',
      gl:'Venta de mercadería al crédito a Bodegas Unidas',
      simple:'Tercera venta, <b>S/ 23,600.00</b> en total: <b>S/ 3,600.00</b> de IGV y <b>S/ 20,000.00</b> de venta.',
-     lin:[ { fam:'cobrar', ok:'12', ld:'d', m:23600, q:'lo que nos debe Bodegas Unidas' },
-           { fam:'tributo',ok:'40', ld:'h', m:3600,  q:'el IGV de esta venta' },
-           { fam:'venta',  ok:'70', ld:'h', m:20000, q:'el valor de la venta' } ] } ],
+     lin:[ { fam:'cobrar', ok:'1212', ld:'d', m:23600, q:'lo que nos debe Bodegas Unidas' },
+           { fam:'igv',    ok:'40111', ld:'h', m:3600,  q:'el IGV de esta venta' },
+           { fam:'venta',  ok:'70121', ld:'h', m:20000, q:'el valor de la venta' } ] } ],
   cierre:'Las tres ventas dejan a los clientes debiendo <b>S/ 61,950.00</b> en la cuenta 12: '+
          '5,310.00 + 33,040.00 + 23,600.00. Esa es la plata que hay que cobrar en el bloque 2.' },
 
@@ -400,74 +544,75 @@ var B=[
        '<b>baja</b> la cuenta 12. Ojo: aquí el IGV <b>no aparece</b>, porque ya se registró en la venta.',
   previo:{ t:'Lo que ya está registrado · las ventas del bloque 1', as:[
      { n:1, fe:'15/04/2025', gl:'Venta al contado a los clientes nuevos',
-       l:[['12','d',5310],['40','h',810],['70','h',4500]] },
+       l:[['1212','d',5310],['40111','h',810],['70121','h',4500]] },
      { n:2, fe:'18/04/2025', gl:'Venta al crédito a Supermercados del Sur',
-       l:[['12','d',33040],['40','h',5040],['70','h',28000]] },
+       l:[['1212','d',33040],['40111','h',5040],['70121','h',28000]] },
      { n:3, fe:'25/04/2025', gl:'Venta al crédito a Bodegas Unidas',
-       l:[['12','d',23600],['40','h',3600],['70','h',20000]] } ],
+       l:[['1212','d',23600],['40111','h',3600],['70121','h',20000]] } ],
     pie:'La cuenta 12 tiene <b>S/ 61,950.00</b> por cobrar. Eso es lo que vas a cancelar ahora.' },
   as:[
    { n:4, fe:'15/04/2025', tipo:'cob', pista:'antes',
      gl:'Cobranza en efectivo de la venta a los clientes nuevos',
-     simple:'Los clientes nuevos pagaron en ese momento. Entra dinero a la caja (cuenta <b>101</b>) y la deuda del cliente queda en cero: se descarga de la cuenta <b>12</b>. Va el total, con IGV incluido.',
+     simple:'Los clientes nuevos pagaron en ese momento. Entra dinero a la caja (cuenta <b>101</b>) y la deuda del cliente queda en cero: se descarga de la cuenta <b>1212</b>. Va el total, con IGV incluido.',
      lin:[ { fam:'caja',  ok:'101', ld:'d', m:5310, q:'entra el efectivo a la caja' },
-           { fam:'cobrar',ok:'12',  ld:'h', m:5310, q:'el cliente ya no nos debe nada' } ] },
+           { fam:'cobrar',ok:'1212', ld:'h', m:5310, q:'el cliente ya no nos debe nada' } ] },
    { n:5, fe:'30/04/2025', tipo:'cob', pista:'despues',
      gl:'Cobranza de la factura de Supermercados del Sur',
-     simple:'Al cierre de abril el cliente paga por transferencia, <b>S/ 33,040.00</b>. El dinero entra a la cuenta del banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
-     lin:[ { fam:'banco', ok:'104', ld:'d', m:33040, q:'el dinero entra a la cuenta corriente' },
-           { fam:'cobrar',ok:'12',  ld:'h', m:33040, q:'baja lo que el cliente nos debe' } ] },
+     simple:'Al cierre de abril el cliente paga por transferencia, <b>S/ 33,040.00</b>. El dinero entra a la cuenta del banco (cuenta <b>1041</b>) y disminuye lo que nos deben (cuenta <b>1212</b>).',
+     lin:[ { fam:'banco', ok:'1041', ld:'d', m:33040, q:'el dinero entra a la cuenta corriente' },
+           { fam:'cobrar',ok:'1212', ld:'h', m:33040, q:'baja lo que el cliente nos debe' } ] },
    { n:6, fe:'31/05/2025', tipo:'cob', pista:'final',
      gl:'Cobranza de la factura de Bodegas Unidas',
-     simple:'En mayo paga el último cliente, <b>S/ 23,600.00</b>, también por transferencia: entra al banco (cuenta <b>104</b>) y baja la cuenta <b>12</b>.',
-     lin:[ { fam:'banco', ok:'104', ld:'d', m:23600, q:'entra a la cuenta corriente' },
-           { fam:'cobrar',ok:'12',  ld:'h', m:23600, q:'se cancela la última factura' } ] } ],
+     simple:'En mayo paga el último cliente, <b>S/ 23,600.00</b>, también por transferencia: entra al banco (cuenta <b>1041</b>) y baja la cuenta <b>1212</b>.',
+     lin:[ { fam:'banco', ok:'1041', ld:'d', m:23600, q:'entra a la cuenta corriente' },
+           { fam:'cobrar',ok:'1212', ld:'h', m:23600, q:'se cancela la última factura' } ] } ],
   cierre:'Cobrado <b>S/ 61,950.00</b>, exactamente lo que se había vendido: la cuenta 12 queda en '+
-         '<b>cero</b>. Ningún cobro movió la cuenta 40, porque el IGV ya se había registrado al vender.' },
+         '<b>cero</b>. Ningún cobro movió la cuenta 40111, porque el IGV ya se había registrado al vender.' },
 
-{ id:'cmps', t:'3 · Compras y su destino', st:'20, 24 y 25 contra 61',
+{ id:'cmps', t:'3 · Compras y su destino', st:'20111, 24111 y 2524 contra su 61',
   per:'personajes/profe-idea.webp', clase:'', chu:['cmp'],
   dice:'Aquí viene lo que más se olvida: <b>toda compra lleva dos asientos</b>. El primero reconoce '+
        'la compra y la deuda con el proveedor. El segundo, el <b>asiento de destino</b>, mete el bien '+
-       'al almacén. Y el almacén cambia según lo que compres: <b>20</b> mercaderías, <b>24</b> materias '+
-       'primas, <b>25</b> suministros. Los tres van contra la <b>61</b>, y siempre con el valor <b>sin IGV</b>.',
+       'al almacén. Y el almacén cambia según lo que compres: <b>20111</b> mercaderías, <b>24111</b> materias '+
+       'primas, <b>2524</b> suministros, cada uno con su variación. Siempre con el valor <b>sin IGV</b>.',
   as:[
    { n:7, fe:'30/04/2025', tipo:'cmp', pista:'antes',
      gl:'Compra de mercadería al Proveedor 1',
-     simple:'Compramos mercadería por <b>S/ 21,240.00</b>. El valor va a compras (cuenta <b>60</b>) y el IGV pagado a la cuenta <b>40</b>, porque se podrá descontar del IGV de las ventas. Lo que le debemos al proveedor se anota en la cuenta <b>42</b>.',
+     simple:'Compramos mercadería por <b>S/ 21,240.00</b>. El valor va a compras (cuenta <b>6011</b>) y el IGV pagado a la cuenta <b>40111</b>, porque se podrá descontar del IGV de las ventas. Lo que le debemos al proveedor se anota en la cuenta <b>4212</b>.',
      calc:{ et:'El IGV de la compra', op:'18,000.00 × 18 %', v:3240 },
-     lin:[ { fam:'compra', ok:'60', ld:'d', m:18000, q:'el valor de lo que compramos, sin IGV' },
-           { fam:'tributo',ok:'40', ld:'d', m:3240,  q:'este IGV sí es nuestro: es crédito fiscal' },
-           { fam:'pagar',  ok:'42', ld:'h', m:21240, q:'le debemos al proveedor el total con IGV' } ] },
+     lin:[ { fam:'cpMerc', ok:'6011', ld:'d', m:18000, q:'el valor de lo que compramos, sin IGV' },
+           { fam:'igv',    ok:'40111', ld:'d', m:3240,  q:'este IGV sí es nuestro: es crédito fiscal' },
+           { fam:'pagar',  ok:'4212', ld:'h', m:21240, q:'le debemos al proveedor el total con IGV' } ] },
    { n:8, fe:'30/04/2025', tipo:'des', pista:'antes',
      gl:'Destino: ingreso al almacén de la mercadería del Proveedor 1',
-     simple:'Es el asiento de destino. Lo comprado entra al almacén de <b>mercaderías</b> (cuenta <b>20</b>) contra la cuenta <b>61</b>. Va el valor sin IGV: <b>S/ 18,000.00</b>.',
-     lin:[ { fam:'alm20', ok:'20', ld:'d', m:18000, q:'mercadería comprada para revender: almacén 20' },
-           { fam:'vari',  ok:'61', ld:'h', m:18000, q:'la variación cierra el asiento de destino' } ] },
+     simple:'Es el asiento de destino. Lo comprado entra al almacén de <b>mercaderías</b> (cuenta <b>20111</b>) contra la cuenta <b>6111</b>. Va el valor sin IGV: <b>S/ 18,000.00</b>.',
+     lin:[ { fam:'alMerc', ok:'20111', ld:'d', m:18000, q:'mercadería comprada para revender: almacén 20' },
+           { fam:'vaMerc', ok:'6111', ld:'h', m:18000, q:'la variación cierra el asiento de destino' } ] },
    { n:9, fe:'30/04/2025', tipo:'cmp', pista:'despues',
      gl:'Compra de materia prima al Proveedor 2',
      simple:'Misma estructura: <b>S/ 11,210.00</b> en total, con <b>S/ 1,710.00</b> de IGV y <b>S/ 9,500.00</b> de valor. El asiento de la compra no cambia aunque lo comprado sea distinto.',
-     lin:[ { fam:'compra', ok:'60', ld:'d', m:9500,  q:'el valor de la compra' },
-           { fam:'tributo',ok:'40', ld:'d', m:1710,  q:'el IGV que podremos descontar' },
-           { fam:'pagar',  ok:'42', ld:'h', m:11210, q:'la deuda con el Proveedor 2' } ] },
+     lin:[ { fam:'cpMp',   ok:'602', ld:'d', m:9500,  q:'el valor de la compra' },
+           { fam:'igv',    ok:'40111', ld:'d', m:1710,  q:'el IGV que podremos descontar' },
+           { fam:'pagar',  ok:'4212', ld:'h', m:11210, q:'la deuda con el Proveedor 2' } ] },
    { n:10, fe:'30/04/2025', tipo:'des', pista:'despues',
      gl:'Destino: ingreso al almacén de la materia prima del Proveedor 2',
-     simple:'Aquí sí cambia el almacén: no es mercadería para revender, es <b>materia prima</b> para producir, así que va a la cuenta <b>24</b> contra la <b>61</b>.',
-     lin:[ { fam:'alm24', ok:'24', ld:'d', m:9500, q:'materia prima para producir: almacén 24' },
-           { fam:'vari',  ok:'61', ld:'h', m:9500, q:'la misma contrapartida de siempre' } ] },
+     simple:'Aquí sí cambia el almacén: no es mercadería para revender, es <b>materia prima</b> para producir, así que va a la cuenta <b>24111</b> contra la <b>612</b>.',
+     lin:[ { fam:'alMp',   ok:'24111', ld:'d', m:9500, q:'materia prima para producir: almacén 24' },
+           { fam:'vaMp',   ok:'612', ld:'h', m:9500, q:'la misma contrapartida de siempre' } ] },
    { n:11, fe:'30/04/2025', tipo:'cmp', pista:'final',
      gl:'Compra de suministros al Proveedor 3',
      simple:'Tercera compra, <b>S/ 7,080.00</b>: <b>S/ 1,080.00</b> de IGV y <b>S/ 6,000.00</b> de valor.',
-     lin:[ { fam:'compra', ok:'60', ld:'d', m:6000, q:'el valor de los suministros' },
-           { fam:'tributo',ok:'40', ld:'d', m:1080, q:'el IGV de la compra' },
-           { fam:'pagar',  ok:'42', ld:'h', m:7080, q:'la deuda con el Proveedor 3' } ] },
+     lin:[ { fam:'cpSum',  ok:'6032', ld:'d', m:6000, q:'el valor de los suministros' },
+           { fam:'igv',    ok:'40111', ld:'d', m:1080, q:'el IGV de la compra' },
+           { fam:'pagar',  ok:'4212', ld:'h', m:7080, q:'la deuda con el Proveedor 3' } ] },
    { n:12, fe:'30/04/2025', tipo:'des', pista:'final',
      gl:'Destino: ingreso al almacén de los suministros del Proveedor 3',
-     simple:'No se revende ni se transforma: son <b>suministros</b> que se consumen, así que el almacén es la cuenta <b>25</b> contra la <b>61</b>.',
-     lin:[ { fam:'alm25', ok:'25', ld:'d', m:6000, q:'suministros y repuestos: almacén 25' },
-           { fam:'vari',  ok:'61', ld:'h', m:6000, q:'la contrapartida del destino' } ] } ],
-  cierre:'Tres compras, tres destinos distintos: <b>20</b> para lo que se revende, <b>24</b> para lo '+
-         'que se transforma y <b>25</b> para lo que se consume. Los tres contra la <b>61</b> y con el '+
+     simple:'No se revende ni se transforma: son <b>suministros</b> que se consumen, así que el almacén es la cuenta <b>2524</b> contra la <b>6132</b>.',
+     lin:[ { fam:'alSum',  ok:'2524', ld:'d', m:6000, q:'suministros y repuestos: almacén 25' },
+           { fam:'vaSum',  ok:'6132', ld:'h', m:6000, q:'la contrapartida del destino' } ] } ],
+  cierre:'Tres compras, tres destinos distintos: <b>20111</b> para lo que se revende, <b>24111</b> para lo '+
+         'que se transforma y <b>2524</b> para lo que se consume, con sus variaciones <b>6111</b>, '+
+         '<b>612</b> y <b>6132</b>. Siempre con el '+
          'valor sin IGV. Quedamos debiendo <b>S/ 39,530.00</b> en la cuenta 42.' },
 
 { id:'pags', t:'4 · Los pagos', st:'Las compras ya están',
@@ -477,35 +622,35 @@ var B=[
        'banco. Ni IGV ni almacén: eso ya se registró cuando se compró.',
   previo:{ t:'Lo que ya está registrado · las compras del bloque 3', as:[
      { n:7, fe:'30/04/2025', gl:'Compra de mercadería al Proveedor 1',
-       l:[['60','d',18000],['40','d',3240],['42','h',21240]] },
+       l:[['6011','d',18000],['40111','d',3240],['4212','h',21240]] },
      { n:8, fe:'30/04/2025', gl:'Destino al almacén de mercaderías',
-       l:[['20','d',18000],['61','h',18000]] },
+       l:[['20111','d',18000],['6111','h',18000]] },
      { n:9, fe:'30/04/2025', gl:'Compra de materia prima al Proveedor 2',
-       l:[['60','d',9500],['40','d',1710],['42','h',11210]] },
+       l:[['602','d',9500],['40111','d',1710],['4212','h',11210]] },
      { n:10, fe:'30/04/2025', gl:'Destino al almacén de materias primas',
-       l:[['24','d',9500],['61','h',9500]] },
+       l:[['24111','d',9500],['612','h',9500]] },
      { n:11, fe:'30/04/2025', gl:'Compra de suministros al Proveedor 3',
-       l:[['60','d',6000],['40','d',1080],['42','h',7080]] },
+       l:[['6032','d',6000],['40111','d',1080],['4212','h',7080]] },
      { n:12, fe:'30/04/2025', gl:'Destino al almacén de suministros',
-       l:[['25','d',6000],['61','h',6000]] } ],
+       l:[['2524','d',6000],['6132','h',6000]] } ],
     pie:'La cuenta 42 debe <b>S/ 39,530.00</b>: 21,240.00 + 11,210.00 + 7,080.00.' },
   as:[
    { n:13, fe:'30/04/2025', tipo:'pag', pista:'antes',
      gl:'Pago al Proveedor 1 por transferencia',
-     simple:'Se le paga todo al Proveedor 1, <b>S/ 21,240.00</b>. Disminuye lo que debemos (cuenta <b>42</b>) y sale dinero del banco (cuenta <b>104</b>).',
-     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:21240, q:'baja la deuda con el proveedor' },
-           { fam:'banco', ok:'104', ld:'h', m:21240, q:'sale el dinero de la cuenta corriente' } ] },
+     simple:'Se le paga todo al Proveedor 1, <b>S/ 21,240.00</b>. Disminuye lo que debemos (cuenta <b>4212</b>) y sale dinero del banco (cuenta <b>1041</b>).',
+     lin:[ { fam:'pagar', ok:'4212', ld:'d', m:21240, q:'baja la deuda con el proveedor' },
+           { fam:'banco', ok:'1041', ld:'h', m:21240, q:'sale el dinero de la cuenta corriente' } ] },
    { n:14, fe:'30/04/2025', tipo:'pag', pista:'despues',
      gl:'Pago al Proveedor 2 en efectivo',
-     simple:'Al Proveedor 2 se le paga en efectivo, <b>S/ 11,210.00</b>: baja la cuenta <b>42</b> y sale el dinero de la caja (cuenta <b>101</b>).',
-     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:11210, q:'se cancela la deuda' },
+     simple:'Al Proveedor 2 se le paga en efectivo, <b>S/ 11,210.00</b>: baja la cuenta <b>4212</b> y sale el dinero de la caja (cuenta <b>101</b>).',
+     lin:[ { fam:'pagar', ok:'4212', ld:'d', m:11210, q:'se cancela la deuda' },
            { fam:'caja',  ok:'101', ld:'h', m:11210, q:'sale el efectivo de la caja' } ] },
    { n:15, fe:'31/05/2025', tipo:'pag', pista:'final',
      gl:'Pago al Proveedor 3 por transferencia',
      simple:'En mayo se paga al último proveedor, <b>S/ 7,080.00</b>, por transferencia.',
      calc:{ et:'Lo que quedaba por pagar', op:'39,530.00 − 21,240.00 − 11,210.00', v:7080 },
-     lin:[ { fam:'pagar', ok:'42',  ld:'d', m:7080, q:'queda saldada la cuenta 42' },
-           { fam:'banco', ok:'104', ld:'h', m:7080, q:'sale del banco' } ] } ],
+     lin:[ { fam:'pagar', ok:'4212', ld:'d', m:7080, q:'queda saldada la cuenta 42' },
+           { fam:'banco', ok:'1041', ld:'h', m:7080, q:'sale del banco' } ] } ],
   cierre:'Pagado <b>S/ 39,530.00</b>, justo lo que se había comprado: la cuenta 42 queda en <b>cero</b>. '+
          'Con esto el ciclo está cerrado: se vendió, se cobró, se compró y se pagó.' }
 ];
@@ -635,8 +780,8 @@ function pintaChuleta(){
   });
   if(b.id==='cmps'){
     h+='<div class="regla" style="margin-top:4px"><b>¿Qué almacén?</b><br>'+
-       '<b>20</b> lo que se revende tal cual.<br><b>24</b> lo que se transforma.<br>'+
-       '<b>25</b> lo que se consume en la operación.</div>';
+       '<b>20111</b> lo que se revende tal cual.<br><b>24111</b> lo que se transforma.<br>'+
+       '<b>2524</b> lo que se consume en la operación.</div>';
   }
   h+='</div></div>';
   $('chuleta').innerHTML=h;
@@ -652,7 +797,7 @@ function vistaPrevio(p){
        '<div class="envuelve"><table class="t"><tbody>'+
        a.l.map(function(x){
          return '<tr><td style="width:56%"><span class="ccok">'+esc(x[0])+'</span> '+
-                '<span class="nomb">'+esc(CU[x[0]].n)+'</span></td>'+
+                '<span class="nomb">'+esc(cuenta(x[0]))+'</span></td>'+
                 '<td class="n" data-et="Debe">'+(x[1]==='d'?miles(x[2]):'')+'</td>'+
                 '<td class="n" data-et="Haber">'+(x[1]==='h'?miles(x[2]):'')+'</td></tr>';
        }).join('')+'</tbody></table></div></div>';
@@ -665,7 +810,7 @@ function filaLinea(a, l, i){
   var p=puesta(a,i), bien=(p===l.ok);
   var h='<tr><td style="width:46%">';
   if(bien){
-    h+='<span class="ccok">'+esc(l.ok)+'</span> <span class="nomb">'+esc(CU[l.ok].n)+'</span>'+
+    h+='<span class="ccok">'+esc(l.ok)+'</span> <span class="nomb">'+esc(cuenta(l.ok))+'</span>'+
        '<span class="porq">'+esc(l.q)+'</span>';
   }else{
     var malos=G.mal[kl(a,i)]||[];
@@ -673,7 +818,7 @@ function filaLinea(a, l, i){
        l.ops.map(function(c){
          var m=malos.indexOf(c)>=0;
          return '<button type="button" data-c="'+esc(c)+'"'+(m?' class="mala" disabled':'')+'>'+
-                '<span class="cd">'+esc(c)+'</span>'+esc(CU[c].n.split(' —')[0].split(',')[0])+'</button>';
+                '<span class="cd">'+esc(c)+'</span>'+esc(corto(c))+'</button>';
        }).join('')+'</div>';
   }
   h+='</td><td class="n" data-et="Debe">'+(l.ld==='d'
@@ -688,6 +833,7 @@ function vistaAsiento(b, a, k){
   var h='<div class="as'+(listo?' listo':(act?' activo':''))+'">'+
     '<div class="ah"><span class="nro">'+a.n+'</span><span class="fe">'+esc(a.fe)+'</span>'+
     '<span class="gl">'+esc(a.gl)+'</span>'+
+    '<button type="button" class="bAy" data-gu="'+esc(a.tipo)+'">❓ Ayuda</button>'+
     '<span class="tip t-'+a.tipo+'">'+esc(NOMT[a.tipo])+'</span></div>';
 
   if(!abiertoA(b,k)){
@@ -759,14 +905,58 @@ function pinta(){
 function vistaCierre(){
   return '<div class="caja vd"><h3><span>El ciclo completo</span>'+
     '<span class="st">15 asientos en cuatro bloques</span></h3><div class="cuerpo">'+
-    '<p>Vendiste por <b>S/ 61,950.00</b> y cobraste exactamente eso: la cuenta <b>12</b> quedó en cero. '+
-    'Compraste por <b>S/ 39,530.00</b> y pagaste exactamente eso: la cuenta <b>42</b> quedó en cero.</p>'+
-    '<p>Lo que no se cierra solo es el <b>IGV</b>: la cuenta 40 se abonó con el IGV de las ventas '+
+    '<p>Vendiste por <b>S/ 61,950.00</b> y cobraste exactamente eso: la cuenta <b>1212</b> quedó en cero. '+
+    'Compraste por <b>S/ 39,530.00</b> y pagaste exactamente eso: la cuenta <b>4212</b> quedó en cero.</p>'+
+    '<p>Lo que no se cierra solo es el <b>IGV</b>: la cuenta 40111 se abonó con el IGV de las ventas '+
     '(9,450.00) y se cargó con el de las compras (6,030.00). La diferencia, <b>S/ 3,420.00</b>, es lo que '+
-    'se le paga a la SUNAT. Por eso la cuenta 40 aparece a los dos lados.</p>'+
+    'se le paga a la SUNAT. Por eso la cuenta 40111 aparece a los dos lados.</p>'+
     '<p style="margin:0">Y la que más se olvida: <b>toda compra lleva dos asientos</b>. El de la compra '+
-    'y el de destino, que cambia de almacén según lo comprado: 20, 24 o 25, siempre contra la 61 y '+
+    'y el de destino, que cambia de almacén según lo comprado: 20111, 24111 o 2524, cada uno contra su 61 y '+
     'con el valor sin IGV.</p></div></div>';
+}
+
+function abreGuia(tipo){
+  var g=guiaDe(tipo); if(!g) return;
+  var h='<div class="velo" id="velo"><div class="ficha" role="dialog" aria-modal="true">'+
+    '<div class="fh"><span class="ic">'+g.ic+'</span><div><h4>'+esc(g.t)+'</h4>'+
+    '<p>'+esc(g.d)+'</p></div>'+
+    '<button type="button" class="x" id="cerrarGuia" aria-label="Cerrar">×</button></div>'+
+    '<div class="fc">';
+  g.tabs.forEach(function(t){
+    h+='<p class="sub">'+esc(t.t)+'</p><table><thead><tr><th style="width:30%">Código</th>'+
+       '<th>Debe</th><th>Haber</th></tr></thead><tbody>'+
+       t.f.map(function(f){
+         return '<tr><td class="cc">'+esc(f[0])+'</td>'+
+                '<td'+(f[1]?' class="vd"':'')+'>'+esc(f[1]||'')+'</td>'+
+                '<td'+(f[2]?' class="vd"':'')+'>'+esc(f[2]||'')+'</td></tr>';
+       }).join('')+'</tbody></table>';
+  });
+  if(g.form || g.ej){
+    h+='<div class="cols">';
+    if(g.form) h+='<div class="rec"><b class="t">'+esc(g.form.t)+'</b><ul>'+
+       g.form.l.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+    if(g.ej) h+='<div class="rec ej"><b class="t">'+esc(g.ej.t)+'</b>'+
+       g.ej.l.map(function(x){ return '<span class="fil"><span>'+esc(x[0])+'</span><b>'+esc(x[1])+'</b></span>'; }).join('')+
+       '</div>';
+    h+='</div>';
+  }
+  if(g.cajita) h+='<div class="rec" style="margin-top:4px"><b class="t">'+esc(g.cajita.t)+'</b>'+g.cajita.x+'</div>';
+  if(g.igv){
+    h+='<p class="sub" style="margin-top:12px">'+esc(g.igv.t)+'</p><div class="tres3">'+
+       g.igv.l.map(function(x){ return '<div class="tj '+x[2]+'"><b>'+esc(x[0])+'</b>'+esc(x[1])+'</div>'; }).join('')+
+       '</div>';
+  }
+  if(g.nota) h+='<div class="nota">'+g.nota+'</div>';
+  h+='</div></div></div>';
+  var d=document.createElement('div'); d.innerHTML=h;
+  document.body.appendChild(d.firstChild);
+  var v=$('velo');
+  function cierra(){ if(v && v.parentNode){ v.parentNode.removeChild(v); } document.removeEventListener('keydown', esc2); }
+  function esc2(e){ if(e.key==='Escape') cierra(); }
+  $('cerrarGuia').addEventListener('click', cierra);
+  v.addEventListener('click', function(e){ if(e.target===v) cierra(); });
+  document.addEventListener('keydown', esc2);
+  $('cerrarGuia').focus();
 }
 
 function cablea(){
@@ -810,6 +1000,10 @@ function cablea(){
     }
     inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); prueba(); } });
     inp.addEventListener('blur', function(){ if(String(inp.value).trim()!=='') prueba(); });
+  });
+
+  qq('#panel .bAy[data-gu]').forEach(function(x){
+    x.addEventListener('click', function(){ sTec(); abreGuia(x.dataset.gu); });
   });
 
   qq('#panel button[data-ay]').forEach(function(x){
