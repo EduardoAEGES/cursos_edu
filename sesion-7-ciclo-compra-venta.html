@@ -192,6 +192,40 @@
                color:var(--o-muted); padding:2px 0; }
   .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
 
+  /* láminas de teoría a pantalla completa */
+  .bTeo{ font:inherit; font-size:12.5px; font-weight:800; cursor:pointer; flex:none;
+         border:1.5px solid #8A6B32; background:#F6E9CC; color:#5B4216;
+         border-radius:9px; padding:7px 13px; }
+  .bTeo:hover{ background:#EFDDB4; border-color:#6B5224; }
+
+  .teo{ position:fixed; inset:0; z-index:9995; background:#1C1409;
+        display:flex; flex-direction:column; animation:aparece .18s ease; }
+  .teoBar{ display:flex; gap:7px; align-items:center; flex-wrap:wrap; flex:none;
+           padding:9px 12px; background:#2A1F10; border-bottom:2px solid #6B5224; }
+  .teoBar .tt{ font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+               color:#D9C79A; margin-right:4px; }
+  .teoBar .tb{ font:inherit; font-size:12.5px; font-weight:800; cursor:pointer;
+               border:1.5px solid #6B5224; background:#3A2B16; color:#E7D9B4;
+               border-radius:8px; padding:6px 12px; }
+  .teoBar .tb:hover{ background:#4A3820; }
+  .teoBar .tb.on{ background:#E7D9B4; border-color:#E7D9B4; color:#2A1F10; }
+  .teoBar .der{ margin-left:auto; display:flex; gap:7px; align-items:center; }
+  .teoBar .tz{ font:inherit; font-size:12px; font-weight:700; cursor:pointer;
+               border:1.5px solid #6B5224; background:#3A2B16; color:#D9C79A;
+               border-radius:8px; padding:6px 11px; }
+  .teoBar .tx{ font:inherit; font-size:19px; font-weight:800; cursor:pointer; line-height:1;
+               border:1.5px solid #6B5224; background:#3A2B16; color:#E7D9B4;
+               border-radius:8px; width:34px; height:32px; }
+  .teoBar .tx:hover, .teoBar .tz:hover{ background:#4A3820; }
+  .teoCuerpo{ flex:1; overflow:auto; padding:14px; display:flex;
+              align-items:flex-start; justify-content:center; }
+  .teoCuerpo img{ max-width:100%; height:auto; border-radius:5px; display:block; cursor:zoom-in;
+                  box-shadow:0 10px 36px rgba(0,0,0,.5); background:#EFE4CB; }
+  .teoCuerpo.zoom{ align-items:flex-start; justify-content:flex-start; }
+  .teoCuerpo.zoom img{ max-width:none; width:auto; flex:none; cursor:zoom-out; }
+  .teoPie{ flex:none; padding:7px 12px; background:#2A1F10; border-top:1px solid #4A3820;
+           font-size:11.5px; color:#B7A379; text-align:center; }
+
   /* el par: lo ya registrado y, debajo, lo que hay que armar */
   .emparejado{ border:2px dashed #C3CBD4; border-radius:13px; padding:10px 10px 4px;
                background:#F7F9FB; margin-bottom:-6px; }
@@ -300,7 +334,10 @@
         <h1>Sesión 7 · Venta, cobro, compra y pago, bloque por bloque</h1>
         <p>Cuatro bloques en orden: primero se vende, después se cobra, luego se compra con su destino y al final se paga</p>
       </div>
+      <span style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <button class="bTeo" id="btnTeo" type="button">📖 Ver teoría</button>
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+      </span>
     </div>
     <div class="intro2">
       <img src="personajes/profe-completa.webp" alt="" loading="lazy">
@@ -734,6 +771,7 @@ function pintaSon(){
   b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
   b.setAttribute('aria-pressed', son?'true':'false');
 }
+$('btnTeo').addEventListener('click', function(){ sTec(); abreTeoria(); });
 $('btnSon').addEventListener('click', function(){
   son=!son; try{ localStorage.setItem('g7_son', son?'1':'0'); }catch(e){}
   pintaSon(); if(son) sBien();
@@ -957,6 +995,63 @@ function vistaCierre(){
     '<p style="margin:0">Y la que más se olvida: <b>toda compra lleva dos asientos</b>. El de la compra '+
     'y el de destino, que cambia de almacén según lo comprado: 20111, 24111 o 2524, cada uno contra su 61 y '+
     'con el valor sin IGV.</p></div></div>';
+}
+
+var LAMINAS=[
+  { k:'ops', t:'Resumen de operaciones', f:'laminas/resumen-operaciones.webp',
+    pie:'Venta, cobro, compra con su destino y pago · las fórmulas del IGV y el crédito fiscal' },
+  { k:'cat', t:'Catálogo de cuentas', f:'laminas/catalogo-cuentas.webp',
+    pie:'Elementos 1, 2, 4, 6 y 7 · los códigos que se usan en esta sesión' }
+];
+var lamAct='ops', lamZoom=false;
+
+function abreTeoria(cual){
+  if(cual) lamAct=cual;
+  if($('teo')) return pintaTeoria();
+  var d=document.createElement('div');
+  d.innerHTML='<div class="teo" id="teo" role="dialog" aria-modal="true">'+
+    '<div class="teoBar"><span class="tt">Teoría</span><span id="teoTabs"></span>'+
+    '<span class="der"><button type="button" class="tz" id="zoomTeo"></button>'+
+    '<button type="button" class="tx" id="cerrarTeo" aria-label="Cerrar">×</button></span></div>'+
+    '<div class="teoCuerpo" id="teoCuerpo"></div>'+
+    '<div class="teoPie" id="teoPie"></div></div>';
+  document.body.appendChild(d.firstChild);
+  document.body.style.overflow='hidden';
+  $('cerrarTeo').addEventListener('click', cierraTeoria);
+  $('zoomTeo').addEventListener('click', function(){ lamZoom=!lamZoom; pintaTeoria(); });
+  $('teoCuerpo').addEventListener('click', function(e){
+    if(e.target===$('teoCuerpo')) cierraTeoria();
+    else if(e.target.tagName==='IMG'){ lamZoom=!lamZoom; pintaTeoria(); }
+  });
+  document.addEventListener('keydown', teclaTeoria);
+  pintaTeoria();
+}
+function teclaTeoria(e){
+  if(e.key==='Escape') cierraTeoria();
+  else if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+    lamAct = (lamAct==='ops') ? 'cat' : 'ops'; pintaTeoria();
+  }
+}
+function cierraTeoria(){
+  var t=$('teo'); if(t && t.parentNode) t.parentNode.removeChild(t);
+  document.body.style.overflow='';
+  document.removeEventListener('keydown', teclaTeoria);
+}
+function pintaTeoria(){
+  var L=null; LAMINAS.forEach(function(x){ if(x.k===lamAct) L=x; });
+  $('teoTabs').innerHTML=LAMINAS.map(function(x){
+    return '<button type="button" class="tb'+(x.k===lamAct?' on':'')+'" data-l="'+x.k+'">'+
+           esc(x.t.toUpperCase())+'</button>';
+  }).join(' ');
+  qq('#teoTabs .tb').forEach(function(b){
+    b.addEventListener('click', function(){ lamAct=b.dataset.l; lamZoom=false; pintaTeoria(); });
+  });
+  $('zoomTeo').textContent = lamZoom ? '🔎 Ajustar a la pantalla' : '🔍 Acercar para leer';
+  var c=$('teoCuerpo');
+  c.className='teoCuerpo'+(lamZoom?' zoom':'');
+  c.innerHTML='<img src="'+esc(L.f)+'" alt="'+esc(L.t)+'">';
+  c.scrollTop=0; c.scrollLeft=0;
+  $('teoPie').textContent=L.pie+' · toca la lámina para acercar o alejar · Esc para cerrar';
 }
 
 function abreGuia(tipo){
