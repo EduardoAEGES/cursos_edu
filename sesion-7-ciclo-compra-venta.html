@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Guía para resolver asientos de compra, pago, venta y cobro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .g7{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --mora:#714B67; --ambar:#B25E09;
+       --debe:#C0306B; --haber:#D0561C; --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+       max-width:1380px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--azul); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,23px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo button{ margin-left:auto; flex:none; }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin:14px 0 13px; }
+  .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
+  .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+
+  /* dos columnas: la hoja y la chuleta */
+  .dos{ display:grid; grid-template-columns:minmax(0,1fr); gap:14px; align-items:start; }
+  @media (min-width:1060px){ .dos{ grid-template-columns:minmax(0,1fr) 318px; } }
+  .lado{ position:sticky; top:12px; display:flex; flex-direction:column; gap:12px; }
+  @media (max-width:1059px){ .lado{ position:static; } }
+
+  .caja{ border:1px solid var(--o-border); border-radius:11px; background:#fff;
+         overflow:hidden; margin-bottom:13px; }
+  .caja > h3{ margin:0; font-size:11.5px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:#fff; background:var(--gris); padding:9px 12px;
+              display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center; }
+  .caja > h3 .st{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.92; font-size:11px; }
+  .caja.az > h3{ background:var(--azul); }
+  .caja.vd > h3{ background:var(--verde); }
+  .caja.mo > h3{ background:var(--mora); }
+  .caja .cuerpo{ padding:12px 14px; font-size:13px; line-height:1.6; color:#33404E; }
+  .caja .cuerpo p{ margin:0 0 9px; } .caja .cuerpo p:last-child{ margin-bottom:0; }
+
+  /* el método en cuatro preguntas */
+  .cuatro{ display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:10px; }
+  .pq{ border:1px solid var(--o-border); border-radius:10px; padding:9px 11px; min-width:0;
+       font-size:12.5px; line-height:1.5; color:#33404E; background:#fff; }
+  .pq b.t{ display:block; font-size:13px; color:var(--azul); margin-bottom:3px; }
+  .pq .nn{ display:inline-flex; width:19px; height:19px; border-radius:99px; background:var(--azul);
+           color:#fff; font-size:11px; font-weight:800; align-items:center; justify-content:center;
+           margin-right:6px; vertical-align:1px; }
+  .regla{ border:1.5px solid var(--amaBd); background:var(--ama); border-radius:10px;
+          padding:9px 12px; font-size:12.5px; line-height:1.6; color:#5B4A15; margin-top:11px; }
+  .regla b{ color:#3F3208; }
+
+  /* las plantillas */
+  .pl{ border:1.5px solid var(--o-border); border-radius:10px; overflow:hidden; margin-bottom:9px; }
+  .pl > b{ display:flex; gap:7px; align-items:center; font-size:12px; font-weight:800;
+           padding:6px 10px; background:#F4F7FA; color:#33404E; border-bottom:1px solid var(--o-border); }
+  .pl table{ width:100%; border-collapse:collapse; font-size:11.5px; }
+  .pl td{ padding:4px 9px; border-bottom:1px solid #F1F3F5; }
+  .pl tr:last-child td{ border-bottom:0; }
+  .pl td.cc{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
+             color:var(--azul); width:1%; white-space:nowrap; }
+  .pl td.ld{ width:46px; text-align:right; font-weight:800; font-size:10px;
+             letter-spacing:.04em; text-transform:uppercase; }
+  .pl td.ld.d{ color:var(--debe); } .pl td.ld.h{ color:var(--haber); }
+  .pl.vta > b{ background:#F6FBF8; } .pl.cob > b{ background:#F2FAF5; }
+  .pl.cmp > b{ background:#EAF1FA; } .pl.des > b{ background:#F6F3FB; }
+  .pl.pag > b{ background:#FDF3E6; }
+
+  /* la hoja de trabajo */
+  .as{ border:1.5px solid var(--o-border); border-radius:11px; margin-bottom:13px;
+       background:#fff; overflow:hidden; }
+  .as.activo{ border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.1); }
+  .as.listo{ border-color:#7CC29B; }
+  .as > .ah{ display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+             padding:9px 12px; background:#FAFBFC; border-bottom:1px solid var(--o-border); }
+  .as.listo > .ah{ background:#F2FAF5; border-color:#7CC29B; }
+  .as > .ah .nro{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+                  font-weight:800; color:#fff; background:var(--azul); border-radius:7px;
+                  padding:3px 9px; flex:none; }
+  .as.listo > .ah .nro{ background:var(--verde); }
+  .as > .ah .fe{ font-size:12px; color:var(--o-muted); flex:none; }
+  .as > .ah .gl{ font-size:13.5px; font-weight:700; color:#33404E; flex:1; min-width:170px; }
+  .as > .ah .tip{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
+                  border-radius:7px; padding:3px 9px; flex:none; }
+  .tip.t-vta{ background:#E9F7EF; color:#14532D; } .tip.t-cob{ background:#E9F7EF; color:#14532D; }
+  .tip.t-cmp{ background:#EAF1FA; color:#14365E; } .tip.t-des{ background:#EDE7F6; color:#4A3B66; }
+  .tip.t-pag{ background:#FDF3E6; color:#7A4A06; }
+
+  .simple{ font-size:12.5px; line-height:1.6; color:#5B4A15; background:var(--ama);
+           border-bottom:1px solid var(--amaBd); padding:9px 12px; }
+  .simple b{ color:#3F3208; }
+  .simple .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+               letter-spacing:.05em; color:#8A6510; margin-bottom:2px; }
+
+  .calc{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; padding:10px 12px;
+         border-bottom:1px solid #EDEFF2; background:#FBFCFD; }
+  .calc .et{ font-size:12.5px; font-weight:700; color:#33404E; }
+  .calc .op{ font-size:13px; font-weight:800; color:#14365E; background:#EAF1FA;
+             border-radius:8px; padding:5px 10px; font-variant-numeric:tabular-nums; }
+  .calc input{ width:132px; font:inherit; font-size:14px; font-weight:800; text-align:right;
+               border:1.5px solid var(--o-border); border-radius:8px; padding:5px 9px;
+               font-variant-numeric:tabular-nums; color:#33404E; }
+  .calc input:focus{ outline:none; border-color:var(--azul); box-shadow:0 0 0 3px rgba(31,95,168,.14); }
+  .calc input.mal{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; animation:tiembla .4s; }
+  .calc .val{ font-size:15px; font-weight:800; color:var(--verde); font-variant-numeric:tabular-nums; }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.t th{ background:#F4F7FA; font-size:9.5px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:var(--o-muted); padding:6px 10px;
+              border-bottom:1px solid var(--o-border); text-align:left; }
+  table.t th.n, table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t td{ padding:7px 10px; border-bottom:1px solid #EDEFF2; vertical-align:top; }
+  table.t tr.tot td{ font-weight:800; background:#FAFBFC; border-top:2px solid #D8DCE2; }
+  table.t tr.tot.cuadra td{ background:#F2FAF5; color:#14532D; }
+  .envuelve{ overflow-x:auto; }
+  .ccok{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800; color:var(--azul);
+         font-size:13px; }
+  .nomb{ font-size:12.5px; color:#33404E; }
+  .porq{ display:block; font-size:11px; color:var(--o-muted); line-height:1.4; margin-top:2px; }
+
+  .ops{ display:flex; gap:6px; flex-wrap:wrap; }
+  .ops button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer; text-align:left;
+               border:1.5px solid var(--o-border); background:#fff; color:#33404E;
+               border-radius:8px; padding:6px 10px; display:inline-flex; gap:6px; align-items:center; }
+  .ops button:hover{ border-color:var(--azul); background:#F5F9FD; }
+  .ops button .cd{ font-family:ui-monospace,Menlo,Consolas,monospace; font-weight:800;
+                   color:var(--azul); }
+  .ops button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
+                    cursor:not-allowed; opacity:.65; }
+  .ops button.temblor{ animation:tiembla .4s; }
+  @keyframes tiembla{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)}
+                      40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+  .lado-et{ font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; }
+  .lado-et.d{ color:var(--debe); } .lado-et.h{ color:var(--haber); }
+
+  .ayuda{ padding:9px 12px; border-top:1px solid #EDEFF2; }
+  .ayuda button{ font:inherit; font-size:12px; font-weight:700; cursor:pointer;
+                 border:1.5px solid var(--amaBd); background:var(--ama); color:#8A6510;
+                 border-radius:8px; padding:5px 11px; }
+  .bloq{ padding:12px 14px; font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+
+  .marcador{ border:1px solid var(--o-border); border-radius:10px; padding:10px 13px;
+             margin-top:12px; font-size:13px; font-weight:700; background:#FAFBFC; color:var(--gris); }
+  .marcador.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+
+  #confeti{ position:fixed; inset:0; pointer-events:none; z-index:9998; display:none; }
+
+  @media (max-width:640px){
+    table.t, table.t thead, table.t tbody, table.t tr, table.t td, table.t th{ display:block; }
+    table.t thead{ display:none; }
+    table.t tr{ border-bottom:1px solid #EDEFF2; padding:5px 0; }
+    table.t td{ border:0; padding:3px 11px; }
+    table.t td.n::before{ content:attr(data-et) ' '; font-size:9.5px; font-weight:800;
+      text-transform:uppercase; color:var(--o-muted); }
+    table.t td.n:empty{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="contabilidad.html">Contabilidad</a></span> / <b>Sesión 7</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesión 7</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap g7">
+
+  <div class="o-sheet" id="hojaIntro">
+    <div class="titulo">
+      <div>
+        <h1>Sesión 7 · Cómo resolver asientos de compra, pago, venta y cobro</h1>
+        <p>Guía paso a paso sobre la hoja de trabajo de abril y mayo · nueve asientos del ciclo completo</p>
+      </div>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+    </div>
+    <div class="idea">
+      <b>La idea.</b> Casi todos los asientos del mes son del mismo puñado de tipos: una
+      <b>venta</b>, un <b>cobro</b>, una <b>compra</b>, su <b>ingreso al almacén</b> y un <b>pago</b>.
+      Cada tipo mueve siempre las mismas cuentas, en el mismo lado. Si reconoces el tipo, el asiento
+      ya está casi escrito. Aquí vas a resolver los nueve de la hoja, de los más guiados a los más
+      libres, con las plantillas siempre a la vista.
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Entrar para practicar</h2>
+    <div id="aula"></div>
+    <p style="font-size:12.5px;color:var(--o-muted);margin:11px 0 0;line-height:1.55">
+      El alumno entra con su nombre y trabaja en su propia hoja; el docente entra con su clave y ve a todos.
+    </p>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="avance">
+      <span class="cuenta" id="cuenta"></span>
+      <span class="barra"><i id="progI"></i></span>
+      <span class="reinicio" id="reinicio"></span>
+    </div>
+
+    <div class="dos">
+      <div id="panel"></div>
+      <div class="lado" id="chuleta"></div>
+    </div>
+
+    <div class="marcador" id="marcador"></div>
+
+    <div class="o-sheet" id="hojaMuro" hidden style="margin-top:16px">
+      <h2 class="o-section-title">Monitoreo del aula</h2>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Contabilidad</span>
+    <span>Compra · pago · venta · cobro</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function r2(n){ return Math.round(n*100)/100; }
+function miles(n){
+  if(n===null||n===undefined||isNaN(n)) return '';
+  var p=Math.abs(n).toFixed(2).split('.');
+  return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')+'.'+p[1];
+}
+function baraja(a){
+  a=a.slice();
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+
+/* =================== el plan de cuentas de la hoja =================== */
+var CU={
+  '12': { n:'Cuentas por cobrar comerciales — terceros', ic:'🧍' },
+  '13': { n:'Cuentas por cobrar comerciales — relacionadas', ic:'🧍' },
+  '16': { n:'Cuentas por cobrar diversas — terceros', ic:'🧍' },
+  '40': { n:'Tributos por pagar — IGV', ic:'🧾' },
+  '41': { n:'Remuneraciones por pagar', ic:'👥' },
+  '49': { n:'Pasivo diferido', ic:'🗂️' },
+  '70': { n:'Ventas', ic:'💰' },
+  '73': { n:'Descuentos obtenidos', ic:'💰' },
+  '75': { n:'Otros ingresos de gestión', ic:'💰' },
+  '101':{ n:'Caja', ic:'💵' },
+  '102':{ n:'Fondos fijos', ic:'🪙' },
+  '104':{ n:'Cuentas corrientes en instituciones financieras', ic:'🏦' },
+  '60': { n:'Compras — mercaderías', ic:'🛒' },
+  '63': { n:'Gastos de servicios prestados por terceros', ic:'🔧' },
+  '42': { n:'Cuentas por pagar comerciales — terceros', ic:'🤝' },
+  '46': { n:'Cuentas por pagar diversas — terceros', ic:'🤝' },
+  '20': { n:'Mercaderías (almacén)', ic:'🏬' },
+  '21': { n:'Productos terminados', ic:'🏬' },
+  '25': { n:'Materiales auxiliares y suministros', ic:'🏬' },
+  '61': { n:'Variación de existencias', ic:'🔄' },
+  '69': { n:'Costo de ventas', ic:'📉' }
+};
+/* por cada familia, la correcta y dos parecidas */
+var OPC={
+  cobrar: ['12','13','16'],
+  tributo:['40','41','49'],
+  venta:  ['70','73','75'],
+  caja:   ['101','102','104'],
+  banco:  ['104','101','102'],
+  compra: ['60','61','63'],
+  pagar:  ['42','40','46'],
+  alma:   ['20','21','25'],
+  vari:   ['61','69','60']
+};
+
+/* =================== las cinco plantillas =================== */
+var PLAN=[
+  { k:'vta', ic:'🧍', t:'VENTA de mercadería', l:[
+      ['12','d','el total con IGV'], ['40','h','el IGV'], ['70','h','el valor de la venta'] ] },
+  { k:'cob', ic:'💵', t:'COBRO al cliente', l:[
+      ['101 ó 104','d','el total que entra'], ['12','h','el mismo total'] ] },
+  { k:'cmp', ic:'🛒', t:'COMPRA de mercadería', l:[
+      ['60','d','el valor de la compra'], ['40','d','el IGV'], ['42','h','el total con IGV'] ] },
+  { k:'des', ic:'🏬', t:'DESTINO al almacén', l:[
+      ['20','d','el valor, sin IGV'], ['61','h','el mismo valor'] ] },
+  { k:'pag', ic:'🤝', t:'PAGO al proveedor', l:[
+      ['42','d','lo que se paga'], ['104','h','el mismo importe'] ] }
+];
+var NOMT={ vta:'Venta', cob:'Cobro', cmp:'Compra', des:'Destino', pag:'Pago' };
+
+/* =================== los nueve asientos de la hoja =================== */
+var A=[
+ { n:1, fe:'15/04/2025', tipo:'vta', pista:'antes',
+   gl:'Venta de mercadería al contado a los clientes nuevos',
+   simple:'Vendimos mercadería por <b>S/ 5,310.00</b>. Primero se anota que el cliente debe pagar ese total (cuenta <b>12</b>). Ese total tiene dos partes: <b>S/ 810.00</b> de IGV, que después se entrega a la SUNAT (cuenta <b>40</b>), y <b>S/ 4,500.00</b>, que es el ingreso real de la venta (cuenta <b>70</b>).',
+   calc:{ et:'El IGV de la venta', op:'4,500.00 × 18 %', v:810 },
+   lin:[ { fam:'cobrar', ok:'12', ld:'d', m:5310, q:'el cliente nos debe el total con IGV' },
+         { fam:'tributo',ok:'40', ld:'h', m:810,  q:'el IGV no es nuestro: se le entrega a la SUNAT' },
+         { fam:'venta',  ok:'70', ld:'h', m:4500, q:'esto sí es el ingreso de la empresa' } ] },
+
+ { n:2, fe:'15/04/2025', tipo:'cob', pista:'antes',
+   gl:'Cobranza en efectivo de la venta a los clientes nuevos',
+   simple:'Los clientes nuevos pagaron en ese momento. Entra dinero a la caja (cuenta <b>101</b>) y la deuda del cliente queda en cero: se descarga de la cuenta <b>12</b>.',
+   lin:[ { fam:'caja',  ok:'101', ld:'d', m:5310, q:'entra el efectivo a la caja' },
+         { fam:'cobrar',ok:'12',  ld:'h', m:5310, q:'el cliente ya no nos debe nada' } ] },
+
+ { n:3, fe:'30/04/2025', tipo:'cob', pista:'antes',
+   gl:'Cobranza de las facturas vencidas de los clientes con crédito',
+   simple:'Al cierre de abril los clientes con crédito pagaron todas sus facturas vencidas, <b>S/ 33,200.00</b>. El dinero entra a la cuenta del banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
+   lin:[ { fam:'banco', ok:'104', ld:'d', m:33200, q:'el dinero entra a la cuenta corriente' },
+         { fam:'cobrar',ok:'12',  ld:'h', m:33200, q:'baja lo que los clientes nos deben' } ] },
+
+ { n:4, fe:'30/04/2025', tipo:'cmp', pista:'despues',
+   gl:'Compra de mercadería al Proveedor 1',
+   simple:'Compramos mercadería al Proveedor 1 por <b>S/ 21,240.00</b>. El valor de la mercadería va a compras (cuenta <b>60</b>) y el IGV pagado va a la cuenta <b>40</b>, porque se podrá descontar del IGV de las ventas. Lo que le debemos al proveedor se anota en la cuenta <b>42</b>.',
+   calc:{ et:'El IGV de la compra', op:'18,000.00 × 18 %', v:3240 },
+   lin:[ { fam:'compra', ok:'60', ld:'d', m:18000, q:'el valor de lo que compramos, sin IGV' },
+         { fam:'tributo',ok:'40', ld:'d', m:3240,  q:'este IGV sí es nuestro: es crédito fiscal' },
+         { fam:'pagar',  ok:'42', ld:'h', m:21240, q:'le debemos al proveedor el total con IGV' } ] },
+
+ { n:5, fe:'30/04/2025', tipo:'des', pista:'despues',
+   gl:'Ingreso al almacén de la mercadería comprada al Proveedor 1',
+   simple:'Es el <b>asiento de destino</b>. La mercadería comprada entra al almacén y pasa a formar parte del inventario (cuenta <b>20</b>); la cuenta <b>61</b> es su contrapartida. Va el valor sin IGV.',
+   lin:[ { fam:'alma', ok:'20', ld:'d', m:18000, q:'la mercadería entra al almacén, sin IGV' },
+         { fam:'vari', ok:'61', ld:'h', m:18000, q:'la variación cierra el asiento de destino' } ] },
+
+ { n:6, fe:'30/04/2025', tipo:'cmp', pista:'despues',
+   gl:'Compra de mercadería al Proveedor 2',
+   simple:'Igual que con el Proveedor 1, se registra la compra por <b>S/ 11,210.00</b>: valor de la mercadería (cuenta <b>60</b>), IGV (cuenta <b>40</b>) y la deuda con el proveedor (cuenta <b>42</b>).',
+   calc:{ et:'El IGV de la compra', op:'9,500.00 × 18 %', v:1710 },
+   lin:[ { fam:'compra', ok:'60', ld:'d', m:9500,  q:'el valor de la compra' },
+         { fam:'tributo',ok:'40', ld:'d', m:1710,  q:'el IGV que podremos descontar' },
+         { fam:'pagar',  ok:'42', ld:'h', m:11210, q:'la deuda con el Proveedor 2' } ] },
+
+ { n:7, fe:'30/04/2025', tipo:'des', pista:'despues',
+   gl:'Ingreso al almacén de la mercadería comprada al Proveedor 2',
+   simple:'La mercadería del Proveedor 2 entra al almacén (cuenta <b>20</b>) contra la cuenta <b>61</b>.',
+   lin:[ { fam:'alma', ok:'20', ld:'d', m:9500, q:'entra al inventario' },
+         { fam:'vari', ok:'61', ld:'h', m:9500, q:'la contrapartida del destino' } ] },
+
+ { n:8, fe:'30/04/2025', tipo:'pag', pista:'final',
+   gl:'Pago a proveedores del mes de abril',
+   simple:'En abril se paga a los proveedores <b>S/ 32,450.00</b> por transferencia. Disminuye lo que debemos (cuenta <b>42</b>) y sale dinero del banco (cuenta <b>104</b>).',
+   calc:{ et:'Lo que se paga a los dos proveedores', op:'21,240.00 + 11,210.00', v:32450 },
+   lin:[ { fam:'pagar', ok:'42',  ld:'d', m:32450, q:'baja la deuda con los proveedores' },
+         { fam:'banco', ok:'104', ld:'h', m:32450, q:'sale el dinero de la cuenta corriente' } ] },
+
+ { n:9, fe:'31/05/2025', tipo:'cob', pista:'final',
+   gl:'Cobranza de las facturas por vencer de los clientes con crédito',
+   simple:'En mayo los clientes con crédito pagan las facturas que estaban por vencer, <b>S/ 23,800.00</b>. Entra dinero al banco (cuenta <b>104</b>) y disminuye lo que nos deben (cuenta <b>12</b>).',
+   lin:[ { fam:'banco', ok:'104', ld:'d', m:23800, q:'entra a la cuenta corriente' },
+         { fam:'cobrar',ok:'12',  ld:'h', m:23800, q:'baja la cuenta por cobrar' } ] }
+];
+
+/* las tres alternativas de cada línea, barajadas una vez por sesión */
+A.forEach(function(a){
+  a.lin.forEach(function(l){ l.ops=baraja(OPC[l.fam]); });
+});
+var TOTAL=A.reduce(function(n,a){ return n+a.lin.length+(a.calc?1:0); },0);
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('g7_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC();
+    if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sBien(){ nota(660,0,0.09,0.07,'triangle'); nota(990,0.07,0.12,0.05,'triangle'); }
+function sMal(){ nota(190,0,0.16,0.09,'sawtooth'); nota(130,0.13,0.26,0.08,'sawtooth'); }
+function sCuadra(){ nota(523.25,0,0.1,0.06,'triangle'); nota(784,0.09,0.18,0.05,'triangle'); }
+function sFin(){
+  [523.25,659.25,783.99,1046.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); });
+  nota(1318.5,0.45,0.6,0.07);
+}
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Silencio';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('g7_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) sBien();
+});
+pintaSon();
+
+/* =================== estado =================== */
+var LS='g7_avance_v1';
+function vacio(){ return { ok:{}, mal:{}, calc:{}, ayuda:{}, fallos:0 }; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object'){
+    G.ok=d.ok||{}; G.mal=d.mal||{}; G.calc=d.calc||{};
+    G.ayuda=d.ayuda||{}; G.fallos=d.fallos||0;
+  }
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+var festejado=false;
+
+function kl(a,i){ return a.n+'/'+i; }
+function puesta(a,i){ return G.ok[kl(a,i)]; }
+function calcOk(a){ return !a.calc || G.calc[a.n]===1; }
+function hechasA(a){
+  var n=calcOk(a)&&a.calc ? 1 : 0;
+  a.lin.forEach(function(l,i){ if(puesta(a,i)===l.ok) n++; });
+  return n;
+}
+function totalA(a){ return a.lin.length+(a.calc?1:0); }
+function listoA(a){ return hechasA(a)===totalA(a); }
+function hechas(){ return A.reduce(function(n,a){ return n+hechasA(a); },0); }
+function listoTodo(){ return hechas()===TOTAL; }
+function abierto(k){ return k===0 || listoA(A[k-1]); }
+function verPista(a){
+  if(a.pista==='antes') return true;
+  if(a.pista==='despues') return listoA(a) || G.ayuda[a.n]===1;
+  return listoA(a) || G.ayuda[a.n]===1;   /* 'final' */
+}
+
+/* =================== la chuleta del costado =================== */
+function pintaChuleta(){
+  var h='<div class="caja az"><h3><span>El método, en cuatro preguntas</span></h3>'+
+    '<div class="cuerpo"><div class="cuatro">'+
+    '<div class="pq"><b class="t"><span class="nn">1</span>¿Qué pasó?</b>'+
+    'Ponle nombre: venta, cobro, compra, destino o pago. Esa palabra ya decide casi todo.</div>'+
+    '<div class="pq"><b class="t"><span class="nn">2</span>¿Qué cuentas mueve?</b>'+
+    'Cada tipo mueve siempre las mismas. Están en las plantillas de abajo.</div>'+
+    '<div class="pq"><b class="t"><span class="nn">3</span>¿De qué lado va?</b>'+
+    'Lo que <b>entra</b> o lo que <b>me deben</b>, al Debe. Lo que <b>sale</b> o lo que <b>debo</b>, al Haber.</div>'+
+    '<div class="pq"><b class="t"><span class="nn">4</span>¿Cuánto?</b>'+
+    'El <b>total con IGV</b> a la cuenta del cliente o del proveedor. El <b>valor sin IGV</b> a la venta o a la compra. El IGV, aparte.</div>'+
+    '</div><div class="regla"><b>La regla de oro:</b> el Debe y el Haber de cada asiento tienen que '+
+    'dar lo mismo. Si no cuadra, falta una línea o un importe está mal.</div></div></div>';
+
+  h+='<div class="caja vd"><h3><span>Las cinco plantillas</span>'+
+     '<span class="st">cópialas tal cual</span></h3><div class="cuerpo">';
+  PLAN.forEach(function(p){
+    h+='<div class="pl '+p.k+'"><b>'+p.ic+' '+esc(p.t)+'</b><table><tbody>'+
+       p.l.map(function(x){
+         return '<tr><td class="cc">'+esc(x[0])+'</td><td>'+esc(x[2])+'</td>'+
+                '<td class="ld '+x[1]+'">'+(x[1]==='d'?'Debe':'Haber')+'</td></tr>';
+       }).join('')+'</tbody></table></div>';
+  });
+  h+='<p style="font-size:11.5px;color:var(--o-muted);line-height:1.5;margin:4px 0 0">'+
+     'Toda compra lleva <b>dos</b> asientos: el de la compra y el del destino al almacén.</p>'+
+     '</div></div>';
+  $('chuleta').innerHTML=h;
+}
+
+/* =================== la hoja de trabajo =================== */
+function filaLinea(a, l, i){
+  var p=puesta(a,i), bien=(p===l.ok);
+  var h='<tr><td style="width:46%">';
+  if(bien){
+    h+='<span class="ccok">'+esc(l.ok)+'</span> <span class="nomb">'+esc(CU[l.ok].ic+' '+CU[l.ok].n)+'</span>'+
+       '<span class="porq">'+esc(l.q)+'</span>';
+  }else{
+    var malos=G.mal[kl(a,i)]||[];
+    h+='<div class="ops" data-a="'+a.n+'" data-i="'+i+'">'+
+       l.ops.map(function(c){
+         var m=malos.indexOf(c)>=0;
+         return '<button type="button" data-c="'+esc(c)+'"'+(m?' class="mala" disabled':'')+'>'+
+                '<span class="cd">'+esc(c)+'</span>'+esc(CU[c].n.split(' —')[0])+'</button>';
+       }).join('')+'</div>';
+  }
+  h+='</td><td class="n" data-et="Debe">'+(l.ld==='d'
+       ? (bien?'<b>'+miles(l.m)+'</b>':'<span class="lado-et d">Debe</span>') : '')+'</td>'+
+     '<td class="n" data-et="Haber">'+(l.ld==='h'
+       ? (bien?'<b>'+miles(l.m)+'</b>':'<span class="lado-et h">Haber</span>') : '')+'</td></tr>';
+  return h;
+}
+
+function vistaAsiento(a, k){
+  var listo=listoA(a), act=(!listo && abierto(k));
+  var h='<div class="as'+(listo?' listo':(act?' activo':''))+'">'+
+    '<div class="ah"><span class="nro">'+a.n+'</span><span class="fe">'+esc(a.fe)+'</span>'+
+    '<span class="gl">'+esc(a.gl)+'</span>'+
+    '<span class="tip t-'+a.tipo+'">'+esc(NOMT[a.tipo])+'</span></div>';
+
+  if(!abierto(k)){
+    return h+'<div class="bloq">Se abre cuando termines el asiento '+A[k-1].n+'. '+
+      'Llevas '+hechasA(A[k-1])+' de '+totalA(A[k-1])+'.</div></div>';
+  }
+
+  if(verPista(a)){
+    h+='<div class="simple"><span class="et">En palabras simples</span>'+a.simple+'</div>';
+  }
+
+  if(a.calc){
+    var ok=(G.calc[a.n]===1);
+    h+='<div class="calc"><span class="et">'+esc(a.calc.et)+'</span>'+
+       '<span class="op">'+esc(a.calc.op)+' =</span>'+
+       (ok ? '<span class="val">'+miles(a.calc.v)+'</span>'
+           : '<input type="text" inputmode="decimal" data-k="'+a.n+'" placeholder="?" autocomplete="off">')+
+       '</div>';
+  }
+
+  var puedeLineas = calcOk(a);
+  h+='<div class="envuelve"><table class="t"><thead><tr><th>Código y denominación</th>'+
+     '<th class="n" style="width:21%">Debe</th><th class="n" style="width:21%">Haber</th></tr></thead><tbody>';
+  if(puedeLineas){
+    a.lin.forEach(function(l,i){ h+=filaLinea(a,l,i); });
+    var d=0,hh=0;
+    a.lin.forEach(function(l,i){ if(puesta(a,i)===l.ok){ if(l.ld==='d') d+=l.m; else hh+=l.m; } });
+    var cuadra=listo && Math.abs(d-hh)<0.005;
+    h+='<tr class="tot'+(cuadra?' cuadra':'')+'"><td>'+(cuadra?'✓ Cuadra':'Sumas')+'</td>'+
+       '<td class="n" data-et="Debe">'+miles(d)+'</td><td class="n" data-et="Haber">'+miles(hh)+'</td></tr>';
+  }else{
+    h+='<tr><td colspan="3" style="color:var(--o-muted);font-size:12.5px">'+
+       'Primero resuelve el cálculo de arriba: sin ese importe el asiento no se puede armar.</td></tr>';
+  }
+  h+='</tbody></table></div>';
+
+  if(!verPista(a) && !listo){
+    h+='<div class="ayuda"><button type="button" data-ay="'+a.n+'">💡 Ver la ayuda en palabras simples</button></div>';
+  }
+  return h+'</div>';
+}
+
+function pinta(){
+  var h='';
+  A.forEach(function(a,k){ h+=vistaAsiento(a,k); });
+  if(listoTodo()) h+=vistaCierre();
+  $('panel').innerHTML=h;
+  pintaChuleta();
+  var n=hechas();
+  $('cuenta').innerHTML='<b>'+n+' de '+TOTAL+'</b> pasos de la hoja';
+  $('progI').style.width=(n/TOTAL*100)+'%';
+  cablea();
+  pintaMarcador();
+}
+
+function vistaCierre(){
+  return '<div class="caja vd"><h3><span>Los nueve asientos resueltos</span>'+
+    '<span class="st">el ciclo completo de abril y mayo</span></h3><div class="cuerpo">'+
+    '<p>Eso es todo el ciclo: se <b>vende</b>, se <b>cobra</b>, se <b>compra</b>, la mercadería '+
+    '<b>entra al almacén</b> y se <b>paga</b> al proveedor. Nueve asientos, cinco plantillas.</p>'+
+    '<p>Dos cosas para no olvidar. La primera: el <b>IGV de la venta</b> se abona (lo debemos a la '+
+    'SUNAT) y el <b>IGV de la compra</b> se carga (lo podemos descontar); por eso la cuenta 40 '+
+    'aparece a los dos lados. La segunda: toda compra lleva <b>dos asientos</b>, el de la compra y '+
+    'el del ingreso al almacén, y el de destino va con el valor <b>sin IGV</b>.</p>'+
+    '<p style="margin:0">Fíjate también en que el pago de abril, S/ 32,450.00, es exactamente la suma '+
+    'de las dos compras: 21,240.00 + 11,210.00. Al cerrar el mes no queda nada pendiente con los '+
+    'proveedores.</p></div></div>';
+}
+
+function cablea(){
+  qq('#panel .ops[data-a]').forEach(function(g){
+    var a=null; A.forEach(function(x){ if(x.n===+g.dataset.a) a=x; });
+    var i=+g.dataset.i, l=a.lin[i];
+    qq('button', g).forEach(function(b){
+      if(b.disabled) return;
+      b.addEventListener('click', function(){
+        if(b.dataset.c===l.ok){
+          G.ok[kl(a,i)]=l.ok; graba();
+          if(listoA(a)) sCuadra(); else sBien();
+          pinta(); revisaFin();
+        }else{
+          var k=kl(a,i);
+          if(!G.mal[k]) G.mal[k]=[];
+          if(G.mal[k].indexOf(b.dataset.c)<0) G.mal[k].push(b.dataset.c);
+          G.fallos++; graba(); sMal();
+          b.classList.add('temblor','mala'); b.disabled=true;
+          setTimeout(function(){ b.classList.remove('temblor'); }, 420);
+          pintaMarcador();
+        }
+      });
+    });
+  });
+
+  qq('#panel .calc input[data-k]').forEach(function(inp){
+    var a=null; A.forEach(function(x){ if(x.n===+inp.dataset.k) a=x; });
+    function prueba(){
+      var v=parseFloat(String(inp.value).replace(/[\s,]/g,''));
+      if(isNaN(v)) return;
+      if(Math.abs(v-a.calc.v)<0.005){ G.calc[a.n]=1; graba(); sBien(); pinta(); revisaFin(); }
+      else{
+        G.fallos++; graba(); sMal();
+        inp.classList.add('mal');
+        setTimeout(function(){ inp.classList.remove('mal'); inp.select(); }, 450);
+      }
+    }
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); prueba(); } });
+    inp.addEventListener('blur', function(){ if(String(inp.value).trim()!=='') prueba(); });
+  });
+
+  qq('#panel button[data-ay]').forEach(function(b){
+    b.addEventListener('click', function(){
+      G.ayuda[+b.dataset.ay]=1; graba(); pinta();
+    });
+  });
+}
+
+function pintaMarcador(){
+  var m=$('marcador');
+  if(listoTodo()){
+    m.className='marcador ok';
+    m.innerHTML='✓ Hoja terminada: los nueve asientos cuadran'+
+      (G.fallos ? ' · '+G.fallos+(G.fallos>1?' elecciones falladas':' elección fallada') : ' y sin fallar ninguna')+'.';
+    return;
+  }
+  m.className='marcador';
+  var k=0; while(k<A.length && listoA(A[k])) k++;
+  var a=A[k];
+  m.innerHTML='Asiento '+a.n+' · '+esc(NOMT[a.tipo])+': '+hechasA(a)+' de '+totalA(a)+'. '+
+    (a.calc && !calcOk(a) ? 'Empieza por el cálculo.' : 'Elige la cuenta de cada línea entre las tres.');
+}
+
+function revisaFin(){
+  if(listoTodo() && !festejado){ festejado=true; festeja(); }
+}
+
+function festeja(){
+  sFin();
+  var cv=$('confeti'), x=cv.getContext('2d');
+  cv.style.display='block'; cv.width=innerWidth; cv.height=innerHeight;
+  var col=['#1F5FA8','#147A5C','#E8CE8A','#714B67','#B42318'], p=[];
+  for(var i=0;i<110;i++) p.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.4,
+    vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+    c:col[i%col.length], r:Math.random()*6});
+  var t0=Date.now();
+  (function p2(){
+    x.clearRect(0,0,cv.width,cv.height);
+    p.forEach(function(u){ u.x+=u.vx; u.y+=u.vy; u.r+=0.08;
+      x.save(); x.translate(u.x,u.y); x.rotate(u.r); x.fillStyle=u.c;
+      x.fillRect(-u.s/2,-u.s/2,u.s,u.s*0.6); x.restore(); });
+    if(Date.now()-t0<2500) requestAnimationFrame(p2);
+    else { x.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })();
+}
+
+/* =================== sala =================== */
+function resumenAula(){
+  var k=0; while(k<A.length && listoA(A[k])) k++;
+  return { asiento:(k<A.length? ('Asiento '+A[k].n+' · '+NOMT[A[k].tipo]) : 'Terminado'),
+           hechos:A.filter(listoA).length+'/'+A.length,
+           pasos:hechas()+'/'+TOTAL,
+           ayudas:Object.keys(G.ayuda).length,
+           listo:listoTodo(), fallos:G.fallos };
+}
+function ventanaAula(e){
+  return '<div class="vmini">'+
+    '<div class="lin"><span>'+esc(e.asiento||'—')+'</span><b>'+(e.listo?'terminado':'en curso')+'</b></div>'+
+    '<div class="lin"><span>Asientos cerrados</span><b>'+esc(e.hechos||'—')+'</b></div>'+
+    '<div class="lin"><span>Pasos</span><b>'+esc(e.pasos||'—')+'</b></div>'+
+    '<div class="lin"><span>Ayudas abiertas</span><b>'+(e.ayudas||0)+'</b></div>'+
+    '<div class="lin"><span>Elecciones falladas</span><b>'+(e.fallos||0)+'</b></div></div>';
+}
+
+/* =================== arranque =================== */
+(function inicio(){
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar la hoja',
+    aviso:'Se borra tu avance en los nueve asientos.',
+    hecho:function(){ G=vacio(); festejado=false; pinta(); }
+  });
+  Aula.iniciar({ sala:'G7', codigo:'CONTA7', resumen:resumenAula, ventana:ventanaAula,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('zona').hidden=!dentro;
+      if(dentro){ if(listoTodo()) festejado=true; pinta(); }
+    } });
+})();
+
+})();
+</script>
+
+</body>
+</html>
