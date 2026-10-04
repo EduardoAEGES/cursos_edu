@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adivina la cuenta · el juego de la mímica contable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .jg{
+    --ac:#1F6FB2; --anc:#146B4F; --pc:#C0392B; --pnc:#B25E09;
+    --pat:#714B67; --ing:#017E84; --gas:#334155;
+    --gris:#5A5A5A; --ama:#FFF8E1; --amaBd:#E8CE8A;
+    max-width:1180px; margin:0 auto;
+  }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--o-purple); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.6vw,24px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo .acc{ margin-left:auto; display:flex; gap:7px; flex-wrap:wrap; }
+
+  /* ---------- marcador ---------- */
+  .marcador{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+  .mk{ display:flex; align-items:center; gap:7px; border:2px solid var(--o-border);
+       border-radius:10px; padding:6px 11px; background:#fff; font-size:13px; font-weight:700;
+       color:var(--gris); }
+  .mk b{ font-size:16px; font-variant-numeric:tabular-nums; color:var(--o-purple); }
+  .mk.racha b{ color:#C2410C; }
+  .mk .et{ font-size:11px; font-weight:600; color:var(--o-muted); text-transform:uppercase;
+           letter-spacing:.4px; }
+  .riel{ flex:1 1 170px; min-width:130px; height:10px; border-radius:99px;
+         background:var(--o-line); overflow:hidden; border:1px solid var(--o-border); }
+  .riel i{ display:block; height:100%; width:0; background:var(--o-purple);
+           transition:width .35s ease; }
+
+  /* ---------- escenario ---------- */
+  .escena{
+    position:relative; border:2px solid var(--o-border); border-radius:16px; overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 42%, #FFFFFF 0%, #F2F4F8 58%, #E6EAF1 100%);
+    min-height:232px; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; gap:10px; padding:20px 16px 16px;
+  }
+  .escena::before{
+    content:''; position:absolute; left:0; right:0; bottom:0; height:46px;
+    background:linear-gradient(to top, rgba(31,31,31,.09), rgba(31,31,31,0));
+  }
+  .foco{ position:absolute; top:-46%; left:50%; width:300px; height:300px; margin-left:-150px;
+         border-radius:50%; background:radial-gradient(circle, rgba(255,236,170,.55), rgba(255,236,170,0) 70%);
+         pointer-events:none; }
+
+  .sim{ position:relative; width:150px; height:118px; display:flex; align-items:center;
+        justify-content:center; z-index:1; }
+  .sim i{ font-style:normal; font-size:76px; line-height:1; display:block;
+          animation:2s ease-in-out infinite both; will-change:transform; }
+  .sim .sombra{ position:absolute; bottom:-2px; left:50%; width:62px; height:11px;
+                margin-left:-31px; border-radius:50%; background:rgba(31,31,31,.16);
+                filter:blur(3px); animation:sombra 2s ease-in-out infinite both; }
+  .sim .ins{ position:absolute; right:6px; bottom:12px; font-size:30px; line-height:1;
+             filter:drop-shadow(0 1px 2px rgba(0,0,0,.25)); }
+
+  .mimica{ position:relative; z-index:1; max-width:640px; text-align:center;
+           font-size:14.5px; line-height:1.6; color:#2B3A4A; background:rgba(255,255,255,.9);
+           border:1.5px solid var(--o-border); border-radius:12px; padding:9px 14px; }
+  .mimica .cl{ display:block; font-size:11px; font-weight:800; letter-spacing:.6px;
+               text-transform:uppercase; color:var(--o-purple); margin-bottom:2px; }
+  .mimica b{ color:#16305A; }
+
+  /* ---------- pregunta y opciones ---------- */
+  .preg{ margin:16px 0 9px; font-size:15.5px; font-weight:800; color:var(--gris); }
+  .preg small{ display:block; font-size:12.5px; font-weight:600; color:var(--o-muted);
+               margin-top:2px; }
+
+  .ops{ display:grid; gap:9px; grid-template-columns:1fr; }
+  @media (min-width:700px){ .ops.tres{ grid-template-columns:repeat(3,1fr); } }
+  .ops button{
+    font:inherit; font-size:14.5px; font-weight:700; cursor:pointer; text-align:left;
+    border:2px solid var(--o-border); background:#fff; color:var(--o-text);
+    border-radius:12px; padding:13px 15px; line-height:1.4; min-height:52px;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .ops button:hover:not([disabled]){ border-color:var(--o-purple); background:var(--o-purple-soft);
+    transform:translateY(-2px); box-shadow:0 5px 14px rgba(113,75,103,.16); }
+  .ops button[disabled]{ cursor:default; }
+  .ops button.mala{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12;
+                    text-decoration:line-through; opacity:.75; }
+  .ops button.fuera{ opacity:.3; }
+
+  /* grupos */
+  .ops.grupos{ grid-template-columns:repeat(auto-fit,minmax(156px,1fr)); }
+  .ops.grupos button{ text-align:center; padding:12px 10px; border-width:2.5px; }
+  .ops.grupos button .ab{ display:block; font-size:11px; font-weight:800; letter-spacing:.7px;
+                          opacity:.85; margin-bottom:2px; }
+  .ops.grupos button .nm{ display:block; font-size:14px; line-height:1.25; }
+  .g-AC{ color:var(--ac); border-color:#B8D3EA !important; }
+  .g-ANC{ color:var(--anc); border-color:#A9D3C4 !important; }
+  .g-PC{ color:var(--pc); border-color:#EEB6AF !important; }
+  .g-PNC{ color:var(--pnc); border-color:#EBCB9B !important; }
+  .g-PAT{ color:var(--pat); border-color:#D8CBD4 !important; }
+  .g-ING{ color:var(--ing); border-color:#A8D4D6 !important; }
+  .g-GAS{ color:var(--gas); border-color:#BCC5D1 !important; }
+  .ops.grupos button:hover:not([disabled]){ background:#F6F8FB; box-shadow:0 5px 14px rgba(31,31,31,.12); }
+
+  /* ---------- resultado de la ronda ---------- */
+  .resuelto{ border:2px solid var(--o-border); border-radius:14px; padding:14px 16px;
+             background:#F8FBF9; margin-top:12px; }
+  .resuelto .fila{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .insignia{ display:inline-flex; flex-direction:column; align-items:center; gap:1px;
+             border-radius:10px; padding:7px 13px; color:#fff; font-weight:800; flex:none; }
+  .insignia .ab{ font-size:11px; letter-spacing:.8px; opacity:.9; }
+  .insignia .nm{ font-size:14px; }
+  .b-AC{ background:var(--ac); } .b-ANC{ background:var(--anc); } .b-PC{ background:var(--pc); }
+  .b-PNC{ background:var(--pnc); } .b-PAT{ background:var(--pat); } .b-ING{ background:var(--ing); }
+  .b-GAS{ background:var(--gas); }
+  .resuelto .cuenta{ font-size:16px; font-weight:800; color:var(--gris); }
+  .resuelto .pq{ margin:9px 0 0; font-size:13.5px; line-height:1.6; color:#2B3A4A; }
+  .resuelto .pq b{ color:#16305A; }
+  .resuelto .seña{ margin:9px 0 0; font-size:13px; color:var(--o-muted); }
+  .resuelto .seña b{ color:var(--o-text); }
+  .estrellas{ margin-left:auto; font-size:17px; letter-spacing:2px; }
+
+  .nota{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:10px 13px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .nota b{ color:#3F3208; }
+
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:13px; align-items:center; }
+  .mandos .crece{ flex:1 1 auto; }
+
+  /* ---------- las 7 señas ---------- */
+  .senas{ display:grid; gap:10px; grid-template-columns:1fr; }
+  @media (min-width:880px){ .senas{ grid-template-columns:1fr 1fr; } }
+  .sena{ border:2px solid var(--o-border); border-radius:13px; padding:11px 12px; background:#fff;
+         display:flex; gap:13px; align-items:center; }
+  .sena .caja{ width:92px; height:70px; flex:none; border-radius:11px; background:#F4F6FA;
+               display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .sena .caja i{ font-style:normal; font-size:35px; line-height:1;
+                 animation:2s ease-in-out infinite both; }
+  .sena .tx{ min-width:0; }
+  .sena .tx > b:first-child{ display:block; font-size:13.5px; }
+  .sena .tx .lema{ display:block; font-size:12px; font-weight:700; color:var(--o-muted);
+                   margin:1px 0 3px; }
+  .sena .tx .rg{ display:block; font-size:12.5px; line-height:1.55; color:#2B3A4A; text-wrap:pretty; }
+
+  /* ---------- final ---------- */
+  .final{ text-align:center; padding:6px 0 2px; }
+  .final .medalla{ font-size:62px; line-height:1; }
+  .final h2{ margin:6px 0 2px; font-size:21px; font-weight:800; color:var(--gris); }
+  .final .lead{ margin:0 0 14px; font-size:14px; color:var(--o-muted); }
+  .final .cifras{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-bottom:14px; }
+  .cif{ border:2px solid var(--o-border); border-radius:12px; padding:9px 16px; background:#fff;
+        min-width:112px; }
+  .cif b{ display:block; font-size:24px; font-weight:800; color:var(--o-purple);
+          font-variant-numeric:tabular-nums; }
+  .cif span{ font-size:11.5px; font-weight:700; color:var(--o-muted); text-transform:uppercase;
+             letter-spacing:.4px; }
+
+  .tabla{ width:100%; border-collapse:collapse; font-size:13px; margin-top:4px; }
+  .tabla th, .tabla td{ border:1px solid var(--o-border); padding:7px 10px; text-align:left; }
+  .tabla th{ background:#F5F7FA; font-weight:800; font-size:12px; color:var(--gris);
+             text-transform:uppercase; letter-spacing:.4px; }
+  .tabla td.n{ text-align:center; width:1%; white-space:nowrap; font-weight:800;
+               font-variant-numeric:tabular-nums; }
+  .tabla td .pt{ display:inline-block; width:11px; height:11px; border-radius:3px;
+                 margin-right:7px; vertical-align:-1px; }
+  .tabla tr.flojo td{ background:#FDECEA; }
+
+  /* ---------- temblor ---------- */
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)}
+                      40%{transform:translateX(7px)} 60%{transform:translateX(-5px)}
+                      80%{transform:translateX(5px)} }
+
+  /* ================= las mímicas de cada símbolo ================= */
+  @keyframes m-rebota{ 0%,100%{transform:translateY(0) rotate(-5deg)} 45%{transform:translateY(-28px) rotate(7deg)} }
+  @keyframes m-flota{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-13px)} }
+  @keyframes m-apila{ 0%{transform:translateY(-26px) scale(.86); opacity:.2} 38%{transform:translateY(0) scale(1); opacity:1} 100%{transform:translateY(0) scale(1); opacity:1} }
+  @keyframes m-jala{ 0%{transform:translateX(38px) rotate(9deg)} 55%{transform:translateX(-10px) rotate(-5deg)} 100%{transform:translateX(0) rotate(0)} }
+  @keyframes m-maneja{ 0%{transform:translateX(-118px) scaleX(1)} 48%{transform:translateX(0) translateY(-5px)} 50%{transform:translateX(2px) translateY(0)} 100%{transform:translateX(118px)} }
+  @keyframes m-firme{ 0%,100%{transform:translateY(0) scaleY(1)} 50%{transform:translateY(3px) scaleY(.975)} }
+  @keyframes m-teclea{ 0%,100%{transform:translate(0,0)} 20%{transform:translate(-3px,1px)} 45%{transform:translate(3px,-1px)} 70%{transform:translate(-2px,-2px)} }
+  @keyframes m-empuja{ 0%{transform:translateX(-26px) rotate(-7deg); opacity:1} 80%{opacity:.4} 100%{transform:translateX(34px) rotate(12deg); opacity:.15} }
+  @keyframes m-sella{ 0%,100%{transform:translateY(-18px) scale(1)} 16%{transform:translateY(8px) scale(1.1,.86)} 30%{transform:translateY(0) scale(1)} }
+  @keyframes m-saluda{ 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(10deg)} }
+  @keyframes m-calendario{ 0%,100%{transform:rotate(0) translateY(0)} 25%{transform:rotate(-6deg) translateY(-7px)} 75%{transform:rotate(6deg) translateY(-7px)} }
+  @keyframes m-presta{ 0%{transform:translateX(0) scale(1)} 40%{transform:translateX(16px) scale(1.07)} 100%{transform:translateX(0) scale(1)} }
+  @keyframes m-aporta{ 0%,100%{transform:scale(1) rotate(-3deg)} 42%{transform:scale(1.2) rotate(3deg)} }
+  @keyframes m-brilla{ 0%,100%{transform:scale(1); filter:drop-shadow(0 0 0 rgba(255,190,0,0))} 50%{transform:scale(1.1); filter:drop-shadow(0 0 20px rgba(255,190,0,.95))} }
+  @keyframes m-pasacaja{ 0%{transform:translateX(-82px) translateY(0)} 50%{transform:translateX(0) translateY(-16px)} 100%{transform:translateX(82px) translateY(0)} }
+  @keyframes m-gira{ 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+  @keyframes m-parpadea{ 0%,100%{opacity:1; filter:drop-shadow(0 0 16px rgba(255,214,0,.9))} 44%{opacity:.22; filter:none} }
+  @keyframes m-ondea{ 0%,100%{transform:rotate(-8deg) translateY(0)} 50%{transform:rotate(8deg) translateY(-6px)} }
+  @keyframes sombra{ 0%,100%{transform:scaleX(1); opacity:.16} 50%{transform:scaleX(.74); opacity:.09} }
+
+  .jg i.m-rebota{ animation-name:m-rebota; animation-duration:1.1s; }
+  .jg i.m-flota{ animation-name:m-flota; animation-duration:2.4s; }
+  .jg i.m-apila{ animation-name:m-apila; animation-duration:1.5s; }
+  .jg i.m-jala{ animation-name:m-jala; animation-duration:1.7s; }
+  .jg i.m-maneja{ animation-name:m-maneja; animation-duration:2.6s; animation-timing-function:linear; }
+  .jg i.m-firme{ animation-name:m-firme; animation-duration:3.4s; }
+  .jg i.m-teclea{ animation-name:m-teclea; animation-duration:.42s; }
+  .jg i.m-empuja{ animation-name:m-empuja; animation-duration:1.9s; }
+  .jg i.m-sella{ animation-name:m-sella; animation-duration:1.5s; }
+  .jg i.m-saluda{ animation-name:m-saluda; animation-duration:1.2s; }
+  .jg i.m-calendario{ animation-name:m-calendario; animation-duration:3s; }
+  .jg i.m-presta{ animation-name:m-presta; animation-duration:2.2s; }
+  .jg i.m-aporta{ animation-name:m-aporta; animation-duration:1.6s; }
+  .jg i.m-brilla{ animation-name:m-brilla; animation-duration:1.9s; }
+  .jg i.m-pasacaja{ animation-name:m-pasacaja; animation-duration:2.3s; animation-timing-function:linear; }
+  .jg i.m-gira{ animation-name:m-gira; animation-duration:1.9s; animation-timing-function:linear; }
+  .jg i.m-parpadea{ animation-name:m-parpadea; animation-duration:1.3s; }
+  .jg i.m-ondea{ animation-name:m-ondea; animation-duration:2.1s; }
+
+  /* ================= las señas de los 7 grupos ================= */
+  @keyframes g-rueda{ 0%{transform:translateX(-62px) rotate(0)} 100%{transform:translateX(62px) rotate(720deg)} }
+  @keyframes g-planta{ 0%{transform:translateY(-34px) scale(1)} 16%{transform:translateY(0) scale(1.16,.82)} 28%{transform:translateY(0) scale(1)} 64%{transform:translateY(0) rotate(1.5deg)} 100%{transform:translateY(0) rotate(0)} }
+  @keyframes g-apura{ 0%,52%,100%{transform:translate(0,0) rotate(0)} 8%{transform:translate(-6px,0) rotate(-8deg)} 16%{transform:translate(6px,0) rotate(8deg)} 24%{transform:translate(-6px,0) rotate(-8deg)} 32%{transform:translate(6px,0) rotate(8deg)} 40%{transform:translate(-4px,0) rotate(-5deg)} }
+  @keyframes g-mece{ 0%,100%{transform:rotate(-14deg)} 50%{transform:rotate(14deg)} }
+  @keyframes g-late{ 0%,100%{transform:scale(1); filter:drop-shadow(0 0 0 rgba(113,75,103,0))} 50%{transform:scale(1.16); filter:drop-shadow(0 0 22px rgba(113,75,103,.75))} }
+  @keyframes g-sube{ 0%{transform:translateY(38px); opacity:0} 22%{opacity:1} 78%{opacity:1} 100%{transform:translateY(-38px); opacity:0} }
+  @keyframes g-baja{ 0%{transform:translateY(-38px); opacity:0} 22%{opacity:1} 78%{opacity:1} 100%{transform:translateY(38px); opacity:0} }
+
+  .jg i.g-rueda{ animation-name:g-rueda; animation-duration:1.1s; animation-timing-function:linear; }
+  .jg i.g-planta{ animation-name:g-planta; animation-duration:2.8s; }
+  .jg i.g-apura{ animation-name:g-apura; animation-duration:1s; }
+  .jg i.g-mece{ animation-name:g-mece; animation-duration:3.2s; transform-origin:50% 0%; }
+  .jg i.g-late{ animation-name:g-late; animation-duration:1.8s; }
+  .jg i.g-sube{ animation-name:g-sube; animation-duration:1.7s; animation-timing-function:linear; }
+  .jg i.g-baja{ animation-name:g-baja; animation-duration:1.7s; animation-timing-function:linear; }
+
+  /* en la leyenda el recuadro es chico: mismas señas, recorrido corto */
+  @keyframes g-rueda-c{ 0%{transform:translateX(-27px) rotate(0)} 100%{transform:translateX(27px) rotate(720deg)} }
+  @keyframes g-planta-c{ 0%{transform:translateY(-17px) scale(1)} 16%{transform:translateY(0) scale(1.16,.82)} 28%,100%{transform:translateY(0) scale(1)} }
+  @keyframes g-sube-c{ 0%{transform:translateY(19px); opacity:0} 25%,75%{opacity:1} 100%{transform:translateY(-19px); opacity:0} }
+  @keyframes g-baja-c{ 0%{transform:translateY(-19px); opacity:0} 25%,75%{opacity:1} 100%{transform:translateY(19px); opacity:0} }
+  .jg .sena .caja i.g-apura{ animation-name:g-apura-c; }
+  @keyframes g-apura-c{ 0%,52%,100%{transform:translate(0,0) rotate(0)} 8%{transform:translate(-5px,0) rotate(-8deg)} 16%{transform:translate(5px,0) rotate(8deg)} 24%{transform:translate(-5px,0) rotate(-8deg)} 32%{transform:translate(5px,0) rotate(8deg)} 40%{transform:translate(-3px,0) rotate(-5deg)} }
+  .jg .sena .caja i.g-rueda{ animation-name:g-rueda-c; }
+  .jg .sena .caja i.g-planta{ animation-name:g-planta-c; }
+  .jg .sena .caja i.g-sube{ animation-name:g-sube-c; }
+  .jg .sena .caja i.g-baja{ animation-name:g-baja-c; }
+
+  @media (prefers-reduced-motion: reduce){
+    .sim i, .sena .caja i, .sim .sombra{ animation:none !important; }
+    .ops button:hover:not([disabled]){ transform:none; }
+    .temblor{ animation:none; }
+  }
+  @media (max-width:560px){
+    .sim{ width:124px; height:100px; }
+    .sim i{ font-size:60px; }
+    .escena{ min-height:206px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matemáticas Aplicadas</a></span> / <b>Adivina la cuenta</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">12 rondas</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap jg">
+
+  <div class="o-sheet">
+    <div class="titulo">
+      <div>
+        <h1>🎭 Adivina la cuenta</h1>
+        <p>El juego de la mímica contable · activo, pasivo, patrimonio, ingresos y gastos</p>
+      </div>
+      <div class="acc">
+        <button type="button" class="o-btn o-btn-secondary" id="btnSenas">🤟 Las 7 señas</button>
+        <button type="button" class="o-btn o-btn-secondary" id="btnSon" aria-pressed="true">🔊 Sonido</button>
+      </div>
+    </div>
+
+    <div class="nota" id="instru">
+      <b>Cómo se juega.</b> Igual que «adivina la película», pero con cuentas. En el escenario sale
+      un símbolo haciendo mímica. Tú adivinas <b>qué cuenta es</b> y después <b>a qué grupo va</b>.
+      Si aciertas a la primera ganas <b>3 puntos</b>; si fallas y luego aciertas, <b>1</b>. Tienes
+      <b>3 comodines</b> para que el juego te quite opciones. Cuando aciertas el grupo, el símbolo
+      hace <b>la seña del grupo</b>: esa seña es la regla, apréndetela.
+    </div>
+
+    <div class="o-acciones centrado" style="margin-top:14px" id="arranque">
+      <button type="button" class="o-btn o-btn-primary" id="btnJugar">▶ Empezar a jugar</button>
+      <button type="button" class="o-btn o-btn-secondary" id="btnVerSenas2">Ver primero las 7 señas</button>
+    </div>
+  </div>
+
+  <div class="o-sheet" id="hojaJuego" hidden>
+    <div class="marcador">
+      <span class="mk"><span class="et">Ronda</span><b id="mRonda">1</b></span>
+      <span class="mk"><span class="et">Puntos</span><b id="mPuntos">0</b></span>
+      <span class="mk racha"><span class="et">Racha</span><b id="mRacha">0</b></span>
+      <span class="mk"><span class="et">Comodines</span><b id="mComo">3</b></span>
+      <span class="riel"><i id="mRiel"></i></span>
+    </div>
+
+    <div class="escena">
+      <span class="foco"></span>
+      <div class="sim" id="sim"></div>
+      <p class="mimica" id="mimica"></p>
+    </div>
+
+    <p class="preg" id="preg"></p>
+    <div class="ops" id="ops"></div>
+    <div id="caja"></div>
+
+    <div class="mandos">
+      <button type="button" class="o-btn o-btn-secondary" id="btnComo">🃏 Usar un comodín</button>
+      <span class="crece"></span>
+      <button type="button" class="o-btn o-btn-secondary" id="btnSenas3">🤟 Las 7 señas</button>
+    </div>
+  </div>
+
+  <div class="o-sheet" id="hojaFin" hidden></div>
+
+  <div class="o-sheet" id="hojaSenas" hidden>
+    <h2 class="o-section-title">🤟 Las 7 señas</h2>
+    <p style="margin:0 0 12px; font-size:13.5px; color:var(--o-muted)">
+      Cada grupo se mueve de una manera. Si te aprendes el movimiento, te aprendes la regla.
+    </p>
+    <div class="senas" id="listaSenas"></div>
+    <div class="nota" style="margin-top:13px">
+      <b>La palabra «corriente» es la clave.</b> Corriente quiere decir <b>dentro del año</b>: se
+      convierte en efectivo o se paga antes de los doce meses, por eso se mueve rápido. No corriente
+      quiere decir <b>después del año</b>: se queda, se usa, se paga de a pocos, por eso se mueve lento.
+    </div>
+    <div class="o-acciones centrado" style="margin-top:14px">
+      <button type="button" class="o-btn o-btn-primary" id="btnCerrarSenas">Cerrar</button>
+    </div>
+  </div>
+
+  <div id="zonaReinicio" class="o-acciones centrado o-mb"></div>
+
+  <div class="o-footer">
+    <span>Matemáticas Aplicadas / Pensamiento Lógico · Adivina la cuenta</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* =================== los 7 grupos =================== */
+var GR={
+  AC:{ n:'Activo corriente', sena:'g-rueda', lema:'Rueda rápido',
+       rg:'Lo que la empresa tiene y se vuelve efectivo <b>antes del año</b>.' },
+  ANC:{ n:'Activo no corriente', sena:'g-planta', lema:'Se planta y no se mueve',
+       rg:'Lo que la empresa tiene para <b>usarlo varios años</b>, no para venderlo.' },
+  PC:{ n:'Pasivo corriente', sena:'g-apura', lema:'Tiembla, hay que pagar ya',
+       rg:'Lo que la empresa debe y vence <b>dentro del año</b>.' },
+  PNC:{ n:'Pasivo no corriente', sena:'g-mece', lema:'Se mece lento',
+       rg:'Lo que la empresa debe y vence <b>después del año</b>.' },
+  PAT:{ n:'Patrimonio', sena:'g-late', lema:'Late en el centro',
+       rg:'Lo que pusieron los dueños y lo que la empresa ganó y no repartió.' },
+  ING:{ n:'Ingresos', sena:'g-sube', lema:'Sube',
+       rg:'Lo que la empresa <b>gana</b> por vender bienes o prestar servicios.' },
+  GAS:{ n:'Gastos', sena:'g-baja', lema:'Baja',
+       rg:'Lo que la empresa <b>consume</b> para poder funcionar.' }
+};
+var ORDEN=['AC','ANC','PC','PNC','PAT','ING','GAS'];
+var EJEM={ AC:'💵', ANC:'🏭', PC:'📄', PNC:'🏦', PAT:'🤝', ING:'🛒', GAS:'💡' };
+
+/* =================== el banco de mímicas ===================
+   ops[0] siempre es la respuesta correcta; se barajan al pintar. */
+var BANCO=[
+  { id:'caja', s:'💵', mim:'m-rebota', g:'AC',
+    pista:'Un cliente nos pagó <b>S/ 2,000 en billetes</b> y el dinero se quedó en el cajón del local.',
+    ops:['Caja','Capital social','Ventas'],
+    pq:'El efectivo <b>ya es dinero</b>. No hay nada más corriente que eso.' },
+
+  { id:'bancos', s:'🏧', mim:'m-flota', g:'AC',
+    pista:'Depositamos <b>S/ 18,000</b> en la cuenta corriente de la empresa en el banco.',
+    ops:['Cuentas corrientes en instituciones financieras','Obligaciones financieras','Gastos financieros'],
+    pq:'La plata está en el banco, pero <b>es nuestra y la sacamos cuando queremos</b>. Por eso es activo corriente, no deuda.' },
+
+  { id:'merca', s:'📦', mim:'m-apila', g:'AC',
+    pista:'Llegaron al almacén <b>120 cajas</b> compradas para revenderlas este mes.',
+    ops:['Mercaderías','Costo de ventas','Unidades de transporte'],
+    pq:'Está en el almacén <b>esperando venderse</b>. Mientras no se venda es activo; recién al venderse se vuelve costo de ventas.' },
+
+  { id:'xcobrar', s:'🧾', mim:'m-jala', g:'AC',
+    pista:'Vendimos al crédito por <b>S/ 9,440</b> y el cliente nos paga <b>en 30 días</b>.',
+    ops:['Cuentas por cobrar comerciales','Cuentas por pagar comerciales','Ventas'],
+    pq:'Nos <b>deben</b> a nosotros, y cobramos antes del año. Ojo: la venta es el ingreso; lo que el cliente debe es el activo.' },
+
+  { id:'camion', s:'🚚', mim:'m-maneja', g:'ANC',
+    pista:'Compramos un <b>camión</b> para repartir la mercadería durante los próximos años.',
+    ops:['Unidades de transporte','Gastos de transporte','Mercaderías'],
+    pq:'No se compró para venderlo: se compró <b>para usarlo</b> año tras año.' },
+
+  { id:'local', s:'🏭', mim:'m-firme', g:'ANC',
+    pista:'La empresa es dueña del <b>local</b> donde funciona la tienda y el almacén.',
+    ops:['Edificaciones','Alquileres pagados','Capital social'],
+    pq:'Un inmueble propio <b>se queda</b>. Si lo alquiláramos sería gasto; como es nuestro, es activo no corriente.' },
+
+  { id:'compu', s:'💻', mim:'m-teclea', g:'ANC',
+    pista:'Compramos <b>8 computadoras</b> para la oficina; durarán unos cuatro años.',
+    ops:['Equipos diversos','Suministros de oficina','Gastos de administración'],
+    pq:'Duran <b>más de un año</b>. Si fuera papel o tóner, que se acaba en el mes, sería otra cosa.' },
+
+  { id:'xpagar', s:'📄', mim:'m-empuja', g:'PC',
+    pista:'El proveedor nos dejó la mercadería y la factura: <b>pagamos en 30 días</b>.',
+    ops:['Cuentas por pagar comerciales','Cuentas por cobrar comerciales','Compras'],
+    pq:'<b>Nosotros debemos</b>, y vence dentro del año. Es el espejo de las cuentas por cobrar.' },
+
+  { id:'igv', s:'🏛️', mim:'m-sella', g:'PC',
+    pista:'Del IGV de nuestras ventas queda <b>S/ 3,100 por pagar a la SUNAT el día 18</b>.',
+    ops:['Tributos por pagar','Gastos por tributos','Caja'],
+    pq:'Ese dinero <b>no es nuestro</b>: lo cobramos al cliente y lo entregamos al Estado este mes.' },
+
+  { id:'sueldos', s:'👷', mim:'m-saluda', g:'PC',
+    pista:'A fin de mes le debemos <b>S/ 14,500 de sueldos</b> a los trabajadores; se pagan el día 5.',
+    ops:['Remuneraciones por pagar','Sueldos y salarios','Resultados acumulados'],
+    pq:'La <b>deuda</b> con el trabajador es pasivo. El sueldo como <b>gasto</b> es otra cuenta: una cosa es deber y otra consumir.' },
+
+  { id:'prestamo', s:'🏦', mim:'m-presta', g:'PNC', ins:'⏳',
+    pista:'El banco nos prestó <b>S/ 80,000</b> y los devolvemos <b>en 5 años</b> en cuotas.',
+    ops:['Obligaciones financieras a largo plazo','Cuentas corrientes en instituciones financieras','Capital social'],
+    pq:'Debemos al banco y el plazo pasa del año. <b>Plata del banco en nuestra cuenta es activo; plata que le debemos al banco es pasivo.</b>' },
+
+  { id:'letras', s:'📅', mim:'m-calendario', g:'PNC', ins:'⏳',
+    pista:'Compramos una máquina al crédito y firmamos letras: la última vence <b>dentro de 3 años</b>.',
+    ops:['Cuentas por pagar diversas a largo plazo','Cuentas por pagar comerciales','Maquinaria y equipo'],
+    pq:'Es deuda, pero <b>vence después del año</b>. La máquina va al activo; la deuda por la máquina va al pasivo.' },
+
+  { id:'capital', s:'🤝', mim:'m-aporta', g:'PAT',
+    pista:'Los tres socios pusieron <b>S/ 60,000</b> cada uno para abrir la empresa.',
+    ops:['Capital social','Obligaciones financieras a largo plazo','Ingresos diversos'],
+    pq:'La empresa no se lo tiene que devolver a nadie en una fecha: <b>es de los dueños</b>, no es deuda.' },
+
+  { id:'utilidades', s:'🏆', mim:'m-brilla', g:'PAT',
+    pista:'La empresa ganó <b>S/ 42,000</b> el año pasado y los socios decidieron <b>no repartirlos</b>.',
+    ops:['Resultados acumulados','Ventas','Caja'],
+    pq:'La ganancia que no se reparte <b>se queda dentro</b> y engorda el patrimonio.' },
+
+  { id:'ventas', s:'🛒', mim:'m-pasacaja', g:'ING',
+    pista:'Este mes la tienda facturó <b>S/ 85,000</b> en mercadería vendida.',
+    ops:['Ventas de mercaderías','Mercaderías','Cuentas por cobrar comerciales'],
+    pq:'La venta es el <b>ingreso</b>. Lo que sale del almacén es la mercadería y lo que el cliente debe es la cuenta por cobrar: tres cosas distintas.' },
+
+  { id:'servicios', s:'🔧', mim:'m-gira', g:'ING',
+    pista:'Cobramos <b>S/ 7,000</b> por el mantenimiento que le hicimos a otra empresa.',
+    ops:['Prestación de servicios','Servicios prestados por terceros','Caja'],
+    pq:'Si <b>nosotros</b> prestamos el servicio, es ingreso. Si <b>nos lo prestan a nosotros</b>, es gasto.' },
+
+  { id:'luz', s:'💡', mim:'m-parpadea', g:'GAS',
+    pista:'Llegaron los recibos del mes: <b>luz, agua e internet, S/ 1,850</b>.',
+    ops:['Servicios prestados por terceros','Prestación de servicios','Suministros'],
+    pq:'Se consumió este mes y <b>no queda nada</b> guardado. Lo que se consume es gasto.' },
+
+  { id:'planilla', s:'👔', mim:'m-ondea', g:'GAS',
+    pista:'La planilla del mes costó <b>S/ 14,500</b> y ya se registró el gasto del personal.',
+    ops:['Sueldos y salarios','Remuneraciones por pagar','Capital social'],
+    pq:'El trabajo <b>ya se consumió</b>: es gasto. Que todavía no lo paguemos es otra cuenta, la del pasivo.' }
+];
+
+/* =================== sonido =================== */
+var sonOn=true, ctx=null;
+try{ sonOn = localStorage.getItem('jac_son')!=='0'; }catch(e){}
+function tono(f,d,t,v){
+  if(!sonOn) return;
+  try{
+    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=t||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(v||0.12, ctx.currentTime+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+d);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime+d+0.02);
+  }catch(e){}
+}
+function sBien(){ tono(660,.12); setTimeout(function(){ tono(880,.16); },95); }
+function sMal(){ tono(190,.22,'square',.09); }
+function sRonda(){ tono(523,.1); setTimeout(function(){ tono(659,.1); },90);
+                   setTimeout(function(){ tono(784,.22); },180); }
+function sFin(){ [523,659,784,1047].forEach(function(f,k){
+                   setTimeout(function(){ tono(f,.26); }, k*130); }); }
+
+/* =================== estado =================== */
+var LS='jac_v1';
+var TOTAL=12;
+var J=null;
+function nuevo(){
+  return { orden:[], r:0, fase:1, pts:0, racha:0, mejorRacha:0, comodines:3,
+           e1:false, e2:false, acierto:{}, error:{}, fin:false, cuenta:null };
+}
+function graba(){ try{ localStorage.setItem(LS, JSON.stringify(J)); }catch(e){} }
+function lee(){
+  try{
+    var d=JSON.parse(localStorage.getItem(LS)||'null');
+    if(d && d.orden && d.orden.length) return d;
+  }catch(e){}
+  return null;
+}
+function mejorGuardado(){ var v=0; try{ v=+localStorage.getItem('jac_mejor')||0; }catch(e){} return v; }
+
+/* =================== sorteo =================== */
+function baraja(a){
+  var b=a.slice();
+  for(var k=b.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=b[k]; b[k]=b[j]; b[j]=t; }
+  return b;
+}
+function sortea(){
+  /* una de cada grupo, y el resto al azar, todo barajado al final */
+  var porG={}; BANCO.forEach(function(x){ (porG[x.g]=porG[x.g]||[]).push(x.id); });
+  var elegidos=[], usados={};
+  ORDEN.forEach(function(g){
+    var c=baraja(porG[g]||[])[0];
+    if(c){ elegidos.push(c); usados[c]=1; }
+  });
+  var resto=baraja(BANCO.filter(function(x){ return !usados[x.id]; }).map(function(x){ return x.id; }));
+  while(elegidos.length<TOTAL && resto.length) elegidos.push(resto.shift());
+  return baraja(elegidos).slice(0,TOTAL);
+}
+function carta(){ var id=J.orden[J.r], c=null;
+  BANCO.forEach(function(x){ if(x.id===id) c=x; }); return c; }
+
+/* =================== dibujo =================== */
+function simbolo(c, clase){
+  return '<span class="sombra"></span><i class="'+clase+'">'+c.s+'</i>'+
+         (c.ins ? '<span class="ins">'+c.ins+'</span>' : '');
+}
+function marcador(){
+  if(!J || J.fin) return;
+  $('mRonda').textContent=(J.r+1)+' / '+J.orden.length;
+  $('mPuntos').textContent=J.pts;
+  $('mRacha').textContent=J.racha;
+  $('mComo').textContent=J.comodines;
+  $('mRiel').style.width=Math.round(J.r/J.orden.length*100)+'%';
+  $('rotulo').textContent='Ronda '+(J.r+1)+' de '+J.orden.length;
+  $('btnComo').disabled=(J.comodines<1 || J.fase===3);
+}
+
+function pinta(){
+  if(J.fin){ pintaFin(); return; }
+  $('hojaJuego').hidden=false; $('hojaFin').hidden=true;
+  var c=carta();
+  marcador();
+
+  $('sim').innerHTML=simbolo(c, J.fase===3 ? GR[c.g].sena : c.mim);
+  $('mimica').innerHTML='<span class="cl">La mímica</span>'+c.pista;
+
+  if(J.fase===1){
+    $('preg').innerHTML='¿Qué cuenta está haciendo la mímica?'+
+      '<small>Mira el movimiento y lee la pista. Elige una de las tres.</small>';
+    var ops=J.barajadas || (J.barajadas=baraja(c.ops));
+    $('ops').className='ops tres';
+    $('ops').innerHTML=ops.map(function(o){
+      var mala=(J.malas1||{})[o];
+      return '<button type="button" data-o="'+esc(o)+'"'+(mala?' class="mala" disabled':'')+'>'+
+             esc(o)+'</button>';
+    }).join('');
+    $('caja').innerHTML='';
+  }
+  else if(J.fase===2){
+    $('preg').innerHTML='Es <b>'+esc(c.ops[0])+'</b>. ¿A qué grupo va?'+
+      '<small>Siete grupos. Acuérdate: «corriente» quiere decir dentro del año.</small>';
+    $('ops').className='ops grupos';
+    $('ops').innerHTML=ORDEN.map(function(g){
+      var mala=(J.malas2||{})[g], fuera=(J.fuera2||{})[g];
+      return '<button type="button" data-g="'+g+'" class="g-'+g+(mala?' mala':'')+(fuera?' fuera':'')+'"'+
+             ((mala||fuera)?' disabled':'')+'>'+
+             '<span class="ab">'+g+'</span><span class="nm">'+esc(GR[g].n)+'</span></button>';
+    }).join('');
+    $('caja').innerHTML='';
+  }
+  else{
+    var est=(J.e1?0:1)+(J.e2?0:1);
+    var estrellas=(est===2?'⭐⭐':(est===1?'⭐☆':'☆☆'));
+    $('preg').innerHTML='';
+    $('ops').className='ops'; $('ops').innerHTML='';
+    $('caja').innerHTML=
+      '<div class="resuelto">'+
+        '<div class="fila">'+
+          '<span class="insignia b-'+c.g+'"><span class="ab">'+c.g+'</span>'+
+          '<span class="nm">'+esc(GR[c.g].n)+'</span></span>'+
+          '<span class="cuenta">'+esc(c.ops[0])+'</span>'+
+          '<span class="estrellas">'+estrellas+'</span>'+
+        '</div>'+
+        '<p class="pq">'+c.pq+'</p>'+
+        '<p class="seña">La seña de este grupo: <b>'+esc(GR[c.g].lema)+'</b> — '+GR[c.g].rg+'</p>'+
+      '</div>'+
+      '<div class="o-acciones" style="margin-top:12px">'+
+        '<button type="button" class="o-btn o-btn-primary" id="btnSig">'+
+        (J.r+1>=J.orden.length?'Ver el resultado ›':'Siguiente ronda ›')+'</button>'+
+      '</div>';
+    var b=$('btnSig');
+    if(b) b.addEventListener('click', siguiente);
+  }
+  cablea();
+}
+
+function cablea(){
+  qq('#ops button[data-o]').forEach(function(b){
+    b.addEventListener('click', function(){ eligeCuenta(b, b.dataset.o); });
+  });
+  qq('#ops button[data-g]').forEach(function(b){
+    b.addEventListener('click', function(){ eligeGrupo(b, b.dataset.g); });
+  });
+}
+
+function eligeCuenta(b, o){
+  var c=carta();
+  if(o===c.ops[0]){
+    J.pts += J.e1 ? 1 : 3;
+    J.fase=2; graba(); sBien(); pinta();
+  }else{
+    J.e1=true; J.malas1=J.malas1||{}; J.malas1[o]=1;
+    J.error[c.g]=(J.error[c.g]||0)+1;
+    J.racha=0; graba(); sMal();
+    b.classList.add('temblor','mala'); b.disabled=true;
+    setTimeout(function(){ b.classList.remove('temblor'); marcador(); }, 430);
+  }
+}
+
+function eligeGrupo(b, g){
+  var c=carta();
+  if(g===c.g){
+    J.pts += J.e2 ? 1 : 3;
+    if(!J.e1 && !J.e2){ J.racha++; if(J.racha>J.mejorRacha) J.mejorRacha=J.racha; }
+    J.acierto[c.g]=(J.acierto[c.g]||0)+1;
+    J.fase=3; graba(); sRonda(); pinta();
+  }else{
+    J.e2=true; J.malas2=J.malas2||{}; J.malas2[g]=1;
+    J.error[c.g]=(J.error[c.g]||0)+1;
+    J.racha=0; graba(); sMal();
+    b.classList.add('temblor','mala'); b.disabled=true;
+    setTimeout(function(){ b.classList.remove('temblor'); marcador(); }, 430);
+  }
+}
+
+function siguiente(){
+  J.r++; J.fase=1; J.e1=false; J.e2=false;
+  J.malas1={}; J.malas2={}; J.fuera2={}; J.barajadas=null;
+  if(J.r>=J.orden.length){ J.fin=true; graba(); sFin(); pintaFin(); return; }
+  graba(); pinta();
+}
+
+function comodin(){
+  if(J.comodines<1 || J.fase===3) return;
+  var c=carta();
+  if(J.fase===1){
+    var vivas=qq('#ops button[data-o]').filter(function(b){
+      return !b.disabled && b.dataset.o!==c.ops[0]; });
+    if(!vivas.length) return;
+    var v=vivas[Math.floor(Math.random()*vivas.length)];
+    J.malas1=J.malas1||{}; J.malas1[v.dataset.o]=1;
+  }else{
+    var otros=ORDEN.filter(function(g){ return g!==c.g && !(J.malas2||{})[g] && !(J.fuera2||{})[g]; });
+    if(otros.length<3) return;              /* ya quedan pocas: no gastes el comodín */
+    J.fuera2=J.fuera2||{};
+    baraja(otros).slice(0, otros.length-2).forEach(function(g){ J.fuera2[g]=1; });
+  }
+  J.comodines--; graba(); tono(440,.1,'triangle',.1); pinta();
+}
+
+/* =================== final =================== */
+function pintaFin(){
+  var max=J.orden.length*6;
+  var pct=Math.round(J.pts/max*100);
+  var m = pct>=92 ? {i:'🏆', t:'¡Mímica perfecta!'}
+        : pct>=78 ? {i:'🥇', t:'Muy bien'}
+        : pct>=62 ? {i:'🥈', t:'Bien, pero afina'}
+        : pct>=45 ? {i:'🥉', t:'Vas agarrándole'}
+                  : {i:'🎬', t:'A repasar las señas'};
+  var mejor=mejorGuardado();
+  var rec = J.pts>mejor;
+  if(rec){ try{ localStorage.setItem('jac_mejor', String(J.pts)); }catch(e){} }
+
+  var filas=ORDEN.map(function(g){
+    var a=J.acierto[g]||0, e=J.error[g]||0;
+    if(!a && !e) return '';
+    return '<tr class="'+(e>a?'flojo':'')+'">'+
+      '<td><span class="pt" style="background:var(--'+g.toLowerCase()+')"></span>'+esc(GR[g].n)+'</td>'+
+      '<td class="n">'+a+'</td><td class="n">'+e+'</td>'+
+      '<td>'+GR[g].rg+'</td></tr>';
+  }).join('');
+
+  var flojos=ORDEN.filter(function(g){ return (J.error[g]||0) > 0; })
+    .sort(function(a,b){ return (J.error[b]||0)-(J.error[a]||0); })
+    .slice(0,3);
+  var consejo = !flojos.length
+    ? 'No fallaste ni una. Vuelve a jugar para que te toquen las cuentas que esta vez no salieron.'
+    : (pct<45
+        ? 'Antes de volver a jugar, abre <b>«Las 7 señas»</b> y léelas con calma: ahí está toda la regla. '+
+          'Donde más fallaste fue en <b>'+flojos.map(function(g){ return esc(GR[g].n); }).join('</b>, <b>')+'</b>.'
+        : 'Donde más te trabaste fue en <b>'+flojos.map(function(g){ return esc(GR[g].n); }).join('</b>, <b>')+
+          '</b>. Repasa esas señas y vuelve a jugar: te van a salir otras cuentas.');
+
+  $('hojaJuego').hidden=true;
+  $('hojaFin').hidden=false;
+  $('hojaFin').innerHTML=
+    '<div class="final">'+
+      '<div class="medalla">'+m.i+'</div>'+
+      '<h2>'+m.t+'</h2>'+
+      '<p class="lead">'+J.pts+' de '+max+' puntos posibles ('+pct+' %)'+
+        (rec?' · <b>nuevo récord tuyo</b>':(mejor?' · tu récord es '+mejor:''))+'</p>'+
+      '<div class="cifras">'+
+        '<span class="cif"><b>'+J.pts+'</b><span>Puntos</span></span>'+
+        '<span class="cif"><b>'+J.mejorRacha+'</b><span>Mejor racha</span></span>'+
+        '<span class="cif"><b>'+J.comodines+'</b><span>Comodines sin usar</span></span>'+
+      '</div>'+
+    '</div>'+
+    '<table class="tabla"><thead><tr><th>Grupo</th><th class="n">Bien</th><th class="n">Fallos</th>'+
+    '<th>La regla</th></tr></thead><tbody>'+filas+'</tbody></table>'+
+    '<div class="nota" style="margin-top:13px">'+consejo+'</div>'+
+    '<div class="o-acciones centrado" style="margin-top:15px">'+
+      '<button type="button" class="o-btn o-btn-primary" id="btnOtra">🔁 Jugar otra vez</button>'+
+      '<button type="button" class="o-btn o-btn-secondary" id="btnSenas4">🤟 Las 7 señas</button>'+
+      '<a class="o-btn o-btn-secondary" href="matematicas-aplicadas.html">Volver al curso</a>'+
+    '</div>';
+  $('rotulo').textContent='Partida terminada';
+  $('btnOtra').addEventListener('click', empieza);
+  $('btnSenas4').addEventListener('click', function(){ verSenas(true); });
+}
+
+/* =================== las 7 señas =================== */
+function pintaSenas(){
+  $('listaSenas').innerHTML=ORDEN.map(function(g){
+    return '<div class="sena">'+
+      '<span class="caja"><i class="'+GR[g].sena+'">'+EJEM[g]+'</i></span>'+
+      '<span class="tx"><b style="color:var(--'+g.toLowerCase()+')">'+esc(GR[g].n)+'</b>'+
+      '<span class="lema">'+esc(GR[g].lema)+'</span>'+
+      '<span class="rg">'+GR[g].rg+'</span></span></div>';
+  }).join('');
+}
+function verSenas(si){
+  $('hojaSenas').hidden=!si;
+  if(si){ pintaSenas(); $('hojaSenas').scrollIntoView({behavior:'smooth', block:'start'}); }
+}
+
+/* =================== arranque =================== */
+function empieza(){
+  J=nuevo();
+  J.orden=sortea();
+  J.malas1={}; J.malas2={}; J.fuera2={};
+  graba();
+  $('arranque').hidden=true;
+  $('instru').hidden=true;
+  $('hojaFin').hidden=true;
+  verSenas(false);
+  pinta();
+  $('hojaJuego').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+$('btnJugar').addEventListener('click', empieza);
+$('btnVerSenas2').addEventListener('click', function(){ verSenas(true); });
+$('btnSenas').addEventListener('click', function(){ verSenas($('hojaSenas').hidden); });
+$('btnSenas3').addEventListener('click', function(){ verSenas(true); });
+$('btnCerrarSenas').addEventListener('click', function(){ verSenas(false); });
+$('btnComo').addEventListener('click', comodin);
+
+$('btnSon').addEventListener('click', function(){
+  sonOn=!sonOn;
+  try{ localStorage.setItem('jac_son', sonOn?'1':'0'); }catch(e){}
+  this.textContent = sonOn ? '🔊 Sonido' : '🔇 Sin sonido';
+  this.setAttribute('aria-pressed', sonOn?'true':'false');
+  if(sonOn) tono(660,.1);
+});
+if(!sonOn){ $('btnSon').textContent='🔇 Sin sonido'; $('btnSon').setAttribute('aria-pressed','false'); }
+
+if(window.Reinicio){
+  Reinicio.monta({
+    donde:'zonaReinicio',
+    claves:['jac_v1','jac_mejor'],
+    texto:'Borrar mi récord y empezar de cero',
+    aviso:'¿Borro tu partida y tu récord?',
+    hecho:function(){ J=null; $('arranque').hidden=false; $('instru').hidden=false;
+                      $('hojaJuego').hidden=true; $('hojaFin').hidden=true;
+                      $('rotulo').textContent='12 rondas'; }
+  });
+}
+
+/* ¿había una partida a medias? */
+var guardada=lee();
+if(guardada){
+  J=guardada;
+  $('arranque').innerHTML=
+    '<button type="button" class="o-btn o-btn-primary" id="btnSigue">▶ Seguir la partida</button>'+
+    '<button type="button" class="o-btn o-btn-secondary" id="btnNueva">🔁 Empezar una nueva</button>';
+  $('btnSigue').addEventListener('click', function(){
+    $('arranque').hidden=true; $('instru').hidden=true; pinta();
+  });
+  $('btnNueva').addEventListener('click', empieza);
+}
+
+pintaSenas();
+
+})();
+</script>
+
+</body>
+</html>
