@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Qué fruta es y está apta?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .fr{ --ok:#147A5C; --duda:#B25E09; --mal:#B42318; --gris:#5A5A5A;
+       --ama:#FFF8E1; --amaBd:#E8CE8A;
+       max-width:1240px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--o-purple); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.6vw,24px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo .acc{ margin-left:auto; display:flex; gap:7px; flex-wrap:wrap; }
+
+  .nota{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:10px 13px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .nota b{ color:#3F3208; }
+  .nota + .nota{ margin-top:9px; }
+
+  /* ---------- estado del modelo ---------- */
+  .motor{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13px;
+          border:2px solid var(--o-border); border-radius:11px; padding:9px 13px; background:#fff;
+          margin-bottom:12px; }
+  .motor .luz{ width:11px; height:11px; border-radius:50%; background:#C9CED6; flex:none; }
+  .motor.cargando .luz{ background:var(--duda); animation:late 1s ease-in-out infinite; }
+  .motor.listo .luz{ background:var(--ok); }
+  .motor.falla .luz{ background:var(--mal); }
+  .motor b{ color:var(--gris); }
+  .motor .crece{ flex:1 1 auto; }
+  @keyframes late{ 0%,100%{opacity:1} 50%{opacity:.25} }
+
+  /* ---------- entrada ---------- */
+  .tablero{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:980px){ .tablero{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); } }
+
+  .visor{ position:relative; border:2px solid var(--o-border); border-radius:14px; overflow:hidden;
+          background:#11161D; aspect-ratio:4/3; display:flex; align-items:center;
+          justify-content:center; }
+  .visor video, .visor canvas, .visor img{ width:100%; height:100%; object-fit:contain; display:block; }
+  .visor .vacio{ color:#8C97A6; font-size:14px; text-align:center; padding:20px; line-height:1.7; }
+  .visor .vacio .ic{ display:block; font-size:44px; margin-bottom:6px; }
+  .visor .mira{ position:absolute; inset:14%; border:2.5px dashed rgba(255,255,255,.55);
+                border-radius:14px; pointer-events:none; }
+
+  .botonera{ display:flex; gap:8px; flex-wrap:wrap; margin-top:11px; }
+  .suelta{ margin-top:11px; border:2px dashed var(--o-border); border-radius:12px; padding:14px;
+           text-align:center; font-size:13px; color:var(--o-muted); background:#FAFBFC; }
+  .suelta.encima{ border-color:var(--o-purple); background:var(--o-purple-soft); color:var(--o-purple); }
+  .suelta b{ color:var(--o-text); }
+
+  /* ---------- resultado ---------- */
+  .veredicto{ border:2.5px solid var(--o-border); border-radius:14px; padding:15px 16px;
+              background:#fff; }
+  .veredicto.apta{ border-color:#7CC29B; background:#F1FAF5; }
+  .veredicto.duda{ border-color:#EBCB9B; background:#FFF8EC; }
+  .veredicto.mala{ border-color:#E3A9A2; background:#FDF1EF; }
+  .veredicto .cab{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .veredicto .emo{ font-size:42px; line-height:1; flex:none; }
+  .veredicto h2{ margin:0; font-size:20px; font-weight:800; color:var(--gris); }
+  .veredicto .sub{ margin:1px 0 0; font-size:13px; color:var(--o-muted); }
+  .sello{ margin-left:auto; border-radius:9px; padding:7px 14px; color:#fff; font-weight:800;
+          font-size:14px; letter-spacing:.4px; flex:none; }
+  .sello.apta{ background:var(--ok); } .sello.duda{ background:var(--duda); }
+  .sello.mala{ background:var(--mal); }
+
+  .barras{ margin-top:13px; display:grid; gap:8px; }
+  .bar{ display:grid; grid-template-columns:minmax(118px,auto) 1fr auto; gap:9px; align-items:center;
+        font-size:12.5px; }
+  .bar .et{ font-weight:700; color:var(--gris); }
+  .bar .riel{ height:9px; border-radius:99px; background:var(--o-line);
+              border:1px solid var(--o-border); overflow:hidden; }
+  .bar .riel i{ display:block; height:100%; border-radius:99px; background:var(--o-purple);
+                transition:width .3s ease; }
+  .bar .riel i.ok{ background:var(--ok); } .bar .riel i.duda{ background:var(--duda); }
+  .bar .riel i.mal{ background:var(--mal); }
+  .bar .n{ font-variant-numeric:tabular-nums; font-weight:800; color:var(--gris); min-width:46px;
+           text-align:right; }
+
+  .lista{ margin:12px 0 0; padding:0; list-style:none; display:grid; gap:5px; }
+  .lista li{ display:flex; gap:9px; align-items:center; font-size:13px; border:1px solid var(--o-border);
+             border-radius:9px; padding:6px 10px; background:#fff; }
+  .lista li.top{ border-color:var(--o-purple); background:var(--o-purple-soft); font-weight:700; }
+  .lista li .pc{ margin-left:auto; font-variant-numeric:tabular-nums; font-weight:800;
+                 color:var(--o-purple); }
+  .lista li .en{ font-size:11.5px; color:var(--o-muted); }
+
+  .conta{ margin-top:13px; border-left:4px solid var(--o-purple); background:var(--o-purple-soft);
+          border-radius:0 10px 10px 0; padding:11px 14px; font-size:13px; line-height:1.65; }
+  .conta b{ color:#4A2F42; }
+  .conta .cta{ display:inline-block; font-weight:800; color:#4A2F42; }
+
+  details.ayuda{ margin-top:12px; border:2px solid var(--o-border); border-radius:11px;
+                 background:#fff; }
+  details.ayuda summary{ cursor:pointer; padding:10px 13px; font-weight:700; font-size:13.5px;
+                         color:var(--gris); list-style:none; }
+  details.ayuda summary::-webkit-details-marker{ display:none; }
+  details.ayuda summary::before{ content:'▸ '; color:var(--o-purple); }
+  details.ayuda[open] summary::before{ content:'▾ '; }
+  details.ayuda .cu{ padding:0 13px 13px; font-size:13px; line-height:1.65; color:#2B3A4A; }
+  details.ayuda .cu code{ background:#F2F4F8; border-radius:4px; padding:1px 5px; font-size:12px; }
+
+  .campo{ display:flex; gap:8px; flex-wrap:wrap; margin-top:9px; }
+  .campo input{ flex:1 1 280px; min-width:0; font:inherit; font-size:13.5px; padding:9px 11px;
+                border:2px solid var(--o-border); border-radius:9px; color:var(--o-text); }
+  .campo input:focus{ outline:none; border-color:var(--o-purple); }
+
+  .galeria{ display:grid; gap:8px; grid-template-columns:repeat(auto-fill,minmax(92px,1fr));
+            margin-top:10px; }
+  .galeria button{ border:2px solid var(--o-border); border-radius:10px; background:#fff; padding:0;
+                   cursor:pointer; overflow:hidden; aspect-ratio:1; }
+  .galeria button:hover{ border-color:var(--o-purple); }
+  .galeria img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+  table.rec{ width:100%; border-collapse:collapse; font-size:12.5px; margin-top:4px; }
+  table.rec th, table.rec td{ border:1px solid var(--o-border); padding:6px 9px; text-align:left; }
+  table.rec th{ background:#F5F7FA; font-weight:800; font-size:11.5px; text-transform:uppercase;
+                letter-spacing:.4px; color:var(--gris); }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a href="index.html#cursos">Cursos</a>
+    <a class="activo" href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html#herramientas">Volver a herramientas</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Herramientas</span> / <b>¿Qué fruta es y está apta?</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sin analizar</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap fr">
+
+  <div class="o-sheet">
+    <div class="titulo">
+      <div>
+        <h1>🍌 ¿Qué fruta es y está apta?</h1>
+        <p>Reconocimiento de fruta en el navegador y revisión de si sirve para la venta</p>
+      </div>
+      <div class="acc">
+        <button type="button" class="o-btn o-btn-secondary" id="btnAjustes">⚙️ Modelo propio</button>
+      </div>
+    </div>
+
+    <div class="motor cargando" id="motor">
+      <span class="luz"></span>
+      <span id="motorTx"><b>Cargando el modelo…</b> la primera vez descarga unos 14 MB; después queda en caché.</span>
+      <span class="crece"></span>
+      <button type="button" class="o-btn o-btn-secondary" id="btnReintenta" hidden>Reintentar</button>
+    </div>
+
+    <div class="tablero">
+      <div>
+        <div class="visor" id="visor">
+          <div class="vacio" id="vacio"><span class="ic">📷</span>
+            Enciende la cámara o sube una foto de la fruta.<br>
+            Que salga <b>una sola fruta</b>, centrada y con buena luz.</div>
+          <video id="video" playsinline muted hidden></video>
+          <canvas id="lienzo" hidden></canvas>
+          <div class="mira" id="mira" hidden></div>
+        </div>
+
+        <div class="botonera">
+          <button type="button" class="o-btn o-btn-primary" id="btnCam">📷 Encender cámara</button>
+          <button type="button" class="o-btn o-btn-teal" id="btnFoto" hidden>⚡ Tomar y analizar</button>
+          <button type="button" class="o-btn o-btn-secondary" id="btnCambia" hidden>🔄 Voltear cámara</button>
+          <button type="button" class="o-btn o-btn-secondary" id="btnSubir">🖼️ Subir una foto</button>
+          <input type="file" id="archivo" accept="image/*" hidden>
+        </div>
+
+        <div class="suelta" id="suelta">
+          También puedes <b>arrastrar una foto</b> y soltarla aquí.
+        </div>
+
+        <div id="muestras" hidden>
+          <p style="margin:14px 0 0; font-size:12.5px; font-weight:700; color:var(--gris)">Ejemplos para probar sin cámara</p>
+          <div class="galeria" id="galeria"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="veredicto" id="veredicto">
+          <div class="cab">
+            <span class="emo">🤔</span>
+            <div>
+              <h2>Todavía no hay nada que revisar</h2>
+              <p class="sub">Toma una foto o sube una imagen para empezar</p>
+            </div>
+          </div>
+        </div>
+
+        <details class="ajustes o-sheet" id="panelAjustes" hidden style="margin-top:12px; padding:0">
+        </details>
+
+        <details class="ayuda">
+          <summary>¿Cómo decide si está apta?</summary>
+          <div class="cu" id="comoDecide"></div>
+        </details>
+
+        <details class="ayuda">
+          <summary>Lo que este reconocedor sí puede y lo que no</summary>
+          <div class="cu">
+            <p><b>Qué reconoce.</b> El modelo que viene cargado es MobileNet entrenado con ImageNet, que
+            solo tiene estas frutas y verduras:</p>
+            <p id="listaFrutas" style="line-height:2"></p>
+            <p><b>Qué no reconoce.</b> Mango, palta, papaya, uva, maracuyá, chirimoya en su variedad
+            local y casi todo lo que no esté en esa lista. Si le muestras una palta va a decir
+            cualquier otra cosa con mucha seguridad: el modelo <b>siempre</b> responde algo, aunque la
+            fruta no exista en su lista.</p>
+            <p><b>Lo de «apta o no apta» no viene de un modelo entrenado.</b> Es una regla de color que
+            mide manchas oscuras, tono marrón y qué tan vivo está el color. Funciona bien con plátano,
+            manzana, fresa y naranja, y funciona mal con frutas que ya son marrones por naturaleza.
+            Para tener un juicio de verdad hay que entrenar un modelo con fotos de fruta buena y fruta
+            malograda: eso es lo que hace el botón <b>⚙️ Modelo propio</b>.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top:14px">
+      <b>Todo corre en el teléfono o en la computadora del alumno.</b> La foto no se sube a ningún
+      servidor: el modelo se descarga una vez y la imagen se analiza dentro del navegador. Por eso
+      funciona igual con la cámara del celular y no guarda nada de nadie.
+    </div>
+  </div>
+
+  <div class="o-sheet" id="hojaAjustes" hidden>
+    <h2 class="o-section-title">⚙️ Usar tu propio modelo entrenado</h2>
+    <p style="margin:0 0 10px; font-size:13.5px; line-height:1.7">
+      La regla de color es un apaño. Para que el veredicto <b>apta / no apta</b> salga de un modelo de
+      verdad, entrena uno con Teachable Machine —es gratis, se hace en el navegador y no necesita
+      programar— y pega aquí su enlace. Desde ese momento la página usa tu modelo en vez de la regla
+      de color.
+    </p>
+
+    <details class="ayuda" open>
+      <summary>Cómo entrenarlo en unos 20 minutos</summary>
+      <div class="cu">
+        <ol style="margin:0; padding-left:20px; line-height:1.9">
+          <li>Entra a <code>teachablemachine.withgoogle.com</code> y elige <b>Proyecto de imagen ·
+              modelo de imagen estándar</b>.</li>
+          <li>Crea dos clases y llámalas <b>apta</b> y <b>no apta</b>. Si además quieres que distinga
+              la fruta, usa cuatro: <code>plátano apto</code>, <code>plátano malogrado</code>,
+              <code>manzana apta</code>, <code>manzana malograda</code>.</li>
+          <li>Sube las fotos de cada clase. Puedes usar las de los repositorios de abajo o, mejor
+              todavía, fotos tomadas por los propios alumnos en el mercado. Con <b>80 a 150 fotos por
+              clase</b> ya rinde.</li>
+          <li>Pulsa <b>Entrenar modelo</b> y espera.</li>
+          <li><b>Exportar modelo → Tensorflow.js → Subir (enlace compartible)</b>. Te da una dirección
+              que termina en <code>/models/XXXXXXX/</code>.</li>
+          <li>Pega esa dirección aquí abajo y guarda.</li>
+        </ol>
+      </div>
+    </details>
+
+    <div class="campo">
+      <input type="url" id="urlTM" placeholder="https://teachablemachine.withgoogle.com/models/XXXXXXX/"
+             autocomplete="off" spellcheck="false">
+      <button type="button" class="o-btn o-btn-primary" id="btnGuardaTM">Guardar y cargar</button>
+      <button type="button" class="o-btn o-btn-secondary" id="btnQuitaTM">Quitar</button>
+    </div>
+    <p id="estadoTM" style="margin:9px 0 0; font-size:13px"></p>
+
+    <h2 class="o-section-title" style="margin-top:20px">De dónde sacar las fotos</h2>
+    <table class="rec">
+      <thead><tr><th>Repositorio</th><th>Qué trae</th><th>Para qué sirve aquí</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/Horea94/Fruit-Images-Dataset" target="_blank" rel="noopener">Horea94 · Fruit&nbsp;Images&nbsp;Dataset</a></td>
+          <td>Unas 90 000 fotos de 131 tipos de fruta, cada una sola y sobre fondo blanco.</td>
+          <td>Excelente para enseñar a <b>distinguir la fruta</b> (plátano, manzana, palta, papaya…).
+              Como todas las fotos son de estudio, un modelo entrenado solo con ellas falla con las
+              fotos de celular: conviene mezclarlas con fotos propias.</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/Bangkit-JKT2-D/fruits-fresh-rotten-classification" target="_blank" rel="noopener">Bangkit · fresh / rotten</a></td>
+          <td>El cuaderno de un modelo que separa fruta fresca de fruta podrida, con manzana, plátano
+              y naranja.</td>
+          <td>Es justo lo que falta aquí: el juicio de <b>apta o no apta</b>. Las fotos que usa salen
+              del conjunto «Fruits fresh and rotten for classification» de Kaggle.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin:10px 0 0; font-size:12.5px; color:var(--o-muted)">
+      El primero se publica con licencia CC BY-SA 4.0. Esta página no copia ninguna foto de esos
+      repositorios: solo te dice dónde están.
+    </p>
+
+    <div class="o-acciones centrado" style="margin-top:16px">
+      <button type="button" class="o-btn o-btn-primary" id="btnCierraAjustes">Cerrar</button>
+    </div>
+  </div>
+
+  <div class="o-footer">
+    <span>Herramientas · ¿Qué fruta es y está apta?</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script src="vendor/tf.min.js"></script>
+<script src="vendor/imagenet-1000.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ================= el modelo de reconocimiento ================= */
+/* Se puede alojar el modelo en otro lado definiendo window.FRUTA_MODELO antes de este script. */
+var URL_MODELO = window.FRUTA_MODELO ||
+  'https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json';
+var LADO=224;
+var modelo=null, cargando=false;
+
+/* las frutas y verduras que ImageNet sí tiene, con su nombre de acá */
+var FRUTAS={
+  936:{ es:'Col · repollo', emo:'🥬' },        937:{ es:'Brócoli', emo:'🥦' },
+  938:{ es:'Coliflor', emo:'🥦' },             939:{ es:'Zapallito italiano', emo:'🥒' },
+  940:{ es:'Zapallo espagueti', emo:'🎃' },    941:{ es:'Zapallo bellota', emo:'🎃' },
+  942:{ es:'Zapallo butternut', emo:'🎃' },    943:{ es:'Pepino', emo:'🥒' },
+  944:{ es:'Alcachofa', emo:'🌿' },            945:{ es:'Pimiento', emo:'🫑' },
+  946:{ es:'Cardo', emo:'🌿' },                947:{ es:'Champiñón', emo:'🍄', pardo:true },
+  948:{ es:'Manzana verde', emo:'🍏' },        949:{ es:'Fresa', emo:'🍓' },
+  950:{ es:'Naranja', emo:'🍊' },              951:{ es:'Limón', emo:'🍋' },
+  952:{ es:'Higo', emo:'🫒', pardo:true },     953:{ es:'Piña', emo:'🍍', pardo:true },
+  954:{ es:'Plátano', emo:'🍌', mancha:1.45 }, 955:{ es:'Yaca · jackfruit', emo:'🥭', pardo:true },
+  956:{ es:'Chirimoya', emo:'🍈' },            957:{ es:'Granada', emo:'🍎' },
+  987:{ es:'Choclo · maíz', emo:'🌽' },        988:{ es:'Bellota', emo:'🌰', pardo:true }
+};
+var PUESTO=582;  /* grocery store: suele salir cuando hay varias frutas juntas */
+
+function pintaListaFrutas(){
+  var t=[]; for(var k in FRUTAS) t.push(FRUTAS[k].emo+' '+esc(FRUTAS[k].es));
+  $('listaFrutas').innerHTML=t.join(' · ');
+}
+
+function motorEstado(clase, html, reintenta){
+  var m=$('motor');
+  m.className='motor '+clase;
+  $('motorTx').innerHTML=html;
+  $('btnReintenta').hidden=!reintenta;
+}
+
+function cargaModelo(){
+  if(cargando) return;
+  cargando=true;
+  motorEstado('cargando','<b>Cargando el modelo…</b> la primera vez descarga unos 14 MB; después queda en caché.', false);
+  tf.loadGraphModel(URL_MODELO).then(function(m){
+    modelo=m; cargando=false;
+    motorEstado('listo','<b>Modelo listo.</b> MobileNet v2 · 1000 clases de ImageNet, corriendo en este dispositivo.', false);
+    /* calentar: la primera inferencia es la lenta */
+    tf.tidy(function(){ modelo.predict(tf.zeros([1,LADO,LADO,3])).dataSync(); });
+  }).catch(function(e){
+    cargando=false;
+    motorEstado('falla','<b>No se pudo cargar el modelo.</b> Revisa la conexión. '+
+      'Mientras tanto la página igual revisa si la fruta está apta, pero no te dirá qué fruta es. '+
+      '<span style="font-size:11.5px;opacity:.75">'+esc(String(e&&e.message||e)).slice(0,120)+'</span>', true);
+  });
+}
+
+/* ================= el modelo propio (Teachable Machine) ================= */
+var LS_TM='fruta_tm';
+var tm={ url:null, modelo:null, etiquetas:null, lado:224 };
+
+function urlLimpia(u){
+  u=String(u||'').trim();
+  if(!u) return '';
+  if(u.slice(-1)!=='/') u+='/';
+  return u;
+}
+function cargaTM(u, callback){
+  u=urlLimpia(u);
+  if(!u){ callback(false,'Pega primero el enlace del modelo.'); return; }
+  $('estadoTM').innerHTML='Cargando tu modelo…';
+  fetch(u+'metadata.json').then(function(r){
+    if(!r.ok) throw new Error('No encuentro metadata.json (HTTP '+r.status+')');
+    return r.json();
+  }).then(function(meta){
+    var labels=meta.labels||[];
+    if(!labels.length) throw new Error('El modelo no trae la lista de clases.');
+    return tf.loadLayersModel(u+'model.json').then(function(m){
+      tm.url=u; tm.modelo=m; tm.etiquetas=labels;
+      var sh=m.inputs[0].shape;
+      tm.lado=(sh && sh[1]) ? sh[1] : 224;
+      try{ localStorage.setItem(LS_TM,u); }catch(e){}
+      callback(true, 'Tu modelo está cargado: <b>'+labels.map(esc).join('</b> · <b>')+'</b>.');
+    });
+  }).catch(function(e){
+    tm.url=null; tm.modelo=null; tm.etiquetas=null;
+    callback(false, 'No se pudo cargar: '+esc(String(e&&e.message||e)));
+  });
+}
+
+/* ================= la regla de color ================= */
+/* Separa la fruta del fondo y mide manchas oscuras, tono marrón, qué tan
+   vivo está el color y qué tan manchada se ve la superficie.            */
+function aHSV(r,g,b){
+  r/=255; g/=255; b/=255;
+  var mx=Math.max(r,g,b), mn=Math.min(r,g,b), d=mx-mn, h=0;
+  if(d){
+    if(mx===r) h=((g-b)/d+(g<b?6:0));
+    else if(mx===g) h=(b-r)/d+2;
+    else h=(r-g)/d+4;
+    h*=60;
+  }
+  return [h, mx?d/mx:0, mx];
+}
+
+function analizaColor(ctx, w, h, info){
+  var img=ctx.getImageData(0,0,w,h), d=img.data;
+  var n=w*h, i, px;
+
+  /* color del fondo: la mediana del marco exterior */
+  var borde=[];
+  for(i=0;i<w;i+=2){ borde.push((i)*4); borde.push(((h-1)*w+i)*4); }
+  for(i=0;i<h;i+=2){ borde.push((i*w)*4); borde.push((i*w+w-1)*4); }
+  function medianaCanal(c){
+    var v=borde.map(function(p){ return d[p+c]; }).sort(function(a,b){ return a-b; });
+    return v[Math.floor(v.length/2)]||0;
+  }
+  var fr=medianaCanal(0), fg=medianaCanal(1), fb=medianaCanal(2);
+
+  /* los píxeles que se alejan del fondo son la fruta */
+  var mask=new Uint8Array(n), cuenta=0;
+  for(i=0;i<n;i++){
+    px=i*4;
+    var dist=Math.abs(d[px]-fr)+Math.abs(d[px+1]-fg)+Math.abs(d[px+2]-fb);
+    if(dist>74){ mask[i]=1; cuenta++; }
+  }
+  var recorte=false;
+  if(cuenta < n*0.07){                       /* el fondo no se separó: usa el centro */
+    recorte=true; cuenta=0;
+    var cx=w/2, cy=h/2, rx=w*0.34, ry=h*0.34;
+    for(i=0;i<n;i++){
+      var x=i%w, y=(i/w)|0;
+      var u=(x-cx)/rx, v=(y-cy)/ry;
+      mask[i]=(u*u+v*v<=1)?1:0;
+      if(mask[i]) cuenta++;
+    }
+  }
+  if(!cuenta) return null;
+
+  var oscuras=0, marron=0, sumS=0, sumV=0, vs=new Float32Array(n);
+  for(i=0;i<n;i++){
+    if(!mask[i]) continue;
+    px=i*4;
+    var hsv=aHSV(d[px],d[px+1],d[px+2]);
+    var H=hsv[0], S=hsv[1], V=hsv[2];
+    vs[i]=V; sumS+=S; sumV+=V;
+    if(V<0.34 && S<0.60) oscuras++;
+    else if(H>=12 && H<=48 && S>=0.14 && S<=0.78 && V>=0.16 && V<=0.62) marron++;
+  }
+  var pOsc=oscuras/cuenta*100, pMar=marron/cuenta*100;
+  var sMed=sumS/cuenta, vMed=sumV/cuenta;
+
+  /* manchas: bloques de 8x8 claramente más oscuros que el resto de la fruta */
+  var bl=8, bloques=0, malos=0;
+  for(var by=0; by+bl<=h; by+=bl){
+    for(var bx=0; bx+bl<=w; bx+=bl){
+      var s=0, c=0;
+      for(var y2=0;y2<bl;y2++) for(var x2=0;x2<bl;x2++){
+        var idx=(by+y2)*w+(bx+x2);
+        if(mask[idx]){ s+=vs[idx]; c++; }
+      }
+      if(c>bl*bl*0.6){ bloques++; if(s/c < vMed*0.62) malos++; }
+    }
+  }
+  var pMan=bloques?malos/bloques*100:0;
+
+  /* el castigo del marrón depende de la fruta: hay frutas que ya son marrones */
+  var pesoMar=1.05;
+  if(info && info.pardo) pesoMar=0.30;
+  if(info && info.mancha) pesoMar=info.mancha;
+
+  var puntaje=100;
+  puntaje-=pOsc*1.55;
+  puntaje-=pMar*pesoMar;
+  puntaje-=pMan*0.75;
+  if(sMed<0.34) puntaje-=(0.34-sMed)*120;
+  puntaje=Math.max(0, Math.min(100, Math.round(puntaje)));
+
+  return { oscuras:pOsc, marron:pMar, manchas:pMan, viveza:sMed*100, luz:vMed*100,
+           cobertura:cuenta/n*100, recorte:recorte, puntaje:puntaje };
+}
+
+/* ================= inferencia ================= */
+function tensorDe(lienzo, lado, rango){
+  return tf.tidy(function(){
+    var t=tf.browser.fromPixels(lienzo).toFloat();
+    t=tf.image.resizeBilinear(t,[lado,lado]);
+    t = (rango==='menos1') ? t.div(127.5).sub(1) : t.div(255);
+    return t.expandDims(0);
+  });
+}
+
+function reconoce(lienzo){
+  if(!modelo) return Promise.resolve(null);
+  return new Promise(function(res){
+    var y=tf.tidy(function(){
+      var x=tensorDe(lienzo, LADO, 'cero1');   /* este modelo espera los valores entre 0 y 1 */
+      var z=modelo.predict(x);
+      /* este modelo devuelve logits, no probabilidades: hay que pasarlos por softmax */
+      return tf.softmax(z.reshape([-1]));
+    });
+    y.data().then(function(p){
+      y.dispose();
+      /* la salida trae 1001 (con la clase «fondo» al inicio) o 1000 */
+      var off=(p.length===1001)?1:0;
+      var top=[];
+      for(var i=0;i<1000;i++) top.push([i, p[i+off]]);
+      top.sort(function(a,b){ return b[1]-a[1]; });
+      res(top.slice(0,5));
+    });
+  });
+}
+
+function predTM(lienzo){
+  if(!tm.modelo) return Promise.resolve(null);
+  return new Promise(function(res){
+    var y=tf.tidy(function(){
+      var x=tensorDe(lienzo, tm.lado, 'menos1');
+      return tm.modelo.predict(x).reshape([-1]);
+    });
+    y.data().then(function(p){
+      y.dispose();
+      var r=[]; for(var i=0;i<tm.etiquetas.length;i++) r.push([tm.etiquetas[i], p[i]||0]);
+      r.sort(function(a,b){ return b[1]-a[1]; });
+      res(r);
+    });
+  });
+}
+
+/* ================= el veredicto ================= */
+function barra(et, valor, tope, invertido){
+  var pc=Math.max(0, Math.min(100, valor/tope*100));
+  var clase = invertido ? (valor<12?'ok':(valor<28?'duda':'mal'))
+                        : (valor>60?'ok':(valor>35?'duda':'mal'));
+  return '<div class="bar"><span class="et">'+esc(et)+'</span>'+
+         '<span class="riel"><i class="'+clase+'" style="width:'+pc.toFixed(0)+'%"></i></span>'+
+         '<span class="n">'+valor.toFixed(0)+' %</span></div>';
+}
+
+var CONTA={
+  apta:'<b>Mercadería apta para la venta.</b> Se queda en la cuenta <span class="cta">20 Mercaderías</span>, '+
+       'dentro del activo corriente, por su costo.',
+  duda:'<b>Hay que revisarla a mano.</b> Si se puede vender pero más barata, la existencia vale lo que '+
+       'se espera cobrar menos los gastos de venta: ahí se reconoce una <span class="cta">desvalorización '+
+       'de existencias (29)</span> por la diferencia.',
+  mala:'<b>Es un desmedro.</b> La fruta sigue en el almacén pero ya no se puede vender: se reconoce la '+
+       '<span class="cta">desvalorización de existencias (29)</span>, que resta del activo corriente, '+
+       'con cargo al gasto. Para que la SUNAT la acepte como pérdida hay que destruirla ante notario '+
+       'y avisar con anticipación.'
+};
+
+function veredicto(res){
+  var v=$('veredicto');
+  var col = res.puntaje>=70 ? 'apta' : (res.puntaje>=45 ? 'duda' : 'mala');
+  var emo = col==='apta'?'✅':(col==='duda'?'⚠️':'❌');
+  var sello= col==='apta'?'APTA':(col==='duda'?'DUDOSA':'NO APTA');
+  var tit = res.nombre || 'No identifiqué la fruta';
+  var sub = res.sub || '';
+
+  var h='<div class="cab"><span class="emo">'+(res.emo||emo)+'</span>'+
+        '<div><h2>'+esc(tit)+'</h2><p class="sub">'+sub+'</p></div>'+
+        '<span class="sello '+col+'">'+emo+' '+sello+'</span></div>';
+
+  if(res.tm){
+    h+='<ul class="lista">'+res.tm.map(function(p,k){
+      return '<li class="'+(k===0?'top':'')+'"><span>'+esc(p[0])+'</span>'+
+             '<span class="pc">'+(p[1]*100).toFixed(1)+' %</span></li>';
+    }).join('')+'</ul>'+
+    '<p style="margin:9px 0 0;font-size:12.5px;color:var(--o-muted)">Veredicto dado por '+
+    '<b>tu modelo entrenado</b>.</p>';
+  }
+
+  if(res.color){
+    var c=res.color;
+    h+='<div class="barras">'+
+      barra('Manchas oscuras', c.oscuras, 100, true)+
+      barra('Tono marrón', c.marron, 100, true)+
+      barra('Superficie manchada', c.manchas, 100, true)+
+      barra('Color vivo', c.viveza, 100, false)+
+      '</div>'+
+      '<div class="bar" style="margin-top:9px"><span class="et">Puntaje</span>'+
+      '<span class="riel"><i class="'+(col==='apta'?'ok':(col==='duda'?'duda':'mal'))+
+      '" style="width:'+c.puntaje+'%"></i></span><span class="n">'+c.puntaje+'/100</span></div>';
+    if(c.recorte){
+      h+='<p style="margin:9px 0 0;font-size:12.5px;color:var(--o-muted)">No pude separar la fruta del '+
+         'fondo, así que miré solo el centro de la foto. Sale mejor con <b>fondo liso</b>.</p>';
+    }
+  }
+
+  if(res.top){
+    h+='<ul class="lista">'+res.top.map(function(p,k){
+      var f=FRUTAS[p[0]];
+      return '<li class="'+(k===0?'top':'')+'">'+
+             '<span>'+(f?f.emo+' '+esc(f.es):'')+
+             '<span class="en">'+(f?' · ':'')+esc(window.IMAGENET_1000[p[0]]||('clase '+p[0]))+'</span></span>'+
+             '<span class="pc">'+(p[1]*100).toFixed(1)+' %</span></li>';
+    }).join('')+'</ul>';
+  }
+
+  h+='<div class="conta">'+CONTA[col]+'</div>';
+  v.className='veredicto '+col;
+  v.innerHTML=h;
+  $('rotulo').textContent=sello.charAt(0)+sello.slice(1).toLowerCase();
+}
+
+/* ================= el flujo ================= */
+var lienzo=$('lienzo'), ctx=lienzo.getContext('2d', {willReadFrequently:true});
+
+function analiza(){
+  $('rotulo').textContent='Analizando…';
+  var chico=document.createElement('canvas');
+  chico.width=160; chico.height=Math.max(1, Math.round(160*lienzo.height/lienzo.width));
+  chico.getContext('2d').drawImage(lienzo,0,0,chico.width,chico.height);
+
+  Promise.all([reconoce(lienzo), predTM(lienzo)]).then(function(r){
+    var top=r[0], tmr=r[1];
+    var res={ top:top, tm:tmr };
+    var info=null;
+
+    if(top){
+      var mejor=top[0];
+      info=FRUTAS[mejor[0]]||null;
+      if(info){
+        res.nombre=info.es; res.emo=info.emo;
+        res.sub='El modelo le da <b>'+(mejor[1]*100).toFixed(0)+' %</b> de seguridad.';
+      }else if(mejor[0]===PUESTO){
+        res.nombre='Veo varias frutas juntas';
+        res.sub='Para revisar si está apta, enfoca <b>una sola fruta</b>.';
+      }else if(mejor[1]<0.12){
+        res.nombre='No distingo qué es esto';
+        res.sub='Ni siquiera su mejor opción llega al <b>12 %</b> de seguridad. Acerca la fruta, '+
+                'ponla sobre un fondo liso y con buena luz.';
+      }else{
+        res.nombre='No es ninguna de las frutas que conozco';
+        res.sub='Lo que más se le parece es <b>'+esc(window.IMAGENET_1000[mejor[0]]||'?')+'</b> '+
+                '('+(mejor[1]*100).toFixed(0)+' %). Mira la lista de las que sí reconozco.';
+      }
+    }else{
+      res.nombre='Sin reconocimiento de fruta';
+      res.sub='El modelo no está cargado, pero igual reviso el estado de la fruta.';
+    }
+
+    res.color=analizaColor(chico.getContext('2d'), chico.width, chico.height, info);
+    if(!res.color){ res.color={oscuras:0,marron:0,manchas:0,viveza:0,luz:0,cobertura:0,recorte:true,puntaje:50}; }
+    res.puntaje=res.color.puntaje;
+
+    /* si hay modelo propio, él manda */
+    if(tmr && tmr.length){
+      var g=tmr[0][0].toLowerCase();
+      var buena=/apt|fresc|fresh|buen|sana|nuev/.test(g) && !/no |mal|rot|podr|dañ/.test(g);
+      var mala=/no apt|mal|rot|podr|dañ|vencid|pasad/.test(g);
+      if(buena) res.puntaje=Math.max(78, Math.round(tmr[0][1]*100));
+      else if(mala) res.puntaje=Math.min(30, Math.round(100-tmr[0][1]*100));
+      if(!res.top) res.nombre=tmr[0][0];
+    }
+    veredicto(res);
+  });
+}
+
+function dibuja(fuente, w, h){
+  lienzo.width=w; lienzo.height=h;
+  ctx.drawImage(fuente,0,0,w,h);
+  lienzo.hidden=false; $('vacio').hidden=true;
+  $('video').hidden=true; $('mira').hidden=true;
+}
+
+/* --- cámara --- */
+var stream=null, frontal=false;
+function apagaCam(){
+  if(stream){ stream.getTracks().forEach(function(t){ t.stop(); }); stream=null; }
+  $('video').hidden=true; $('btnFoto').hidden=true; $('btnCambia').hidden=true; $('mira').hidden=true;
+  $('btnCam').textContent='📷 Encender cámara';
+}
+function enciendeCam(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    alert('Este navegador no deja usar la cámara. Sube una foto.');
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode: frontal?'user':{ideal:'environment'},
+      width:{ideal:1280}, height:{ideal:960} }, audio:false })
+  .then(function(s){
+    stream=s;
+    var v=$('video');
+    v.srcObject=s; v.hidden=false; lienzo.hidden=true; $('vacio').hidden=true; $('mira').hidden=false;
+    v.play();
+    $('btnFoto').hidden=false; $('btnCambia').hidden=false;
+    $('btnCam').textContent='⏹ Apagar cámara';
+  })
+  .catch(function(e){
+    alert('No pude abrir la cámara: '+(e&&e.message||e)+'\n\nPuedes subir una foto.');
+  });
+}
+
+$('btnCam').addEventListener('click', function(){ stream ? apagaCam() : enciendeCam(); });
+$('btnCambia').addEventListener('click', function(){ frontal=!frontal; apagaCam(); enciendeCam(); });
+$('btnFoto').addEventListener('click', function(){
+  var v=$('video');
+  if(!v.videoWidth) return;
+  dibuja(v, v.videoWidth, v.videoHeight);
+  apagaCam();
+  analiza();
+});
+
+/* --- archivo --- */
+function cargaImagen(file){
+  if(!file || !/^image\//.test(file.type)) return;
+  var im=new Image();
+  im.onload=function(){
+    var max=1280, w=im.naturalWidth, h=im.naturalHeight;
+    if(Math.max(w,h)>max){ var k=max/Math.max(w,h); w=Math.round(w*k); h=Math.round(h*k); }
+    apagaCam();
+    dibuja(im, w, h);
+    analiza();
+    URL.revokeObjectURL(im.src);
+  };
+  im.onerror=function(){ alert('No pude abrir esa imagen.'); };
+  im.src=URL.createObjectURL(file);
+}
+$('btnSubir').addEventListener('click', function(){ $('archivo').click(); });
+$('archivo').addEventListener('change', function(){ cargaImagen(this.files[0]); this.value=''; });
+
+var sz=$('suelta');
+['dragenter','dragover'].forEach(function(ev){
+  sz.addEventListener(ev, function(e){ e.preventDefault(); sz.classList.add('encima'); });
+  document.addEventListener(ev, function(e){ e.preventDefault(); });
+});
+['dragleave','drop'].forEach(function(ev){
+  sz.addEventListener(ev, function(e){ e.preventDefault(); sz.classList.remove('encima'); });
+});
+sz.addEventListener('drop', function(e){
+  if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) cargaImagen(e.dataTransfer.files[0]);
+});
+document.addEventListener('drop', function(e){ e.preventDefault(); });
+document.addEventListener('paste', function(e){
+  var it=e.clipboardData && e.clipboardData.items;
+  if(!it) return;
+  for(var i=0;i<it.length;i++) if(/^image\//.test(it[i].type)){ cargaImagen(it[i].getAsFile()); break; }
+});
+
+/* --- ajustes --- */
+function abreAjustes(si){
+  $('hojaAjustes').hidden=!si;
+  if(si) $('hojaAjustes').scrollIntoView({behavior:'smooth', block:'start'});
+}
+$('btnAjustes').addEventListener('click', function(){ abreAjustes($('hojaAjustes').hidden); });
+$('btnCierraAjustes').addEventListener('click', function(){ abreAjustes(false); });
+$('btnGuardaTM').addEventListener('click', function(){
+  cargaTM($('urlTM').value, function(ok,msg){
+    $('estadoTM').innerHTML=(ok?'✅ ':'⚠️ ')+msg;
+    $('estadoTM').style.color=ok?'var(--ok)':'var(--mal)';
+    $('btnAjustes').textContent = ok ? '⚙️ Modelo propio ✓' : '⚙️ Modelo propio';
+  });
+});
+$('btnQuitaTM').addEventListener('click', function(){
+  tm.url=null; tm.modelo=null; tm.etiquetas=null;
+  try{ localStorage.removeItem(LS_TM); }catch(e){}
+  $('urlTM').value='';
+  $('estadoTM').innerHTML='Quitado. Vuelve a mandar la regla de color.';
+  $('estadoTM').style.color='var(--o-muted)';
+  $('btnAjustes').textContent='⚙️ Modelo propio';
+});
+$('btnReintenta').addEventListener('click', cargaModelo);
+
+/* --- al abrir --- */
+pintaListaFrutas();
+$('comoDecide').innerHTML=
+  '<p>No hay aquí ningún modelo entrenado para esto. Lo que hace la página es <b>mirar el color</b>, '+
+  'que es lo mismo que hace una persona en el mercado:</p>'+
+  '<ol style="margin:0;padding-left:20px;line-height:1.9">'+
+  '<li>Separa la fruta del fondo comparando cada punto con el color del borde de la foto.</li>'+
+  '<li><b>Manchas oscuras</b>: cuántos puntos de la fruta están oscuros y apagados.</li>'+
+  '<li><b>Tono marrón</b>: cuántos puntos caen en el marrón de los golpes y la pudrición.</li>'+
+  '<li><b>Superficie manchada</b>: cuántos bloquecitos de la fruta son mucho más oscuros que el resto.</li>'+
+  '<li><b>Color vivo</b>: qué tan encendido está el color. La fruta pasada pierde brillo.</li>'+
+  '</ol>'+
+  '<p>Con esos cuatro números arma un puntaje de 0 a 100: de <b>70 para arriba es apta</b>, '+
+  'entre 45 y 69 es dudosa, y de <b>45 para abajo no es apta</b>. El castigo del marrón se afloja '+
+  'en frutas que ya son marrones (champiñón, higo, piña) y se aprieta en el plátano, donde la mancha '+
+  'oscura es justo la señal.</p>'+
+  '<p>Es una regla honesta pero tosca: una foto a contraluz o con fondo del mismo color la engaña. '+
+  'Para un juicio de verdad, entrena tu modelo con el botón <b>⚙️ Modelo propio</b>.</p>';
+
+try{
+  var g=localStorage.getItem(LS_TM);
+  if(g){
+    $('urlTM').value=g;
+    cargaTM(g, function(ok,msg){
+      $('estadoTM').innerHTML=(ok?'✅ ':'⚠️ ')+msg;
+      if(ok) $('btnAjustes').textContent='⚙️ Modelo propio ✓';
+    });
+  }
+}catch(e){}
+
+cargaModelo();
+
+})();
+</script>
+
+</body>
+</html>
