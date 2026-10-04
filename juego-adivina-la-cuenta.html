@@ -67,9 +67,7 @@
   .mimica{ position:relative; z-index:1; max-width:640px; text-align:center;
            font-size:14.5px; line-height:1.6; color:#2B3A4A; background:rgba(255,255,255,.9);
            border:1.5px solid var(--o-border); border-radius:12px; padding:9px 14px; }
-  .mimica .cl{ display:block; font-size:11px; font-weight:800; letter-spacing:.6px;
-               text-transform:uppercase; color:var(--o-purple); margin-bottom:2px; }
-  .mimica b{ color:#16305A; }
+
 
   /* ---------- pregunta y opciones ---------- */
   .preg{ margin:16px 0 9px; font-size:15.5px; font-weight:800; color:var(--gris); }
@@ -77,7 +75,6 @@
                margin-top:2px; }
 
   .ops{ display:grid; gap:9px; grid-template-columns:1fr; }
-  @media (min-width:700px){ .ops.tres{ grid-template-columns:repeat(3,1fr); } }
   .ops button{
     font:inherit; font-size:14.5px; font-weight:700; cursor:pointer; text-align:left;
     border:2px solid var(--o-border); background:#fff; color:var(--o-text);
@@ -92,8 +89,9 @@
   .ops button.fuera{ opacity:.3; }
 
   /* grupos */
-  .ops.grupos{ grid-template-columns:repeat(auto-fit,minmax(156px,1fr)); }
-  .ops.grupos button{ text-align:center; padding:12px 10px; border-width:2.5px; }
+  .ops.grupos{ grid-template-columns:repeat(2,1fr); }
+  @media (min-width:760px){ .ops.grupos{ grid-template-columns:repeat(4,1fr); } }
+  .ops.grupos button{ text-align:center; padding:14px 10px; border-width:2.5px; }
   .ops.grupos button .ab{ display:block; font-size:11px; font-weight:800; letter-spacing:.7px;
                           opacity:.85; margin-bottom:2px; }
   .ops.grupos button .nm{ display:block; font-size:14px; line-height:1.25; }
@@ -120,8 +118,8 @@
   .resuelto .cuenta{ font-size:16px; font-weight:800; color:var(--gris); }
   .resuelto .pq{ margin:9px 0 0; font-size:13.5px; line-height:1.6; color:#2B3A4A; }
   .resuelto .pq b{ color:#16305A; }
-  .resuelto .seña{ margin:9px 0 0; font-size:13px; color:var(--o-muted); }
-  .resuelto .seña b{ color:var(--o-text); }
+  .resuelto .sena-txt{ margin:9px 0 0; font-size:13px; color:var(--o-muted); }
+  .resuelto .sena-txt b{ color:var(--o-text); }
   .estrellas{ margin-left:auto; font-size:17px; letter-spacing:2px; }
 
   .nota{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
@@ -292,10 +290,11 @@
 
     <div class="nota" id="instru">
       <b>Cómo se juega.</b> Igual que «adivina la película», pero con cuentas. En el escenario sale
-      un símbolo haciendo mímica. Tú adivinas <b>qué cuenta es</b> y después <b>a qué grupo va</b>.
-      Si aciertas a la primera ganas <b>3 puntos</b>; si fallas y luego aciertas, <b>1</b>. Tienes
-      <b>3 comodines</b> para que el juego te quite opciones. Cuando aciertas el grupo, el símbolo
-      hace <b>la seña del grupo</b>: esa seña es la regla, apréndetela.
+      un símbolo moviéndose con un caso debajo, y tú eliges el grupo: activo corriente, activo no
+      corriente, pasivo corriente, pasivo no corriente, patrimonio, ingresos o gastos. Si aciertas a
+      la primera ganas 3 puntos; si fallas y luego aciertas, 1. Tienes 3 comodines para que el juego
+      te deje solo tres grupos. Cuando aciertas, el símbolo hace la seña del grupo: esa seña es la
+      regla, apréndetela.
     </div>
 
     <div class="o-acciones centrado" style="margin-top:14px" id="arranque">
@@ -391,92 +390,92 @@ var EJEM={ AC:'💵', ANC:'🏭', PC:'📄', PNC:'🏦', PAT:'🤝', ING:'🛒',
    ops[0] siempre es la respuesta correcta; se barajan al pintar. */
 var BANCO=[
   { id:'caja', s:'💵', mim:'m-rebota', g:'AC',
-    pista:'Un cliente nos pagó <b>S/ 2,000 en billetes</b> y el dinero se quedó en el cajón del local.',
+    pista:'Un cliente nos pagó S/ 2,000 en billetes y el dinero se quedó en el cajón del local.',
     ops:['Caja','Capital social','Ventas'],
     pq:'El efectivo <b>ya es dinero</b>. No hay nada más corriente que eso.' },
 
   { id:'bancos', s:'🏧', mim:'m-flota', g:'AC',
-    pista:'Depositamos <b>S/ 18,000</b> en la cuenta corriente de la empresa en el banco.',
+    pista:'Depositamos S/ 18,000 en la cuenta corriente de la empresa en el banco.',
     ops:['Cuentas corrientes en instituciones financieras','Obligaciones financieras','Gastos financieros'],
     pq:'La plata está en el banco, pero <b>es nuestra y la sacamos cuando queremos</b>. Por eso es activo corriente, no deuda.' },
 
   { id:'merca', s:'📦', mim:'m-apila', g:'AC',
-    pista:'Llegaron al almacén <b>120 cajas</b> compradas para revenderlas este mes.',
+    pista:'Llegaron al almacén 120 cajas compradas para revenderlas este mes.',
     ops:['Mercaderías','Costo de ventas','Unidades de transporte'],
     pq:'Está en el almacén <b>esperando venderse</b>. Mientras no se venda es activo; recién al venderse se vuelve costo de ventas.' },
 
   { id:'xcobrar', s:'🧾', mim:'m-jala', g:'AC',
-    pista:'Vendimos al crédito por <b>S/ 9,440</b> y el cliente nos paga <b>en 30 días</b>.',
+    pista:'Vendimos al crédito por S/ 9,440 y el cliente nos paga en 30 días.',
     ops:['Cuentas por cobrar comerciales','Cuentas por pagar comerciales','Ventas'],
     pq:'Nos <b>deben</b> a nosotros, y cobramos antes del año. Ojo: la venta es el ingreso; lo que el cliente debe es el activo.' },
 
   { id:'camion', s:'🚚', mim:'m-maneja', g:'ANC',
-    pista:'Compramos un <b>camión</b> para repartir la mercadería durante los próximos años.',
+    pista:'Compramos un camión para repartir la mercadería durante los próximos años.',
     ops:['Unidades de transporte','Gastos de transporte','Mercaderías'],
     pq:'No se compró para venderlo: se compró <b>para usarlo</b> año tras año.' },
 
   { id:'local', s:'🏭', mim:'m-firme', g:'ANC',
-    pista:'La empresa es dueña del <b>local</b> donde funciona la tienda y el almacén.',
+    pista:'La empresa es dueña del local donde funciona la tienda y el almacén.',
     ops:['Edificaciones','Alquileres pagados','Capital social'],
     pq:'Un inmueble propio <b>se queda</b>. Si lo alquiláramos sería gasto; como es nuestro, es activo no corriente.' },
 
   { id:'compu', s:'💻', mim:'m-teclea', g:'ANC',
-    pista:'Compramos <b>8 computadoras</b> para la oficina; durarán unos cuatro años.',
+    pista:'Compramos 8 computadoras para la oficina; durarán unos cuatro años.',
     ops:['Equipos diversos','Suministros de oficina','Gastos de administración'],
     pq:'Duran <b>más de un año</b>. Si fuera papel o tóner, que se acaba en el mes, sería otra cosa.' },
 
   { id:'xpagar', s:'📄', mim:'m-empuja', g:'PC',
-    pista:'El proveedor nos dejó la mercadería y la factura: <b>pagamos en 30 días</b>.',
+    pista:'El proveedor nos dejó la mercadería y la factura: pagamos en 30 días.',
     ops:['Cuentas por pagar comerciales','Cuentas por cobrar comerciales','Compras'],
     pq:'<b>Nosotros debemos</b>, y vence dentro del año. Es el espejo de las cuentas por cobrar.' },
 
   { id:'igv', s:'🏛️', mim:'m-sella', g:'PC',
-    pista:'Del IGV de nuestras ventas queda <b>S/ 3,100 por pagar a la SUNAT el día 18</b>.',
+    pista:'Del IGV de nuestras ventas queda S/ 3,100 por pagar a la SUNAT el día 18.',
     ops:['Tributos por pagar','Gastos por tributos','Caja'],
     pq:'Ese dinero <b>no es nuestro</b>: lo cobramos al cliente y lo entregamos al Estado este mes.' },
 
   { id:'sueldos', s:'👷', mim:'m-saluda', g:'PC',
-    pista:'A fin de mes le debemos <b>S/ 14,500 de sueldos</b> a los trabajadores; se pagan el día 5.',
+    pista:'A fin de mes le debemos S/ 14,500 de sueldos a los trabajadores; se pagan el día 5.',
     ops:['Remuneraciones por pagar','Sueldos y salarios','Resultados acumulados'],
     pq:'La <b>deuda</b> con el trabajador es pasivo. El sueldo como <b>gasto</b> es otra cuenta: una cosa es deber y otra consumir.' },
 
   { id:'prestamo', s:'🏦', mim:'m-presta', g:'PNC', ins:'⏳',
-    pista:'El banco nos prestó <b>S/ 80,000</b> y los devolvemos <b>en 5 años</b> en cuotas.',
+    pista:'El banco nos prestó S/ 80,000 y los devolvemos en 5 años en cuotas.',
     ops:['Obligaciones financieras a largo plazo','Cuentas corrientes en instituciones financieras','Capital social'],
     pq:'Debemos al banco y el plazo pasa del año. <b>Plata del banco en nuestra cuenta es activo; plata que le debemos al banco es pasivo.</b>' },
 
   { id:'letras', s:'📅', mim:'m-calendario', g:'PNC', ins:'⏳',
-    pista:'Compramos una máquina al crédito y firmamos letras: la última vence <b>dentro de 3 años</b>.',
+    pista:'Compramos una máquina al crédito y firmamos letras: la última vence dentro de 3 años.',
     ops:['Cuentas por pagar diversas a largo plazo','Cuentas por pagar comerciales','Maquinaria y equipo'],
     pq:'Es deuda, pero <b>vence después del año</b>. La máquina va al activo; la deuda por la máquina va al pasivo.' },
 
   { id:'capital', s:'🤝', mim:'m-aporta', g:'PAT',
-    pista:'Los tres socios pusieron <b>S/ 60,000</b> cada uno para abrir la empresa.',
+    pista:'Los tres socios pusieron S/ 60,000 cada uno para abrir la empresa.',
     ops:['Capital social','Obligaciones financieras a largo plazo','Ingresos diversos'],
     pq:'La empresa no se lo tiene que devolver a nadie en una fecha: <b>es de los dueños</b>, no es deuda.' },
 
   { id:'utilidades', s:'🏆', mim:'m-brilla', g:'PAT',
-    pista:'La empresa ganó <b>S/ 42,000</b> el año pasado y los socios decidieron <b>no repartirlos</b>.',
+    pista:'La empresa ganó S/ 42,000 el año pasado y los socios decidieron no repartirlos.',
     ops:['Resultados acumulados','Ventas','Caja'],
     pq:'La ganancia que no se reparte <b>se queda dentro</b> y engorda el patrimonio.' },
 
   { id:'ventas', s:'🛒', mim:'m-pasacaja', g:'ING',
-    pista:'Este mes la tienda facturó <b>S/ 85,000</b> en mercadería vendida.',
+    pista:'Este mes la tienda facturó S/ 85,000 en mercadería vendida.',
     ops:['Ventas de mercaderías','Mercaderías','Cuentas por cobrar comerciales'],
     pq:'La venta es el <b>ingreso</b>. Lo que sale del almacén es la mercadería y lo que el cliente debe es la cuenta por cobrar: tres cosas distintas.' },
 
   { id:'servicios', s:'🔧', mim:'m-gira', g:'ING',
-    pista:'Cobramos <b>S/ 7,000</b> por el mantenimiento que le hicimos a otra empresa.',
+    pista:'Cobramos S/ 7,000 por el mantenimiento que le hicimos a otra empresa.',
     ops:['Prestación de servicios','Servicios prestados por terceros','Caja'],
     pq:'Si <b>nosotros</b> prestamos el servicio, es ingreso. Si <b>nos lo prestan a nosotros</b>, es gasto.' },
 
   { id:'luz', s:'💡', mim:'m-parpadea', g:'GAS',
-    pista:'Llegaron los recibos del mes: <b>luz, agua e internet, S/ 1,850</b>.',
+    pista:'Llegaron los recibos del mes: luz, agua e internet, S/ 1,850.',
     ops:['Servicios prestados por terceros','Prestación de servicios','Suministros'],
     pq:'Se consumió este mes y <b>no queda nada</b> guardado. Lo que se consume es gasto.' },
 
   { id:'planilla', s:'👔', mim:'m-ondea', g:'GAS',
-    pista:'La planilla del mes costó <b>S/ 14,500</b> y ya se registró el gasto del personal.',
+    pista:'La planilla del mes costó S/ 14,500 y ya se registró el gasto del personal.',
     ops:['Sueldos y salarios','Remuneraciones por pagar','Capital social'],
     pq:'El trabajo <b>ya se consumió</b>: es gasto. Que todavía no lo paguemos es otra cuenta, la del pasivo.' }
 ];
@@ -510,7 +509,7 @@ var TOTAL=12;
 var J=null;
 function nuevo(){
   return { orden:[], r:0, fase:1, pts:0, racha:0, mejorRacha:0, comodines:3,
-           e1:false, e2:false, acierto:{}, error:{}, fin:false, cuenta:null };
+           e1:false, acierto:{}, error:{}, fin:false };
 }
 function graba(){ try{ localStorage.setItem(LS, JSON.stringify(J)); }catch(e){} }
 function lee(){
@@ -556,7 +555,7 @@ function marcador(){
   $('mComo').textContent=J.comodines;
   $('mRiel').style.width=Math.round(J.r/J.orden.length*100)+'%';
   $('rotulo').textContent='Ronda '+(J.r+1)+' de '+J.orden.length;
-  $('btnComo').disabled=(J.comodines<1 || J.fase===3);
+  $('btnComo').disabled=(J.comodines<1 || J.fase===2);
 }
 
 function pinta(){
@@ -565,27 +564,15 @@ function pinta(){
   var c=carta();
   marcador();
 
-  $('sim').innerHTML=simbolo(c, J.fase===3 ? GR[c.g].sena : c.mim);
-  $('mimica').innerHTML='<span class="cl">La mímica</span>'+c.pista;
+  $('sim').innerHTML=simbolo(c, J.fase===2 ? GR[c.g].sena : c.mim);
+  $('mimica').textContent=c.pista;
 
   if(J.fase===1){
-    $('preg').innerHTML='¿Qué cuenta está haciendo la mímica?'+
-      '<small>Mira el movimiento y lee la pista. Elige una de las tres.</small>';
-    var ops=J.barajadas || (J.barajadas=baraja(c.ops));
-    $('ops').className='ops tres';
-    $('ops').innerHTML=ops.map(function(o){
-      var mala=(J.malas1||{})[o];
-      return '<button type="button" data-o="'+esc(o)+'"'+(mala?' class="mala" disabled':'')+'>'+
-             esc(o)+'</button>';
-    }).join('');
-    $('caja').innerHTML='';
-  }
-  else if(J.fase===2){
-    $('preg').innerHTML='Es <b>'+esc(c.ops[0])+'</b>. ¿A qué grupo va?'+
-      '<small>Siete grupos. Acuérdate: «corriente» quiere decir dentro del año.</small>';
+    $('preg').innerHTML='¿A qué grupo va?'+
+      '<small>Mira cómo se mueve y lee el caso. Acuérdate: corriente quiere decir dentro del año.</small>';
     $('ops').className='ops grupos';
     $('ops').innerHTML=ORDEN.map(function(g){
-      var mala=(J.malas2||{})[g], fuera=(J.fuera2||{})[g];
+      var mala=(J.malas||{})[g], fuera=(J.fuera||{})[g];
       return '<button type="button" data-g="'+g+'" class="g-'+g+(mala?' mala':'')+(fuera?' fuera':'')+'"'+
              ((mala||fuera)?' disabled':'')+'>'+
              '<span class="ab">'+g+'</span><span class="nm">'+esc(GR[g].n)+'</span></button>';
@@ -593,8 +580,7 @@ function pinta(){
     $('caja').innerHTML='';
   }
   else{
-    var est=(J.e1?0:1)+(J.e2?0:1);
-    var estrellas=(est===2?'⭐⭐':(est===1?'⭐☆':'☆☆'));
+    var estrellas=(J.e1?'⭐':'⭐⭐⭐');
     $('preg').innerHTML='';
     $('ops').className='ops'; $('ops').innerHTML='';
     $('caja').innerHTML=
@@ -606,7 +592,7 @@ function pinta(){
           '<span class="estrellas">'+estrellas+'</span>'+
         '</div>'+
         '<p class="pq">'+c.pq+'</p>'+
-        '<p class="seña">La seña de este grupo: <b>'+esc(GR[c.g].lema)+'</b> — '+GR[c.g].rg+'</p>'+
+        '<p class="sena-txt">La seña de este grupo: <b>'+esc(GR[c.g].lema)+'</b> — '+GR[c.g].rg+'</p>'+
       '</div>'+
       '<div class="o-acciones" style="margin-top:12px">'+
         '<button type="button" class="o-btn o-btn-primary" id="btnSig">'+
@@ -619,37 +605,20 @@ function pinta(){
 }
 
 function cablea(){
-  qq('#ops button[data-o]').forEach(function(b){
-    b.addEventListener('click', function(){ eligeCuenta(b, b.dataset.o); });
-  });
   qq('#ops button[data-g]').forEach(function(b){
     b.addEventListener('click', function(){ eligeGrupo(b, b.dataset.g); });
   });
 }
 
-function eligeCuenta(b, o){
-  var c=carta();
-  if(o===c.ops[0]){
-    J.pts += J.e1 ? 1 : 3;
-    J.fase=2; graba(); sBien(); pinta();
-  }else{
-    J.e1=true; J.malas1=J.malas1||{}; J.malas1[o]=1;
-    J.error[c.g]=(J.error[c.g]||0)+1;
-    J.racha=0; graba(); sMal();
-    b.classList.add('temblor','mala'); b.disabled=true;
-    setTimeout(function(){ b.classList.remove('temblor'); marcador(); }, 430);
-  }
-}
-
 function eligeGrupo(b, g){
   var c=carta();
   if(g===c.g){
-    J.pts += J.e2 ? 1 : 3;
-    if(!J.e1 && !J.e2){ J.racha++; if(J.racha>J.mejorRacha) J.mejorRacha=J.racha; }
+    J.pts += J.e1 ? 1 : 3;
+    if(!J.e1){ J.racha++; if(J.racha>J.mejorRacha) J.mejorRacha=J.racha; }
     J.acierto[c.g]=(J.acierto[c.g]||0)+1;
-    J.fase=3; graba(); sRonda(); pinta();
+    J.fase=2; graba(); sRonda(); pinta();
   }else{
-    J.e2=true; J.malas2=J.malas2||{}; J.malas2[g]=1;
+    J.e1=true; J.malas=J.malas||{}; J.malas[g]=1;
     J.error[c.g]=(J.error[c.g]||0)+1;
     J.racha=0; graba(); sMal();
     b.classList.add('temblor','mala'); b.disabled=true;
@@ -658,33 +627,25 @@ function eligeGrupo(b, g){
 }
 
 function siguiente(){
-  J.r++; J.fase=1; J.e1=false; J.e2=false;
-  J.malas1={}; J.malas2={}; J.fuera2={}; J.barajadas=null;
+  J.r++; J.fase=1; J.e1=false;
+  J.malas={}; J.fuera={};
   if(J.r>=J.orden.length){ J.fin=true; graba(); sFin(); pintaFin(); return; }
   graba(); pinta();
 }
 
 function comodin(){
-  if(J.comodines<1 || J.fase===3) return;
+  if(J.comodines<1 || J.fase===2) return;
   var c=carta();
-  if(J.fase===1){
-    var vivas=qq('#ops button[data-o]').filter(function(b){
-      return !b.disabled && b.dataset.o!==c.ops[0]; });
-    if(!vivas.length) return;
-    var v=vivas[Math.floor(Math.random()*vivas.length)];
-    J.malas1=J.malas1||{}; J.malas1[v.dataset.o]=1;
-  }else{
-    var otros=ORDEN.filter(function(g){ return g!==c.g && !(J.malas2||{})[g] && !(J.fuera2||{})[g]; });
-    if(otros.length<3) return;              /* ya quedan pocas: no gastes el comodín */
-    J.fuera2=J.fuera2||{};
-    baraja(otros).slice(0, otros.length-2).forEach(function(g){ J.fuera2[g]=1; });
-  }
+  var otros=ORDEN.filter(function(g){ return g!==c.g && !(J.malas||{})[g] && !(J.fuera||{})[g]; });
+  if(otros.length<3) return;              /* ya quedan pocas: no gastes el comodín */
+  J.fuera=J.fuera||{};
+  baraja(otros).slice(0, otros.length-2).forEach(function(g){ J.fuera[g]=1; });
   J.comodines--; graba(); tono(440,.1,'triangle',.1); pinta();
 }
 
 /* =================== final =================== */
 function pintaFin(){
-  var max=J.orden.length*6;
+  var max=J.orden.length*3;
   var pct=Math.round(J.pts/max*100);
   var m = pct>=92 ? {i:'🏆', t:'¡Mímica perfecta!'}
         : pct>=78 ? {i:'🥇', t:'Muy bien'}
@@ -761,7 +722,7 @@ function verSenas(si){
 function empieza(){
   J=nuevo();
   J.orden=sortea();
-  J.malas1={}; J.malas2={}; J.fuera2={};
+  J.malas={}; J.fuera={};
   graba();
   $('arranque').hidden=true;
   $('instru').hidden=true;
