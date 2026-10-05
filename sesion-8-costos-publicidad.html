@@ -38,6 +38,9 @@
   .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
         background:var(--papel); display:flex; flex-direction:column; }
   .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
 
   .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
         align-items:center; gap:12px; flex:none; }
@@ -62,6 +65,8 @@
   /* ---------- navegación ---------- */
   .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
         padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
   .nav .o-btn{ font-size:15px; padding:10px 18px; }
   .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
   .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
@@ -311,6 +316,7 @@
 
 <script src="aula.js"></script>
 <script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
 <script>
 (function(){
 'use strict';
