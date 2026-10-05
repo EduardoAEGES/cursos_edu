@@ -186,6 +186,24 @@
                 text-underline-offset:2px; }
   button.pista:hover{ color:var(--rojo); }
   button.pista::after{ content:' ⓘ'; text-decoration:none; }
+  /* botón de ayuda que acompaña mientras se baja por el caso */
+  /* va justo encima del botón de la calculadora, que ocupa el rincón */
+  .flota{ position:fixed; right:16px; bottom:82px; z-index:71; display:none;
+          font:inherit; font-size:14px; font-weight:800; cursor:pointer;
+          background:var(--certus); color:#fff; border:2px solid #fff;
+          border-radius:999px; padding:12px 18px; line-height:1;
+          box-shadow:0 6px 20px rgba(22,48,122,.38); }
+  .flota:hover{ background:#0F2258; }
+  .flota.ver{ display:inline-flex; align-items:center; gap:7px; }
+  .flota .ic{ font-size:17px; }
+  .flota.late{ animation:floteo 1.5s ease-in-out 3; }
+  @keyframes floteo{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-7px) } }
+  @media (max-width:560px){
+    .flota{ right:16px; bottom:78px; padding:13px 15px; font-size:13.5px; }
+    .flota .tx{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){ .flota.late{ animation:none; } }
+
   .ayuda{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 14px; }
   .ayuda span{ font-size:12.5px; color:#5A6B5F; }
   .ayuda .o-btn{ border:1.5px solid var(--certus); color:var(--certus); background:#EEF2FB; font-weight:700; }
@@ -929,13 +947,46 @@
         'se vende o se destruye el bien. Es <b>temporal</b>.']))
   };
 
+  /* ===== botón flotante de base legal, uno por caso ===== */
+  var flota=null, floteoVisto=false;
+  try{ floteoVisto = localStorage.getItem('sci_ad_flota')==='1'; }catch(e){}
+  function casoActual(){
+    var B=BLOQUES[bi]; return B && B.casos[ciDe[bi]];
+  }
+  function montaFlota(){
+    if(flota) return flota;
+    flota=document.createElement('button');
+    flota.type='button';
+    flota.className='flota';
+    flota.id='ayudaFlota';
+    flota.title='Ver la base legal de este caso';
+    flota.innerHTML='<span class="ic">⚖️</span><span class="tx">Base legal</span>';
+    flota.addEventListener('click', function(){
+      var cs=casoActual(); if(cs) verLey(cs);
+      flota.classList.remove('late');
+      if(!floteoVisto){ floteoVisto=true; try{ localStorage.setItem('sci_ad_flota','1'); }catch(e){} }
+    });
+    document.body.appendChild(flota);
+    return flota;
+  }
+  function pintaFlota(){
+    var f=montaFlota();
+    var dentro = !$('zona').hidden && !!casoActual();
+    /* aula.js deja sus velos en el documento, ocultos: solo cuentan los que se ven */
+    var hayVelo = Array.prototype.some.call(
+      document.querySelectorAll('.velo, .aula-velo, .aula-pant'),
+      function(x){ return !x.hidden && x.getClientRects().length>0; });
+    f.classList.toggle('ver', dentro && !hayVelo);
+    if(dentro && !floteoVisto) f.classList.add('late');
+  }
+
   function verNorma(ref){
     var d=document.createElement('div');
     d.innerHTML='<div class="velo"><div class="ficha" role="dialog" aria-modal="true" aria-label="Base legal">'+
       '<div class="cab2"><b>⚖️ '+esc(ref)+'</b><button type="button" class="cierra">Cerrar ✕</button></div>'+
       '<div class="cont"><div class="tarj ley">'+(NORMA[ref]||'')+'</div></div></div></div>';
-    var v=d.firstChild; document.body.appendChild(v);
-    function fuera(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    var v=d.firstChild; document.body.appendChild(v); pintaFlota();
+    function fuera(){ v.remove(); document.removeEventListener('keydown', tecla); pintaFlota(); }
     function tecla(e){ if(e.key==='Escape') fuera(); }
     v.querySelector('.cierra').addEventListener('click', fuera);
     v.addEventListener('click', function(e){ if(e.target===v) fuera(); });
@@ -949,8 +1000,8 @@
       '<div class="cont">'+(LEYES[cs.t]||[]).map(function(n){
         return '<div class="tarj ley"><b>'+esc(n[0])+'</b><br>'+n[1]+'</div>';
       }).join('')+(AYUDAS[cs.t]||'')+'</div></div></div>';
-    var v=d.firstChild; document.body.appendChild(v);
-    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    var v=d.firstChild; document.body.appendChild(v); pintaFlota();
+    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); pintaFlota(); }
     function tecla(e){ if(e.key==='Escape') cierra(); }
     v.querySelector('.cierra').addEventListener('click', cierra);
     v.addEventListener('click', function(e){ if(e.target===v) cierra(); });
@@ -1056,6 +1107,7 @@
 
     $('panel').innerHTML='<div class="tablero"><div>'+izq+'</div><div>'+der+'</div></div>';
 
+    pintaFlota();
     $('btnLey').addEventListener('click', function(){ verLey(cs); });
     Array.prototype.forEach.call(document.querySelectorAll('#panel button.pista[data-ley]'), function(b){
       b.addEventListener('click', function(){ verNorma(b.dataset.ley); });
@@ -1171,8 +1223,8 @@
       '<tr><td>Retribución al directorio</td><td>6% de la utilidad comercial</td><td>Art. 37° m)</td></tr>'+
       '<tr><td>Intereses netos</td><td>30% del EBITDA tributario</td><td>Art. 37° a)</td></tr>'+
       '</tbody></table></div></div></div>';
-    var v=d.firstChild; document.body.appendChild(v);
-    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    var v=d.firstChild; document.body.appendChild(v); pintaFlota();
+    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); pintaFlota(); }
     function tecla(e){ if(e.key==='Escape') cierra(); }
     $('cierraRep').addEventListener('click', cierra);
     v.addEventListener('click', function(e){ if(e.target===v) cierra(); });
@@ -1296,7 +1348,7 @@
         $('zona').hidden=!dentro;
         $('puerta').querySelector('h2').textContent=dentro?'Estás dentro':'Antes de pasar, di tu nombre';
         $('puerta').querySelector('p').hidden=dentro;
-        if(dentro) pinta();
+        if(dentro) pinta(); else pintaFlota();
       } });
   }else{
     $('zona').hidden=false;
