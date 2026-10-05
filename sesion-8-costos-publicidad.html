@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 8 · Teoría de costos en campañas publicitarias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .tj{
+    --gris:#46464A; --rojo:#D8232A; --tinta:#2B2B2E; --humo:#F4F4F6; --linea:#DCDCE0;
+    --verde:#1C6E4E; --ambar:#9A5B07; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+  }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--gris); padding-bottom:14px; }
+  .marca .logo{ height:54px; width:auto; flex:none; }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
+  .marca .tx p b{ color:var(--rojo); }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+  @media (max-width:560px){ .marca .logo{ height:42px; } }
+
+  .puerta{ border:1px solid var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column;
+        box-shadow:0 1px 3px rgba(43,43,46,.07); }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+
+  .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
+        align-items:center; gap:12px; flex:none; }
+  .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1;
+        min-height:clamp(380px,56vh,620px); font-size:17px; line-height:1.72; color:var(--tinta); }
+  .esc.full .lam{ min-height:0; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:var(--gris); font-weight:500; }
+  .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:13px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:1.5px solid var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:88px; }
+    .perso .globo{ font-size:15px; padding:11px 13px; }
+  }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:1.5px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(17px,2.6vw,22px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:13.5px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:1.5px solid var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:15.5px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:13px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px solid var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
+          border:1.8px solid var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%;
+          box-shadow:0 1px 2px rgba(43,43,46,.1); }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(216,35,42,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px solid var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:1.5px solid var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:15.5px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:13.5px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:16px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px solid var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:17px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 22px; font-size:14.5px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px solid var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(216,35,42,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:1.5px solid var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:15.5px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:16px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:150px; font-size:15px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:24px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matemáticas Aplicadas</a></span> / <b>Semana 8</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 8</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="tj">
+
+  <div class="marca">
+    <img class="logo" src="marca/thomas-jefferson.svg" alt="Thomas Jefferson · Instituto de Diseño y Comunicación">
+    <span class="tx">
+      <h1>Teoría de costos aplicada a campañas publicitarias</h1>
+      <p><b>Semana 8</b> · Matemáticas Aplicadas · Escuela de Marketing</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">⛶ Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, regístrate</h2>
+    <p>Escribe tu nombre y el código de sala que indique el docente. Las diapositivas se abren al entrar
+       y tu avance queda guardado.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">—</span>
+        <span class="cu" id="cu">1 / 1</span>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">‹ Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente ›</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mil(n, d){
+  d=(d===undefined)?2:d;
+  return Number(n).toLocaleString('es-PE',{minimumFractionDigits:d, maximumFractionDigits:d});
+}
+
+var P={ punt:'personajes/tj-docente-puntero.webp', pres:'personajes/tj-docente-presenta.webp',
+        sent:'personajes/tj-alumno-sentado.webp',  sorp:'personajes/tj-alumna-sorpresa.webp',
+        sena:'personajes/tj-alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('tj_c8_son')!=='0'; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null;
+});
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{
+    fallo.currentTime=0;
+    var p=fallo.play();
+    if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('tj_c8_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien();
+});
+pintaSon();
+
+/* ================= el caso que recorre toda la sesión ================= */
+var CF=6000, CPM=12;
+var NIV=[100000,250000,500000,1000000];
+function cv(q){ return q/1000*CPM; }
+function ct(q){ return CF+cv(q); }
+function cme(q){ return ct(q)/(q/1000); }
+
+var C={ inv:9000, imp:250000, clics:3600, ventas:180, precio:95, costoU:55 };
+C.margen = C.precio - C.costoU;                 /* 40 */
+C.cpm    = C.inv/C.imp*1000;                    /* 36.00 */
+C.cpc    = C.inv/C.clics;                       /* 2.50 */
+C.cpa    = C.inv/C.ventas;                      /* 50.00 */
+C.ctr    = C.clics/C.imp*100;                   /* 1.44 */
+C.conv   = C.ventas/C.clics*100;                /* 5.00 */
+C.ingreso= C.ventas*C.precio;                   /* 17,100 */
+C.roas   = C.ingreso/C.inv;                     /* 1.90 */
+C.mcTotal= C.ventas*C.margen;                   /* 7,200 */
+C.result = C.mcTotal-C.inv;                     /* −1,800 */
+C.pe     = C.inv/C.margen;                      /* 225 */
+
+/* ================= las diapositivas ================= */
+var D=[
+
+{ et:'Portada', t:'Teoría de costos en campañas publicitarias',
+  h:'<p class="enc">¿Cuánto cuesta de verdad una campaña?</p>'+
+    '<p class="sub">Semana 8 · Matemáticas Aplicadas · Escuela de Marketing</p>'+
+    globo(P.punt,'La pregunta de la sesión',
+      'Una campaña no se evalúa por lo que se gastó, sino por <b>cuánto costó cada contacto, cada clic '+
+      'y cada venta</b>, y por el punto a partir del cual la inversión se recupera. Esta sesión '+
+      'desarrolla esa aritmética.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Lo que vamos a construir</h4><div class="c"><ul>'+
+      '<li>Costo fijo y costo variable de una campaña.</li>'+
+      '<li>Costo total, costo medio y costo marginal.</li>'+
+      '<li>Las métricas del medio: CPM, CPC, CPA y CTR.</li>'+
+      '<li>ROAS y punto de equilibrio de la campaña.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Cómo se trabaja</h4><div class="c"><ul>'+
+      '<li>Teoría breve, y enseguida una actividad.</li>'+
+      '<li>Las respuestas se corrigen solas.</li>'+
+      '<li>El error suena: vuelve a intentarlo.</li>'+
+      '<li>Tu avance queda guardado en este dispositivo.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+{ et:'Teoría 1', t:'Costo fijo y costo variable',
+  h:'<p class="enc">Los dos costos de una campaña</p>'+
+    '<p class="sub">La diferencia no está en el monto, sino en si el monto cambia cuando la campaña crece</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Costo fijo (CF)</h4><div class="c">'+
+      '<p>No se mueve aunque la campaña llegue a mil personas o a un millón. Se paga una vez, o se paga '+
+      'por período.</p><ul>'+
+      '<li>Producción del spot.</li><li>Diseño de las piezas gráficas.</li>'+
+      '<li>Fee mensual de la agencia.</li><li>Contrato cerrado con un influencer.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Costo variable (CV)</h4><div class="c">'+
+      '<p>Crece en proporción al volumen: a más impresiones, más clics o más ventas, más se paga.</p><ul>'+
+      '<li>Pago por cada mil impresiones.</li><li>Pago por cada clic.</li>'+
+      '<li>Volantes impresos, por unidad.</li><li>Comisión por cada venta cerrada.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    '<div class="av"><b>La prueba para distinguirlos:</b> pregúntese si el monto cambiaría al duplicar '+
+    'el alcance de la campaña. Si cambia, es variable; si no cambia, es fijo.</div>' },
+
+{ et:'Actividad 1', t:'Clasifique cada costo', tipo:'arr', clave:'a1',
+  h:'<p class="enc">Clasifique cada costo</p>'+
+    '<p class="sub">Arrastre las ocho fichas a la columna que corresponde. En el celular, toque la ficha y después la columna.</p>' },
+
+{ et:'Teoría 2', t:'El costo total',
+  h:'<p class="enc">El costo total de la campaña</p>'+
+    '<p class="sub">Todo lo fijo, más lo variable multiplicado por el volumen</p>'+
+    '<div class="form">CT = CF + ( CV unitario × Q )'+
+    '<small>CT: costo total · CF: costo fijo · Q: volumen alcanzado</small></div>'+
+    globo(P.pres,'El caso de la sesión',
+      'La heladería <b>Nevado</b> lanza su sabor de verano. La agencia cobra <b>S/ 2,500</b> de fee y la '+
+      'producción del spot cuesta <b>S/ 3,500</b>: ese es el costo fijo. La pauta digital se paga a '+
+      '<b>S/ 12 por cada mil impresiones</b>: ese es el costo variable.')+
+    '<div class="av">Con esos datos, <b>CF = S/ 6,000</b> y el costo variable es de <b>S/ 12 por millar</b>. '+
+    'Para 400,000 impresiones serían 400 millares, es decir S/ 4,800 de variable, y el costo total '+
+    'ascendería a S/ 10,800.</div>' },
+
+{ et:'Actividad 2', t:'Calcule el costo total', tipo:'cal', clave:'a2',
+  h:'<p class="enc">Calcule el costo total</p>'+
+    '<p class="sub">Costo fijo S/ 6,000 · costo variable S/ 12 por cada mil impresiones. Escriba el importe y pulse Enter.</p>' },
+
+{ et:'Teoría 3', t:'El costo medio',
+  h:'<p class="enc">El costo medio: el fijo se diluye</p>'+
+    '<p class="sub">Cuanto más alcance tiene la campaña, menos cuesta llegar a cada mil personas</p>'+
+    '<div class="form">Costo medio por millar = CT ÷ ( Q ÷ 1,000 )</div>'+
+    '<div class="tabenv"><table class="t"><thead><tr>'+
+    '<th>Impresiones</th><th class="n">Costo fijo</th><th class="n">Costo variable</th>'+
+    '<th class="n">Costo total</th><th class="n">Costo por millar</th></tr></thead><tbody>'+
+    NIV.map(function(q){
+      return '<tr><td>'+mil(q,0)+'</td><td class="n">'+mil(CF,0)+'</td>'+
+             '<td class="n">'+mil(cv(q),0)+'</td><td class="n">'+mil(ct(q),0)+'</td>'+
+             '<td class="n"><b>'+mil(cme(q))+'</b></td></tr>';
+    }).join('')+'</tbody></table></div>'+
+    globo(P.sorp,'Lo que hay que notar',
+      'El costo fijo es el mismo en las cuatro filas, y sin embargo el costo por millar cae de '+
+      '<b>S/ 72.00 a S/ 18.00</b>. No es que la pauta se haya abaratado: es que los <b>S/ 6,000</b> '+
+      'se reparten entre muchas más personas.') },
+
+{ et:'Actividad 3', t:'Calcule el costo medio', tipo:'cal', clave:'a3',
+  h:'<p class="enc">Calcule el costo por millar</p>'+
+    '<p class="sub">Divida el costo total entre el número de millares de impresiones. Dos decimales.</p>' },
+
+{ et:'Teoría 4', t:'El costo marginal',
+  h:'<p class="enc">El costo marginal: el siguiente millar</p>'+
+    '<p class="sub">Lo que cuesta ampliar la campaña en una unidad más</p>'+
+    '<div class="form">Costo marginal = <span class="v">Δ</span> Costo total ÷ <span class="v">Δ</span> Cantidad'+
+    '<small>Δ se lee «variación de»: cuánto cambió</small></div>'+
+    '<div class="tabenv"><table class="t"><thead><tr>'+
+    '<th>De … a</th><th class="n">Variación del costo total</th><th class="n">Millares añadidos</th>'+
+    '<th class="n">Costo marginal</th></tr></thead><tbody>'+
+    '<tr><td>100,000 → 250,000</td><td class="n">'+mil(ct(250000)-ct(100000),0)+'</td><td class="n">150</td><td class="n"><b>12.00</b></td></tr>'+
+    '<tr><td>250,000 → 500,000</td><td class="n">'+mil(ct(500000)-ct(250000),0)+'</td><td class="n">250</td><td class="n"><b>12.00</b></td></tr>'+
+    '<tr><td>500,000 → 1,000,000</td><td class="n">'+mil(ct(1000000)-ct(500000),0)+'</td><td class="n">500</td><td class="n"><b>12.00</b></td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av"><b>El costo marginal no se mueve: siempre S/ 12 por millar.</b> El costo fijo ya '+
+    'está pagado y no reaparece. Por eso el costo medio cae y se acerca al marginal, pero nunca llega '+
+    'a bajar de él.</div>'+
+    globo(P.sena,'Para decidir',
+      'Cuando el gerente pregunta «¿cuánto me cuesta ampliar la campaña?», la respuesta es el <b>costo '+
+      'marginal</b>, no el medio. El medio sirve para evaluar la campaña completa; el marginal, para '+
+      'decidir si conviene estirarla.') },
+
+{ et:'Actividad 4', t:'Compruebe los conceptos', tipo:'quiz', clave:'a4',
+  h:'<p class="enc">Compruebe los conceptos</p>'+
+    '<p class="sub">Cuatro preguntas. Si se equivoca, la opción queda tachada y puede volver a elegir.</p>' },
+
+{ et:'Teoría 5', t:'Las métricas del medio',
+  h:'<p class="enc">Las cuatro métricas del medio</p>'+
+    '<p class="sub">Todas son el mismo cociente: lo que se invirtió entre lo que se consiguió</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>CPM · costo por mil impresiones</h4><div class="c">'+
+      '<p>Cuánto cuesta que la pieza aparezca mil veces en pantalla.</p>'+
+      '<p><b>CPM = ( Inversión ÷ Impresiones ) × 1,000</b></p></div></div>'+
+    '<div class="fc"><h4>CPC · costo por clic</h4><div class="c">'+
+      '<p>Cuánto cuesta cada visita que llega al sitio.</p>'+
+      '<p><b>CPC = Inversión ÷ Clics</b></p></div></div>'+
+    '<div class="fc rj"><h4>CPA · costo por adquisición</h4><div class="c">'+
+      '<p>Cuánto cuesta cada venta o cada registro conseguido.</p>'+
+      '<p><b>CPA = Inversión ÷ Conversiones</b></p></div></div>'+
+    '<div class="fc rj"><h4>CTR · tasa de clics</h4><div class="c">'+
+      '<p>Qué proporción de quienes vieron la pieza hicieron clic. No es un costo: es un porcentaje.</p>'+
+      '<p><b>CTR = ( Clics ÷ Impresiones ) × 100</b></p></div></div>'+
+    '</div>'+
+    '<div class="av">Una quinta métrica cierra el embudo: la <b>tasa de conversión = ( Conversiones ÷ '+
+    'Clics ) × 100</b>, que mide qué parte de las visitas terminó comprando.</div>' },
+
+{ et:'Actividad 5', t:'Arme las fórmulas', tipo:'comp', clave:'a5',
+  h:'<p class="enc">Arme las fórmulas</p>'+
+    '<p class="sub">Elija en cada hueco el término que corresponde.</p>' },
+
+{ et:'Actividad 6', t:'Empareje la métrica', tipo:'par', clave:'a6',
+  h:'<p class="enc">¿Qué pregunta responde cada métrica?</p>'+
+    '<p class="sub">Arrastre cada métrica junto a la pregunta que contesta. En el celular, toque y toque.</p>' },
+
+{ et:'Teoría 6', t:'Los resultados de la campaña',
+  h:'<p class="enc">Los resultados de la campaña Nevado</p>'+
+    '<p class="sub">Se eligió el escenario de 250,000 impresiones. Estos son los datos que entregó la plataforma.</p>'+
+    '<div class="tabenv"><table class="t"><tbody>'+
+    '<tr><td>Inversión total de la campaña</td><td class="n"><b>S/ '+mil(C.inv,0)+'</b></td></tr>'+
+    '<tr><td>Impresiones servidas</td><td class="n"><b>'+mil(C.imp,0)+'</b></td></tr>'+
+    '<tr><td>Clics al sitio</td><td class="n"><b>'+mil(C.clics,0)+'</b></td></tr>'+
+    '<tr><td>Ventas atribuidas a la campaña</td><td class="n"><b>'+mil(C.ventas,0)+'</b></td></tr>'+
+    '<tr class="tot"><td>Precio de venta del producto</td><td class="n">S/ '+mil(C.precio)+'</td></tr>'+
+    '<tr class="tot"><td>Costo variable del producto</td><td class="n">S/ '+mil(C.costoU)+'</td></tr>'+
+    '<tr class="res"><td>Margen de contribución por unidad</td><td class="n"><b>S/ '+mil(C.margen)+'</b></td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.sent,'Antes de calcular',
+      'Observe que el producto se vende a <b>S/ 95</b> pero cada unidad deja solo <b>S/ 40</b>, porque '+
+      '<b>S/ 55</b> se van en el costo del helado. Esa diferencia, el <b>margen de contribución</b>, es '+
+      'lo único con lo que la campaña puede pagarse. Téngalo presente: es donde más se equivocan los '+
+      'informes publicitarios.') },
+
+{ et:'Actividad 7', t:'Calcule las métricas', tipo:'cal', clave:'a7',
+  h:'<p class="enc">Calcule las métricas de la campaña</p>'+
+    '<p class="sub">Use los datos de la diapositiva anterior. Dos decimales.</p>' },
+
+{ et:'Teoría 7', t:'¿La campaña se pagó?',
+  h:'<p class="enc">¿La campaña se pagó sola?</p>'+
+    '<p class="sub">El ROAS mide la venta; el punto de equilibrio mide lo que de verdad queda</p>'+
+    '<div class="form">ROAS = Ingresos generados ÷ Inversión publicitaria'+
+    '<small>Se lee «cuántos soles de venta devuelve cada sol invertido»</small></div>'+
+    '<div class="tabenv"><table class="t"><tbody>'+
+    '<tr><td>Ingresos de la campaña · '+mil(C.ventas,0)+' × S/ '+mil(C.precio)+'</td><td class="n">S/ '+mil(C.ingreso,0)+'</td></tr>'+
+    '<tr><td>Inversión publicitaria</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
+    '<tr class="tot"><td>ROAS</td><td class="n"><b>'+mil(C.roas)+'</b></td></tr>'+
+    '<tr><td>Margen de contribución generado · '+mil(C.ventas,0)+' × S/ '+mil(C.margen)+'</td><td class="n">S/ '+mil(C.mcTotal,0)+'</td></tr>'+
+    '<tr><td>Inversión publicitaria</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
+    '<tr class="tot"><td>Resultado real de la campaña</td><td class="n"><b style="color:#B42318">− S/ '+mil(Math.abs(C.result),0)+'</b></td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.sorp,'El error que hay que evitar',
+      'Un ROAS de <b>1.90</b> suena a éxito: por cada sol se vendieron casi dos. Pero la campaña '+
+      '<b>perdió S/ 1,800</b>, porque lo que la paga no es la venta sino el margen. Un informe que se '+
+      'queda en el ROAS puede estar celebrando una pérdida.')+
+    '<div class="form">Punto de equilibrio = Inversión publicitaria ÷ Margen por unidad'+
+    '<small>Las ventas que la campaña necesita para no perder ni ganar</small></div>' },
+
+{ et:'Actividad 8', t:'Decida sobre la campaña', tipo:'cal2', clave:'a8',
+  h:'<p class="enc">El cierre: ¿qué recomienda?</p>'+
+    '<p class="sub">Calcule el punto de equilibrio y responda la pregunta de decisión.</p>' },
+
+{ et:'Cierre', t:'Lo que queda de la sesión',
+  h:'<div class="cierre"><div class="ic">📐</div>'+
+    '<h2>Lo que queda de la sesión</h2></div>'+
+    '<div class="tabenv"><table class="t"><thead><tr><th>Concepto</th><th>Fórmula</th><th>Para qué sirve</th></tr></thead><tbody>'+
+    '<tr><td><b>Costo total</b></td><td>CF + CVu × Q</td><td>Lo que cuesta la campaña completa</td></tr>'+
+    '<tr><td><b>Costo medio</b></td><td>CT ÷ Q</td><td>Evaluar la campaña ya ejecutada</td></tr>'+
+    '<tr><td><b>Costo marginal</b></td><td>ΔCT ÷ ΔQ</td><td>Decidir si conviene ampliarla</td></tr>'+
+    '<tr><td><b>CPM</b></td><td>(Inversión ÷ Impresiones) × 1,000</td><td>Comparar el precio del medio</td></tr>'+
+    '<tr><td><b>CPC</b></td><td>Inversión ÷ Clics</td><td>Comparar el precio de la visita</td></tr>'+
+    '<tr><td><b>CPA</b></td><td>Inversión ÷ Conversiones</td><td>Comparar el precio de la venta</td></tr>'+
+    '<tr><td><b>CTR</b></td><td>(Clics ÷ Impresiones) × 100</td><td>Medir si la pieza atrae</td></tr>'+
+    '<tr><td><b>ROAS</b></td><td>Ingresos ÷ Inversión</td><td>Medir el retorno en ventas</td></tr>'+
+    '<tr class="res"><td><b>Punto de equilibrio</b></td><td>Inversión ÷ Margen unitario</td><td>Saber si la campaña se paga</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.punt,'La idea que vale la nota',
+      'El costo medio juzga lo hecho, el costo marginal decide lo que viene, y el <b>margen de '+
+      'contribución</b> es lo único que paga la publicidad. Una campaña con buen ROAS y margen flaco '+
+      'puede perder dinero.') }
+];
+
+/* ================= contenido de las actividades ================= */
+var A1={
+  fichas:[
+    {id:'f1', t:'Producción del spot publicitario', g:'F'},
+    {id:'f2', t:'Fee mensual de la agencia', g:'F'},
+    {id:'f3', t:'Alquiler del estudio de grabación', g:'F'},
+    {id:'f4', t:'Contrato cerrado con el influencer', g:'F'},
+    {id:'f5', t:'Pago por cada mil impresiones', g:'V'},
+    {id:'f6', t:'Pago por cada clic recibido', g:'V'},
+    {id:'f7', t:'Volantes impresos, por unidad', g:'V'},
+    {id:'f8', t:'Comisión por cada venta cerrada', g:'V'}
+  ],
+  cajas:[{id:'F', t:'Costo fijo'},{id:'V', t:'Costo variable'}]
+};
+
+var A2={ titulo:'Complete la columna del costo total',
+  lineas:NIV.map(function(q){
+    return { id:'q'+q, q:'Costo total para <b>'+mil(q,0)+'</b> impresiones', u:'S/',
+             v:ct(q), pre:'Costo variable: '+mil(q/1000,0)+' millares × S/ 12' };
+  }) };
+
+var A3={ titulo:'Complete la columna del costo por millar',
+  lineas:NIV.map(function(q){
+    return { id:'m'+q, q:'Costo por millar con <b>'+mil(q,0)+'</b> impresiones', u:'S/',
+             v:cme(q), pre:'Costo total S/ '+mil(ct(q),0)+' ÷ '+mil(q/1000,0)+' millares' };
+  }) };
+
+var A4=[
+  { q:'La agencia cobra S/ 2,500 al mes, llegue la campaña a 50,000 o a 900,000 personas. ¿Qué clase de costo es?',
+    ops:['Costo fijo','Costo variable','Costo marginal'], ok:0,
+    pq:'No cambia con el volumen: es fijo. El monto puede ser alto, pero eso no lo convierte en variable.' },
+  { q:'El costo por millar de la campaña Nevado cae de S/ 72.00 a S/ 18.00 al ampliar el alcance. ¿Por qué?',
+    ops:['Porque la plataforma rebajó la tarifa de la pauta',
+         'Porque el costo fijo se reparte entre más impresiones',
+         'Porque el costo variable baja cuando se compra más volumen'], ok:1,
+    pq:'La tarifa siguió en S/ 12 por millar todo el tiempo. Lo que cambió es que los S/ 6,000 fijos se dividen entre muchas más personas.' },
+  { q:'El gerente pregunta cuánto costaría añadir 100,000 impresiones más. ¿Qué dato debe darle?',
+    ops:['El costo medio, porque resume la campaña',
+         'El costo total, porque es el monto completo',
+         'El costo marginal, porque mide lo que cuesta ampliar'], ok:2,
+    pq:'Para decidir sobre lo que viene se usa el costo marginal: S/ 12 por millar, es decir S/ 1,200 por esas 100,000 impresiones.' },
+  { q:'¿Puede el costo medio llegar a ser menor que el costo marginal en esta campaña?',
+    ops:['Sí, si el alcance crece lo suficiente',
+         'No, el costo medio se acerca al marginal pero siempre queda por encima',
+         'Sí, apenas se superan las 500,000 impresiones'], ok:1,
+    pq:'El costo medio arrastra una parte del fijo, por pequeña que sea. Se acerca a S/ 12 pero nunca baja de ahí.' }
+];
+
+var A5=[
+  { id:'c1', pre:'CPM =  (', ops:['Inversión','Clics','Conversiones'], ok:0,
+    med:'÷', ops2:['Impresiones','Clics','Conversiones'], ok2:0, post:' ) × 1,000' },
+  { id:'c2', pre:'CPC =  ', ops:['Inversión','Impresiones','Conversiones'], ok:0,
+    med:'÷', ops2:['Clics','Impresiones','Conversiones'], ok2:0, post:'' },
+  { id:'c3', pre:'CPA =  ', ops:['Inversión','Clics','Impresiones'], ok:0,
+    med:'÷', ops2:['Conversiones','Impresiones','Clics'], ok2:0, post:'' },
+  { id:'c4', pre:'CTR =  (', ops:['Clics','Inversión','Conversiones'], ok:0,
+    med:'÷', ops2:['Impresiones','Clics','Inversión'], ok2:0, post:' ) × 100' }
+];
+
+var A6={
+  fichas:[
+    {id:'p1', t:'CPM'},{id:'p2', t:'CPC'},{id:'p3', t:'CPA'},
+    {id:'p4', t:'CTR'},{id:'p5', t:'ROAS'}
+  ],
+  huecos:[
+    {id:'p3', q:'¿Cuánto me cuesta conseguir una venta?'},
+    {id:'p1', q:'¿Cuánto me cuesta aparecer mil veces en pantalla?'},
+    {id:'p5', q:'¿Cuántos soles de venta devuelve cada sol invertido?'},
+    {id:'p2', q:'¿Cuánto me cuesta cada visita que llega al sitio?'},
+    {id:'p4', q:'¿Qué parte de los que vieron la pieza hicieron clic?'}
+  ]
+};
+
+var A7={ titulo:'Las métricas de la campaña Nevado',
+  lineas:[
+    { id:'m1', q:'<b>CPM</b> · costo por mil impresiones', u:'S/', v:C.cpm,
+      pre:'(S/ '+mil(C.inv,0)+' ÷ '+mil(C.imp,0)+') × 1,000' },
+    { id:'m2', q:'<b>CPC</b> · costo por clic', u:'S/', v:C.cpc,
+      pre:'S/ '+mil(C.inv,0)+' ÷ '+mil(C.clics,0)+' clics' },
+    { id:'m3', q:'<b>CPA</b> · costo por venta conseguida', u:'S/', v:C.cpa,
+      pre:'S/ '+mil(C.inv,0)+' ÷ '+mil(C.ventas,0)+' ventas' },
+    { id:'m4', q:'<b>CTR</b> · tasa de clics', u:'%', v:C.ctr,
+      pre:'('+mil(C.clics,0)+' ÷ '+mil(C.imp,0)+') × 100' },
+    { id:'m5', q:'<b>Tasa de conversión</b>', u:'%', v:C.conv,
+      pre:'('+mil(C.ventas,0)+' ÷ '+mil(C.clics,0)+') × 100' }
+  ] };
+
+var A8={ titulo:'El cierre de la campaña',
+  lineas:[
+    { id:'r1', q:'<b>ROAS</b> de la campaña', u:'', v:C.roas,
+      pre:'S/ '+mil(C.ingreso,0)+' de ingresos ÷ S/ '+mil(C.inv,0)+' de inversión' },
+    { id:'r2', q:'<b>Margen de contribución</b> generado por las 180 ventas', u:'S/', v:C.mcTotal,
+      pre:'180 ventas × S/ 40 de margen', dec:0 },
+    { id:'r3', q:'<b>Punto de equilibrio</b> · ventas necesarias para no perder', u:'ventas', v:C.pe,
+      pre:'S/ 9,000 de inversión ÷ S/ 40 de margen', dec:0 },
+    { id:'r4', q:'<b>Ventas que faltaron</b> para llegar al equilibrio', u:'ventas', v:C.pe-C.ventas,
+      pre:'225 necesarias − 180 conseguidas', dec:0 }
+  ],
+  quiz:{ q:'Con estos números, ¿qué recomienda al cliente?',
+    ops:['Repetir la campaña igual: un ROAS de 1.90 es positivo',
+         'Subir la conversión o bajar el CPA: con 180 ventas la campaña pierde S/ 1,800',
+         'Ampliar el presupuesto, porque el costo medio baja al crecer'], ok:1,
+    pq:'La campaña necesitaba 225 ventas y consiguió 180. Ampliar el presupuesto sin tocar la conversión '+
+       'agranda la pérdida; lo que hay que mover es la tasa de conversión o el costo de adquisición.' }
+};
+
+/* ================= estado ================= */
+var LS='tj_costos8_v1';
+var G={ visto:{}, a1:{}, a2:{}, a3:{}, a4:{}, a5:{}, a6:{}, a7:{}, a8:{}, q8:null, mal:{} };
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+
+var TAREAS=[
+  {k:'a1', n:A1.fichas.length}, {k:'a2', n:A2.lineas.length}, {k:'a3', n:A3.lineas.length},
+  {k:'a4', n:A4.length},        {k:'a5', n:A5.length*2},      {k:'a6', n:A6.huecos.length},
+  {k:'a7', n:A7.lineas.length}, {k:'a8', n:A8.lineas.length+1}
+];
+function hechas(k){
+  if(k==='a8') return Object.keys(G.a8||{}).length + (G.q8===A8.quiz.ok?1:0);
+  return Object.keys(G[k]||{}).length;
+}
+function totalOk(){ var s=0; TAREAS.forEach(function(t){ s+=hechas(t.k); }); return s; }
+function totalMax(){ var s=0; TAREAS.forEach(function(t){ s+=t.n; }); return s; }
+function tareaLista(k){ var t=null; TAREAS.forEach(function(x){ if(x.k===k) t=x; });
+                        return t && hechas(k)>=t.n; }
+
+var i=0;
+
+/* ================= arrastre reutilizable ================= */
+var elegida=null;
+function sueltaEn(zona){ return zona; }
+function montaArrastre(cont, alSoltar){
+  var ghost=null, orig=null;
+  qq('.ficha[draggable-si]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      orig=f;
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true);
+      ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35';
+      f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display='';
+      f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    function fin(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null;
+      f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    }
+    f.addEventListener('pointerup', fin);
+    f.addEventListener('pointercancel', function(){ if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+
+    /* tocar y tocar, para el celular */
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){
+  if(!el) return;
+  el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450);
+}
+
+/* ================= vistas de actividad ================= */
+function vArrastre(){
+  var puestas=G.a1||{};
+  var libres=A1.fichas.filter(function(f){ return !puestas[f.id]; });
+  var h='<div class="tarea'+(tareaLista('a1')?' ok':'')+'"><h4>Actividad 1 · '+
+        Object.keys(puestas).length+' de '+A1.fichas.length+'</h4><div class="c">'+
+        '<div class="banco" id="banco">'+
+        (libres.length ? libres.map(function(f){
+          return '<button type="button" class="ficha" draggable-si data-f="'+f.id+'">'+esc(f.t)+'</button>';
+        }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+        '</div><div class="cajas c2">';
+  A1.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+'</h5><div class="z">'+
+       A1.fichas.filter(function(f){ return puestas[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>';
+       }).join('')+'</div></div>';
+  });
+  h+='</div>';
+  if(tareaLista('a1')) h+=globo(P.sena,'Resuelto','Las cuatro de la izquierda se pagan igual sin importar '+
+      'el alcance; las cuatro de la derecha crecen con él. Esa es toda la diferencia.');
+  return h+'</div></div>';
+}
+
+function vCalcula(A, clave){
+  var g=G[clave]||{};
+  var h='<div class="tarea'+(tareaLista(clave)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+        Object.keys(g).length+' de '+A.lineas.length+'</h4><div class="c"><div class="lineas">';
+  A.lineas.forEach(function(l){
+    var ok=g[l.id];
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+l.q+'<span class="pre">'+esc(l.pre)+'</span></span>'+
+       '<span class="r">'+(l.u==='S/'?'<span class="u">S/</span>':'')+
+       '<input class="cel'+(ok?' bien':'')+'" type="text" inputmode="decimal" data-c="'+clave+'" data-l="'+l.id+'"'+
+       (ok?' value="'+mil(l.v, l.dec===0?0:2)+'" disabled':'')+' placeholder="0.00">'+
+       (l.u && l.u!=='S/' ? '<span class="u">'+esc(l.u)+'</span>' : '')+'</span></div>';
+  });
+  h+='</div>';
+  if(tareaLista(clave) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+function vQuiz(lista, clave, titulo){
+  var g=G[clave]||{};
+  var h='<div class="tarea'+(tareaLista(clave)?' ok':'')+'"><h4>'+esc(titulo)+' · '+
+        Object.keys(g).length+' de '+lista.length+'</h4><div class="c">';
+  lista.forEach(function(p,k){
+    var resuelto=(g[k]!==undefined);
+    h+='<p class="preg">'+(k+1)+'. '+p.q+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : ((G.mal[clave+'|'+k+'|'+j]) ? ' mala' : '');
+      h+='<button type="button" data-q="'+clave+'" data-k="'+k+'" data-j="'+j+'"'+
+         (resuelto||cls===' mala'?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  return h+'</div></div>';
+}
+
+/* orden de opciones estable: el mismo para un id dado, pero no siempre el 0 primero */
+function barajaFija(sem, n){
+  var h=0, k;
+  for(k=0;k<sem.length;k++) h=(h*31+sem.charCodeAt(k))>>>0;
+  var a=[]; for(k=0;k<n;k++) a.push(k);
+  for(k=a.length-1;k>0;k--){
+    h=(h*1103515245+12345)>>>0;
+    var j=h%(k+1), t=a[k]; a[k]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+function vCompleta(){
+  var g=G.a5||{};
+  var n=0; A5.forEach(function(f){ if(g[f.id+'a']) n++; if(g[f.id+'b']) n++; });
+  var h='<div class="tarea'+(tareaLista('a5')?' ok':'')+'"><h4>Actividad 5 · '+n+' de '+(A5.length*2)+'</h4><div class="c">';
+  A5.forEach(function(f){
+    function opc(id, ops, puesto){
+      var orden=barajaFija(id, ops.length);
+      return '<select class="cel'+(puesto?' bien':'')+'" data-f="'+id+'"'+(puesto?' disabled':'')+'>'+
+        '<option value="">— elija —</option>'+
+        orden.map(function(j){
+          return '<option value="'+j+'"'+(puesto&&j===0?' selected':'')+'>'+esc(ops[j])+'</option>';
+        }).join('')+
+        '</select>';
+    }
+    h+='<div class="formhueco"><span>'+esc(f.pre)+'</span>'+opc(f.id+'a', f.ops, g[f.id+'a'])+
+       '<span>'+esc(f.med)+'</span>'+opc(f.id+'b', f.ops2, g[f.id+'b'])+
+       '<span>'+esc(f.post)+'</span></div>';
+  });
+  if(tareaLista('a5')) h+=globo(P.pres,'Resuelto','Las cuatro son el mismo cociente: lo invertido entre lo '+
+      'conseguido. Solo el CPM y el CTR llevan un factor al final, porque se expresan por millar y en porcentaje.');
+  return h+'</div></div>';
+}
+
+function vParea(){
+  var g=G.a6||{};
+  var libres=A6.fichas.filter(function(f){ return !g[f.id]; });
+  var h='<div class="tarea'+(tareaLista('a6')?' ok':'')+'"><h4>Actividad 6 · '+
+        Object.keys(g).length+' de '+A6.huecos.length+'</h4><div class="c">'+
+        '<div class="banco">'+
+        (libres.length ? libres.map(function(f){
+          return '<button type="button" class="ficha" draggable-si data-f="'+f.id+'">'+esc(f.t)+'</button>';
+        }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna métrica.</span>')+
+        '</div><div class="pares">';
+  A6.huecos.forEach(function(x,k){
+    var puesto=g[x.id];
+    var nom=''; A6.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+k+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelte aquí')+'</span></div>';
+  });
+  h+='</div>';
+  if(tareaLista('a6')) h+=globo(P.sorp,'Resuelto','Tres de ellas son costos y responden «cuánto me cuesta»; '+
+      'el CTR es un porcentaje y responde «qué parte»; el ROAS es un retorno y responde «cuánto me devuelve».');
+  return h+'</div></div>';
+}
+
+function vCierreCampana(){
+  var h=vCalcula(A8,'a8');
+  var q=A8.quiz, resuelto=(G.q8===q.ok);
+  h+='<div class="tarea'+(resuelto?' ok':'')+'" style="margin-top:16px"><h4>Pregunta de decisión</h4><div class="c">'+
+     '<p class="preg">'+esc(q.q)+'</p><div class="ops">';
+  q.ops.forEach(function(o,j){
+    var cls = resuelto && j===q.ok ? ' buena' : (G.mal['q8|'+j] ? ' mala' : '');
+    h+='<button type="button" data-q8="'+j+'"'+(resuelto||cls===' mala'?' disabled':'')+
+       ' class="'+cls.trim()+'">'+esc(o)+'</button>';
+  });
+  h+='</div>';
+  if(resuelto) h+='<p class="pq">'+esc(q.pq)+'</p>'+
+    globo(P.punt,'Cierre','Esa es la lectura correcta: la campaña vendió, pero no lo suficiente para '+
+      'cubrirse con su propio margen. El informe tiene que decirlo con esos números.');
+  return h+'</div></div>';
+}
+
+/* ================= dibujo ================= */
+function pinta(){
+  var s=D[i];
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.tipo==='arr')  h+=vArrastre();
+  if(s.tipo==='cal')  h+=vCalcula(s.clave==='a2'?A2:(s.clave==='a3'?A3:A7), s.clave);
+  if(s.tipo==='quiz') h+=vQuiz(A4,'a4','Actividad 4');
+  if(s.tipo==='comp') h+=vCompleta();
+  if(s.tipo==='par')  h+=vParea();
+  if(s.tipo==='cal2') h+=vCierreCampana();
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=0;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,k){
+    var cl = k===i ? 'on' : (x.clave && tareaLista(x.clave) ? 'hecho' : (G.visto[k]?'visto':''));
+    return '<button type="button" data-p="'+k+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){ i=+b.dataset.p; elegida=null; pinta(); });
+  });
+  cablea();
+}
+
+function cablea(){
+  var lam=$('lam');
+
+  /* arrastre de la actividad 1 */
+  if(D[i].tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A1.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G.a1[fid]=zona; graba(); bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  /* arrastre de la actividad 6 */
+  if(D[i].tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G.a6[fid]=1; graba(); bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+
+  /* campos numéricos */
+  qq('#lam input.cel[data-l]', lam).forEach(function(inp){
+    function revisa(){
+      if(inp.disabled) return;
+      var txt=inp.value.replace(/\s|,/g,'').replace(/^S\/\.?/i,'');
+      if(txt==='') return;
+      var v=parseFloat(txt);
+      var clave=inp.dataset.c, id=inp.dataset.l;
+      var A = clave==='a2'?A2:(clave==='a3'?A3:(clave==='a7'?A7:A8));
+      var l=null; A.lineas.forEach(function(x){ if(x.id===id) l=x; });
+      if(!l) return;
+      var tol = l.dec===0 ? 0.5 : 0.011;
+      if(isFinite(v) && Math.abs(v-l.v)<=tol){
+        G[clave][id]=1; graba(); bien(); pinta();
+      }else{
+        mal(); inp.classList.add('mal'); sacude(inp);
+        setTimeout(function(){ inp.classList.remove('mal'); }, 900);
+      }
+    }
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    inp.addEventListener('blur', revisa);
+  });
+
+  /* quiz */
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var clave=b.dataset.q, k=+b.dataset.k, j=+b.dataset.j;
+      var p=A4[k];
+      if(j===p.ok){ G[clave][k]=j; graba(); bien(); pinta(); }
+      else{ G.mal[clave+'|'+k+'|'+j]=1; graba(); mal(); b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+  qq('#lam button[data-q8]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var j=+b.dataset.q8;
+      if(j===A8.quiz.ok){ G.q8=j; graba(); fanfarria(); pinta(); }
+      else{ G.mal['q8|'+j]=1; graba(); mal(); b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  /* selects de las fórmulas */
+  qq('#lam select.cel[data-f]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value===''){ return; }
+      if(sl.value==='0'){ G.a5[sl.dataset.f]=1; graba(); bien(); pinta(); }
+      else{ mal(); sl.classList.add('mal'); sacude(sl);
+            setTimeout(function(){ sl.classList.remove('mal'); sl.value=''; }, 900); }
+    });
+  });
+}
+
+/* ================= navegación ================= */
+function va(n){
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc');
+  e.classList.toggle('full');
+  document.body.style.overflow = e.classList.contains('full') ? 'hidden' : '';
+  $('btnFull').textContent = e.classList.contains('full') ? '✕ Salir' : '⛶ Pantalla completa';
+}
+$('btnFull').addEventListener('click', full);
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  var ok=totalOk(), mx=totalMax();
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:ok, total:mx,
+           rejilla:TAREAS.map(function(t,k){ return {b:k, n:hechas(t.k), t:t.n}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+}
+
+if(window.Aula){
+  Aula.iniciar({ sala:'COST8', codigo:'TJ', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(dentro) pinta();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  hecho:function(){ G={ visto:{}, a1:{}, a2:{}, a3:{}, a4:{}, a5:{}, a6:{}, a7:{}, a8:{}, q8:null, mal:{} };
+                    i=0; pinta(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
