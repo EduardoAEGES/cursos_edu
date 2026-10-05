@@ -330,7 +330,24 @@
     }catch(e){}
   }
   function bien(){ nota(660,0,.12,.05,'triangle'); }
-  function mal(){ nota(220,0,.14,.04,'sine'); }
+  /* sonido de fallo propio: el primero que exista de esta lista; si no hay, un tono */
+  var FALLO=['sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav','sonidos/sonido_fallo.ogg','sonidos/sonido_fallo.m4a'];
+  var fallo=new Audio(), falloI=0;
+  fallo.preload='auto'; fallo.volume=0.7;
+  fallo.addEventListener('error', function(){
+    falloI++;
+    if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null;
+  });
+  fallo.src=FALLO[0];
+  function mal(){
+    if(!son) return;
+    if(!fallo){ nota(220,0,.14,.04,'sine'); return; }
+    try{
+      fallo.currentTime=0;
+      var p=fallo.play();
+      if(p && p.catch) p.catch(function(){ nota(220,0,.14,.04,'sine'); });
+    }catch(e){ nota(220,0,.14,.04,'sine'); }
+  }
   function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
   function pintaSon(){ var b=$('btnSon'); b.textContent=son?'🔊 Sonido':'🔇 Sin sonido'; b.setAttribute('aria-pressed', son?'true':'false'); }
   $('btnSon').addEventListener('click', function(){
@@ -779,8 +796,11 @@
     return izq;
   }
 
+  var casoSonando=null;
   function pinta(){
     var B=BLOQUES[bi], c=ciDe[bi], cs=B.casos[c];
+    if(casoSonando!==null && casoSonando!==bi+'|'+c && window.Aula) Aula.cambiaMusica();
+    casoSonando=bi+'|'+c;
     var izq=izqHtml(bi,c);
 
     var der='<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
@@ -793,7 +813,7 @@
 
     $('btnLimpia').addEventListener('click', function(){
       cs.filas.forEach(function(f,r){ delete guardado[clave(bi,c,r)]; });
-      delete celebrado[bi+'|'+c]; graba(); pinta(); empuja();
+      delete celebrado[bi+'|'+c]; yaSono={}; graba(); pinta(); empuja();
     });
     Array.prototype.forEach.call(document.querySelectorAll('#panel .cel'), function(el){
       var ev = el.tagName==='SELECT' ? 'change' : 'input';
@@ -821,13 +841,20 @@
       if(!previos[id] && alSalir!==undefined && document.activeElement===el) bien();
     }else if(f.k==='sel'){
       el.classList.add('mal'); msg.textContent='Revisa esta opción.';
-      if(alSalir) mal();
+      if(alSalir) suenaMal(id, el.value);
     }else{
       var v=lee(el.value);
       if(isNaN(v)){ if(alSalir){ el.classList.add('mal'); msg.textContent='Escribe solo números.'; } }
-      else if(alSalir){ el.classList.add('mal'); }
+      else if(alSalir){ el.classList.add('mal'); suenaMal(id, el.value); }
     }
     previos[id]=ok;
+  }
+
+  /* suena una vez por respuesta equivocada, no cada vez que se sale de la casilla */
+  var yaSono={};
+  function suenaMal(id, val){
+    if(yaSono[id]===val) return;
+    yaSono[id]=val; mal();
   }
 
   function resumen(primera){
@@ -1013,7 +1040,7 @@
   function empuja(){ if(window.Aula && Aula.enSala) Aula.empuja(); }
 
   if(window.Aula){
-    Aula.iniciar({ sala:'ADED', codigo:'SCI', resumen:resumenAula, ventana:ventanaAula, pantalla:pantalla,
+    Aula.iniciar({ sala:'ADED', codigo:'SCI', resumen:resumenAula, ventana:ventanaAula, pantalla:pantalla, musica:true,
       alModo:function(doc){
         $('hojaMuro').hidden=!doc;
         var dentro=Aula.enSala;
@@ -1029,7 +1056,7 @@
   if(window.Reinicio) Reinicio.monta({
     donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
     aviso:'Se borrarán tus respuestas de los cuatro bloques.',
-    hecho:function(){ guardado={}; celebrado={}; previos={}; bi=0; ciDe=[0,0,0,0]; pinta(); }
+    hecho:function(){ guardado={}; celebrado={}; previos={}; yaSono={}; bi=0; ciDe=[0,0,0,0]; pinta(); }
   });
 
   /* lo que ya estaba resuelto al abrir no se vuelve a celebrar */

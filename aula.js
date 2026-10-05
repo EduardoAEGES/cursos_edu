@@ -20,6 +20,12 @@
        Si la página la define, el docente puede hacer clic en la ventanita
        de un alumno y ver su pantalla en grande; se vuelve a dibujar con
        cada actualización de la sala (cada 3 s) mientras esté abierta.
+
+   Opcional: musica: true
+       Al entrar como docente suena de fondo, a volumen bajo y solo en su
+       equipo, una pista al azar de la carpeta sonidos/ del repositorio
+       (menos sonido_fallo y ono-bebe). Aula.cambiaMusica() pasa a otra
+       pista al azar; la página lo llama al cambiar de caso o de parte.
    ===================================================================== */
 (function(){
 'use strict';
@@ -31,6 +37,11 @@ var CLAVE='46069339';
 
 var cfg=null, sala=null, yo=null, docente=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
+
+var BASE=(function(){
+  var s=document.currentScript && document.currentScript.src;
+  return s ? s.replace(/[^\/]*$/,'') : '';
+})();
 
 function $(id){ return document.getElementById(id); }
 function esc(s){
@@ -70,6 +81,11 @@ function pintaControles(){
         '<button class="o-btn" id="aulaSalir" type="button">Salir</button>'+
         '<button class="o-btn" id="aulaGrande" type="button" hidden>🔍 Ventanas grandes</button>'+
         '<button class="o-btn" id="aulaRefresca" type="button" hidden>↻ Actualizar</button>'+
+        '<span class="aula-mus" id="aulaMus" hidden>'+
+          '<button class="o-btn" id="aulaMusOn" type="button" aria-pressed="false">🎵 Música</button>'+
+          '<button class="o-btn" id="aulaMusSig" type="button" title="Otra pista al azar">⏭</button>'+
+          '<input id="aulaMusVol" type="range" min="0" max="100" step="1" aria-label="Volumen de la música">'+
+        '</span>'+
       '</div>'+
       '<span class="aula-estado solo" id="aulaEstado">Modo individual</span>'+
     '</div>'+
@@ -97,6 +113,13 @@ function pintaControles(){
     grande=!grande;
     $('muro').classList.toggle('grande', grande);
     $('aulaGrande').textContent = grande ? '🔎 Ventanas pequeñas' : '🔍 Ventanas grandes';
+  });
+  $('aulaMusVol').value=volMusica()*100;
+  $('aulaMusOn').addEventListener('click', function(){ musica(!suena); });
+  $('aulaMusSig').addEventListener('click', function(){ if(!suena) musica(true); else otraPista(); });
+  $('aulaMusVol').addEventListener('input', function(){
+    guardaLocal('musica_vol', $('aulaMusVol').value);
+    if(pista) pista.volume=volMusica();
   });
   ['aulaNombre','aulaSala'].forEach(function(id){
     $(id).addEventListener('keydown', function(e){ if(e.key==='Enter') entraAlumno(); });
@@ -133,6 +156,7 @@ function dentro(txt){
   $('aulaQuien').textContent=txt;
   $('aulaGrande').hidden=!docente;
   $('aulaRefresca').hidden=!docente;
+  $('aulaMus').hidden=!(docente && cfg.musica);
 }
 function fuera(){
   $('aulaEntrada').hidden=false;
@@ -167,10 +191,12 @@ function entraDocente(){
   dentro('Docente');
   estado('vivo','Conectando…');
   fallos=0; arranca();
+  if(cfg.musica) musica(leeLocal('musica')!=='0');
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
   cierraPantalla();
+  callaMusica();
   sala=null; yo=null; docente=false; gente=[];
   if(tSala){ clearInterval(tSala); tSala=null; }
   fuera(); estado('solo','Modo individual'); pintaMuro();
@@ -303,6 +329,70 @@ function refrescaPantalla(){
   c.scrollTop=arriba;
 }
 
+/* ---------------- música de fondo (solo docente, solo en su equipo) ---------------- */
+var REPO='https://api.github.com/repos/EduardoAEGES/cursos_edu/git/trees/main?recursive=1';
+var pistas=null, pista=null, suena=false, ultima=-1;
+
+function volMusica(){
+  var v=parseFloat(leeLocal('musica_vol'));
+  return isNaN(v) ? 0.15 : Math.max(0, Math.min(1, v/100));
+}
+/* lista los audios de sonidos/ directamente del repositorio: basta subir un mp3 */
+function buscaPistas(){
+  if(pistas && pistas.length) return Promise.resolve(pistas);
+  try{
+    var c=JSON.parse(sessionStorage.getItem('aula_pistas')||'null');
+    if(c && c.length){ pistas=c; return Promise.resolve(pistas); }
+  }catch(e){}
+  return fetch(REPO).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(d){
+      pistas=(d.tree||[]).map(function(t){ return t.path; }).filter(function(p){
+        return /^sonidos\//i.test(p) && /\.(mp3|wav|ogg|m4a|aac|webm)$/i.test(p) &&
+               !/sonido[_ -]?fallo|ono-bebe/i.test(p);
+      });
+      try{ if(pistas.length) sessionStorage.setItem('aula_pistas', JSON.stringify(pistas)); }catch(e){}
+      return pistas;
+    })
+    .catch(function(){ pistas=[]; return pistas; });
+}
+function otraPista(){
+  if(!suena || !docente || !pistas || !pistas.length) return;
+  var i=Math.floor(Math.random()*pistas.length);
+  if(pistas.length>1 && i===ultima) i=(i+1+Math.floor(Math.random()*(pistas.length-1)))%pistas.length;
+  ultima=i;
+  if(!pista){
+    pista=new Audio();
+    pista.addEventListener('ended', otraPista);
+  }
+  pista.src=BASE+pistas[i].split('/').map(encodeURIComponent).join('/');
+  pista.volume=volMusica();
+  var p=pista.play();
+  if(p && p.catch) p.catch(function(){});
+  pintaMusica();
+}
+function musica(on){
+  guardaLocal('musica', on?'1':'0');
+  if(!on){ callaMusica(); return; }
+  suena=true; pintaMusica();
+  buscaPistas().then(function(){
+    if(!pistas.length){ suena=false; pintaMusica(); return; }
+    otraPista();
+  });
+}
+function callaMusica(){
+  suena=false;
+  if(pista) pista.pause();
+  pintaMusica();
+}
+function pintaMusica(){
+  var b=$('aulaMusOn');
+  if(!b) return;
+  var vacia=pistas && !pistas.length;
+  b.textContent = vacia ? '🎵 Sin audios en sonidos/' : (suena ? '🎵 Música: sí' : '🔇 Música: no');
+  b.setAttribute('aria-pressed', suena?'true':'false');
+  b.title = suena && ultima>=0 && pistas ? decodeURIComponent(pistas[ultima].replace(/^.*\//,'')) : '';
+}
+
 window.Aula={
   iniciar:function(opciones){
     cfg=opciones;
@@ -311,6 +401,7 @@ window.Aula={
   empuja:function(){ empuja(); },
   refresca:function(){ pintaMuro(); },
   verPantalla:function(nombre){ abrePantalla(nombre); },
+  cambiaMusica:function(){ otraPista(); },
   get esDocente(){ return docente; },
   get enSala(){ return !!sala; }
 };
