@@ -15,6 +15,11 @@
                                           (si falta, se usa el prefijo)
        });
        Aula.empuja();                     tras cada cambio del alumno
+
+   Opcional: pantalla: function(est, quien, contenedor){ }
+       Si la página la define, el docente puede hacer clic en la ventanita
+       de un alumno y ver su pantalla en grande; se vuelve a dibujar con
+       cada actualización de la sala (cada 3 s) mientras esté abierta.
    ===================================================================== */
 (function(){
 'use strict';
@@ -25,7 +30,7 @@ var TABLA=SUPA+'/rest/v1/sala_asientos';
 var CLAVE='46069339';
 
 var cfg=null, sala=null, yo=null, docente=false;
-var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false;
+var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 
 function $(id){ return document.getElementById(id); }
 function esc(s){
@@ -165,6 +170,7 @@ function entraDocente(){
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
+  cierraPantalla();
   sala=null; yo=null; docente=false; gente=[];
   if(tSala){ clearInterval(tSala); tSala=null; }
   fuera(); estado('solo','Modo individual'); pintaMuro();
@@ -234,13 +240,67 @@ function pintaMuro(){
     var e=g.estado||{};
     var seg=Math.max(0, Math.round((ahora-new Date(g.actualizado).getTime())/1000));
     var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
-    h+='<div class="aula-vtna'+(g.alumno===yo?' yo':'')+(e.listo?' listo':'')+'">'+
+    h+='<div class="aula-vtna'+(g.alumno===yo?' yo':'')+(e.listo?' listo':'')+
+         (cfg.pantalla?' clic" role="button" tabindex="0" title="Ver su pantalla" data-al="'+esc(g.alumno):'')+'">'+
          '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
          '<span class="vs">'+esc(hace)+'</span></div>'+
          cfg.ventana(e, g.alumno)+
        '</div>';
   });
   $('muro').innerHTML=h;
+  if(cfg.pantalla){
+    Array.prototype.forEach.call($('muro').querySelectorAll('.aula-vtna.clic'), function(v){
+      v.addEventListener('click', function(){ abrePantalla(v.getAttribute('data-al')); });
+      v.addEventListener('keydown', function(e){
+        if(e.key==='Enter' || e.key===' '){ e.preventDefault(); abrePantalla(v.getAttribute('data-al')); }
+      });
+    });
+  }
+  refrescaPantalla();
+}
+
+/* ---------------- pantalla de un alumno (solo docente) ---------------- */
+function abrePantalla(nombre){
+  if(!cfg.pantalla || !docente) return;
+  mirando=nombre;
+  var v=$('aulaPant');
+  if(!v){
+    v=document.createElement('div');
+    v.className='aula-pant'; v.id='aulaPant';
+    v.innerHTML='<div class="ap-caja" role="dialog" aria-modal="true" aria-label="Pantalla del alumno">'+
+      '<div class="ap-h"><span class="ap-n" id="aulaPantN"></span><span class="ap-s" id="aulaPantS"></span>'+
+      '<button class="o-btn" id="aulaPantX" type="button">Cerrar ✕</button></div>'+
+      '<div class="ap-c" id="aulaPantC"></div></div>';
+    document.body.appendChild(v);
+    $('aulaPantX').addEventListener('click', cierraPantalla);
+    v.addEventListener('click', function(e){ if(e.target===v) cierraPantalla(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape' && mirando) cierraPantalla(); });
+  }
+  v.hidden=false;
+  document.body.style.overflow='hidden';
+  $('aulaPantC').scrollTop=0;
+  refrescaPantalla();
+}
+function cierraPantalla(){
+  mirando=null;
+  var v=$('aulaPant');
+  if(v){ v.hidden=true; $('aulaPantC').innerHTML=''; }
+  document.body.style.overflow='';
+}
+function refrescaPantalla(){
+  if(!mirando || !$('aulaPant')) return;
+  var g=null;
+  gente.forEach(function(x){ if(x.alumno===mirando) g=x; });
+  $('aulaPantN').textContent=mirando;
+  if(!g){
+    $('aulaPantS').textContent='ya no está en la sala';
+    return;
+  }
+  var seg=Math.max(0, Math.round((Date.now()-new Date(g.actualizado).getTime())/1000));
+  $('aulaPantS').textContent='● en vivo · último cambio '+(seg<60 ? 'hace '+seg+' s' : 'hace '+Math.round(seg/60)+' min');
+  var c=$('aulaPantC'), arriba=c.scrollTop;
+  cfg.pantalla(g.estado||{}, g.alumno, c);
+  c.scrollTop=arriba;
 }
 
 window.Aula={
@@ -250,6 +310,7 @@ window.Aula={
   },
   empuja:function(){ empuja(); },
   refresca:function(){ pintaMuro(); },
+  verPantalla:function(nombre){ abrePantalla(nombre); },
   get esDocente(){ return docente; },
   get enSala(){ return !!sala; }
 };

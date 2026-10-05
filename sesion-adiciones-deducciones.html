@@ -137,6 +137,15 @@
   .vmini .cel2.full{ border-color:#7CC29B; background:#E9F7EF; }
   .vmini .cel2.full b{ color:#14532D; }
 
+  /* espejo de la pantalla de un alumno (docente) */
+  .pv .pv-barra{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:6px; }
+  .pv .pv-barra select.cel{ width:auto; max-width:100%; min-width:260px; }
+  .pv .pv-sol{ display:inline-flex; gap:6px; align-items:center; font-size:12.5px; font-weight:700; color:var(--gris); cursor:pointer; }
+  .pv .pv-donde{ font-size:12.5px; color:var(--o-muted); margin:0 0 12px; }
+  .pv .pv-donde b{ color:var(--certus); }
+  .cel.vista{ display:inline-block; min-width:118px; text-align:right; }
+  .msg.solu{ color:var(--verde); }
+
   /* repaso */
   .velo{ position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:80;
          display:flex; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; }
@@ -707,11 +716,12 @@
     if(f.k==='sel') return val===f.v;
     var v=lee(val); return v!==null && !isNaN(v) && Math.abs(v-f.v)<=f.tol;
   }
-  function avance(b,c){
+  function avance(b,c,resp){
     var cs=BLOQUES[b].casos[c], tot=0, ok=0;
+    resp=resp||guardado;
     cs.filas.forEach(function(f,r){
       if(f.k==='cab') return;
-      tot++; if(esBien(f, guardado[clave(b,c,r)])) ok++;
+      tot++; if(esBien(f, resp[clave(b,c,r)])) ok++;
     });
     return {ok:ok, total:tot, pc: tot?Math.round(ok/tot*100):0, lleno: tot>0 && ok===tot};
   }
@@ -756,8 +766,8 @@
     });
   }
 
-  function pinta(){
-    var B=BLOQUES[bi], c=ciDe[bi], cs=B.casos[c];
+  function izqHtml(b,c){
+    var B=BLOQUES[b], cs=B.casos[c];
     var izq=globo(cs.per, (B.casos.length>1?'Caso '+(c+1)+' de '+B.casos.length+' · ':'')+cs.t, cs.h);
     if(cs.datos){
       izq+='<div class="bloque az"><h3>Datos del caso</h3><table><tbody>'+
@@ -766,6 +776,12 @@
     }
     if(cs.tabla) izq+='<div class="bloque"><h3>Tabla del Reglamento</h3>'+cs.tabla+'</div>';
     if(cs.izq) izq+=cs.izq;
+    return izq;
+  }
+
+  function pinta(){
+    var B=BLOQUES[bi], c=ciDe[bi], cs=B.casos[c];
+    var izq=izqHtml(bi,c);
 
     var der='<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
             '<button type="button" class="o-btn" id="btnLimpia">Borrar este caso</button></div>'+
@@ -903,9 +919,85 @@
       var pcs=0; B.casos.forEach(function(x,c){ pcs+=avance(b,c).pc; });
       rej.push({b:b, n:n, t:B.casos.length, pc:Math.round(pcs/B.casos.length)});
     });
-    var a=avance(bi,ciDe[bi]);
+    var a=avance(bi,ciDe[bi]), resp={};
+    for(var k in guardado){ if(k.charAt(0)!=='_' && guardado[k]!=='') resp[k]=guardado[k]; }
     return { bloque:BLOQUES[bi].corto, caso:BLOQUES[bi].casos[ciDe[bi]].t, ok:a.ok, total:a.total,
-             hechos:hechos, totalCasos:total, listo:hechos===total, rejilla:rej };
+             hechos:hechos, totalCasos:total, listo:hechos===total, rejilla:rej,
+             vista:{ b:bi, c:ciDe[bi] }, resp:resp };
+  }
+
+  /* ===== pantalla de un alumno (la ve el docente al hacer clic en su ventanita) =====
+     Es un espejo de lo que el alumno tiene abierto: el mismo caso y sus respuestas,
+     en verde si están bien y en rojo si no. Por defecto sigue al alumno cuando
+     cambia de caso; el docente puede mirar otro caso o mostrar la solución. */
+  var pv={ alumno:null, b:0, c:0, sigue:true, sol:false };
+  function celdaVista(f, val, sol){
+    var vacio = val===undefined || val==='';
+    var ok=!vacio && esBien(f, val);
+    var txt = vacio ? '—' : (f.k==='num' && !isNaN(lee(val)) ? fmt(lee(val)) : String(val));
+    var h='<span class="cel vista '+(vacio?'':(ok?'ok':'mal'))+'">'+esc(txt)+'</span>';
+    if(sol && !ok) h+='<span class="msg solu">✔ '+esc(f.k==='num'?fmt(f.v):f.v)+'</span>';
+    return h;
+  }
+  function pantalla(e, alumno, cont){
+    /* si el docente tiene abierta la lista de casos, no se la cerramos al actualizar */
+    var ae=document.activeElement;
+    if(ae && ae.id==='pvCaso' && cont.contains(ae) && pv.alumno===alumno) return;
+    var resp=e.resp||{}, vis=e.vista||{b:0,c:0};
+    if(pv.alumno!==alumno){ pv={ alumno:alumno, b:0, c:0, sigue:true, sol:false }; }
+    if(!BLOQUES[vis.b] || !BLOQUES[vis.b].casos[vis.c]) vis={b:0,c:0};
+    if(pv.sigue){ pv.b=vis.b; pv.c=vis.c; }
+    var B=BLOQUES[pv.b], cs=B.casos[pv.c], a=avance(pv.b,pv.c,resp);
+    var aqui = pv.b===vis.b && pv.c===vis.c;
+
+    var opc='';
+    BLOQUES.forEach(function(Bx,b){
+      opc+='<optgroup label="'+esc(Bx.t)+'">';
+      Bx.casos.forEach(function(x,c){
+        var ax=avance(b,c,resp);
+        opc+='<option value="'+b+'|'+c+'"'+(b===pv.b&&c===pv.c?' selected':'')+'>'+
+             (b===vis.b&&c===vis.c?'👁 ':'')+(Bx.casos.length>1?(c+1)+' · ':'')+esc(x.t)+' — '+(ax.lleno?'✓':ax.pc+'%')+'</option>';
+      });
+      opc+='</optgroup>';
+    });
+
+    var filas=cs.filas.map(function(f,r){
+      if(f.k==='cab') return '<tr class="cab"><td colspan="2">'+esc(f.t)+'</td></tr>';
+      return '<tr class="'+(f.tot?'sub':'')+'"><td class="concepto">'+esc(f.t)+
+             (f.p?'<span class="pista">'+esc(f.p)+'</span>':'')+'</td><td class="num">'+
+             celdaVista(f, resp[clave(pv.b,pv.c,r)], pv.sol)+'</td></tr>';
+    }).join('');
+
+    cont.innerHTML=
+      '<div class="ad pv">'+
+      '<div class="pv-barra">'+
+        '<select class="cel" id="pvCaso" aria-label="Caso que se muestra">'+opc+'</select>'+
+        '<button type="button" class="o-btn'+(pv.sigue?' o-btn-primary':'')+'" id="pvSigue">'+
+          (pv.sigue?'📡 Siguiendo su pantalla':'📡 Volver a su pantalla')+'</button>'+
+        '<label class="pv-sol"><input type="checkbox" id="pvSol"'+(pv.sol?' checked':'')+'> Mostrar la solución</label>'+
+      '</div>'+
+      '<p class="pv-donde">'+(aqui ? '<b>Ahora mismo</b> está en este caso.'
+        : 'Ahora mismo está en <b>'+esc(BLOQUES[vis.b].t)+' · '+esc(BLOQUES[vis.b].casos[vis.c].t)+'</b>.')+
+        ' Casos resueltos: <b>'+(e.hechos||0)+' de '+(e.totalCasos||0)+'</b>.</p>'+
+      '<div class="tablero"><div>'+izqHtml(pv.b,pv.c)+'</div><div>'+
+        '<div class="barra"><div class="prog"><i style="width:'+(a.total?a.ok/a.total*100:0)+'%"></i></div>'+
+        '<span class="cuenta">'+a.ok+' de '+a.total+' correctas</span></div>'+
+        '<div class="bloque vd tab-r"><h3>Sus respuestas</h3><table><thead><tr><th>Concepto</th><th class="num">Respuesta</th></tr></thead><tbody>'+
+        filas+'</tbody></table></div>'+
+        (a.lleno?globo('bien','Caso resuelto', cs.fin, true):'')+
+      '</div></div></div>';
+
+    cont.querySelector('#pvCaso').addEventListener('change', function(ev){
+      var p=ev.target.value.split('|'); pv.b=+p[0]; pv.c=+p[1];
+      pv.sigue = pv.b===vis.b && pv.c===vis.c;
+      pantalla(e, alumno, cont); cont.scrollTop=0;
+    });
+    cont.querySelector('#pvSigue').addEventListener('click', function(){
+      pv.sigue=true; pantalla(e, alumno, cont); cont.scrollTop=0;
+    });
+    cont.querySelector('#pvSol').addEventListener('change', function(ev){
+      pv.sol=ev.target.checked; pantalla(e, alumno, cont);
+    });
   }
   function ventanaAula(e){
     var h='<div class="vmini">'+
@@ -921,7 +1013,7 @@
   function empuja(){ if(window.Aula && Aula.enSala) Aula.empuja(); }
 
   if(window.Aula){
-    Aula.iniciar({ sala:'ADED', codigo:'SCI', resumen:resumenAula, ventana:ventanaAula,
+    Aula.iniciar({ sala:'ADED', codigo:'SCI', resumen:resumenAula, ventana:ventanaAula, pantalla:pantalla,
       alModo:function(doc){
         $('hojaMuro').hidden=!doc;
         var dentro=Aula.enSala;
