@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión 7 · Estados financieros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .ef{
+    --gris:#5A5A5A; --rojo:#16307A; --tinta:#1F2933; --verde:#147A5C; --ambar:#B25E09; --humo:#F4F4F6; --linea:#DCDCE0;
+    --verde:#1C6E4E; --ambar:#9A5B07; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+  }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--rojo); padding-bottom:14px; }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
+        align-items:center; gap:12px; flex:none; }
+  .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1;
+        min-height:clamp(380px,56vh,620px); font-size:17px; line-height:1.72; color:var(--tinta); }
+  .esc.full .lam{ min-height:0; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:var(--gris); font-weight:500; }
+  .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:13px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  .perso.dos{ align-items:flex-end; }
+  .perso.dos img.b{ margin-left:-10px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:88px; }
+    .perso.dos img{ width:70px; }
+    .perso .globo{ font-size:15px; padding:11px 13px; }
+  }
+  .tabenv table.t.chica{ font-size:14px; }
+  .tabenv table.t.chica th, .tabenv table.t.chica td{ padding:7px 9px; }
+  table.t tr.gris td{ background:#EEF1F6; font-weight:700; font-size:13px;
+                      text-transform:uppercase; letter-spacing:.04em; color:var(--gris); }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:15px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(17px,2.6vw,22px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:13.5px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:15.5px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:13px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(22,48,122,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:15.5px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:13.5px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:16px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:17px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 22px; font-size:14.5px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(22,48,122,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:15.5px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:16px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:150px; font-size:15px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:24px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesi&oacute;n 7</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ef">
+
+  <div class="marca">
+    <span class="tx">
+      <h1>Estados financieros</h1>
+      <p><span class="sem">Semana 7</span> &middot; UD Contabilidad &middot; an&aacute;lisis para tomar decisiones</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, reg&iacute;strate</h2>
+    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente. Las diapositivas se abren al entrar
+       y tu avance queda guardado.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+    <div id="muro"></div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Basado en el material de la semana 7 de UD Contabilidad.
+    Referencias: NIC 1 Presentaci&oacute;n de Estados Financieros (MEF), Plan Contable General Empresarial
+    2019 y Novoa, H. (2019), Elaboraci&oacute;n Anal&iacute;tica de Estados Financieros.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mil(n,d){ d=(d===undefined)?2:d;
+  return Number(n).toLocaleString('es-PE',{minimumFractionDigits:d, maximumFractionDigits:d}); }
+
+var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
+        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
+        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+/* como máximo dos personajes por lámina */
+function globo2(imgA, imgB, et, txt){
+  return '<div class="perso dos"><img src="'+imgA+'" alt="" loading="lazy">'+
+         '<img class="b" src="'+imgB+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('ef7_son')!=='0'; }catch(e){}
+function nota(f,ini,dur,vol,tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{ fallo.currentTime=0; var p=fallo.play();
+       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false'); }
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('ef7_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien(); });
+pintaSon();
+
+/* ================= los tres casos ================= */
+var W={ efec:98500, cxc:32000, merc:180000, camioneta:85000, local:189000, muebles:14400,
+        dep:18000, erp:8500, otros:14000, fxp:10000, trib:17325, planilla:35200,
+        leasing:55000, capital:450000 };
+W.ac=W.efec+W.cxc+W.merc;                 /* 310,500 */
+W.ppe=W.camioneta+W.local+W.muebles;      /* 288,400 */
+W.int=W.erp+W.otros;                      /*  22,500 */
+W.anc=W.ppe-W.dep+W.int;                  /* 292,900 */
+W.ta=W.ac+W.anc;                          /* 603,400 */
+W.pc=W.fxp+W.trib+W.planilla;             /*  62,525 */
+W.pnc=W.leasing; W.tp=W.pc+W.pnc;         /* 117,525 */
+W.ut=W.ta-W.tp-W.capital;                 /*  35,875 */
+W.pat=W.capital+W.ut;                     /* 485,875 */
+
+var M={ v:853000, cv:560000, ga:115600, gv:95300, gf:32000, inf:40000, oi:45000, og:32800 };
+M.ub=M.v-M.cv;                            /* 293,000 */
+M.uo=M.ub-M.ga-M.gv;                      /*  82,100 */
+M.rai=M.uo-M.gf+M.inf+M.oi-M.og;          /* 102,300 */
+M.ir=Math.round(M.rai*0.295*100)/100;     /*  30,178.50 */
+M.un=Math.round((M.rai-M.ir)*100)/100;    /*  72,121.50 */
+
+var T={ v:1890000, cv:776590, ga:188000, gv:129100, gf:49200, inf:15500, oi:55000, og:57800,
+        efec:155293, cxc:98000, merc:398000, inm:709500, auto:69000, dep:28500,
+        fxp:93627, planilla:42000, leasing:210000, capital:520000 };
+T.ub=T.v-T.cv;                            /* 1,113,410 */
+T.uo=T.ub-T.ga-T.gv;                      /*   796,310 */
+T.rai=T.uo-T.gf+T.inf+T.oi-T.og;          /*   759,810 */
+T.ir=Math.round(T.rai*0.295*100)/100;     /*   224,143.95 */
+T.un=Math.round((T.rai-T.ir)*100)/100;    /*   535,666.05 */
+T.ac=T.efec+T.cxc+T.merc;                 /*   651,293 */
+T.anc=T.inm+T.auto-T.dep;                 /*   750,000 */
+T.ta=T.ac+T.anc;                          /* 1,401,293 */
+T.pc=T.fxp+T.planilla;                    /*   135,627 */
+T.pnc=T.leasing; T.tp=T.pc+T.pnc;         /*   345,627 */
+T.pat=T.capital+T.un;                     /* 1,055,666.05 */
+
+/* ================= las actividades ================= */
+var ACT={
+
+a1:{ tipo:'par', titulo:'Actividad 1',
+  fichas:[ {id:'e1', t:'Estado de situación financiera'},
+           {id:'e2', t:'Estado de resultados'},
+           {id:'e3', t:'Estado de cambios en el patrimonio neto'},
+           {id:'e4', t:'Estado de flujos de efectivo'},
+           {id:'e5', t:'Notas a los estados financieros'} ],
+  huecos:[ {id:'e2', q:'Los ingresos y los gastos de un periodo, y la ganancia o la pérdida que quedó'},
+           {id:'e4', q:'De dónde entró el dinero y en qué se fue durante el periodo'},
+           {id:'e1', q:'Lo que la empresa tiene y lo que debe, a una fecha determinada'},
+           {id:'e5', q:'El detalle que explica las cifras de los demás estados'},
+           {id:'e3', q:'Cómo se movió el patrimonio de los dueños durante el periodo'} ],
+  fin:globo(P.bien,'Resuelto','Los cuatro primeros son los estados; las notas no son un estado aparte, '+
+      'son la letra pequeña que explica a los otros cuatro. La NIC 1 pide los cinco juntos.') },
+
+a2:{ tipo:'quiz', titulo:'Actividad 2',
+  lista:[
+   { q:'La empresa compró una camioneta al crédito. ¿Por qué la camioneta es un activo?',
+     ops:['Porque todavía no está pagada',
+          'Porque la empresa la controla y espera obtener beneficios de ella',
+          'Porque figura en una factura'], ok:1,
+     pq:'Un activo es un recurso controlado por la empresa, que viene de un hecho pasado y del que se '+
+        'espera obtener beneficios futuros. Que esté pagada o no es otra cosa: esa deuda es el pasivo.' },
+   { q:'¿Cuál de estas NO es una característica del pasivo?',
+     ops:['Es una obligación actual a la fecha del balance',
+          'Surge de un hecho que ya ocurrió',
+          'Puede nacer de una compra que se hará el próximo año'], ok:2,
+     pq:'El pasivo nace de sucesos pasados. Lo que se va a comprar el año que viene todavía no es una '+
+        'obligación: no se registra.' },
+   { q:'El activo de una empresa suma S/ 800,000 y su pasivo S/ 310,000. ¿Cuánto es el patrimonio neto?',
+     ops:['S/ 1,110,000','S/ 490,000','No se puede saber con esos datos'], ok:1,
+     pq:'Patrimonio neto = activo − pasivo. 800,000 − 310,000 = 490,000. Es lo que de verdad les queda '+
+        'a los dueños después de pagar todo.' },
+   { q:'¿Qué partida NO forma parte del patrimonio neto?',
+     ops:['El capital social','Los resultados acumulados','Las obligaciones financieras a largo plazo'], ok:2,
+     pq:'Las obligaciones financieras son deuda con el banco: pasivo. El patrimonio son los aportes de '+
+        'los socios, las reservas y los resultados que la empresa no repartió.' } ] },
+
+a3:{ tipo:'arr', titulo:'Actividad 3',
+  fichas:[ {id:'p1', t:'Dinero en efectivo · 101', g:'AC'},
+           {id:'p2', t:'Mercaderías · 201', g:'AC'},
+           {id:'p3', t:'Facturas por cobrar a clientes · 1212', g:'AC'},
+           {id:'p4', t:'Camioneta 4×4 · 334', g:'ANC'},
+           {id:'p5', t:'Maquinaria comprada este año · 333', g:'ANC'},
+           {id:'p6', t:'IGV por pagar · 40111', g:'PC'},
+           {id:'p7', t:'Planilla por pagar · 411', g:'PC'},
+           {id:'p8', t:'Cuenta por pagar a proveedores · 4212', g:'PC'},
+           {id:'p9', t:'Leasing con el banco a 4 años · 455', g:'PNC'},
+           {id:'p10', t:'Capital social · 501', g:'PAT'} ],
+  cajas:[ {id:'AC', t:'Activo corriente'}, {id:'ANC', t:'Activo no corriente'},
+          {id:'PC', t:'Pasivo corriente'}, {id:'PNC', t:'Pasivo no corriente'},
+          {id:'PAT', t:'Patrimonio'} ],
+  fin:globo(P.expl,'Resuelto','Lo que decide es el plazo: corriente es lo que se cobra, se vende o se '+
+      'paga dentro del año; no corriente es lo que se queda más tiempo. La maquinaria se compró este año, '+
+      'pero se va a usar varios: por eso es no corriente.') },
+
+a4:{ tipo:'cal', titulo:'Actividad 4',
+  lineas:[
+   { id:'w1', q:'Total activo corriente', u:'S/', v:W.ac, dec:0,
+     pre:'efectivo 98,500 + facturas por cobrar 32,000 + mercaderías 180,000' },
+   { id:'w2', q:'Propiedad, planta y equipo', u:'S/', v:W.ppe, dec:0,
+     pre:'camioneta 85,000 + local 189,000 + sillas y muebles 14,400' },
+   { id:'w3', q:'Intangibles y otros activos', u:'S/', v:W.int, dec:0,
+     pre:'sistema ERP 8,500 + otros activos 14,000' },
+   { id:'w4', q:'Total activo no corriente', u:'S/', v:W.anc, dec:0,
+     pre:'propiedad planta y equipo − depreciación 18,000 + intangibles' },
+   { id:'w5', q:'Total activo', u:'S/', v:W.ta, dec:0, pre:'corriente + no corriente' },
+   { id:'w6', q:'Total pasivo corriente', u:'S/', v:W.pc, dec:0,
+     pre:'facturas por pagar 10,000 + impuestos 17,325 + planilla 35,200' },
+   { id:'w7', q:'Total pasivo', u:'S/', v:W.tp, dec:0,
+     pre:'pasivo corriente + leasing BCP 55,000' },
+   { id:'w8', q:'Resultado del ejercicio', u:'S/', v:W.ut, dec:0,
+     pre:'por la ecuación contable: total activo − total pasivo − capital social 450,000' },
+   { id:'w9', q:'Total pasivo y patrimonio', u:'S/', v:W.ta, dec:0,
+     pre:'tiene que dar exactamente igual que el total activo' } ],
+  fin:globo2(P.pres, P.bien,'Cuadra','Los dos lados dan S/ 603,400. Esa es la comprobación: si no coinciden, '+
+      'alguna partida está en el lado equivocado o falta una. El resultado del ejercicio no hizo falta '+
+      'buscarlo en los datos: sale solo de la ecuación contable.') },
+
+a5:{ tipo:'arr', titulo:'Actividad 5',
+  fichas:[ {id:'r1', t:'Ventas netas', g:'S'},
+           {id:'r2', t:'Ingresos financieros', g:'S'},
+           {id:'r3', t:'Otros ingresos · venta de activo fijo', g:'S'},
+           {id:'r4', t:'Costo de ventas', g:'R'},
+           {id:'r5', t:'Gastos administrativos', g:'R'},
+           {id:'r6', t:'Gastos de ventas', g:'R'},
+           {id:'r7', t:'Gastos financieros', g:'R'},
+           {id:'r8', t:'Otros gastos · gastos de gestión', g:'R'},
+           {id:'r9', t:'Impuesto a la renta', g:'R'} ],
+  cajas:[ {id:'S', t:'Suma'}, {id:'R', t:'Resta'} ],
+  fin:globo(P.idea,'Resuelto','Todo lo que entra suma y todo lo que sale resta. El impuesto a la renta '+
+      'también resta, pero va al final: se calcula sobre el resultado antes de impuestos, no sobre la venta.') },
+
+a6:{ tipo:'cal', titulo:'Actividad 6',
+  lineas:[
+   { id:'m1', q:'Utilidad bruta', u:'S/', v:M.ub, dec:0, pre:'ventas netas 853,000 − costo de ventas 560,000' },
+   { id:'m2', q:'Utilidad operativa', u:'S/', v:M.uo, dec:0,
+     pre:'utilidad bruta − gastos administrativos 115,600 − gastos de ventas 95,300' },
+   { id:'m3', q:'Resultado antes del impuesto a la renta', u:'S/', v:M.rai, dec:0,
+     pre:'utilidad operativa − gastos financieros 32,000 + ingresos financieros 40,000 + otros ingresos 45,000 − otros gastos 32,800' },
+   { id:'m4', q:'Impuesto a la renta · 29.5 %', u:'S/', v:M.ir,
+     pre:'resultado antes de impuestos × 29.5 %' },
+   { id:'m5', q:'Utilidad neta del ejercicio', u:'S/', v:M.un,
+     pre:'resultado antes de impuestos − impuesto a la renta' } ],
+  fin:globo(P.bien,'Resuelto','Medusa ganó S/ 72,121.50. Fíjate en un detalle: los gastos de gestión '+
+      '(32,800) no entraron en la utilidad operativa; van abajo, como otros gastos. Por eso la operativa '+
+      'es 82,100 y no 49,300.') },
+
+a7:{ tipo:'arr', titulo:'Actividad 7',
+  fichas:[ {id:'t1', t:'Facturas por cobrar · 98,000', g:'ESF'},
+           {id:'t2', t:'Mercaderías · 398,000', g:'ESF'},
+           {id:'t3', t:'Facturas por pagar · 93,627', g:'ESF'},
+           {id:'t4', t:'Dinero cuenta corriente BBVA · 155,293', g:'ESF'},
+           {id:'t5', t:'Inmueble y local comercial · 709,500', g:'ESF'},
+           {id:'t6', t:'Automóvil Kia · 69,000', g:'ESF'},
+           {id:'t7', t:'Depreciación acumulada · 28,500', g:'ESF'},
+           {id:'t8', t:'Capital social · 520,000', g:'ESF'},
+           {id:'t9', t:'Leasing con el BBVA · 210,000', g:'ESF'},
+           {id:'t10', t:'Pago de planilla por pagar · 42,000', g:'ESF'},
+           {id:'t11', t:'Ventas netas · 1,890,000', g:'ER'},
+           {id:'t12', t:'Costo de ventas · 776,590', g:'ER'},
+           {id:'t13', t:'Gastos administrativos · 188,000', g:'ER'},
+           {id:'t14', t:'Gastos de ventas · 129,100', g:'ER'},
+           {id:'t15', t:'Gastos financieros · 49,200', g:'ER'},
+           {id:'t16', t:'Ingresos financieros · 15,500', g:'ER'},
+           {id:'t17', t:'Gastos de gestión · 57,800', g:'ER'},
+           {id:'t18', t:'Venta de maquinaria · 55,000', g:'ER'} ],
+  cajas:[ {id:'ESF', t:'Estado de situación financiera'}, {id:'ER', t:'Estado de resultados'} ],
+  fin:globo(P.expl,'Resuelto','La regla rápida: si es algo que la empresa tiene, debe o es de los dueños, '+
+      'va al estado de situación financiera. Si es algo que ganó o gastó durante el año, va al estado de '+
+      'resultados. La depreciación acumulada confunde: no es un gasto del año, es lo acumulado que resta '+
+      'del activo.') },
+
+a8:{ tipo:'cal', titulo:'Actividad 8',
+  lineas:[
+   { id:'s1', q:'Utilidad bruta', u:'S/', v:T.ub, dec:0, pre:'1,890,000 − 776,590' },
+   { id:'s2', q:'Utilidad operativa', u:'S/', v:T.uo, dec:0,
+     pre:'utilidad bruta − gastos administrativos 188,000 − gastos de ventas 129,100' },
+   { id:'s3', q:'Resultado antes del impuesto a la renta', u:'S/', v:T.rai, dec:0,
+     pre:'− gastos financieros 49,200 + ingresos financieros 15,500 + venta de maquinaria 55,000 − gastos de gestión 57,800' },
+   { id:'s4', q:'Impuesto a la renta · 29.5 %', u:'S/', v:T.ir, pre:'759,810 × 29.5 %' },
+   { id:'s5', q:'Utilidad neta del ejercicio', u:'S/', v:T.un, pre:'759,810 − 224,143.95' } ] },
+
+a9:{ tipo:'cal', titulo:'Actividad 9',
+  lineas:[
+   { id:'f1', q:'Total activo corriente', u:'S/', v:T.ac, dec:0,
+     pre:'155,293 + 98,000 + 398,000' },
+   { id:'f2', q:'Total activo no corriente', u:'S/', v:T.anc, dec:0,
+     pre:'709,500 + 69,000 − depreciación 28,500' },
+   { id:'f3', q:'Total activo', u:'S/', v:T.ta, dec:0, pre:'corriente + no corriente' },
+   { id:'f4', q:'Total pasivo corriente', u:'S/', v:T.pc, dec:0, pre:'93,627 + 42,000' },
+   { id:'f5', q:'Total pasivo', u:'S/', v:T.tp, dec:0, pre:'pasivo corriente + leasing 210,000' },
+   { id:'f6', q:'Resultado del ejercicio', u:'S/', v:T.un,
+     pre:'el mismo que salió del estado de resultados' },
+   { id:'f7', q:'Total patrimonio', u:'S/', v:T.pat,
+     pre:'capital social 520,000 + resultado del ejercicio' },
+   { id:'f8', q:'Total pasivo y patrimonio', u:'S/', v:T.ta, dec:0,
+     pre:'tiene que dar igual que el total activo' } ],
+  fin:globo2(P.pres, P.bien,'La comprobación que pide el paso 5',
+      'La utilidad que salió del estado de resultados (S/ 535,666.05) es la misma que aparece en el '+
+      'patrimonio del estado de situación financiera. Si en los dos estados sale la misma cifra, el '+
+      'trabajo está bien hecho. La diferencia de 5 céntimos en el total es solo el redondeo del impuesto.') }
+};
+
+/* ================= las diapositivas ================= */
+function tabla(filas, clase){
+  return '<div class="tabenv"><table class="t '+(clase||'')+'"><tbody>'+filas+'</tbody></table></div>';
+}
+function fila(a,b,cl){ return '<tr'+(cl?' class="'+cl+'"':'')+'><td>'+a+'</td><td class="n">'+b+'</td></tr>'; }
+
+var D=[
+
+{ et:'Conectemos', t:'Estados financieros',
+  h:'<p class="enc">Leer una empresa con números</p>'+
+    '<p class="sub">Semana 7 · UD Contabilidad</p>'+
+    globo(P.pres,'El logro de la sesión',
+      'Al terminar vas a poder analizar los estados financieros para saber cómo está la empresa y '+
+      'tomar decisiones con esa información.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>17 · Estados financieros</h4><div class="c"><ul>'+
+      '<li>17.1 Estado de situación financiera</li>'+
+      '<li>17.2 Estado de resultados</li>'+
+      '<li>17.3 Estado de cambios en el patrimonio neto</li>'+
+      '<li>17.4 Estado de flujos de efectivo</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Cómo se trabaja</h4><div class="c"><ul>'+
+      '<li>Teoría corta y enseguida una actividad.</li>'+
+      '<li>Nueve actividades que se corrigen solas.</li>'+
+      '<li>Tres casos completos: Wayra, Medusa y TR &amp; S.</li>'+
+      '<li>Tu avance queda guardado.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+{ et:'Conectemos', t:'Lluvia de ideas',
+  h:'<p class="enc">Antes de empezar, conversemos</p>'+
+    '<p class="sub">En equipos · 15 minutos · responde primero y recién después abre la respuesta</p>'+
+    globo2(P.idea, P.alum,'Para discutir en equipo',
+      'Estas tres preguntas se responden entre todos. No hay que buscarlas en el cuaderno: la idea es '+
+      'ver qué sabemos ya, y al final de la sesión volver a mirarlas.')+
+    '<details class="fc" style="margin-bottom:12px"><summary style="cursor:pointer;padding:12px 15px;font-weight:700">'+
+      '¿Qué son y para qué se utilizan los estados financieros?</summary>'+
+      '<div class="c">Son informes que resumen cómo está la empresa. Sirven para tomar decisiones, para '+
+      'pedir un crédito, para informar a los socios y para ver cómo ha ido evolucionando el negocio.</div></details>'+
+    '<details class="fc" style="margin-bottom:12px"><summary style="cursor:pointer;padding:12px 15px;font-weight:700">'+
+      '¿Qué entendemos por interpretación de resultados?</summary>'+
+      '<div class="c">Es pasar del número a la frase. No basta con decir que la utilidad fue de S/ 72,121: '+
+      'hay que decir si eso es bueno o malo, comparado con qué, y qué conviene hacer.</div></details>'+
+    '<details class="fc"><summary style="cursor:pointer;padding:12px 15px;font-weight:700">'+
+      '¿Cuál es su importancia?</summary>'+
+      '<div class="c">Sin estados financieros se decide a ciegas. Con ellos el dueño sabe si puede comprar, '+
+      'el banco sabe si puede prestar y el socio sabe si su dinero está rindiendo.</div></details>' },
+
+{ et:'Construyamos', t:'¿Qué son los estados financieros?',
+  h:'<p class="enc">¿Qué son los estados financieros?</p>'+
+    '<p class="sub">Informes que reflejan el estado de una empresa en un momento determinado</p>'+
+    '<div class="av">Se componen de varios documentos en los que se plasma la situación de un negocio, '+
+    'tanto la parte económica como la patrimonial. Normalmente se preparan por un año.</div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Los cinco</h4><div class="c"><ul>'+
+      '<li>Estado de situación financiera</li>'+
+      '<li>Estado de resultados</li>'+
+      '<li>Estado de cambios en el patrimonio neto</li>'+
+      '<li>Estado de flujos de efectivo</li>'+
+      '<li>Notas a los estados financieros</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Para qué se usan</h4><div class="c"><ul>'+
+      '<li>Para tomar decisiones.</li>'+
+      '<li>Para acceder a un crédito financiero.</li>'+
+      '<li>Para informar a los socios o accionistas.</li>'+
+      '<li>Para conocer la evolución de la empresa en el tiempo.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    '<p class="pie2" style="font-size:13px;color:var(--gris);margin-top:12px">Fuente: MEF, NIC 1.</p>' },
+
+{ et:'Actividad 1', t:'¿Qué muestra cada estado?', clave:'a1',
+  h:'<p class="enc">¿Qué muestra cada estado?</p>'+
+    '<p class="sub">Lleva cada nombre junto a lo que ese estado responde. En el celular, toca y toca.</p>' },
+
+{ et:'Construyamos', t:'Activo, pasivo y patrimonio',
+  h:'<p class="enc">Las tres piezas de toda empresa</p>'+
+    '<p class="sub">Según las NIIF, el estado de situación financiera se arma con estas tres</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Activo</h4><div class="c"><ul>'+
+      '<li>Son los bienes y derechos de la organización.</li>'+
+      '<li>La empresa lo controla: puede obtener los beneficios que vienen de él.</li>'+
+      '<li>Viene de un hecho que ya ocurrió.</li>'+
+      '<li>Se espera obtener beneficios futuros, por venta, consumo o uso.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Pasivo</h4><div class="c"><ul>'+
+      '<li>Son las deudas y obligaciones de la empresa.</li>'+
+      '<li>Es una obligación actual a la fecha del balance.</li>'+
+      '<li>Surge de sucesos pasados, no de lo que pasará.</li>'+
+      '<li>Para cancelarla la empresa se desprende de efectivo, bienes o servicios.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    '<div class="fc" style="margin-top:14px"><h4>Patrimonio neto</h4><div class="c"><ul>'+
+      '<li>Son los aportes de capital y las reservas.</li>'+
+      '<li>Contiene las acciones de inversión.</li>'+
+      '<li>Posee los excedentes de revaluación.</li>'+
+      '<li>Se le deducen las ganancias o pérdidas de los resultados acumulados.</li>'+
+      '</ul></div></div>'+
+    '<div class="form">PATRIMONIO NETO = ACTIVO − PASIVO</div>' },
+
+{ et:'Actividad 2', t:'Comprueba los conceptos', clave:'a2',
+  h:'<p class="enc">Comprueba los conceptos</p>'+
+    '<p class="sub">Cuatro preguntas. Si te equivocas, esa opción queda tachada y puedes elegir otra.</p>' },
+
+{ et:'Construyamos', t:'El estado de situación financiera',
+  h:'<p class="enc">El estado de situación financiera</p>'+
+    '<p class="sub">Antes conocido como balance general</p>'+
+    globo(P.expl,'Qué es',
+      'Es un informe que refleja la salud financiera de la empresa en una fecha concreta. No cuenta lo que '+
+      'pasó durante el año: cuenta cómo estaba la empresa el 31 de diciembre, como una fotografía.')+
+    '<div class="tabenv"><table class="t"><thead><tr><th>Activo</th><th>Pasivo y patrimonio</th></tr></thead>'+
+    '<tbody>'+
+    '<tr><td>Activo corriente</td><td>Pasivo corriente</td></tr>'+
+    '<tr><td>Activo no corriente</td><td>Pasivo no corriente</td></tr>'+
+    '<tr class="res"><td>&nbsp;</td><td>Patrimonio neto</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av">Los dos lados siempre suman lo mismo. Si el activo da S/ 603,400, el pasivo más el '+
+    'patrimonio tiene que dar S/ 603,400. Esa es la comprobación de que el trabajo está bien hecho.</div>' },
+
+{ et:'Construyamos', t:'Corriente y no corriente',
+  h:'<p class="enc">Corriente y no corriente: todo es cuestión de plazo</p>'+
+    '<p class="sub">Un año es la frontera</p>'+
+    '<div class="form">ACTIVO Y PASIVO CORRIENTE = CORTO PLAZO<small>dentro del año</small></div>'+
+    '<div class="form">ACTIVO Y PASIVO NO CORRIENTE = LARGO PLAZO<small>después del año</small></div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Activo corriente</h4><div class="c"><ul>'+
+      '<li>Efectivo y equivalentes de efectivo</li><li>Inversiones financieras</li>'+
+      '<li>Cuentas por cobrar</li><li>Otras cuentas por cobrar</li>'+
+      '<li>Estimación de cuentas de cobranza dudosa</li><li>Mercaderías</li>'+
+      '<li>Otros activos corrientes</li></ul></div></div>'+
+    '<div class="fc"><h4>Activo no corriente</h4><div class="c"><ul>'+
+      '<li>Cuentas por cobrar a largo plazo</li><li>Otras cuentas por cobrar a largo plazo</li>'+
+      '<li>Inversiones mobiliarias</li><li>Propiedades de inversión</li>'+
+      '<li>Propiedad, planta y equipo</li><li>Intangibles</li>'+
+      '<li>Depreciación y amortización acumuladas</li></ul></div></div>'+
+    '<div class="fc rj"><h4>Pasivo corriente</h4><div class="c"><ul>'+
+      '<li>Sobregiros bancarios</li><li>Cuentas por pagar</li>'+
+      '<li>Tributos y aportes al sistema de pensiones y de salud por pagar</li>'+
+      '<li>Remuneraciones y participaciones por pagar</li>'+
+      '<li>Obligaciones financieras</li><li>Otros pasivos corrientes</li></ul></div></div>'+
+    '<div class="fc rj"><h4>Pasivo no corriente</h4><div class="c"><ul>'+
+      '<li>Cuentas por pagar a largo plazo</li><li>Beneficios sociales</li>'+
+      '<li>Obligaciones financieras a largo plazo</li><li>Provisiones</li>'+
+      '<li>Otros pasivos no corrientes</li></ul></div></div>'+
+    '</div>'+
+    '<p class="pie2" style="font-size:13px;color:var(--gris);margin-top:12px">Fuente: PCGE 2019.</p>' },
+
+{ et:'Actividad 3', t:'Clasifica cada partida', clave:'a3',
+  h:'<p class="enc">Clasifica cada partida</p>'+
+    '<p class="sub">Lleva cada ficha a su grupo. El número que acompaña es su cuenta del plan contable.</p>' },
+
+{ et:'Construyamos', t:'Caso Corporación Wayra',
+  h:'<p class="enc">Caso 1 · Corporación Wayra S.A.C.</p>'+
+    '<p class="sub">RUC 20603458974 · rubro restaurantes · partidas contables del año 2023</p>'+
+    tabla(
+      fila('Facturas por pagar','10,000.00')+
+      fila('Facturas por cobrar','32,000.00')+
+      fila('Mercaderías','180,000.00')+
+      fila('Capital social','450,000.00')+
+      fila('Camioneta Hyundai Tucson','85,000.00')+
+      fila('Local comercial propio','189,000.00')+
+      fila('Impuesto de IGV y renta','17,325.00')+
+      fila('Sillas y muebles','14,400.00')+
+      fila('Depreciación acumulada','18,000.00')+
+      fila('Planilla de trabajadores','35,200.00')+
+      fila('Leasing crédito con el BCP','55,000.00')+
+      fila('Dinero cuenta corriente BCP','98,500.00')+
+      fila('Sistema ERP','8,500.00')+
+      fila('Otros activos · garantías entregadas','14,000.00'), 'chica')+
+    globo(P.idea,'Antes de calcular',
+      'Fíjate en dos trampas. La depreciación acumulada <em>resta</em> del activo no corriente, no suma. '+
+      'Y el resultado del ejercicio no está en la lista: se saca al final con la ecuación contable.') },
+
+{ et:'Actividad 4', t:'Arma el estado de situación financiera', clave:'a4',
+  h:'<p class="enc">Arma el estado de situación financiera de Wayra</p>'+
+    '<p class="sub">Escribe cada total y pulsa Enter. Sin decimales.</p>' },
+
+{ et:'Construyamos', t:'La lectura del caso Wayra',
+  h:'<p class="enc">¿Y esta empresa es rentable?</p>'+
+    '<p class="sub">La segunda pregunta del caso, la que de verdad importa</p>'+
+    tabla(
+      fila('Total activo','603,400','tot')+
+      fila('Total pasivo','117,525')+
+      fila('Total patrimonio','485,875')+
+      fila('Resultado del ejercicio','35,875','res'), 'chica')+
+    globo2(P.pres, P.alum,'Cómo se responde',
+      'El resultado del ejercicio es positivo: la empresa ganó S/ 35,875, así que el año cerró bien. '+
+      'Además, de cada S/ 100 que tiene, solo S/ 19.50 son deuda (117,525 de 603,400): está poco endeudada. '+
+      'Eso ya es una interpretación, no solo un número.')+
+    '<div class="av">Ojo con la palabra «rentable». El estado de situación financiera dice cuánto tiene y '+
+    'cuánto debe; quien dice si ganó o perdió es el estado de resultados. Por eso los dos se leen juntos.</div>' },
+
+{ et:'Construyamos', t:'El estado de resultados',
+  h:'<p class="enc">El estado de resultados</p>'+
+    '<p class="sub">También llamado estado de ganancias y pérdidas</p>'+
+    globo(P.alum,'El caso de Alejandra',
+      'Alejandra hace sus prácticas en una empresa y le piden formular el estado de resultados. '+
+      '¿Qué información tendría que pedir? ¿Las ventas del año, los costos, los gastos? ¿Y de qué periodo?')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Qué es</h4><div class="c">'+
+      '<p>Muestra los ingresos de la organización y los gastos realizados durante un periodo. '+
+      'A diferencia del estado de situación financiera, que es una foto de un día, este es la película '+
+      'de todo el año.</p></div></div>'+
+    '<div class="fc rj"><h4>Para qué se analiza</h4><div class="c">'+
+      '<p>Permite evaluar e interpretar cómo se comportó la empresa en el pasado y apreciar su situación '+
+      'económica actual, para estimar cómo le irá. A la gerencia y a los inversionistas les sirve para '+
+      'planear a corto y a largo plazo.</p></div></div>'+
+    '</div>' },
+
+{ et:'Construyamos', t:'Estructura del estado de resultados',
+  h:'<p class="enc">Cómo se arma, línea por línea</p>'+
+    '<p class="sub">Se baja desde la venta hasta lo que de verdad queda</p>'+
+    tabla(
+      fila('Ventas netas','')+
+      fila('(−) Costo de ventas','')+
+      fila('<b>Utilidad bruta</b>','','tot')+
+      fila('(−) Gastos administrativos','')+
+      fila('(−) Gastos de ventas','')+
+      fila('<b>Utilidad operativa</b>','','tot')+
+      fila('(−) Gastos financieros','')+
+      fila('(+) Ingresos financieros','')+
+      fila('(+) Otros ingresos','')+
+      fila('(−) Otros gastos','')+
+      fila('<b>Resultado antes del impuesto a la renta</b>','','tot')+
+      fila('(−) Impuesto a la renta · 29.5 %','')+
+      fila('<b>Utilidad o pérdida neta del ejercicio</b>','','res'))+
+    '<div class="av">Tres subtotales que hay que saber distinguir. La utilidad bruta mide el negocio puro: '+
+    'vender por encima de lo que cuesta. La operativa descuenta lo que cuesta administrar y vender. Y el '+
+    'resultado antes de impuestos añade todo lo que no es del giro: intereses, venta de activos, otros gastos.</div>' },
+
+{ et:'Actividad 5', t:'¿Suma o resta?', clave:'a5',
+  h:'<p class="enc">¿Suma o resta en el estado de resultados?</p>'+
+    '<p class="sub">Lleva cada ficha a su columna.</p>' },
+
+{ et:'Construyamos', t:'Caso Medusa',
+  h:'<p class="enc">Caso 2 · Medusa S.A.C.</p>'+
+    '<p class="sub">RUC 20553458987 · rubro textil · partidas contables del año 2023</p>'+
+    tabla(
+      fila('Ventas netas','853,000')+
+      fila('Costo de ventas','560,000')+
+      fila('Gastos administrativos','115,600')+
+      fila('Gastos de ventas','95,300')+
+      fila('Gastos financieros','32,000')+
+      fila('Ingresos financieros','40,000')+
+      fila('Venta de activo fijo','45,000')+
+      fila('Gastos de gestión','32,800')+
+      fila('Impuesto a la renta · régimen general','29.5 %'), 'chica')+
+    globo(P.expl,'Dónde van los dos raros',
+      'La venta del activo fijo no es una venta del giro: la empresa es textil, no vende máquinas. Va en '+
+      '<em>otros ingresos</em>. Y los gastos de gestión van en <em>otros gastos</em>, debajo de la utilidad '+
+      'operativa. Ese es el detalle que más se equivoca.') },
+
+{ et:'Actividad 6', t:'Arma el estado de resultados', clave:'a6',
+  h:'<p class="enc">Arma el estado de resultados de Medusa</p>'+
+    '<p class="sub">Escribe cada subtotal y pulsa Enter. El impuesto y la utilidad neta llevan dos decimales.</p>' },
+
+{ et:'Construyamos', t:'Caso integral TR & S',
+  h:'<p class="enc">Caso 3 · TR &amp; S S.A. · los dos estados juntos</p>'+
+    '<p class="sub">Cierre del periodo 2023 · venta de productos tecnológicos</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Los siete pasos</h4><div class="c"><ol style="margin:0;padding-left:20px;line-height:1.9">'+
+      '<li>Separa lo que va al estado de situación financiera.</li>'+
+      '<li>Separa lo que va al estado de resultados.</li>'+
+      '<li>Coloca el código de la cuenta en cada uno.</li>'+
+      '<li>Calcula la utilidad con la ecuación contable.</li>'+
+      '<li>Verifica que sea la misma utilidad en los dos estados.</li>'+
+      '<li>Elabora ambos estados financieros.</li>'+
+      '<li>Interpreta los resultados.</li>'+
+      '</ol></div></div>'+
+    '<div class="fc rj"><h4>Las partidas</h4><div class="c"><div class="tabenv"><table class="t chica"><tbody>'+
+      fila('Facturas por cobrar','98,000')+fila('Mercaderías','398,000')+
+      fila('Facturas por pagar','93,627')+fila('Ingresos financieros','15,500')+
+      fila('Gastos administrativos','188,000')+fila('Costo de ventas','776,590')+
+      fila('Ventas netas','1,890,000')+fila('Dinero cuenta corriente BBVA','155,293')+
+      fila('Inmueble y local comercial','709,500')+fila('Gastos financieros','49,200')+
+      fila('Depreciación acumulada','28,500')+fila('Gastos de gestión','57,800')+
+      fila('Venta de maquinaria','55,000')+fila('Capital social','520,000')+
+      fila('Leasing crédito con BBVA','210,000')+fila('Automóvil Kia','69,000')+
+      fila('Pago de planilla por pagar','42,000')+fila('Gastos de ventas','129,100')+
+      '</tbody></table></div></div></div>'+
+    '</div>' },
+
+{ et:'Actividad 7', t:'Separa las partidas', clave:'a7',
+  h:'<p class="enc">Paso 1 y 2 · separa las partidas</p>'+
+    '<p class="sub">Dieciocho fichas. ¿Cada una va al estado de situación financiera o al de resultados?</p>' },
+
+{ et:'Actividad 8', t:'El estado de resultados de TR & S', clave:'a8',
+  h:'<p class="enc">Paso 4 · calcula la utilidad</p>'+
+    '<p class="sub">Primero el estado de resultados, porque de ahí sale la utilidad que después usarás.</p>' },
+
+{ et:'Actividad 9', t:'El estado de situación financiera de TR & S', clave:'a9',
+  h:'<p class="enc">Paso 5 · comprueba que cuadra</p>'+
+    '<p class="sub">Ahora el estado de situación financiera, con la utilidad que acabas de calcular.</p>' },
+
+{ et:'Construyamos', t:'Los otros dos estados',
+  h:'<p class="enc">Los otros dos estados del temario</p>'+
+    '<p class="sub">17.3 y 17.4 · se trabajan con los casos que entrega el docente</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Estado de cambios en el patrimonio neto</h4><div class="c">'+
+      '<p>Explica cómo se movió el patrimonio durante el año: cuánto aportaron los socios, cuánto se llevó '+
+      'a reservas, cuánta utilidad se repartió y cuánta se quedó dentro.</p>'+
+      '<p>Arranca con el patrimonio del año anterior y termina con el del cierre, que es justo el que '+
+      'aparece en el estado de situación financiera.</p></div></div>'+
+    '<div class="fc rj"><h4>Estado de flujos de efectivo</h4><div class="c">'+
+      '<p>Dice de dónde entró el dinero y en qué salió, separado en tres actividades: operación, '+
+      'inversión y financiamiento.</p>'+
+      '<p>Empieza con el saldo de caja al inicio del año y termina con el saldo al cierre, que también '+
+      'tiene que coincidir con el estado de situación financiera.</p></div></div>'+
+    '</div>'+
+    '<div class="av">Este curso ya tiene dos sesiones dedicadas al estado de flujos de efectivo: una con '+
+    'los casos resueltos y otra para armarlo desde el libro diario. Están en la página del curso.</div>' },
+
+{ et:'Reflexionemos', t:'Las ideas principales',
+  h:'<p class="enc">Las ideas principales de hoy</p>'+
+    '<p class="sub">En una frase: ¿qué aprendiste y a qué conclusión llegaste?</p>'+
+    '<div class="fc"><h4>El estado de situación financiera</h4><div class="c">'+
+      '<p>Muestra la situación en una fecha determinada. Ahí se ve la situación patrimonial de la entidad, '+
+      'cómo fue financiada y con qué recursos cuenta.</p></div></div>'+
+    '<div class="fc rj" style="margin-top:14px"><h4>El estado de resultados</h4><div class="c">'+
+      '<p>Permite a la gerencia y a los inversionistas saber cómo marcha la empresa para planear a corto y '+
+      'a largo plazo, interpretar cómo se comportó en el pasado y estimar cómo le irá.</p></div></div>'+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'La pregunta de la sesión era: ¿qué tan importantes son los estados financieros para tomar '+
+      'decisiones? Después de los tres casos ya tienes la respuesta con números: sin ellos no se sabe si '+
+      'la empresa gana, si puede pagar ni si conviene invertir.')+
+    '<div class="av">Referencias: NIC 1 Presentación de Estados Financieros (MEF) · Plan Contable General '+
+    'Empresarial 2019 · Gonzales, P., Análisis e Interpretación de Estados Financieros · Novoa, H. (2019), '+
+    'Elaboración Analítica de Estados Financieros, Instituto Pacífico.</div>' }
+];
+
+/* ================= estado ================= */
+var LS='ef_sem7_v1';
+var CLAVES=['a1','a2','a3','a4','a5','a6','a7','a8','a9'];
+function vacio(){ var g={ visto:{}, mal:{} }; CLAVES.forEach(function(k){ g[k]={}; }); return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+function cuantas(k){
+  var A=ACT[k];
+  if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arr')  return A.fichas.length;
+  if(A.tipo==='cal')  return A.lineas.length;
+  return A.lista.length;
+}
+function hechas(k){ return Object.keys(G[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+var i=0;
+
+/* ================= arrastre ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[data-f]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true); ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35'; f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display=''; f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null; f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    });
+    f.addEventListener('pointercancel', function(){
+      if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){ if(!el) return; el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450); }
+
+/* ================= vistas ================= */
+var docenteVista=false;
+function cab(k, extra){
+  var A=ACT[k];
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">'+(extra||'');
+}
+function vArr(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cab(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="cajas'+(A.cajas.length===2?' c2':'')+'">';
+  A.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>'; }).join('')+
+       '</div></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vPar(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cab(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var puesto=g[x.id], nom='';
+    A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelta aquí')+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vCal(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cab(k)+'<div class="lineas">';
+  A.lineas.forEach(function(l){
+    var ok=g[l.id];
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+esc(l.q)+'<span class="pre">'+esc(l.pre)+'</span></span>'+
+       '<span class="r">'+(l.u==='S/'?'<span class="u">S/</span>':'')+
+       '<input class="cel'+(ok?' bien':'')+'" type="text" inputmode="decimal" data-c="'+k+'" data-l="'+l.id+'"'+
+       (ok?' value="'+mil(l.v, l.dec===0?0:2)+'" disabled':'')+' placeholder="0">'+
+       (l.u && l.u!=='S/' ? '<span class="u">'+esc(l.u)+'</span>' : '')+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vQuiz(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cab(k);
+  A.lista.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : (G.mal[k+'|'+n+'|'+j] ? ' mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         ((resuelto||cls===' mala')?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vista(k){
+  var t=ACT[k].tipo;
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cal' ? vCal(k) : vQuiz(k);
+}
+
+/* ================= dibujo ================= */
+function pinta(){
+  var s=D[i];
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.clave) h+=vista(s.clave);
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=0;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
+    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){ i=+b.dataset.p; elegida=null; pinta(); });
+  });
+  cablea();
+}
+
+function cablea(){
+  var lam=$('lam'), s=D[i];
+  if(!s.clave) return;
+  var k=s.clave, A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  qq('#lam input.cel[data-l]', lam).forEach(function(inp){
+    function revisa(){
+      if(inp.disabled) return;
+      var txt=inp.value.replace(/\s/g,'').replace(/,/g,'').replace(/^S\/\.?/i,'');
+      if(txt==='') return;
+      var v=parseFloat(txt);
+      var cl=inp.dataset.c, id=inp.dataset.l, l=null;
+      ACT[cl].lineas.forEach(function(x){ if(x.id===id) l=x; });
+      if(!l) return;
+      var tol = l.dec===0 ? 0.5 : 0.011;
+      if(isFinite(v) && Math.abs(v-l.v)<=tol){
+        G[cl][id]=1; graba();
+        if(lista(cl)) fanfarria(); else bien();
+        pinta();
+      }else{
+        mal(); inp.classList.add('mal'); sacude(inp);
+        setTimeout(function(){ inp.classList.remove('mal'); }, 900);
+      }
+    }
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    inp.addEventListener('blur', revisa);
+  });
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
+      if(j===p.ok){ G[cl][n]=j; graba(); bien(); pinta(); }
+      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+            b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+}
+
+/* ================= navegación ================= */
+function va(n){
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc');
+  e.classList.toggle('full');
+  document.body.style.overflow = e.classList.contains('full') ? 'hidden' : '';
+  $('btnFull').textContent = e.classList.contains('full') ? '✕ Salir' : '⛶ Pantalla completa';
+}
+$('btnFull').addEventListener('click', full);
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+}
+if(window.Aula){
+  Aula.iniciar({ sala:'EEFF7', codigo:'EF', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(dentro) pinta();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las nueve actividades.',
+  hecho:function(){ G=vacio(); i=0; pinta(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
