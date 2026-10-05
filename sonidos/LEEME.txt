@@ -16,3 +16,20 @@ generado por el propio navegador, así que nunca queda en silencio.
 
 Si prefieres otro archivo o enlazar directo al mp3 de MyInstants,
 cambia la constante SONIDO_SRC al inicio de pendiente.js.
+
+
+Música de fondo del docente y sonido de fallo
+=============================================
+
+Música de fondo (solo suena en la computadora del docente):
+  - Cualquier .mp3 / .wav / .ogg / .m4a que subas a esta carpeta
+    (o a una subcarpeta) entra solo a la lista, con el nombre que sea.
+  - Al entrar como docente suena una pista al azar a volumen bajo y,
+    cada vez que cambias de caso o de bloque, pasa a otra al azar.
+  - En la barra del docente: 🎵 Música (sí/no), ⏭ otra pista y volumen.
+  - Los alumnos nunca la escuchan ni ven esos controles.
+
+Sonido de fallo (suena en la computadora del alumno al equivocarse):
+  - Nombre: SONIDO_FALLO.mp3 o sonido_fallo.mp3 (también .wav, .ogg o .m4a).
+  - No entra a la música de fondo; ono-bebe.mp3 tampoco.
+  - Si falta, se oye un tono corto generado por el navegador.

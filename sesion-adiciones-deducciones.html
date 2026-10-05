@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adiciones y deducciones · casos interactivos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .ad, .velo{ --azul:#1F5FA8; --verde:#147A5C; --rojo:#B42318; --ambar:#B25E09;
+       --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A; --certus:#16307A; }
+  .ad{ max-width:1280px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--certus); padding-bottom:11px; }
+  .titulo .tx{ flex:1; min-width:220px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,24px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:3px 0 0; font-size:13.5px; color:var(--o-muted); }
+  .titulo .bts{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+
+  /* personajes */
+  .perso{ display:flex; gap:12px; align-items:flex-end; }
+  .perso img{ flex:none; width:118px; height:auto; max-height:170px; object-fit:contain; display:block; }
+  .perso.chico img{ width:104px; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:#fff;
+                 border:2px solid var(--certus); border-radius:14px; padding:11px 14px;
+                 font-size:13px; line-height:1.6; color:#33404E; margin-bottom:14px; }
+  .perso .globo b{ color:var(--certus); }
+  .perso .globo::before{ content:''; position:absolute; left:-9px; bottom:16px;
+                         width:14px; height:14px; background:#fff; border-left:2px solid var(--certus);
+                         border-bottom:2px solid var(--certus); transform:rotate(45deg); }
+  .perso .globo .et{ display:block; font-size:9.5px; font-weight:800; text-transform:uppercase;
+                     letter-spacing:.06em; color:var(--certus); margin-bottom:3px; }
+  .perso.ok .globo{ border-color:#2E8B57; background:#F2FAF5; }
+  .perso.ok .globo::before{ background:#F2FAF5; border-color:#2E8B57; }
+  .perso.ok .globo b, .perso.ok .globo .et{ color:#14532D; }
+  @media (max-width:560px){
+    .perso img{ width:80px; } .perso.chico img{ width:72px; }
+    .perso .globo{ font-size:12.5px; padding:9px 11px; }
+  }
+  .intro2{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:14px; }
+  .intro2 img{ width:140px; height:auto; flex:none; }
+  .intro2 .tx{ flex:1; min-width:250px; }
+  .elenco{ display:flex; gap:4px; align-items:flex-end; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  .elenco img{ height:96px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:62px; } .intro2 img{ width:96px; } }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:11px 14px; font-size:13px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+  .formula{ display:block; margin-top:6px; font-weight:800; color:#3F3208; }
+
+  .puerta{ border:1px solid var(--o-border); border-left:4px solid var(--certus);
+           border-radius:11px; padding:14px 16px; margin-top:16px; background:#F7FAFD; }
+  .puerta h2{ margin:0 0 3px; font-size:16px; font-weight:800; color:var(--certus); }
+  .puerta p{ margin:0 0 12px; font-size:12.5px; color:var(--o-muted); line-height:1.55; }
+
+  /* pestañas de bloques y casos */
+  .pest{ display:flex; gap:6px; flex-wrap:wrap; margin:16px 0 8px; }
+  .pest button{ font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; text-align:left;
+    border:1.5px solid var(--o-border); background:#fff; color:var(--o-muted);
+    border-radius:10px; padding:8px 13px; line-height:1.3; }
+  .pest button:hover{ border-color:var(--certus); color:var(--certus); }
+  .pest button.on{ background:var(--certus); border-color:var(--certus); color:#fff; }
+  .pest button.ok{ border-color:#7CC29B; color:#14532D; background:#F2FAF5; }
+  .pest button.ok.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .pest button .p{ display:block; font-size:10.5px; font-weight:600; opacity:.85; }
+
+  .casos{ display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 14px; align-items:center; }
+  .casos button{ font:inherit; font-size:12px; font-weight:600; cursor:pointer;
+                 border:1px solid var(--o-border); background:#fff; color:var(--gris);
+                 border-radius:999px; padding:5px 12px; }
+  .casos button:hover{ border-color:var(--verde); }
+  .casos button.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .casos button.lleno:not(.on){ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .casos button .pc{ font-weight:700; opacity:.75; margin-left:5px; font-size:10.5px; }
+  @media (max-width:640px){ .casos button .nm{ display:none; } .casos button{ padding:5px 10px; } }
+
+  .tablero{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:1000px){ .tablero{ grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); align-items:start; } }
+  .tablero > *{ min-width:0; }
+
+  .bloque{ border:1px solid var(--o-border); border-radius:11px; background:#fff; overflow:hidden; margin-bottom:14px; }
+  .bloque > h3{ margin:0; font-size:12px; font-weight:800; letter-spacing:.3px;
+                text-transform:uppercase; color:#fff; background:var(--gris); padding:8px 12px; }
+  .bloque.az > h3{ background:var(--certus); }
+  .bloque.vd > h3{ background:var(--verde); }
+  .bloque .cuerpo{ padding:11px 13px; font-size:13px; line-height:1.6; color:#33404E; }
+  .bloque .cuerpo p{ margin:0 0 8px; } .bloque .cuerpo p:last-child{ margin:0; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th,td{ padding:6px 10px; border-bottom:1px solid #EDEFF2; text-align:left; vertical-align:middle; }
+  thead th{ font-size:11px; text-transform:uppercase; letter-spacing:.3px;
+            color:var(--o-muted); background:#FAFBFC; font-weight:700; }
+  td.num, th.num{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  tr.cab td{ background:#F4F6F8; font-weight:800; font-size:11.5px; letter-spacing:.3px;
+             text-transform:uppercase; color:var(--gris); }
+  tr.tot td{ font-weight:800; border-top:2px solid #D8DCE2; background:#FCFCFD; }
+  tr.sub td{ font-weight:800; background:#F6FBF8; }
+  td.neg{ color:var(--rojo); }
+  .pista{ display:block; font-size:11.5px; color:var(--o-muted); font-weight:400;
+          line-height:1.45; margin-top:2px; }
+
+  .cel{ font:inherit; font-size:13px; border:1px solid var(--amaBd); background:var(--ama);
+        border-radius:6px; padding:4px 7px; color:#3F3208; max-width:100%; }
+  input.cel{ width:118px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:230px; cursor:pointer; }
+  .cel:focus{ outline:2px solid var(--certus); outline-offset:1px; }
+  .cel.ok{ background:#E9F7EF; border-color:#7CC29B; color:#14532D; }
+  .cel.mal{ background:#FDECEA; border-color:#E3A9A2; color:#7A1C12; }
+  .msg{ display:block; font-size:11.5px; line-height:1.4; margin-top:3px; font-weight:600; color:var(--rojo); }
+  .msg:empty{ display:none; }
+
+  .barra{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:0 0 12px; }
+  .prog{ height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; min-width:120px; flex:1; }
+  .prog i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .cuenta{ font-size:12.5px; color:var(--o-muted); font-weight:600; white-space:nowrap; }
+
+  .final{ margin-top:4px; }
+  .sigue{ display:flex; justify-content:flex-end; gap:8px; margin:-4px 0 6px; }
+
+  .aviso{ font-size:12.5px; color:var(--o-muted); line-height:1.55; margin:9px 0 0; }
+  .titsec{ margin:0 0 8px; font-size:13px; font-weight:800; text-transform:uppercase;
+           letter-spacing:.3px; color:#5A5A5A; }
+  .vmini{ padding:8px 11px 11px; }
+  .vmini .lin{ display:flex; justify-content:space-between; gap:8px; font-size:11.5px;
+               color:var(--o-muted); padding:2px 0; }
+  .vmini .lin b{ color:var(--o-text); font-variant-numeric:tabular-nums; }
+  .vmini .rej{ display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:7px; }
+  .vmini .cel2{ border:1px solid var(--o-border); border-radius:6px; padding:4px 2px;
+                text-align:center; font-size:10px; color:var(--o-muted); background:#FAFBFC; }
+  .vmini .cel2 b{ display:block; font-size:12px; color:var(--certus); }
+  .vmini .cel2.full{ border-color:#7CC29B; background:#E9F7EF; }
+  .vmini .cel2.full b{ color:#14532D; }
+
+  /* espejo de la pantalla de un alumno (docente) */
+  .pv .pv-barra{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:6px; }
+  .pv .pv-barra select.cel{ width:auto; max-width:100%; min-width:260px; }
+  .pv .pv-sol{ display:inline-flex; gap:6px; align-items:center; font-size:12.5px; font-weight:700; color:var(--gris); cursor:pointer; }
+  .pv .pv-donde{ font-size:12.5px; color:var(--o-muted); margin:0 0 12px; }
+  .pv .pv-donde b{ color:var(--certus); }
+  .cel.vista{ display:inline-block; min-width:118px; text-align:right; }
+  .msg.solu{ color:var(--verde); }
+
+  /* repaso */
+  .velo{ position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:80;
+         display:flex; align-items:flex-start; justify-content:center; padding:24px 12px; overflow:auto; }
+  .ficha{ background:#fff; border-radius:14px; max-width:880px; width:100%;
+          box-shadow:0 18px 50px rgba(0,0,0,.35); overflow:hidden; }
+  .ficha .cab2{ display:flex; justify-content:space-between; align-items:center; gap:10px;
+                background:var(--certus); color:#fff; padding:11px 15px; }
+  .ficha .cab2 b{ font-size:15px; }
+  .ficha .cab2 button{ font:inherit; font-weight:700; cursor:pointer; border:0; border-radius:8px;
+                       background:#fff; color:var(--certus); padding:6px 12px; }
+  .ficha .cont{ padding:14px 16px; font-size:13px; line-height:1.6; color:#33404E; }
+  .ficha h4{ margin:14px 0 6px; font-size:13px; text-transform:uppercase; letter-spacing:.3px; color:var(--certus); }
+  .ficha h4:first-child{ margin-top:0; }
+  .ficha table{ margin:4px 0 6px; }
+  .dosc{ display:grid; grid-template-columns:1fr; gap:10px; }
+  @media (min-width:700px){ .dosc{ grid-template-columns:1fr 1fr; } }
+  .tarj{ border:1px solid var(--o-border); border-radius:10px; padding:9px 12px; background:#FAFBFC; }
+  .tarj b{ color:var(--certus); }
+  .tarj.ley{ margin-bottom:10px; }
+  .tarj.ley:last-child{ margin-bottom:0; }
+  .ayuda{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 14px; }
+  .ayuda span{ font-size:12.5px; color:#5A6B5F; }
+  .ayuda .o-btn{ border:1.5px solid var(--certus); color:var(--certus); background:#EEF2FB; font-weight:700; }
+  .ayuda .o-btn:hover{ background:var(--certus); color:#fff; }
+
+  @media (max-width:640px){
+    .tab-r table, .tab-r thead, .tab-r tbody, .tab-r tr, .tab-r td, .tab-r th{ display:block; }
+    .tab-r thead{ position:absolute; left:-9999px; }
+    .tab-r tr{ border-bottom:1px solid #EDEFF2; padding:5px 0; }
+    .tab-r td{ border:0; padding:3px 11px; }
+    .tab-r td.concepto{ font-weight:600; }
+    .tab-r td.num{ text-align:left; }
+    input.cel{ width:140px; } select.cel{ width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Sistemas Contables Integrados</span> / <b>Adiciones y deducciones</b></span>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ad">
+
+  <div class="titulo">
+    <span class="tx">
+      <h1>Adiciones y deducciones · lo contable y lo tributario</h1>
+      <p>Casos interactivos del Impuesto a la Renta de tercera categoría · se corrigen solos</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnRepaso" type="button">📖 Repaso</button>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+    </span>
+  </div>
+
+  <div class="intro2">
+    <img id="imgIntro" alt="" loading="lazy">
+    <div class="tx"><div class="idea">
+      <b>La contabilidad y la SUNAT miran el mismo año con lentes distintos.</b> La contabilidad
+      registra todos los gastos reales de la empresa; la Ley del Impuesto a la Renta acepta solo
+      algunos, y otros con un tope. Por eso, a la utilidad contable se le <b>suman</b> los gastos que la
+      Ley no acepta (adiciones) y se le <b>restan</b> lo que la Ley permite descontar o los ingresos que no
+      están gravados (deducciones).
+      <span class="formula">Renta neta imponible = Utilidad contable + Adiciones − Deducciones − Pérdidas compensables</span>
+    </div></div>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de pasar, di tu nombre</h2>
+    <p>Los casos aparecen cuando entras. Escribe tu nombre y el código de sala que indique el docente.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="zona" hidden>
+    <div class="pest" id="pest"></div>
+    <div id="cabBloque"></div>
+    <div class="casos" id="casos"></div>
+    <div id="reinicio" style="margin:0 0 12px"></div>
+    <div id="panel"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="elenco" id="elenco" aria-hidden="true"></div>
+
+  <p class="aviso">Importes referenciales con fines didácticos. Tasa del Régimen General: 29.5%. UIT 2025: S/ 5,350.
+    Las bases legales citan la Ley del Impuesto a la Renta (LIR) y su Reglamento (Rgto.), según la cartilla de
+    instrucciones de la Declaración Jurada Anual 2025 – Rentas de Empresas.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  /* ===== personajes =====
+     Cada uno es [imagen, respaldo]. Los tres nuevos se ven en cuanto su archivo
+     esté en la carpeta personajes/; mientras tanto se usa el respaldo. */
+  var P={
+    full:  ['personajes/profe-completa.webp'],
+    pres:  ['personajes/profe-presenta.webp'],
+    idea:  ['personajes/profe-idea.webp'],
+    expl:  ['personajes/tutor-explica.webp'],
+    bien:  ['personajes/tutor-bien.webp'],
+    chico: ['personajes/alumno-senala.webp',  'personajes/tutor-explica.webp'],
+    roja:  ['personajes/alumna-senala.webp',  'personajes/profe-idea.webp'],
+    melena:['personajes/profe-melena.webp',   'personajes/profe-completa.webp']
+  };
+  var CHICOS={ expl:1, bien:1, chico:1 };
+
+  function imgP(nom){
+    var p=P[nom]||P.pres;
+    return '<img src="'+p[0]+'"'+(p[1]?' data-alt="'+p[1]+'"':'')+' alt="" loading="lazy">';
+  }
+  /* si un personaje nuevo aún no está subido, se muestra su respaldo */
+  document.addEventListener('error', function(ev){
+    var im=ev.target;
+    if(im && im.tagName==='IMG' && im.dataset && im.dataset.alt && im.getAttribute('src')!==im.dataset.alt){
+      im.setAttribute('src', im.dataset.alt);
+    }
+  }, true);
+
+  function globo(nom, etiqueta, html, ok){
+    return '<div class="perso'+(CHICOS[nom]?' chico':'')+(ok?' ok':'')+'">'+imgP(nom)+
+           '<div class="globo">'+(etiqueta?'<span class="et">'+esc(etiqueta)+'</span>':'')+html+'</div></div>';
+  }
+
+  /* ===== utilidades ===== */
+  function fmt(n){
+    if(n===null || n===undefined || isNaN(n)) return '';
+    var s=Math.abs(n).toLocaleString('es-PE',{minimumFractionDigits:0, maximumFractionDigits:2});
+    return n<0 ? '('+s+')' : s;
+  }
+  function lee(txt){
+    if(txt===null || txt===undefined) return null;
+    var t=String(txt).trim();
+    if(!t) return null;
+    var neg=/^\(.*\)$/.test(t) || /^-/.test(t);
+    t=t.replace(/[()\s]/g,'').replace(/^-/,'').replace(/^S\/\.?/i,'').replace(/,/g,'');
+    if(t==='' || isNaN(Number(t))) return NaN;
+    var v=Number(t);
+    return neg ? -v : v;
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  var $=function(id){ return document.getElementById(id); };
+
+  /* ===== sonido ===== */
+  var son=true, ac=null;
+  try{ son = localStorage.getItem('sci_ad_son')!=='0'; }catch(e){}
+  function nota(f, ini, dur, vol, tipo){
+    if(!son) return;
+    try{
+      if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+      var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+      o.type=tipo||'sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+    }catch(e){}
+  }
+  function bien(){ nota(660,0,.12,.05,'triangle'); }
+  /* sonido de fallo propio: el primero que exista de esta lista; si no hay, un tono */
+  var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav','sonidos/sonido_fallo.ogg','sonidos/sonido_fallo.m4a'];
+  var fallo=new Audio(), falloI=0;
+  fallo.preload='auto'; fallo.volume=0.7;
+  fallo.addEventListener('error', function(){
+    falloI++;
+    if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null;
+  });
+  fallo.src=FALLO[0];
+  function mal(){
+    if(!son) return;
+    if(!fallo){ nota(220,0,.14,.04,'sine'); return; }
+    try{
+      fallo.currentTime=0;
+      var p=fallo.play();
+      if(p && p.catch) p.catch(function(){ nota(220,0,.14,.04,'sine'); });
+    }catch(e){ nota(220,0,.14,.04,'sine'); }
+  }
+  function listo(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.09,.22,.06,'triangle'); }); }
+  function pintaSon(){ var b=$('btnSon'); b.textContent=son?'🔊 Sonido':'🔇 Sin sonido'; b.setAttribute('aria-pressed', son?'true':'false'); }
+  $('btnSon').addEventListener('click', function(){
+    son=!son; try{ localStorage.setItem('sci_ad_son', son?'1':'0'); }catch(e){}
+    pintaSon(); if(son) bien();
+  });
+  pintaSon();
+
+  function confeti(){
+    var c=document.createElement('canvas');
+    c.style.cssText='position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:9998';
+    c.width=innerWidth; c.height=innerHeight; document.body.appendChild(c);
+    var x=c.getContext('2d'), col=['#16307A','#147A5C','#E8CE8A','#1F5FA8','#B42318'], p=[];
+    for(var i=0;i<110;i++) p.push({x:Math.random()*c.width, y:-20-Math.random()*c.height*0.4,
+      vx:(Math.random()-.5)*2.4, vy:2+Math.random()*3.2, s:4+Math.random()*5,
+      c:col[i%col.length], r:Math.random()*6});
+    var t0=Date.now();
+    (function paso(){
+      x.clearRect(0,0,c.width,c.height);
+      p.forEach(function(q){ q.x+=q.vx; q.y+=q.vy; q.r+=0.08;
+        x.save(); x.translate(q.x,q.y); x.rotate(q.r); x.fillStyle=q.c;
+        x.fillRect(-q.s/2,-q.s/2,q.s,q.s*0.6); x.restore(); });
+      if(Date.now()-t0<2600) requestAnimationFrame(paso); else c.remove();
+    })();
+  }
+
+  /* ===== constructores de filas =====
+     cab: encabezado · dato: importe dado · num: importe por escribir · sel: elegir una opción */
+  function cab(t){ return {k:'cab', t:t}; }
+  function num(t, v, p, o){ o=o||{}; return {k:'num', t:t, v:v, p:p||'', tol:o.tol||0.5, tot:!!o.tot}; }
+  function sel(t, v, ops, p){ return {k:'sel', t:t, v:v, ops:ops, p:p||''}; }
+
+  var AJ=['Adición','Deducción','No se ajusta'];
+  var TP=['Permanente','Temporal','No corresponde'];
+  var CTA_DIF=['3712 Activo diferido – IR diferido (resultados)',
+               '4912 Pasivo diferido – IR diferido (resultados)',
+               '882 Impuesto a las ganancias – Diferido',
+               '881 Impuesto a las ganancias – Corriente',
+               '40171 Renta de tercera categoría'];
+
+  /* bloque 1: cuenta contable, ajuste tributario, tipo e importe */
+  function filas1(cta, ctas, aj, tp, imp){
+    return [ cab('Parte contable'),
+             sel('¿En qué cuenta se registra en la contabilidad?', cta, ctas),
+             cab('Parte tributaria'),
+             sel('¿Qué ajuste se hace en la declaración jurada?', aj, AJ),
+             sel('¿Qué tipo de diferencia es?', tp, TP, 'Si no hay ajuste, no corresponde.'),
+             num('Importe del ajuste (S/)', imp, 'Si no hay ajuste, escribe 0.') ];
+  }
+  /* bloque 3: contable vs tributario, IR diferido y su asiento */
+  function filas3(acep, dif, aj, ird, debe, haber){
+    return [ cab('Contable frente a tributario'),
+             num('Gasto aceptado tributariamente en 2025', acep),
+             num('Diferencia (sin signo)', dif),
+             sel('¿Qué ajuste se hace en la DJ 2025?', aj, AJ.slice(0,2)),
+             cab('Impuesto a la renta diferido'),
+             num('IR diferido = diferencia × 29.5%', ird, '', {tol:1}),
+             sel('Asiento · cuenta al Debe', debe, CTA_DIF),
+             sel('Asiento · cuenta al Haber', haber, CTA_DIF) ];
+  }
+
+  /* ===== los bloques ===== */
+  var BLOQUES=[
+  { id:'b1', t:'Bloque 1 · ¿Se suma, se resta o no pasa nada?', corto:'¿Adición o deducción?', per:'idea',
+    intro:'En cada caso primero haces lo del <b>contador</b>: eliges la cuenta del PCGE donde va el gasto o el ingreso. '+
+          'Luego te pones el sombrero <b>tributario</b>: ¿la Ley lo acepta, lo rechaza o lo deja restar? '+
+          'Ojo: hay casos donde <b>no pasa nada</b>, porque el gasto cumple todo.',
+    casos:[
+    { t:'Multa de SUNAT', per:'chico',
+      h:'Distribuidora Chachani presentó tarde su declaración mensual. Pagó la <b>multa con sus intereses moratorios</b>: S/ 2,344.',
+      filas:filas1('6592 Sanciones administrativas', ['6411 IGV y selectivo al consumo','6592 Sanciones administrativas','6413 Impuesto temporal a los activos netos'], 'Adición','Permanente',2344),
+      fin:'Para la contabilidad la multa es un gasto real (cuenta <b>6592</b>). Para la Ley no: las multas, recargos e intereses moratorios de la SUNAT <b>nunca</b> se deducen. Se suma y no se revierte: es <b>permanente</b>.',
+      base:'Art. 44° inc. c) LIR' },
+    { t:'La cena del gerente', per:'expl',
+      h:'El gerente, que también es accionista, celebró el cumpleaños de su hijo en un restaurante y pidió la factura a nombre de la empresa: S/ 6,460.',
+      filas:filas1('659 Otros gastos de gestión', ['625 Atención al personal','659 Otros gastos de gestión','6373 Relaciones públicas'], 'Adición','Permanente',6460),
+      fin:'No es atención al personal ni relaciones públicas: es un <b>gasto personal</b> del accionista que no ayuda a generar renta. La Ley no lo acepta y nunca lo aceptará: adición <b>permanente</b>.',
+      base:'Art. 44° inc. a) LIR' },
+    { t:'Combustible con ticket sin RUC', per:'pres',
+      h:'Se compró combustible para la camioneta de reparto, pero el sustento es un <b>ticket que no consigna el RUC</b> de la empresa: S/ 4,990.',
+      filas:filas1('656 Suministros', ['651 Seguros','656 Suministros','6343 Mantenimiento de PPE'], 'Adición','Permanente',4990),
+      fin:'El combustible es un suministro (<b>656</b>) y sí ayuda a generar renta, pero el comprobante <b>no reúne los requisitos</b> del Reglamento de Comprobantes de Pago. Sin sustento válido, la Ley no lo acepta.',
+      base:'Art. 44° inc. j) LIR; Art. 25° inc. b) Rgto.' },
+    { t:'Pago en efectivo', per:'chico',
+      h:'El mantenimiento del local de ventas costó S/ 5,250. Todo está con factura, pero se <b>pagó en efectivo</b>, sin depósito ni transferencia.',
+      filas:filas1('6343 Mantenimiento de PPE', ['6321 Asesoría administrativa','6343 Mantenimiento de PPE','635 Alquileres'], 'Adición','Permanente',5250),
+      fin:'Desde S/ 2,000 (o US$ 500) hay que pagar con <b>medios de pago</b> (depósito, transferencia, tarjeta, cheque no negociable). Si no, ese gasto no se deduce aunque tenga factura.',
+      base:'Ley N° 28194, Art. 3° y 8°' },
+    { t:'Dividendos cobrados', per:'expl',
+      h:'La empresa tiene acciones de otra sociedad peruana y este año recibió <b>dividendos</b> por S/ 28,000. El contador los registró como ingreso.',
+      filas:filas1('773 Dividendos', ['73 Descuentos obtenidos','75 Otros ingresos de gestión','773 Dividendos'], 'Deducción','Permanente',28000),
+      fin:'Contablemente es un ingreso financiero (<b>773</b>) y aumenta la utilidad. Pero los dividendos entre personas jurídicas domiciliadas <b>no están gravados</b>: por eso se restan. Es <b>permanente</b>.',
+      base:'Art. 24°-B LIR' },
+    { t:'Curso de Excel', per:'idea',
+      h:'Se pagó un curso de Excel para el área contable: S/ 3,800 con factura, pagado por transferencia y relacionado con el trabajo.',
+      filas:filas1('624 Capacitación', ['624 Capacitación','625 Atención al personal','6329 Otras asesorías'], 'No se ajusta','No corresponde',0),
+      fin:'Cumple todo: es causal, tiene comprobante válido, está bancarizado y la capacitación no exige generalidad. El gasto contable y el tributario son iguales: <b>no hay ajuste</b>.',
+      base:'Art. 37° inc. ll) LIR' },
+    { t:'El impuesto del arrendador', per:'chico',
+      h:'El dueño del almacén pidió cobrar su alquiler "limpio". La empresa <b>asumió el impuesto a la renta</b> de primera categoría que le correspondía a él: S/ 1,280.',
+      filas:filas1('635 Alquileres', ['635 Alquileres','6411 IGV y selectivo al consumo','6592 Sanciones administrativas'], 'Adición','Permanente',1280),
+      fin:'El impuesto de un tercero que la empresa asume <b>no se deduce</b>. Se registra como parte del costo del alquiler (<b>635</b>), pero en la declaración se suma. Permanente.',
+      base:'Art. 47° LIR' },
+    { t:'Trabajadores con discapacidad', per:'expl',
+      h:'De 20 trabajadores, 2 tienen discapacidad acreditada (10%). Cada uno ganó S/ 12,000 en el año. La Ley da una <b>deducción adicional del 50%</b> de esas remuneraciones (cuando no superan el 30% del personal).',
+      filas:filas1('6211 Sueldos y salarios', ['6211 Sueldos y salarios','6214 Gratificaciones','628 Retribuciones al directorio'], 'Deducción','Permanente',12000),
+      fin:'Las remuneraciones ya están en la <b>6211</b> como gasto. Encima de eso, la Ley premia la contratación: se resta un 50% adicional (2 × 12,000 × 50% = <b>12,000</b>). No se revierte: permanente.',
+      base:'Art. 37° inc. z) LIR; Art. 21° inc. x) Rgto.' },
+    { t:'Vacaciones que se pagarán en julio', per:'full',
+      h:'Al 31 de diciembre de 2025 se provisionaron vacaciones devengadas por S/ 17,200. Se pagarán en <b>julio de 2026</b>, después del vencimiento de la declaración jurada anual.',
+      filas:filas1('6215 Vacaciones', ['6214 Gratificaciones','6215 Vacaciones','6291 Compensación por tiempo de servicio'], 'Adición','Temporal',17200),
+      fin:'Contablemente se devenga en 2025 (<b>6215</b> contra la 4115). La Ley solo acepta las vacaciones si se pagan antes del vencimiento de la DJ: se adicionan en 2025 y se <b>deducen en 2026</b>, cuando se paguen. Es <b>temporal</b>.',
+      base:'Art. 37° inc. v) LIR' },
+    { t:'Cobranza dudosa apurada', per:'chico',
+      h:'Se estimó como incobrable la factura de un cliente que venció hace solo 20 días, <b>sin gestiones de cobro</b> ni morosidad acreditada: S/ 5,140.',
+      filas:filas1('6871 Estimación de cuentas de cobranza dudosa', ['6841 Depreciación de PPE','6871 Estimación de cuentas de cobranza dudosa','6592 Sanciones administrativas'], 'Adición','Temporal',5140),
+      fin:'La estimación contable va a la <b>6871</b>. Tributariamente se exige demostrar dificultades financieras o morosidad (más de 12 meses vencida o gestiones de cobro). Se suma ahora; cuando cumpla los requisitos, se deducirá: <b>temporal</b>.',
+      base:'Art. 37° inc. i) LIR; Art. 21° inc. f) Rgto.' },
+    { t:'Honorarios pagados tarde', per:'expl',
+      h:'Un contador independiente emitió su recibo por honorarios por S/ 3,200 por servicios de 2025, pero se le pagará en <b>mayo de 2026</b>, después de la DJ anual.',
+      filas:filas1('6323 Auditoría y contable', ['6322 Legal y tributaria','6323 Auditoría y contable','628 Retribuciones al directorio'], 'Adición','Temporal',3200),
+      fin:'Los gastos que son renta de cuarta categoría para quien los cobra solo se deducen si se <b>pagan</b> antes del vencimiento de la DJ. Se suman en 2025 y se restarán en 2026, al pagarse: <b>temporal</b>.',
+      base:'Art. 37° inc. v) LIR' }
+    ] },
+
+  { id:'b2', t:'Bloque 2 · Gastos con tope', corto:'Gastos con límite', per:'chico',
+    intro:'Estos gastos <b>sí</b> se aceptan, pero solo hasta un límite. La receta es siempre la misma: calculas el tope, '+
+          'te quedas con el que manda (a veces el menor de dos) y lo que pasa del tope es la <b>adición</b>.',
+    casos:[
+    { t:'Gastos de representación', per:'expl',
+      h:'Obsequios y agasajos a clientes por S/ 15,000. Ingresos brutos del año (netos de devoluciones y descuentos): S/ 2,000,000.',
+      datos:[['Ingresos brutos netos',2000000],['UIT 2025',5350],['Gasto de representación contabilizado',15000]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '6373 Relaciones públicas', ['6371 Publicidad','6373 Relaciones públicas','625 Atención al personal']),
+              cab('Cálculo del límite'),
+              num('Límite 1: 0.5% de los ingresos brutos', 10000),
+              num('Límite 2: 40 UIT', 214000),
+              num('Límite aceptado (el menor)', 10000, '', {tot:true}),
+              num('Exceso = adición', 5000, '← contabilizado − aceptado', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'Se acepta el menor entre 0.5% de los ingresos brutos (10,000) y 40 UIT (214,000). Se suman <b>5,000</b>, y es <b>permanente</b>: ese exceso no se recupera nunca.',
+      base:'Art. 37° inc. q) LIR; Art. 21° inc. m) Rgto.' },
+    { t:'Gastos recreativos', per:'pres',
+      h:'Ejemplo de la cartilla de la SUNAT: Comercial Sarai SAC gastó S/ 400,000 (sin IGV) en el Día del Trabajo, Navidad y Año Nuevo para su personal. Sus ingresos netos 2025 fueron S/ 40,500,100.',
+      datos:[['Ingresos netos 2025',40500100],['UIT 2025',5350],['Gasto recreativo contabilizado',400000]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '625 Atención al personal', ['624 Capacitación','625 Atención al personal','6373 Relaciones públicas']),
+              cab('Cálculo del límite'),
+              num('Límite 1: 0.5% de los ingresos netos', 202501, 'Redondea a soles.', {tol:1}),
+              num('Límite 2: 40 UIT', 214000),
+              num('Límite aceptado (el menor)', 202501, '', {tol:1, tot:true}),
+              num('Exceso = adición', 197499, '', {tol:1, tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'El 0.5% de los ingresos netos (202,501) es menor que 40 UIT (214,000), así que manda el primero. Adición permanente de <b>197,499</b>, igual que en la cartilla.',
+      base:'Art. 37° inc. ll), último párrafo, LIR' },
+    { t:'Viáticos en provincia', per:'chico',
+      h:'Un vendedor viajó 10 días a Puno. Se contabilizaron S/ 8,000 de alojamiento y alimentación. El viático diario del Sector Público es S/ 320.',
+      datos:[['Viático diario del Sector Público',320],['Días de comisión',10],['Viáticos contabilizados',8000]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '631 Transporte, correos y gastos de viaje', ['6211 Sueldos y salarios','631 Transporte, correos y gastos de viaje','659 Otros gastos de gestión']),
+              cab('Cálculo del límite'),
+              num('Límite diario: el doble del Sector Público', 640),
+              num('Límite por los 10 días', 6400, '', {tot:true}),
+              num('Exceso = adición', 1600, '', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'En el país se acepta hasta el <b>doble</b> del viático del Sector Público: 640 × 10 = 6,400. Lo que pasa, <b>1,600</b>, se suma y no se recupera.',
+      base:'Art. 37° inc. r) LIR; Art. 21° inc. n) Rgto.; D.S. 007-2013-EF' },
+    { t:'Camionetas de la gerencia', per:'expl',
+      h:'La empresa tiene 4 camionetas (categoría A2–A4) asignadas a gerencia y administración. Gastó S/ 40,000 en su combustible, mantenimiento y seguros. Sus ingresos netos de 2024 fueron S/ 20,000,000.',
+      datos:[['Ingresos netos 2024',20000000],['UIT 2024',5150],['Camionetas A2–A4 de dirección',4],['Gastos de funcionamiento',40000]],
+      tabla:'<table><thead><tr><th>Ingresos netos anuales (UIT)</th><th class="num">Vehículos aceptados</th></tr></thead><tbody>'+
+            '<tr><td>Hasta 3,200</td><td class="num">1</td></tr><tr><td>Hasta 16,100</td><td class="num">2</td></tr>'+
+            '<tr><td>Hasta 24,200</td><td class="num">3</td></tr><tr><td>Hasta 32,300</td><td class="num">4</td></tr>'+
+            '<tr><td>Más de 32,300</td><td class="num">5</td></tr></tbody></table>',
+      filas:[ cab('Cálculo del límite'),
+              num('Ingresos netos 2024 expresados en UIT', 3883.5, '← ingresos ÷ UIT del año anterior', {tol:1}),
+              num('Número de camionetas con derecho a deducción', 2, '← según la tabla'),
+              num('Gasto aceptado = gasto × (con derecho ÷ total)', 20000, '', {tot:true}),
+              num('Exceso = adición', 20000, '', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'Con 3,883.5 UIT, la tabla acepta <b>2</b> vehículos de 4: la mitad del gasto (20,000). La otra mitad se suma. Se usa la UIT y los ingresos del <b>ejercicio anterior</b>.',
+      base:'Art. 37° inc. w) LIR; Art. 21° inc. r) Rgto.' },
+    { t:'Donación', per:'idea',
+      h:'La empresa donó S/ 60,000 a una entidad calificada como perceptora de donaciones. Su renta neta, antes de restar la donación, es S/ 500,000.',
+      datos:[['Renta neta antes de la donación',500000],['Donación contabilizada',60000]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '6591 Donaciones', ['6591 Donaciones','6592 Sanciones administrativas','659 Otros gastos de gestión']),
+              cab('Cálculo del límite'),
+              num('Límite: 10% de la renta neta', 50000, '', {tot:true}),
+              num('Exceso = adición', 10000, '', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'Se acepta hasta el <b>10% de la renta neta</b> (50,000). Los 10,000 restantes se suman y no se recuperan.',
+      base:'Art. 37° inc. x) LIR; Art. 21° inc. s) Rgto.' },
+    { t:'Dietas del directorio', per:'chico',
+      h:'Se pagaron dietas al directorio por S/ 20,590. La utilidad comercial del ejercicio, antes del impuesto a la renta, fue S/ 300,000.',
+      datos:[['Utilidad comercial antes del IR',300000],['Dietas al directorio contabilizadas',20590]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '628 Retribuciones al directorio', ['6211 Sueldos y salarios','6214 Gratificaciones','628 Retribuciones al directorio']),
+              cab('Cálculo del límite'),
+              num('Límite: 6% de la utilidad comercial', 18000, '', {tot:true}),
+              num('Exceso = adición', 2590, '', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Permanente', TP.slice(0,2)) ],
+      fin:'La retribución al directorio se acepta hasta el <b>6% de la utilidad comercial</b>: 18,000. Se suman <b>2,590</b> de forma permanente.',
+      base:'Art. 37° inc. m) LIR; Art. 21° inc. l) Rgto.' },
+    { t:'Intereses y el EBITDA', per:'expl',
+      h:'El interés neto del año (intereses pagados menos intereses ganados) fue S/ 150,000. El EBITDA tributario del ejercicio anterior fue S/ 400,000.',
+      datos:[['EBITDA tributario del ejercicio anterior',400000],['Interés neto contabilizado',150000]],
+      filas:[ cab('Parte contable'),
+              sel('¿En qué cuenta se registra?', '6731 Préstamos de instituciones financieras', ['6731 Préstamos de instituciones financieras','659 Otros gastos de gestión','6592 Sanciones administrativas']),
+              cab('Cálculo del límite'),
+              num('Límite: 30% del EBITDA', 120000, '', {tot:true}),
+              num('Exceso = adición', 30000, '', {tot:true}),
+              sel('¿Qué tipo de diferencia es?', 'Temporal', TP.slice(0,2)) ],
+      fin:'El interés neto se acepta hasta el <b>30% del EBITDA</b>. El exceso (30,000) se suma ahora, pero puede deducirse en los <b>cuatro ejercicios siguientes</b> si hay margen: por eso es <b>temporal</b>.',
+      base:'Art. 37° inc. a) LIR; Art. 21° inc. a) Rgto.' }
+    ] },
+
+  { id:'b3', t:'Bloque 3 · Temporales e IR diferido', corto:'Contable vs tributario', per:'idea',
+    intro:'Cuando la diferencia es <b>temporal</b>, el impuesto que hoy pagas de más (o de menos) se recupera (o se paga) después. '+
+          'La contabilidad lo deja anotado con el <b>impuesto a la renta diferido</b>: diferencia × 29.5%. '+
+          'Adición temporal → activo diferido (<b>3712</b>). Deducción temporal → pasivo diferido (<b>4912</b>), o se revierte el activo de años anteriores.',
+    casos:[
+    { t:'Vacaciones por pagar', per:'chico',
+      h:'Vacaciones devengadas en 2025 por S/ 18,000. Se pagarán después del vencimiento de la DJ anual.',
+      datos:[['Gasto contable 2025 (6215 Vacaciones)',18000]],
+      filas:filas3(0,18000,'Adición',5310,CTA_DIF[0],CTA_DIF[2]),
+      fin:'En 2025 se acepta 0: adición temporal de 18,000. Ese impuesto se recupera en 2026, al pagarlas; por eso nace un <b>activo diferido</b> de 5,310: Debe <b>3712</b>, Haber <b>882</b>.',
+      base:'Art. 37° inc. v) LIR · NIC 12' },
+    { t:'Cobranza dudosa sin requisitos', per:'expl',
+      h:'Se estimaron S/ 15,000 como cobranza dudosa, pero aún no se cumplen los requisitos tributarios. Se espera cumplirlos en 2026.',
+      datos:[['Gasto contable 2025 (6871 Estimación de cobranza dudosa)',15000]],
+      filas:filas3(0,15000,'Adición',4425,CTA_DIF[0],CTA_DIF[2]),
+      fin:'Adición temporal de 15,000 en 2025 y deducción cuando se cumplan los requisitos. El activo diferido es 15,000 × 29.5% = <b>4,425</b>.',
+      base:'Art. 37° inc. i) LIR; Art. 21° inc. f) Rgto.' },
+    { t:'Desvalorización de existencias', per:'pres',
+      h:'Se reconoció una desvalorización de mercaderías por S/ 6,280, pero <b>no se acreditó</b> con la destrucción ante notario ni con el informe técnico que exige la Ley.',
+      datos:[['Gasto contable 2025 (695 Desvalorización de inventarios)',6280]],
+      filas:filas3(0,6280,'Adición',1852.6,CTA_DIF[0],CTA_DIF[2]),
+      fin:'La pérdida se deducirá cuando se acredite o cuando la mercadería se venda o se destruya. Hoy: adición temporal y activo diferido de <b>1,852.60</b>.',
+      base:'Art. 37° inc. f) LIR; Art. 21° inc. c) Rgto.' },
+    { t:'Seguro pagado por adelantado', per:'chico',
+      h:'El 1 de octubre de 2025 se contrató una póliza anual de S/ 4,800 y se registró <b>todo</b> como gasto en la 651 Seguros. A 2025 solo le corresponden 3 meses.',
+      datos:[['Gasto contable 2025 (651 Seguros)',4800],['Meses que corresponden a 2025',3]],
+      filas:filas3(1200,3600,'Adición',1062,CTA_DIF[0],CTA_DIF[2]),
+      fin:'Tributariamente vale el devengo: 4,800 × 3/12 = 1,200. Se suman 3,600 que se deducirán en 2026. <b>Lo contable ideal</b>: llevar la póliza a la <b>182 Seguros</b> (servicios contratados por anticipado) y devengarla cada mes; así no habría diferencia.',
+      base:'Art. 57° LIR' },
+    { t:'Camión en leasing', per:'expl',
+      h:'Un camión de S/ 24,000 tomado en leasing. Contablemente se deprecia en 6 años (S/ 4,000 al año). El contrato dura 4 años y la Ley permite depreciarlo en ese plazo: S/ 6,000 al año.',
+      datos:[['Depreciación contable 2025 (682 Activos por derecho de uso)',4000],['Depreciación tributaria según el contrato',6000]],
+      filas:filas3(6000,2000,'Deducción',590,CTA_DIF[2],CTA_DIF[1]),
+      fin:'La Ley acepta más de lo que se registró: se <b>restan</b> 2,000. Hoy pagas menos impuesto, pero en los últimos años pagarás más: nace un <b>pasivo diferido</b> de 590. Debe <b>882</b>, Haber <b>4912</b>.',
+      base:'D. Leg. N° 299, Art. 18°' },
+    { t:'Vacaciones de 2024 pagadas en 2025', per:'chico',
+      h:'Las vacaciones de 2024 (S/ 2,750) se adicionaron en la DJ 2024 porque no se pagaron a tiempo. Se pagaron recién en marzo de 2025. En la contabilidad de 2025 ya no hay gasto: se registró en 2024.',
+      datos:[['Gasto contable 2025 por esas vacaciones',0],['Adición temporal hecha en 2024',2750]],
+      filas:filas3(2750,2750,'Deducción',811.25,CTA_DIF[2],CTA_DIF[0]),
+      fin:'Ahora que se pagaron, la Ley acepta el gasto en 2025: se <b>deducen</b> 2,750. El activo diferido creado en 2024 se <b>revierte</b>: Debe <b>882</b>, Haber <b>3712</b>, por 811.25.',
+      base:'Art. 37° inc. v) LIR · NIC 12' }
+    ] },
+
+  { id:'b4b', t:'Bloque 4 · Caso integral: la declaración anual', corto:'Caso integral', per:'full',
+    intro:'Ahora todo junto, con el caso <b>Distribuidora RPB &amp; Asociados S.A.C.</b> (ejercicio 2022). '+
+          'Clasificas cada adición y deducción, llegas a la <b>renta neta imponible</b> (la pérdida que se compensa es un dato), '+
+          'calculas el impuesto a la renta <b>corriente</b> y el <b>diferido</b>, y terminas con sus <b>asientos</b>.',
+    casos:[ null ] }
+  ];
+
+  /* ===== caso integral (Enunciado DJA revisado) ===== */
+  var ADIC=[
+    ['Compra de combustible con comprobante sin requisitos',4990,'P','Art. 44° inc. j) LIR'],
+    ['Seguros de un vehículo ya vendido',1200,'P','Art. 37° LIR · RTF 09330-8-2015'],
+    ['Deuda incobrable sin requisitos',4225,'T','Art. 37° inc. i) LIR'],
+    ['Seguros pagados por adelantado',3250,'T','Art. 57° LIR'],
+    ['Depreciación de un activo fijo vendido',4000,'P','Arts. 37° inc. f) y 38° LIR'],
+    ['Movilidad de los trabajadores (exceso)',259,'P','Art. 37° inc. a1) LIR'],
+    ['Gastos ajenos al giro del negocio',13545,'P','Art. 44° inc. d) LIR'],
+    ['Comprobantes que no reúnen los requisitos',4900,'P','Art. 44° inc. j) LIR'],
+    ['Pérdidas extraordinarias aún no acreditadas',6950,'T','Art. 37° inc. d) LIR'],
+    ['Seguros de vida de los socios',4305,'P','Art. 44° inc. d) LIR'],
+    ['Gastos recreativos del personal (exceso)',4586,'P','Art. 37° inc. ll) LIR'],
+    ['Impuesto de terceros asumido por la empresa',1280,'P','Art. 47° LIR'],
+    ['Provisión de cobranza dudosa del ejercicio',5140,'T','Art. 37° inc. i) LIR'],
+    ['Exceso de remuneraciones del directorio',2590,'P','Art. 37° inc. m) LIR'],
+    ['Gastos por premios',5782,'P','Arts. 37° inc. u) y 44° inc. k) LIR'],
+    ['Multas e intereses moratorios',2344,'P','Art. 44° inc. c) LIR'],
+    ['Provisiones no admitidas',4910,'T','Art. 37° inc. f) LIR'],
+    ['Viáticos en el interior del país (exceso)',2760,'P','Art. 37° inc. r) LIR'],
+    ['Gastos pagados sin medios de pago',5250,'P','Ley N° 28194, Arts. 3° y 8°'],
+    ['Desvalorización de existencias',6280,'T','Art. 37° inc. f) LIR'],
+    ['Asesoría legal personal del gerente',5780,'P','Art. 37° LIR'],
+    ['Honorarios profesionales pagados en 2023',3200,'T','Art. 37° inc. v) LIR'],
+    ['Gastos sin comprobante de pago',4180,'P','Art. 44° inc. j) LIR'],
+    ['Gastos de vehículos (exceso)',64110,'P','Art. 37° inc. w) LIR'],
+    ['Canastas navideñas a personal independiente',3045,'P','Art. 44° inc. d) LIR'],
+    ['Gastos personales de accionistas',6460,'P','Art. 44° inc. a) LIR'],
+    ['Vacaciones devengadas al 31.12.2022 no pagadas',17200,'T','Art. 37° inc. v) LIR']
+  ];
+  var DEDU=[
+    ['Deducción adicional por trabajadores con discapacidad',25170,'P','Art. 37° inc. z) LIR'],
+    ['Dividendos recibidos',28000,'P','Art. 24°-B LIR'],
+    ['Depreciación acelerada por leasing',2000,'T','D. Leg. N° 299, Art. 18°']
+  ];
+  var PT={P:'Permanente', T:'Temporal'};
+
+  (function(){
+    var f=[ cab('Paso 1 · Clasifica cada adición (Anexo 2)') ];
+    ADIC.forEach(function(a){ f.push(sel(a[0]+' · S/ '+fmt(a[1]), PT[a[2]], ['Permanente','Temporal'], a[3])); });
+    f.push(num('Total adiciones temporales', 51155, '← las necesitarás para el IR diferido', {tot:true}),
+           num('Total adiciones (casilla 103)', 192521, '', {tot:true}),
+           cab('Paso 2 · Clasifica cada deducción'));
+    DEDU.forEach(function(a){ f.push(sel(a[0]+' · S/ '+fmt(a[1]), PT[a[2]], ['Permanente','Temporal'], a[3])); });
+    f.push(num('Total deducciones temporales', 2000, '', {tot:true}),
+           num('Total deducciones (casilla 105)', 55170, '', {tot:true}),
+           cab('Paso 3 · Renta neta imponible'),
+           num('Renta neta del ejercicio', 1000822, '← utilidad contable + adiciones − deducciones', {tot:true}),
+           num('(−) Pérdida tributaria que se compensa', 500411, '← es un dato del caso'),
+           num('Renta neta imponible', 500411, '', {tot:true}),
+           cab('Paso 4 · Impuesto a la renta corriente'),
+           num('IR corriente = renta neta imponible × 29.5%', 147621, 'Redondea a soles.', {tol:1, tot:true}),
+           cab('Paso 5 · Impuesto a la renta diferido'),
+           num('Activo diferido = adiciones temporales × 29.5%', 15090.73, '', {tol:1}),
+           num('Pasivo diferido = deducciones temporales × 29.5%', 590, '', {tol:1}),
+           cab('Paso 6 · Asientos al 31 de diciembre de 2022'),
+           sel('IR corriente · cuenta al Debe', CTA_DIF[3], CTA_DIF),
+           sel('IR corriente · cuenta al Haber', CTA_DIF[4], CTA_DIF),
+           sel('Activo diferido · cuenta al Debe', CTA_DIF[0], CTA_DIF),
+           sel('Activo diferido · cuenta al Haber', CTA_DIF[2], CTA_DIF),
+           sel('Pasivo diferido · cuenta al Debe', CTA_DIF[2], CTA_DIF),
+           sel('Pasivo diferido · cuenta al Haber', CTA_DIF[1], CTA_DIF));
+
+    BLOQUES[3].casos[0]={
+      t:'Distribuidora RPB & Asociados', per:'chico',
+      h:'<b>Distribuidora RPB &amp; Asociados S.A.C.</b> (RUC 20514688328), Ventanilla, Régimen General. '+
+        'Prepara su declaración jurada anual del ejercicio 2022 (Formulario Virtual 710).',
+      datos:[['Utilidad contable antes de impuestos',863471],['Pérdida tributaria que se compensa en 2022',500411]],
+      izq:'<div class="bloque"><h3>Sobre la pérdida</h3><div class="cuerpo">'+
+          '<p>La empresa arrastra una pérdida tributaria de años anteriores. Aquí la usas <b>tal cual</b>, como dato: '+
+          'cómo se calcula cuánto se compensa (sistemas A y B) lo veremos más adelante.</p>'+
+          '<p>Las adiciones y deducciones vienen del Anexo 2 del enunciado; a la derecha clasificas cada una. '+
+          'Tasa del Régimen General: <b>29.5%</b>.</p></div></div>',
+      filas:f,
+      fin:'Utilidad 863,471 + adiciones 192,521 − deducciones 55,170 = renta neta <b>1,000,822</b>. Menos la pérdida compensada (500,411): '+
+          'renta neta imponible 500,411 e IR corriente <b>147,621</b> (Debe 881 / Haber 40171). '+
+          'Las adiciones temporales (51,155) dan un activo diferido de <b>15,090.73</b> (Debe 3712 / Haber 882) '+
+          'y la deducción temporal (2,000) un pasivo diferido de <b>590</b> (Debe 882 / Haber 4912).',
+      base:'Arts. 37°, 44°, 50° y 55° LIR · NIC 12 · Formulario Virtual 710'
+    };
+  })();
+
+  /* ===== ayudita: qué dice cada norma, por título de caso ===== */
+  var NIC12=['NIC 12 Impuesto a las ganancias','Si la diferencia se suma hoy y se restará después (diferencia temporaria deducible), nace un <b>activo</b> por impuesto diferido; si se resta hoy y se sumará después (imponible), nace un <b>pasivo</b>. Se mide como diferencia × tasa (29.5%).'];
+  var V37=['Art. 37° inc. v) LIR','Los gastos que para quien los cobra son rentas de segunda, cuarta o quinta categoría (sueldos, vacaciones, honorarios) se deducen en el ejercicio en que se devengan solo si se <b>pagan</b> hasta el vencimiento de la declaración jurada anual. Si se pagan después, se deducen en el ejercicio en que efectivamente se paguen.'];
+  var I37=['Art. 37° inc. i) LIR','Son deducibles los castigos por deudas incobrables y las provisiones equitativas por deudas de <b>cobranza dudosa</b>, siempre que se determinen las cuentas a las que corresponden.'];
+  var F21=['Art. 21° inc. f) Rgto.','Para provisionar, la deuda debe estar vencida y tener riesgo de incobrabilidad: dificultades financieras del deudor, gestiones de cobro luego del vencimiento, protesto, o más de 12 meses de vencida sin pagarse. La provisión debe figurar al cierre, en forma discriminada, en el Libro de Inventarios y Balances.'];
+  var LEYES={
+    'Multa de SUNAT':[['Art. 44° inc. c) LIR','No son deducibles las <b>multas, recargos e intereses moratorios</b> previstos en el Código Tributario y, en general, las sanciones aplicadas por el Sector Público Nacional.']],
+    'La cena del gerente':[['Art. 44° inc. a) LIR','No son deducibles los <b>gastos personales</b> y de sustento del contribuyente y sus familiares.'],
+                           ['Art. 37° LIR · causalidad','Solo se deducen los gastos <b>necesarios</b> para producir la renta y mantener su fuente.']],
+    'Combustible con ticket sin RUC':[['Art. 44° inc. j) LIR','No son deducibles los gastos cuya documentación sustentatoria <b>no cumpla los requisitos</b> y características mínimas del Reglamento de Comprobantes de Pago.'],
+                           ['Reglamento de Comprobantes de Pago','El ticket solo sustenta costo o gasto si consigna el <b>RUC</b> y los datos del adquirente.']],
+    'Pago en efectivo':[['Ley N° 28194 · Arts. 3° y 4°','Las obligaciones de <b>S/ 2,000 o US$ 500</b> a más deben pagarse con <b>medios de pago</b>: depósito en cuenta, transferencia, giro, tarjeta, cheque no negociable, entre otros.'],
+                        ['Ley N° 28194 · Art. 8°','Los pagos hechos <b>sin</b> usar medios de pago no dan derecho a deducir gastos, costos o créditos, aunque tengan comprobante.']],
+    'Dividendos cobrados':[['Art. 24°-B LIR','Las personas jurídicas domiciliadas <b>no computan</b> para su renta imponible los dividendos que reciben de otras personas jurídicas domiciliadas.']],
+    'Curso de Excel':[['Art. 37° inc. ll) LIR','Son deducibles los gastos destinados a la <b>capacitación</b> del personal, siempre que sean necesarios para el negocio. Como cumple además con comprobante y medio de pago, no hay ajuste.']],
+    'El impuesto del arrendador':[['Art. 47° LIR','No es deducible el <b>impuesto a la renta de un tercero</b> que la empresa asume por cuenta de él.']],
+    'Trabajadores con discapacidad':[['Art. 37° inc. z) LIR','Las remuneraciones pagadas a personas con <b>discapacidad</b> dan derecho a una deducción adicional, en el porcentaje que fija el Reglamento.'],
+                           ['Art. 21° inc. x) Rgto.','La deducción adicional es del <b>50%</b> cuando los trabajadores con discapacidad son hasta el 30% del personal, y del 80% cuando son más del 30%.']],
+    'Vacaciones que se pagarán en julio':[V37],
+    'Cobranza dudosa apurada':[I37, F21],
+    'Honorarios pagados tarde':[V37],
+    'Gastos de representación':[['Art. 37° inc. q) LIR','Los gastos de representación propios del giro se deducen hasta el <b>0.5% de los ingresos brutos</b>, con un máximo de <b>40 UIT</b>.'],
+                           ['Art. 21° inc. m) Rgto.','Son los gastos para mantener o mejorar la imagen y las relaciones con clientes (agasajos, obsequios). Los ingresos brutos se toman netos de devoluciones, descuentos y bonificaciones.']],
+    'Gastos recreativos':[['Art. 37° inc. ll), último párrafo, LIR','Los gastos recreativos del personal se deducen hasta el <b>0.5% de los ingresos netos</b> del ejercicio, con un máximo de <b>40 UIT</b>.']],
+    'Viáticos en provincia':[['Art. 37° inc. r) LIR','Son deducibles los gastos de viaje indispensables: transporte y <b>viáticos</b> (alojamiento, alimentación y movilidad).'],
+                           ['Art. 21° inc. n) Rgto. · D.S. 007-2013-EF','En el país, los viáticos no pueden exceder del <b>doble</b> de lo que el Sector Público otorga a sus funcionarios: S/ 320 diarios, es decir, hasta S/ 640 por día.']],
+    'Camionetas de la gerencia':[['Art. 37° inc. w) LIR','Los gastos de vehículos de categoría <b>A2, A3 y A4</b> asignados a dirección, representación y administración se deducen solo por el número de vehículos que permite el Reglamento.'],
+                           ['Art. 21° inc. r) Rgto.','Una tabla fija de <b>1 a 5 vehículos</b> según los ingresos netos anuales expresados en UIT. Si hay más vehículos, se acepta el gasto en proporción: gasto × (vehículos con derecho ÷ total).']],
+    'Donación':[['Art. 37° inc. x) LIR','Las donaciones a entidades <b>perceptoras de donaciones</b> calificadas por la SUNAT se deducen hasta el <b>10% de la renta neta</b> de tercera categoría.']],
+    'Dietas del directorio':[['Art. 37° inc. m) LIR','Las retribuciones a los directores se deducen hasta el <b>6% de la utilidad comercial</b> del ejercicio antes del impuesto a la renta. El exceso no es deducible.']],
+    'Intereses y el EBITDA':[['Art. 37° inc. a) LIR','Los intereses netos se deducen hasta el <b>30% del EBITDA</b> tributario del ejercicio anterior. El exceso puede deducirse en los <b>cuatro ejercicios siguientes</b>, si hay margen.']],
+    'Vacaciones por pagar':[V37, NIC12],
+    'Cobranza dudosa sin requisitos':[I37, F21, NIC12],
+    'Desvalorización de existencias':[['Art. 37° inc. f) LIR','Son deducibles las mermas y los <b>desmedros</b> de existencias debidamente acreditados.'],
+                           ['Art. 21° inc. c) Rgto.','Los desmedros se acreditan con la <b>destrucción</b> de los bienes ante notario público o juez de paz, comunicada antes a la SUNAT; las mermas, con un <b>informe técnico</b>. Una simple estimación de menor valor se deduce recién al vender o destruir el bien.'],
+                           NIC12],
+    'Seguro pagado por adelantado':[['Art. 57° LIR','Los gastos de tercera categoría se imputan al ejercicio en que se <b>devengan</b>: una póliza anual se reparte entre los meses que cubre.'], NIC12],
+    'Camión en leasing':[['D. Leg. N° 299 · Art. 18°','El arrendatario deprecia el bien en leasing y puede depreciarlo, como tope, en línea recta según los <b>años del contrato</b> (mínimo 2 años para bienes muebles).'], NIC12],
+    'Vacaciones de 2024 pagadas en 2025':[V37, ['NIC 12 · reversión','Cuando la diferencia se revierte (aquí: se deduce lo que antes se adicionó), el activo diferido creado antes se <b>cancela</b>: Debe 882, Haber 3712.']],
+    'Distribuidora RPB & Asociados':[
+      ['Art. 37° LIR · causalidad','La renta neta sale de restar a la renta bruta los gastos <b>necesarios</b> para producirla. Las adiciones y deducciones se hacen en la declaración jurada (Formulario Virtual 710), no en los libros contables.'],
+      ['Art. 44° LIR','Enumera los gastos que <b>no</b> son deducibles: gastos personales, multas, gastos sin comprobante válido, liberalidades, entre otros.'],
+      ['Art. 50° LIR','Las pérdidas tributarias de años anteriores se <b>compensan</b> contra la renta neta (sistema A o B). En este caso es un dato: el cálculo se verá más adelante.'],
+      ['Art. 55° LIR','El impuesto de las empresas del Régimen General es el <b>29.5%</b> de la renta neta imponible.'],
+      NIC12,
+      ['Asientos','IR corriente: Debe 881, Haber 40171. Activo diferido: Debe 3712, Haber 882. Pasivo diferido: Debe 882, Haber 4912.']]
+  };
+  function verLey(cs){
+    var d=document.createElement('div');
+    d.innerHTML='<div class="velo"><div class="ficha" role="dialog" aria-modal="true" aria-label="Base legal">'+
+      '<div class="cab2"><b>⚖️ Base legal · '+esc(cs.t)+'</b><button type="button" class="cierra">Cerrar ✕</button></div>'+
+      '<div class="cont">'+(LEYES[cs.t]||[]).map(function(n){
+        return '<div class="tarj ley"><b>'+esc(n[0])+'</b><br>'+n[1]+'</div>';
+      }).join('')+'</div></div></div>';
+    var v=d.firstChild; document.body.appendChild(v);
+    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    function tecla(e){ if(e.key==='Escape') cierra(); }
+    v.querySelector('.cierra').addEventListener('click', cierra);
+    v.addEventListener('click', function(e){ if(e.target===v) cierra(); });
+    document.addEventListener('keydown', tecla);
+  }
+
+  /* ===== estado guardado ===== */
+  var LS='sci_adided_v1';
+  var guardado={};
+  try{ guardado=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ guardado={}; }
+  function graba(){ try{ localStorage.setItem(LS, JSON.stringify(guardado)); }catch(e){} }
+  var bi=0, ciDe=[0,0,0,0];
+  if(guardado._bi!==undefined) bi=+guardado._bi||0;
+  if(guardado._ci) ciDe=guardado._ci.slice(0,4);
+  var celebrado={}, previos={};
+
+  function clave(b,c,r){ return BLOQUES[b].id+'|'+c+'|'+r; }
+  function esBien(f, val){
+    if(val===undefined || val===null || val==='') return false;
+    if(f.k==='sel') return val===f.v;
+    var v=lee(val); return v!==null && !isNaN(v) && Math.abs(v-f.v)<=f.tol;
+  }
+  function avance(b,c,resp){
+    var cs=BLOQUES[b].casos[c], tot=0, ok=0;
+    resp=resp||guardado;
+    cs.filas.forEach(function(f,r){
+      if(f.k==='cab') return;
+      tot++; if(esBien(f, resp[clave(b,c,r)])) ok++;
+    });
+    return {ok:ok, total:tot, pc: tot?Math.round(ok/tot*100):0, lleno: tot>0 && ok===tot};
+  }
+  function hechosBloque(b){
+    var n=0; BLOQUES[b].casos.forEach(function(x,c){ if(avance(b,c).lleno) n++; }); return n;
+  }
+
+  /* ===== dibujo ===== */
+  function filaHtml(f, r){
+    if(f.k==='cab') return '<tr class="cab"><td colspan="2">'+esc(f.t)+'</td></tr>';
+    var k=clave(bi, ciDe[bi], r), prev=guardado[k];
+    var h='<tr class="'+(f.tot?'sub':'')+'"><td class="concepto">'+esc(f.t)+
+          (f.p?'<span class="pista">'+esc(f.p)+'</span>':'')+'</td><td class="num">';
+    if(f.k==='sel'){
+      h+='<select class="cel" data-r="'+r+'" aria-label="'+esc(f.t)+'"><option value="">Elige…</option>'+
+         f.ops.map(function(o){ return '<option'+(prev===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+'</select>';
+    }else{
+      h+='<input class="cel" inputmode="decimal" autocomplete="off" data-r="'+r+'" value="'+
+         (prev===undefined?'':esc(prev))+'" aria-label="'+esc(f.t)+'">';
+    }
+    return h+'<span class="msg"></span></td></tr>';
+  }
+
+  function pintaCab(){
+    var B=BLOQUES[bi];
+    $('pest').innerHTML=BLOQUES.map(function(b,i){
+      var n=hechosBloque(i), t=b.casos.length;
+      return '<button type="button" data-b="'+i+'" class="'+(i===bi?'on ':'')+(n===t?'ok':'')+'">'+
+             esc(b.t)+'<span class="p">'+n+' de '+t+(t===1?' caso resuelto':' casos resueltos')+'</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#pest button'), function(b){
+      b.addEventListener('click', function(){ bi=+b.dataset.b; guardado._bi=bi; graba(); pinta(); });
+    });
+    $('cabBloque').innerHTML=globo(B.per, B.corto, B.intro);
+    $('casos').innerHTML = B.casos.length<2 ? '' : B.casos.map(function(c,i){
+      var a=avance(bi,i);
+      return '<button type="button" data-c="'+i+'" class="'+(i===ciDe[bi]?'on ':'')+(a.lleno?'lleno':'')+'">'+
+             (i+1)+'<span class="nm"> · '+esc(c.t)+'</span><span class="pc">'+(a.lleno?'✓':a.pc+'%')+'</span></button>';
+    }).join('');
+    Array.prototype.forEach.call(document.querySelectorAll('#casos button'), function(b){
+      b.addEventListener('click', function(){ ciDe[bi]=+b.dataset.c; guardado._ci=ciDe; graba(); pinta(); });
+    });
+  }
+
+  function izqHtml(b,c,conLey){
+    var B=BLOQUES[b], cs=B.casos[c];
+    var izq=globo(cs.per, (B.casos.length>1?'Caso '+(c+1)+' de '+B.casos.length+' · ':'')+cs.t, cs.h);
+    if(conLey) izq+='<div class="ayuda"><button type="button" class="o-btn" id="btnLey">⚖️ Base legal</button>'+
+                    '<span>¿Qué dice la norma? Haz clic para verla.</span></div>';
+    if(cs.datos){
+      izq+='<div class="bloque az"><h3>Datos del caso</h3><table><tbody>'+
+           cs.datos.map(function(d){ return '<tr><td>'+esc(d[0])+'</td><td class="num">'+fmt(d[1])+'</td></tr>'; }).join('')+
+           '</tbody></table></div>';
+    }
+    if(cs.tabla) izq+='<div class="bloque"><h3>Tabla del Reglamento</h3>'+cs.tabla+'</div>';
+    if(cs.izq) izq+=cs.izq;
+    return izq;
+  }
+
+  var casoSonando=null;
+  function pinta(){
+    var B=BLOQUES[bi], c=ciDe[bi], cs=B.casos[c];
+    if(casoSonando!==null && casoSonando!==bi+'|'+c && window.Aula) Aula.cambiaMusica();
+    casoSonando=bi+'|'+c;
+    var izq=izqHtml(bi,c,true);
+
+    var der='<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
+            '<button type="button" class="o-btn" id="btnLimpia">Borrar este caso</button></div>'+
+            '<div class="bloque vd tab-r"><h3>Resuelve</h3><table><thead><tr><th>Concepto</th><th class="num">Tu respuesta</th></tr></thead><tbody>'+
+            cs.filas.map(filaHtml).join('')+'</tbody></table></div>'+
+            '<div id="final" class="final"></div>';
+
+    $('panel').innerHTML='<div class="tablero"><div>'+izq+'</div><div>'+der+'</div></div>';
+
+    $('btnLey').addEventListener('click', function(){ verLey(cs); });
+    $('btnLimpia').addEventListener('click', function(){
+      cs.filas.forEach(function(f,r){ delete guardado[clave(bi,c,r)]; });
+      delete celebrado[bi+'|'+c]; yaSono={}; graba(); pinta(); empuja();
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#panel .cel'), function(el){
+      var ev = el.tagName==='SELECT' ? 'change' : 'input';
+      el.addEventListener(ev, function(){
+        guardado[clave(bi,c,+el.dataset.r)]=el.value; graba();
+        revisa(el, el.tagName==='SELECT'); resumen(); empuja();
+      });
+      if(el.tagName==='INPUT') el.addEventListener('blur', function(){ revisa(el, true); });
+      revisa(el, false);
+    });
+    pintaCab();
+    resumen(true);
+  }
+
+  function revisa(el, alSalir){
+    var f=BLOQUES[bi].casos[ciDe[bi]].filas[+el.dataset.r];
+    var msg=el.parentNode.querySelector('.msg');
+    var id=bi+'|'+ciDe[bi]+'|'+el.dataset.r;
+    el.classList.remove('ok','mal'); msg.textContent='';
+    if(el.value===''){ previos[id]=false; return; }
+    var ok=esBien(f, el.value);
+    if(ok){
+      el.classList.add('ok');
+      if(el.tagName==='INPUT' && alSalir) el.value=fmt(lee(el.value));
+      if(!previos[id] && alSalir!==undefined && document.activeElement===el) bien();
+    }else if(f.k==='sel'){
+      el.classList.add('mal'); msg.textContent='Revisa esta opción.';
+      if(alSalir) suenaMal(id, el.value);
+    }else{
+      var v=lee(el.value);
+      if(isNaN(v)){ if(alSalir){ el.classList.add('mal'); msg.textContent='Escribe solo números.'; } }
+      else if(alSalir){ el.classList.add('mal'); suenaMal(id, el.value); }
+    }
+    previos[id]=ok;
+  }
+
+  /* suena una vez por respuesta equivocada, no cada vez que se sale de la casilla */
+  var yaSono={};
+  function suenaMal(id, val){
+    if(yaSono[id]===val) return;
+    yaSono[id]=val; mal();
+  }
+
+  function resumen(primera){
+    var c=ciDe[bi], a=avance(bi,c), cs=BLOQUES[bi].casos[c];
+    $('progI').style.width=a.total?(a.ok/a.total*100)+'%':'0';
+    $('cuenta').textContent=a.ok+' de '+a.total+' correctas';
+    var fin=$('final');
+    if(a.lleno){
+      var sig='';
+      if(c<BLOQUES[bi].casos.length-1) sig='<button type="button" class="o-btn o-btn-primary" id="btnSig">Siguiente caso ›</button>';
+      else if(bi<BLOQUES.length-1) sig='<button type="button" class="o-btn o-btn-primary" id="btnSig">Ir al '+esc(BLOQUES[bi+1].t.split(' · ')[0])+' ›</button>';
+      fin.innerHTML=globo('bien','¡Bien resuelto!', cs.fin+'<br><span style="font-size:12px;color:#5A6B5F">Base legal: '+esc(cs.base)+'</span>', true)+
+                    (sig?'<div class="sigue">'+sig+'</div>':'');
+      var bs=$('btnSig');
+      if(bs) bs.addEventListener('click', function(){
+        if(c<BLOQUES[bi].casos.length-1){ ciDe[bi]=c+1; }
+        else { bi++; guardado._bi=bi; }
+        guardado._ci=ciDe; graba(); pinta(); window.scrollTo({top:$('zona').offsetTop-10, behavior:'smooth'});
+      });
+      var id=bi+'|'+c;
+      if(!celebrado[id]){ celebrado[id]=true; if(!primera){ listo(); confeti(); } }
+    }else{
+      fin.innerHTML='';
+    }
+    if(!primera) pintaCab();
+  }
+
+  /* ===== repaso ===== */
+  function repaso(){
+    var d=document.createElement('div');
+    d.innerHTML='<div class="velo" id="velo"><div class="ficha" role="dialog" aria-modal="true" aria-label="Repaso">'+
+      '<div class="cab2"><b>📖 Repaso · adiciones y deducciones</b><button type="button" id="cierraRep">Cerrar ✕</button></div>'+
+      '<div class="cont">'+
+      globo('pres','La idea', 'La utilidad contable sale de la contabilidad (NIIF y PCGE). La renta neta imponible sale de la Ley. '+
+        'El puente entre las dos son las <b>adiciones</b> y <b>deducciones</b>, que se hacen en la declaración jurada, <b>no</b> en el libro diario.')+
+      '<h4>Del resultado contable al impuesto</h4>'+
+      '<table><tbody>'+
+      '<tr><td>Utilidad (o pérdida) contable antes de impuestos</td><td class="num">A</td></tr>'+
+      '<tr><td>(+) Adiciones: gastos no aceptados o aceptados solo en parte</td><td class="num">casilla 103</td></tr>'+
+      '<tr><td>(−) Deducciones: lo que la Ley permite restar e ingresos no gravados</td><td class="num">casilla 105</td></tr>'+
+      '<tr class="sub"><td>(=) Renta neta del ejercicio</td><td class="num"></td></tr>'+
+      '<tr><td>(−) Pérdidas tributarias compensables (sistema A o B)</td><td class="num"></td></tr>'+
+      '<tr class="sub"><td>(=) Renta neta imponible × 29.5% (Régimen General)</td><td class="num"></td></tr>'+
+      '<tr><td>(−) Créditos: pagos a cuenta, ITAN, retenciones</td><td class="num"></td></tr>'+
+      '<tr class="tot"><td>(=) Impuesto por regularizar o saldo a favor</td><td class="num"></td></tr>'+
+      '</tbody></table>'+
+      '<p style="font-size:12px;color:#5A6B5F;margin:0">En el RMT: 10% hasta 15 UIT de renta neta imponible y 29.5% por el exceso.</p>'+
+      '<h4>Permanentes y temporales</h4><div class="dosc">'+
+      '<div class="tarj"><b>Permanente</b>: la diferencia no se revierte nunca. Multas, gastos personales, gastos sin comprobante, '+
+        'excesos de representación o de viáticos, dividendos recibidos. <b>No</b> genera impuesto diferido.</div>'+
+      '<div class="tarj"><b>Temporal</b>: se suma (o se resta) hoy y se revierte en otro año. Vacaciones no pagadas, provisiones '+
+        'sin requisitos, leasing, exceso de intereses. <b>Sí</b> genera impuesto diferido (NIC 12).</div></div>'+
+      '<h4>Los asientos del impuesto</h4><div class="dosc">'+
+      '<div class="tarj"><b>Adición temporal</b> → activo diferido<br>Debe 3712 IR diferido · Haber 882 IR diferido</div>'+
+      '<div class="tarj"><b>Deducción temporal</b> → pasivo diferido<br>Debe 882 IR diferido · Haber 4912 IR diferido</div>'+
+      '<div class="tarj"><b>Reversión</b> de una adición de años anteriores<br>Debe 882 · Haber 3712</div>'+
+      '<div class="tarj"><b>Impuesto corriente</b><br>Debe 881 IR corriente · Haber 40171 Renta de tercera categoría</div></div>'+
+      '<h4>Gastos con tope más frecuentes</h4>'+
+      '<table><thead><tr><th>Gasto</th><th>Límite</th><th>Base legal</th></tr></thead><tbody>'+
+      '<tr><td>Representación</td><td>0.5% de ingresos brutos, máx. 40 UIT</td><td>Art. 37° q)</td></tr>'+
+      '<tr><td>Recreativos del personal</td><td>0.5% de ingresos netos, máx. 40 UIT</td><td>Art. 37° ll)</td></tr>'+
+      '<tr><td>Viáticos en el país</td><td>doble del viático del Sector Público</td><td>Art. 37° r)</td></tr>'+
+      '<tr><td>Vehículos A2–A4 de dirección</td><td>según tabla de ingresos en UIT</td><td>Art. 37° w)</td></tr>'+
+      '<tr><td>Donaciones</td><td>10% de la renta neta</td><td>Art. 37° x)</td></tr>'+
+      '<tr><td>Retribución al directorio</td><td>6% de la utilidad comercial</td><td>Art. 37° m)</td></tr>'+
+      '<tr><td>Intereses netos</td><td>30% del EBITDA tributario</td><td>Art. 37° a)</td></tr>'+
+      '</tbody></table></div></div></div>';
+    var v=d.firstChild; document.body.appendChild(v);
+    function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    function tecla(e){ if(e.key==='Escape') cierra(); }
+    $('cierraRep').addEventListener('click', cierra);
+    v.addEventListener('click', function(e){ if(e.target===v) cierra(); });
+    document.addEventListener('keydown', tecla);
+  }
+  $('btnRepaso').addEventListener('click', repaso);
+
+  /* decoración fija */
+  $('imgIntro').outerHTML=imgP('full');
+  /* en la fila decorativa, el personaje que aún no está subido simplemente no aparece */
+  $('elenco').innerHTML=['pres','chico','expl','idea','bien'].map(function(n){
+    return '<img src="'+P[n][0]+'" alt="" loading="lazy" onerror="this.remove()">';
+  }).join('');
+
+  /* ===== sala en vivo ===== */
+  function resumenAula(){
+    var rej=[], hechos=0, total=0;
+    BLOQUES.forEach(function(B,b){
+      var n=hechosBloque(b); hechos+=n; total+=B.casos.length;
+      var pcs=0; B.casos.forEach(function(x,c){ pcs+=avance(b,c).pc; });
+      rej.push({b:b, n:n, t:B.casos.length, pc:Math.round(pcs/B.casos.length)});
+    });
+    var a=avance(bi,ciDe[bi]), resp={};
+    for(var k in guardado){ if(k.charAt(0)!=='_' && guardado[k]!=='') resp[k]=guardado[k]; }
+    return { bloque:BLOQUES[bi].corto, caso:BLOQUES[bi].casos[ciDe[bi]].t, ok:a.ok, total:a.total,
+             hechos:hechos, totalCasos:total, listo:hechos===total, rejilla:rej,
+             vista:{ b:bi, c:ciDe[bi] }, resp:resp };
+  }
+
+  /* ===== pantalla de un alumno (la ve el docente al hacer clic en su ventanita) =====
+     Es un espejo de lo que el alumno tiene abierto: el mismo caso y sus respuestas,
+     en verde si están bien y en rojo si no. Por defecto sigue al alumno cuando
+     cambia de caso; el docente puede mirar otro caso o mostrar la solución. */
+  var pv={ alumno:null, b:0, c:0, sigue:true, sol:false };
+  function celdaVista(f, val, sol){
+    var vacio = val===undefined || val==='';
+    var ok=!vacio && esBien(f, val);
+    var txt = vacio ? '—' : (f.k==='num' && !isNaN(lee(val)) ? fmt(lee(val)) : String(val));
+    var h='<span class="cel vista '+(vacio?'':(ok?'ok':'mal'))+'">'+esc(txt)+'</span>';
+    if(sol && !ok) h+='<span class="msg solu">✔ '+esc(f.k==='num'?fmt(f.v):f.v)+'</span>';
+    return h;
+  }
+  function pantalla(e, alumno, cont){
+    /* si el docente tiene abierta la lista de casos, no se la cerramos al actualizar */
+    var ae=document.activeElement;
+    if(ae && ae.id==='pvCaso' && cont.contains(ae) && pv.alumno===alumno) return;
+    var resp=e.resp||{}, vis=e.vista||{b:0,c:0};
+    if(pv.alumno!==alumno){ pv={ alumno:alumno, b:0, c:0, sigue:true, sol:false }; }
+    if(!BLOQUES[vis.b] || !BLOQUES[vis.b].casos[vis.c]) vis={b:0,c:0};
+    if(pv.sigue){ pv.b=vis.b; pv.c=vis.c; }
+    var B=BLOQUES[pv.b], cs=B.casos[pv.c], a=avance(pv.b,pv.c,resp);
+    var aqui = pv.b===vis.b && pv.c===vis.c;
+
+    var opc='';
+    BLOQUES.forEach(function(Bx,b){
+      opc+='<optgroup label="'+esc(Bx.t)+'">';
+      Bx.casos.forEach(function(x,c){
+        var ax=avance(b,c,resp);
+        opc+='<option value="'+b+'|'+c+'"'+(b===pv.b&&c===pv.c?' selected':'')+'>'+
+             (b===vis.b&&c===vis.c?'👁 ':'')+(Bx.casos.length>1?(c+1)+' · ':'')+esc(x.t)+' — '+(ax.lleno?'✓':ax.pc+'%')+'</option>';
+      });
+      opc+='</optgroup>';
+    });
+
+    var filas=cs.filas.map(function(f,r){
+      if(f.k==='cab') return '<tr class="cab"><td colspan="2">'+esc(f.t)+'</td></tr>';
+      return '<tr class="'+(f.tot?'sub':'')+'"><td class="concepto">'+esc(f.t)+
+             (f.p?'<span class="pista">'+esc(f.p)+'</span>':'')+'</td><td class="num">'+
+             celdaVista(f, resp[clave(pv.b,pv.c,r)], pv.sol)+'</td></tr>';
+    }).join('');
+
+    cont.innerHTML=
+      '<div class="ad pv">'+
+      '<div class="pv-barra">'+
+        '<select class="cel" id="pvCaso" aria-label="Caso que se muestra">'+opc+'</select>'+
+        '<button type="button" class="o-btn'+(pv.sigue?' o-btn-primary':'')+'" id="pvSigue">'+
+          (pv.sigue?'📡 Siguiendo su pantalla':'📡 Volver a su pantalla')+'</button>'+
+        '<label class="pv-sol"><input type="checkbox" id="pvSol"'+(pv.sol?' checked':'')+'> Mostrar la solución</label>'+
+      '</div>'+
+      '<p class="pv-donde">'+(aqui ? '<b>Ahora mismo</b> está en este caso.'
+        : 'Ahora mismo está en <b>'+esc(BLOQUES[vis.b].t)+' · '+esc(BLOQUES[vis.b].casos[vis.c].t)+'</b>.')+
+        ' Casos resueltos: <b>'+(e.hechos||0)+' de '+(e.totalCasos||0)+'</b>.</p>'+
+      '<div class="tablero"><div>'+izqHtml(pv.b,pv.c)+'</div><div>'+
+        '<div class="barra"><div class="prog"><i style="width:'+(a.total?a.ok/a.total*100:0)+'%"></i></div>'+
+        '<span class="cuenta">'+a.ok+' de '+a.total+' correctas</span></div>'+
+        '<div class="bloque vd tab-r"><h3>Sus respuestas</h3><table><thead><tr><th>Concepto</th><th class="num">Respuesta</th></tr></thead><tbody>'+
+        filas+'</tbody></table></div>'+
+        (a.lleno?globo('bien','Caso resuelto', cs.fin, true):'')+
+      '</div></div></div>';
+
+    cont.querySelector('#pvCaso').addEventListener('change', function(ev){
+      var p=ev.target.value.split('|'); pv.b=+p[0]; pv.c=+p[1];
+      pv.sigue = pv.b===vis.b && pv.c===vis.c;
+      pantalla(e, alumno, cont); cont.scrollTop=0;
+    });
+    cont.querySelector('#pvSigue').addEventListener('click', function(){
+      pv.sigue=true; pantalla(e, alumno, cont); cont.scrollTop=0;
+    });
+    cont.querySelector('#pvSol').addEventListener('change', function(ev){
+      pv.sol=ev.target.checked; pantalla(e, alumno, cont);
+    });
+  }
+  function ventanaAula(e){
+    var h='<div class="vmini">'+
+          '<div class="lin"><span>'+esc(e.bloque||'—')+'</span></div>'+
+          '<div class="lin"><span>'+esc(e.caso||'—')+'</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+          '<div class="lin"><span>Casos resueltos</span><b>'+(e.hechos||0)+' de '+(e.totalCasos||0)+'</b></div>'+
+          '<div class="rej">';
+    (e.rejilla||[]).forEach(function(r){
+      h+='<div class="cel2'+(r.n===r.t?' full':'')+'">B'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+    });
+    return h+'</div></div>';
+  }
+  function empuja(){ if(window.Aula && Aula.enSala) Aula.empuja(); }
+
+  if(window.Aula){
+    Aula.iniciar({ sala:'ADED', codigo:'SCI', resumen:resumenAula, ventana:ventanaAula, pantalla:pantalla, musica:true,
+      alModo:function(doc){
+        $('hojaMuro').hidden=!doc;
+        var dentro=Aula.enSala;
+        $('zona').hidden=!dentro;
+        $('puerta').querySelector('h2').textContent=dentro?'Estás dentro':'Antes de pasar, di tu nombre';
+        $('puerta').querySelector('p').hidden=dentro;
+        if(dentro) pinta();
+      } });
+  }else{
+    $('zona').hidden=false;
+  }
+
+  if(window.Reinicio) Reinicio.monta({
+    donde:'reinicio', claves:[LS], texto:'Reiniciar todo',
+    aviso:'Se borrarán tus respuestas de los cuatro bloques.',
+    hecho:function(){ guardado={}; celebrado={}; previos={}; yaSono={}; bi=0; ciDe=[0,0,0,0]; pinta(); }
+  });
+
+  /* lo que ya estaba resuelto al abrir no se vuelve a celebrar */
+  BLOQUES.forEach(function(B,b){ B.casos.forEach(function(x,c){ if(avance(b,c).lleno) celebrado[b+'|'+c]=true; }); });
+  pinta();
+})();
+</script>
+
+</body>
+</html>
