@@ -166,6 +166,26 @@
   .tarj b{ color:var(--certus); }
   .tarj.ley{ margin-bottom:10px; }
   .tarj.ley:last-child{ margin-bottom:0; }
+  /* bloques de ayuda dentro de la ventana de base legal */
+  .guia{ border:1px solid var(--o-border); border-left:4px solid var(--verde); border-radius:4px 10px 10px 4px;
+         background:#F6FBF8; padding:11px 13px; margin-top:12px; }
+  .guia > h4{ margin:0 0 7px; font-size:12px; font-weight:800; letter-spacing:.05em;
+              text-transform:uppercase; color:var(--verde); }
+  .guia table{ margin:8px 0; }
+  .guia table th, .guia table td{ padding:5px 9px; font-size:12.5px; }
+  .guia .paso{ margin:0 0 5px; padding-left:18px; position:relative; }
+  .guia .paso:last-child{ margin-bottom:0; }
+  .guia .paso::before{ content:'›'; position:absolute; left:4px; color:var(--verde); font-weight:800; }
+  .guia .res{ margin-top:8px; padding-top:8px; border-top:1px dashed #BFD9CB; font-weight:700;
+              color:#14532D; }
+  /* la base legal de cada línea, abrible */
+  button.pista{ font:inherit; text-align:left; background:none; border:0; padding:0;
+                display:block; font-size:11.5px; line-height:1.45; margin-top:2px;
+                color:var(--certus); font-weight:600; cursor:pointer;
+                text-decoration:underline; text-decoration-style:dotted;
+                text-underline-offset:2px; }
+  button.pista:hover{ color:var(--rojo); }
+  button.pista::after{ content:' ⓘ'; text-decoration:none; }
   .ayuda{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 14px; }
   .ayuda span{ font-size:12.5px; color:#5A6B5F; }
   .ayuda .o-btn{ border:1.5px solid var(--certus); color:var(--certus); background:#EEF2FB; font-weight:700; }
@@ -703,6 +723,34 @@
     };
   })();
 
+
+  /* ===== qué dice cada norma citada en las líneas, para abrirla al toque ===== */
+  var NORMA={
+'Art. 37° LIR':'<b>Principio de causalidad.</b> Solo se deducen los gastos <b>necesarios</b> para producir la renta y mantener su fuente, siempre que no estén expresamente prohibidos. Si el gasto no se relaciona con el negocio, se adiciona.',
+'Art. 37° LIR · RTF 09330-8-2015':'<b>Causalidad en el tiempo.</b> El gasto tiene que estar ligado a un bien que todavía genera renta para la empresa. Lo que se paga por un bien <b>ya vendido o dado de baja</b> no cumple la causalidad y se adiciona.',
+'Art. 37° inc. a1) LIR':'<b>Movilidad de los trabajadores.</b> Es deducible la movilidad que necesitan para cumplir sus funciones. Si se sustenta con <b>planilla de movilidad</b>, no puede pasar, por día y por trabajador, del <b>4% de la Remuneración Mínima Vital</b> mensual. El exceso se adiciona y es permanente.',
+'Art. 37° inc. d) LIR':'<b>Pérdidas extraordinarias.</b> Las pérdidas por caso fortuito, fuerza mayor o <b>delito</b> en perjuicio de la empresa se deducen en la parte no cubierta por el seguro, y solo cuando se ha <b>probado judicialmente</b> el hecho o se acredita que es inútil seguir la acción judicial. Mientras eso no ocurra, se adiciona; cuando ocurre, se deduce: por eso es temporal.',
+'Art. 37° inc. f) LIR':'<b>Depreciación, mermas y desmedros.</b> Son deducibles las depreciaciones por desgaste de los bienes del activo fijo y las mermas y desmedros de existencias <b>debidamente acreditados</b>.',
+'Arts. 37° inc. f) y 38° LIR':'<b>Depreciación de bienes dados de baja.</b> La depreciación compensa el desgaste de los bienes que la empresa <b>usa</b> para generar renta. Un activo que ya se vendió dejó de estar en el negocio: lo depreciado después de la venta se adiciona y es permanente.',
+'Art. 37° inc. i) LIR':'<b>Cobranza dudosa.</b> Son deducibles los castigos por deudas incobrables y las <b>provisiones equitativas</b> por deudas de cobranza dudosa, siempre que se identifiquen las cuentas a las que corresponden y se cumplan los requisitos del Art. 21° inc. f) del Reglamento.',
+'Art. 37° inc. ll) LIR':'<b>Gastos recreativos y de capacitación.</b> Los gastos de salud, culturales y educativos del personal son deducibles. Los <b>recreativos</b> tienen tope: <b>0.5% de los ingresos netos</b> del ejercicio, con un máximo de <b>40 UIT</b>. El exceso se adiciona y es permanente.',
+'Art. 37° inc. m) LIR':'<b>Dietas del directorio.</b> Las retribuciones a los directores se deducen hasta el <b>6% de la utilidad comercial</b> del ejercicio antes del impuesto a la renta. El exceso es adición permanente.',
+'Art. 37° inc. r) LIR':'<b>Viáticos de viaje.</b> Son deducibles los gastos de transporte y los viáticos (alojamiento, alimentación y movilidad) indispensables para el negocio. En el país, el tope diario es el <b>doble</b> de lo que el Sector Público otorga a sus funcionarios.',
+'Art. 37° inc. v) LIR':'<b>Rentas de 2ª, 4ª y 5ª categoría.</b> Sueldos, vacaciones, gratificaciones y honorarios se deducen en el ejercicio en que se devengan <b>solo si se pagan</b> hasta el vencimiento de la declaración jurada anual. Si se pagan después, se deducen recién en el ejercicio del pago: por eso la diferencia es temporal.',
+'Art. 37° inc. w) LIR':'<b>Vehículos de dirección.</b> Los gastos de vehículos de categoría <b>A2, A3 y A4</b> (y B1.3 y B1.4) asignados a dirección, representación y administración se deducen solo por el número de vehículos que permite la tabla del Art. 21° inc. r) del Reglamento.',
+'Art. 37° inc. z) LIR':'<b>Trabajadores con discapacidad.</b> Las remuneraciones pagadas a personas con discapacidad dan derecho a una <b>deducción adicional</b>, además del gasto ya registrado. El porcentaje lo fija el Art. 21° inc. x) del Reglamento: 50% u 80%, según cuánto pesen en la planilla.',
+'Arts. 37° inc. u) y 44° inc. k) LIR':'<b>Premios.</b> Los premios en dinero o en especie son deducibles si se ofrecen con <b>carácter general</b>, el sorteo consta en <b>acta notarial</b> y se cumplen las normas vigentes. En cambio, el <b>IGV que grava el retiro</b> de los bienes entregados nunca es deducible.',
+'Art. 44° inc. a) LIR':'<b>Gastos personales.</b> No son deducibles los gastos personales ni de sustento del contribuyente, de los socios ni de sus familiares. Adición permanente.',
+'Art. 44° inc. c) LIR':'<b>Multas e intereses moratorios.</b> No son deducibles las multas, los recargos, los intereses moratorios del Código Tributario ni, en general, las sanciones del Sector Público Nacional. Adición permanente.',
+'Art. 44° inc. d) LIR':'<b>Donaciones y liberalidades.</b> No son deducibles las donaciones ni cualquier otro acto de liberalidad en dinero o en especie, salvo las donaciones del Art. 37° inc. x) a entidades calificadas. Lo que la empresa regala sin obligación ni causalidad se adiciona.',
+'Art. 44° inc. j) LIR':'<b>Comprobantes que no cumplen.</b> No son deducibles los gastos cuya documentación <b>no reúne los requisitos</b> del Reglamento de Comprobantes de Pago, ni los emitidos por contribuyentes con baja de RUC o con la condición de no habido al momento de la emisión.',
+'Art. 47° LIR':'<b>Impuesto de un tercero.</b> La empresa no puede deducir el impuesto a la renta que <b>asume por cuenta de otro</b> (por ejemplo, el del arrendador). Es un gasto suyo, pero tributariamente no se acepta: adición permanente.',
+'Art. 57° LIR':'<b>Devengo.</b> Los gastos de tercera categoría se imputan al ejercicio en que se <b>devengan</b>, es decir, cuando se produce el hecho que los origina, aunque se paguen antes o después. Una póliza anual pagada por adelantado se reparte entre los meses que cubre.',
+'Art. 24°-B LIR':'<b>Dividendos entre empresas.</b> Las personas jurídicas domiciliadas <b>no computan</b> en su renta imponible los dividendos que reciben de otras personas jurídicas domiciliadas: ya pagaron impuesto en la empresa que los repartió. Se deducen y la diferencia es permanente.',
+'Ley N° 28194, Arts. 3° y 8°':'<b>Bancarización.</b> Las obligaciones de <b>S/ 2,000 o US$ 500</b> a más deben pagarse con medios de pago: depósito en cuenta, transferencia, giro, tarjeta o cheque no negociable. Lo pagado sin medio de pago <b>no da derecho</b> a deducir gasto, costo ni crédito fiscal, aunque haya comprobante.',
+'D. Leg. N° 299, Art. 18°':'<b>Leasing.</b> En el arrendamiento financiero, el arrendatario registra el bien como activo y lo deprecia. Como tope puede depreciarlo en <b>línea recta según los años del contrato</b>, con un mínimo de 2 años para bienes muebles. Esa depreciación acelerada es mayor que la contable: la diferencia se deduce ahora y se revierte después.'
+  };
+
   /* ===== ayudita: qué dice cada norma, por título de caso ===== */
   var NIC12=['NIC 12 Impuesto a las ganancias','Si la diferencia se suma hoy y se restará después (diferencia temporaria deducible), nace un <b>activo</b> por impuesto diferido; si se resta hoy y se sumará después (imponible), nace un <b>pasivo</b>. Se mide como diferencia × tasa (29.5%).'];
   var V37=['Art. 37° inc. v) LIR','Los gastos que para quien los cobra son rentas de segunda, cuarta o quinta categoría (sueldos, vacaciones, honorarios) se deducen en el ejercicio en que se devengan solo si se <b>pagan</b> hasta el vencimiento de la declaración jurada anual. Si se pagan después, se deducen en el ejercicio en que efectivamente se paguen.'];
@@ -750,13 +798,157 @@
       NIC12,
       ['Asientos','IR corriente: Debe 881, Haber 40171. Activo diferido: Debe 3712, Haber 882. Pasivo diferido: Debe 882, Haber 4912.']]
   };
+
+  /* ===== ayuda extra para los casos con cálculo difícil: la tabla, los pasos y otro ejemplo ===== */
+  function guia(tit, cuerpo){ return '<div class="guia"><h4>'+tit+'</h4>'+cuerpo+'</div>'; }
+  function pasos(lista){ return lista.map(function(x){ return '<p class="paso">'+x+'</p>'; }).join(''); }
+  var TABLA_VEH='<table><thead><tr><th>Ingresos netos del año anterior, en UIT</th>'+
+      '<th class="num">Vehículos con derecho</th></tr></thead><tbody>'+
+      '<tr><td>Hasta 3,200 UIT</td><td class="num">1</td></tr>'+
+      '<tr><td>Más de 3,200 y hasta 16,100 UIT</td><td class="num">2</td></tr>'+
+      '<tr><td>Más de 16,100 y hasta 24,200 UIT</td><td class="num">3</td></tr>'+
+      '<tr><td>Más de 24,200 y hasta 32,300 UIT</td><td class="num">4</td></tr>'+
+      '<tr><td>Más de 32,300 UIT</td><td class="num">5</td></tr></tbody></table>';
+
+  var AYUDAS={
+    'Camionetas de la gerencia':
+      guia('La tabla del Art. 21° inc. r), numeral 4', TABLA_VEH+
+        '<p style="margin:6px 0 0">Se entra a la tabla con los <b>ingresos netos del ejercicio anterior</b>, '+
+        'divididos entre la <b>UIT de ese mismo año anterior</b>.</p>')+
+      guia('Cómo se resuelve, paso a paso', pasos([
+        'Pasa los ingresos a UIT: <b>ingresos ÷ UIT del año anterior</b>.',
+        'Busca ese resultado en la tabla y anota <b>cuántos vehículos</b> tienen derecho.',
+        'Si la empresa tiene <b>más</b> vehículos que los de la tabla, el gasto se acepta en proporción: '+
+        '<b>gasto × (vehículos con derecho ÷ vehículos que tiene)</b>.',
+        'La <b>adición</b> es lo que sobra: gasto contabilizado − gasto aceptado. Es <b>permanente</b>.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Ingresos netos del año anterior: <b>S/ 95,000,000</b>. UIT de ese año: <b>5,150</b>.',
+        '95,000,000 ÷ 5,150 = <b>18,446.6 UIT</b>. En la tabla cae entre 16,100 y 24,200: <b>3 vehículos</b>.',
+        'La empresa tiene <b>6</b> camionetas A2–A4 de gerencia y gastó <b>S/ 72,000</b>.',
+        'Aceptado = 72,000 × (3 ÷ 6) = <b>S/ 36,000</b>.'])+
+        '<p class="res">Adición = 72,000 − 36,000 = <b>S/ 36,000</b>, permanente.</p>'),
+
+    'Gastos de representación':
+      guia('Los dos topes, y cuál manda', pasos([
+        'Tope 1: <b>0.5% de los ingresos brutos</b> del ejercicio, ya netos de devoluciones, descuentos y bonificaciones.',
+        'Tope 2: <b>40 UIT</b>.',
+        'Se acepta el <b>menor</b> de los dos. Casi siempre manda el 0.5%, salvo en empresas muy grandes.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Ingresos brutos: <b>S/ 8,400,000</b>. UIT: <b>5,350</b>. Gasto de representación contabilizado: <b>S/ 55,000</b>.',
+        'Tope 1 = 8,400,000 × 0.5% = <b>S/ 42,000</b>.',
+        'Tope 2 = 40 × 5,350 = <b>S/ 214,000</b>.',
+        'Manda el menor: <b>S/ 42,000</b>.'])+
+        '<p class="res">Adición = 55,000 − 42,000 = <b>S/ 13,000</b>, permanente.</p>'),
+
+    'Gastos recreativos':
+      guia('El tope', pasos([
+        'Tope 1: <b>0.5% de los ingresos netos</b> del ejercicio.',
+        'Tope 2: <b>40 UIT</b>.',
+        'Se acepta el <b>menor</b>. Ojo con la diferencia respecto a representación: aquí la base son los '+
+        'ingresos <b>netos</b>, no los brutos.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Ingresos netos: <b>S/ 3,600,000</b>. UIT: <b>5,350</b>. Agasajos del personal: <b>S/ 24,500</b>.',
+        'Tope 1 = 3,600,000 × 0.5% = <b>S/ 18,000</b>.',
+        'Tope 2 = 40 × 5,350 = <b>S/ 214,000</b>. Manda <b>18,000</b>.'])+
+        '<p class="res">Adición = 24,500 − 18,000 = <b>S/ 6,500</b>, permanente.</p>'),
+
+    'Viáticos en provincia':
+      guia('El tope diario', pasos([
+        'El Sector Público otorga <b>S/ 320</b> diarios a sus funcionarios de mayor jerarquía (D.S. 007-2013-EF).',
+        'Las empresas pueden deducir hasta el <b>doble</b>: <b>S/ 640</b> por día y por persona.',
+        'El tope se calcula por <b>días-persona</b>: días de viaje × número de personas que viajan.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Viajan <b>3</b> trabajadores durante <b>4</b> días. Viáticos contabilizados: <b>S/ 9,900</b>.',
+        'Días-persona = 3 × 4 = <b>12</b>.',
+        'Tope = 12 × 640 = <b>S/ 7,680</b>.'])+
+        '<p class="res">Adición = 9,900 − 7,680 = <b>S/ 2,220</b>, permanente.</p>'),
+
+    'Dietas del directorio':
+      guia('Cuál es la base', pasos([
+        'El tope es el <b>6% de la utilidad comercial</b>: la utilidad del ejercicio <b>antes</b> del impuesto '+
+        'a la renta, tal como figura en el estado de resultados.',
+        'Si la empresa tuvo <b>pérdida</b>, no hay base de cálculo: la dieta completa se adiciona.',
+        'El exceso es <b>permanente</b>, no se recupera en años siguientes.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Utilidad comercial antes del IR: <b>S/ 1,250,000</b>. Dietas contabilizadas: <b>S/ 98,000</b>.',
+        'Tope = 1,250,000 × 6% = <b>S/ 75,000</b>.'])+
+        '<p class="res">Adición = 98,000 − 75,000 = <b>S/ 23,000</b>, permanente.</p>'),
+
+    'Intereses y el EBITDA':
+      guia('Qué se compara', pasos([
+        'Se toma el <b>interés neto</b>: los intereses gastados menos los intereses ganados del ejercicio.',
+        'El tope es el <b>30% del EBITDA tributario del ejercicio anterior</b>, no del ejercicio que se declara.',
+        'El exceso se adiciona ahora, pero puede deducirse en los <b>cuatro ejercicios siguientes</b> si '+
+        'queda margen: por eso la diferencia es <b>temporal</b>.']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'EBITDA tributario del año anterior: <b>S/ 2,400,000</b>. Interés neto del ejercicio: <b>S/ 900,000</b>.',
+        'Tope = 2,400,000 × 30% = <b>S/ 720,000</b>.'])+
+        '<p class="res">Adición = 900,000 − 720,000 = <b>S/ 180,000</b>, temporal.</p>'),
+
+    'Donación':
+      guia('El orden de las operaciones', pasos([
+        'El tope es el <b>10% de la renta neta</b> de tercera categoría, <b>después</b> de compensar las '+
+        'pérdidas de años anteriores.',
+        'Primero se arma la renta neta <b>sin</b> considerar la donación; recién sobre esa cifra se aplica el 10%.',
+        'La entidad que recibe debe estar <b>calificada por la SUNAT</b> como perceptora de donaciones; si no lo está, '+
+        'nada es deducible (Art. 44° inc. d).']))+
+      guia('Otro ejemplo resuelto', pasos([
+        'Renta neta luego de compensar pérdidas: <b>S/ 900,000</b>. Donación contabilizada: <b>S/ 120,000</b>.',
+        'Tope = 900,000 × 10% = <b>S/ 90,000</b>.'])+
+        '<p class="res">Adición = 120,000 − 90,000 = <b>S/ 30,000</b>, permanente.</p>'),
+
+    'Trabajadores con discapacidad':
+      guia('La tabla del Art. 21° inc. x)',
+        '<table><thead><tr><th>Peso en la planilla</th><th class="num">Deducción adicional</th></tr></thead><tbody>'+
+        '<tr><td>Hasta el 30% del total de trabajadores</td><td class="num">50%</td></tr>'+
+        '<tr><td>Más del 30% del total de trabajadores</td><td class="num">80%</td></tr>'+
+        '</tbody></table>'+
+        '<p style="margin:6px 0 0">El porcentaje se aplica sobre las <b>remuneraciones pagadas</b> a esos '+
+        'trabajadores, y es <b>además</b> del gasto que ya está registrado en la 6211.</p>')+
+      guia('Otro ejemplo resuelto', pasos([
+        'La empresa tiene <b>40</b> trabajadores; <b>6</b> tienen discapacidad: 6 ÷ 40 = <b>15%</b>, no pasa del 30%.',
+        'Le toca el <b>50%</b> de deducción adicional.',
+        'Remuneraciones pagadas a esos 6 trabajadores: <b>S/ 180,000</b>.'])+
+        '<p class="res">Deducción adicional = 180,000 × 50% = <b>S/ 90,000</b>, permanente.</p>'),
+
+    'Cobranza dudosa apurada':
+      guia('Los tres requisitos, todos a la vez', pasos([
+        'Que exista la <b>deuda</b> y esté identificada.',
+        'Que haya <b>riesgo de incobrabilidad</b> demostrable: dificultades del deudor, gestiones de cobro '+
+        'después del vencimiento, protesto, o <b>más de 12 meses</b> de vencida sin pagarse.',
+        'Que la provisión figure al cierre, <b>discriminada</b>, en el Libro de Inventarios y Balances.',
+        'Si falta cualquiera de los tres, se adiciona; el año en que se cumplan, se deduce. Por eso es <b>temporal</b>.'])),
+
+    'Desvalorización de existencias':
+      guia('Merma y desmedro no se acreditan igual', pasos([
+        '<b>Merma:</b> pérdida de cantidad o de volumen. Se acredita con un <b>informe técnico</b> de un '+
+        'profesional independiente y competente, con la metodología y las pruebas.',
+        '<b>Desmedro:</b> pérdida de calidad; el bien está entero pero ya no sirve. Se acredita con la '+
+        '<b>destrucción</b> ante notario público o juez de paz, comunicada a la SUNAT con anticipación.',
+        'Una simple estimación contable de menor valor no basta: se adiciona hoy y se deduce el año en que '+
+        'se vende o se destruye el bien. Es <b>temporal</b>.']))
+  };
+
+  function verNorma(ref){
+    var d=document.createElement('div');
+    d.innerHTML='<div class="velo"><div class="ficha" role="dialog" aria-modal="true" aria-label="Base legal">'+
+      '<div class="cab2"><b>⚖️ '+esc(ref)+'</b><button type="button" class="cierra">Cerrar ✕</button></div>'+
+      '<div class="cont"><div class="tarj ley">'+(NORMA[ref]||'')+'</div></div></div></div>';
+    var v=d.firstChild; document.body.appendChild(v);
+    function fuera(){ v.remove(); document.removeEventListener('keydown', tecla); }
+    function tecla(e){ if(e.key==='Escape') fuera(); }
+    v.querySelector('.cierra').addEventListener('click', fuera);
+    v.addEventListener('click', function(e){ if(e.target===v) fuera(); });
+    document.addEventListener('keydown', tecla);
+  }
+
   function verLey(cs){
     var d=document.createElement('div');
     d.innerHTML='<div class="velo"><div class="ficha" role="dialog" aria-modal="true" aria-label="Base legal">'+
       '<div class="cab2"><b>⚖️ Base legal · '+esc(cs.t)+'</b><button type="button" class="cierra">Cerrar ✕</button></div>'+
       '<div class="cont">'+(LEYES[cs.t]||[]).map(function(n){
         return '<div class="tarj ley"><b>'+esc(n[0])+'</b><br>'+n[1]+'</div>';
-      }).join('')+'</div></div></div>';
+      }).join('')+(AYUDAS[cs.t]||'')+'</div></div></div>';
     var v=d.firstChild; document.body.appendChild(v);
     function cierra(){ v.remove(); document.removeEventListener('keydown', tecla); }
     function tecla(e){ if(e.key==='Escape') cierra(); }
@@ -799,7 +991,10 @@
     if(f.k==='cab') return '<tr class="cab"><td colspan="2">'+esc(f.t)+'</td></tr>';
     var k=clave(bi, ciDe[bi], r), prev=guardado[k];
     var h='<tr class="'+(f.tot?'sub':'')+'"><td class="concepto">'+esc(f.t)+
-          (f.p?'<span class="pista">'+esc(f.p)+'</span>':'')+'</td><td class="num">';
+          (f.p ? (NORMA[f.p]
+                  ? '<button type="button" class="pista" data-ley="'+esc(f.p)+'">'+esc(f.p)+'</button>'
+                  : '<span class="pista">'+esc(f.p)+'</span>')
+               : '')+'</td><td class="num">';
     if(f.k==='sel'){
       h+='<select class="cel" data-r="'+r+'" aria-label="'+esc(f.t)+'"><option value="">Elige…</option>'+
          f.ops.map(function(o){ return '<option'+(prev===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+'</select>';
@@ -862,6 +1057,9 @@
     $('panel').innerHTML='<div class="tablero"><div>'+izq+'</div><div>'+der+'</div></div>';
 
     $('btnLey').addEventListener('click', function(){ verLey(cs); });
+    Array.prototype.forEach.call(document.querySelectorAll('#panel button.pista[data-ley]'), function(b){
+      b.addEventListener('click', function(){ verNorma(b.dataset.ley); });
+    });
     $('btnLimpia').addEventListener('click', function(){
       cs.filas.forEach(function(f,r){ delete guardado[clave(bi,c,r)]; });
       delete celebrado[bi+'|'+c]; yaSono={}; graba(); pinta(); empuja();
