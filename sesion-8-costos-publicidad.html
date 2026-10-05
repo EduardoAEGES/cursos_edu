@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semana 8 · Teoría de costos en campañas publicitarias</title>
+<title>Semana 8 · Los costos de una campaña publicitaria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -25,19 +25,18 @@
   .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
                  color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
   .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
-  .marca .tx p b{ color:var(--rojo); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
   .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
   @media (max-width:560px){ .marca .logo{ height:42px; } }
 
-  .puerta{ border:1px solid var(--linea); border-left:5px solid var(--rojo);
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
            border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
   .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
   .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
 
   /* ---------- escenario de diapositivas ---------- */
   .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
-        background:var(--papel); display:flex; flex-direction:column;
-        box-shadow:0 1px 3px rgba(43,43,46,.07); }
+        background:var(--papel); display:flex; flex-direction:column; }
   .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
 
   .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
@@ -82,7 +81,7 @@
   .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
   .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
   .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
-                 border:1.5px solid var(--linea); border-left:4px solid var(--rojo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
                  border-radius:4px 12px 12px 4px; padding:13px 17px;
                  font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
   .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
@@ -95,12 +94,15 @@
   /* ---------- bloques de teoría ---------- */
   .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
   @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
-  .fc{ border:1.5px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
   .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
             background:var(--gris); letter-spacing:.03em; }
   .fc.rj > h4{ background:var(--rojo); }
   .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
   .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:15px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
 
   .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
          font-size:clamp(17px,2.6vw,22px); font-weight:700; text-align:center;
@@ -109,7 +111,7 @@
                letter-spacing:0; }
   .form .v{ color:#FF8A82; }
 
-  .av{ border:1.5px solid var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
        border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
        margin:16px 0; }
   .av b{ color:var(--rojo); }
@@ -124,7 +126,7 @@
   .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
 
   /* ---------- actividades ---------- */
-  .tarea{ border:2px solid var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
   .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
                letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
   .tarea .c{ padding:15px; }
@@ -134,17 +136,16 @@
   .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
           border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
   .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
-          border:1.8px solid var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
-          touch-action:none; user-select:none; line-height:1.35; max-width:100%;
-          box-shadow:0 1px 2px rgba(43,43,46,.1); }
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
   .ficha:hover{ border-color:var(--rojo); }
   .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(227,30,36,.18); }
   .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
   .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
-                   box-shadow:0 10px 24px rgba(0,0,0,.26); }
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
   .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
   @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
-  .caja{ border:2px solid var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
   .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
               color:#fff; letter-spacing:.03em; }
   .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
@@ -153,7 +154,7 @@
 
   /* parear */
   .pares{ display:grid; gap:10px; margin-top:14px; }
-  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:1.5px solid var(--linea);
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
         border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
   @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
   .par .q{ font-size:15.5px; line-height:1.55; }
@@ -167,9 +168,11 @@
   /* quiz */
   .ops{ display:grid; gap:10px; margin-top:12px; }
   .ops button{ font:inherit; font-size:16px; font-weight:600; text-align:left; cursor:pointer;
-               border:2px solid var(--linea); background:#fff; color:var(--tinta);
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
                border-radius:10px; padding:14px 16px; line-height:1.5; }
   .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
   .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
                     text-decoration:line-through; }
   .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
@@ -181,7 +184,7 @@
        border-left:3px solid var(--verde); padding-left:12px; }
 
   /* calcular y completar */
-  input.cel, select.cel{ font:inherit; font-size:16px; border:2px solid var(--linea);
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px dashed var(--linea);
           border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
           max-width:100%; }
   input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
@@ -191,7 +194,7 @@
   .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
   .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
   .lineas{ display:grid; gap:13px; }
-  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:1.5px solid var(--linea);
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
           border-radius:10px; padding:12px 14px; background:#fff; }
   @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
   .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
@@ -246,8 +249,8 @@
   <div class="marca">
     <img class="logo" src="marca/logo-tj.png" alt="Thomas Jefferson · Instituto de Diseño y Comunicación">
     <span class="tx">
-      <h1>Teoría de costos aplicada a campañas publicitarias</h1>
-      <p><b>Semana 8</b> · Matemáticas Aplicadas · Escuela de Marketing</p>
+      <h1>Los costos de una campaña publicitaria</h1>
+      <p><span class="sem">Semana 8</span> · Matemáticas Aplicadas · Marketing · Ciclo I</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
@@ -373,286 +376,280 @@ $('btnSon').addEventListener('click', function(){
 pintaSon();
 
 /* ================= el caso que recorre toda la sesión ================= */
-var CF=6000, CPM=12;
-var NIV=[100000,250000,500000,1000000];
+var CF=6000, CPM=10;
+var NIV=[100000,200000,500000,1000000];
 function cv(q){ return q/1000*CPM; }
 function ct(q){ return CF+cv(q); }
 function cme(q){ return ct(q)/(q/1000); }
 
-var C={ inv:9000, imp:250000, clics:3600, ventas:180, precio:95, costoU:55 };
-C.margen = C.precio - C.costoU;                 /* 40 */
-C.cpm    = C.inv/C.imp*1000;                    /* 36.00 */
-C.cpc    = C.inv/C.clics;                       /* 2.50 */
+var C={ inv:8000, imp:200000, clics:4000, ventas:160, precio:60, costoU:35 };
+C.gana   = C.precio - C.costoU;                 /* 25 */
+C.cpm    = C.inv/C.imp*1000;                    /* 40.00 */
+C.cpc    = C.inv/C.clics;                       /* 2.00 */
 C.cpa    = C.inv/C.ventas;                      /* 50.00 */
-C.ctr    = C.clics/C.imp*100;                   /* 1.44 */
-C.conv   = C.ventas/C.clics*100;                /* 5.00 */
-C.ingreso= C.ventas*C.precio;                   /* 17,100 */
-C.roas   = C.ingreso/C.inv;                     /* 1.90 */
-C.mcTotal= C.ventas*C.margen;                   /* 7,200 */
-C.result = C.mcTotal-C.inv;                     /* −1,800 */
-C.pe     = C.inv/C.margen;                      /* 225 */
+C.ctr    = C.clics/C.imp*100;                   /* 2.00 */
+C.conv   = C.ventas/C.clics*100;                /* 4.00 */
+C.ingreso= C.ventas*C.precio;                   /* 9,600 */
+C.roas   = C.ingreso/C.inv;                     /* 1.20 */
+C.ganTot = C.ventas*C.gana;                     /* 4,000 */
+C.result = C.ganTot-C.inv;                      /* −4,000 */
+C.pe     = C.inv/C.gana;                        /* 320 */
 
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:'Portada', t:'Teoría de costos en campañas publicitarias',
-  h:'<p class="enc">¿Cuánto cuesta de verdad una campaña?</p>'+
-    '<p class="sub">Semana 8 · Matemáticas Aplicadas · Escuela de Marketing</p>'+
-    globo(P.punt,'La pregunta de la sesión',
-      'Una campaña no se evalúa por lo que se gastó, sino por <b>cuánto costó cada contacto, cada clic '+
-      'y cada venta</b>, y por el punto a partir del cual la inversión se recupera. Esta sesión '+
-      'desarrolla esa aritmética.')+
+{ et:'Portada', t:'Los costos de una campaña publicitaria',
+  h:'<p class="enc">¿Cuánto cuesta una campaña?</p>'+
+    '<p class="sub">Semana 8 · Matemáticas Aplicadas · Marketing · Ciclo I</p>'+
+    globo(P.punt,'De qué va la sesión',
+      'Una campaña no se mide solo por lo que se gastó. Lo que de verdad importa es cuánto costó llegar '+
+      'a cada persona, cuánto costó cada clic y cuánto costó cada venta. Hoy vamos a sacar esos números '+
+      'con divisiones sencillas.')+
     '<div class="dos">'+
-    '<div class="fc"><h4>Lo que vamos a construir</h4><div class="c"><ul>'+
-      '<li>Costo fijo y costo variable de una campaña.</li>'+
-      '<li>Costo total, costo medio y costo marginal.</li>'+
-      '<li>Las métricas del medio: CPM, CPC, CPA y CTR.</li>'+
-      '<li>ROAS y punto de equilibrio de la campaña.</li>'+
+    '<div class="fc"><h4>Lo que vas a aprender</h4><div class="c"><ul>'+
+      '<li>Qué costos no cambian y qué costos sí cambian.</li>'+
+      '<li>Cuánto cuesta la campaña completa.</li>'+
+      '<li>Cuánto cuesta llegar a mil personas.</li>'+
+      '<li>Cuánto cuesta un clic y cuánto cuesta una venta.</li>'+
+      '<li>Si la campaña recuperó lo que costó.</li>'+
       '</ul></div></div>'+
     '<div class="fc rj"><h4>Cómo se trabaja</h4><div class="c"><ul>'+
-      '<li>Teoría breve, y enseguida una actividad.</li>'+
-      '<li>Las respuestas se corrigen solas.</li>'+
-      '<li>El error suena: vuelve a intentarlo.</li>'+
-      '<li>Tu avance queda guardado en este dispositivo.</li>'+
+      '<li>Un poco de teoría y enseguida una actividad.</li>'+
+      '<li>Todo se corrige solo.</li>'+
+      '<li>Si te equivocas suena un aviso y puedes volver a intentarlo.</li>'+
+      '<li>Tu avance queda guardado.</li>'+
       '</ul></div></div>'+
     '</div>' },
 
-{ et:'Teoría 1', t:'Costo fijo y costo variable',
-  h:'<p class="enc">Los dos costos de una campaña</p>'+
-    '<p class="sub">La diferencia no está en el monto, sino en si el monto cambia cuando la campaña crece</p>'+
+{ et:'Teoría 1', t:'Los dos tipos de costo',
+  h:'<p class="enc">Hay costos que no cambian y costos que sí cambian</p>'+
+    '<p class="sub">Esa es toda la diferencia</p>'+
     '<div class="dos">'+
-    '<div class="fc"><h4>Costo fijo (CF)</h4><div class="c">'+
-      '<p>No se mueve aunque la campaña llegue a mil personas o a un millón. Se paga una vez, o se paga '+
-      'por período.</p><ul>'+
-      '<li>Producción del spot.</li><li>Diseño de las piezas gráficas.</li>'+
-      '<li>Fee mensual de la agencia.</li><li>Contrato cerrado con un influencer.</li>'+
+    '<div class="fc"><h4>Costo fijo</h4><div class="c">'+
+      '<p>Se paga igual, llegue la campaña a mil personas o a un millón.</p><ul>'+
+      '<li>Grabar el video.</li><li>Diseñar los afiches.</li>'+
+      '<li>Lo que cobra la agencia al mes.</li><li>El contrato con un influencer.</li>'+
       '</ul></div></div>'+
-    '<div class="fc rj"><h4>Costo variable (CV)</h4><div class="c">'+
-      '<p>Crece en proporción al volumen: a más impresiones, más clics o más ventas, más se paga.</p><ul>'+
-      '<li>Pago por cada mil impresiones.</li><li>Pago por cada clic.</li>'+
-      '<li>Volantes impresos, por unidad.</li><li>Comisión por cada venta cerrada.</li>'+
+    '<div class="fc rj"><h4>Costo variable</h4><div class="c">'+
+      '<p>Sube cuando la campaña crece. A más gente, más se paga.</p><ul>'+
+      '<li>Pagar por cada mil personas que ven el anuncio.</li>'+
+      '<li>Pagar por cada clic.</li><li>Cada volante que se imprime.</li>'+
+      '<li>La comisión por cada venta.</li>'+
       '</ul></div></div>'+
     '</div>'+
-    '<div class="av"><b>La prueba para distinguirlos:</b> pregúntese si el monto cambiaría al duplicar '+
-    'el alcance de la campaña. Si cambia, es variable; si no cambia, es fijo.</div>' },
+    '<div class="av">Para saber cuál es cuál, hazte una sola pregunta: si la campaña llegara al doble de '+
+    'gente, ¿pagarías más? Si la respuesta es sí, el costo es variable. Si pagarías lo mismo, es fijo.</div>' },
 
-{ et:'Actividad 1', t:'Clasifique cada costo', tipo:'arr', clave:'a1',
-  h:'<p class="enc">Clasifique cada costo</p>'+
-    '<p class="sub">Arrastre las ocho fichas a la columna que corresponde. En el celular, toque la ficha y después la columna.</p>' },
+{ et:'Actividad 1', t:'¿Fijo o variable?', tipo:'arr', clave:'a1',
+  h:'<p class="enc">¿Fijo o variable?</p>'+
+    '<p class="sub">Lleva cada ficha a su columna. En el celular, toca la ficha y después la columna.</p>' },
 
 { et:'Teoría 2', t:'El costo total',
   h:'<p class="enc">El costo total de la campaña</p>'+
-    '<p class="sub">Todo lo fijo, más lo variable multiplicado por el volumen</p>'+
-    '<div class="form">CT = CF + ( CV unitario × Q )'+
-    '<small>CT: costo total · CF: costo fijo · Q: volumen alcanzado</small></div>'+
+    '<p class="sub">Lo fijo más lo variable</p>'+
+    '<div class="form">Costo total = costo fijo + costo variable</div>'+
     globo(P.pres,'El caso de la sesión',
-      'La heladería <b>Nevado</b> lanza su sabor de verano. La agencia cobra <b>S/ 2,500</b> de fee y la '+
-      'producción del spot cuesta <b>S/ 3,500</b>: ese es el costo fijo. La pauta digital se paga a '+
-      '<b>S/ 12 por cada mil impresiones</b>: ese es el costo variable.')+
-    '<div class="av">Con esos datos, <b>CF = S/ 6,000</b> y el costo variable es de <b>S/ 12 por millar</b>. '+
-    'Para 400,000 impresiones serían 400 millares, es decir S/ 4,800 de variable, y el costo total '+
-    'ascendería a S/ 10,800.</div>' },
+      'La heladería Nevado lanza su sabor de verano. Gastó S/ 6,000 en grabar el video y en la agencia: '+
+      'eso se paga una sola vez. Además paga S/ 10 por cada mil personas que ven el anuncio.')+
+    '<div class="av">Si el anuncio lo ven 300,000 personas, eso son 300 millares. El costo variable sería '+
+    '300 × 10 = S/ 3,000, y el costo total 6,000 + 3,000 = S/ 9,000.</div>' },
 
-{ et:'Actividad 2', t:'Calcule el costo total', tipo:'cal', clave:'a2',
-  h:'<p class="enc">Calcule el costo total</p>'+
-    '<p class="sub">Costo fijo S/ 6,000 · costo variable S/ 12 por cada mil impresiones. Escriba el importe y pulse Enter.</p>' },
+{ et:'Actividad 2', t:'Calcula el costo total', tipo:'cal', clave:'a2',
+  h:'<p class="enc">Calcula el costo total</p>'+
+    '<p class="sub">Costo fijo S/ 6,000. Costo variable S/ 10 por cada mil personas. Escribe el número y pulsa Enter.</p>' },
 
-{ et:'Teoría 3', t:'El costo medio',
-  h:'<p class="enc">El costo medio: el fijo se diluye</p>'+
-    '<p class="sub">Cuanto más alcance tiene la campaña, menos cuesta llegar a cada mil personas</p>'+
-    '<div class="form">Costo medio por millar = CT ÷ ( Q ÷ 1,000 )</div>'+
+{ et:'Teoría 3', t:'El costo por cada mil',
+  h:'<p class="enc">Mientras más gente ve el anuncio, menos cuesta cada mil</p>'+
+    '<p class="sub">Porque los S/ 6,000 del inicio se reparten entre más personas</p>'+
+    '<div class="form">Costo por cada mil = costo total ÷ millares de personas</div>'+
     '<div class="tabenv"><table class="t"><thead><tr>'+
-    '<th>Impresiones</th><th class="n">Costo fijo</th><th class="n">Costo variable</th>'+
-    '<th class="n">Costo total</th><th class="n">Costo por millar</th></tr></thead><tbody>'+
+    '<th>Personas que ven el anuncio</th><th class="n">Costo fijo</th><th class="n">Costo variable</th>'+
+    '<th class="n">Costo total</th><th class="n">Costo por cada mil</th></tr></thead><tbody>'+
     NIV.map(function(q){
       return '<tr><td>'+mil(q,0)+'</td><td class="n">'+mil(CF,0)+'</td>'+
              '<td class="n">'+mil(cv(q),0)+'</td><td class="n">'+mil(ct(q),0)+'</td>'+
-             '<td class="n"><b>'+mil(cme(q))+'</b></td></tr>';
+             '<td class="n">'+mil(cme(q))+'</td></tr>';
     }).join('')+'</tbody></table></div>'+
-    globo(P.sorp,'Lo que hay que notar',
-      'El costo fijo es el mismo en las cuatro filas, y sin embargo el costo por millar cae de '+
-      '<b>S/ 72.00 a S/ 18.00</b>. No es que la pauta se haya abaratado: es que los <b>S/ 6,000</b> '+
-      'se reparten entre muchas más personas.') },
+    globo(P.sorp,'Fíjate en esto',
+      'El costo fijo es el mismo en las cuatro filas: siempre S/ 6,000. Y sin embargo el costo por cada '+
+      'mil baja de S/ 70 a S/ 16. La pauta no se abarató: los mismos S/ 6,000 ahora se reparten entre '+
+      'mucha más gente.') },
 
-{ et:'Actividad 3', t:'Calcule el costo medio', tipo:'cal', clave:'a3',
-  h:'<p class="enc">Calcule el costo por millar</p>'+
-    '<p class="sub">Divida el costo total entre el número de millares de impresiones. Dos decimales.</p>' },
+{ et:'Actividad 3', t:'Calcula el costo por cada mil', tipo:'cal', clave:'a3',
+  h:'<p class="enc">Calcula el costo por cada mil</p>'+
+    '<p class="sub">Divide el costo total entre los millares de personas. Escribe dos decimales.</p>' },
 
-{ et:'Teoría 4', t:'El costo marginal',
-  h:'<p class="enc">El costo marginal: el siguiente millar</p>'+
-    '<p class="sub">Lo que cuesta ampliar la campaña en una unidad más</p>'+
-    '<div class="form">Costo marginal = <span class="v">Δ</span> Costo total ÷ <span class="v">Δ</span> Cantidad'+
-    '<small>Δ se lee «variación de»: cuánto cambió</small></div>'+
+{ et:'Teoría 4', t:'¿Cuánto cuesta ampliar?',
+  h:'<p class="enc">¿Y si quiero llegar a mil personas más?</p>'+
+    '<p class="sub">Esa pregunta tiene otra respuesta</p>'+
+    '<div class="form">Mil personas más cuestan S/ 10. Siempre.</div>'+
     '<div class="tabenv"><table class="t"><thead><tr>'+
-    '<th>De … a</th><th class="n">Variación del costo total</th><th class="n">Millares añadidos</th>'+
-    '<th class="n">Costo marginal</th></tr></thead><tbody>'+
-    '<tr><td>100,000 → 250,000</td><td class="n">'+mil(ct(250000)-ct(100000),0)+'</td><td class="n">150</td><td class="n"><b>12.00</b></td></tr>'+
-    '<tr><td>250,000 → 500,000</td><td class="n">'+mil(ct(500000)-ct(250000),0)+'</td><td class="n">250</td><td class="n"><b>12.00</b></td></tr>'+
-    '<tr><td>500,000 → 1,000,000</td><td class="n">'+mil(ct(1000000)-ct(500000),0)+'</td><td class="n">500</td><td class="n"><b>12.00</b></td></tr>'+
+    '<th>De … a</th><th class="n">Sube el costo total</th><th class="n">Millares añadidos</th>'+
+    '<th class="n">Costo de cada mil nuevo</th></tr></thead><tbody>'+
+    '<tr><td>100,000 → 200,000</td><td class="n">'+mil(ct(200000)-ct(100000),0)+'</td><td class="n">100</td><td class="n">10.00</td></tr>'+
+    '<tr><td>200,000 → 500,000</td><td class="n">'+mil(ct(500000)-ct(200000),0)+'</td><td class="n">300</td><td class="n">10.00</td></tr>'+
+    '<tr><td>500,000 → 1,000,000</td><td class="n">'+mil(ct(1000000)-ct(500000),0)+'</td><td class="n">500</td><td class="n">10.00</td></tr>'+
     '</tbody></table></div>'+
-    '<div class="av"><b>El costo marginal no se mueve: siempre S/ 12 por millar.</b> El costo fijo ya '+
-    'está pagado y no reaparece. Por eso el costo medio cae y se acerca al marginal, pero nunca llega '+
-    'a bajar de él.</div>'+
-    globo(P.sena,'Para decidir',
-      'Cuando el gerente pregunta «¿cuánto me cuesta ampliar la campaña?», la respuesta es el <b>costo '+
-      'marginal</b>, no el medio. El medio sirve para evaluar la campaña completa; el marginal, para '+
-      'decidir si conviene estirarla.') },
+    '<div class="av">Los S/ 6,000 del inicio ya se pagaron y no se vuelven a pagar. Por eso ampliar la '+
+    'campaña cuesta siempre S/ 10 por cada mil personas, aunque el costo por cada mil de toda la campaña '+
+    'vaya bajando.</div>'+
+    globo(P.sena,'Para no confundirlos',
+      'Son dos preguntas distintas. ¿Cuánto me salió en promedio cada mil? Eso es el costo por cada mil '+
+      'de la tabla anterior. ¿Cuánto me costaría llegar a mil más? Eso siempre son S/ 10.') },
 
-{ et:'Actividad 4', t:'Compruebe los conceptos', tipo:'quiz', clave:'a4',
-  h:'<p class="enc">Compruebe los conceptos</p>'+
-    '<p class="sub">Cuatro preguntas. Si se equivoca, la opción queda tachada y puede volver a elegir.</p>' },
+{ et:'Actividad 4', t:'Comprueba lo que entendiste', tipo:'quiz', clave:'a4',
+  h:'<p class="enc">Comprueba lo que entendiste</p>'+
+    '<p class="sub">Cuatro preguntas. Si te equivocas, esa opción queda tachada y puedes elegir otra.</p>' },
 
-{ et:'Teoría 5', t:'Las métricas del medio',
-  h:'<p class="enc">Las cuatro métricas del medio</p>'+
-    '<p class="sub">Todas son el mismo cociente: lo que se invirtió entre lo que se consiguió</p>'+
+{ et:'Teoría 5', t:'Las cuentas del marketing',
+  h:'<p class="enc">Cuatro divisiones que vas a usar siempre</p>'+
+    '<p class="sub">Todas se arman igual: lo que invertiste entre lo que conseguiste</p>'+
     '<div class="dos">'+
-    '<div class="fc"><h4>CPM · costo por mil impresiones</h4><div class="c">'+
-      '<p>Cuánto cuesta que la pieza aparezca mil veces en pantalla.</p>'+
-      '<p><b>CPM = ( Inversión ÷ Impresiones ) × 1,000</b></p></div></div>'+
+    '<div class="fc"><h4>CPM · costo por mil</h4><div class="c">'+
+      '<p>Cuánto cuesta que mil personas vean el anuncio.</p>'+
+      '<p class="fx">CPM = (inversión ÷ personas que lo vieron) × 1,000</p></div></div>'+
     '<div class="fc"><h4>CPC · costo por clic</h4><div class="c">'+
-      '<p>Cuánto cuesta cada visita que llega al sitio.</p>'+
-      '<p><b>CPC = Inversión ÷ Clics</b></p></div></div>'+
-    '<div class="fc rj"><h4>CPA · costo por adquisición</h4><div class="c">'+
-      '<p>Cuánto cuesta cada venta o cada registro conseguido.</p>'+
-      '<p><b>CPA = Inversión ÷ Conversiones</b></p></div></div>'+
-    '<div class="fc rj"><h4>CTR · tasa de clics</h4><div class="c">'+
-      '<p>Qué proporción de quienes vieron la pieza hicieron clic. No es un costo: es un porcentaje.</p>'+
-      '<p><b>CTR = ( Clics ÷ Impresiones ) × 100</b></p></div></div>'+
+      '<p>Cuánto cuesta cada persona que entra a la tienda en línea.</p>'+
+      '<p class="fx">CPC = inversión ÷ clics</p></div></div>'+
+    '<div class="fc rj"><h4>CPA · costo por venta</h4><div class="c">'+
+      '<p>Cuánto cuesta conseguir una venta.</p>'+
+      '<p class="fx">CPA = inversión ÷ ventas</p></div></div>'+
+    '<div class="fc rj"><h4>CTR · cuántos hicieron clic</h4><div class="c">'+
+      '<p>De todos los que vieron el anuncio, qué parte hizo clic. No es un costo: es un porcentaje.</p>'+
+      '<p class="fx">CTR = (clics ÷ personas que lo vieron) × 100</p></div></div>'+
     '</div>'+
-    '<div class="av">Una quinta métrica cierra el embudo: la <b>tasa de conversión = ( Conversiones ÷ '+
-    'Clics ) × 100</b>, que mide qué parte de las visitas terminó comprando.</div>' },
+    '<div class="av">Hay una quinta que cierra el camino: de los que entraron, cuántos compraron. Se llama '+
+    'tasa de conversión y se calcula igual: (ventas ÷ clics) × 100.</div>' },
 
-{ et:'Actividad 5', t:'Arme las fórmulas', tipo:'comp', clave:'a5',
-  h:'<p class="enc">Arme las fórmulas</p>'+
-    '<p class="sub">Elija en cada hueco el término que corresponde.</p>' },
+{ et:'Actividad 5', t:'Arma las fórmulas', tipo:'comp', clave:'a5',
+  h:'<p class="enc">Arma las fórmulas</p>'+
+    '<p class="sub">Elige en cada espacio el dato que va.</p>' },
 
-{ et:'Actividad 6', t:'Empareje la métrica', tipo:'par', clave:'a6',
-  h:'<p class="enc">¿Qué pregunta responde cada métrica?</p>'+
-    '<p class="sub">Arrastre cada métrica junto a la pregunta que contesta. En el celular, toque y toque.</p>' },
+{ et:'Actividad 6', t:'¿Qué responde cada una?', tipo:'par', clave:'a6',
+  h:'<p class="enc">¿Qué pregunta responde cada una?</p>'+
+    '<p class="sub">Lleva cada nombre junto a su pregunta. En el celular, toca y toca.</p>' },
 
-{ et:'Teoría 6', t:'Los resultados de la campaña',
-  h:'<p class="enc">Los resultados de la campaña Nevado</p>'+
-    '<p class="sub">Se eligió el escenario de 250,000 impresiones. Estos son los datos que entregó la plataforma.</p>'+
+{ et:'Teoría 6', t:'Lo que pasó con la campaña',
+  h:'<p class="enc">Lo que pasó con la campaña de Nevado</p>'+
+    '<p class="sub">Se eligió llegar a 200,000 personas. Esto es lo que entregó la plataforma.</p>'+
     '<div class="tabenv"><table class="t"><tbody>'+
-    '<tr><td>Inversión total de la campaña</td><td class="n"><b>S/ '+mil(C.inv,0)+'</b></td></tr>'+
-    '<tr><td>Impresiones servidas</td><td class="n"><b>'+mil(C.imp,0)+'</b></td></tr>'+
-    '<tr><td>Clics al sitio</td><td class="n"><b>'+mil(C.clics,0)+'</b></td></tr>'+
-    '<tr><td>Ventas atribuidas a la campaña</td><td class="n"><b>'+mil(C.ventas,0)+'</b></td></tr>'+
-    '<tr class="tot"><td>Precio de venta del producto</td><td class="n">S/ '+mil(C.precio)+'</td></tr>'+
-    '<tr class="tot"><td>Costo variable del producto</td><td class="n">S/ '+mil(C.costoU)+'</td></tr>'+
-    '<tr class="res"><td>Margen de contribución por unidad</td><td class="n"><b>S/ '+mil(C.margen)+'</b></td></tr>'+
+    '<tr><td>Se invirtió en total</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
+    '<tr><td>Personas que vieron el anuncio</td><td class="n">'+mil(C.imp,0)+'</td></tr>'+
+    '<tr><td>Clics a la tienda</td><td class="n">'+mil(C.clics,0)+'</td></tr>'+
+    '<tr><td>Helados familiares vendidos</td><td class="n">'+mil(C.ventas,0)+'</td></tr>'+
+    '<tr class="tot"><td>Precio de cada helado familiar</td><td class="n">S/ '+mil(C.precio)+'</td></tr>'+
+    '<tr class="tot"><td>Lo que le cuesta a la empresa hacer cada helado</td><td class="n">S/ '+mil(C.costoU)+'</td></tr>'+
+    '<tr class="res"><td>Ganancia de la empresa por cada helado</td><td class="n">S/ '+mil(C.gana)+'</td></tr>'+
     '</tbody></table></div>'+
     globo(P.sent,'Antes de calcular',
-      'Observe que el producto se vende a <b>S/ 95</b> pero cada unidad deja solo <b>S/ 40</b>, porque '+
-      '<b>S/ 55</b> se van en el costo del helado. Esa diferencia, el <b>margen de contribución</b>, es '+
-      'lo único con lo que la campaña puede pagarse. Téngalo presente: es donde más se equivocan los '+
-      'informes publicitarios.') },
+      'Mira la última fila. El helado se vende a S/ 60, pero a la empresa le cuesta S/ 35 hacerlo. Lo que '+
+      'queda para la empresa son S/ 25, no S/ 60. Esa cifra es la que después va a tener que pagar la '+
+      'campaña. Guárdala.') },
 
-{ et:'Actividad 7', t:'Calcule las métricas', tipo:'cal', clave:'a7',
-  h:'<p class="enc">Calcule las métricas de la campaña</p>'+
-    '<p class="sub">Use los datos de la diapositiva anterior. Dos decimales.</p>' },
+{ et:'Actividad 7', t:'Calcula las cuentas', tipo:'cal', clave:'a7',
+  h:'<p class="enc">Calcula las cuentas de la campaña</p>'+
+    '<p class="sub">Usa los datos de la diapositiva anterior. Escribe dos decimales.</p>' },
 
-{ et:'Teoría 7', t:'¿La campaña se pagó?',
-  h:'<p class="enc">¿La campaña se pagó sola?</p>'+
-    '<p class="sub">El ROAS mide la venta; el punto de equilibrio mide lo que de verdad queda</p>'+
-    '<div class="form">ROAS = Ingresos generados ÷ Inversión publicitaria'+
-    '<small>Se lee «cuántos soles de venta devuelve cada sol invertido»</small></div>'+
+{ et:'Teoría 7', t:'¿Se recuperó lo invertido?',
+  h:'<p class="enc">¿La campaña recuperó lo que costó?</p>'+
+    '<p class="sub">Hay dos maneras de mirarlo, y dan respuestas distintas</p>'+
+    '<div class="form">ROAS = lo que se vendió ÷ lo que se invirtió'+
+    '<small>Cuántos soles de venta trae cada sol invertido</small></div>'+
     '<div class="tabenv"><table class="t"><tbody>'+
-    '<tr><td>Ingresos de la campaña · '+mil(C.ventas,0)+' × S/ '+mil(C.precio)+'</td><td class="n">S/ '+mil(C.ingreso,0)+'</td></tr>'+
-    '<tr><td>Inversión publicitaria</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
-    '<tr class="tot"><td>ROAS</td><td class="n"><b>'+mil(C.roas)+'</b></td></tr>'+
-    '<tr><td>Margen de contribución generado · '+mil(C.ventas,0)+' × S/ '+mil(C.margen)+'</td><td class="n">S/ '+mil(C.mcTotal,0)+'</td></tr>'+
-    '<tr><td>Inversión publicitaria</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
-    '<tr class="tot"><td>Resultado real de la campaña</td><td class="n"><b style="color:#B42318">− S/ '+mil(Math.abs(C.result),0)+'</b></td></tr>'+
+    '<tr><td>Se vendió · '+mil(C.ventas,0)+' helados × S/ '+mil(C.precio)+'</td><td class="n">S/ '+mil(C.ingreso,0)+'</td></tr>'+
+    '<tr><td>Se invirtió en la campaña</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
+    '<tr class="tot"><td>ROAS</td><td class="n">'+mil(C.roas)+'</td></tr>'+
+    '<tr><td>Ganancia de la empresa · '+mil(C.ventas,0)+' helados × S/ '+mil(C.gana)+'</td><td class="n">S/ '+mil(C.ganTot,0)+'</td></tr>'+
+    '<tr><td>Se invirtió en la campaña</td><td class="n">S/ '+mil(C.inv,0)+'</td></tr>'+
+    '<tr class="tot"><td>Resultado de verdad</td><td class="n neg">− S/ '+mil(Math.abs(C.result),0)+'</td></tr>'+
     '</tbody></table></div>'+
-    globo(P.sorp,'El error que hay que evitar',
-      'Un ROAS de <b>1.90</b> suena a éxito: por cada sol se vendieron casi dos. Pero la campaña '+
-      '<b>perdió S/ 1,800</b>, porque lo que la paga no es la venta sino el margen. Un informe que se '+
-      'queda en el ROAS puede estar celebrando una pérdida.')+
-    '<div class="form">Punto de equilibrio = Inversión publicitaria ÷ Margen por unidad'+
-    '<small>Las ventas que la campaña necesita para no perder ni ganar</small></div>' },
+    globo(P.sorp,'Aquí está la trampa',
+      'El ROAS dice 1.20: por cada sol invertido se vendieron S/ 1.20. Suena bien. Pero la campaña perdió '+
+      'S/ 4,000, porque de cada helado la empresa se queda con S/ 25, no con S/ 60. Lo que paga la '+
+      'campaña es la ganancia, no el precio.')+
+    '<div class="form">Ventas necesarias = lo invertido ÷ ganancia por helado'+
+    '<small>Cuántos helados hay que vender para no perder</small></div>' },
 
-{ et:'Actividad 8', t:'Decida sobre la campaña', tipo:'cal2', clave:'a8',
-  h:'<p class="enc">El cierre: ¿qué recomienda?</p>'+
-    '<p class="sub">Calcule el punto de equilibrio y responda la pregunta de decisión.</p>' },
+{ et:'Actividad 8', t:'Decide qué hacer', tipo:'cal2', clave:'a8',
+  h:'<p class="enc">El cierre: ¿qué le dirías al cliente?</p>'+
+    '<p class="sub">Calcula cuántas ventas hacían falta y después responde.</p>' },
 
-{ et:'Cierre', t:'Lo que queda de la sesión',
+{ et:'Cierre', t:'Lo que te llevas',
   h:'<div class="cierre"><div class="ic">📐</div>'+
-    '<h2>Lo que queda de la sesión</h2></div>'+
-    '<div class="tabenv"><table class="t"><thead><tr><th>Concepto</th><th>Fórmula</th><th>Para qué sirve</th></tr></thead><tbody>'+
-    '<tr><td><b>Costo total</b></td><td>CF + CVu × Q</td><td>Lo que cuesta la campaña completa</td></tr>'+
-    '<tr><td><b>Costo medio</b></td><td>CT ÷ Q</td><td>Evaluar la campaña ya ejecutada</td></tr>'+
-    '<tr><td><b>Costo marginal</b></td><td>ΔCT ÷ ΔQ</td><td>Decidir si conviene ampliarla</td></tr>'+
-    '<tr><td><b>CPM</b></td><td>(Inversión ÷ Impresiones) × 1,000</td><td>Comparar el precio del medio</td></tr>'+
-    '<tr><td><b>CPC</b></td><td>Inversión ÷ Clics</td><td>Comparar el precio de la visita</td></tr>'+
-    '<tr><td><b>CPA</b></td><td>Inversión ÷ Conversiones</td><td>Comparar el precio de la venta</td></tr>'+
-    '<tr><td><b>CTR</b></td><td>(Clics ÷ Impresiones) × 100</td><td>Medir si la pieza atrae</td></tr>'+
-    '<tr><td><b>ROAS</b></td><td>Ingresos ÷ Inversión</td><td>Medir el retorno en ventas</td></tr>'+
-    '<tr class="res"><td><b>Punto de equilibrio</b></td><td>Inversión ÷ Margen unitario</td><td>Saber si la campaña se paga</td></tr>'+
+    '<h2>Lo que te llevas de la sesión</h2></div>'+
+    '<div class="tabenv"><table class="t"><thead><tr><th>Nombre</th><th>Cómo se calcula</th><th>Para qué sirve</th></tr></thead><tbody>'+
+    '<tr><td>Costo total</td><td>costo fijo + costo variable</td><td>Cuánto cuesta la campaña entera</td></tr>'+
+    '<tr><td>Costo por cada mil</td><td>costo total ÷ millares</td><td>Cuánto salió en promedio</td></tr>'+
+    '<tr><td>Costo de ampliar</td><td>lo que sube el costo ÷ millares añadidos</td><td>Cuánto cuesta llegar a más gente</td></tr>'+
+    '<tr><td>CPM</td><td>(inversión ÷ personas) × 1,000</td><td>Comparar el precio del medio</td></tr>'+
+    '<tr><td>CPC</td><td>inversión ÷ clics</td><td>Cuánto cuesta una visita</td></tr>'+
+    '<tr><td>CPA</td><td>inversión ÷ ventas</td><td>Cuánto cuesta una venta</td></tr>'+
+    '<tr><td>CTR</td><td>(clics ÷ personas) × 100</td><td>Si el anuncio llama la atención</td></tr>'+
+    '<tr><td>ROAS</td><td>lo vendido ÷ lo invertido</td><td>Cuánto se vendió por cada sol</td></tr>'+
+    '<tr class="res"><td>Ventas necesarias</td><td>lo invertido ÷ ganancia por producto</td><td>Si la campaña se paga sola</td></tr>'+
     '</tbody></table></div>'+
-    globo(P.punt,'La idea que vale la nota',
-      'El costo medio juzga lo hecho, el costo marginal decide lo que viene, y el <b>margen de '+
-      'contribución</b> es lo único que paga la publicidad. Una campaña con buen ROAS y margen flaco '+
-      'puede perder dinero.') }
+    globo(P.punt,'La frase para recordar',
+      'Lo que paga una campaña no es el precio de lo que se vende, sino la ganancia que deja cada venta. '+
+      'Una campaña puede vender mucho y aun así perder dinero.') }
 ];
 
 /* ================= contenido de las actividades ================= */
 var A1={
   fichas:[
-    {id:'f1', t:'Producción del spot publicitario', g:'F'},
-    {id:'f2', t:'Fee mensual de la agencia', g:'F'},
-    {id:'f3', t:'Alquiler del estudio de grabación', g:'F'},
-    {id:'f4', t:'Contrato cerrado con el influencer', g:'F'},
-    {id:'f5', t:'Pago por cada mil impresiones', g:'V'},
-    {id:'f6', t:'Pago por cada clic recibido', g:'V'},
-    {id:'f7', t:'Volantes impresos, por unidad', g:'V'},
-    {id:'f8', t:'Comisión por cada venta cerrada', g:'V'}
+    {id:'f1', t:'Grabar el video del anuncio', g:'F'},
+    {id:'f2', t:'Lo que cobra la agencia al mes', g:'F'},
+    {id:'f3', t:'Diseñar los afiches', g:'F'},
+    {id:'f4', t:'El contrato con el influencer', g:'F'},
+    {id:'f5', t:'Pagar por cada mil personas que ven el anuncio', g:'V'},
+    {id:'f6', t:'Pagar por cada clic', g:'V'},
+    {id:'f7', t:'Cada volante que se imprime', g:'V'},
+    {id:'f8', t:'La comisión por cada venta', g:'V'}
   ],
   cajas:[{id:'F', t:'Costo fijo'},{id:'V', t:'Costo variable'}]
 };
 
-var A2={ titulo:'Complete la columna del costo total',
+var A2={ titulo:'Actividad 2',
   lineas:NIV.map(function(q){
-    return { id:'q'+q, q:'Costo total para <b>'+mil(q,0)+'</b> impresiones', u:'S/',
-             v:ct(q), pre:'Costo variable: '+mil(q/1000,0)+' millares × S/ 12' };
+    return { id:'q'+q, q:'Costo total si el anuncio lo ven '+mil(q,0)+' personas', u:'S/',
+             v:ct(q), pre:mil(q/1000,0)+' millares × S/ 10 = costo variable, más los S/ 6,000 fijos' };
   }) };
 
-var A3={ titulo:'Complete la columna del costo por millar',
+var A3={ titulo:'Actividad 3',
   lineas:NIV.map(function(q){
-    return { id:'m'+q, q:'Costo por millar con <b>'+mil(q,0)+'</b> impresiones', u:'S/',
-             v:cme(q), pre:'Costo total S/ '+mil(ct(q),0)+' ÷ '+mil(q/1000,0)+' millares' };
+    return { id:'m'+q, q:'Costo por cada mil con '+mil(q,0)+' personas', u:'S/',
+             v:cme(q), pre:'S/ '+mil(ct(q),0)+' ÷ '+mil(q/1000,0)+' millares' };
   }) };
 
 var A4=[
-  { q:'La agencia cobra S/ 2,500 al mes, llegue la campaña a 50,000 o a 900,000 personas. ¿Qué clase de costo es?',
-    ops:['Costo fijo','Costo variable','Costo marginal'], ok:0,
-    pq:'No cambia con el volumen: es fijo. El monto puede ser alto, pero eso no lo convierte en variable.' },
-  { q:'El costo por millar de la campaña Nevado cae de S/ 72.00 a S/ 18.00 al ampliar el alcance. ¿Por qué?',
-    ops:['Porque la plataforma rebajó la tarifa de la pauta',
-         'Porque el costo fijo se reparte entre más impresiones',
-         'Porque el costo variable baja cuando se compra más volumen'], ok:1,
-    pq:'La tarifa siguió en S/ 12 por millar todo el tiempo. Lo que cambió es que los S/ 6,000 fijos se dividen entre muchas más personas.' },
-  { q:'El gerente pregunta cuánto costaría añadir 100,000 impresiones más. ¿Qué dato debe darle?',
-    ops:['El costo medio, porque resume la campaña',
-         'El costo total, porque es el monto completo',
-         'El costo marginal, porque mide lo que cuesta ampliar'], ok:2,
-    pq:'Para decidir sobre lo que viene se usa el costo marginal: S/ 12 por millar, es decir S/ 1,200 por esas 100,000 impresiones.' },
-  { q:'¿Puede el costo medio llegar a ser menor que el costo marginal en esta campaña?',
-    ops:['Sí, si el alcance crece lo suficiente',
-         'No, el costo medio se acerca al marginal pero siempre queda por encima',
-         'Sí, apenas se superan las 500,000 impresiones'], ok:1,
-    pq:'El costo medio arrastra una parte del fijo, por pequeña que sea. Se acerca a S/ 12 pero nunca baja de ahí.' }
+  { q:'La agencia cobra S/ 2,500 al mes, vean el anuncio 50,000 o 900,000 personas. ¿Qué tipo de costo es?',
+    ops:['Costo fijo','Costo variable','Las dos cosas'], ok:0,
+    pq:'No cambia aunque la campaña crezca, así que es fijo. Que sea un monto alto no lo convierte en variable.' },
+  { q:'En la tabla, el costo por cada mil bajó de S/ 70 a S/ 16. ¿Por qué?',
+    ops:['Porque la plataforma rebajó el precio',
+         'Porque los S/ 6,000 fijos se reparten entre más personas',
+         'Porque el costo variable baja si compras más'], ok:1,
+    pq:'El precio siguió en S/ 10 por millar todo el tiempo. Lo que cambió es entre cuánta gente se reparten los S/ 6,000.' },
+  { q:'El dueño pregunta cuánto costaría llegar a 100,000 personas más. ¿Qué le respondes?',
+    ops:['S/ 16, que es el costo por cada mil',
+         'S/ 1,000, porque son 100 millares a S/ 10 cada uno',
+         'S/ 6,000, que es el costo fijo'], ok:1,
+    pq:'Los S/ 6,000 ya se pagaron. Llegar a más gente solo suma el variable: 100 millares × S/ 10 = S/ 1,000.' },
+  { q:'Si la campaña llega a muchísima gente, ¿puede el costo por cada mil bajar de S/ 10?',
+    ops:['Sí, si llega a suficiente gente',
+         'No, se acerca a S/ 10 pero siempre queda un poco arriba',
+         'Sí, pasando el millón de personas'], ok:1,
+    pq:'Siempre arrastra una partecita de los S/ 6,000 fijos. Se acerca mucho a S/ 10, pero nunca baja de ahí.' }
 ];
 
 var A5=[
-  { id:'c1', pre:'CPM =  (', ops:['Inversión','Clics','Conversiones'], ok:0,
-    med:'÷', ops2:['Impresiones','Clics','Conversiones'], ok2:0, post:' ) × 1,000' },
-  { id:'c2', pre:'CPC =  ', ops:['Inversión','Impresiones','Conversiones'], ok:0,
-    med:'÷', ops2:['Clics','Impresiones','Conversiones'], ok2:0, post:'' },
-  { id:'c3', pre:'CPA =  ', ops:['Inversión','Clics','Impresiones'], ok:0,
-    med:'÷', ops2:['Conversiones','Impresiones','Clics'], ok2:0, post:'' },
-  { id:'c4', pre:'CTR =  (', ops:['Clics','Inversión','Conversiones'], ok:0,
-    med:'÷', ops2:['Impresiones','Clics','Inversión'], ok2:0, post:' ) × 100' }
+  { id:'c1', pre:'CPM =  (', ops:['inversión','clics','ventas'], ok:0,
+    med:'÷', ops2:['personas que lo vieron','clics','ventas'], ok2:0, post:' ) × 1,000' },
+  { id:'c2', pre:'CPC =  ', ops:['inversión','personas que lo vieron','ventas'], ok:0,
+    med:'÷', ops2:['clics','personas que lo vieron','ventas'], ok2:0, post:'' },
+  { id:'c3', pre:'CPA =  ', ops:['inversión','clics','personas que lo vieron'], ok:0,
+    med:'÷', ops2:['ventas','personas que lo vieron','clics'], ok2:0, post:'' },
+  { id:'c4', pre:'CTR =  (', ops:['clics','inversión','ventas'], ok:0,
+    med:'÷', ops2:['personas que lo vieron','clics','inversión'], ok2:0, post:' ) × 100' }
 ];
 
 var A6={
@@ -662,44 +659,44 @@ var A6={
   ],
   huecos:[
     {id:'p3', q:'¿Cuánto me cuesta conseguir una venta?'},
-    {id:'p1', q:'¿Cuánto me cuesta aparecer mil veces en pantalla?'},
-    {id:'p5', q:'¿Cuántos soles de venta devuelve cada sol invertido?'},
-    {id:'p2', q:'¿Cuánto me cuesta cada visita que llega al sitio?'},
-    {id:'p4', q:'¿Qué parte de los que vieron la pieza hicieron clic?'}
+    {id:'p1', q:'¿Cuánto me cuesta que mil personas vean el anuncio?'},
+    {id:'p5', q:'¿Cuántos soles vendo por cada sol que invierto?'},
+    {id:'p2', q:'¿Cuánto me cuesta cada clic?'},
+    {id:'p4', q:'De los que vieron el anuncio, ¿qué parte hizo clic?'}
   ]
 };
 
-var A7={ titulo:'Las métricas de la campaña Nevado',
+var A7={ titulo:'Actividad 7',
   lineas:[
-    { id:'m1', q:'<b>CPM</b> · costo por mil impresiones', u:'S/', v:C.cpm,
-      pre:'(S/ '+mil(C.inv,0)+' ÷ '+mil(C.imp,0)+') × 1,000' },
-    { id:'m2', q:'<b>CPC</b> · costo por clic', u:'S/', v:C.cpc,
+    { id:'m1', q:'CPM · costo por mil personas', u:'S/', v:C.cpm,
+      pre:'(S/ '+mil(C.inv,0)+' ÷ '+mil(C.imp,0)+' personas) × 1,000' },
+    { id:'m2', q:'CPC · costo por clic', u:'S/', v:C.cpc,
       pre:'S/ '+mil(C.inv,0)+' ÷ '+mil(C.clics,0)+' clics' },
-    { id:'m3', q:'<b>CPA</b> · costo por venta conseguida', u:'S/', v:C.cpa,
+    { id:'m3', q:'CPA · costo por venta', u:'S/', v:C.cpa,
       pre:'S/ '+mil(C.inv,0)+' ÷ '+mil(C.ventas,0)+' ventas' },
-    { id:'m4', q:'<b>CTR</b> · tasa de clics', u:'%', v:C.ctr,
+    { id:'m4', q:'CTR · qué parte hizo clic', u:'%', v:C.ctr,
       pre:'('+mil(C.clics,0)+' ÷ '+mil(C.imp,0)+') × 100' },
-    { id:'m5', q:'<b>Tasa de conversión</b>', u:'%', v:C.conv,
+    { id:'m5', q:'Tasa de conversión · qué parte compró', u:'%', v:C.conv,
       pre:'('+mil(C.ventas,0)+' ÷ '+mil(C.clics,0)+') × 100' }
   ] };
 
-var A8={ titulo:'El cierre de la campaña',
+var A8={ titulo:'Actividad 8',
   lineas:[
-    { id:'r1', q:'<b>ROAS</b> de la campaña', u:'', v:C.roas,
-      pre:'S/ '+mil(C.ingreso,0)+' de ingresos ÷ S/ '+mil(C.inv,0)+' de inversión' },
-    { id:'r2', q:'<b>Margen de contribución</b> generado por las 180 ventas', u:'S/', v:C.mcTotal,
-      pre:'180 ventas × S/ 40 de margen', dec:0 },
-    { id:'r3', q:'<b>Punto de equilibrio</b> · ventas necesarias para no perder', u:'ventas', v:C.pe,
-      pre:'S/ 9,000 de inversión ÷ S/ 40 de margen', dec:0 },
-    { id:'r4', q:'<b>Ventas que faltaron</b> para llegar al equilibrio', u:'ventas', v:C.pe-C.ventas,
-      pre:'225 necesarias − 180 conseguidas', dec:0 }
+    { id:'r1', q:'ROAS de la campaña', u:'', v:C.roas,
+      pre:'S/ '+mil(C.ingreso,0)+' vendidos ÷ S/ '+mil(C.inv,0)+' invertidos' },
+    { id:'r2', q:'Ganancia que dejaron los 160 helados', u:'S/', v:C.ganTot,
+      pre:'160 helados × S/ 25 de ganancia cada uno', dec:0 },
+    { id:'r3', q:'Helados que había que vender para no perder', u:'helados', v:C.pe,
+      pre:'S/ 8,000 invertidos ÷ S/ 25 de ganancia', dec:0 },
+    { id:'r4', q:'Helados que faltaron', u:'helados', v:C.pe-C.ventas,
+      pre:'320 que hacían falta − 160 que se vendieron', dec:0 }
   ],
-  quiz:{ q:'Con estos números, ¿qué recomienda al cliente?',
-    ops:['Repetir la campaña igual: un ROAS de 1.90 es positivo',
-         'Subir la conversión o bajar el CPA: con 180 ventas la campaña pierde S/ 1,800',
-         'Ampliar el presupuesto, porque el costo medio baja al crecer'], ok:1,
-    pq:'La campaña necesitaba 225 ventas y consiguió 180. Ampliar el presupuesto sin tocar la conversión '+
-       'agranda la pérdida; lo que hay que mover es la tasa de conversión o el costo de adquisición.' }
+  quiz:{ q:'Con estos números, ¿qué le dirías al cliente?',
+    ops:['Que repita la campaña igual: el ROAS de 1.20 es bueno',
+         'Que la campaña perdió S/ 4,000 y hay que lograr más ventas con la misma inversión',
+         'Que invierta más dinero, porque el costo por cada mil baja'], ok:1,
+    pq:'Hacían falta 320 helados y se vendieron 160, la mitad. Invertir más sin vender más solo agranda '+
+       'la pérdida: lo que hay que mejorar es cuántos de los que entran terminan comprando.' }
 };
 
 /* ================= estado ================= */
