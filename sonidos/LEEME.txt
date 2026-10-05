@@ -30,6 +30,6 @@ Música de fondo (solo suena en la computadora del docente):
   - Los alumnos nunca la escuchan ni ven esos controles.
 
 Sonido de fallo (suena en la computadora del alumno al equivocarse):
-  - Nombre exacto: sonido_fallo.mp3 (también vale .wav, .ogg o .m4a).
+  - Nombre: SONIDO_FALLO.mp3 o sonido_fallo.mp3 (también .wav, .ogg o .m4a).
   - No entra a la música de fondo; ono-bebe.mp3 tampoco.
   - Si falta, se oye un tono corto generado por el navegador.
