@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caso integral · Comercial Andina del Sur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .mono{
+    --azul:#2E75B6; --nar:#E07B39; --ver:#548235; --teal:#00897B; --rojo:#C00000;
+    --ama:#FFF8E1; --amaBd:#E8CE8A; --gris:#5A5A5A;
+    max-width:1180px; margin:0 auto;
+  }
+  .mono p, .mono li{ font-size:14px; line-height:1.65; }
+  .mono h2.cap{ margin:0 0 10px; font-size:clamp(17px,2.1vw,21px); font-weight:800; color:var(--gris); }
+  .mono h3.sub{ margin:18px 0 8px; font-size:15px; font-weight:800; color:var(--azul); }
+  .mono .num-cap{
+    display:inline-grid; place-items:center; width:30px; height:30px; border-radius:8px; margin-right:8px;
+    background:var(--azul); color:#fff; font-size:14px; font-weight:800; vertical-align:2px;
+  }
+  .parte2 .num-cap{ background:var(--ver); }
+  .parte2 h3.sub{ color:var(--ver); }
+
+  /* ---------- portada ---------- */
+  .portada{ text-align:center; padding:clamp(22px,4vw,44px) 10px; border-bottom:5px solid var(--rojo); }
+  .portada .eti{ font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--o-muted); }
+  .portada h1{ margin:10px 0 6px; font-size:clamp(24px,3.6vw,38px); font-weight:800; color:var(--gris); line-height:1.15; }
+  .portada .sub{ margin:0 auto; max-width:720px; font-size:15px; color:var(--o-muted); }
+  .portada .chips{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
+
+  /* ---------- plan de sesiones ---------- */
+  .sesiones{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:760px){ .sesiones{ grid-template-columns:1fr 1fr; } }
+  .ses{ border:2px solid var(--azul); border-radius:12px; overflow:hidden; }
+  .ses.s2{ border-color:var(--ver); }
+  .ses .h{ background:var(--azul); color:#fff; padding:10px 14px; font-weight:800; font-size:14px; display:flex; justify-content:space-between; gap:10px; }
+  .ses.s2 .h{ background:var(--ver); }
+  .ses table{ width:100%; border-collapse:collapse; }
+  .ses td{ padding:7px 14px; border-top:1px solid #EEF1F5; font-size:13.5px; }
+  .ses td.m{ width:76px; text-align:right; font-weight:700; color:var(--o-muted); font-variant-numeric:tabular-nums; }
+
+  .avance{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:16px; }
+  .avance .riel{ flex:1 1 220px; height:11px; border-radius:99px; background:var(--o-line); overflow:hidden; min-width:140px; }
+  .avance .lleno{ height:100%; width:0; border-radius:99px; background:var(--teal); transition:width .3s ease; }
+  .avance .cuenta{ font-size:12.5px; font-weight:700; color:var(--o-muted); }
+
+  /* ---------- índice ---------- */
+  .indice{ columns:2 260px; column-gap:28px; margin:0; padding:0; list-style:none; }
+  .indice li{ break-inside:avoid; margin:0 0 4px; }
+  .indice a{ color:var(--o-text); text-decoration:none; display:flex; gap:8px; padding:4px 6px; border-radius:6px; }
+  .indice a:hover{ background:#F5F7FA; color:var(--azul); }
+  .indice .n{ font-weight:800; color:var(--azul); min-width:26px; }
+  .indice .p2 .n{ color:var(--ver); }
+  .indice .parte{ font-size:11.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--o-muted); padding:8px 6px 2px; }
+
+  /* ---------- bandas de parte ---------- */
+  .banda{
+    border-radius:12px; padding:18px 22px; margin:0 0 18px; color:#fff;
+    background:linear-gradient(120deg,#2E75B6 0%,#1F4E79 100%);
+    display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  }
+  .banda.v{ background:linear-gradient(120deg,#548235 0%,#375623 100%); }
+  .banda .big{ font-size:clamp(26px,3.4vw,36px); font-weight:800; line-height:1; }
+  .banda .tx b{ display:block; font-size:16px; }
+  .banda .tx span{ font-size:13.5px; opacity:.9; }
+  .banda .t{ margin-left:auto; background:rgba(255,255,255,.18); border-radius:99px; padding:6px 14px; font-weight:700; font-size:13px; }
+
+  /* ---------- recuadros ---------- */
+  .recuerda{
+    background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+    padding:11px 14px; font-size:13.5px; line-height:1.6; margin:12px 0 0; color:#5B4A15;
+  }
+  .recuerda b{ color:#3F3208; }
+  .datos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:8px; margin-top:12px; }
+  .dato{ border:1px solid var(--o-border); border-radius:9px; padding:8px 12px; background:#FAFBFC; }
+  .dato .k{ font-size:11.5px; color:var(--o-muted); font-weight:700; text-transform:uppercase; letter-spacing:.05em; }
+  .dato .v{ font-size:16px; font-weight:800; color:var(--azul); }
+
+  .ops{ list-style:none; margin:10px 0 0; padding:0; counter-reset:op; }
+  .ops li{
+    counter-increment:op; position:relative; padding:10px 12px 10px 52px; margin:0 0 8px;
+    border:1px solid var(--o-border); border-radius:10px; background:#fff;
+  }
+  .ops li::before{
+    content:counter(op); position:absolute; left:12px; top:10px; width:28px; height:28px; border-radius:7px;
+    background:#EAF2FB; color:var(--azul); font-weight:800; display:grid; place-items:center; font-size:13px;
+  }
+  .ops li .f{ font-weight:800; color:var(--azul); margin-right:4px; }
+  .ops li .tag{
+    display:inline-block; font-size:11px; font-weight:800; border-radius:99px; padding:1px 8px; margin-left:4px;
+    background:#FDECEA; color:var(--rojo); vertical-align:1px;
+  }
+
+  details.pista{ margin-top:10px; border:1px dashed var(--amaBd); border-radius:9px; background:#FFFDF6; }
+  details.pista summary{ cursor:pointer; padding:8px 12px; font-weight:700; color:#8A6D1B; font-size:13px; }
+  details.pista > div{ padding:0 14px 10px; font-size:13.5px; line-height:1.6; }
+
+  /* ---------- tablas contables ---------- */
+  .tabla-wrap{ overflow-x:auto; margin-top:10px; border:1px solid var(--o-border); border-radius:10px; }
+  table.ct{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:560px; background:#fff; }
+  table.ct th{
+    background:#F1F4F8; color:var(--gris); font-size:12px; font-weight:800; letter-spacing:.03em;
+    padding:8px 10px; text-align:left; border-bottom:1px solid var(--o-border); white-space:nowrap;
+  }
+  table.ct th.n{ text-align:right; }
+  table.ct thead tr.g th{ text-align:center; background:#E8EEF6; border-bottom:1px solid #D6DFEA; }
+  table.ct td{ padding:5px 10px; border-top:1px solid #EEF1F5; vertical-align:middle; }
+  table.ct td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; width:128px; }
+  table.ct td.c{ white-space:nowrap; color:var(--o-muted); font-variant-numeric:tabular-nums; width:70px; }
+  table.ct tr.sub td{ background:#F7F9FC; font-weight:800; color:var(--gris); }
+  table.ct tr.tot td{ background:#EAF2FB; font-weight:800; }
+  table.ct tr.gran td{ background:var(--azul); color:#fff; font-weight:800; }
+  .parte2 table.ct tr.tot td{ background:#EEF5E9; }
+  .parte2 table.ct tr.gran td{ background:var(--ver); }
+  table.ct tr.tit td{ font-weight:800; font-size:12px; letter-spacing:.07em; text-transform:uppercase; color:var(--azul); padding-top:10px; }
+  .parte2 table.ct tr.tit td{ color:var(--ver); }
+  table.ct td.ind{ padding-left:28px; }
+  table.ct td.ind2{ padding-left:46px; }
+
+  /* libro diario */
+  table.diario tr.asi td{ background:#F7F9FC; border-top:2px solid #D6DFEA; font-weight:800; color:var(--gris); font-size:12.5px; }
+  table.diario tr.glosa td{ font-style:italic; color:var(--o-muted); font-size:12.5px; padding-bottom:8px; }
+  table.diario td.hab{ padding-left:42px; }
+  table.diario tr.p2 td{ background:#F2F8EE; }
+
+  /* casillas */
+  .caja{ position:relative; display:inline-flex; width:118px; }
+  .caja input{
+    width:100%; font:inherit; font-size:13.5px; font-weight:700; text-align:right;
+    font-variant-numeric:tabular-nums; padding:4px 8px; border-radius:6px;
+    border:1.5px solid var(--amaBd); background:var(--ama); color:var(--o-text); min-width:0;
+  }
+  .caja input:focus{ outline:2px solid var(--azul); outline-offset:1px; }
+  .caja input::placeholder{ color:#BFB593; font-weight:600; }
+  .caja.bien input{ background:#E6F4EA; border-color:#2E8B57; color:#14532D; }
+  .caja.mal  input{ background:#FDECEA; border-color:#C0392B; color:#8B1A10; }
+  .caja.falta input{ background:#FFF3CD; border-color:var(--rojo); border-style:dashed; }
+  .caja.sol input{ background:#EAF2FB; border-color:#8FB3DA; color:#1F4E79; }
+  tr.gran .caja input{ background:#fff; }
+
+  /* botonera y marcador */
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+  .mandos button{
+    font:inherit; font-size:13px; font-weight:700; cursor:pointer; border-radius:8px;
+    padding:8px 14px; border:2px solid var(--o-border); background:#fff; color:var(--o-text);
+  }
+  .mandos button:hover{ background:#F5F7FA; }
+  .mandos .rev{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .parte2 .mandos .rev{ background:var(--ver); border-color:var(--ver); }
+  .mandos .rev:hover{ filter:brightness(1.08); background:var(--azul); }
+  .parte2 .mandos .rev:hover{ background:var(--ver); }
+  .mandos .sol{ border-color:var(--rojo); color:var(--rojo); }
+  .mandos .res{ font-size:13px; font-weight:700; border-radius:8px; padding:7px 12px; }
+  .mandos .res.todo{ background:#E6F4EA; color:#14532D; }
+  .mandos .res.algo{ background:#FFF3CD; color:#6B5310; }
+  .mandos .res:empty{ display:none; }
+
+  .fin-ses{
+    border:2px dashed var(--azul); border-radius:12px; padding:16px 18px; background:#F5F9FD;
+    display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+  }
+  .fin-ses .ico{ font-size:30px; }
+  .fin-ses p{ margin:0; }
+
+  .concl{ margin:8px 0 0; padding-left:20px; }
+  .concl li{ margin-bottom:6px; }
+  .refs{ margin:6px 0 0; padding-left:20px; font-size:13px; color:var(--o-muted); }
+
+  .pie-acc{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; align-items:center; }
+
+  /* ---------- impresión ---------- */
+  @media print{
+    body{ background:#fff; font-size:11.5px; }
+    .o-navbar, .o-cp, .mandos, .no-imp, .avance, details.pista summary{ display:none !important; }
+    details.pista{ display:none; }
+    .o-content{ padding:0; }
+    .o-sheet{ border:0; box-shadow:none; padding:6px 0; margin:0 0 10px; }
+    .tabla-wrap{ overflow:visible; border:0; }
+    table.ct{ min-width:0; font-size:11px; }
+    table.ct tr, .ops li{ break-inside:avoid; }
+    .caja input{ background:#fff !important; border:0; border-bottom:1px solid #555; border-radius:0; color:#000; }
+    .caja input::placeholder{ color:transparent; }
+    .banda{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    #parte-2{ break-before:page; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Caso integral</b></span>
+  <div class="o-cp-right">
+    <span class="o-count" id="cuentaTop">0 de 0 casillas</span>
+    <button class="o-btn o-btn-secondary" type="button" onclick="window.print()">🖨️ Imprimir</button>
+  </div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap mono">
+
+  <!-- ================= PORTADA ================= -->
+  <div class="o-sheet">
+    <div class="portada">
+      <div class="eti">Monografía de enunciados contables · Estados Financieros</div>
+      <h1>Comercial Andina del Sur S.A.C.<br>del libro diario a los estados financieros</h1>
+      <p class="sub">Un caso integral de empresa comercial con depreciación, préstamo bancario con cuadro de amortización, viáticos con gasto en exceso y planilla, que termina en el balance de comprobación y los cinco estados financieros del ejercicio 2025.</p>
+      <div class="chips">
+        <span class="o-chip o-chip-purple">2 sesiones</span>
+        <span class="o-chip o-chip-teal">≈ 60 minutos en total</span>
+        <span class="o-chip o-chip-ok">Se corrige solo</span>
+      </div>
+    </div>
+
+    <div class="avance no-imp" style="display:flex">
+      <div class="riel"><div class="lleno" id="riel"></div></div>
+      <span class="cuenta" id="cuenta">0 de 0 casillas respondidas</span>
+    </div>
+  </div>
+
+  <!-- ================= PLAN ================= -->
+  <div class="o-sheet">
+    <h2 class="o-section-title">Cómo se trabaja en clase</h2>
+    <div class="sesiones">
+      <div class="ses">
+        <div class="h"><span>Sesión 1 · Parte 1 · Del enunciado al libro diario</span><span>30 min</span></div>
+        <table>
+          <tr><td>Lectura de la empresa, saldos iniciales y operaciones</td><td class="m">5 min</td></tr>
+          <tr><td>Casos A y B: depreciación y préstamo bancario</td><td class="m">10 min</td></tr>
+          <tr><td>Casos C y D: viáticos y planilla</td><td class="m">5 min</td></tr>
+          <tr><td>Completar el libro diario incompleto</td><td class="m">10 min</td></tr>
+        </table>
+      </div>
+      <div class="ses s2">
+        <div class="h"><span>Sesión 2 · Parte 2 · Del balance a los estados</span><span>30 min</span></div>
+        <table>
+          <tr><td>Balance de comprobación</td><td class="m">6 min</td></tr>
+          <tr><td>Estado de resultados, con el impuesto a la renta</td><td class="m">8 min</td></tr>
+          <tr><td>Estado de situación financiera</td><td class="m">6 min</td></tr>
+          <tr><td>Estado de flujos de efectivo</td><td class="m">6 min</td></tr>
+          <tr><td>Estado de cambios en el patrimonio y conclusiones</td><td class="m">4 min</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="recuerda">Las <b>casillas amarillas</b> son las que faltan. Escribe solo el número (12000, 12,000 o (12,000) sirven). Con <b>Revisar</b> cada tabla se pinta de verde o rojo; <b>Ver solución</b> es para el docente cuando el tiempo apremia. Lo escrito se guarda en este navegador, así que la sesión 2 empieza donde terminó la 1.</p>
+  </div>
+
+  <!-- ================= ÍNDICE ================= -->
+  <div class="o-sheet">
+    <h2 class="o-section-title">Índice</h2>
+    <ul class="indice">
+      <li><a href="#intro"><span class="n">0</span>Introducción y datos de la empresa</a></li>
+      <li class="parte">Parte 1 · Sesión 1</li>
+      <li><a href="#s1"><span class="n">1</span>Situación financiera al 1 de enero de 2025</a></li>
+      <li><a href="#s2"><span class="n">2</span>Operaciones del ejercicio</a></li>
+      <li><a href="#s3"><span class="n">3</span>Caso A · Depreciación</a></li>
+      <li><a href="#s4"><span class="n">4</span>Caso B · Préstamo con cuadro de amortización</a></li>
+      <li><a href="#s5"><span class="n">5</span>Caso C · Viáticos con gasto de más</a></li>
+      <li><a href="#s6"><span class="n">6</span>Caso D · Planilla, EsSalud y ONP</a></li>
+      <li><a href="#s7"><span class="n">7</span>Libro diario incompleto</a></li>
+      <li class="parte p2">Parte 2 · Sesión 2</li>
+      <li class="p2"><a href="#s8"><span class="n">8</span>Balance de comprobación</a></li>
+      <li class="p2"><a href="#s9"><span class="n">9</span>Estado de resultados</a></li>
+      <li class="p2"><a href="#s10"><span class="n">10</span>Estado de situación financiera</a></li>
+      <li class="p2"><a href="#s11"><span class="n">11</span>Estado de flujos de efectivo</a></li>
+      <li class="p2"><a href="#s12"><span class="n">12</span>Estado de cambios en el patrimonio</a></li>
+      <li class="p2"><a href="#s13"><span class="n">13</span>Conclusiones y referencias</a></li>
+    </ul>
+  </div>
+
+  <!-- ================= INTRODUCCIÓN ================= -->
+  <div class="o-sheet" id="intro">
+    <h2 class="cap">Introducción</h2>
+    <p>Esta monografía reúne en un solo caso las operaciones que más dudas generan al registrar la contabilidad de una empresa comercial: el activo fijo que se deprecia, el préstamo que se paga en cuotas, el trabajador que gasta más de lo que se le entregó y la planilla con sus aportes. Cada operación se resuelve primero como un cálculo aparte y luego se lleva al <b>libro diario</b>, que viene a medio llenar.</p>
+    <p>Con el diario completo se arma el <b>balance de comprobación</b> y, de él, los cinco estados que pide la NIC 1: situación financiera, resultados, flujos de efectivo, cambios en el patrimonio y, como cierre, las conclusiones que harían de notas.</p>
+    <p><b>Objetivo.</b> Recorrer el ciclo contable completo de un ejercicio, desde la operación hasta los estados financieros, y comprobar que todo cuadra: el efectivo del flujo con el del balance, y el patrimonio del estado de cambios con el de la situación financiera.</p>
+
+    <h3 class="sub">La empresa</h3>
+    <p><b>Comercial Andina del Sur S.A.C.</b> compra y vende electrodomésticos en Arequipa. Lleva inventario permanente, registra los gastos por naturaleza y presenta sus estados por función. El caso abarca el ejercicio del 1 de enero al 31 de diciembre de 2025 y todos los importes están en soles.</p>
+    <div class="datos">
+      <div class="dato"><div class="k">IGV</div><div class="v">18%</div></div>
+      <div class="dato"><div class="k">Impuesto a la renta</div><div class="v">29.5%</div></div>
+      <div class="dato"><div class="k">EsSalud (empleador)</div><div class="v">9%</div></div>
+      <div class="dato"><div class="k">ONP (retención)</div><div class="v">13%</div></div>
+      <div class="dato"><div class="k">Vehículos</div><div class="v">20% anual</div></div>
+      <div class="dato"><div class="k">Equipos de cómputo</div><div class="v">25% anual</div></div>
+    </div>
+    <p class="recuerda">Para simplificar: la renta imponible es igual a la utilidad contable (no hay adiciones ni deducciones), no se hicieron pagos a cuenta del impuesto a la renta y no se registran los asientos de destino (clase 9 contra la 79). La distribución por función se hace en la parte 2.</p>
+  </div>
+
+  <!-- ================= PARTE 1 ================= -->
+  <div class="banda" id="parte-1">
+    <div class="big">Parte 1</div>
+    <div class="tx"><b>Del enunciado al libro diario</b><span>Situación inicial, operaciones, cuatro casos de cálculo y el diario incompleto</span></div>
+    <span class="t">Sesión 1 · 30 min</span>
+  </div>
+
+  <div class="o-sheet" id="s1">
+    <h2 class="cap"><span class="num-cap">1</span>Situación financiera al 1 de enero de 2025</h2>
+    <p>Estos son los saldos con los que la empresa abre el ejercicio. Con ellos se registra el asiento de apertura (asiento 1 del diario).</p>
+    <div data-tabla="inicial"></div>
+  </div>
+
+  <div class="o-sheet" id="s2">
+    <h2 class="cap"><span class="num-cap">2</span>Operaciones del ejercicio 2025</h2>
+    <p>Las que llevan etiqueta roja tienen un caso de cálculo propio en las secciones 3 a 6.</p>
+    <ol class="ops">
+      <li><span class="f">15/02.</span> Compra al crédito de mercaderías a un mayorista de Lima. La factura suma <b>S/ 106,200 incluido el IGV</b>.</li>
+      <li><span class="f">10/03.</span> Venta al crédito de mercaderías por <b>S/ 180,000 más IGV</b>. El costo de lo vendido es S/ 108,000.</li>
+      <li><span class="f">01/04.</span> El banco desembolsa un préstamo de <b>S/ 40,000</b> en la cuenta corriente: 4 cuotas trimestrales, tasa del 3% trimestral, amortización constante (sistema alemán). La primera cuota vence el 30/06/2025.<span class="tag">Caso B</span></li>
+      <li><span class="f">30/04.</span> La junta general acuerda repartir <b>S/ 6,000 de dividendos</b> de las utilidades acumuladas; se pagan el mismo día por transferencia.</li>
+      <li><span class="f">02/05.</span> Los socios aportan <b>S/ 10,000</b> en efectivo como aumento de capital; se depositan en la cuenta corriente.</li>
+      <li><span class="f">01/07.</span> Compra al contado, por transferencia, de computadoras para el área administrativa por <b>S/ 9,440 incluido el IGV</b>.<span class="tag">Caso A</span></li>
+      <li><span class="f">10/08.</span> Se entregan <b>S/ 1,200 en efectivo</b> al vendedor de la empresa, a rendir cuenta, por un viaje de ventas a Cusco.<span class="tag">Caso C</span></li>
+      <li><span class="f">16/08.</span> El vendedor rinde cuentas: factura de hotel por S/ 1,180 (incluye IGV), boletas de alimentación por S/ 280 y planilla de movilidad por S/ 120. Gastó más de lo recibido y la empresa le <b>reembolsa la diferencia en efectivo</b>.<span class="tag">Caso C</span></li>
+      <li><span class="f">Todo el año.</span> Planilla de <b>S/ 2,500 mensuales</b>: S/ 1,500 de administración y S/ 1,000 de ventas. Todos están en la ONP. Se pagaron los netos de los 12 meses; EsSalud y ONP se pagaron hasta noviembre y los de diciembre vencen en enero de 2026.<span class="tag">Caso D</span></li>
+      <li><span class="f">Todo el año.</span> Servicios de luz, agua e internet por <b>S/ 6,000 más IGV</b>, pagados por transferencia. El 60% corresponde a administración y el 40% a ventas.</li>
+      <li><span class="f">Todo el año.</span> Cobranzas a clientes por <b>S/ 202,400</b> y pagos a proveedores por <b>S/ 111,200</b>, todo por la cuenta corriente.</li>
+      <li><span class="f">30/06, 30/09 y 31/12.</span> Se pagan las tres primeras cuotas del préstamo.<span class="tag">Caso B</span></li>
+      <li><span class="f">31/12.</span> Depreciación del ejercicio, en línea recta: el vehículo lo usa el área de ventas y las computadoras, administración.<span class="tag">Caso A</span></li>
+      <li><span class="f">31/12.</span> Impuesto a la renta del ejercicio, 29.5% de la utilidad antes de impuestos. Se calcula en la parte 2.</li>
+    </ol>
+  </div>
+
+  <div class="o-sheet" id="s3">
+    <h2 class="cap"><span class="num-cap">3</span>Caso A · Depreciación del ejercicio</h2>
+    <p>El vehículo viene del año anterior: ya tiene un año depreciado. Las computadoras se compraron el 1 de julio, así que en 2025 solo se deprecian por los meses de uso. Su costo es el valor sin IGV, porque ese IGV es crédito fiscal.</p>
+    <div data-tabla="dep"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Costo de las computadoras: 9,440 ÷ 1.18. Depreciación del año = costo × tasa × meses ÷ 12. Valor neto = costo − depreciación acumulada.</div></details>
+    <div class="mandos" data-sec="dep"></div>
+  </div>
+
+  <div class="o-sheet" id="s4">
+    <h2 class="cap"><span class="num-cap">4</span>Caso B · Préstamo bancario y cuadro de amortización</h2>
+    <p>En el sistema alemán la <b>amortización es la misma en cada cuota</b> (40,000 ÷ 4 = 10,000) y el interés se calcula sobre el saldo que se debe al inicio del trimestre, así que la cuota baja cada vez. La primera fila va resuelta como ejemplo.</p>
+    <div data-tabla="pre"></div>
+    <h3 class="sub">¿Qué se lleva a la contabilidad de 2025?</h3>
+    <div data-tabla="pre2"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Interés = saldo inicial × 3%. Cuota = amortización + interés. En 2025 se pagaron las cuotas 1, 2 y 3; la cuarta vence el 31/03/2026, dentro de los doce meses siguientes, por eso todo el saldo es <b>pasivo corriente</b>.</div></details>
+    <div class="mandos" data-sec="pre"></div>
+  </div>
+
+  <div class="o-sheet" id="s5">
+    <h2 class="cap"><span class="num-cap">5</span>Caso C · Viáticos con gasto de más</h2>
+    <p>Al entregar el dinero no hay gasto todavía: es una cuenta por cobrar al trabajador (1413 Entregas a rendir cuenta). El gasto aparece cuando rinde con sus comprobantes. Solo la factura da crédito fiscal; las boletas y la planilla de movilidad van completas al gasto.</p>
+    <div data-tabla="via"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Hotel: 1,180 ÷ 1.18 = valor sin IGV. Si rindió más de lo que recibió, la empresa le debe la diferencia: se cancela la 1413 por los 1,200 entregados y la diferencia sale de Caja.</div></details>
+    <div class="mandos" data-sec="via"></div>
+  </div>
+
+  <div class="o-sheet" id="s6">
+    <h2 class="cap"><span class="num-cap">6</span>Caso D · Planilla del año, EsSalud y ONP</h2>
+    <p>EsSalud lo paga la empresa encima del sueldo: es gasto. La ONP se descuenta al trabajador: no es gasto, es una retención que la empresa entrega a la SUNAT.</p>
+    <div data-tabla="pla"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Neto = sueldos − ONP. Lo de diciembre es la doceava parte del año. Pagado a la SUNAT = (EsSalud + ONP del año) − lo de diciembre.</div></details>
+    <div class="mandos" data-sec="pla"></div>
+  </div>
+
+  <div class="o-sheet" id="s7">
+    <h2 class="cap"><span class="num-cap">7</span>Libro diario incompleto</h2>
+    <p>Los asientos rutinarios vienen completos; los que dependen de los casos A a D tienen las casillas vacías. Los asientos del 31/12 resumen los movimientos de todo el año. Comprueba que en cada asiento el Debe sea igual al Haber.</p>
+    <div data-tabla="diario"></div>
+    <div class="mandos" data-sec="diario"></div>
+  </div>
+
+  <div class="o-sheet fin-ses">
+    <span class="ico">⏸️</span>
+    <p><b>Fin de la sesión 1.</b> Con el diario completo ya se tienen todos los movimientos del año. En la sesión 2 se pasan al balance de comprobación y de ahí a los estados financieros.</p>
+  </div>
+
+  <!-- ================= PARTE 2 ================= -->
+  <div class="banda v" id="parte-2">
+    <div class="big">Parte 2</div>
+    <div class="tx"><b>Del balance de comprobación a los estados financieros</b><span>Balance, resultados, situación financiera, flujos de efectivo y cambios en el patrimonio</span></div>
+    <span class="t">Sesión 2 · 30 min</span>
+  </div>
+
+  <div class="parte2">
+
+  <div class="o-sheet" id="s8">
+    <h2 class="cap"><span class="num-cap">8</span>Balance de comprobación al 31 de diciembre de 2025</h2>
+    <p>Se agrupan los movimientos del diario por cuenta (a dos dígitos) antes del impuesto a la renta. Las sumas ya vienen hechas; falta sacar el saldo: si el Debe es mayor, el saldo es deudor; si el Haber es mayor, acreedor.</p>
+    <div data-tabla="bc"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>La cuenta 40 junta IGV, EsSalud y ONP: 13,500 + 225 + 325. Las cuentas 60 y 61 se anulan entre sí: con inventario permanente, lo que va al estado de resultados es la 69 Costo de ventas.</div></details>
+    <div class="mandos" data-sec="bc"></div>
+  </div>
+
+  <div class="o-sheet" id="s9">
+    <h2 class="cap"><span class="num-cap">9</span>Estado de resultados del ejercicio 2025</h2>
+    <h3 class="sub">Paso previo: de la naturaleza a la función</h3>
+    <p>El balance trae los gastos por naturaleza (62, 63, 68). El estado de resultados los pide por función: administración y ventas. Usa la información de las operaciones y de los casos.</p>
+    <div data-tabla="fun"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Personal de administración: 18,000 + 9% de EsSalud. De ventas: 12,000 + 9%. La 63 ya viene repartida: servicios 60/40 y los viáticos, todos a ventas. Depreciación: el vehículo es de ventas y las computadoras, de administración.</div></details>
+    <div class="mandos" data-sec="fun"></div>
+
+    <h3 class="sub">Estado de resultados por función</h3>
+    <div data-tabla="er"></div>
+    <h3 class="sub">Asiento 21 · Impuesto a la renta del ejercicio</h3>
+    <div data-tabla="ir"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Impuesto = resultado antes de impuestos × 29.5%. Como no hubo pagos a cuenta, queda todo por pagar en la 4017.</div></details>
+    <div class="mandos" data-sec="er"></div>
+  </div>
+
+  <div class="o-sheet" id="s10">
+    <h2 class="cap"><span class="num-cap">10</span>Estado de situación financiera al 31 de diciembre de 2025</h2>
+    <p>Los saldos del balance de comprobación, más el impuesto a la renta por pagar, ordenados en corriente y no corriente.</p>
+    <div data-tabla="esf"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Tributos por pagar = cuenta 40 del balance (14,050) + impuesto a la renta (4,779). Resultados acumulados: 18,000 iniciales − 6,000 de dividendos. El préstamo vence en marzo de 2026: pasivo corriente.</div></details>
+    <div class="mandos" data-sec="esf"></div>
+  </div>
+
+  <div class="o-sheet" id="s11">
+    <h2 class="cap"><span class="num-cap">11</span>Estado de flujos de efectivo · método directo</h2>
+    <p>Solo entran los asientos que mueven las cuentas 101 y 1041. Los intereses del préstamo los presentamos en financiación. El efectivo final tiene que ser igual al del estado de situación financiera.</p>
+    <div data-tabla="efe"></div>
+    <details class="pista"><summary>💡 Pista</summary><div>Viáticos: salieron 1,200 al entregar y 380 al reembolsar. EsSalud y ONP: solo lo pagado (enero a noviembre). La compra de computadoras se presenta con su IGV, porque eso es lo que salió del banco.</div></details>
+    <div class="mandos" data-sec="efe"></div>
+  </div>
+
+  <div class="o-sheet" id="s12">
+    <h2 class="cap"><span class="num-cap">12</span>Estado de cambios en el patrimonio del ejercicio 2025</h2>
+    <p>Explica por qué el patrimonio pasó de 118,000 a su saldo final. El resultado del ejercicio entra en la columna de resultados acumulados.</p>
+    <div data-tabla="ecp"></div>
+    <div class="mandos" data-sec="ecp"></div>
+  </div>
+
+  <div class="o-sheet" id="s13">
+    <h2 class="cap"><span class="num-cap">13</span>Conclusiones</h2>
+    <ol class="concl">
+      <li>La empresa cerró 2025 con una <b>utilidad de S/ 11,421</b>: la venta dejó 72,000 de margen bruto, pero la depreciación del vehículo (12,000) y el personal (32,700) se llevaron buena parte.</li>
+      <li>El efectivo subió de 45,000 a <b>97,250</b>. Casi todo vino de la operación (50,390); el préstamo neto de amortizaciones, el aporte y los dividendos sumaron 11,300 y las computadoras costaron 9,440.</li>
+      <li>La utilidad (11,421) y el aumento del efectivo (52,250) no coinciden: hay cobranzas por cobrar, compras por pagar, depreciación que no es salida de dinero y tributos que se pagan en 2026.</li>
+      <li>Todo el pasivo es corriente (48,829): el préstamo vence en marzo de 2026 y el IGV, el impuesto a la renta y los aportes de diciembre se pagan en los primeros meses del año.</li>
+      <li>Los viáticos gastados de más no son una pérdida aparte: el exceso es gasto de viaje igual que el resto, y la diferencia se le devuelve al trabajador.</li>
+      <li>Los estados se cruzan entre sí: el efectivo del flujo es el del balance (97,250) y el patrimonio del estado de cambios es el de la situación financiera (133,421).</li>
+    </ol>
+    <h3 class="sub">Referencias</h3>
+    <ul class="refs">
+      <li>NIC 1 · Presentación de estados financieros.</li>
+      <li>NIC 7 · Estado de flujos de efectivo.</li>
+      <li>NIC 16 · Propiedades, planta y equipo.</li>
+      <li>Plan Contable General Empresarial, versión modificada 2019.</li>
+      <li>Reglamento de la Ley del Impuesto a la Renta, artículo 22: tasas máximas de depreciación.</li>
+    </ul>
+  </div>
+
+  </div><!-- /parte2 -->
+
+  <div class="o-sheet no-imp">
+    <div class="pie-acc">
+      <div id="reinicio"></div>
+      <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+    </div>
+  </div>
+
+  <div class="o-footer">
+    <span>Caso integral · Comercial Andina del Sur S.A.C.</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+
+var LS='mono_andina_v1';
+var est={};
+try{ est=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ est={}; }
+function guarda(){ try{ localStorage.setItem(LS,JSON.stringify(est)); }catch(e){} }
+
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function fmt(v){
+  if(v===null||v===undefined||v==='') return '';
+  if(typeof v!=='number') return v;
+  var a=Math.abs(v);
+  var s=a.toLocaleString('en-US',{minimumFractionDigits:(a%1?2:0),maximumFractionDigits:2});
+  return v<0?'('+s+')':s;
+}
+function lee(t){
+  t=String(t).trim();
+  if(!t) return null;
+  var neg=/^\(.*\)$/.test(t)||/^-/.test(t);
+  t=t.replace(/[()\s]|S\/|-/g,'');
+  if(/^\d{1,3}(\.\d{3})+$/.test(t)) t=t.replace(/\./g,'');   /* 12.000 escrito al estilo europeo */
+  t=t.replace(/,/g,'');
+  if(!/^\d*\.?\d+$/.test(t)) return NaN;
+  var n=parseFloat(t);
+  return neg?-n:n;
+}
+
+/* ---------- casillas ---------- */
+/* B(v) marca una casilla en blanco cuya respuesta es v */
+function B(v){ return {b:v}; }
+var cont={};   /* contador de casillas por tabla */
+function casilla(tab,v){
+  cont[tab]=(cont[tab]||0)+1;
+  var id=tab+'-'+cont[tab];
+  var val=est[id]||'';
+  var cl='caja'+(est['$'+id]?' sol':'');
+  return '<span class="'+cl+'"><input type="text" inputmode="decimal" autocomplete="off" placeholder="?" '+
+         'data-id="'+id+'" data-ok="'+v+'" value="'+esc(val)+'" aria-label="Casilla por completar"></span>';
+}
+function celda(tab,c){
+  if(c===null||c===undefined) return '';
+  if(typeof c==='object' && 'b' in c) return casilla(tab,c.b);
+  if(typeof c==='object' && 'h' in c) return c.h;
+  if(typeof c==='number') return fmt(c);
+  return esc(c);
+}
+
+/* Tabla genérica.
+   spec.cab   encabezados; spec.g grupos [[texto,colspan],...] opcional
+   spec.n     índices de columnas numéricas
+   spec.f     filas: {c:[celdas], cl:'sub|tot|gran|tit', ind:1|2} */
+function tabla(tab,spec){
+  var n=spec.n||[];
+  var h='<div class="tabla-wrap"><table class="ct'+(spec.cls?' '+spec.cls:'')+'"><thead>';
+  if(spec.g){
+    h+='<tr class="g">'+spec.g.map(function(x){ return '<th colspan="'+x[1]+'">'+esc(x[0])+'</th>'; }).join('')+'</tr>';
+  }
+  h+='<tr>'+spec.cab.map(function(t,i){ return '<th'+(n.indexOf(i)>=0?' class="n"':'')+'>'+esc(t)+'</th>'; }).join('')+'</tr></thead><tbody>';
+  spec.f.forEach(function(r){
+    if(r.tit){ h+='<tr class="tit"><td colspan="'+spec.cab.length+'">'+esc(r.tit)+'</td></tr>'; return; }
+    h+='<tr'+(r.cl?' class="'+r.cl+'"':'')+'>';
+    r.c.forEach(function(c,i){
+      var cl=[];
+      if(n.indexOf(i)>=0) cl.push('n');
+      if(i===0 && r.ind) cl.push(r.ind===2?'ind2':'ind');
+      h+='<td'+(cl.length?' class="'+cl.join(' ')+'"':'')+'>'+celda(tab,c)+'</td>';
+    });
+    h+='</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+
+/* ================= datos del caso ================= */
+
+var T={};
+
+T.inicial=function(){
+  return tabla('inicial',{cab:['Activo','S/','Pasivo y patrimonio','S/'],n:[1,3],f:[
+    {c:['Caja',5000,'Facturas por pagar',25000]},
+    {c:['Cuentas corrientes',40000,'',null]},
+    {c:['Facturas por cobrar',20000,'Capital',100000]},
+    {c:['Mercaderías',30000,'Utilidades acumuladas',18000]},
+    {c:['Vehículo (costo)',60000,'',null]},
+    {c:['Depreciación acumulada del vehículo',-12000,'',null]},
+    {cl:'tot',c:['Total activo',143000,'Total pasivo y patrimonio',143000]}
+  ]});
+};
+
+T.dep=function(){
+  return tabla('dep',{cab:['Activo','Costo','Tasa','Meses en 2025','Depreciación 2025','Dep. acumulada al 31/12','Valor neto al 31/12'],n:[1,2,3,4,5,6],f:[
+    {c:['Vehículo (ventas)',60000,'20%',12,B(12000),B(24000),B(36000)]},
+    {c:['Computadoras (administración)',B(8000),'25%',B(6),B(1000),B(1000),B(7000)]},
+    {cl:'tot',c:['Total',68000,'','',B(13000),B(25000),B(43000)]}
+  ]});
+};
+
+T.pre=function(){
+  return tabla('pre',{cab:['Cuota','Vencimiento','Saldo inicial','Interés 3%','Amortización','Cuota total','Saldo final'],n:[2,3,4,5,6],f:[
+    {c:['1','30/06/2025',40000,1200,10000,11200,30000]},
+    {c:['2','30/09/2025',30000,B(900),10000,B(10900),B(20000)]},
+    {c:['3','31/12/2025',20000,B(600),10000,B(10600),B(10000)]},
+    {c:['4','31/03/2026',10000,B(300),10000,B(10300),B(0)]},
+    {cl:'tot',c:['Total','','',3000,40000,43000,'']}
+  ]});
+};
+T.pre2=function(){
+  return tabla('pre',{cab:['Concepto','S/'],n:[1],f:[
+    {c:['Amortización pagada en 2025 (cuotas 1 a 3) · disminuye la 4511',B(30000)]},
+    {c:['Intereses pagados en 2025 · gasto financiero 6731',B(2700)]},
+    {c:['Saldo del préstamo al 31/12/2025 · pasivo corriente',B(10000)]}
+  ]});
+};
+
+T.via=function(){
+  return tabla('via',{cab:['Comprobante rendido','Importe pagado','Gasto (631)','IGV (crédito fiscal)'],n:[1,2,3],f:[
+    {c:['Factura de hotel · 6313 Alojamiento',1180,B(1000),B(180)]},
+    {c:['Boletas de alimentación · 6314 Alimentación',280,280,'—']},
+    {c:['Planilla de movilidad · 6311 Transporte',120,120,'—']},
+    {cl:'tot',c:['Total rendido',B(1580),B(1400),180]},
+    {c:['(−) Entregado a rendir el 10/08 (1413)',-1200,'','']},
+    {cl:'gran',c:['Diferencia que la empresa le reembolsa',B(380),'','']}
+  ]});
+};
+
+T.pla=function(){
+  return tabla('pla',{cab:['Concepto del año','Cálculo','S/'],n:[2],f:[
+    {c:['Sueldos (administración 18,000 · ventas 12,000)','2,500 × 12',30000]},
+    {c:['EsSalud · aporte de la empresa (gasto 6271)','9% de los sueldos',B(2700)]},
+    {c:['ONP · retención al trabajador (4032)','13% de los sueldos',B(3900)]},
+    {c:['Neto pagado a los trabajadores (4111)','sueldos − ONP',B(26100)]},
+    {c:['EsSalud de diciembre, pendiente','',B(225)]},
+    {c:['ONP de diciembre, pendiente','',B(325)]},
+    {cl:'tot',c:['EsSalud y ONP pagados de enero a noviembre','',B(6050)]}
+  ]});
+};
+
+/* Libro diario: [código, cuenta, debe, haber]; d/h como B(v) para dejar casilla */
+var DIARIO=[
+  {n:1,f:'01/01',g:'Por los saldos iniciales del ejercicio 2025.',l:[
+    ['101','Caja',5000,0],['1041','Cuentas corrientes operativas',40000,0],['1212','Facturas por cobrar – emitidas en cartera',20000,0],
+    ['2011','Mercaderías',30000,0],['3341','Vehículos motorizados',60000,0],
+    ['39525','Depreciación acumulada – unidades de transporte',0,12000],['4212','Facturas por pagar – emitidas',0,25000],
+    ['5011','Capital – acciones',0,100000],['5911','Utilidades acumuladas',0,18000]]},
+  {n:2,f:'15/02',g:'Por la compra al crédito de mercaderías según factura.',l:[
+    ['6011','Compras – mercaderías',B(90000),0],['40111','IGV – cuenta propia',B(16200),0],['4212','Facturas por pagar – emitidas',0,106200]]},
+  {n:3,f:'15/02',g:'Por el ingreso de la mercadería al almacén.',l:[
+    ['2011','Mercaderías',90000,0],['6111','Variación de inventarios – mercaderías',0,90000]]},
+  {n:4,f:'10/03',g:'Por la venta al crédito de mercaderías.',l:[
+    ['1212','Facturas por cobrar – emitidas en cartera',B(212400),0],['40111','IGV – cuenta propia',0,B(32400)],['7012','Ventas – mercaderías, venta local',0,180000]]},
+  {n:5,f:'10/03',g:'Por el costo de la mercadería vendida.',l:[
+    ['6912','Costo de ventas – mercaderías, venta local',108000,0],['2011','Mercaderías',0,108000]]},
+  {n:6,f:'01/04',g:'Por el préstamo bancario recibido en la cuenta corriente.',l:[
+    ['1041','Cuentas corrientes operativas',40000,0],['4511','Préstamos de instituciones financieras',0,40000]]},
+  {n:7,f:'30/04',g:'Por el acuerdo de la junta de repartir dividendos.',l:[
+    ['5911','Utilidades acumuladas',6000,0],['4412','Dividendos por pagar',0,6000]]},
+  {n:8,f:'30/04',g:'Por el pago de los dividendos.',l:[
+    ['4412','Dividendos por pagar',6000,0],['1041','Cuentas corrientes operativas',0,6000]]},
+  {n:9,f:'02/05',g:'Por el aporte de capital en efectivo.',l:[
+    ['1041','Cuentas corrientes operativas',10000,0],['5011','Capital – acciones',0,10000]]},
+  {n:10,f:'01/07',g:'Por la compra al contado de las computadoras.',l:[
+    ['3361','Equipo para procesamiento de información',B(8000),0],['40111','IGV – cuenta propia',B(1440),0],['1041','Cuentas corrientes operativas',0,9440]]},
+  {n:11,f:'10/08',g:'Por la entrega de viáticos a rendir cuenta.',l:[
+    ['1413','Entregas a rendir cuenta',1200,0],['101','Caja',0,1200]]},
+  {n:12,f:'16/08',g:'Por la rendición de viáticos y el reembolso de lo gastado de más.',l:[
+    ['6313','Alojamiento',B(1000),0],['6314','Alimentación',280,0],['6311','Transporte (movilidad)',120,0],
+    ['40111','IGV – cuenta propia',B(180),0],['1413','Entregas a rendir cuenta',0,B(1200)],['101','Caja',0,B(380)]]},
+  {n:13,f:'31/12',g:'Por los servicios básicos del año.',l:[
+    ['636','Servicios básicos',6000,0],['40111','IGV – cuenta propia',B(1080),0],['1041','Cuentas corrientes operativas',0,7080]]},
+  {n:14,f:'31/12',g:'Por la planilla del año.',l:[
+    ['6211','Sueldos y salarios',30000,0],['6271','Régimen de prestaciones de salud (EsSalud)',B(2700),0],
+    ['4031','EsSalud',0,B(2700)],['4032','ONP',0,B(3900)],['4111','Sueldos y salarios por pagar',0,B(26100)]]},
+  {n:15,f:'31/12',g:'Por el pago de los netos de la planilla.',l:[
+    ['4111','Sueldos y salarios por pagar',B(26100),0],['1041','Cuentas corrientes operativas',0,B(26100)]]},
+  {n:16,f:'31/12',g:'Por el pago de EsSalud y ONP de enero a noviembre.',l:[
+    ['4031','EsSalud',B(2475),0],['4032','ONP',B(3575),0],['1041','Cuentas corrientes operativas',0,B(6050)]]},
+  {n:17,f:'31/12',g:'Por las cobranzas a clientes del año.',l:[
+    ['1041','Cuentas corrientes operativas',202400,0],['1212','Facturas por cobrar – emitidas en cartera',0,202400]]},
+  {n:18,f:'31/12',g:'Por los pagos a proveedores del año.',l:[
+    ['4212','Facturas por pagar – emitidas',111200,0],['1041','Cuentas corrientes operativas',0,111200]]},
+  {n:19,f:'31/12',g:'Por el pago de las cuotas 1, 2 y 3 del préstamo, según el cuadro.',l:[
+    ['4511','Préstamos de instituciones financieras',B(30000),0],['6731','Intereses – préstamos de instituciones financieras',B(2700),0],
+    ['1041','Cuentas corrientes operativas',0,B(32700)]]},
+  {n:20,f:'31/12',g:'Por la depreciación del ejercicio.',l:[
+    ['68413','Depreciación – unidades de transporte',B(12000),0],['68415','Depreciación – equipos diversos',B(1000),0],
+    ['39525','Depreciación acumulada – unidades de transporte',0,B(12000)],['39527','Depreciación acumulada – equipos diversos',0,B(1000)]]}
+];
+
+function filasDiario(tab,lista,cl){
+  var h='';
+  lista.forEach(function(a){
+    h+='<tr class="asi'+(cl?' '+cl:'')+'"><td>'+a.n+'</td><td>'+a.f+'</td><td colspan="4"></td></tr>';
+    a.l.forEach(function(x){
+      var haber=(x[2]===0);
+      h+='<tr><td></td><td></td><td class="c">'+x[0]+'</td><td'+(haber?' class="hab"':'')+'>'+esc(x[1])+'</td>'+
+         '<td class="n">'+(x[2]?celda(tab,x[2]):'')+'</td><td class="n">'+(x[3]?celda(tab,x[3]):'')+'</td></tr>';
+    });
+    h+='<tr class="glosa"><td></td><td></td><td></td><td colspan="3">'+esc(a.g)+'</td></tr>';
+  });
+  return h;
+}
+function cabDiario(){
+  return '<div class="tabla-wrap"><table class="ct diario"><thead><tr><th>N.°</th><th>Fecha</th><th>Código</th><th>Cuenta</th><th class="n">Debe</th><th class="n">Haber</th></tr></thead><tbody>';
+}
+T.diario=function(){
+  return cabDiario()+filasDiario('diario',DIARIO)+
+    '<tr class="tot"><td></td><td></td><td></td><td>Sumas iguales del diario (asientos 1 a 20)</td><td class="n">1,177,050</td><td class="n">1,177,050</td></tr>'+
+    '</tbody></table></div>';
+};
+
+T.bc=function(){
+  return tabla('bc',{g:[['',2],['Sumas',2],['Saldos',2]],cab:['Cuenta','Denominación','Debe','Haber','Deudor','Acreedor'],n:[2,3,4,5],f:[
+    {c:['10','Efectivo y equivalentes de efectivo',297400,200150,B(97250),'']},
+    {c:['12','Cuentas por cobrar comerciales – terceros',232400,202400,B(30000),'']},
+    {c:['14','Cuentas por cobrar al personal',1200,1200,'—','—']},
+    {c:['20','Mercaderías',120000,108000,B(12000),'']},
+    {c:['33','Propiedad, planta y equipo',68000,0,68000,'']},
+    {c:['39','Depreciación acumulada',0,25000,'',B(25000)]},
+    {c:['40','Tributos y aportes por pagar',24950,39000,'',B(14050)]},
+    {c:['41','Remuneraciones por pagar',26100,26100,'—','—']},
+    {c:['42','Cuentas por pagar comerciales – terceros',111200,131200,'',B(20000)]},
+    {c:['44','Cuentas por pagar a los accionistas',6000,6000,'—','—']},
+    {c:['45','Obligaciones financieras',30000,40000,'',B(10000)]},
+    {c:['50','Capital',0,110000,'',110000]},
+    {c:['59','Resultados acumulados',6000,18000,'',B(12000)]},
+    {c:['60','Compras',90000,0,90000,'']},
+    {c:['61','Variación de inventarios',0,90000,'',90000]},
+    {c:['62','Gastos de personal',32700,0,B(32700),'']},
+    {c:['63','Gastos de servicios prestados por terceros',7400,0,B(7400),'']},
+    {c:['67','Gastos financieros',2700,0,B(2700),'']},
+    {c:['68','Valuación y deterioro de activos (depreciación)',13000,0,B(13000),'']},
+    {c:['69','Costo de ventas',108000,0,108000,'']},
+    {c:['70','Ventas',0,180000,'',180000]},
+    {cl:'gran',c:['','Totales',1177050,1177050,B(461050),B(461050)]}
+  ]});
+};
+
+T.fun=function(){
+  return tabla('fun',{cab:['Gasto por naturaleza','Total','Administración','Ventas'],n:[1,2,3],f:[
+    {c:['62 Gastos de personal (sueldos + EsSalud)',32700,B(19620),B(13080)]},
+    {c:['63 Servicios (luz 60/40 · viáticos a ventas)',7400,3600,3800]},
+    {c:['68 Depreciación',13000,B(1000),B(12000)]},
+    {cl:'tot',c:['Total',53100,B(24220),B(28880)]}
+  ]});
+};
+
+T.er=function(){
+  return tabla('er',{cab:['Comercial Andina del Sur S.A.C. · del 1 de enero al 31 de diciembre de 2025','S/'],n:[1],f:[
+    {c:['Ventas netas',180000]},
+    {c:['Costo de ventas',B(-108000)]},
+    {cl:'tot',c:['Utilidad bruta',B(72000)]},
+    {c:['Gastos de administración',B(-24220)]},
+    {c:['Gastos de ventas',B(-28880)]},
+    {cl:'tot',c:['Utilidad operativa',B(18900)]},
+    {c:['Gastos financieros',B(-2700)]},
+    {cl:'tot',c:['Resultado antes del impuesto a la renta',B(16200)]},
+    {c:['Impuesto a la renta (29.5%)',B(-4779)]},
+    {cl:'gran',c:['Resultado del ejercicio',B(11421)]}
+  ]});
+};
+T.ir=function(){
+  return cabDiario()+filasDiario('er',[{n:21,f:'31/12',g:'Por el impuesto a la renta del ejercicio 2025.',l:[
+    ['881','Impuesto a las ganancias – corriente',B(4779),0],['40171','Impuesto a la renta – renta de tercera categoría',0,B(4779)]]}],'p2')+
+    '</tbody></table></div>';
+};
+
+T.esf=function(){
+  return tabla('esf',{cab:['Comercial Andina del Sur S.A.C. · al 31 de diciembre de 2025','S/'],n:[1],f:[
+    {tit:'Activo'},
+    {cl:'sub',c:['Activo corriente','']},
+    {ind:1,c:['Efectivo y equivalentes de efectivo',B(97250)]},
+    {ind:1,c:['Cuentas por cobrar comerciales',B(30000)]},
+    {ind:1,c:['Inventarios (mercaderías)',B(12000)]},
+    {cl:'tot',c:['Total activo corriente',B(139250)]},
+    {cl:'sub',c:['Activo no corriente','']},
+    {ind:1,c:['Propiedad, planta y equipo (costo)',68000]},
+    {ind:1,c:['Depreciación acumulada',B(-25000)]},
+    {cl:'tot',c:['Total activo no corriente',B(43000)]},
+    {cl:'gran',c:['TOTAL ACTIVO',B(182250)]},
+    {tit:'Pasivo'},
+    {cl:'sub',c:['Pasivo corriente','']},
+    {ind:1,c:['Tributos y aportes por pagar',B(18829)]},
+    {ind:1,c:['Cuentas por pagar comerciales',B(20000)]},
+    {ind:1,c:['Obligaciones financieras',B(10000)]},
+    {cl:'tot',c:['Total pasivo corriente',B(48829)]},
+    {cl:'sub',c:['Pasivo no corriente','—']},
+    {cl:'tot',c:['Total pasivo',B(48829)]},
+    {tit:'Patrimonio'},
+    {ind:1,c:['Capital',110000]},
+    {ind:1,c:['Resultados acumulados',B(12000)]},
+    {ind:1,c:['Resultado del ejercicio',B(11421)]},
+    {cl:'tot',c:['Total patrimonio',B(133421)]},
+    {cl:'gran',c:['TOTAL PASIVO Y PATRIMONIO',B(182250)]}
+  ]});
+};
+
+T.efe=function(){
+  return tabla('efe',{cab:['Comercial Andina del Sur S.A.C. · del 1 de enero al 31 de diciembre de 2025','S/'],n:[1],f:[
+    {tit:'Actividades de operación'},
+    {ind:1,c:['Cobranza a clientes',B(202400)]},
+    {ind:1,c:['Pago a proveedores',B(-111200)]},
+    {ind:1,c:['Pago de remuneraciones',B(-26100)]},
+    {ind:1,c:['Pago de EsSalud y ONP',B(-6050)]},
+    {ind:1,c:['Pago de servicios básicos',B(-7080)]},
+    {ind:1,c:['Pago de viáticos (entrega y reembolso)',B(-1580)]},
+    {cl:'tot',c:['Flujo neto de las actividades de operación',B(50390)]},
+    {tit:'Actividades de inversión'},
+    {ind:1,c:['Compra de equipos de cómputo',B(-9440)]},
+    {cl:'tot',c:['Flujo neto de las actividades de inversión',-9440]},
+    {tit:'Actividades de financiación'},
+    {ind:1,c:['Préstamo bancario recibido',40000]},
+    {ind:1,c:['Amortización del préstamo',B(-30000)]},
+    {ind:1,c:['Intereses pagados',B(-2700)]},
+    {ind:1,c:['Aporte de capital',10000]},
+    {ind:1,c:['Dividendos pagados',-6000]},
+    {cl:'tot',c:['Flujo neto de las actividades de financiación',B(11300)]},
+    {cl:'sub',c:['Aumento neto del efectivo',B(52250)]},
+    {c:['Efectivo al 1 de enero de 2025',B(45000)]},
+    {cl:'gran',c:['Efectivo al 31 de diciembre de 2025',B(97250)]}
+  ]});
+};
+
+T.ecp=function(){
+  return tabla('ecp',{cab:['Comercial Andina del Sur S.A.C. · ejercicio 2025','Capital','Resultados acumulados','Total patrimonio'],n:[1,2,3],f:[
+    {cl:'sub',c:['Saldo al 1 de enero de 2025',100000,18000,B(118000)]},
+    {c:['Aporte de capital de los socios',B(10000),'—',10000]},
+    {c:['Dividendos declarados','—',B(-6000),-6000]},
+    {c:['Resultado del ejercicio','—',B(11421),11421]},
+    {cl:'gran',c:['Saldo al 31 de diciembre de 2025',B(110000),B(23421),B(133421)]}
+  ]});
+};
+
+/* ================= montaje ================= */
+document.querySelectorAll('[data-tabla]').forEach(function(d){
+  var k=d.getAttribute('data-tabla');
+  if(T[k]) d.innerHTML=T[k]();
+});
+
+var NOMBRES={dep:'Caso A',pre:'Caso B',via:'Caso C',pla:'Caso D',diario:'Libro diario',bc:'Balance',fun:'Distribución',er:'Resultados',esf:'Situación financiera',efe:'Flujos',ecp:'Patrimonio'};
+
+function inputsDe(sec){ return Array.prototype.slice.call(document.querySelectorAll('input[data-id^="'+sec+'-"]')); }
+function correcta(inp){
+  var v=lee(inp.value), ok=parseFloat(inp.getAttribute('data-ok'));
+  return v!==null && !isNaN(v) && Math.abs(Math.abs(v)-Math.abs(ok))<0.5;
+}
+
+document.querySelectorAll('.mandos[data-sec]').forEach(function(m){
+  var sec=m.getAttribute('data-sec');
+  m.innerHTML='<button type="button" class="rev">Revisar</button>'+
+              '<button type="button" class="sol">Ver solución</button>'+
+              '<span class="res"></span>';
+  var res=m.querySelector('.res');
+  m.querySelector('.rev').addEventListener('click',function(){
+    var ins=inputsDe(sec), bien=0, vacias=0;
+    ins.forEach(function(inp){
+      var c=inp.parentNode;
+      c.classList.remove('bien','mal','falta');
+      if(lee(inp.value)===null){ c.classList.add('falta'); vacias++; }
+      else if(correcta(inp)){ c.classList.add('bien'); bien++; }
+      else c.classList.add('mal');
+    });
+    res.className='res '+(bien===ins.length?'todo':'algo');
+    res.textContent=bien===ins.length ? '¡Todo correcto! '+bien+' de '+ins.length :
+      bien+' de '+ins.length+' correctas'+(vacias?' · '+vacias+' vacías':'');
+  });
+  var armado=false, t=null;
+  var bSol=m.querySelector('.sol');
+  bSol.addEventListener('click',function(){
+    if(!armado){
+      armado=true; bSol.textContent='¿Seguro? Clic otra vez';
+      t=setTimeout(function(){ armado=false; bSol.textContent='Ver solución'; },4000);
+      return;
+    }
+    clearTimeout(t); armado=false; bSol.textContent='Ver solución';
+    inputsDe(sec).forEach(function(inp){
+      if(correcta(inp)) return;
+      var id=inp.getAttribute('data-id');
+      inp.value=fmt(parseFloat(inp.getAttribute('data-ok')));
+      est[id]=inp.value; est['$'+id]=1;
+      inp.parentNode.classList.remove('bien','mal','falta');
+      inp.parentNode.classList.add('sol');
+    });
+    guarda(); avance();
+    res.className='res algo'; res.textContent='Solución a la vista (en azul lo que completó el docente)';
+  });
+});
+
+document.addEventListener('input',function(e){
+  var inp=e.target;
+  if(!inp.matches || !inp.matches('input[data-id]')) return;
+  var id=inp.getAttribute('data-id');
+  est[id]=inp.value; delete est['$'+id];
+  inp.parentNode.classList.remove('bien','mal','falta','sol');
+  guarda(); avance();
+});
+
+/* Enter pasa a la siguiente casilla */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Enter' || !e.target.matches || !e.target.matches('input[data-id]')) return;
+  e.preventDefault();
+  var todas=Array.prototype.slice.call(document.querySelectorAll('input[data-id]'));
+  var i=todas.indexOf(e.target);
+  if(i>=0 && todas[i+1]) todas[i+1].focus();
+});
+
+function avance(){
+  var todas=document.querySelectorAll('input[data-id]'), llenas=0;
+  todas.forEach(function(i){ if(i.value.trim()) llenas++; });
+  var p=todas.length?Math.round(100*llenas/todas.length):0;
+  document.getElementById('riel').style.width=p+'%';
+  document.getElementById('cuenta').textContent=llenas+' de '+todas.length+' casillas respondidas';
+  document.getElementById('cuentaTop').textContent=llenas+' de '+todas.length+' casillas';
+}
+avance();
+
+if(window.Reinicio){
+  Reinicio.monta({
+    donde:'reinicio',
+    claves:[LS],
+    texto:'Reiniciar todo el caso',
+    aviso:'¿Borrar todas las respuestas de las dos partes?',
+    hecho:function(){ location.reload(); }
+  });
+}
+})();
+</script>
+
+</body>
+</html>
