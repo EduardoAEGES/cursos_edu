@@ -1,0 +1,160 @@
+===============================================================================
+CONTEXTO DEL PROYECTO — INVESTIGACIÓN CUANTITATIVA · MARKETING II (2026-II)
+Resumen para dar contexto a otro chat. Todo lo escrito aquí es información del
+curso; puede usarse como referencia.
+===============================================================================
+
+1) QUIÉN Y QUÉ CURSO
+- Docente del curso "Investigación Cuantitativa", del Programa de Marketing,
+  II semestre, periodo 2026-II (instituto en Arequipa, Perú).
+- El curso es la parte CUANTITATIVA (encuestas) del Proyecto Integrador de
+  Marketing II, cuyo tema general es: "Innovación de producto con enfoque
+  sostenible".
+- Clases: 2 sesiones por semana. Sesión 1 = 3 horas académicas; Sesión 2 =
+  2 horas académicas.
+
+2) EL PROYECTO INTEGRADOR (ESTRUCTURA DEL INFORME)
+El informe final tiene esta estructura (cada parte la desarrolla un curso
+distinto; aquí solo interesa lo CUANTITATIVO):
+  - Carátula, Resumen Ejecutivo, Índice, Introducción.
+  - Capítulo 1: Marco teórico.
+  - Capítulo 2: Análisis de la información recopilada.
+      2.1 Problemática comercial (FODA, Ishikawa).
+      2.2 Método de investigación  <-- CUANTITATIVA
+          2.2.1 Planteamiento: problema, variables (dep/indep) e hipótesis.
+          2.2.2 Técnicas de muestreo y tamaño de la muestra.
+          2.2.3 Diseño del cuestionario (tipos de preguntas y escalas).
+          2.2.4 Instrumentos cualitativos (otro curso).
+      2.3 Resultados de la investigación  <-- CUANTITATIVA / ESTADÍSTICA
+          2.3.1 Procesamiento de datos (Excel / Jamovi).
+          2.3.2 Estadística descriptiva (tendencia central y dispersión).
+          2.3.3 Gráficos, intervalos de confianza y prueba de hipótesis.
+      2.4 Público objetivo (segmentación).          <-- CUANTITATIVA
+      2.5 Propuesta de valor y posicionamiento (2.5.1 imagen/posicionamiento). <-- CUANT.
+      2.6 Evaluación del producto (2.6.1 percepción y satisfacción). <-- CUANT.
+  - Capítulo 3: Propuesta de innovación (otros cursos).
+  - Conclusiones, Bibliografía (APA 7), Anexos (A.2 cuestionario; A.3 base/salidas).
+Formato del informe: APA 7.ª ed., Times New Roman 12, interlineado doble,
+márgenes 2.54 cm. Equipos de 3 a 4 estudiantes.
+
+3) DÓNDE VAN HOY LOS EQUIPOS (ESTADO)
+- Ya tienen hechos: los cuadros de análisis previos (cinco pilares, problema,
+  objetivo general, dimensiones, indicadores y escalas) y el CUESTIONARIO.
+- La encuesta está en campo recolectando respuestas.
+- AÚN NO han empezado a redactar el informe. El informe arranca en la Semana 8.
+- Hitos: resultados ~Semana 9; análisis de datos desde la Semana 10; la parte
+  cuantitativa debe quedar cerrada en la Semana 14.
+
+4) METODOLOGÍA DEL CUESTIONARIO QUE SE ENSEÑA (para entender los cuadros)
+Flujo "Del objetivo general al cuestionario": cinco pilares (qué medir, de
+quién, dónde, cuándo, para qué) -> problema (una sola pregunta) -> objetivo
+general (verbo de investigación: determinar/identificar/medir...; NO vender ni
+posicionar) -> dimensiones (Perfil, Comportamiento, Marca, Producto, Precio,
+Demanda) con un objetivo específico e indicadores por dimensión -> escala y
+nivel por indicador.
+Reglas escala/nivel:
+  - Identificar/describir -> opción única -> nominal.
+  - Determinar una cantidad -> rangos numéricos -> razón.
+  - Evaluar/medir una actitud -> Likert 5 -> ordinal (a veces tratado como
+    intervalo en clase).
+  - Medir demanda/intención -> escala de intención -> intervalo.
+Estructura del cuestionario por bloques (orden que no se cambia):
+  S1-S4 selección/filtro -> P1-P5 calentamiento y conducta (P5 = recordación de
+  marca, sin leer lista) -> P6-P10 escalas de actitud -> LÁMINA de la propuesta
+  -> P11-P13 reacción (P11 agrado, P12 precio en rangos, P13 intención) ->
+  D1-D3 datos de clasificación (sexo, distrito, ocupación).
+
+5) MUESTRA (cómo se calcula)
+- Población (N): se obtiene del INEI (Censos Nacionales 2025 y Estimaciones y
+  proyecciones de población por edad y distrito; portal censos2025.inei.gob.pe).
+  Si solo hay grupos quinquenales, para 18-30: toma 2/5 del grupo 15-19, todo
+  el 20-24, todo el 25-29 y 1/5 del 30-34.
+- Fórmula (población conocida):
+      n = N·Z²·p·q / [ e²·(N-1) + Z²·p·q ]
+  con Z=1.96 (95%), p=q=0.5, e=0.05. Para N grande, n ~ 384.
+
+6) PLAN DE TRABAJO VIGENTE (SEMANA 8 A 14)
+Ritmo por semana: Sesión 1 (3h) = 1h teoría + 2h práctica/avance; Sesión 2 (2h)
+= 1h teoría + 1h avance guiado. En AMBAS se resuelve primero un CASO GUÍA y
+luego cada equipo avanza su propio proyecto.
+  - S8 (6-7 oct): INICIO del informe. 2.2.1 planteamiento/variables/hipótesis y
+    2.2.2 muestra. (La encuesta sigue recolectando.)
+  - S9 (13-14 oct): 2.2.3 instrumento (al Anexo A.2) y preparación de la base
+    (libro de códigos, base vacía). Cierre de encuesta; llegan resultados.
+  - S10 (20-21 oct): procesamiento y estadística descriptiva (2.3.1, 2.3.2) +
+    gráficos.
+  - S11 (27-28 oct): intervalos de confianza y prueba de hipótesis (2.3.3) y
+    público objetivo (2.4.1).
+  - S12 (3-4 nov): imagen y posicionamiento (2.5.1) y estudio del producto (2.6.1).
+  - S13 (10-11 nov): conclusiones, resumen ejecutivo y anexos (A.2, A.3).
+  - S14 (17-18 nov): revisión integral y sustentación.
+
+7) EJEMPLOS DE REFERENCIA QUE SE USAN EN CLASE
+Se arrastran dos ejemplos en todas las guías:
+  - EJEMPLO 1: Shampoo sólido en barra de 80 g, sin envase plástico.
+    Público: personas de 18 a 40 años del Cercado, Yanahuara y Cayma.
+  - EJEMPLO 2: Mochilas y estuches de lona reciclada.
+    Público: estudiantes de institutos y universidades del Cercado.
+(Cada equipo tiene su propio producto; p. ej., cuaderno recargable para padres
+de familia en Cerro Colorado.)
+
+===============================================================================
+8) LO QUE SE ELABORÓ HOY (MATERIALES DE LA SESIÓN, EJEMPLO MODELO NUEVO)
+===============================================================================
+Para la clase de hoy se creó un NUEVO ejemplo modelo (producto distinto, sin
+nombres andinos) y sus materiales. Archivos generados:
+  a) "Del objetivo al cuestionario - Cepillo de bambu (RESUELTO).docx"
+     -> La matriz completa (cinco pilares -> cuestionario) resuelta para el
+        ejemplo modelo.
+  b) "Papel de trabajo - Avance S8 (RESUELTO).docx" y
+     "Papel de trabajo - Avance S8 (SIN RESOLVER).docx"
+     -> El papel de trabajo del avance de hoy (planteamiento al informe 2.2.1 +
+        población y muestra 2.2.2), en versión resuelta (modelo) y en blanco
+        (para que el equipo lo complete).
+  c) "Avance del informe de hoy - Cepillo de bambu (2.2.1 y 2.2.2).docx"
+     -> El informe con SOLO el avance de la Semana 8 (2.2.1 y 2.2.2), redactado
+        en el formato de la plantilla (Times New Roman, Título 1/2/3, tablas
+        sin color, pie "Proyecto Final · Marketing II · 2026-II").
+
+EJEMPLO MODELO NUEVO (datos completos):
+- Producto: Cepillo de dientes de bambú con mango biodegradable y cabezal
+  recambiable (marca EcoSmile). Enfoque sostenible.
+- Público: personas de 18 a 45 años que compran los productos de higiene
+  personal de su hogar.
+- Ámbito: distritos del Cercado, Yanahuara y José Luis Bustamante y Rivero
+  (Arequipa). Periodo: octubre de 2026.
+- Problema: ¿Cuál es la frecuencia de compra de cepillos de dientes, el lugar,
+  las marcas recordadas, los atributos valorados y la intención de compra del
+  cepillo de bambú, en personas de 18 a 45 años del Cercado, Yanahuara y JLByR,
+  en octubre de 2026?
+- Objetivo general: Determinar la relación entre la importancia asignada a que
+  el mango sea biodegradable y la intención de compra del cepillo de dientes de
+  bambú en personas de 18 a 45 años del Cercado, Yanahuara y JLByR, durante el
+  segundo semestre de 2026.
+- Variable independiente: la importancia asignada a que el mango sea
+  biodegradable (atributo ecológico).
+- Variable dependiente: la intención de compra del cepillo de dientes de bambú.
+- H0: la importancia asignada a que el mango sea biodegradable NO se relaciona
+  con la intención de compra del cepillo de bambú.
+- H1: ... SÍ se relaciona ...
+- Dimensiones -> objetivo específico -> ítems -> escala/nivel:
+  Perfil (sexo, distrito, ocupación; D1-D3; opción única; nominal)
+  Comportamiento (tipo, frecuencia, lugar, gasto; P1-P4; opción única/rangos;
+     nominal/razón)
+  Marca (marcas que menciona; P5; abierta; nominal)
+  Producto (importancia de cerdas suaves, mango biodegradable, cabezal
+     recambiable; P6-P10; Likert 5; ordinal)
+  Precio (disposición a pagar; P12; rangos; razón)
+  Demanda (agrado e intención; P11, P13; Likert 5; ordinal)
+- Cuestionario (resumen): S1 filtro rubro; S2 reside en los distritos; S3 edad
+  18-45; S4 compra/decide; P1 tipo de cepillo; P2 cepillos al año; P3 lugar;
+  P4 gasto; P5 marcas; P6 cerdas suaves; P7 mango biodegradable; P8 cabezal
+  recambiable; P9 cuida encías (acuerdo); P10 bambú ayuda al ambiente (acuerdo);
+  LÁMINA; P11 agrado; P12 precio (rangos en soles); P13 intención; D1 sexo;
+  D2 distrito; D3 ocupación.
+- Muestra: población N ~ 120 000 (ejemplo; usar dato real del INEI);
+  muestreo probabilístico; 95% de confianza; error +-5%; n = 383 encuestas.
+
+===============================================================================
+FIN DEL CONTEXTO
+===============================================================================
