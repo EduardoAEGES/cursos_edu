@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 8 · Tabulación en Excel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .tj{
+    --gris:#505050; --rojo:#E31E24; --tinta:#2B2B2E; --humo:#F4F4F6; --linea:#DCDCE0;
+    --verde:#1C6E4E; --ambar:#9A5B07; --papel:#FFFFFF; --xl:#217346;
+    max-width:1180px; margin:0 auto;
+  }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--gris); padding-bottom:14px; }
+  .marca .logo{ height:54px; width:auto; flex:none; }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+  @media (max-width:560px){ .marca .logo{ height:42px; } }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
+        align-items:center; gap:12px; flex:none; }
+  .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1;
+        min-height:clamp(380px,56vh,620px); font-size:17px; line-height:1.72; color:var(--tinta); }
+  .esc.full .lam{ min-height:0; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:var(--gris); font-weight:500; }
+  .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:13px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance span.n{ font-weight:700; font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  /* el que pregunta habla desde la derecha */
+  .perso.der{ flex-direction:row-reverse; }
+  .perso.der .globo{ border-left:2px dashed var(--linea); border-right:4px solid var(--gris);
+                     border-radius:12px 4px 4px 12px; }
+  .perso.der .globo .et{ color:var(--gris); }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:88px; }
+    .perso .globo{ font-size:15px; padding:11px 13px; }
+  }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos, .tres{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } .tres{ grid-template-columns:1fr 1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc.vd > h4{ background:var(--xl); }
+  .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
+  .fc .c p{ margin:0 0 8px; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .lo{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-size:14.5px; color:var(--tinta); }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
+       margin:16px 0; }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:15.5px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:13px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; }
+  table.t td.hue{ color:#B0B0B8; text-align:center; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tit-apa{ margin:16px 0 0; font-size:15px; }
+  .tit-apa .nro{ font-weight:700; display:block; }
+  .tit-apa .nom{ font-style:italic; }
+  .nota-apa{ margin:-6px 0 0; font-size:13.5px; color:var(--gris); }
+  .nota-apa i{ font-style:italic; }
+
+  /* ---------- aspecto de Excel ---------- */
+  .fxbar{ display:flex; align-items:stretch; border:1px solid #C8C8CE; border-radius:6px;
+          overflow:hidden; margin:10px 0; background:#fff; font-size:14.5px; }
+  .fxbar .nm{ flex:none; width:58px; padding:8px 10px; border-right:1px solid #C8C8CE;
+              color:var(--gris); background:#FAFAFB; font-variant-numeric:tabular-nums; }
+  .fxbar .fx{ flex:none; padding:8px 10px; border-right:1px solid #C8C8CE; color:#8A8A92;
+              font-style:italic; font-family:Georgia, serif; }
+  .fxbar code{ flex:1; min-width:0; padding:8px 11px; font-family:Consolas, "Courier New", monospace;
+               font-size:14px; color:var(--tinta); overflow-x:auto; white-space:nowrap; }
+  .fxbar .lo{ flex:none; padding:8px 10px; color:var(--xl); font-size:13px; align-self:center;
+              white-space:nowrap; }
+  @media (max-width:560px){ .fxbar .lo{ display:none; } }
+
+  table.hoja{ border-collapse:collapse; font-size:13.5px; font-variant-numeric:tabular-nums;
+              margin:12px 0; background:#fff; }
+  table.hoja th, table.hoja td{ border:1px solid #D4D4DA; padding:5px 9px; white-space:nowrap; }
+  table.hoja thead th{ background:#EFEFF2; color:#6A6A72; font-weight:500; text-align:center;
+                       font-size:12.5px; }
+  table.hoja th.fila{ background:#EFEFF2; color:#6A6A72; font-weight:500; text-align:center;
+                      font-size:12.5px; min-width:30px; }
+  table.hoja tr.nom td{ background:#E8F3EC; color:var(--xl); font-weight:600; font-size:12.5px; }
+  table.hoja td{ text-align:right; }
+  table.hoja td.tx{ text-align:left; }
+  table.hoja td.ver{ background:#FFF4D6; outline:2px solid #E2B33C; outline-offset:-2px; }
+  table.hoja tr.puntos td, table.hoja tr.puntos th{ color:#A0A0A8; text-align:center; }
+
+  /* ---------- gráficos ---------- */
+  .graf{ border:2px dashed var(--linea); border-radius:12px; padding:13px 15px; background:#fff; }
+  .graf h5{ margin:0 0 4px; font-size:14px; font-weight:800; color:var(--tinta); }
+  .graf .tipo{ display:block; font-size:12px; color:var(--gris); margin-bottom:10px;
+               text-transform:uppercase; letter-spacing:.06em; }
+  .barras{ display:flex; gap:8px; align-items:flex-end; height:170px; padding:0 2px;
+           border-bottom:2px solid var(--gris); }
+  .barras .col{ flex:1; display:flex; flex-direction:column; align-items:center;
+                justify-content:flex-end; height:100%; min-width:0; }
+  .barras .col span{ font-size:12.5px; font-weight:700; color:var(--tinta); margin-bottom:3px;
+                     font-variant-numeric:tabular-nums; }
+  .barras .col i{ display:block; width:100%; max-width:46px; background:var(--rojo);
+                  border-radius:4px 4px 0 0; }
+  .barras.gr .col i{ background:var(--gris); }
+  .rot{ display:flex; gap:8px; padding:6px 2px 0; }
+  .rot span{ flex:1; min-width:0; text-align:center; font-size:11.5px; line-height:1.3; color:var(--gris); }
+  .pastel{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .pastel .disco{ width:150px; height:150px; border-radius:50%; flex:none; }
+  .pastel ul{ list-style:none; margin:0; padding:0; font-size:13.5px; line-height:1.9; }
+  .pastel li i{ display:inline-block; width:12px; height:12px; border-radius:3px;
+                margin-right:7px; vertical-align:-1px; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+  .consigna{ font-size:16px; color:var(--gris); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha.mono{ font-family:Consolas, "Courier New", monospace; font-size:14.5px; color:var(--xl); }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(227,30,36,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .vacio{ color:#8A8A92; font-size:15px; }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  @media (min-width:760px){ .cajas.c3{ grid-template-columns:1fr 1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja > h5 small{ display:block; font-size:12px; font-weight:500; opacity:.85; letter-spacing:0; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:15.5px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:13.5px; color:#8A8A92; }
+  .par .hueco code{ font-family:Consolas, "Courier New", monospace; font-size:15px; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:16px; font-weight:500; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:17px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 22px; font-size:14.5px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y elegir */
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:300px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(227,30,36,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:15.5px; line-height:1.55; }
+  .linea .q code{ font-family:Consolas, "Courier New", monospace; font-size:14px; color:var(--xl); }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre .perso, .cierre .dos{ text-align:left; }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="investigacion-cuantitativa.html">Investigación Cuantitativa</a></span> / <b>Sesión 8</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesión 8</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="tj">
+
+  <div class="marca">
+    <img class="logo" src="marca/logo-tj.png" alt="Thomas Jefferson · Instituto de Diseño y Comunicación">
+    <span class="tx">
+      <h1>Tabulación en Excel: el caso del cepillo de bambú</h1>
+      <p><span class="sem">Sesión 8</span> · Investigación Cuantitativa · Marketing · Segundo ciclo</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">🔊 Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">⛶ Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, regístrate</h2>
+    <p>Escribe tu nombre y el código de sala que indique el docente. Las diapositivas se abren al entrar
+       y tu avance queda guardado.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">—</span>
+        <span class="cu" id="cu">1 / 1</span>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <span class="n" id="marcador">0 de 0</span>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">‹ Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente ›</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta sección.</p>
+    <div id="muro"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function mil(n, d){
+  d=(d===undefined)?2:d;
+  return Number(n).toLocaleString('es-PE',{minimumFractionDigits:d, maximumFractionDigits:d});
+}
+
+var P={ punt:'personajes/tj-docente-puntero.webp', pres:'personajes/tj-docente-presenta.webp',
+        sent:'personajes/tj-alumno-sentado.webp',  sorp:'personajes/tj-alumna-sorpresa.webp',
+        sena:'personajes/tj-alumno-senala.webp' };
+function globo(img, et, txt, der){
+  return '<div class="perso'+(der?' der':'')+'"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('tj_inv8_son')!=='0'; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null;
+});
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{
+    fallo.currentTime=0;
+    var p=fallo.play();
+    if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,i){ nota(f,i*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){
+  var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false');
+}
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('tj_inv8_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien();
+});
+pintaSon();
+
+/* ================= el caso guía: la base del Excel (n = 50) =================
+   Columnas: N.º, D1_Sexo, D2_Distrito, D3_Ocupación, Edad, P1_Tipo,
+   P2_Cepillos_año, P3_Lugar, P6_Cerdas, P7_MangoBio, P8_Cabezal,
+   P11_Agrado, P13_Intención                                              */
+var COLS=['N.º','D1_Sexo','D2_Distrito','D3_Ocupación','Edad','P1_Tipo','P2_Cepillos_año',
+          'P3_Lugar','P6_Cerdas','P7_MangoBio','P8_Cabezal','P11_Agrado','P13_Intención'];
+var BASE=[
+ [1,1,'Cercado',3,38,1,5,1,5,5,3,2,3],   [2,1,'Cercado',4,31,1,5,1,4,5,4,5,3],
+ [3,1,'Cercado',4,45,1,4,1,3,3,4,3,5],   [4,2,'Cercado',2,21,1,1,2,4,4,4,4,4],
+ [5,1,'Yanahuara',2,25,3,6,3,3,3,4,4,4], [6,2,'Cercado',1,34,1,3,1,5,2,5,4,5],
+ [7,1,'Yanahuara',2,37,1,4,1,3,3,5,2,4], [8,1,'JLByR',4,39,3,3,2,5,4,4,4,5],
+ [9,1,'Cercado',1,42,1,6,1,4,5,2,4,4],   [10,1,'Yanahuara',4,26,3,3,2,4,3,2,2,5],
+ [11,1,'Yanahuara',4,23,1,1,1,5,5,3,2,3],[12,2,'JLByR',1,32,3,6,3,4,4,2,5,1],
+ [13,1,'Cercado',3,23,1,5,1,3,2,2,4,1],  [14,1,'JLByR',3,22,2,3,2,5,2,4,3,4],
+ [15,1,'Cercado',1,21,3,6,1,5,2,2,3,4],  [16,1,'JLByR',4,18,3,3,4,5,4,3,4,2],
+ [17,1,'JLByR',4,42,1,6,1,5,5,4,4,4],    [18,2,'Cercado',1,34,1,6,1,3,3,3,4,3],
+ [19,1,'JLByR',2,29,1,1,1,3,3,5,3,4],    [20,1,'JLByR',2,43,2,6,1,4,4,2,3,4],
+ [21,2,'Yanahuara',1,43,4,6,1,5,5,5,3,1],[22,1,'JLByR',3,43,3,5,3,5,5,3,5,1],
+ [23,1,'JLByR',1,34,3,2,1,5,4,3,3,3],    [24,1,'JLByR',2,26,1,2,1,4,5,5,4,4],
+ [25,2,'Cercado',4,22,1,1,3,4,5,5,2,1],  [26,2,'JLByR',1,35,1,6,2,5,4,2,5,2],
+ [27,1,'Cercado',1,34,1,1,3,5,4,5,5,4],  [28,2,'Yanahuara',3,34,1,4,2,4,5,4,3,3],
+ [29,1,'Yanahuara',1,31,1,4,1,4,4,3,3,1],[30,1,'JLByR',2,22,1,2,4,4,5,3,4,3],
+ [31,1,'Cercado',3,34,1,4,1,4,4,2,5,4],  [32,1,'Yanahuara',2,34,2,5,4,3,5,3,3,1],
+ [33,1,'Cercado',1,26,3,4,3,4,5,4,5,4],  [34,1,'JLByR',2,20,1,6,1,5,3,2,2,2],
+ [35,2,'Cercado',1,26,3,4,1,5,4,4,5,1],  [36,2,'Cercado',1,23,1,2,1,4,3,5,3,4],
+ [37,1,'Yanahuara',2,43,1,3,1,3,5,4,5,2],[38,1,'Cercado',3,39,1,4,4,4,3,3,3,3],
+ [39,2,'JLByR',1,30,4,1,3,3,5,4,4,1],    [40,2,'Yanahuara',4,39,4,5,1,4,4,2,4,2],
+ [41,1,'JLByR',2,25,1,3,1,3,4,2,3,5],    [42,1,'JLByR',1,20,1,1,1,5,4,3,5,1],
+ [43,2,'Cercado',4,30,3,6,4,3,4,5,2,4],  [44,2,'JLByR',3,41,3,5,1,5,5,4,4,4],
+ [45,2,'JLByR',1,20,1,2,2,5,4,4,2,1],    [46,2,'JLByR',1,33,1,4,3,4,5,4,5,1],
+ [47,2,'Yanahuara',2,43,1,3,1,4,3,5,4,4],[48,1,'Yanahuara',2,42,1,6,2,3,2,3,4,3],
+ [49,2,'Cercado',1,33,1,3,4,3,3,4,4,2],  [50,1,'Yanahuara',1,35,1,1,3,3,4,4,3,4]
+];
+var LETRA='ABCDEFGHIJKLM';
+
+/* lo mismo que hacen las fórmulas de la hoja «Tabulación» */
+function col(c){ return BASE.map(function(r){ return r[c]; }); }
+function contar(c, v){ return BASE.filter(function(r){ return r[c]===v; }).length; }
+function media(a){ return a.reduce(function(s,x){ return s+x; },0)/a.length; }
+function mediana(a){ var b=a.slice().sort(function(x,y){ return x-y; }), m=b.length>>1;
+                     return b.length%2 ? b[m] : (b[m-1]+b[m])/2; }
+function moda(a){ var f={}, mejor=null, n=0;
+                  a.forEach(function(x){ f[x]=(f[x]||0)+1; if(f[x]>n){ n=f[x]; mejor=x; } });
+                  return mejor; }
+function varianza(a){ var m=media(a);
+                      return a.reduce(function(s,x){ return s+(x-m)*(x-m); },0)/(a.length-1); }
+function frec(c, cats){
+  var n=BASE.length, acu=0;
+  return cats.map(function(t,k){
+    var f=contar(c,k+1), p=f/n*100; acu+=p;
+    return { t:t, f:f, p:p, a:acu };
+  });
+}
+var T1=frec(5,['Manual de plástico','Eléctrico','Ecológico (bambú u otro)','Otro']);
+var T2=frec(7,['Farmacia o botica','Supermercado','Bodega','Otro']);
+var T3=frec(12,['1 Definitivamente no','2 Probablemente no','3 Tal vez','4 Probablemente sí','5 Definitivamente sí']);
+var EDAD=col(4), CEP=col(6);
+function medidas(a){
+  var mn=Math.min.apply(null,a), mx=Math.max.apply(null,a);
+  return { media:media(a), mediana:mediana(a), moda:moda(a), vari:varianza(a),
+           de:Math.sqrt(varianza(a)), min:mn, max:mx, rango:mx-mn };
+}
+var ME=medidas(EDAD), MC=medidas(CEP);
+
+/* ================= piezas que se repiten ================= */
+function fx(celda, formula, lo){
+  return '<div class="fxbar"><span class="nm">'+esc(celda)+'</span><span class="fx">fx</span>'+
+         '<code>'+esc(formula)+'</code>'+(lo?'<span class="lo">'+esc(lo)+'</span>':'')+'</div>';
+}
+function tituloApa(n, nombre){
+  return '<p class="tit-apa"><span class="nro">Tabla '+n+'</span><span class="nom">'+esc(nombre)+'</span></p>';
+}
+var NOTA='<p class="nota-apa"><i>Nota.</i> Elaboración propia con la base de ejemplo (n = 50).</p>';
+function tablaFrec(T, ocultar){
+  var h='<div class="tabenv"><table class="t"><thead><tr><th>Categoría</th><th class="n">f (absoluta)</th>'+
+        '<th class="n">% (relativa)</th><th class="n">% acumulado</th></tr></thead><tbody>';
+  var tf=0, tp=0;
+  T.forEach(function(r){
+    tf+=r.f; tp+=r.p;
+    h+='<tr><td>'+esc(r.t)+'</td><td class="n">'+r.f+'</td>'+
+       (ocultar ? '<td class="hue">?</td><td class="hue">?</td>'
+                : '<td class="n">'+mil(r.p,0)+' %</td><td class="n">'+mil(r.a,0)+' %</td>')+'</tr>';
+  });
+  h+='<tr class="tot"><td>Total</td><td class="n">'+tf+'</td><td class="n">'+
+     (ocultar?'100 %':mil(tp,0)+' %')+'</td><td></td></tr></tbody></table></div>';
+  return h;
+}
+/* un pedazo de la hoja «Base (ejemplo)», con letras de columna y números de fila */
+function hoja(filas, cols, resalta){
+  var h='<div class="tabenv"><table class="hoja"><thead><tr><th></th>';
+  cols.forEach(function(c){ h+='<th>'+LETRA[c]+'</th>'; });
+  h+='</tr></thead><tbody><tr class="nom"><th class="fila">1</th>';
+  cols.forEach(function(c){ h+='<td class="tx">'+esc(COLS[c])+'</td>'; });
+  h+='</tr>';
+  filas.forEach(function(k){
+    var r=BASE[k];
+    h+='<tr><th class="fila">'+(k+2)+'</th>';
+    cols.forEach(function(c){
+      var v=r[c], ver=resalta && resalta(k,c);
+      h+='<td class="'+(typeof v==='string'?'tx':'')+(ver?' ver':'')+'">'+esc(v)+'</td>';
+    });
+    h+='</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function columnas(T, titulo, tipo, gris, cortos){
+  var mx=Math.max.apply(null, T.map(function(r){ return r.f; }));
+  var h='<div class="graf"><h5>'+esc(titulo)+'</h5><span class="tipo">'+esc(tipo)+'</span>'+
+        '<div class="barras'+(gris?' gr':'')+'">';
+  T.forEach(function(r){
+    h+='<div class="col"><span>'+r.f+'</span><i style="height:'+Math.round(r.f/mx*82)+'%"></i></div>';
+  });
+  h+='</div><div class="rot">';
+  T.forEach(function(r,k){ h+='<span>'+esc(cortos?cortos[k]:r.t)+'</span>'; });
+  return h+'</div></div>';
+}
+function pastel(T, titulo, tipo){
+  var colores=['#E31E24','#505050','#9A9AA2','#F3B5B2'], ini=0, partes=[];
+  T.forEach(function(r,k){ var fin=ini+r.p; partes.push(colores[k]+' '+ini+'% '+fin+'%'); ini=fin; });
+  var h='<div class="graf"><h5>'+esc(titulo)+'</h5><span class="tipo">'+esc(tipo)+'</span>'+
+        '<div class="pastel"><div class="disco" style="background:conic-gradient('+partes.join(',')+')"></div><ul>';
+  T.forEach(function(r,k){
+    h+='<li><i style="background:'+colores[k]+'"></i>'+esc(r.t)+' · '+mil(r.p,0)+' %</li>';
+  });
+  return h+'</ul></div></div>';
+}
+
+/* ================= las actividades ================= */
+var ACT={};
+
+ACT.a1={ tipo:'sel', titulo:'Actividad 1',
+  lineas:[
+    { id:'s1', q:'Encuestado 5 · P1_Tipo = 3',
+      ops:['Manual de plástico','Eléctrico','Ecológico (bambú u otro)','Otro'], ok:2 },
+    { id:'s2', q:'Encuestado 6 · D1_Sexo = 2', ops:['Femenino','Masculino'], ok:1 },
+    { id:'s3', q:'Encuestado 14 · P3_Lugar = 2',
+      ops:['Farmacia o botica','Supermercado','Bodega','Otro'], ok:1 },
+    { id:'s4', q:'Encuestado 3 · D3_Ocupación = 4',
+      ops:['Dependiente','Independiente','Estudiante','Otro'], ok:3 },
+    { id:'s5', q:'Encuestado 12 · P13_Intención = 1',
+      ops:['Definitivamente no','Tal vez','Definitivamente sí'], ok:0 },
+    { id:'s6', q:'Encuestado 9 · P2_Cepillos_año = 6',
+      ops:['Compra 6 cepillos al año','Está en la categoría número 6','Le puso 6 puntos al cepillo'], ok:0 }
+  ],
+  fin:globo(P.sena,'Resuelto','Cinco de esas columnas guardan códigos que solo se entienden con la leyenda. '+
+      'La última no: en P2_Cepillos_año el 6 significa seis cepillos de verdad. Esa diferencia es la que '+
+      'vamos a ver ahora.') };
+
+ACT.a2={ tipo:'arr', titulo:'Actividad 2',
+  fichas:[
+    {id:'v1', t:'D1_Sexo', g:'N'},       {id:'v2', t:'D2_Distrito', g:'N'},
+    {id:'v3', t:'D3_Ocupación', g:'N'},  {id:'v4', t:'P1_Tipo', g:'N'},
+    {id:'v5', t:'P3_Lugar', g:'N'},      {id:'v6', t:'P6_Cerdas (1 a 5)', g:'O'},
+    {id:'v7', t:'P11_Agrado (1 a 5)', g:'O'}, {id:'v8', t:'P13_Intención (1 a 5)', g:'O'},
+    {id:'v9', t:'Edad', g:'R'},          {id:'v10', t:'P2_Cepillos_año', g:'R'}
+  ],
+  cajas:[{id:'N', t:'Nominal', s:'categorías sin orden'},
+         {id:'O', t:'Ordinal', s:'categorías con orden'},
+         {id:'R', t:'De razón', s:'números de verdad'}],
+  fin:globo(P.sena,'Resuelto','Cinco nominales, tres ordinales y dos de razón. Las de razón son las únicas '+
+      'a las que tiene sentido sacarles el promedio y la desviación estándar.') };
+
+ACT.a3={ tipo:'cal', titulo:'Actividad 3',
+  lineas:[
+    { id:'c1', q:'<code>=CONTAR.SI(H2:H11,1)</code> · Farmacia o botica', v:6, dec:0, pre:'Cuenta las celdas que tienen 1' },
+    { id:'c2', q:'<code>=CONTAR.SI(H2:H11,2)</code> · Supermercado', v:3, dec:0, pre:'Cuenta las celdas que tienen 2' },
+    { id:'c3', q:'<code>=CONTAR.SI(H2:H11,3)</code> · Bodega', v:1, dec:0, pre:'Cuenta las celdas que tienen 3' },
+    { id:'c4', q:'<code>=CONTAR.SI(H2:H11,4)</code> · Otro', v:0, dec:0, pre:'Cuenta las celdas que tienen 4' },
+    { id:'c5', q:'Total de encuestados contados', v:10, dec:0, pre:'Suma los cuatro conteos, como hace =SUMA en la fila del total' }
+  ],
+  fin:globo(P.sorp,'¿Viste el cero?','Nadie de esos diez marcó «Otro», pero la fila no se borra: se deja con 0. '+
+      'Si la quitas, el lector no sabe si nadie la eligió o si te olvidaste de contarla. Y el total tiene que '+
+      'dar 10, el número de encuestados que contaste.') };
+
+ACT.a4={ tipo:'cal', titulo:'Actividad 4',
+  lineas:[
+    { id:'p1', q:'% de Farmacia o botica', u:'%', v:T2[0].p, dec:0, pre:'27 ÷ 50, en porcentaje' },
+    { id:'p2', q:'% de Supermercado', u:'%', v:T2[1].p, dec:0, pre:'8 ÷ 50, en porcentaje' },
+    { id:'p3', q:'% de Bodega', u:'%', v:T2[2].p, dec:0, pre:'9 ÷ 50, en porcentaje' },
+    { id:'p4', q:'% de Otro', u:'%', v:T2[3].p, dec:0, pre:'6 ÷ 50, en porcentaje' },
+    { id:'p5', q:'% acumulado hasta Supermercado', u:'%', v:T2[1].a, dec:0, pre:'54 % + 16 %' },
+    { id:'p6', q:'% acumulado hasta Bodega', u:'%', v:T2[2].a, dec:0, pre:'70 % + 18 %' },
+    { id:'p7', q:'% acumulado hasta Otro', u:'%', v:T2[3].a, dec:0, pre:'88 % + 12 %' }
+  ],
+  fin:globo(P.punt,'Resuelto','Más de la mitad de los encuestados, el 54 %, compra su cepillo en farmacia o '+
+      'botica. Para lanzar un cepillo de bambú, ese es el primer lugar donde conviene estar. Y el acumulado '+
+      'siempre cierra en 100 %: si no, algo se contó mal.') };
+
+ACT.a5={ tipo:'quiz', titulo:'Actividad 5',
+  preguntas:[
+    { q:'¿Qué porcentaje de encuestados dice que probablemente o definitivamente sí compraría el cepillo de bambú?',
+      ops:['46 %','36 %','10 %'], ok:0,
+      pq:'Se suman las dos categorías de arriba de la escala: 36 % + 10 % = 46 %.' },
+    { q:'¿En qué categoría está la mediana de la intención de compra?',
+      ops:['2 Probablemente no','3 Tal vez','4 Probablemente sí'], ok:1,
+      pq:'La mediana está donde el acumulado pasa el 50 %. Con «Probablemente no» se llega a 36 %; con «Tal vez» se llega a 54 %. Ahí está.' },
+    { q:'¿Cuál es la moda?',
+      ops:['3 Tal vez, porque está al medio de la escala','1 Definitivamente no, con 12 personas','4 Probablemente sí, con 18 personas'], ok:2,
+      pq:'La moda es la categoría que más se repite: 18 personas eligieron «Probablemente sí».' },
+    { q:'Un compañero escribe en su informe: «El 24 % de las personas nunca compraría un cepillo de bambú». ¿Qué le corriges?',
+      ops:['Nada, está bien escrito',
+           'Que es el 24 % de los encuestados y que marcaron «Definitivamente no», no «nunca»',
+           'Que debió escribir 36 %'], ok:1,
+      pq:'Se habla de lo que respondieron los 50 encuestados y con las palabras de la escala. Llevarlo a «las personas» en general pide el margen de error que vimos en la sesión 7.' }
+  ] };
+
+ACT.a6={ tipo:'par', titulo:'Actividad 6',
+  fichas:[
+    {id:'f1', t:'CONTAR.SI'}, {id:'f2', t:'PROMEDIO'}, {id:'f3', t:'MODA.UNO'},
+    {id:'f4', t:'MEDIANA'},   {id:'f5', t:'DESVEST.M'}, {id:'f6', t:'MAX − MIN'}
+  ],
+  huecos:[
+    {id:'f2', q:'¿Cuántos cepillos compra al año, en promedio, cada encuestado?'},
+    {id:'f5', q:'¿Qué tan lejos del promedio suelen estar las edades?'},
+    {id:'f1', q:'¿Cuántos encuestados compran en farmacia o botica?'},
+    {id:'f6', q:'¿Cuántos años hay entre el encuestado más joven y el mayor?'},
+    {id:'f4', q:'Si ordeno las edades de menor a mayor, ¿cuál queda justo al medio?'},
+    {id:'f3', q:'¿Qué edad se repite más veces en la base?'}
+  ],
+  fin:globo(P.sorp,'Resuelto','CONTAR.SI cuenta personas; PROMEDIO, MEDIANA y MODA.UNO dicen dónde se '+
+      'concentran los datos; DESVEST.M y el rango dicen qué tan separados están. Con esas seis funciones '+
+      'se arman las cuatro tablas del archivo.') };
+
+var CINCO=[0,1,2,3,4].map(function(k){ return BASE[k][6]; });     /* 5, 5, 4, 1, 6 */
+ACT.a7={ tipo:'cal', titulo:'Actividad 7',
+  lineas:[
+    { id:'m1', q:'Media · <code>=PROMEDIO(G2:G6)</code>', v:media(CINCO), dec:1, pre:'(5 + 5 + 4 + 1 + 6) ÷ 5' },
+    { id:'m2', q:'Mediana · <code>=MEDIANA(G2:G6)</code>', v:mediana(CINCO), dec:0, pre:'Ordénalos: 1, 4, 5, 5, 6' },
+    { id:'m3', q:'Moda · <code>=MODA.UNO(G2:G6)</code>', v:moda(CINCO), dec:0, pre:'El que más se repite' },
+    { id:'m4', q:'Rango · <code>=MAX(G2:G6)-MIN(G2:G6)</code>', v:Math.max.apply(null,CINCO)-Math.min.apply(null,CINCO),
+      dec:0, pre:'El mayor menos el menor' }
+  ],
+  fin:globo(P.punt,'Mira esto','La media, 4.2, quedó por debajo de la mediana, 5. El encuestado que compra '+
+      'un solo cepillo jala el promedio hacia abajo, pero no mueve la mediana. Por eso en el informe se '+
+      'ponen las dos.') };
+
+ACT.a8={ tipo:'quiz', titulo:'Actividad 8',
+  preguntas:[
+    { q:'Tipo de cepillo que compra (P1): cuatro categorías sin orden.',
+      ops:['Gráfico de líneas','Gráfico de columnas','Histograma'], ok:1,
+      pq:'Es nominal: columnas o barras. Cada columna es una categoría y la altura es cuántas personas la eligieron.' },
+    { q:'Quieres mostrar cómo se reparte el 100 % del lugar de compra (P3) entre cuatro lugares.',
+      ops:['Gráfico circular','Gráfico de líneas','Histograma'], ok:0,
+      pq:'Cuando lo que importa es la parte de un todo y son pocas categorías, el circular se lee de un vistazo.' },
+    { q:'Intención de compra del 1 al 5 (P13).',
+      ops:['Columnas ordenadas de mayor a menor','Circular con cinco partes','Columnas en el orden de la escala, del 1 al 5'], ok:2,
+      pq:'La escala ya trae su orden. Si reordenas las columnas de mayor a menor, se pierde la lectura de «más o menos dispuesto».' },
+    { q:'Ventas mensuales del cepillo de bambú de enero a junio.',
+      ops:['Gráfico circular','Gráfico de líneas','Columnas apiladas'], ok:1,
+      pq:'Hay una secuencia de tiempo, y ese es el único caso en que van las líneas.' },
+    { q:'Edad de los 50 encuestados.',
+      ops:['Histograma, agrupando las edades en intervalos','Circular, con una parte por cada edad','Líneas, de la edad menor a la mayor'], ok:0,
+      pq:'La edad es de razón y tiene muchos valores distintos: se agrupa en intervalos (18 a 24, 25 a 31…) y se dibuja un histograma.' }
+  ] };
+
+ACT.a9={ tipo:'quiz', titulo:'Actividad 9',
+  preguntas:[
+    { q:'¿Cuál es la mejor interpretación de la Tabla 2, lugar de compra?',
+      ops:['La farmacia tiene 27.',
+           'El 54 % de los encuestados compra su cepillo en farmacia o botica, así que es el canal donde la marca debería estar primero.',
+           'Todos los arequipeños compran su cepillo en farmacia.'], ok:1,
+      pq:'Tiene el dato, el porcentaje, de quién se habla y qué significa para la marca. La primera se queda en el número y la tercera generaliza de más.' },
+    { q:'¿Cuál describe bien la Tabla 4 para los cepillos al año?',
+      ops:['Cada persona compra exactamente 3.76 cepillos al año.',
+           'La varianza de 3.12 indica que compran 3 cepillos.',
+           'Los encuestados compran en promedio 3.76 cepillos al año (mediana de 4), con una desviación estándar de 1.77.'], ok:2,
+      pq:'La media resume, la mediana la acompaña y la desviación dice cuánto se separan. La varianza no se interpreta en cepillos: está en unidades al cuadrado.' },
+    { q:'En el informe, ¿dónde va la línea «Nota. Elaboración propia con la base de ejemplo (n = 50)»?',
+      ops:['Debajo de la tabla','En el título de la tabla','No hace falta ponerla'], ok:0,
+      pq:'Arriba van el número y el título; abajo, la nota con la fuente y el tamaño de la muestra.' }
+  ] };
+
+/* ================= las diapositivas ================= */
+var D=[
+
+{ et:'Portada', t:'Tabulación en Excel',
+  h:'<p class="enc">De 50 encuestas a un informe que se entiende</p>'+
+    '<p class="sub">Sesión 8 · Investigación Cuantitativa · caso guía: el cepillo de bambú</p>'+
+    globo(P.punt,'De qué va la sesión',
+      'Ya aplicamos la encuesta del cepillo de bambú a 50 personas de Cercado, Yanahuara y José Luis '+
+      'Bustamante y Rivero. Hoy convertimos esas respuestas en tablas, porcentajes, medidas y gráficos. '+
+      'Todo con unas pocas fórmulas de Excel, como en el archivo resuelto.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Lo que vas a aprender</h4><div class="c"><ul>'+
+      '<li>Cómo se arma la base de datos con códigos.</li>'+
+      '<li>Qué variable es nominal, ordinal o de razón.</li>'+
+      '<li>Cómo se hace una tabla de frecuencias con CONTAR.SI.</li>'+
+      '<li>Cómo se calculan la media, la mediana, la moda y la desviación.</li>'+
+      '<li>Qué gráfico va con cada variable y cómo se interpreta.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Cómo se trabaja</h4><div class="c"><ul>'+
+      '<li>Un poco de teoría y enseguida un juego.</li>'+
+      '<li>Hay nueve actividades y todas se corrigen solas.</li>'+
+      '<li>Si te equivocas suena un aviso y puedes volver a intentarlo.</li>'+
+      '<li>La calculadora de la esquina te ayuda con las cuentas.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+{ et:'Teoría 1', t:'La base de datos',
+  h:'<p class="enc">Una fila por persona, una columna por pregunta</p>'+
+    '<p class="sub">Así se ve la hoja «Base (ejemplo)» del archivo</p>'+
+    globo(P.pres,'La regla de oro',
+      'Cada encuestado ocupa una fila y cada pregunta ocupa una columna. En las celdas no se escriben '+
+      'palabras sino códigos: 1 es femenino y 2 es masculino. Así Excel puede contar sin errores.')+
+    hoja([0,1,2,3,4,5], [0,1,2,3,4,5,6,7,8,9,10,11,12])+
+    '<p style="font-size:14px;color:var(--gris)">La base sigue hasta la fila 51: son 50 encuestados.</p>'+
+    globo(P.sent,'Pregunta del alumno',
+      '¿Y por qué no escribo «farmacia» de frente? Se entiende más.', true)+
+    globo(P.punt,'La profe responde',
+      'Porque uno escribe «farmacia», otro «Farmacia» y otro «botica», y Excel los cuenta como tres cosas '+
+      'distintas. Con el código 1 no hay forma de equivocarse. El distrito sí se dejó en texto, y vale, '+
+      'siempre que se escriba igual en las 50 filas.')+
+    '<div class="fc vd"><h4>Leyenda de códigos (va debajo de la base)</h4><div class="c"><ul>'+
+      '<li>D1_Sexo: 1 = Femenino, 2 = Masculino.</li>'+
+      '<li>D3_Ocupación: 1 = Dependiente, 2 = Independiente, 3 = Estudiante, 4 = Otro.</li>'+
+      '<li>P1_Tipo: 1 = Manual de plástico, 2 = Eléctrico, 3 = Ecológico (bambú u otro), 4 = Otro.</li>'+
+      '<li>P3_Lugar: 1 = Farmacia o botica, 2 = Supermercado, 3 = Bodega, 4 = Otro.</li>'+
+      '<li>P6, P7 y P8 (importancia), P11 (agrado) y P13 (intención): escala de 1 a 5.</li>'+
+      '</ul></div></div>' },
+
+{ et:'Actividad 1', t:'Traduce los códigos', act:'a1',
+  h:'<p class="enc">¿Qué respondió cada encuestado?</p>'+
+    '<p class="consigna">Usa la leyenda de la diapositiva anterior y elige lo que significa cada código.</p>' },
+
+{ et:'Teoría 2', t:'Los niveles de medición',
+  h:'<p class="enc">Antes de tabular, mira qué tipo de variable es</p>'+
+    '<p class="sub">El nivel de medición decide qué se calcula y qué gráfico se usa</p>'+
+    '<div class="tres">'+
+    '<div class="fc"><h4>Nominal</h4><div class="c">'+
+      '<p>Categorías que no tienen orden. Ninguna es más que otra.</p>'+
+      '<p>Sexo, distrito, ocupación, tipo de cepillo, lugar de compra.</p>'+
+      '<div class="lo">Se calcula: frecuencias, porcentajes y moda.</div></div></div>'+
+    '<div class="fc"><h4>Ordinal</h4><div class="c">'+
+      '<p>Categorías con orden, aunque la distancia entre una y otra no es exacta.</p>'+
+      '<p>Las escalas de 1 a 5: importancia de las cerdas, agrado, intención de compra.</p>'+
+      '<div class="lo">Se calcula: frecuencias, % acumulado, mediana y moda.</div></div></div>'+
+    '<div class="fc rj"><h4>De razón</h4><div class="c">'+
+      '<p>Números de verdad, con un cero que significa «nada».</p>'+
+      '<p>Edad, cepillos que compra al año.</p>'+
+      '<div class="lo">Se calcula: media, mediana, moda, varianza, desviación estándar y rango.</div></div></div>'+
+    '</div>'+
+    globo(P.sorp,'Ojo con esto',
+      'Que una columna tenga números no la vuelve cuantitativa. En P1_Tipo el 3 no vale el triple que el 1: '+
+      'solo es la etiqueta de «ecológico». Sacarle el promedio a esa columna no significa nada.') },
+
+{ et:'Actividad 2', t:'Clasifica las variables', act:'a2',
+  h:'<p class="enc">¿Nominal, ordinal o de razón?</p>'+
+    '<p class="consigna">Arrastra cada columna de la base a su caja. En el celular, toca la ficha y luego la caja.</p>' },
+
+{ et:'Teoría 3', t:'La tabla de frecuencias',
+  h:'<p class="enc">Contar, dividir y acumular</p>'+
+    '<p class="sub">Las tres columnas de toda tabla de frecuencias</p>'+
+    '<div class="tres">'+
+    '<div class="fc"><h4>f (absoluta)</h4><div class="c"><p>Cuántas personas eligieron esa categoría.</p>'+
+      '<div class="lo">Se cuenta con CONTAR.SI.</div></div></div>'+
+    '<div class="fc"><h4>% (relativa)</h4><div class="c"><p>Qué parte del total representa.</p>'+
+      '<div class="lo">f ÷ total, con formato de porcentaje.</div></div></div>'+
+    '<div class="fc"><h4>% acumulado</h4><div class="c"><p>La suma de los porcentajes hasta esa fila.</p>'+
+      '<div class="lo">El de arriba más el de la fila.</div></div></div>'+
+    '</div>'+
+    '<h3>Así está hecha la Tabla 1 en la hoja «Tabulación»</h3>'+
+    fx('B5',"=CONTAR.SI('Base (ejemplo)'!$F$2:$F$51,1)",'cuenta los 1 de P1')+
+    fx('B9','=SUMA(B5:B8)','total')+
+    fx('C5','=B5/$B$9','f ÷ total')+
+    fx('D6','=D5+C6','acumula')+
+    tituloApa(1,'Tipo de cepillo que compra (P1)')+tablaFrec(T1)+NOTA+
+    globo(P.punt,'El truco de los signos de dólar',
+      'El rango $F$2:$F$51 lleva signos de dólar para que no se mueva cuando arrastras la fórmula hacia abajo. '+
+      'De fila a fila solo cambias el código: 1, 2, 3 y 4. Lo mismo con $B$9, porque el total siempre está '+
+      'en la misma celda.')+
+    '<div class="av">En Excel en inglés las funciones se llaman COUNTIF y SUM. Si tu Excel separa los '+
+    'argumentos con punto y coma, escribe ; donde aquí ves una coma.</div>' },
+
+{ et:'Actividad 3', t:'Sé CONTAR.SI', act:'a3',
+  h:'<p class="enc">Cuenta tú, como lo haría Excel</p>'+
+    '<p class="consigna">Estos son los diez primeros encuestados y la columna H, lugar de compra '+
+    '(1 farmacia, 2 supermercado, 3 bodega, 4 otro). Escribe lo que devolvería cada fórmula.</p>'+
+    hoja([0,1,2,3,4,5,6,7,8,9], [0,7], function(k,c){ return c===7; }) },
+
+{ et:'Actividad 4', t:'Completa la Tabla 2', act:'a4',
+  h:'<p class="enc">Lugar de compra: saca los porcentajes</p>'+
+    '<p class="consigna">Excel ya contó a los 50 encuestados. Completa el % relativo y el % acumulado. '+
+    'Puedes escribir 54 o 0.54: las dos formas valen.</p>'+
+    tituloApa(2,'Lugar de compra del cepillo (P3)')+tablaFrec(T2, true) },
+
+{ et:'Teoría 4', t:'La escala de 1 a 5',
+  h:'<p class="enc">La intención de compra, leída con el acumulado</p>'+
+    '<p class="sub">P13 · ¿Compraría un cepillo de bambú?</p>'+
+    tituloApa(3,'Intención de compra del cepillo de bambú (P13)')+tablaFrec(T3)+NOTA+
+    '<div class="tres">'+
+    '<div class="fc"><h4>Los de abajo</h4><div class="c"><p>1 + 2: 24 % + 12 % = 36 % no lo compraría.</p></div></div>'+
+    '<div class="fc"><h4>Los del medio</h4><div class="c"><p>3: el 18 % todavía duda.</p></div></div>'+
+    '<div class="fc rj"><h4>Los de arriba</h4><div class="c"><p>4 + 5: 36 % + 10 % = 46 % sí lo compraría.</p></div></div>'+
+    '</div>'+
+    globo(P.sent,'Pregunta del alumno',
+      'En la Tabla 1 también calculamos el acumulado. ¿Ahí también se lee así?', true)+
+    globo(P.pres,'La profe responde',
+      'Excel lo calcula igual, pero en una nominal no se lee: si cambias el orden de las filas, el acumulado '+
+      'cambia y no significa nada. Solo sirve cuando las categorías tienen orden, como en esta escala. Aquí '+
+      'te dice, por ejemplo, que la mediana cae en «Tal vez», porque ahí el acumulado pasa el 50 %.') },
+
+{ et:'Actividad 5', t:'Lee la Tabla 3', act:'a5',
+  h:'<p class="enc">Quiz: ¿qué dice la intención de compra?</p>'+
+    '<p class="consigna">Mira la Tabla 3 de la diapositiva anterior. Si fallas, la opción se tacha y '+
+    'vuelves a intentarlo.</p>' },
+
+{ et:'Teoría 5', t:'Medidas de tendencia y dispersión',
+  h:'<p class="enc">Un número que resume y otro que dice qué tan separados están</p>'+
+    '<p class="sub">Solo para las variables de razón: edad y cepillos al año</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Tendencia central: dónde se concentran</h4><div class="c"><ul>'+
+      '<li>Media: el promedio. PROMEDIO.</li>'+
+      '<li>Mediana: el valor del medio al ordenar. MEDIANA.</li>'+
+      '<li>Moda: el que más se repite. MODA.UNO.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Dispersión: qué tan separados</h4><div class="c"><ul>'+
+      '<li>Varianza: VAR.S.</li>'+
+      '<li>Desviación estándar: DESVEST.M.</li>'+
+      '<li>Mínimo y máximo: MIN y MAX.</li>'+
+      '<li>Rango: MAX − MIN.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    fx('B30',"=PROMEDIO('Base (ejemplo)'!$E$2:$E$51)",'media de la edad')+
+    tituloApa(4,'Medidas de tendencia central y dispersión')+
+    '<div class="tabenv"><table class="t"><thead><tr><th>Medida</th><th class="n">Edad</th>'+
+    '<th class="n">Cepillos al año (P2)</th></tr></thead><tbody>'+
+    [['Media',ME.media,MC.media,2],['Mediana',ME.mediana,MC.mediana,0],['Moda',ME.moda,MC.moda,0],
+     ['Varianza',ME.vari,MC.vari,2],['Desviación estándar',ME.de,MC.de,2],['Mínimo',ME.min,MC.min,0],
+     ['Máximo',ME.max,MC.max,0],['Rango',ME.rango,MC.rango,0]].map(function(r){
+       return '<tr><td>'+r[0]+'</td><td class="n">'+mil(r[1],r[3])+'</td><td class="n">'+mil(r[2],r[3])+'</td></tr>';
+     }).join('')+
+    '</tbody></table></div>'+NOTA+
+    globo(P.pres,'Cómo se lee',
+      'La edad promedio es 31.7 años y la desviación estándar es de casi 8 años: buena parte de los '+
+      'encuestados tiene entre 24 y 40 años. La desviación está en la misma unidad que la variable; la '+
+      'varianza no, porque está al cuadrado. Por eso en el informe se comenta la desviación.') },
+
+{ et:'Actividad 6', t:'Cada función con su pregunta', act:'a6',
+  h:'<p class="enc">¿Qué función de Excel responde cada pregunta?</p>'+
+    '<p class="consigna">Arrastra cada función a la pregunta que responde. En el celular, toca la ficha y luego la pregunta.</p>' },
+
+{ et:'Actividad 7', t:'Calcula a mano', act:'a7',
+  h:'<p class="enc">Cinco encuestados, cuatro medidas</p>'+
+    '<p class="consigna">Estos son los cepillos al año (columna G) de los cinco primeros encuestados. '+
+    'Calcula lo que devolvería cada fórmula.</p>'+
+    hoja([0,1,2,3,4], [0,6], function(k,c){ return c===6; }) },
+
+{ et:'Teoría 6', t:'El gráfico según la variable',
+  h:'<p class="enc">Cada variable con su gráfico</p>'+
+    '<p class="sub">Los tres gráficos de la hoja «Gráficos», hechos desde la Tabulación</p>'+
+    '<div class="tres">'+
+    columnas(T1,'Tipo de cepillo (P1)','Columnas · nominal',false,['Plástico','Eléctrico','Ecológico','Otro'])+
+    pastel(T2,'Lugar de compra (P3)','Circular · proporción')+
+    columnas(T3,'Intención de compra (P13)','Columnas · escala de 1 a 5',true,['1','2','3','4','5'])+
+    '</div>'+
+    '<div class="dos" style="margin-top:16px">'+
+    '<div class="fc"><h4>Qué gráfico usar</h4><div class="c"><ul>'+
+      '<li>Columnas o barras: variables nominales y ordinales.</li>'+
+      '<li>Circular: partes de un todo que suman 100 %, con pocas categorías.</li>'+
+      '<li>Líneas: solo cuando hay una secuencia de tiempo.</li>'+
+      '<li>Histograma: variables de razón agrupadas en intervalos, como la edad.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>En Excel</h4><div class="c"><ul>'+
+      '<li>Selecciona las categorías y la columna f de la tabla.</li>'+
+      '<li>Insertar, y eliges el gráfico.</li>'+
+      '<li>Ponle título y etiquetas de datos.</li>'+
+      '<li>Como sale de la tabla, se actualiza solo si cambia la base.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    globo(P.sena,'En el informe',
+      'Cada gráfico lleva su número y su título arriba, como «Figura 1», y la nota con la fuente abajo. '+
+      'Y nunca va solo: debajo se escribe qué se ve en él.') },
+
+{ et:'Actividad 8', t:'Elige el gráfico', act:'a8',
+  h:'<p class="enc">Quiz: ¿qué gráfico le queda a cada caso?</p>'+
+    '<p class="consigna">Piensa primero en el nivel de medición y después en el gráfico.</p>' },
+
+{ et:'Teoría 7', t:'Presentar e interpretar',
+  h:'<p class="enc">Una tabla sin interpretación está a medias</p>'+
+    '<p class="sub">Así se presenta en el informe (2.3.1 y 2.3.2)</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Las partes de la tabla</h4><div class="c"><ul>'+
+      '<li>Arriba: el número, «Tabla 1».</li>'+
+      '<li>Debajo del número: el título, en cursiva.</li>'+
+      '<li>La tabla, con su fila de total.</li>'+
+      '<li>Abajo: la nota con la fuente y el tamaño de la muestra.</li>'+
+      '<li>Después: el párrafo de interpretación.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>El párrafo, en tres pasos</h4><div class="c"><ul>'+
+      '<li>Qué se encontró: el dato y el porcentaje.</li>'+
+      '<li>Con qué se compara: la categoría que sigue o la que menos.</li>'+
+      '<li>Qué significa para la marca.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    tituloApa(1,'Tipo de cepillo que compra (P1)')+tablaFrec(T1)+NOTA+
+    globo(P.punt,'Así se interpreta',
+      'El 64 % de los encuestados compra cepillos manuales de plástico y solo el 24 % compra uno ecológico. '+
+      'Para la marca, el reto no está en quien ya compra bambú, sino en el grupo grande que todavía usa '+
+      'plástico y ya compra en farmacias.') },
+
+{ et:'Actividad 9', t:'La mejor interpretación', act:'a9',
+  h:'<p class="enc">Quiz: ¿cuál lo dice mejor?</p>'+
+    '<p class="consigna">Elige la opción que tú pondrías en el informe.</p>' },
+
+{ et:'Cierre', t:'Lo que te llevas',
+  h:'<div class="cierre"><div class="ic">📊</div>'+
+    '<p class="enc">Primero el nivel, después la fórmula, al final el gráfico</p></div>'+
+    globo(P.punt,'La frase para recordar',
+      'Una tabla bien hecha siempre termina en una frase que alguien de marketing pueda usar. Los números '+
+      'los saca Excel; la lectura la pones tú.')+
+    '<div class="dos">'+
+    '<div class="fc vd"><h4>Para tu informe</h4><div class="c"><ul>'+
+      '<li>La base con una fila por encuestado y su leyenda de códigos.</li>'+
+      '<li>Una tabla de frecuencias por cada pregunta clave, con CONTAR.SI.</li>'+
+      '<li>La tabla de medidas para las variables de razón.</li>'+
+      '<li>Un gráfico por tabla, según el nivel de medición.</li>'+
+      '<li>Una interpretación debajo de cada tabla y cada gráfico.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc"><h4>Los números del caso</h4><div class="c"><ul>'+
+      '<li>64 % compra cepillo de plástico; 24 %, ecológico.</li>'+
+      '<li>54 % compra en farmacia o botica.</li>'+
+      '<li>46 % probablemente o definitivamente compraría el de bambú.</li>'+
+      '<li>Edad promedio: 31.7 años. Cepillos al año: 3.76.</li>'+
+      '</ul></div></div>'+
+    '</div>' }
+];
+
+/* ================= estado ================= */
+var LS='tj_tabula8_v1';
+function vacio(){ var g={ visto:{}, mal:{}, r:{} }; for(var k in ACT) g.r[k]={}; return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object'){
+    if(d.visto) G.visto=d.visto;
+    if(d.mal) G.mal=d.mal;
+    if(d.r) for(var k0 in G.r) if(d.r[k0]) G.r[k0]=d.r[k0];
+  }
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+
+function cuantas(k){
+  var A=ACT[k];
+  return A.tipo==='arr'||A.tipo==='par' ? (A.huecos||A.fichas).length
+       : A.tipo==='quiz' ? A.preguntas.length : A.lineas.length;
+}
+var CLAVES=Object.keys(ACT);
+function hechas(k){ return Object.keys(G.r[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+
+var i=0;
+
+/* orden de opciones estable: el mismo para un id dado, pero no siempre el correcto primero */
+function barajaFija(sem, n){
+  var h=0, k;
+  for(k=0;k<sem.length;k++) h=(h*31+sem.charCodeAt(k))>>>0;
+  var a=[]; for(k=0;k<n;k++) a.push(k);
+  for(k=a.length-1;k>0;k--){
+    h=(h*1103515245+12345)>>>0;
+    var j=h%(k+1), t=a[k]; a[k]=a[j]; a[j]=t;
+  }
+  return a;
+}
+
+/* ================= arrastre reutilizable ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[draggable-si]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true);
+      ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35';
+      f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display='';
+      f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    function fin(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null;
+      f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    }
+    f.addEventListener('pointerup', fin);
+    f.addEventListener('pointercancel', function(){ if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+
+    /* tocar y tocar, para el celular */
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){
+  if(!el) return;
+  el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450);
+}
+
+/* ================= vistas de actividad ================= */
+function cabTarea(k){
+  var A=ACT[k];
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">';
+}
+function pie(k){ return (lista(k) && ACT[k].fin ? ACT[k].fin : '')+'</div></div>'; }
+function banco(fichas, g, mono, nada){
+  var libres=fichas.filter(function(f){ return !g[f.id]; });
+  return '<div class="banco">'+(libres.length ? libres.map(function(f){
+    return '<button type="button" class="ficha'+(mono?' mono':'')+'" draggable-si data-f="'+f.id+'">'+esc(f.t)+'</button>';
+  }).join('') : '<span class="vacio">'+esc(nada)+'</span>')+'</div>';
+}
+
+function vArrastre(k){
+  var A=ACT[k], g=G.r[k];
+  var h=cabTarea(k)+banco(A.fichas, g, false, 'No queda ninguna ficha.')+
+        '<div class="cajas c'+A.cajas.length+'">';
+  A.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+(c.s?'<small>'+esc(c.s)+'</small>':'')+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>';
+       }).join('')+'</div></div>';
+  });
+  return h+'</div>'+pie(k);
+}
+
+function vParea(k){
+  var A=ACT[k], g=G.r[k];
+  var h=cabTarea(k)+banco(A.fichas, g, true, 'No queda ninguna función.')+'<div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var nom=''; A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(g[x.id]?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(g[x.id]?'<code>'+esc(nom)+'</code>':'suelta aquí')+'</span></div>';
+  });
+  return h+'</div>'+pie(k);
+}
+
+function vElige(k){
+  var A=ACT[k], g=G.r[k];
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lineas.forEach(function(l){
+    var ok=g[l.id], orden=barajaFija(l.id+k, l.ops.length);
+    h+='<div class="linea'+(ok?' bien':'')+'"><span class="q">'+esc(l.q)+'</span><span class="r">'+
+       '<select class="cel'+(ok?' bien':'')+'" data-c="'+k+'" data-s="'+l.id+'"'+(ok?' disabled':'')+'>'+
+       (ok?'':'<option value="">Elige…</option>')+
+       orden.map(function(j){
+         return '<option value="'+j+'"'+(ok&&j===l.ok?' selected':'')+'>'+esc(l.ops[j])+'</option>';
+       }).join('')+'</select></span></div>';
+  });
+  return h+'</div>'+pie(k);
+}
+
+function vCalcula(k){
+  var A=ACT[k], g=G.r[k];
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lineas.forEach(function(l){
+    var ok=g[l.id], dec=(l.dec===undefined?2:l.dec);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+l.q+'<span class="pre">'+esc(l.pre)+'</span></span>'+
+       '<span class="r"><input class="cel'+(ok?' bien':'')+'" type="text" inputmode="decimal" '+
+       'data-c="'+k+'" data-l="'+l.id+'"'+(ok?' value="'+mil(l.v,dec)+'" disabled':'')+
+       ' placeholder="'+(dec?'0.'+'0'.repeat(dec):'0')+'" aria-label="'+esc(l.q.replace(/<[^>]+>/g,''))+'">'+
+       (l.u?'<span class="u">'+esc(l.u)+'</span>':'')+'</span></div>';
+  });
+  return h+'</div>'+pie(k);
+}
+
+function vQuiz(k){
+  var A=ACT[k], g=G.r[k];
+  var h=cabTarea(k);
+  A.preguntas.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    barajaFija(k+'|'+n, p.ops.length).forEach(function(j){
+      var cls = resuelto && j===p.ok ? 'buena' : (G.mal[k+'|'+n+'|'+j] ? 'mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         (resuelto||cls==='mala'?' disabled':'')+' class="'+cls+'">'+esc(p.ops[j])+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  if(lista(k)) h+=globo(P.sena,'Quiz completo','Todas bien. Pasa a la siguiente diapositiva.');
+  return h+'</div></div>';
+}
+
+var VISTA={ sel:vElige, arr:vArrastre, cal:vCalcula, quiz:vQuiz, par:vParea };
+
+/* ================= dibujo ================= */
+function pinta(){
+  var s=D[i];
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.act) h+=VISTA[ACT[s.act].tipo](s.act);
+  $('lam').innerHTML=h;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,k){
+    var cl = k===i ? 'on' : (x.act && lista(x.act) ? 'hecho' : (G.visto[k]?'visto':''));
+    return '<button type="button" data-p="'+k+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){ va(+b.dataset.p); });
+  });
+  cablea();
+}
+/* al cambiar de diapositiva se vuelve arriba; al responder, la vista se queda donde estaba */
+function repinta(){ var y=$('lam').scrollTop; pinta(); $('lam').scrollTop=y; }
+
+/* lee 54, 54 %, 0.54, 4,2 o 1,000 */
+function numero(txt){
+  var t=String(txt).replace(/\s/g,'').replace(/%$/,'');
+  if(/^-?\d+,\d{1,2}$/.test(t)) t=t.replace(',','.'); else t=t.replace(/,/g,'');
+  return t==='' ? NaN : Number(t);
+}
+
+function cablea(){
+  var lam=$('lam'), s=D[i], k=s.act;
+  if(!k) return;
+  var A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G.r[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); repinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G.r[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); repinta(); }
+      else{ mal(); sacude(el); sacude(caja); }
+    });
+  }
+
+  qq('select.cel[data-s]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var l=null; A.lineas.forEach(function(x){ if(x.id===sl.dataset.s) l=x; });
+      if(+sl.value===l.ok){ G.r[k][l.id]=1; graba(); if(lista(k)) fanfarria(); else bien(); repinta(); }
+      else{ mal(); sl.classList.add('mal'); sacude(sl);
+            setTimeout(function(){ sl.classList.remove('mal'); sl.value=''; }, 900); }
+    });
+  });
+
+  qq('input.cel[data-l]', lam).forEach(function(inp){
+    function revisa(){
+      if(inp.disabled) return;
+      var v=numero(inp.value);
+      if(isNaN(v) && inp.value.trim()==='') return;
+      var l=null; A.lineas.forEach(function(x){ if(x.id===inp.dataset.l) l=x; });
+      if(!l) return;
+      var tol=l.tol || 0.011;
+      var vale = isFinite(v) && (Math.abs(v-l.v)<=tol || (l.u==='%' && Math.abs(v*100-l.v)<=tol));
+      if(vale){ G.r[k][l.id]=1; graba(); if(lista(k)) fanfarria(); else bien(); repinta(); }
+      else{
+        mal(); inp.classList.add('mal'); sacude(inp);
+        setTimeout(function(){ inp.classList.remove('mal'); }, 900);
+      }
+    }
+    inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    inp.addEventListener('blur', revisa);
+  });
+
+  qq('button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var n=+b.dataset.k, j=+b.dataset.j, p=A.preguntas[n];
+      if(j===p.ok){ G.r[k][n]=j; graba(); if(lista(k)) fanfarria(); else bien(); repinta(); }
+      else{ G.mal[k+'|'+n+'|'+j]=1; graba(); mal(); b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+}
+
+/* ================= navegación ================= */
+function va(n){
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); $('lam').scrollTop=0; }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc');
+  e.classList.toggle('full');
+  document.body.style.overflow = e.classList.contains('full') ? 'hidden' : '';
+  $('btnFull').textContent = e.classList.contains('full') ? '✕ Salir' : '⛶ Pantalla completa';
+}
+$('btnFull').addEventListener('click', full);
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1 || (e.target.closest && e.target.closest('.ficha,.tabenv'))){ x0=null; return; }
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva '+esc(e.lamina||'')+' · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: '+(e.ok||0)+' de '+(e.total||0)+'</p></div>';
+}
+
+if(window.Aula){
+  Aula.iniciar({ sala:'TAB', codigo:'INV8', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(dentro) pinta();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las nueve actividades.',
+  hecho:function(){ G=vacio(); i=0; pinta(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
