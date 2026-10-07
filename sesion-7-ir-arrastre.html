@@ -204,6 +204,94 @@
   }
   @media (prefers-reduced-motion: reduce){ .flota.late{ animation:none; } }
 
+  .o-btn.auto{ border:1.5px solid var(--ambar); color:var(--ambar); background:#FFF4E5; font-weight:700; }
+  .o-btn.auto:hover{ background:var(--ambar); color:#fff; }
+
+  /* laboratorio del arrastre */
+  .lab{ border:1px solid var(--o-border); border-left:4px solid var(--verde); border-radius:11px;
+        background:#fff; margin:0 0 14px; overflow:hidden; }
+  .lab-cab{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:9px 12px; background:#F6FBF8;
+            border-bottom:1px solid var(--o-border); }
+  .lab-cab > b{ color:var(--verde); font-size:14px; }
+  .lab-tabs{ display:flex; gap:6px; flex-wrap:wrap; flex:1; }
+  .lab-tabs button, .lab-seg button{ font:inherit; font-size:12.5px; font-weight:700; cursor:pointer;
+    border:1.5px solid var(--o-border); background:#fff; color:var(--gris); border-radius:999px; padding:5px 12px; }
+  .lab-tabs button.on, .lab-seg button.on{ background:var(--verde); border-color:var(--verde); color:#fff; }
+  .lab-cuerpo{ padding:12px 13px; }
+  .lab-ctrl{ display:flex; gap:10px 14px; flex-wrap:wrap; align-items:center; font-size:12.5px; color:var(--gris); font-weight:600; }
+  .lab-ctrl label{ display:inline-flex; gap:6px; align-items:center; }
+  .lab-ctrl select.cel{ width:auto; }
+  .lab-seg{ display:inline-flex; gap:4px; }
+  .lab-bts{ display:inline-flex; gap:6px; flex-wrap:wrap; }
+  .lab-rentas{ display:flex; gap:6px 12px; flex-wrap:wrap; align-items:center; margin:10px 0 4px;
+               font-size:12px; color:var(--o-muted); font-weight:600; }
+  .lab-rentas label{ display:inline-flex; gap:5px; align-items:center; }
+  .lab-rentas input.cel, .lab-ctrl input.cel{ width:96px; }
+  .lab-bolsa{ margin:12px 0 6px; }
+  .lab-bolsa-t{ display:flex; justify-content:space-between; gap:10px; font-size:12.5px; color:var(--gris); font-weight:700; margin-bottom:4px; }
+  .lab-bolsa-t b{ color:var(--rojo); font-variant-numeric:tabular-nums; }
+  .lab-bolsa-bar{ display:flex; gap:2px; height:22px; border-radius:6px; overflow:hidden; background:#F1F3F5; }
+  .lab-bolsa-bar i{ display:block; height:100%; width:0; transition:width .9s ease; }
+  .lab-bolsa-bar i.u, .lab-ley i.u{ background:var(--verde); }
+  .lab-bolsa-bar i.q, .lab-ley i.q{ background:var(--rojo); }
+  .lab-bolsa-bar i.v, .lab-ley i.v{ background:repeating-linear-gradient(135deg,#9AA3AD 0 5px,#D5DAE0 5px 10px); }
+  .lab-ley i.r{ background:#DCE3EC; }
+  .lab-bolsa-bar.sacude{ animation:sacude .5s ease 2; }
+  @keyframes sacude{ 0%,100%{ transform:translateX(0) } 25%{ transform:translateX(-6px) } 75%{ transform:translateX(6px) } }
+  .lab-ley{ display:flex; gap:12px; flex-wrap:wrap; margin-top:6px; font-size:11.5px; color:var(--o-muted); }
+  .lab-ley span{ display:inline-flex; gap:5px; align-items:center; }
+  .lab-ley i{ display:inline-block; width:12px; height:12px; border-radius:3px; }
+  .lab-cols{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-top:12px; }
+  .lab-col{ text-align:center; border-radius:10px; padding:6px 4px 8px; transition:background .3s; }
+  .lab-col.foco{ background:#EEF6F1; }
+  .lab-pila{ height:170px; display:flex; align-items:flex-end; justify-content:center; border-bottom:1px solid #C9CFD6; }
+  .lab-renta{ position:relative; width:min(64px,80%); background:#DCE3EC; border-radius:4px 4px 0 0;
+              display:flex; align-items:flex-end; transition:opacity .3s; }
+  .lab-apl{ width:100%; height:0; background:var(--verde); border-radius:4px 4px 0 0; transition:height 1s ease; }
+  .lab-tope{ position:absolute; left:-6px; right:-6px; bottom:50%; border-top:2px dashed var(--certus); }
+  .lab-tope span{ position:absolute; right:-2px; top:-15px; font-size:9.5px; font-weight:800; color:var(--certus); }
+  .lab-col.fuera .lab-renta{ opacity:.55; }
+  .lab-y{ font-weight:800; color:var(--certus); margin-top:5px; font-size:13px; }
+  .lab-n{ font-size:11.5px; color:var(--o-muted); line-height:1.5; font-variant-numeric:tabular-nums; }
+  .lab-n b{ color:var(--o-text); }
+  .lab-n.ap b{ color:var(--verde); }
+  .lab-n.sq b{ color:var(--rojo); }
+  .lab-n:empty{ visibility:hidden; } .lab-n:empty::before{ content:'·'; }
+  .lab-badge{ font-size:10.5px; font-weight:800; color:#5A6470; text-transform:uppercase; letter-spacing:.04em; min-height:14px; }
+  .lab-nar{ margin:10px 0; padding:10px 13px; border-radius:10px; background:var(--ama); border:1px solid var(--amaBd);
+            font-size:13px; line-height:1.6; color:#5B4A15; min-height:44px; }
+  .lab-fin{ margin-top:6px; padding-top:6px; border-top:1px dashed var(--amaBd); }
+  .lab-tabla{ overflow-x:auto; }
+  .lab-tabla td.tapa{ background:#FAFBFC; }
+  .lab-tabla td.neg{ color:var(--rojo); }
+  .lab-x{ color:#5A6470; font-weight:700; font-style:italic; }
+  @media (max-width:640px){
+    .lab-cols{ gap:3px; } .lab-pila{ height:120px; } .lab-n{ font-size:10.5px; }
+  }
+  /* juego */
+  .lab-ins{ margin:0 0 10px; font-size:12.5px; color:var(--o-muted); }
+  .lab-mazo{ display:flex; gap:7px; flex-wrap:wrap; min-height:10px; margin-bottom:12px; }
+  .lab-ficha{ font-size:12.5px; line-height:1.4; background:#fff; border:1.5px solid var(--certus); color:#24325E;
+              border-radius:10px; padding:7px 11px; cursor:grab; max-width:290px; user-select:none;
+              box-shadow:0 2px 6px rgba(22,48,122,.12); }
+  .lab-ficha:hover, .lab-ficha.sel{ background:#EEF2FB; }
+  .lab-ficha.sel{ outline:3px solid var(--ambar); }
+  .lab-ficha.arr{ opacity:.45; }
+  .lab-ficha.fija{ cursor:default; border-color:#7CC29B; background:#E9F7EF; color:#14532D; box-shadow:none; max-width:none; }
+  .lab-ficha.mal{ animation:sacude .4s ease 1; border-color:var(--rojo); }
+  .lab-zonas{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+  @media (max-width:700px){ .lab-zonas{ grid-template-columns:1fr; } }
+  .lab-zona{ border:2px dashed #C9CFD6; border-radius:11px; padding:8px; min-height:120px; background:#FAFBFC; cursor:pointer;
+             transition:border-color .2s, background .2s; }
+  .lab-zona.sobre{ border-color:var(--verde); background:#F2FAF5; }
+  .lab-zona h5{ margin:0 0 7px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--certus); }
+  .lab-dentro{ display:flex; flex-direction:column; gap:6px; }
+  .lab-jbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px; }
+  .lab-jmsg{ flex:1; font-size:12.5px; font-weight:600; min-width:200px; }
+  .lab-jmsg.ok{ color:var(--verde); } .lab-jmsg.no{ color:var(--rojo); }
+  @media (prefers-reduced-motion: reduce){
+    .lab-apl, .lab-bolsa-bar i{ transition:none; } .lab-bolsa-bar.sacude, .lab-ficha.mal{ animation:none; }
+  }
   .ayuda{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 14px; }
   .ayuda span{ font-size:12.5px; color:#5A6B5F; }
   .ayuda .o-btn{ border:1.5px solid var(--certus); color:var(--certus); background:#EEF2FB; font-weight:700; }
@@ -273,6 +361,7 @@
   <div id="zona" hidden>
     <div class="pest" id="pest"></div>
     <div id="cabBloque"></div>
+    <div class="lab" id="lab" hidden></div>
     <div class="casos" id="casos"></div>
     <div id="reinicio" style="margin:0 0 12px"></div>
     <div id="panel"></div>
@@ -286,9 +375,9 @@
 
   <div class="elenco" id="elenco" aria-hidden="true"></div>
 
-  <p class="aviso">Casos de la Semana 14 (ejercicios de IR y arrastre de pérdidas), con importes referenciales con fines
+  <p class="aviso">Casos de la Semana 14 (ejercicios de IR y arrastre de pérdidas), actualizados al ejercicio 2025, con importes referenciales con fines
     didácticos. Tasa del Régimen General: 29.5%. Régimen MYPE Tributario: 10% hasta 15 UIT y 29.5% por el exceso,
-    con la UIT 2023 de S/ 4,950. Las bases legales citan la Ley del Impuesto a la Renta (LIR) y el D. Leg. N° 1269.</p>
+    con la UIT 2025 de S/ 5,350 (15 UIT = S/ 80,250). Las bases legales citan la Ley del Impuesto a la Renta (LIR) y el D. Leg. N° 1269.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
@@ -424,7 +513,7 @@
   function sel(t, v, ops, p){ return {k:'sel', t:t, v:v, ops:ops, p:p||''}; }
 
   function r2(n){ return Math.round(n*100)/100; }
-  var UIT=4950, T15=15*UIT, TASA=0.295;
+  var UIT=5350, T15=15*UIT, TASA=0.295;
   /* Régimen MYPE Tributario: 10% hasta 15 UIT y 29.5% por el exceso */
   function irRmt(rni){ return rni<=T15 ? r2(rni*0.10) : r2(T15*0.10+(rni-T15)*TASA); }
 
@@ -435,7 +524,7 @@
       t:o.t, per:o.per, ley:'rmt', h:o.h,
       datos:[['Utilidad contable (RAPEI)',o.u],['Adiciones temporales',o.at],['Adiciones permanentes',o.ap],
              ['Deducciones temporales',o.dt],['Deducciones permanentes',o.dp],['Pagos a cuenta del año',o.pagos],
-             ['UIT 2023',UIT]],
+             ['UIT 2025',UIT]],
       filas:[ cab('Renta neta imponible'),
               num('(+) Total adiciones', adi, '← temporales + permanentes; si no hay, escribe 0.'),
               num('(−) Total deducciones', ded, 'Si no hay, escribe 0.'),
@@ -449,7 +538,7 @@
               num('(−) Pagos a cuenta', o.pagos),
               num('Impuesto por regularizar', reg, '← lo que se paga con la declaración anual', {tol:1, tot:true}) ],
       fin:'Renta neta imponible: '+(adi||ded ? fmt(o.u)+(adi?' + '+fmt(adi):'')+(ded?' − '+fmt(ded):'')+' = ' : 'sin ajustes, la misma utilidad: ')+'<b>'+fmt(rni)+'</b>. '+
-          'Los primeros 15 UIT (74,250) pagan 10% = 7,425; el exceso ('+fmt(exc)+') paga 29.5% = '+fmt(r2(exc*TASA))+'. '+
+          'Los primeros 15 UIT ('+fmt(T15)+') pagan 10% = '+fmt(r2(T15*0.10))+'; el exceso ('+fmt(exc)+') paga 29.5% = '+fmt(r2(exc*TASA))+'. '+
           'Impuesto <b>'+fmt(ir)+'</b>, menos los pagos a cuenta ('+fmt(o.pagos)+'): se regularizan <b>'+fmt(reg)+'</b>.'+
           (o.at||o.dt ? ' Aquí no se aplica la NIC 12: las temporales y las permanentes se suman igual.' : ''),
       base:'D. Leg. N° 1269, Arts. 5° y 6° · Arts. 37° y 44° LIR'
@@ -489,10 +578,10 @@
       t:o.t, per:o.per, ley:o.rmt?'nicrmt':'nic', h:o.h,
       datos:[['Ventas netas',o.v],['Costo de ventas',o.cv],['Gastos administrativos',o.ga],['Gastos de ventas',o.gv],
              ['(+) Adiciones temporales',o.at],['(−) Deducciones temporales',o.dt],
-             ['(+) Adiciones permanentes',o.ap],['(−) Deducciones permanentes',o.dp]].concat(o.rmt?[['UIT 2023',UIT]]:[]),
+             ['(+) Adiciones permanentes',o.ap],['(−) Deducciones permanentes',o.dp]].concat(o.rmt?[['UIT 2025',UIT]]:[]),
       filas:f,
       fin:'RAPEI '+fmt(rapei)+' y utilidad tributaria <b>'+fmt(ut)+'</b>. IR corriente <b>'+fmt(corr)+'</b>'+
-          (o.rmt?' (7,425 del primer tramo + '+fmt(r2((ut-T15)*TASA))+' del exceso)':'')+'. '+
+          (o.rmt?' ('+fmt(r2(T15*0.10))+' del primer tramo + '+fmt(r2((ut-T15)*TASA))+' del exceso)':'')+'. '+
           'Activo diferido '+fmt(ad)+(pd?' y pasivo diferido '+fmt(pd):'')+': el gasto por IR baja a <b>'+fmt(gasto)+'</b> '+
           'y la utilidad neta queda en <b>'+fmt(neta)+'</b>. Asiento: Debe 881 '+fmt(gasto)+' y 3712 '+fmt(ad)+
           '; Haber 40171 '+fmt(corr)+(pd?' y 4912 '+fmt(pd):'')+'.'+
@@ -504,13 +593,15 @@
   /* ===== bloque 3: arrastre de pérdidas (Art. 50° LIR) =====
      sistema A: hasta el 100% de la renta neta, durante los 4 ejercicios siguientes a la pérdida.
      sistema B: hasta el 50% de la renta neta, sin plazo. Siempre se compensa primero la más antigua. */
-  var EJ=2022;
+  var EJ=2025;
+  /* sistema A: 4 años; la pérdida de 2020, 5 años (D. Leg. N° 1481) */
+  function plazoA(a){ return a===2020 ? 5 : 4; }
   function casoArr(o){
     var r0=o.u-o.p+o.ad-o.de, c106=Math.max(r0,0), c107=Math.max(-r0,0);
     var tope = o.sis==='A' ? c106 : r2(c106*0.5), queda=tope, c108=0, saldo=0, vencida=0;
     var perd=o.perd.slice().sort(function(a,b){ return a[0]-b[0]; });
     var comp=perd.map(function(x){
-      var vence = o.sis==='A' && x[0]+4<EJ;
+      var vence = o.sis==='A' && x[0]+plazoA(x[0])<EJ;
       if(vence){ vencida+=x[1]; return {a:x[0], s:x[1], c:0, v:true}; }
       var c=Math.min(x[1], queda); queda=r2(queda-c); c108=r2(c108+c); saldo=r2(saldo+x[1]-c);
       return {a:x[0], s:x[1], c:c, v:false};
@@ -529,7 +620,7 @@
                 o.sis==='A' ? 'Art. 50° inc. a) LIR' : 'Art. 50° inc. b) LIR') ];
     comp.forEach(function(x){
       f.push(num('Pérdida de '+x.a+' (saldo '+fmt(x.s)+') · se compensa', x.c,
-                 x.v ? 'Ojo con el plazo del sistema A.' : 'Primero la más antigua.'));
+                 x.v ? 'Ojo con el plazo del sistema A.' : (o.sis==='A' && x.a===2020 ? 'D. Leg. N° 1481' : 'Primero la más antigua.')));
     });
     f.push(cab('Resultado'),
            num('Casilla 108 · Pérdidas netas compensables', c108, '← la suma de lo compensado', {tot:true}),
@@ -551,9 +642,11 @@
         '. Se compensan <b>'+fmt(c108)+'</b> ('+(usadas.length>1 ? usadas.slice(0,-1).join(', ')+' y '+usadas[usadas.length-1] : usadas[0])+') y la renta neta imponible queda en <b>'+fmt(c110)+'</b>. '
       : 'En '+EJ+' hay <b>pérdida</b> ('+fmt(c107)+'): no hay renta neta contra la cual compensar, así que la casilla 108 queda en 0. '+
         'A la pérdida del año se le restan los ingresos exonerados ('+fmt(o.ex)+'): '+fmt(perdEj)+' se suman a lo que ya se arrastraba. ';
+    if(o.sis==='A' && comp.some(function(x){ return x.a===2020 && !x.v; }))
+      fin += 'La pérdida de 2020 todavía se usa en 2025: por el <b>D. Leg. N° 1481</b>, con el sistema A se arrastra 5 años (2021 a 2025). ';
     fin += vencida ? 'La pérdida de '+comp.filter(function(x){ return x.v; }).map(function(x){ return x.a; }).join(', ')+
                      ' ('+fmt(vencida)+') ya <b>venció</b>: con el sistema A solo se arrastra 4 años. ' : '';
-    fin += c111 ? 'Quedan <b>'+fmt(c111)+'</b> por compensar'+(o.sis==='A' ? ', cada parte hasta el cuarto año siguiente al de su pérdida.' : ', sin plazo (sistema B).')
+    fin += c111 ? 'Quedan <b>'+fmt(c111)+'</b> por compensar'+(o.sis==='A' ? ', cada parte hasta el cuarto año siguiente al de su pérdida'+(comp.some(function(x){ return x.a===2020; }) ? ' (el quinto, si es de 2020).' : '.') : ', sin plazo (sistema B).')
                 : 'No queda saldo de pérdida por compensar.';
     return { t:o.t, per:o.per, ley:o.sis, h:o.h, datos:datos, filas:f, fin:fin,
              base:'Art. 50° inc. '+(o.sis==='A'?'a)':'b)')+' LIR · Formulario Virtual 710' };
@@ -567,11 +660,11 @@
           'para saber cuánto se regulariza. Aquí no se calcula impuesto diferido.',
     casos:[
     casoRmt({ t:'IBC Villar & Asociados', per:'chico', u:90000, at:0, ap:0, dt:0, dp:0, pagos:2000,
-      h:'La empresa <b>IBC Villar &amp; Asociados</b> en el 2023 obtuvo una utilidad contable (RAPEI) de <b>S/ 90,000.00</b>, '+
+      h:'La empresa <b>IBC Villar &amp; Asociados</b> en el 2025 obtuvo una utilidad contable (RAPEI) de <b>S/ 90,000.00</b>, '+
         'se encuentra en el Régimen Mype Tributario y cuenta con 15 trabajadores. Realizó pagos a cuenta por <b>S/ 2,000.00</b>. '+
         'Calcula el impuesto a la renta y el pago a regularizar.' }),
     casoRmt({ t:'Colmenares S.A.', per:'expl', u:125000, at:1200, ap:800, dt:0, dp:500, pagos:2900,
-      h:'La empresa <b>Colmenares S.A.</b> en el 2023 obtuvo una utilidad contable (RAPEI) de <b>S/ 125,000.00</b>, '+
+      h:'La empresa <b>Colmenares S.A.</b> en el 2025 obtuvo una utilidad contable (RAPEI) de <b>S/ 125,000.00</b>, '+
         'se encuentra en el Régimen Mype Tributario y cuenta con 18 trabajadores. Realizó pagos a cuenta por <b>S/ 2,900.00</b>. '+
         'Tiene adiciones temporales por S/ 1,200, adiciones permanentes por S/ 800 y deducciones permanentes por S/ 500. '+
         'Calcula el impuesto a la renta y el pago a regularizar.' })
@@ -588,68 +681,70 @@
     casoNic({ t:'Caso II · Régimen General', per:'expl', v:850000, cv:160000, ga:45800, gv:65200, at:100000, dt:60000, ap:20000, dp:0,
       h:'Empresa del <b>Régimen General</b>, esta vez con adiciones y deducciones temporales y una adición permanente. '+
         'Determina el impuesto corriente y el diferido, cierra el estado de resultados y registra el asiento.' }),
-    casoNic({ t:'Caso III · Régimen MYPE 2023', per:'chico', rmt:true, v:225000, cv:85000, ga:15400, gv:25600, at:5000, dt:500, ap:0, dp:400,
-      h:'Empresa del <b>Régimen MYPE Tributario 2023</b>: el impuesto corriente se calcula con las dos tasas (10% hasta 15 UIT y 29.5% por el exceso). '+
+    casoNic({ t:'Caso III · Régimen MYPE 2025', per:'chico', rmt:true, v:225000, cv:85000, ga:15400, gv:25600, at:5000, dt:500, ap:0, dp:400,
+      h:'Empresa del <b>Régimen MYPE Tributario 2025</b>: el impuesto corriente se calcula con las dos tasas (10% hasta 15 UIT y 29.5% por el exceso). '+
         'Determina el corriente y el diferido, cierra el estado de resultados y registra el asiento.' })
     ] },
 
   { id:'b3', t:'Bloque 3 · Arrastre de pérdidas', corto:'Sistemas A y B', per:'idea',
     intro:'La pérdida tributaria de un año se puede <b>compensar</b> con la renta de los siguientes. Con el <b>sistema A</b> se descuenta hasta el '+
-          '<b>100%</b> de la renta neta, pero solo durante <b>4 años</b>; con el <b>sistema B</b>, solo hasta el <b>50%</b>, pero sin plazo. '+
-          'Llenas las casillas del Formulario 710 y el asistente de la casilla 108, empezando por la pérdida más antigua.',
+          '<b>100%</b> de la renta neta, pero solo durante <b>4 años</b> (5 para la pérdida de 2020, D. Leg. N° 1481); con el <b>sistema B</b>, solo hasta el <b>50%</b>, pero sin plazo. '+
+          'Mira primero el <b>laboratorio</b>: el gráfico animado y el juego. Luego llenas las casillas del Formulario 710 '+
+          'del ejercicio <b>2025</b> y el asistente de la casilla 108, empezando por la pérdida más antigua.',
     casos:[
-    casoArr({ t:'Pérdida mayor que la utilidad', per:'chico', sis:'A', perd:[[2021,15000]], u:12000, p:0, ad:0, de:0, ex:0,
-      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2021 de <b>S/ 15,000.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'Pérdida mayor que la utilidad', per:'chico', sis:'A', perd:[[2024,15000]], u:12000, p:0, ad:0, de:0, ex:0,
+      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2024 de <b>S/ 15,000.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 12,000.00</b>. No hay adiciones ni deducciones y el método de arrastre elegido es el <b>método A</b>.' }),
-    casoArr({ t:'Con una deducción', per:'expl', sis:'A', perd:[[2021,15000]], u:12000, p:0, ad:0, de:400, ex:0,
-      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2021 de <b>S/ 15,000.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'Con una deducción', per:'expl', sis:'A', perd:[[2024,15000]], u:12000, p:0, ad:0, de:400, ex:0,
+      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2024 de <b>S/ 15,000.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 12,000.00</b>. No tiene adiciones, pero sí una <b>deducción de S/ 400.00</b>; el método de arrastre elegido es el <b>método A</b>.' }),
-    casoArr({ t:'La pérdida se agota', per:'pres', sis:'A', perd:[[2021,11200]], u:12000, p:0, ad:0, de:0, ex:0,
-      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2021 de <b>S/ 11,200.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'La pérdida se agota', per:'pres', sis:'A', perd:[[2024,11200]], u:12000, p:0, ad:0, de:0, ex:0,
+      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2024 de <b>S/ 11,200.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 12,000.00</b>. No hay adiciones ni deducciones y el método de arrastre elegido es el <b>método A</b>.' }),
-    casoArr({ t:'El mismo caso con el sistema B', per:'chico', sis:'B', perd:[[2021,15000]], u:12000, p:0, ad:0, de:0, ex:0,
-      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2021 de <b>S/ 15,000.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'El mismo caso con el sistema B', per:'chico', sis:'B', perd:[[2024,15000]], u:12000, p:0, ad:0, de:0, ex:0,
+      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2024 de <b>S/ 15,000.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 12,000.00</b>. No hay adiciones ni deducciones y el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Comercial Sureño con ajustes', per:'expl', sis:'B', perd:[[2021,24500]], u:15400, p:0, ad:14800, de:2500, ex:0,
-      h:'La empresa <b>Comercial Sureño SRL</b> obtuvo una pérdida en el 2021 de <b>S/ 24,500.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'Comercial Sureño con ajustes', per:'expl', sis:'B', perd:[[2024,24500]], u:15400, p:0, ad:14800, de:2500, ex:0,
+      h:'La empresa <b>Comercial Sureño SRL</b> obtuvo una pérdida en el 2024 de <b>S/ 24,500.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 15,400.00</b>. Tiene una <b>adición de S/ 14,800.00</b>, una <b>deducción de S/ 2,500.00</b> y el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Utilidad mayor que la pérdida', per:'pres', sis:'B', perd:[[2021,12000]], u:18500, p:0, ad:0, de:0, ex:0,
-      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2021 de <b>S/ 12,000.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'Utilidad mayor que la pérdida', per:'pres', sis:'B', perd:[[2024,12000]], u:18500, p:0, ad:0, de:0, ex:0,
+      h:'La empresa <b>Controversial del Norte S.A.C.</b> obtuvo una pérdida en el 2024 de <b>S/ 12,000.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 18,500.00</b>. No hay adiciones ni deducciones y el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Una pérdida pequeña', per:'chico', sis:'B', perd:[[2021,4500]], u:15400, p:0, ad:4800, de:4900, ex:0,
-      h:'La empresa <b>Comercial Sureño SRL</b> obtuvo una pérdida en el 2021 de <b>S/ 4,500.00</b>. En el 2022 obtuvo una utilidad de '+
+    casoArr({ t:'Una pérdida pequeña', per:'chico', sis:'B', perd:[[2024,4500]], u:15400, p:0, ad:4800, de:4900, ex:0,
+      h:'La empresa <b>Comercial Sureño SRL</b> obtuvo una pérdida en el 2024 de <b>S/ 4,500.00</b>. En el 2025 obtuvo una utilidad de '+
         '<b>S/ 15,400.00</b>. Tiene una <b>adición de S/ 4,800.00</b>, una <b>deducción de S/ 4,900.00</b> y el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Dos pérdidas por compensar', per:'expl', sis:'A', perd:[[2020,8000],[2021,14320]], u:15500, p:0, ad:5400, de:500, ex:0,
-      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2020 de <b>S/ 8,000.00</b> y en el 2021 de <b>S/ 14,320.00</b>. '+
-        'En el 2022 obtuvo una utilidad de <b>S/ 15,500.00</b>. Tiene una <b>adición de S/ 5,400.00</b> y una <b>deducción de S/ 500.00</b>; '+
+    casoArr({ t:'Dos pérdidas por compensar', per:'expl', sis:'A', perd:[[2023,8000],[2024,14320]], u:15500, p:0, ad:5400, de:500, ex:0,
+      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2023 de <b>S/ 8,000.00</b> y en el 2024 de <b>S/ 14,320.00</b>. '+
+        'En el 2025 obtuvo una utilidad de <b>S/ 15,500.00</b>. Tiene una <b>adición de S/ 5,400.00</b> y una <b>deducción de S/ 500.00</b>; '+
         'el método de arrastre elegido es el <b>método A</b>.' }),
-    casoArr({ t:'Una pérdida que termina en renta', per:'pres', sis:'B', perd:[[2020,8000],[2021,14320]], u:0, p:5500, ad:8400, de:300, ex:0,
-      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2020 de <b>S/ 8,000.00</b> y en el 2021 de <b>S/ 14,320.00</b>. '+
-        'En el 2022 obtuvo una <b>pérdida</b> contable de <b>S/ 5,500.00</b>. Tiene una <b>adición de S/ 8,400.00</b> y una <b>deducción de S/ 300.00</b>; '+
+    casoArr({ t:'Una pérdida que termina en renta', per:'pres', sis:'B', perd:[[2023,8000],[2024,14320]], u:0, p:5500, ad:8400, de:300, ex:0,
+      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2023 de <b>S/ 8,000.00</b> y en el 2024 de <b>S/ 14,320.00</b>. '+
+        'En el 2025 obtuvo una <b>pérdida</b> contable de <b>S/ 5,500.00</b>. Tiene una <b>adición de S/ 8,400.00</b> y una <b>deducción de S/ 300.00</b>; '+
         'el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Una pérdida vencida', per:'chico', sis:'A', perd:[[2017,450],[2019,850],[2020,500],[2021,8500]], u:12400, p:0, ad:4800, de:3900, ex:0,
-      h:'<b>Carlos Andrade Cruz</b> obtuvo una pérdida en el 2021 de <b>S/ 8,500.00</b>; además arrastra saldos de pérdida del 2020 (<b>S/ 500.00</b>), '+
-        'del 2019 (<b>S/ 850.00</b>) y del 2017 (<b>S/ 450.00</b>). En el 2022 obtuvo una utilidad de <b>S/ 12,400.00</b>. '+
+    casoArr({ t:'La pérdida de 2020 y el D. Leg. 1481', per:'chico', sis:'A', perd:[[2020,450],[2022,850],[2023,500],[2024,8500]], u:12400, p:0, ad:4800, de:3900, ex:0,
+      h:'<b>Carlos Andrade Cruz</b> obtuvo una pérdida en el 2024 de <b>S/ 8,500.00</b>; además arrastra saldos de pérdida del 2023 (<b>S/ 500.00</b>), '+
+        'del 2022 (<b>S/ 850.00</b>) y del 2020 (<b>S/ 450.00</b>). En el 2025 obtuvo una utilidad de <b>S/ 12,400.00</b>. '+
         'Tiene una <b>adición de S/ 4,800.00</b>, una <b>deducción de S/ 3,900.00</b> y el método de arrastre elegido es el <b>método A</b>.' }),
-    casoArr({ t:'Cinco años de pérdidas', per:'expl', sis:'B', perd:[[2017,840],[2018,250],[2019,350],[2020,500],[2021,3500]], u:8400, p:0, ad:800, de:650, ex:0,
-      h:'<b>Carlos Andrade Cruz</b> obtuvo una pérdida en el 2021 de <b>S/ 3,500.00</b>; además arrastra saldos de pérdida del 2020 (<b>S/ 500.00</b>), '+
-        'del 2019 (<b>S/ 350.00</b>), del 2018 (<b>S/ 250.00</b>) y del 2017 (<b>S/ 840.00</b>). En el 2022 obtuvo una utilidad de <b>S/ 8,400.00</b>. '+
+    casoArr({ t:'Cinco años de pérdidas', per:'expl', sis:'B', perd:[[2020,840],[2021,250],[2022,350],[2023,500],[2024,3500]], u:8400, p:0, ad:800, de:650, ex:0,
+      h:'<b>Carlos Andrade Cruz</b> obtuvo una pérdida en el 2024 de <b>S/ 3,500.00</b>; además arrastra saldos de pérdida del 2023 (<b>S/ 500.00</b>), '+
+        'del 2022 (<b>S/ 350.00</b>), del 2021 (<b>S/ 250.00</b>) y del 2020 (<b>S/ 840.00</b>). En el 2025 obtuvo una utilidad de <b>S/ 8,400.00</b>. '+
         'Tiene una <b>adición de S/ 800.00</b>, una <b>deducción de S/ 650.00</b> y el método de arrastre elegido es el <b>método B</b>.' }),
-    casoArr({ t:'Otra pérdida e ingresos exonerados', per:'pres', sis:'A', perd:[[2020,8000],[2021,14320]], u:0, p:7500, ad:3400, de:2300, ex:450,
-      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2020 de <b>S/ 8,000.00</b> y en el 2021 de <b>S/ 14,320.00</b>. '+
-        'En el 2022 obtuvo una <b>pérdida</b> de <b>S/ 7,500.00</b>. Tiene una <b>adición de S/ 3,400.00</b>, una <b>deducción de S/ 2,300.00</b> '+
+    casoArr({ t:'Otra pérdida e ingresos exonerados', per:'pres', sis:'A', perd:[[2023,8000],[2024,14320]], u:0, p:7500, ad:3400, de:2300, ex:450,
+      h:'La empresa <b>Industrias Marinas E.I.R.L.</b> obtuvo una pérdida en el 2023 de <b>S/ 8,000.00</b> y en el 2024 de <b>S/ 14,320.00</b>. '+
+        'En el 2025 obtuvo una <b>pérdida</b> de <b>S/ 7,500.00</b>. Tiene una <b>adición de S/ 3,400.00</b>, una <b>deducción de S/ 2,300.00</b> '+
         'e <b>ingresos exonerados de S/ 450.00</b>; el método de arrastre elegido es el <b>método A</b>.' })
     ] }
   ];
 
   /* ===== qué dice cada norma citada en las líneas, para abrirla al toque ===== */
   var NORMA={
-'D. Leg. N° 1269 · Art. 5°':'<b>Tasas del Régimen MYPE Tributario.</b> El impuesto se calcula sobre la renta neta imponible con una escala: <b>10%</b> hasta 15 UIT y <b>29.5%</b> por el exceso. Con la UIT 2023 (S/ 4,950), el primer tramo llega hasta <b>S/ 74,250</b>.',
+'D. Leg. N° 1269 · Art. 5°':'<b>Tasas del Régimen MYPE Tributario.</b> El impuesto se calcula sobre la renta neta imponible con una escala: <b>10%</b> hasta 15 UIT y <b>29.5%</b> por el exceso. Con la UIT 2025 (S/ 5,350), el primer tramo llega hasta <b>S/ 80,250</b>.',
 'Art. 55° LIR':'<b>Tasa del Régimen General.</b> El impuesto a la renta de las empresas domiciliadas es el <b>29.5%</b> de la renta neta imponible.',
 'NIC 12':'<b>Impuesto diferido.</b> Si la diferencia se suma hoy y se restará después (temporaria deducible), nace un <b>activo</b> por impuesto diferido (3712). Si se resta hoy y se sumará después (imponible), nace un <b>pasivo</b> (4912). Se mide como diferencia × tasa. Las diferencias <b>permanentes</b> no generan diferido.',
 'Art. 50° inc. a) LIR':'<b>Sistema A.</b> La pérdida neta se compensa con la renta neta de los ejercicios siguientes, hasta el <b>100%</b> de esa renta, durante los <b>4 ejercicios</b> inmediatos posteriores al de la pérdida. El saldo que no se compensa en ese plazo <b>se pierde</b>.',
 'Art. 50° inc. b) LIR':'<b>Sistema B.</b> La pérdida neta se compensa con el <b>50%</b> de la renta neta de los ejercicios siguientes, <b>sin plazo</b>, hasta agotarla. Solo se usa si en el año hay renta neta.',
-'Art. 50° LIR, último párrafo':'<b>Rentas exoneradas.</b> Cuando en el año de la pérdida hay rentas exoneradas, la pérdida que se puede arrastrar es la pérdida del ejercicio <b>menos</b> esas rentas exoneradas.'
+'D. Leg. N° 1481':'<b>La pérdida de 2020.</b> Con el sistema A, la pérdida neta de 2020 se compensa en los <b>cinco</b> ejercicios siguientes (2021 a 2025), no en cuatro. El saldo que no se compense en ese lapso se pierde. Con el sistema B no cambia nada: ya no tenía plazo.',
+'Art. 50° LIR, último párrafo':'<b>Rentas exoneradas.</b> Cuando en el año de la pérdida hay rentas exoneradas, la pérdida que se puede arrastrar es la pérdida del ejercicio <b>menos</b> esas rentas exoneradas. Si en el año <b>no</b> hay pérdida y solo se arrastran pérdidas de años anteriores, las rentas exoneradas no afectan esas pérdidas.'
   };
 
   /* ===== base legal de cada tipo de caso ===== */
@@ -665,7 +760,7 @@
     rmt:   [LEY_RMT, LEY_PAG, LEY_AJ],
     nic:   [LEY_RG, LEY_NIC, LEY_ASI],
     nicrmt:[LEY_RMT, LEY_NIC, LEY_ASI],
-    A:     [['Art. 50° inc. a) LIR', NORMA['Art. 50° inc. a) LIR']], LEY_EXO, LEY_710],
+    A:     [['Art. 50° inc. a) LIR', NORMA['Art. 50° inc. a) LIR']], ['D. Leg. N° 1481 · Art. 4°', NORMA['D. Leg. N° 1481']], LEY_EXO, LEY_710],
     B:     [['Art. 50° inc. b) LIR', NORMA['Art. 50° inc. b) LIR']], LEY_EXO, LEY_710]
   };
 
@@ -676,12 +771,12 @@
     rmt:
       guia('Cómo se resuelve, paso a paso', pasos([
         'Renta neta imponible = utilidad contable <b>+ adiciones − deducciones</b> (temporales y permanentes, todas).',
-        'Primer tramo: hasta <b>15 UIT</b> (15 × 4,950 = 74,250) se paga <b>10%</b>.',
-        'Lo que pasa de 74,250 paga <b>29.5%</b>.',
+        'Primer tramo: hasta <b>15 UIT</b> (15 × 5,350 = 80,250) se paga <b>10%</b>.',
+        'Lo que pasa de 80,250 paga <b>29.5%</b>.',
         'Impuesto del año − <b>pagos a cuenta</b> = impuesto por regularizar.']))+
       guia('Otro ejemplo resuelto', pasos([
         'Utilidad contable <b>S/ 60,000</b>, adiciones <b>S/ 3,000</b>, pagos a cuenta <b>S/ 1,500</b>.',
-        'Renta neta imponible = 63,000: no pasa de 74,250, todo va al 10% = <b>S/ 6,300</b>.'])+
+        'Renta neta imponible = 63,000: no pasa de 80,250, todo va al 10% = <b>S/ 6,300</b>.'])+
         '<p class="res">Por regularizar = 6,300 − 1,500 = <b>S/ 4,800</b>.</p>'),
     nic:
       guia('Cómo se resuelve, paso a paso', pasos([
@@ -697,13 +792,13 @@
     A:
       guia('Sistema A, paso a paso', pasos([
         'Arma la renta neta del año: casilla 100 (o −101) + 103 − 105.',
-        'Mira qué pérdidas siguen <b>vivas</b>: cada una se usa en los 4 años siguientes. En 2022 sirven las de 2018 a 2021.',
+        'Mira qué pérdidas siguen <b>vivas</b>: cada una se usa en los 4 años siguientes. En 2025 sirven las de 2021 a 2024, y también la de 2020 (D. Leg. N° 1481: 5 años).',
         'Compensa empezando por la más <b>antigua</b>, hasta el <b>100%</b> de la renta neta.',
         'Casilla 110 = 106 − 108. Lo que sobra de las pérdidas vivas va a la casilla 111.']))+
       guia('Otro ejemplo resuelto', pasos([
-        'Pérdida 2020 <b>S/ 3,000</b> y pérdida 2021 <b>S/ 5,000</b>. Renta neta 2022 <b>S/ 6,000</b>.',
-        'Primero la de 2020: se compensan 3,000. Luego 3,000 de la de 2021.'])+
-        '<p class="res">Casilla 108 = 6,000 · casilla 110 = 0 · casilla 111 = 2,000 (de 2021, hasta 2025).</p>'),
+        'Pérdida 2023 <b>S/ 3,000</b> y pérdida 2024 <b>S/ 5,000</b>. Renta neta 2025 <b>S/ 6,000</b>.',
+        'Primero la de 2023: se compensan 3,000. Luego 3,000 de la de 2024.'])+
+        '<p class="res">Casilla 108 = 6,000 · casilla 110 = 0 · casilla 111 = 2,000 (de 2024, hasta 2028).</p>'),
     B:
       guia('Sistema B, paso a paso', pasos([
         'Arma la renta neta del año: casilla 100 (o −101) + 103 − 105.',
@@ -711,7 +806,7 @@
         'Compensa empezando por la más <b>antigua</b>, sin pasar del tope.',
         'Casilla 110 = 106 − 108. Lo que sobra de las pérdidas va a la casilla 111.']))+
       guia('Otro ejemplo resuelto', pasos([
-        'Pérdida 2021 <b>S/ 9,000</b>. Renta neta 2022 <b>S/ 10,000</b>.',
+        'Pérdida 2024 <b>S/ 9,000</b>. Renta neta 2025 <b>S/ 10,000</b>.',
         'Tope = 10,000 × 50% = <b>5,000</b>. Se compensan 5,000 de la pérdida.'])+
         '<p class="res">Casilla 108 = 5,000 · casilla 110 = 5,000 · casilla 111 = 4,000.</p>')
   };
@@ -837,6 +932,8 @@
       b.addEventListener('click', function(){ bi=+b.dataset.b; guardado._bi=bi; graba(); pinta(); });
     });
     $('cabBloque').innerHTML=globo(B.per, B.corto, B.intro);
+    $('lab').hidden = B.id!=='b3';
+    if(B.id==='b3') montaLab(); else paraGraf();
     $('casos').innerHTML = B.casos.length<2 ? '' : B.casos.map(function(c,i){
       var a=avance(bi,i);
       return '<button type="button" data-c="'+i+'" class="'+(i===ciDe[bi]?'on ':'')+(a.lleno?'lleno':'')+'">'+
@@ -870,6 +967,7 @@
     var izq=izqHtml(bi,c,true);
 
     var der='<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
+            (window.Aula && Aula.esDocente ? '<button type="button" class="o-btn auto" id="btnAuto" title="Solo lo ve el docente">🔑 Autocompletar respuesta</button>' : '')+
             '<button type="button" class="o-btn" id="btnLimpia">Borrar este caso</button></div>'+
             '<div class="bloque vd tab-r"><h3>Resuelve</h3><table><thead><tr><th>Concepto</th><th class="num">Tu respuesta</th></tr></thead><tbody>'+
             cs.filas.map(filaHtml).join('')+'</tbody></table></div>'+
@@ -881,6 +979,19 @@
     $('btnLey').addEventListener('click', function(){ verLey(cs); });
     Array.prototype.forEach.call(document.querySelectorAll('#panel button.pista[data-ley]'), function(b){
       b.addEventListener('click', function(){ verNorma(b.dataset.ley); });
+    });
+    /* docente: llena el caso con la respuesta correcta, una casilla tras otra */
+    if($('btnAuto')) $('btnAuto').addEventListener('click', function(){
+      var els=document.querySelectorAll('#panel .cel'), i=0;
+      $('btnAuto').disabled=true;
+      (function sigue(){
+        if(i>=els.length){ resumen(); return; }
+        var el=els[i++], f=cs.filas[+el.dataset.r];
+        el.value = f.k==='num' ? fmt(f.v) : f.v;
+        guardado[clave(bi,c,+el.dataset.r)]=el.value; graba();
+        revisa(el, false); resumen(true);
+        setTimeout(sigue, 70);
+      })();
     });
     $('btnLimpia').addEventListener('click', function(){
       cs.filas.forEach(function(f,r){ delete guardado[clave(bi,c,r)]; });
@@ -953,6 +1064,276 @@
     if(!primera) pintaCab();
   }
 
+  /* ===== laboratorio del arrastre (bloque 3): gráfico animado y juego ===== */
+  var lab={ hecho:false, tab:'graf', sis:'A', L:2021, P:90000, R:[13000,19000,21800,29000,25000],
+            paso:0, timer:null, oculto:false };
+  try{ lab.oculto = localStorage.getItem('sci_ira_lab')==='0'; }catch(e){}
+
+  /* año por año: cuánto se compensa, cuánto queda y si la pérdida ya venció */
+  function calcLab(sis){
+    var saldo=lab.P, plazo = sis==='A' ? plazoA(lab.L) : 99, filas=[], perdido=0;
+    lab.R.forEach(function(r,i){
+      var y=lab.L+1+i, vive = i<plazo, tope = sis==='A' ? r : r2(r*0.5);
+      var vence = !vive && i===plazo && saldo>0 ? saldo : 0;
+      if(vence){ perdido=saldo; saldo=0; }
+      var apl = vive ? Math.min(saldo, tope) : 0;
+      saldo=r2(saldo-apl);
+      filas.push({ y:y, r:r, tope:tope, apl:apl, saldo:saldo, vive:vive, vence:vence });
+    });
+    var usado=filas.reduce(function(a,f){ return a+f.apl; },0);
+    return { filas:filas, usado:r2(usado), perdido:perdido, queda:saldo, plazo:plazo };
+  }
+
+  function montaLab(){
+    var box=$('lab');
+    if(!lab.hecho){
+      lab.hecho=true;
+      box.innerHTML=
+        '<div class="lab-cab"><b>🧪 Laboratorio del arrastre</b>'+
+          '<span class="lab-tabs"><button type="button" data-t="graf">📊 Cómo funciona</button>'+
+          '<button type="button" data-t="juego">🧩 Juego: ¿A o B?</button></span>'+
+          '<button type="button" class="o-btn lab-oc" id="labOc"></button></div>'+
+        '<div class="lab-cuerpo" id="labCuerpo"><div id="labGraf"></div><div id="labJuego" hidden></div></div>';
+      Array.prototype.forEach.call(box.querySelectorAll('.lab-tabs button'), function(b){
+        b.addEventListener('click', function(){ lab.tab=b.dataset.t; lab.oculto=false; pintaTabs(); });
+      });
+      $('labOc').addEventListener('click', function(){
+        lab.oculto=!lab.oculto; try{ localStorage.setItem('sci_ira_lab', lab.oculto?'0':'1'); }catch(e){}
+        pintaTabs();
+      });
+      armaGraf(); armaJuego();
+    }
+    pintaTabs();
+  }
+  function pintaTabs(){
+    Array.prototype.forEach.call($('lab').querySelectorAll('.lab-tabs button'), function(b){
+      b.classList.toggle('on', !lab.oculto && b.dataset.t===lab.tab);
+    });
+    $('labCuerpo').hidden=lab.oculto;
+    $('labOc').textContent = lab.oculto ? 'Mostrar ▼' : 'Ocultar ▲';
+    $('labGraf').hidden = lab.tab!=='graf';
+    $('labJuego').hidden = lab.tab!=='juego';
+  }
+
+  /* ---------- gráfico animado ---------- */
+  function armaGraf(){
+    var g=$('labGraf');
+    g.innerHTML=
+      '<div class="lab-ctrl">'+
+        '<span class="lab-seg" role="group" aria-label="Sistema">'+
+          '<button type="button" data-s="A">Sistema A</button><button type="button" data-s="B">Sistema B</button></span>'+
+        '<label>Año de la pérdida <select class="cel" id="labL"><option value="2021">2021</option>'+
+          '<option value="2020">2020 (D. Leg. 1481)</option></select></label>'+
+        '<label>Pérdida <input class="cel" id="labP" inputmode="decimal"></label>'+
+        '<span class="lab-bts"><button type="button" class="o-btn o-btn-primary" id="labPlay">▶ Animar</button>'+
+        '<button type="button" class="o-btn" id="labSig">⏭ Siguiente año</button>'+
+        '<button type="button" class="o-btn" id="labRe">↺ Empezar</button></span>'+
+      '</div>'+
+      '<div class="lab-rentas" id="labRentas"></div>'+
+      '<div class="lab-bolsa"><div class="lab-bolsa-t"><span id="labBt"></span><b id="labBv"></b></div>'+
+        '<div class="lab-bolsa-bar" id="labBar"><i class="u"></i><i class="q"></i><i class="v"></i></div>'+
+        '<div class="lab-ley"><span><i class="u"></i>Compensada</span><span><i class="q"></i>Por arrastrar</span>'+
+        '<span><i class="v"></i>Vencida (se pierde)</span><span><i class="r"></i>Renta que paga impuesto</span></div></div>'+
+      '<div class="lab-cols" id="labCols"></div>'+
+      '<div class="lab-nar" id="labNar"></div>'+
+      '<div class="lab-tabla"><table id="labTab"></table></div>';
+    Array.prototype.forEach.call(g.querySelectorAll('.lab-seg button'), function(b){
+      b.addEventListener('click', function(){ lab.sis=b.dataset.s; reiniciaGraf(); });
+    });
+    $('labL').addEventListener('change', function(){ lab.L=+this.value; reiniciaGraf(); });
+    $('labP').addEventListener('change', function(){
+      var v=lee(this.value); if(v>0) lab.P=Math.abs(v); this.value=fmt(lab.P); reiniciaGraf();
+    });
+    $('labPlay').addEventListener('click', function(){
+      if(lab.timer){ paraGraf(); return; }
+      if(lab.paso>=lab.R.length) lab.paso=0;
+      $('labPlay').textContent='⏸ Pausa';
+      pasoGraf();
+      lab.timer=setInterval(function(){ if(lab.paso>=lab.R.length) paraGraf(); else pasoGraf(); }, 1700);
+    });
+    $('labSig').addEventListener('click', function(){ paraGraf(); if(lab.paso<lab.R.length) pasoGraf(); });
+    $('labRe').addEventListener('click', reiniciaGraf);
+    reiniciaGraf();
+  }
+  function paraGraf(){
+    if(lab.timer){ clearInterval(lab.timer); lab.timer=null; }
+    if($('labPlay')) $('labPlay').textContent='▶ Animar';
+  }
+  function reiniciaGraf(){
+    paraGraf(); lab.paso=0;
+    Array.prototype.forEach.call($('labGraf').querySelectorAll('.lab-seg button'), function(b){
+      b.classList.toggle('on', b.dataset.s===lab.sis);
+    });
+    $('labL').value=String(lab.L); $('labP').value=fmt(lab.P);
+    $('labRentas').innerHTML='<span>Renta neta de cada año:</span>'+lab.R.map(function(r,i){
+      return '<label>'+(lab.L+1+i)+' <input class="cel" data-i="'+i+'" inputmode="decimal" value="'+fmt(r)+'"></label>';
+    }).join('');
+    Array.prototype.forEach.call($('labRentas').querySelectorAll('input'), function(el){
+      el.addEventListener('change', function(){
+        var v=lee(el.value); if(v!==null && !isNaN(v) && v>=0) lab.R[+el.dataset.i]=v;
+        el.value=fmt(lab.R[+el.dataset.i]); reiniciaGraf();
+      });
+    });
+    var max=Math.max.apply(null, lab.R.concat([1]));
+    $('labCols').innerHTML=lab.R.map(function(r,i){
+      return '<div class="lab-col" id="labC'+i+'">'+
+        '<div class="lab-pila"><div class="lab-renta" style="height:'+(r/max*100)+'%" title="Renta neta '+(lab.L+1+i)+': S/ '+fmt(r)+'">'+
+          '<div class="lab-apl"></div>'+(lab.sis==='B'?'<div class="lab-tope"><span>50%</span></div>':'')+'</div></div>'+
+        '<div class="lab-y">'+(lab.L+1+i)+'</div>'+
+        '<div class="lab-n">Renta <b>'+fmt(r)+'</b></div>'+
+        '<div class="lab-n ap"></div><div class="lab-n sq"></div><div class="lab-badge"></div></div>';
+    }).join('');
+    var plazo = lab.sis==='A' ? plazoA(lab.L) : 0;
+    narra(('Pérdida de '+lab.L+': <b>S/ '+fmt(lab.P)+'</b>. '+
+      (lab.sis==='A'
+        ? 'Con el <b>sistema A</b> se descuenta hasta el <b>100%</b> de la renta de cada año, pero solo durante <b>'+plazo+' años</b> ('+(lab.L+1)+' a '+(lab.L+plazo)+')'+
+          (lab.L===2020 ? ': la pérdida de 2020 tiene un año más por el D. Leg. N° 1481.' : '.')
+        : 'Con el <b>sistema B</b> se descuenta solo hasta el <b>50%</b> de la renta de cada año, pero <b>sin plazo</b>.')+
+      ' Pulsa <b>▶ Animar</b> o avanza año por año.'));
+    pintaBolsa(lab.P, 0, 0, 'Pérdida de '+lab.L+' por arrastrar');
+    pintaTablaLab();
+  }
+  function narra(h){ $('labNar').innerHTML=h; }
+  function pintaBolsa(queda, usado, vencido, txt){
+    var t=lab.P||1, b=$('labBar').children;
+    b[0].style.width=(usado/t*100)+'%'; b[1].style.width=(queda/t*100)+'%'; b[2].style.width=(vencido/t*100)+'%';
+    $('labBt').textContent=txt;
+    $('labBv').textContent='Queda S/ '+fmt(queda);
+  }
+  function pasoGraf(){
+    var C=calcLab(lab.sis), i=lab.paso, f=C.filas[i], col=$('labC'+i);
+    lab.paso++;
+    Array.prototype.forEach.call(document.querySelectorAll('.lab-col'), function(x){ x.classList.remove('foco'); });
+    col.classList.add('foco','visto');
+    col.querySelector('.lab-apl').style.height = f.r ? (f.apl/f.r*100)+'%' : '0';
+    col.querySelector('.ap').innerHTML = f.apl ? 'Compensa <b>−'+fmt(f.apl)+'</b>' : 'Compensa <b>0</b>';
+    col.querySelector('.sq').innerHTML = 'Queda <b>'+fmt(f.saldo)+'</b>';
+    var usado=0, venc=0; C.filas.slice(0,lab.paso).forEach(function(x){ usado+=x.apl; venc+=x.vence; });
+    var badge=col.querySelector('.lab-badge');
+    if(!f.vive){ col.classList.add('fuera'); badge.textContent='Fuera de plazo'; }
+    pintaBolsa(f.saldo, usado, venc, venc ? 'La pérdida que quedaba venció' : 'Pérdida de '+lab.L+' por arrastrar');
+    var txt='<b>'+f.y+'</b> · renta neta S/ '+fmt(f.r)+'. ';
+    if(f.vence){
+      txt+='Ya pasaron los '+C.plazo+' años del sistema A: los <b>S/ '+fmt(f.vence)+'</b> que quedaban <b>se pierden</b>. '+
+           'Toda la renta de '+f.y+' paga impuesto.';
+      $('labBar').classList.remove('sacude'); void $('labBar').offsetWidth; $('labBar').classList.add('sacude');
+      mal();
+    }else if(!f.vive){
+      txt+='La pérdida ya venció: no queda nada que compensar.';
+    }else if(f.apl===0){
+      txt+='La pérdida ya se agotó: toda la renta paga impuesto.';
+    }else{
+      txt+= lab.sis==='A' ? 'El sistema A deja compensar hasta el 100%' : 'El tope del sistema B es el 50%: S/ '+fmt(f.tope);
+      txt+= f.apl<f.tope ? ', pero solo quedaban S/ '+fmt(f.apl)+'. ' : '. ';
+      txt+='Se compensan <b>S/ '+fmt(f.apl)+'</b>'+(f.r-f.apl>0 ? ' y S/ '+fmt(r2(f.r-f.apl))+' pagan impuesto' : '')+
+           '. Quedan <b>S/ '+fmt(f.saldo)+'</b> por arrastrar.';
+      bien();
+    }
+    if(lab.paso>=lab.R.length){
+      var A=calcLab('A'), B=calcLab('B');
+      txt+='<div class="lab-fin"><b>Al final:</b> '+
+        (lab.sis==='A'
+          ? 'se compensaron S/ '+fmt(C.usado)+(C.perdido ? ' y se perdieron <b>S/ '+fmt(C.perdido)+'</b>.' : ' y no se perdió nada.')
+          : 'se compensaron S/ '+fmt(C.usado)+(C.queda ? ' y quedan <b>S/ '+fmt(C.queda)+'</b> para '+(lab.L+lab.R.length+1)+' en adelante: no vencen.' : '. La pérdida se agotó.'))+
+        '<br>Comparación en estos '+lab.R.length+' años · <b>A</b>: compensa '+fmt(A.usado)+(A.perdido?', pierde '+fmt(A.perdido):'')+
+        ' · <b>B</b>: compensa '+fmt(B.usado)+(B.queda?', le quedan '+fmt(B.queda):'')+'.</div>';
+      if(!lab.timer) listo();
+    }
+    narra(txt);
+    pintaTablaLab();
+  }
+  function pintaTablaLab(){
+    var C=calcLab(lab.sis), n=lab.paso;
+    function celdas(fn){ return C.filas.map(function(f,i){ return '<td class="num'+(i<n?'':' tapa')+'">'+(i<n?fn(f):'')+'</td>'; }).join(''); }
+    function neg(v){ return v ? '−'+fmt(v) : '0'; }
+    $('labTab').innerHTML=
+      '<thead><tr><th>Sistema '+lab.sis+'</th><th class="num">'+lab.L+'</th>'+
+        C.filas.map(function(f){ return '<th class="num">'+f.y+'</th>'; }).join('')+'</tr></thead><tbody>'+
+      '<tr><td>Resultado</td><td class="num neg">−'+fmt(lab.P)+'</td>'+celdas(function(f){ return fmt(f.r); })+'</tr>'+
+      (lab.sis==='B' ? '<tr><td>50% de la renta neta</td><td></td>'+celdas(function(f){ return fmt(f.tope); })+'</tr>' : '')+
+      '<tr><td>Aplicación</td><td></td>'+celdas(function(f){ return f.vive ? neg(f.apl) : '<span class="lab-x">vencida</span>'; })+'</tr>'+
+      '<tr class="sub"><td>Por arrastrar</td><td class="num neg">−'+fmt(lab.P)+'</td>'+celdas(function(f){
+        return f.vence ? '<span class="lab-x">−'+fmt(f.vence)+' se pierde</span>' : (f.saldo ? '−'+fmt(f.saldo) : '0');
+      })+'</tr></tbody>';
+  }
+
+  /* ---------- juego: arrastra cada tarjeta a su sistema ---------- */
+  var FICHAS=[
+    ['Compensa hasta el 100% de la renta neta del año','A','El sistema A puede dejar la renta neta imponible en cero.'],
+    ['Solo se puede usar en los 4 años siguientes a la pérdida','A','Es el plazo del sistema A (Art. 50° inc. a).'],
+    ['El saldo que no se usa a tiempo se pierde','A','Pasado el plazo, el sistema A ya no deja compensar.'],
+    ['La pérdida de 2020 tuvo 5 años de plazo','A','D. Leg. N° 1481: un año más solo para el sistema A.'],
+    ['En el ejemplo, S/ 7,200 nunca se compensan','A','Al quinto año ya no se pueden usar: se pierden.'],
+    ['Compensa solo hasta el 50% de la renta neta del año','B','Es el tope del sistema B (Art. 50° inc. b).'],
+    ['No tiene plazo: se arrastra hasta agotar la pérdida','B','Por eso en el sistema B el saldo nunca vence.'],
+    ['En el ejemplo, los S/ 48,600 se siguen usando después del cuarto año','B','Con el sistema B el saldo sigue vivo.'],
+    ['Primero se compensa la pérdida más antigua','2','Vale para los dos sistemas.'],
+    ['Las rentas exoneradas reducen la pérdida del año en que se genera','2','Art. 50°, último párrafo: se aplica en ambos sistemas.'],
+    ['Solo se compensa si en el año hay renta neta','2','Sin renta neta no hay contra qué compensar, en A o en B.'],
+    ['Está en el artículo 50° de la Ley del Impuesto a la Renta','2','Los dos sistemas están en el mismo artículo.']
+  ];
+  var juego={ elegida:null, ok:0 };
+  function armaJuego(){
+    var j=$('labJuego');
+    var orden=FICHAS.map(function(x,i){ return i; }).sort(function(){ return Math.random()-0.5; });
+    juego={ elegida:null, ok:0 };
+    j.innerHTML=
+      '<p class="lab-ins">Arrastra cada tarjeta a su sistema (o tócala y luego toca la columna). '+
+        'Si va en los dos, déjala en <b>Los dos</b>.</p>'+
+      '<div class="lab-mazo" id="labMazo">'+orden.map(function(i){
+        return '<div class="lab-ficha" draggable="true" tabindex="0" role="button" data-i="'+i+'">'+esc(FICHAS[i][0])+'</div>';
+      }).join('')+'</div>'+
+      '<div class="lab-zonas">'+
+        '<div class="lab-zona" data-z="A"><h5>Sistema A</h5><div class="lab-dentro"></div></div>'+
+        '<div class="lab-zona" data-z="B"><h5>Sistema B</h5><div class="lab-dentro"></div></div>'+
+        '<div class="lab-zona" data-z="2"><h5>Los dos</h5><div class="lab-dentro"></div></div>'+
+      '</div>'+
+      '<div class="lab-jbar"><span class="cuenta" id="labJc">0 de '+FICHAS.length+' bien ubicadas</span>'+
+        '<span class="lab-jmsg" id="labJm"></span>'+
+        '<button type="button" class="o-btn" id="labJre">↺ Volver a jugar</button></div>';
+    Array.prototype.forEach.call(j.querySelectorAll('.lab-ficha'), function(f){
+      f.addEventListener('dragstart', function(e){ juego.elegida=f; f.classList.add('arr'); try{ e.dataTransfer.setData('text/plain', f.dataset.i); }catch(x){} });
+      f.addEventListener('dragend', function(){ f.classList.remove('arr'); });
+      f.addEventListener('click', function(){ eligeFicha(f); });
+      f.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); eligeFicha(f); } });
+    });
+    Array.prototype.forEach.call(j.querySelectorAll('.lab-zona'), function(z){
+      z.addEventListener('dragover', function(e){ e.preventDefault(); z.classList.add('sobre'); });
+      z.addEventListener('dragleave', function(){ z.classList.remove('sobre'); });
+      z.addEventListener('drop', function(e){ e.preventDefault(); z.classList.remove('sobre'); suelta(z); });
+      z.addEventListener('click', function(){ if(juego.elegida) suelta(z); });
+    });
+    $('labJre').addEventListener('click', armaJuego);
+  }
+  function eligeFicha(f){
+    if(f.classList.contains('fija')) return;
+    if(juego.elegida) juego.elegida.classList.remove('sel');
+    juego.elegida = juego.elegida===f ? null : f;
+    if(juego.elegida){ f.classList.add('sel'); $('labJm').textContent='Ahora toca la columna donde va.'; }
+  }
+  function suelta(z){
+    var f=juego.elegida; if(!f || f.classList.contains('fija')) return;
+    juego.elegida=null; f.classList.remove('sel');
+    var d=FICHAS[+f.dataset.i];
+    if(d[1]===z.dataset.z){
+      f.classList.add('fija'); f.setAttribute('draggable','false'); f.removeAttribute('tabindex');
+      z.querySelector('.lab-dentro').appendChild(f);
+      juego.ok++; bien();
+      $('labJm').innerHTML='✔ '+esc(d[2]);
+      $('labJm').className='lab-jmsg ok';
+    }else{
+      f.classList.remove('mal'); void f.offsetWidth; f.classList.add('mal');
+      mal();
+      $('labJm').textContent='✘ «'+d[0]+'» no va en '+(z.dataset.z==='2'?'Los dos':'el sistema '+z.dataset.z)+'. Inténtalo otra vez.';
+      $('labJm').className='lab-jmsg no';
+    }
+    $('labJc').textContent=juego.ok+' de '+FICHAS.length+' bien ubicadas';
+    if(juego.ok===FICHAS.length){
+      $('labJm').innerHTML='🎉 ¡Todas en su sitio! Ya distingues los dos sistemas.'; $('labJm').className='lab-jmsg ok';
+      listo(); confeti();
+    }
+  }
+
   /* ===== repaso ===== */
   function repaso(){
     var d=document.createElement('div');
@@ -964,7 +1345,7 @@
       '<h4>Las tasas</h4>'+
       '<table><thead><tr><th>Régimen</th><th>Tasa</th></tr></thead><tbody>'+
       '<tr><td>Régimen General</td><td>29.5% de la renta neta imponible</td></tr>'+
-      '<tr><td>Régimen MYPE Tributario</td><td>10% hasta 15 UIT (S/ 74,250 en 2023) y 29.5% por el exceso</td></tr>'+
+      '<tr><td>Régimen MYPE Tributario</td><td>10% hasta 15 UIT (S/ 80,250 en 2025) y 29.5% por el exceso</td></tr>'+
       '</tbody></table>'+
       '<h4>Corriente y diferido (NIC 12)</h4><div class="dosc">'+
       '<div class="tarj"><b>IR corriente</b>: utilidad tributaria × tasa. Es lo que se le debe a la SUNAT (40171).</div>'+
@@ -974,7 +1355,7 @@
       '<h4>Arrastre de pérdidas (Art. 50° LIR)</h4>'+
       '<table><thead><tr><th></th><th>Sistema A</th><th>Sistema B</th></tr></thead><tbody>'+
       '<tr><td>Cuánto se compensa</td><td>Hasta el 100% de la renta neta</td><td>Hasta el 50% de la renta neta</td></tr>'+
-      '<tr><td>Plazo</td><td>4 ejercicios siguientes a la pérdida</td><td>Sin plazo, hasta agotarla</td></tr>'+
+      '<tr><td>Plazo</td><td>4 ejercicios siguientes a la pérdida (5 para la pérdida de 2020, D. Leg. N° 1481)</td><td>Sin plazo, hasta agotarla</td></tr>'+
       '<tr><td>Saldo que no se usa a tiempo</td><td>Se pierde</td><td>Sigue para el año siguiente</td></tr>'+
       '</tbody></table>'+
       '<p style="font-size:12px;color:#5A6B5F;margin:0">Siempre se compensa primero la pérdida más antigua. Si en el año hay ingresos exonerados, '+
