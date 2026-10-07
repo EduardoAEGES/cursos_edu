@@ -204,6 +204,9 @@
   }
   @media (prefers-reduced-motion: reduce){ .flota.late{ animation:none; } }
 
+  .o-btn.auto{ border:1.5px solid var(--ambar); color:var(--ambar); background:#FFF4E5; font-weight:700; }
+  .o-btn.auto:hover{ background:var(--ambar); color:#fff; }
+
   .ayuda{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:-4px 0 14px; }
   .ayuda span{ font-size:12.5px; color:#5A6B5F; }
   .ayuda .o-btn{ border:1.5px solid var(--certus); color:var(--certus); background:#EEF2FB; font-weight:700; }
@@ -1100,6 +1103,7 @@
     var izq=izqHtml(bi,c,true);
 
     var der='<div class="barra"><div class="prog"><i id="progI"></i></div><span class="cuenta" id="cuenta"></span>'+
+            (window.Aula && Aula.esDocente ? '<button type="button" class="o-btn auto" id="btnAuto" title="Solo lo ve el docente">🔑 Autocompletar respuesta</button>' : '')+
             '<button type="button" class="o-btn" id="btnLimpia">Borrar este caso</button></div>'+
             '<div class="bloque vd tab-r"><h3>Resuelve</h3><table><thead><tr><th>Concepto</th><th class="num">Tu respuesta</th></tr></thead><tbody>'+
             cs.filas.map(filaHtml).join('')+'</tbody></table></div>'+
@@ -1111,6 +1115,19 @@
     $('btnLey').addEventListener('click', function(){ verLey(cs); });
     Array.prototype.forEach.call(document.querySelectorAll('#panel button.pista[data-ley]'), function(b){
       b.addEventListener('click', function(){ verNorma(b.dataset.ley); });
+    });
+    /* docente: llena el caso con la respuesta correcta, una casilla tras otra */
+    if($('btnAuto')) $('btnAuto').addEventListener('click', function(){
+      var els=document.querySelectorAll('#panel .cel'), i=0;
+      $('btnAuto').disabled=true;
+      (function sigue(){
+        if(i>=els.length){ resumen(); empuja(); return; }
+        var el=els[i++], f=cs.filas[+el.dataset.r];
+        el.value = f.k==='num' ? fmt(f.v) : f.v;
+        guardado[clave(bi,c,+el.dataset.r)]=el.value; graba();
+        revisa(el, false); resumen(true);
+        setTimeout(sigue, 70);
+      })();
     });
     $('btnLimpia').addEventListener('click', function(){
       cs.filas.forEach(function(f,r){ delete guardado[clave(bi,c,r)]; });
