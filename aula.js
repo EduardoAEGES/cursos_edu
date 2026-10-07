@@ -21,6 +21,12 @@
        de un alumno y ver su pantalla en grande; se vuelve a dibujar con
        cada actualización de la sala (cada 3 s) mientras esté abierta.
 
+   Opcional: reporte: function(est, quien){ return { fila:{...}, detalle:[{...}] }; }
+       Encima del muro, el docente tiene el botón «Descargar reportes»: baja
+       un Excel con una hoja «Resumen» (una fila por alumno) y, si la página
+       lo da, una hoja «Detalle» (una fila por respuesta). Sin esta función
+       se arma un resumen con los datos sueltos que envía cada alumno.
+
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
        equipo, una pista al azar de la carpeta sonidos/ del repositorio
@@ -252,6 +258,7 @@ function falla(e){
 
 /* ---------------- muro ---------------- */
 function pintaMuro(){
+  pintaReporte();
   if(!docente){ $('muro').innerHTML=''; return; }
   if(!sala){
     $('muro').innerHTML='<div class="aula-vacio">Entra con tu clave de docente para ver el avance del aula.</div>';
@@ -283,6 +290,112 @@ function pintaMuro(){
     });
   }
   refrescaPantalla();
+}
+
+/* ---------------- reportes para el docente ---------------- */
+var XLSX_URL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', xlsxCarga=null;
+function pintaReporte(){
+  var m=$('muro'); if(!m) return;
+  var b=$('aulaRepo');
+  if(!b){
+    b=document.createElement('div');
+    b.className='aula-repo'; b.id='aulaRepo';
+    b.innerHTML='<button class="o-btn o-btn-primary" id="aulaRepoBtn" type="button">⬇ Descargar reportes</button>'+
+                '<span class="aula-repo-tx" id="aulaRepoTx">Excel con el avance y las respuestas de cada alumno de la sala.</span>';
+    m.parentNode.insertBefore(b, m);
+    $('aulaRepoBtn').addEventListener('click', descargaReporte);
+  }
+  b.hidden=!(docente && sala);
+}
+function cargaXlsx(){
+  if(window.XLSX) return Promise.resolve(window.XLSX);
+  if(xlsxCarga) return xlsxCarga;
+  xlsxCarga=new Promise(function(ok, no){
+    var sc=document.createElement('script');
+    sc.src=XLSX_URL; sc.async=true;
+    sc.onload=function(){ window.XLSX ? ok(window.XLSX) : no('xlsx'); };
+    sc.onerror=function(){ xlsxCarga=null; no('xlsx'); };
+    document.head.appendChild(sc);
+  });
+  return xlsxCarga;
+}
+/* sin reporte propio: lo que el alumno envía que sea un dato suelto */
+function filaSimple(e){
+  var f={};
+  for(var k in e){
+    var v=e[k];
+    if(v===null || typeof v==='object') continue;
+    f[k]= typeof v==='boolean' ? (v?'Sí':'No') : v;
+  }
+  return f;
+}
+function fechaLocal(iso){
+  var d=new Date(iso); if(isNaN(d)) return '';
+  function d2(n){ return (n<10?'0':'')+n; }
+  return d.getFullYear()+'-'+d2(d.getMonth()+1)+'-'+d2(d.getDate())+' '+d2(d.getHours())+':'+d2(d.getMinutes());
+}
+function armaReporte(rows){
+  var resumen=[], detalle=[];
+  rows.forEach(function(g){
+    var e=g.estado||{}, r=null;
+    try{ r=cfg.reporte ? cfg.reporte(e, g.alumno) : null; }catch(err){ r=null; }
+    var base={ 'Alumno':g.alumno, 'Último cambio':fechaLocal(g.actualizado) };
+    var fila=(r && r.fila) || filaSimple(e);
+    for(var k in fila) base[k]=fila[k];
+    resumen.push(base);
+    ((r && r.detalle) || []).forEach(function(d){
+      var x={ 'Alumno':g.alumno }; for(var k2 in d) x[k2]=d[k2]; detalle.push(x);
+    });
+  });
+  return { resumen:resumen, detalle:detalle };
+}
+function csv(filas){
+  if(!filas.length) return '';
+  var cols=[];
+  filas.forEach(function(f){ for(var k in f) if(cols.indexOf(k)<0) cols.push(k); });
+  function c(v){ v=(v===undefined||v===null)?'':String(v); return /[",;\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  return [cols.map(c).join(',')].concat(filas.map(function(f){
+    return cols.map(function(k){ return c(f[k]); }).join(',');
+  })).join('\r\n');
+}
+function bajaArchivo(blob, nombre){
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=nombre;
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+function descargaReporte(){
+  if(!docente || !sala) return;
+  var btn=$('aulaRepoBtn'), tx=$('aulaRepoTx');
+  btn.disabled=true; tx.textContent='Preparando el reporte…';
+  /* para el reporte se mira todo el día, no solo las últimas horas del muro */
+  var desde=new Date(Date.now()-24*3600*1000).toISOString();
+  var nombre='reporte-'+String(cfg.sala).toLowerCase()+'-'+sala.toLowerCase()+'-'+fechaLocal(new Date().toISOString()).slice(0,10);
+  fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
+        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){
+      rows=rows||[];
+      if(!rows.length){ tx.textContent='Todavía no hay alumnos en la sala '+sala+' para el reporte.'; return; }
+      var rep=armaReporte(rows);
+      return cargaXlsx().then(function(X){
+        var wb=X.utils.book_new();
+        var h1=X.utils.json_to_sheet(rep.resumen);
+        h1['!cols']=Object.keys(rep.resumen[0]).map(function(k){ return { wch:Math.max(12, Math.min(40, k.length+2)) }; });
+        X.utils.book_append_sheet(wb, h1, 'Resumen');
+        if(rep.detalle.length) X.utils.book_append_sheet(wb, X.utils.json_to_sheet(rep.detalle), 'Detalle');
+        X.writeFile(wb, nombre+'.xlsx');
+        tx.textContent='Listo: '+rows.length+(rows.length===1?' alumno':' alumnos')+' en '+nombre+'.xlsx';
+      }, function(){
+        /* sin la librería de Excel, igual se baja en CSV (Excel lo abre) */
+        bajaArchivo(new Blob(['\ufeff'+csv(rep.resumen)], {type:'text/csv;charset=utf-8'}), nombre+'-resumen.csv');
+        if(rep.detalle.length)
+          bajaArchivo(new Blob(['\ufeff'+csv(rep.detalle)], {type:'text/csv;charset=utf-8'}), nombre+'-detalle.csv');
+        tx.textContent='Listo en CSV: '+rows.length+(rows.length===1?' alumno':' alumnos')+'.';
+      });
+    })
+    .catch(function(e){ tx.textContent='No se pudo descargar el reporte ('+e+'). Vuelve a intentarlo.'; })
+    .then(function(){ btn.disabled=false; });
 }
 
 /* ---------------- pantalla de un alumno (solo docente) ---------------- */
