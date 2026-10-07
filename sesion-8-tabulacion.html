@@ -264,6 +264,32 @@
   .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
 
+  /* actividad en una sola hoja: lo que se consulta a la izquierda, lo que se responde a la derecha */
+  .lado{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:900px){ .lado{ grid-template-columns:minmax(0,1.1fr) minmax(0,1fr); }
+                            .lado > .ref{ position:sticky; top:0; }
+                            .lado.ancha{ grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); } }
+  .ref{ border:2px dashed var(--linea); border-radius:12px; background:var(--humo); padding:12px 14px; }
+  .ref > .rt{ display:block; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+              color:var(--gris); margin-bottom:6px; }
+  .ref .fc .c{ font-size:14px; } .ref .fc .c li{ margin-bottom:3px; }
+  .ref table.t{ font-size:14px; margin:8px 0; } .ref table.t th, .ref table.t td{ padding:6px 9px; }
+  .ref table.hoja{ margin:6px 0; }
+  .ref table.hoja th, .ref table.hoja td{ padding:4px 6px; font-size:12px; }
+  .ref table.t thead th{ font-size:11px; letter-spacing:0; padding:6px 7px; }
+  .lado .linea:has(select){ grid-template-columns:1fr; }
+  .lado select.cel{ max-width:none; }
+  .truco{ font-size:14px; color:var(--rojo); font-weight:600; }
+  .pasos{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 14px; padding:0; list-style:none; counter-reset:p; }
+  .pasos li{ counter-increment:p; font-size:14px; background:#fff; border:2px dashed var(--linea);
+             border-radius:99px; padding:6px 13px 6px 6px; display:flex; align-items:center; gap:7px; }
+  .pasos li::before{ content:counter(p); width:22px; height:22px; border-radius:50%; background:var(--rojo);
+                     color:#fff; font-size:12px; font-weight:800; display:flex; align-items:center;
+                     justify-content:center; flex:none; }
+  /* tabla que se llena directamente */
+  table.t input.cel{ width:84px; padding:6px 8px; font-size:15px; }
+  table.t td.ok{ color:var(--verde); font-weight:700; background:#EFF7F2; }
+
   .temblor{ animation:temblor .42s ease; }
   @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
                       40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
@@ -435,10 +461,11 @@ pintaSon();
 
 /* ================= el caso guía: la base del Excel (n = 50) =================
    Columnas: N.º, D1_Sexo, D2_Distrito, D3_Ocupación, Edad, P1_Tipo,
-   P2_Cepillos_año, P3_Lugar, P6_Cerdas, P7_MangoBio, P8_Cabezal,
-   P11_Agrado, P13_Intención                                              */
+   P2_Cepillos_año, P3_Lugar, P11_Agrado, P13_Intención.
+   (Los datos originales traían además P6, P7 y P8; se quitan al cargar
+   porque no se usan en la sesión y confundían.)                          */
 var COLS=['N.º','D1_Sexo','D2_Distrito','D3_Ocupación','Edad','P1_Tipo','P2_Cepillos_año',
-          'P3_Lugar','P6_Cerdas','P7_MangoBio','P8_Cabezal','P11_Agrado','P13_Intención'];
+          'P3_Lugar','P11_Agrado','P13_Intención'];
 var BASE=[
  [1,1,'Cercado',3,38,1,5,1,5,5,3,2,3],   [2,1,'Cercado',4,31,1,5,1,4,5,4,5,3],
  [3,1,'Cercado',4,45,1,4,1,3,3,4,3,5],   [4,2,'Cercado',2,21,1,1,2,4,4,4,4,4],
@@ -466,7 +493,8 @@ var BASE=[
  [47,2,'Yanahuara',2,43,1,3,1,4,3,5,4,4],[48,1,'Yanahuara',2,42,1,6,2,3,2,3,4,3],
  [49,2,'Cercado',1,33,1,3,4,3,3,4,4,2],  [50,1,'Yanahuara',1,35,1,1,3,3,4,4,3,4]
 ];
-var LETRA='ABCDEFGHIJKLM';
+BASE=BASE.map(function(r){ return r.slice(0,8).concat(r.slice(11)); });
+var LETRA='ABCDEFGHIJ';
 
 /* lo mismo que hacen las fórmulas de la hoja «Tabulación» */
 function col(c){ return BASE.map(function(r){ return r[c]; }); }
@@ -488,7 +516,7 @@ function frec(c, cats){
 }
 var T1=frec(5,['Manual de plástico','Eléctrico','Ecológico (bambú u otro)','Otro']);
 var T2=frec(7,['Farmacia o botica','Supermercado','Bodega','Otro']);
-var T3=frec(12,['1 Definitivamente no','2 Probablemente no','3 Tal vez','4 Probablemente sí','5 Definitivamente sí']);
+var T3=frec(9,['1 Definitivamente no','2 Probablemente no','3 Tal vez','4 Probablemente sí','5 Definitivamente sí']);
 var EDAD=col(4), CEP=col(6);
 function medidas(a){
   var mn=Math.min.apply(null,a), mx=Math.max.apply(null,a);
@@ -560,6 +588,17 @@ function pastel(T, titulo, tipo){
   return h+'</ul></div></div>';
 }
 
+var LEYENDA='<div class="fc vd"><h4>Leyenda de códigos</h4><div class="c"><ul>'+
+  '<li>D1_Sexo: 1 = Femenino, 2 = Masculino.</li>'+
+  '<li>D3_Ocupación: 1 = Dependiente, 2 = Independiente, 3 = Estudiante, 4 = Otro.</li>'+
+  '<li>P1_Tipo: 1 = Manual de plástico, 2 = Eléctrico, 3 = Ecológico (bambú u otro), 4 = Otro.</li>'+
+  '<li>P2_Cepillos_año: no es código, es el número de cepillos que compra al año.</li>'+
+  '<li>P3_Lugar: 1 = Farmacia o botica, 2 = Supermercado, 3 = Bodega, 4 = Otro.</li>'+
+  '<li>P11_Agrado: de 1 = No me agrada nada a 5 = Me agrada mucho.</li>'+
+  '<li>P13_Intención: 1 = Definitivamente no, 2 = Probablemente no, 3 = Tal vez, '+
+      '4 = Probablemente sí, 5 = Definitivamente sí.</li>'+
+  '</ul></div></div>';
+
 /* ================= las actividades ================= */
 var ACT={};
 
@@ -583,16 +622,20 @@ ACT.a1={ tipo:'sel', titulo:'Actividad 1',
 
 ACT.a2={ tipo:'arr', titulo:'Actividad 2',
   fichas:[
-    {id:'v1', t:'D1_Sexo', g:'N'},       {id:'v2', t:'D2_Distrito', g:'N'},
-    {id:'v3', t:'D3_Ocupación', g:'N'},  {id:'v4', t:'P1_Tipo', g:'N'},
-    {id:'v5', t:'P3_Lugar', g:'N'},      {id:'v6', t:'P6_Cerdas (1 a 5)', g:'O'},
-    {id:'v7', t:'P11_Agrado (1 a 5)', g:'O'}, {id:'v8', t:'P13_Intención (1 a 5)', g:'O'},
-    {id:'v9', t:'Edad', g:'R'},          {id:'v10', t:'P2_Cepillos_año', g:'R'}
+    {id:'v1', t:'Sexo (1 Fem. · 2 Masc.)', g:'N'},
+    {id:'v2', t:'Distrito donde vive', g:'N'},
+    {id:'v3', t:'Ocupación', g:'N'},
+    {id:'v4', t:'Tipo de cepillo que usa', g:'N'},
+    {id:'v5', t:'Lugar donde lo compra', g:'N'},
+    {id:'v7', t:'Agrado: de «nada» a «mucho» (1 a 5)', g:'O'},
+    {id:'v8', t:'Intención: de «definitivamente no» a «definitivamente sí» (1 a 5)', g:'O'},
+    {id:'v9', t:'Edad en años', g:'R'},
+    {id:'v10', t:'Cepillos que compra al año', g:'R'}
   ],
   cajas:[{id:'N', t:'Nominal', s:'categorías sin orden'},
          {id:'O', t:'Ordinal', s:'categorías con orden'},
          {id:'R', t:'De razón', s:'números de verdad'}],
-  fin:globo(P.sena,'Resuelto','Cinco nominales, tres ordinales y dos de razón. Las de razón son las únicas '+
+  fin:globo(P.sena,'Resuelto','Cinco nominales, dos ordinales y dos de razón. Las de razón son las únicas '+
       'a las que tiene sentido sacarles el promedio y la desviación estándar.') };
 
 ACT.a3={ tipo:'cal', titulo:'Actividad 3',
@@ -607,15 +650,15 @@ ACT.a3={ tipo:'cal', titulo:'Actividad 3',
       'Si la quitas, el lector no sabe si nadie la eligió o si te olvidaste de contarla. Y el total tiene que '+
       'dar 10, el número de encuestados que contaste.') };
 
-ACT.a4={ tipo:'cal', titulo:'Actividad 4',
+ACT.a4={ tipo:'tab', titulo:'Actividad 4', T:T2, rel:['p1','p2','p3','p4'], acu:[null,'p5','p6','p7'],
   lineas:[
-    { id:'p1', q:'% de Farmacia o botica', u:'%', v:T2[0].p, dec:0, pre:'27 ÷ 50, en porcentaje' },
-    { id:'p2', q:'% de Supermercado', u:'%', v:T2[1].p, dec:0, pre:'8 ÷ 50, en porcentaje' },
-    { id:'p3', q:'% de Bodega', u:'%', v:T2[2].p, dec:0, pre:'9 ÷ 50, en porcentaje' },
-    { id:'p4', q:'% de Otro', u:'%', v:T2[3].p, dec:0, pre:'6 ÷ 50, en porcentaje' },
-    { id:'p5', q:'% acumulado hasta Supermercado', u:'%', v:T2[1].a, dec:0, pre:'54 % + 16 %' },
-    { id:'p6', q:'% acumulado hasta Bodega', u:'%', v:T2[2].a, dec:0, pre:'70 % + 18 %' },
-    { id:'p7', q:'% acumulado hasta Otro', u:'%', v:T2[3].a, dec:0, pre:'88 % + 12 %' }
+    { id:'p1', q:'% de Farmacia o botica', u:'%', v:T2[0].p, dec:0 },
+    { id:'p2', q:'% de Supermercado', u:'%', v:T2[1].p, dec:0 },
+    { id:'p3', q:'% de Bodega', u:'%', v:T2[2].p, dec:0 },
+    { id:'p4', q:'% de Otro', u:'%', v:T2[3].p, dec:0 },
+    { id:'p5', q:'% acumulado hasta Supermercado', u:'%', v:T2[1].a, dec:0 },
+    { id:'p6', q:'% acumulado hasta Bodega', u:'%', v:T2[2].a, dec:0 },
+    { id:'p7', q:'% acumulado hasta Otro', u:'%', v:T2[3].a, dec:0 }
   ],
   fin:globo(P.punt,'Resuelto','Más de la mitad de los encuestados, el 54 %, compra su cepillo en farmacia o '+
       'botica. Para lanzar un cepillo de bambú, ese es el primer lugar donde conviene estar. Y el acumulado '+
@@ -737,7 +780,11 @@ var D=[
     globo(P.pres,'La regla de oro',
       'Cada encuestado ocupa una fila y cada pregunta ocupa una columna. En las celdas no se escriben '+
       'palabras sino códigos: 1 es femenino y 2 es masculino. Así Excel puede contar sin errores.')+
-    hoja([0,1,2,3,4,5], [0,1,2,3,4,5,6,7,8,9,10,11,12])+
+    hoja([0,1,2,3,4,5], [0,1,2,3,4,5,6,7,8,9])+
+    '<div class="av">Cómo leer los nombres de columna: la D es un dato del encuestado '+
+    '(D1 = sexo, D2 = distrito, D3 = ocupación) y la P es una pregunta de la encuesta '+
+    '(P1 = tipo de cepillo, P2 = cuántos compra al año, P3 = dónde lo compra, P11 = cuánto le agrada '+
+    'el cepillo de bambú, P13 = si lo compraría).</div>'+
     '<p style="font-size:14px;color:var(--gris)">La base sigue hasta la fila 51: son 50 encuestados.</p>'+
     globo(P.sent,'Pregunta del alumno',
       '¿Y por qué no escribo «farmacia» de frente? Se entiende más.', true)+
@@ -745,17 +792,14 @@ var D=[
       'Porque uno escribe «farmacia», otro «Farmacia» y otro «botica», y Excel los cuenta como tres cosas '+
       'distintas. Con el código 1 no hay forma de equivocarse. El distrito sí se dejó en texto, y vale, '+
       'siempre que se escriba igual en las 50 filas.')+
-    '<div class="fc vd"><h4>Leyenda de códigos (va debajo de la base)</h4><div class="c"><ul>'+
-      '<li>D1_Sexo: 1 = Femenino, 2 = Masculino.</li>'+
-      '<li>D3_Ocupación: 1 = Dependiente, 2 = Independiente, 3 = Estudiante, 4 = Otro.</li>'+
-      '<li>P1_Tipo: 1 = Manual de plástico, 2 = Eléctrico, 3 = Ecológico (bambú u otro), 4 = Otro.</li>'+
-      '<li>P3_Lugar: 1 = Farmacia o botica, 2 = Supermercado, 3 = Bodega, 4 = Otro.</li>'+
-      '<li>P6, P7 y P8 (importancia), P11 (agrado) y P13 (intención): escala de 1 a 5.</li>'+
-      '</ul></div></div>' },
+    LEYENDA },
 
 { et:'Actividad 1', t:'Traduce los códigos', act:'a1',
   h:'<p class="enc">¿Qué respondió cada encuestado?</p>'+
-    '<p class="consigna">Usa la leyenda de la diapositiva anterior y elige lo que significa cada código.</p>' },
+    '<ol class="pasos"><li>Busca la fila del encuestado</li><li>Mira el código resaltado</li><li>Tradúcelo con la leyenda</li></ol>',
+  ref:hoja([2,4,5,8,11,13],[0,1,3,5,6,7,9],function(k,c){
+        return (k===4&&c===5)||(k===5&&c===1)||(k===13&&c===7)||(k===2&&c===3)||(k===11&&c===9)||(k===8&&c===6); })+
+      LEYENDA, ancha:true },
 
 { et:'Teoría 2', t:'Los niveles de medición',
   h:'<p class="enc">Antes de tabular, mira qué tipo de variable es</p>'+
@@ -764,14 +808,17 @@ var D=[
     '<div class="fc"><h4>Nominal</h4><div class="c">'+
       '<p>Categorías que no tienen orden. Ninguna es más que otra.</p>'+
       '<p>Sexo, distrito, ocupación, tipo de cepillo, lugar de compra.</p>'+
+      '<p class="truco">Pregúntate: ¿puedo ordenarlas de menos a más? No.</p>'+
       '<div class="lo">Se calcula: frecuencias, porcentajes y moda.</div></div></div>'+
     '<div class="fc"><h4>Ordinal</h4><div class="c">'+
       '<p>Categorías con orden, aunque la distancia entre una y otra no es exacta.</p>'+
-      '<p>Las escalas de 1 a 5: importancia de las cerdas, agrado, intención de compra.</p>'+
+      '<p>Las escalas de 1 a 5: cuánto le agrada el cepillo, si lo compraría.</p>'+
+      '<p class="truco">Pregúntate: ¿puedo ordenarlas de menos a más? Sí, pero no medir cuánto hay entre una y otra.</p>'+
       '<div class="lo">Se calcula: frecuencias, % acumulado, mediana y moda.</div></div></div>'+
     '<div class="fc rj"><h4>De razón</h4><div class="c">'+
       '<p>Números de verdad, con un cero que significa «nada».</p>'+
       '<p>Edad, cepillos que compra al año.</p>'+
+      '<p class="truco">Pregúntate: ¿tiene sentido decir «el doble»? Sí: 40 años es el doble de 20.</p>'+
       '<div class="lo">Se calcula: media, mediana, moda, varianza, desviación estándar y rango.</div></div></div>'+
     '</div>'+
     globo(P.sorp,'Ojo con esto',
@@ -780,7 +827,9 @@ var D=[
 
 { et:'Actividad 2', t:'Clasifica las variables', act:'a2',
   h:'<p class="enc">¿Nominal, ordinal o de razón?</p>'+
-    '<p class="consigna">Arrastra cada columna de la base a su caja. En el celular, toca la ficha y luego la caja.</p>' },
+    '<p class="consigna">Arrastra cada pregunta a su caja. En el celular, toca la ficha y luego la caja.</p>'+
+    '<div class="av">Truco rápido: ¿se puede ordenar? Si no → nominal. ¿Se ordena pero son '+
+    'opciones de una escala? → ordinal. ¿Es un número que se puede sumar y promediar? → de razón.</div>' },
 
 { et:'Teoría 3', t:'La tabla de frecuencias',
   h:'<p class="enc">Contar, dividir y acumular</p>'+
@@ -808,15 +857,17 @@ var D=[
 
 { et:'Actividad 3', t:'Sé CONTAR.SI', act:'a3',
   h:'<p class="enc">Cuenta tú, como lo haría Excel</p>'+
-    '<p class="consigna">Estos son los diez primeros encuestados y la columna H, lugar de compra '+
-    '(1 farmacia, 2 supermercado, 3 bodega, 4 otro). Escribe lo que devolvería cada fórmula.</p>'+
-    hoja([0,1,2,3,4,5,6,7,8,9], [0,7], function(k,c){ return c===7; }) },
+    '<p class="consigna">Mira la columna H de los diez primeros encuestados y cuenta cuántas veces '+
+    'aparece cada código. Escribe el número y pulsa Enter.</p>',
+  ref:hoja([0,1,2,3,4,5,6,7,8,9], [0,7], function(k,c){ return c===7; })+
+      '<p style="margin:6px 0 0;font-size:14px">1 = Farmacia o botica · 2 = Supermercado · 3 = Bodega · 4 = Otro</p>' },
 
 { et:'Actividad 4', t:'Completa la Tabla 2', act:'a4',
   h:'<p class="enc">Lugar de compra: saca los porcentajes</p>'+
-    '<p class="consigna">Excel ya contó a los 50 encuestados. Completa el % relativo y el % acumulado. '+
-    'Puedes escribir 54 o 0.54: las dos formas valen.</p>'+
-    tituloApa(2,'Lugar de compra del cepillo (P3)')+tablaFrec(T2, true) },
+    '<p class="consigna">Excel ya contó a los 50 encuestados. Escribe los porcentajes en las casillas '+
+    'de la tabla y pulsa Enter. Puedes escribir 54 o 0.54.</p>'+
+    '<ol class="pasos"><li>% = f ÷ 50 × 100</li><li>Acumulado = el de arriba + el de la fila</li><li>Tiene que cerrar en 100 %</li></ol>'+
+    tituloApa(2,'Lugar de compra del cepillo (P3)') },
 
 { et:'Teoría 4', t:'La escala de 1 a 5',
   h:'<p class="enc">La intención de compra, leída con el acumulado</p>'+
@@ -836,8 +887,8 @@ var D=[
 
 { et:'Actividad 5', t:'Lee la Tabla 3', act:'a5',
   h:'<p class="enc">Quiz: ¿qué dice la intención de compra?</p>'+
-    '<p class="consigna">Mira la Tabla 3 de la diapositiva anterior. Si fallas, la opción se tacha y '+
-    'vuelves a intentarlo.</p>' },
+    '<p class="consigna">La Tabla 3 está aquí al lado. Si fallas, la opción se tacha y vuelves a intentarlo.</p>',
+  ref:tituloApa(3,'Intención de compra del cepillo de bambú (P13)')+tablaFrec(T3) },
 
 { et:'Teoría 5', t:'Medidas de tendencia y dispersión',
   h:'<p class="enc">Un número que resume y otro que dice qué tan separados están</p>'+
@@ -876,9 +927,12 @@ var D=[
 
 { et:'Actividad 7', t:'Calcula a mano', act:'a7',
   h:'<p class="enc">Cinco encuestados, cuatro medidas</p>'+
-    '<p class="consigna">Estos son los cepillos al año (columna G) de los cinco primeros encuestados. '+
-    'Calcula lo que devolvería cada fórmula.</p>'+
-    hoja([0,1,2,3,4], [0,6], function(k,c){ return c===6; }) },
+    '<p class="consigna">Con los cepillos al año (columna G) de los cinco primeros encuestados, '+
+    'calcula lo que devolvería cada fórmula. Usa la calculadora de la esquina si la necesitas.</p>',
+  ref:hoja([0,1,2,3,4], [0,6], function(k,c){ return c===6; })+
+      '<div class="fc"><h4>Recuerda</h4><div class="c"><ul>'+
+      '<li>Media: suma todo y divide entre 5.</li><li>Mediana: ordena y toma el del medio.</li>'+
+      '<li>Moda: el que más se repite.</li><li>Rango: el mayor menos el menor.</li></ul></div></div>' },
 
 { et:'Teoría 6', t:'El gráfico según la variable',
   h:'<p class="enc">Cada variable con su gráfico</p>'+
@@ -908,7 +962,12 @@ var D=[
 
 { et:'Actividad 8', t:'Elige el gráfico', act:'a8',
   h:'<p class="enc">Quiz: ¿qué gráfico le queda a cada caso?</p>'+
-    '<p class="consigna">Piensa primero en el nivel de medición y después en el gráfico.</p>' },
+    '<p class="consigna">Piensa primero en el nivel de medición y después en el gráfico.</p>',
+  ref:'<div class="fc"><h4>Qué gráfico usar</h4><div class="c"><ul>'+
+      '<li>Columnas o barras: nominales y ordinales.</li>'+
+      '<li>Circular: partes de un todo (100 %), pocas categorías.</li>'+
+      '<li>Líneas: solo con una secuencia de tiempo.</li>'+
+      '<li>Histograma: razón agrupada en intervalos.</li></ul></div></div>' },
 
 { et:'Teoría 7', t:'Presentar e interpretar',
   h:'<p class="enc">Una tabla sin interpretación está a medias</p>'+
@@ -935,7 +994,15 @@ var D=[
 
 { et:'Actividad 9', t:'La mejor interpretación', act:'a9',
   h:'<p class="enc">Quiz: ¿cuál lo dice mejor?</p>'+
-    '<p class="consigna">Elige la opción que tú pondrías en el informe.</p>' },
+    '<p class="consigna">Elige la opción que tú pondrías en el informe.</p>',
+  ref:tituloApa(2,'Lugar de compra del cepillo (P3)')+tablaFrec(T2)+
+      tituloApa(4,'Cepillos que compra al año (P2)')+
+      '<div class="tabenv"><table class="t"><tbody>'+
+      '<tr><td>Media</td><td class="n">'+mil(MC.media,2)+'</td></tr>'+
+      '<tr><td>Mediana</td><td class="n">'+mil(MC.mediana,0)+'</td></tr>'+
+      '<tr><td>Varianza</td><td class="n">'+mil(MC.vari,2)+'</td></tr>'+
+      '<tr><td>Desviación estándar</td><td class="n">'+mil(MC.de,2)+'</td></tr>'+
+      '</tbody></table></div>'+NOTA },
 
 { et:'Cierre', t:'Lo que te llevas',
   h:'<div class="cierre"><div class="ic">📊</div>'+
@@ -961,7 +1028,7 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='tj_tabula8_v1';
+var LS='tj_tabula8_v2';
 function vacio(){ var g={ visto:{}, mal:{}, r:{} }; for(var k in ACT) g.r[k]={}; return g; }
 var G=vacio();
 try{
@@ -980,7 +1047,7 @@ function graba(){
 function cuantas(k){
   var A=ACT[k];
   return A.tipo==='arr'||A.tipo==='par' ? (A.huecos||A.fichas).length
-       : A.tipo==='quiz' ? A.preguntas.length : A.lineas.length;
+       : A.tipo==='quiz' ? A.preguntas.length : A.lineas.length;   /* cal, sel y tab */
 }
 var CLAVES=Object.keys(ACT);
 function hechas(k){ return Object.keys(G.r[k]||{}).length; }
@@ -1159,7 +1226,28 @@ function vQuiz(k){
   return h+'</div></div>';
 }
 
-var VISTA={ sel:vElige, arr:vArrastre, cal:vCalcula, quiz:vQuiz, par:vParea };
+/* la tabla de frecuencias con casillas para escribir: se resuelve donde se ve */
+function vTabla(k){
+  var A=ACT[k], g=G.r[k];
+  function linea(id){ var l=null; A.lineas.forEach(function(x){ if(x.id===id) l=x; }); return l; }
+  function casilla(id){
+    var l=linea(id);
+    if(g[id]) return '<td class="n ok">'+mil(l.v,0)+' %</td>';
+    return '<td class="n"><input class="cel" type="text" inputmode="decimal" data-c="'+k+'" data-l="'+id+'" '+
+           'placeholder="?" aria-label="'+esc(l.q)+'"></td>';
+  }
+  var h=cabTarea(k)+'<div class="tabenv"><table class="t"><thead><tr><th>Categoría</th><th class="n">f</th>'+
+        '<th class="n">% relativo</th><th class="n">% acumulado</th></tr></thead><tbody>';
+  A.T.forEach(function(r,n){
+    h+='<tr><td>'+esc(r.t)+'</td><td class="n">'+r.f+'</td>'+casilla(A.rel[n])+
+       (A.acu[n] ? casilla(A.acu[n])
+                 : (g[A.rel[n]] ? '<td class="n ok">'+mil(r.a,0)+' %</td>' : '<td class="hue">= % de arriba</td>'))+'</tr>';
+  });
+  h+='<tr class="tot"><td>Total</td><td class="n">50</td><td class="n">100 %</td><td></td></tr></tbody></table></div>'+NOTA;
+  return h+pie(k);
+}
+
+var VISTA={ sel:vElige, arr:vArrastre, cal:vCalcula, quiz:vQuiz, par:vParea, tab:vTabla };
 
 /* ================= dibujo ================= */
 function pinta(){
@@ -1169,7 +1257,10 @@ function pinta(){
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
-  if(s.act) h+=VISTA[ACT[s.act].tipo](s.act);
+  if(s.act){
+    var v=VISTA[ACT[s.act].tipo](s.act);
+    h+= s.ref ? '<div class="lado'+(s.ancha?' ancha':'')+'"><div class="ref"><span class="rt">Para consultar</span>'+s.ref+'</div><div>'+v+'</div></div>' : v;
+  }
   $('lam').innerHTML=h;
   $('ant').disabled=(i===0);
   $('sig').disabled=(i===D.length-1);
