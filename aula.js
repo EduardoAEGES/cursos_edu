@@ -27,6 +27,10 @@
        lo da, una hoja «Detalle» (una fila por respuesta). Sin esta función
        se arma un resumen con los datos sueltos que envía cada alumno.
 
+   El docente puede sacar de la sala a quien no sea de su clase: cada
+   ventanita lleva una ✕ arriba a la derecha. Borra su fila de la sala, no su
+   registro ni su avance; si vuelve a entrar, aparece otra vez.
+
    Opcional: ficha: { clave:'mi_pagina_v1', lee:function(d){}, da:function(){} }
        Enciende el registro con DNI. El alumno entra con su DNI; la primera vez
        escribe además sus apellidos y nombres y queda registrado. A partir de
@@ -529,11 +533,21 @@ function pintaMuro(){
     h+='<div class="aula-vtna'+(g.alumno===yo?' yo':'')+(e.listo?' listo':'')+
          (cfg.pantalla?' clic" role="button" tabindex="0" title="Ver su pantalla" data-al="'+esc(g.alumno):'')+'">'+
          '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
-         '<span class="vs">'+esc(hace)+'</span></div>'+
+         '<span class="vs">'+esc(hace)+'</span>'+
+         '<button class="aula-saca" type="button" title="Sacar de la sala" '+
+           'aria-label="Sacar a '+esc(g.alumno)+' de la sala" data-saca="'+esc(g.alumno)+'">&#10005;</button>'+
+         '</div>'+
          cfg.ventana(e, g.alumno)+
        '</div>';
   });
   $('muro').innerHTML=h;
+  Array.prototype.forEach.call($('muro').querySelectorAll('.aula-saca'), function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation(); ev.preventDefault();
+      sacaAlumno(b.getAttribute('data-saca'));
+    });
+    b.addEventListener('keydown', function(ev){ ev.stopPropagation(); });
+  });
   if(cfg.pantalla){
     Array.prototype.forEach.call($('muro').querySelectorAll('.aula-vtna.clic'), function(v){
       v.addEventListener('click', function(){ abrePantalla(v.getAttribute('data-al')); });
@@ -543,6 +557,33 @@ function pintaMuro(){
     });
   }
   refrescaPantalla();
+}
+
+/* ---------------- sacar a alguien de la sala ---------------- */
+function sacaAlumno(nombre){
+  if(!docente || !sala || !nombre) return;
+  if(!window.confirm('¿Sacar a ' + nombre + ' de la sala ' + sala + '?\n\n' +
+     'Desaparece del muro. No se borra su registro ni su avance: si vuelve a entrar, aparece otra vez.')) return;
+  if(mirando===nombre) cierraPantalla();
+  gente=gente.filter(function(g){ return g.alumno!==nombre; });
+  pintaMuro();
+  estado('vivo','Sacando a '+nombre+'…');
+  var fila=cfg.sala+'-'+sala;
+  /* primero por la función con clave; si no está instalada, por la API directa */
+  fetch(RPC+'saca_alumno', { method:'POST', headers:hdr(),
+    body:JSON.stringify({ p_sala:fila, p_alumno:nombre, p_clave_docente:CLAVE }) })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(){ trae(); })
+    .catch(function(){
+      fetch(TABLA+'?sala=eq.'+encodeURIComponent(fila)+'&alumno=eq.'+encodeURIComponent(nombre),
+            { method:'DELETE', headers:hdr({ Prefer:'return=minimal' }) })
+        .then(function(r){ return r.ok ? true : Promise.reject(r.status); })
+        .then(function(){ trae(); })
+        .catch(function(){
+          estado('malo','No se pudo sacar a '+nombre+'. Falta instalar saca_alumno en la base.');
+          trae();
+        });
+    });
 }
 
 /* ---------------- reportes para el docente ---------------- */
@@ -771,6 +812,7 @@ window.Aula={
   empuja:function(){ empuja(); },
   dirige:function(d){ dirige(d); },
   guardaFicha:function(){ guardaAvance(true); },
+  saca:function(nombre){ sacaAlumno(nombre); },
   get dni(){ return dni; },
   get batuta(){ return batuta; },
   refresca:function(){ pintaMuro(); },
