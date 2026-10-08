@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi&oacute;n 7 &middot; Reg&iacute;menes tributarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  .rt{
+    --gris:#5A5A5A; --rojo:#8A2B2B; --tinta:#1F2933; --verde:#147A5C; --ambar:#B25E09;
+    --nrus:#1F6FB2; --rer:#147A5C; --rmt:#B25E09; --rg:#714B67; --humo:#F4F4F6; --linea:#DCDCE0;
+    --verde:#1C6E4E; --ambar:#9A5B07; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+  }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--rojo); padding-bottom:14px; }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
+        align-items:center; gap:12px; flex:none; }
+  .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1;
+        min-height:clamp(380px,56vh,620px); font-size:17px; line-height:1.72; color:var(--tinta); }
+  .esc.full .lam{ min-height:0; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:var(--gris); font-weight:500; }
+  .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:13px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  .perso.dos{ align-items:flex-end; }
+  .perso.dos img.b{ margin-left:-10px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:88px; }
+    .perso.dos img{ width:70px; }
+    .perso .globo{ font-size:15px; padding:11px 13px; }
+  }
+  .tabenv table.t.chica{ font-size:14px; }
+  .tabenv table.t.chica th, .tabenv table.t.chica td{ padding:7px 9px; }
+  table.t tr.gris td{ background:#EEF1F6; font-weight:700; font-size:13px;
+                      text-transform:uppercase; letter-spacing:.04em; color:var(--gris); }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:15px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(17px,2.6vw,22px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:13.5px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:15.5px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:13px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(138,43,43,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:15.5px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:13.5px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:16px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:17px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 22px; font-size:14.5px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(138,43,43,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:15.5px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:16px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:150px; font-size:15px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:24px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+
+  /* ---------- crucigrama ---------- */
+  .cruz{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+  .cuad{ border-collapse:collapse; margin:0 auto; table-layout:fixed; width:max-content; }
+  .cuad td{ width:34px; height:34px; padding:0; border:0; position:relative; }
+  .cuad td.v{ border:1.5px solid var(--gris); background:#fff; }
+  .cuad td .n{ position:absolute; top:1px; left:2px; font-size:9px; font-weight:800;
+               color:var(--gris); line-height:1; pointer-events:none; }
+  .cuad input{ width:100%; height:100%; border:0; background:transparent; text-align:center;
+               font:inherit; font-size:17px; font-weight:700; text-transform:uppercase;
+               color:var(--tinta); padding:0; }
+  .cuad input:focus{ outline:none; background:#FFF3CD; }
+  .cuad td.lista{ background:#EFF7F2; border-color:var(--verde); }
+  .cuad td.lista input{ color:var(--verde); }
+  .cuad td.foco{ background:#FFF8E1; }
+  .pistas{ display:grid; gap:14px; grid-template-columns:1fr; margin-top:16px; }
+  @media (min-width:760px){ .pistas{ grid-template-columns:1fr 1fr; } }
+  .pistas h5{ margin:0 0 7px; font-size:13px; font-weight:800; text-transform:uppercase;
+              letter-spacing:.06em; color:var(--rojo); }
+  .pistas ol{ margin:0; padding-left:22px; font-size:14.5px; line-height:1.65; }
+  .pistas li{ margin-bottom:5px; }
+  .pistas li.ok{ color:var(--verde); text-decoration:line-through; }
+  .cruz .desliza{ display:none; font-size:12.5px; color:var(--gris); text-align:center;
+                  margin:0 0 7px; }
+  @media (max-width:700px){
+    .cuad td{ width:26px; height:26px; } .cuad input{ font-size:14px; }
+    .cruz .desliza{ display:block; }
+  }
+
+  /* ---------- fichas de régimen ---------- */
+  .reg{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff;
+        margin-bottom:14px; }
+  .reg > h4{ margin:0; padding:11px 15px; color:#fff; font-size:15px; font-weight:800;
+             letter-spacing:.02em; }
+  .reg.n > h4{ background:var(--nrus); } .reg.e > h4{ background:var(--rer); }
+  .reg.m > h4{ background:var(--rmt); }  .reg.g > h4{ background:var(--rg); }
+  .reg .c{ padding:0; }
+  .reg table{ width:100%; border-collapse:collapse; font-size:15px; }
+  .reg td{ padding:9px 14px; border-bottom:1px solid var(--linea); vertical-align:top; }
+  .reg tr:last-child td{ border-bottom:0; }
+  .reg td:first-child{ width:38%; color:var(--gris); font-weight:600; }
+  @media (max-width:560px){ .reg td{ font-size:14px; padding:8px 11px; }
+                            .reg td:first-child{ width:42%; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a></span> / <b>Sesi&oacute;n 7</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="rt">
+
+  <div class="marca">
+    <span class="tx">
+      <h1>Los reg&iacute;menes tributarios</h1>
+      <p><span class="sem">Sesi&oacute;n 7</span> &middot; Sistemas de Procesos Contables &middot; NRUS, RER, RMT y R&eacute;gimen General</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Antes de empezar, reg&iacute;strate</h2>
+    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente. Las diapositivas se abren al entrar
+       y tu avance queda guardado.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+    <h3 class="titsec">El aula</h3>
+    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+    <div id="muro"></div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Datos tomados de las cartillas de la SUNAT: Nuevo R&eacute;gimen
+    &Uacute;nico Simplificado, R&eacute;gimen Especial de Renta, R&eacute;gimen MYPE Tributario y R&eacute;gimen
+    General de Renta. Los topes en UIT y las cuotas se revisan cada a&ntilde;o en sunat.gob.pe.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
+        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
+        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+function globo2(a, b, et, txt){
+  return '<div class="perso dos"><img src="'+a+'" alt="" loading="lazy">'+
+         '<img class="b" src="'+b+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('rt7_son')!=='0'; }catch(e){}
+function nota(f,ini,dur,vol,tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{ fallo.currentTime=0; var p=fallo.play();
+       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false'); }
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('rt7_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien(); });
+pintaSon();
+
+/* ================= las actividades ================= */
+var ACT={
+
+a1:{ tipo:'quiz', titulo:'Actividad 1 · NRUS',
+  lista:[
+   { q:'Doña Rosa tiene una bodega y vende S/ 7,500 al mes. Un cliente le pide factura. ¿Qué pasa?',
+     ops:['Se la emite sin problema','No puede: en el NRUS solo se emiten boletas de venta y tickets',
+          'Puede emitirla, pero solo una vez al mes'], ok:1,
+     pq:'El NRUS no permite emitir facturas. Si su cliente las necesita, tendrá que cambiarse de régimen.' },
+   { q:'Este mes la bodega vendió S/ 6,200. ¿En qué categoría está y cuánto paga?',
+     ops:['Categoría 1, paga S/ 20','Categoría 2, paga S/ 50','No paga nada, porque no pasó de S/ 8,000'], ok:1,
+     pq:'La categoría 1 llega hasta S/ 5,000 de ventas o compras. Al pasar de ese monto entra a la categoría 2, '+
+        'cuya cuota es S/ 50.' },
+   { q:'¿Qué libros contables tiene que llevar quien está en el NRUS?',
+     ops:['Registro de compras y registro de ventas','El libro diario de formato simplificado','Ninguno'], ok:2,
+     pq:'Es la gran ventaja del NRUS: no hay obligación de llevar libros ni registros contables.' },
+   { q:'En agosto la bodega vendió S/ 9,400. ¿Qué tiene que hacer?',
+     ops:['Pagar una cuota más alta','Cambiarse a otro régimen, porque pasó de S/ 8,000',
+          'Nada, el límite es anual'], ok:1,
+     pq:'Si en cualquier mes supera los S/ 8,000 en ventas o en compras, ya no puede seguir en el NRUS.' } ] },
+
+a2:{ tipo:'arr', titulo:'Actividad 2 · RER',
+  fichas:[ {id:'s1', t:'Bodega que vende abarrotes y factura S/ 400,000 al año', g:'SI'},
+           {id:'s2', t:'Taller que fabrica muebles de madera', g:'SI'},
+           {id:'s3', t:'Empresa de servicio de delivery con 8 trabajadores', g:'SI'},
+           {id:'s4', t:'Tienda de ropa que es persona jurídica', g:'SI'},
+           {id:'n1', t:'Constructora que levanta edificios', g:'NO'},
+           {id:'n2', t:'Estudio contable que lleva libros a terceros', g:'NO'},
+           {id:'n3', t:'Consultorio de un médico', g:'NO'},
+           {id:'n4', t:'Agencia de viajes', g:'NO'},
+           {id:'n5', t:'Negocio que vende inmuebles', g:'NO'} ],
+  cajas:[ {id:'SI', t:'Sí puede estar en el RER'}, {id:'NO', t:'No puede estar en el RER'} ],
+  fin:globo(P.expl,'Resuelto','El RER deja fuera la construcción, el transporte de carga, los espectáculos, '+
+      'los casinos, las agencias de viaje, la venta de inmuebles y casi todas las actividades profesionales: '+
+      'médicos, abogados, contadores, arquitectos, ingenieros e informáticos.') },
+
+a3:{ tipo:'par', titulo:'Actividad 3 · RMT',
+  fichas:[ {id:'m1', t:'1 %'}, {id:'m2', t:'Coeficiente o 1.5 %'},
+           {id:'m3', t:'10 %'}, {id:'m4', t:'29.5 %'} ],
+  huecos:[ {id:'m1', q:'Pago a cuenta del mes, con ingresos netos de hasta 300 UIT'},
+           {id:'m2', q:'Pago a cuenta del mes, con ingresos de más de 300 y hasta 1,700 UIT'},
+           {id:'m3', q:'Impuesto anual sobre la parte de renta neta que no pasa de 15 UIT'},
+           {id:'m4', q:'Impuesto anual sobre la renta neta que excede las 15 UIT'} ],
+  fin:globo(P.idea,'Resuelto','Esa escala de 10 % y 29.5 % es lo que hace atractivo al RMT: la empresa chica '+
+      'paga menos por su primer tramo de ganancia, y recién sobre el exceso paga la tasa completa.') },
+
+a4:{ tipo:'quiz', titulo:'Actividad 4 · Régimen General',
+  lista:[
+   { q:'¿Qué empresas entran al Régimen General?',
+     ops:['Solo las personas jurídicas','Solo las que superan las 1,700 UIT',
+          'Todas: no tiene límite de ingresos ni de actividades'], ok:2,
+     pq:'Es el régimen sin restricciones. Ahí se ubica cualquiera que no cumpla las condiciones del NRUS, '+
+        'del RER o del RMT, y también quien elige estar ahí.' },
+   { q:'Una empresa del Régimen General no tuvo impuesto calculado el año anterior. ¿Qué tasa usa para el pago a cuenta?',
+     ops:['No paga nada','El 1.5 % de los ingresos netos del mes','El 29.5 % de los ingresos del mes'], ok:1,
+     pq:'Sin impuesto calculado en el ejercicio anterior ni en el precedente, no hay coeficiente: se aplica '+
+        'directamente el 1.5 % a los ingresos netos del mes.' },
+   { q:'Se calculó la cuota A con el coeficiente y la cuota B con el 1.5 %. ¿Cuál se paga?',
+     ops:['La cuota A, siempre','La cuota B, siempre','La mayor de las dos'], ok:2,
+     pq:'El pago a cuenta del mes es el monto mayor entre las dos cuotas.' },
+   { q:'¿Qué declaración anual presenta el Régimen General?',
+     ops:['Ninguna, solo declara mensualmente','El Formulario Virtual 710','El Formulario 1611'], ok:1,
+     pq:'El Régimen General y el RMT presentan la declaración jurada anual con el Formulario Virtual 710. '+
+        'El NRUS y el RER no presentan declaración anual.' } ] },
+
+a5:{ tipo:'arr', titulo:'Actividad 5',
+  fichas:[ {id:'c1', t:'Puesto de jugos en el mercado, vende S/ 4,000 al mes a vecinos', g:'NRUS'},
+           {id:'c2', t:'Gasfitero que atiende casas y cobra en efectivo', g:'NRUS'},
+           {id:'c3', t:'Peluquería de barrio con ventas de S/ 7,500 al mes', g:'NRUS'},
+           {id:'c4', t:'Ferretería que factura S/ 380,000 al año y tiene 6 trabajadores', g:'RER'},
+           {id:'c5', t:'Distribuidora de útiles con ingresos de S/ 500,000 al año', g:'RER'},
+           {id:'c6', t:'Panadería que vende S/ 900,000 al año y quiere la tasa del 10 %', g:'RMT'},
+           {id:'c7', t:'Imprenta con ingresos de 800 UIT que emite factura electrónica', g:'RMT'},
+           {id:'c8', t:'Constructora mediana con ingresos de 1,200 UIT', g:'RMT'},
+           {id:'c9', t:'Cadena de supermercados con ingresos de 4,000 UIT', g:'RG'},
+           {id:'c10', t:'Minera que factura S/ 30 millones al año', g:'RG'},
+           {id:'c11', t:'Estudio de abogados organizado como sociedad', g:'RG'},
+           {id:'c12', t:'Empresa que es sucursal de una compañía extranjera', g:'RG'} ],
+  cajas:[ {id:'NRUS', t:'NRUS'}, {id:'RER', t:'RER'},
+          {id:'RMT', t:'RMT'}, {id:'RG', t:'Régimen General'} ],
+  fin:globo2(P.pres, P.bien,'Resuelto','El orden para decidir siempre es el mismo: primero mira el monto, '+
+      'después la actividad y al final la forma jurídica. La constructora no puede ir al RER aunque venda poco, '+
+      'y la sucursal extranjera queda fuera del RMT aunque facture poco.') },
+
+a6:{ tipo:'par', titulo:'Actividad 6',
+  fichas:[ {id:'r1', t:'NRUS'}, {id:'r2', t:'RER'}, {id:'r3', t:'RMT'}, {id:'r4', t:'Régimen General'} ],
+  huecos:[ {id:'r2', q:'Paga 1.5 % de sus ingresos netos cada mes y no presenta declaración anual'},
+           {id:'r4', q:'No tiene ningún límite de ingresos y paga 29.5 % al año'},
+           {id:'r1', q:'Paga una cuota fija de S/ 20 o S/ 50 y no lleva libros contables'},
+           {id:'r3', q:'Tope de 1,700 UIT y una escala anual de 10 % y 29.5 %'} ],
+  fin:globo(P.bien,'Resuelto','Con esas cuatro frases ya puedes reconocer cualquier régimen. Lo demás son detalles.') },
+
+a7:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
+  filas:9, cols:16,
+  palabras:[
+   {p:'CUOTA', r:0, c:0, dir:'H', pista:'Lo que paga el NRUS cada mes: S/ 20 o S/ 50'},
+   {p:'TICKET', r:0, c:3, dir:'V', pista:'Comprobante que entrega una máquina registradora'},
+   {p:'IGV', r:0, c:10, dir:'H', pista:'Impuesto del 18 % que se paga sobre la venta'},
+   {p:'GENERAL', r:0, c:11, dir:'V', pista:'El régimen sin límite de ingresos ni de actividades'},
+   {p:'UIT', r:1, c:9, dir:'V', pista:'Unidad Impositiva Tributaria'},
+   {p:'RER', r:1, c:13, dir:'V', pista:'Régimen con tasa de 1.5 % mensual y tope de S/ 525,000'},
+   {p:'MYPE', r:2, c:1, dir:'V', pista:'El régimen pensado para la micro y pequeña empresa'},
+   {p:'COEFICIENTE', r:2, c:3, dir:'H', pista:'Con el 1.5 %, una de las dos formas de calcular el pago a cuenta mensual'},
+   {p:'FACTURA', r:2, c:6, dir:'V', pista:'El comprobante que el NRUS no puede emitir'},
+   {p:'RENTA', r:5, c:0, dir:'H', pista:'El impuesto que grava la ganancia del negocio'},
+   {p:'ANUAL', r:5, c:11, dir:'H', pista:'La declaración que presentan el RMT y el General, con el 710'},
+   {p:'SUNAT', r:6, c:5, dir:'H', pista:'La administración tributaria del Perú'},
+   {p:'BOLETA', r:8, c:1, dir:'H', pista:'Junto con el ticket, lo único que emite el NRUS'} ],
+  fin:globo(P.full,'Resuelto','Trece palabras que resumen toda la sesión. Si las sabes, sabes el tema.') },
+
+a8:{ tipo:'quiz', titulo:'Actividad 8',
+  lista:[
+   { q:'¿Cuál de los cuatro regímenes no lleva ningún libro ni registro contable?',
+     ops:['El NRUS','El RER','El RMT'], ok:0,
+     pq:'En el NRUS no hay obligación de llevar libros. En el RER se llevan registro de compras y de ventas, '+
+        'y en el RMT y el General depende del monto de los ingresos.' },
+   { q:'Una empresa gana S/ 2,000,000 al año y quiere emitir facturas. ¿Qué regímenes quedan descartados de entrada?',
+     ops:['Solo el NRUS','El NRUS y el RER','Ninguno, puede elegir cualquiera'], ok:1,
+     pq:'El NRUS tiene tope de S/ 96,000 y no emite facturas; el RER tiene tope de S/ 525,000. Con ese monto '+
+        'solo quedan el RMT y el Régimen General.' },
+   { q:'¿Qué formulario usan el RER, el RMT y el Régimen General para declarar cada mes?',
+     ops:['El Formulario 1611','El Formulario Virtual 621','El Formulario Virtual 710'], ok:1,
+     pq:'Los tres declaran el IGV y la renta mensual con el Formulario Virtual 621. El 1611 es la constancia '+
+        'de pago del NRUS y el 710 es la declaración anual.' },
+   { q:'¿Cuál es la tasa del IGV en el RER, el RMT y el Régimen General?',
+     ops:['18 % en los tres','1.5 % en los tres','Depende de los ingresos de cada uno'], ok:0,
+     pq:'El IGV es siempre 18 %. Lo que cambia entre regímenes es el impuesto a la renta, no el IGV. '+
+        'En el NRUS no se paga aparte: ya está dentro de la cuota.' },
+   { q:'Un negocio del NRUS supera los S/ 96,000 al año. ¿Cuál sería el paso natural?',
+     ops:['Quedarse y pagar una cuota mayor','Pasar al Régimen Especial de Renta, que es el más sencillo después del NRUS',
+          'Pasar directamente al Régimen General'], ok:1,
+     pq:'La propia cartilla de la SUNAT lo sugiere: el siguiente escalón natural es el RER, que sigue siendo '+
+        'sencillo y ya permite emitir facturas.' } ] }
+};
+
+/* ================= las diapositivas ================= */
+function ficha(cl, nom, filas){
+  return '<div class="reg '+cl+'"><h4>'+nom+'</h4><div class="c"><table><tbody>'+
+    filas.map(function(f){ return '<tr><td>'+f[0]+'</td><td>'+f[1]+'</td></tr>'; }).join('')+
+    '</tbody></table></div></div>';
+}
+
+var D=[
+
+{ et:'Portada', t:'Los regímenes tributarios',
+  h:'<p class="enc">¿En qué régimen va cada negocio?</p>'+
+    '<p class="sub">Sesión 7 · Sistemas de Procesos Contables</p>'+
+    globo(P.pres,'De qué va la sesión',
+      'Cuatro regímenes, cuatro formas de pagar. Hoy vas a aprender a reconocer cuál le toca a cada negocio '+
+      'mirando tres cosas: cuánto vende, a qué se dedica y qué comprobantes necesita.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Los cuatro</h4><div class="c"><ul>'+
+      '<li>NRUS · Nuevo Régimen Único Simplificado</li>'+
+      '<li>RER · Régimen Especial de Renta</li>'+
+      '<li>RMT · Régimen MYPE Tributario</li>'+
+      '<li>Régimen General</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Lo que vas a hacer</h4><div class="c"><ul>'+
+      '<li>Una actividad por cada régimen.</li>'+
+      '<li>Unir parejas y elegir grupos.</li>'+
+      '<li>Un crucigrama de trece palabras.</li>'+
+      '<li>Un quiz final de repaso.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+{ et:'NRUS', t:'Nuevo Régimen Único Simplificado',
+  h:'<p class="enc">NRUS · el más sencillo de todos</p>'+
+    '<p class="sub">Para el negocio pequeño que le vende al consumidor final</p>'+
+    ficha('n','NRUS',[
+      ['Para quién','Personas naturales y sucesiones indivisas con un negocio pequeño, y quienes tienen un oficio: gasfitero, pintor, carpintero'],
+      ['Tope de ingresos','S/ 96,000 al año · S/ 8,000 al mes'],
+      ['Otros topes','Un solo local · activos fijos hasta S/ 70,000 · compras hasta S/ 96,000 al año'],
+      ['Comprobantes','Solo boleta de venta y ticket. No puede emitir factura'],
+      ['Cuánto paga','Una cuota fija al mes: categoría 1 hasta S/ 5,000 paga S/ 20 · categoría 2 hasta S/ 8,000 paga S/ 50'],
+      ['Libros contables','Ninguno'],
+      ['Declaración anual','No presenta']])+
+    globo(P.idea,'La idea en una frase',
+      'Paga una cuota fija, no lleva libros y no declara al año. A cambio, no puede emitir facturas ni crecer '+
+      'más allá de S/ 96,000.') },
+
+{ et:'Actividad 1', t:'La bodega de doña Rosa', clave:'a1',
+  h:'<p class="enc">La bodega de doña Rosa</p>'+
+    '<p class="sub">Cuatro preguntas sobre el NRUS. Si te equivocas, esa opción queda tachada.</p>' },
+
+{ et:'RER', t:'Régimen Especial de Renta',
+  h:'<p class="enc">RER · el siguiente escalón</p>'+
+    '<p class="sub">Para la pequeña empresa que ya necesita emitir facturas</p>'+
+    ficha('e','RER',[
+      ['Para quién','Personas naturales y personas jurídicas que compran y venden bienes o prestan servicios'],
+      ['Tope de ingresos','S/ 525,000 al año, en ingresos netos o en compras'],
+      ['Otros topes','Activos fijos hasta S/ 126,000 · hasta 10 trabajadores por turno'],
+      ['Comprobantes','Todos, incluida la factura'],
+      ['Cuánto paga','IGV 18 % · impuesto a la renta 1.5 % de los ingresos netos del mes'],
+      ['Declara con','Formulario Virtual 621, cada mes'],
+      ['Libros contables','Registro de compras y registro de ventas'],
+      ['Declaración anual','No presenta']])+
+    globo(P.expl,'Ojo con esto',
+      'Aquí el filtro más importante no es el monto sino la actividad. Hay un montón de rubros que no pueden '+
+      'estar en el RER, aunque vendan poco.') },
+
+{ et:'Actividad 2', t:'¿Puede o no puede?', clave:'a2',
+  h:'<p class="enc">¿Puede estar en el RER?</p>'+
+    '<p class="sub">Lleva cada negocio a su columna. En el celular, toca la ficha y después la columna.</p>' },
+
+{ et:'RMT', t:'Régimen MYPE Tributario',
+  h:'<p class="enc">RMT · pensado para la micro y pequeña empresa</p>'+
+    '<p class="sub">Paga menos mientras gana poco, y la tasa sube recién sobre el exceso</p>'+
+    ficha('m','RMT',[
+      ['Para quién','Micro y pequeñas empresas domiciliadas en el país: personas naturales, jurídicas, sucesiones indivisas y sociedades conyugales'],
+      ['Tope de ingresos','1,700 UIT al año'],
+      ['Quién queda fuera','Quien superó las 1,700 UIT el año anterior, quien está vinculado a empresas que juntas las superan, y las sucursales de empresas del exterior'],
+      ['Comprobantes','Todos'],
+      ['Pago a cuenta mensual','Hasta 300 UIT: 1 % de los ingresos netos · de 300 a 1,700 UIT: coeficiente o 1.5 %'],
+      ['Impuesto anual','10 % hasta 15 UIT de renta neta · 29.5 % sobre el exceso'],
+      ['Declara con','Formulario Virtual 621 cada mes y Formulario Virtual 710 al año'],
+      ['Libros contables','Según los ingresos: desde registro de ventas, compras y diario simplificado, hasta contabilidad completa']])+
+    globo(P.alum,'Lo que hay que retener',
+      'Es el único régimen con una escala: la primera parte de la ganancia paga 10 % y recién el exceso paga '+
+      '29.5 %. Por eso conviene tanto a la empresa que está creciendo.') },
+
+{ et:'Actividad 3', t:'Las tasas del RMT', clave:'a3',
+  h:'<p class="enc">¿Qué tasa va en cada caso?</p>'+
+    '<p class="sub">Lleva cada tasa junto a la situación que le corresponde.</p>' },
+
+{ et:'General', t:'Régimen General',
+  h:'<p class="enc">Régimen General · sin límites y sin excusas</p>'+
+    '<p class="sub">Donde caen todos los que no entran en los otros tres</p>'+
+    ficha('g','Régimen General',[
+      ['Para quién','Todas las personas naturales y jurídicas que generan rentas de tercera categoría'],
+      ['Tope de ingresos','No tiene'],
+      ['Limitaciones de actividad','Ninguna'],
+      ['Comprobantes','Todos'],
+      ['Pago a cuenta mensual','El mayor entre la cuota con coeficiente y la cuota con 1.5 %'],
+      ['Impuesto anual','29.5 % de la renta neta'],
+      ['Declara con','Formulario Virtual 621 cada mes y Formulario Virtual 710 al año'],
+      ['Libros contables','Según los ingresos, hasta contabilidad completa']])+
+    globo(P.expl,'Cómo sale el coeficiente',
+      'Se divide el impuesto calculado del año anterior entre los ingresos netos de ese mismo año, y se '+
+      'redondea a cuatro decimales. Si no hubo impuesto calculado, se usa directamente el 1.5 %.') },
+
+{ et:'Actividad 4', t:'Comprueba el Régimen General', clave:'a4',
+  h:'<p class="enc">Comprueba el Régimen General</p>'+
+    '<p class="sub">Cuatro preguntas, incluida la del coeficiente.</p>' },
+
+{ et:'Comparar', t:'Los cuatro, uno al lado del otro',
+  h:'<p class="enc">Los cuatro, uno al lado del otro</p>'+
+    '<p class="sub">Esta es la tabla que conviene llevarse a la memoria</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>&nbsp;</th><th>NRUS</th><th>RER</th><th>RMT</th><th>General</th></tr></thead><tbody>'+
+    '<tr><td>Tope al año</td><td>S/ 96,000</td><td>S/ 525,000</td><td>1,700 UIT</td><td>Sin tope</td></tr>'+
+    '<tr><td>Persona jurídica</td><td>No</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>'+
+    '<tr><td>Emite factura</td><td>No</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>'+
+    '<tr><td>IGV</td><td>Va en la cuota</td><td>18 %</td><td>18 %</td><td>18 %</td></tr>'+
+    '<tr><td>Renta mensual</td><td>S/ 20 o S/ 50</td><td>1.5 %</td><td>1 % o coeficiente</td><td>Coeficiente o 1.5 %</td></tr>'+
+    '<tr><td>Renta anual</td><td>—</td><td>—</td><td>10 % y 29.5 %</td><td>29.5 %</td></tr>'+
+    '<tr><td>Declaración anual</td><td>No</td><td>No</td><td>Sí, con el 710</td><td>Sí, con el 710</td></tr>'+
+    '<tr class="res"><td>Libros</td><td>Ninguno</td><td>Compras y ventas</td><td>Según ingresos</td><td>Según ingresos</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av">Para decidir mira en este orden: cuánto vende al año, a qué se dedica y si necesita '+
+    'emitir facturas. Con esas tres preguntas casi siempre basta.</div>' },
+
+{ et:'Actividad 5', t:'¿A qué régimen va cada negocio?', clave:'a5',
+  h:'<p class="enc">¿A qué régimen va cada negocio?</p>'+
+    '<p class="sub">Doce negocios, cuatro columnas. Toca la ficha y después la columna.</p>' },
+
+{ et:'Actividad 6', t:'Une cada régimen con su rasgo', clave:'a6',
+  h:'<p class="enc">Une cada régimen con su rasgo</p>'+
+    '<p class="sub">Cuatro frases que resumen cada uno.</p>' },
+
+{ et:'Actividad 7', t:'Crucigrama', clave:'a7',
+  h:'<p class="enc">Crucigrama</p>'+
+    '<p class="sub">Trece palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
+
+{ et:'Actividad 8', t:'Quiz final', clave:'a8',
+  h:'<p class="enc">Quiz final</p>'+
+    '<p class="sub">Cinco preguntas que cruzan los cuatro regímenes.</p>' },
+
+{ et:'Cierre', t:'Lo que te llevas',
+  h:'<p class="enc">Lo que te llevas de la sesión</p>'+
+    '<p class="sub">Tres preguntas y ya sabes el régimen</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>1 · ¿Cuánto vende al año?</h4><div class="c">'+
+      '<p>Hasta S/ 96,000 puede ser NRUS. Hasta S/ 525,000, RER. Hasta 1,700 UIT, RMT. Por encima de eso, '+
+      'Régimen General.</p></div></div>'+
+    '<div class="fc rj"><h4>2 · ¿A qué se dedica?</h4><div class="c">'+
+      '<p>Construcción, transporte de carga, casinos, agencias de viaje y las actividades profesionales quedan '+
+      'fuera del RER. Algunas también quedan fuera del NRUS.</p></div></div>'+
+    '<div class="fc"><h4>3 · ¿Necesita emitir facturas?</h4><div class="c">'+
+      '<p>Si sus clientes son empresas que piden factura, el NRUS queda descartado de entrada.</p></div></div>'+
+    '<div class="fc rj"><h4>Y una cuarta, si es empresa</h4><div class="c">'+
+      '<p>Las personas jurídicas no pueden estar en el NRUS, y las sucursales de empresas extranjeras tampoco '+
+      'pueden estar en el RMT.</p></div></div>'+
+    '</div>'+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Elegir mal el régimen le cuesta caro al negocio: o paga de más, o no puede facturarle a sus clientes, '+
+      'o termina con una multa de la SUNAT. Por eso esta decisión la toma el contador, no el dueño.')+
+    '<div class="av">Fuente: cartillas de la SUNAT del NRUS, el RER, el RMT y el Régimen General. '+
+    'Los montos en UIT y las cuotas se revisan cada año en sunat.gob.pe.</div>' }
+];
+
+/* ================= estado ================= */
+var LS='rt_sem7_v1';
+var CLAVES=['a1','a2','a3','a4','a5','a6','a7','a8'];
+function vacio(){ var g={ visto:{}, mal:{} }; CLAVES.forEach(function(k){ g[k]={}; }); return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+function cuantas(k){
+  var A=ACT[k];
+  if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arr')  return A.fichas.length;
+  if(A.tipo==='cruz') return A.palabras.length;
+  return A.lista.length;
+}
+function hechas(k){ return Object.keys(G[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+var i=0;
+
+/* ================= arrastre ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[data-f]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true); ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35'; f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display=''; f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null; f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    });
+    f.addEventListener('pointercancel', function(){
+      if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){ if(!el) return; el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450); }
+
+/* ================= vistas ================= */
+function cabTarea(k){
+  var A=ACT[k];
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">';
+}
+function vArr(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="cajas'+(A.cajas.length===2?' c2':'')+'">';
+  A.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>'; }).join('')+
+       '</div></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vPar(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var puesto=g[x.id], nom='';
+    A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelta aquí')+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vQuiz(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : (G.mal[k+'|'+n+'|'+j] ? ' mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         ((resuelto||cls===' mala')?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- crucigrama ---- */
+var CZ=null;
+function armaCruz(k){
+  var A=ACT[k];
+  var cel={}, num={}, orden=[];
+  A.palabras.forEach(function(w,n){
+    for(var j=0;j<w.p.length;j++){
+      var r=w.r+(w.dir==='V'?j:0), c=w.c+(w.dir==='H'?j:0);
+      var id=r+','+c;
+      if(!cel[id]) cel[id]={ r:r, c:c, letra:w.p.charAt(j), de:[] };
+      cel[id].de.push(n);
+    }
+  });
+  /* numeración de izquierda a derecha y de arriba a abajo */
+  var inicios=A.palabras.map(function(w,n){ return {n:n, r:w.r, c:w.c}; })
+    .sort(function(a,b){ return a.r-b.r || a.c-b.c; });
+  var sig=1, vistos={};
+  inicios.forEach(function(x){
+    var id=x.r+','+x.c;
+    if(vistos[id]===undefined){ vistos[id]=sig++; }
+    num[x.n]=vistos[id];
+  });
+  CZ={ cel:cel, num:num, clave:k };
+  return CZ;
+}
+function vCruz(k){
+  var A=ACT[k], g=G[k]||{}, z=armaCruz(k);
+  var h=cabTarea(k)+'<div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
+          '<table class="cuad"><tbody>';
+  for(var r=0;r<A.filas;r++){
+    h+='<tr>';
+    for(var c=0;c<A.cols;c++){
+      var cl=z.cel[r+','+c];
+      if(!cl){ h+='<td></td>'; continue; }
+      var inicio=null;
+      A.palabras.forEach(function(w,n){ if(w.r===r && w.c===c && inicio===null) inicio=z.num[n]; });
+      var resuelta=cl.de.some(function(n){ return g[A.palabras[n].p]; });
+      var todas=cl.de.every(function(n){ return g[A.palabras[n].p]; });
+      h+='<td class="v'+(todas?' lista':'')+'" data-r="'+r+'" data-c="'+c+'">'+
+         (inicio!==null?'<span class="n">'+inicio+'</span>':'')+
+         '<input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="fila '+(r+1)+' columna '+(c+1)+'"'+
+         (todas?' value="'+cl.letra+'" readonly':(resuelta?' value="'+cl.letra+'" readonly':''))+'>'+
+         '</td>';
+    }
+    h+='</tr>';
+  }
+  h+='</tbody></table></div><div class="pistas">';
+  ['H','V'].forEach(function(dir){
+    h+='<div><h5>'+(dir==='H'?'Horizontales':'Verticales')+'</h5><ol>';
+    A.palabras.map(function(w,n){ return {w:w,n:n}; })
+      .filter(function(x){ return x.w.dir===dir; })
+      .sort(function(a,b){ return z.num[a.n]-z.num[b.n]; })
+      .forEach(function(x){
+        h+='<li value="'+z.num[x.n]+'" class="'+(g[x.w.p]?'ok':'')+'">'+esc(x.w.pista)+
+           ' <span style="opacity:.6">('+x.w.p.length+')</span></li>';
+      });
+    h+='</ol></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vista(k){
+  var t=ACT[k].tipo;
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k) : vQuiz(k);
+}
+
+/* ================= dibujo ================= */
+function pinta(){
+  var s=D[i];
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.clave) h+=vista(s.clave);
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=0;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
+    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){ i=+b.dataset.p; elegida=null; pinta(); });
+  });
+  cablea();
+}
+
+var yaCruz={};
+function cablea(){
+  var lam=$('lam'), s=D[i];
+  if(!s.clave) return;
+  var k=s.clave, A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
+      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(); }
+      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+            b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  if(A.tipo==='cruz') cableaCruz(k, A, lam);
+}
+
+function cableaCruz(k, A, lam){
+  var g=G[k]||{};
+  function campo(r,c){ var td=lam.querySelector('.cuad td[data-r="'+r+'"][data-c="'+c+'"]');
+                       return td ? td.querySelector('input') : null; }
+  function letras(w){
+    var s='';
+    for(var j=0;j<w.p.length;j++){
+      var e=campo(w.r+(w.dir==='V'?j:0), w.c+(w.dir==='H'?j:0));
+      s += (e && e.value ? e.value.toUpperCase() : ' ');
+    }
+    return s;
+  }
+  function revisa(w){
+    if(g[w.p]) return;
+    var s=letras(w);
+    if(s.indexOf(' ')>=0){ yaCruz[w.p]=''; return; }
+    if(yaCruz[w.p]===s) return;
+    yaCruz[w.p]=s;
+    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+    else{
+      mal();
+      for(var j=0;j<w.p.length;j++){
+        var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
+        if(td) sacude(td);
+      }
+    }
+  }
+  qq('.cuad input', lam).forEach(function(inp){
+    var td=inp.parentNode, r=+td.dataset.r, c=+td.dataset.c;
+    inp.addEventListener('focus', function(){
+      qq('.cuad td.foco', lam).forEach(function(x){ x.classList.remove('foco'); });
+      td.classList.add('foco');
+    });
+    inp.addEventListener('input', function(){
+      var v=inp.value.replace(/[^A-Za-zÑñ]/g,'').toUpperCase();
+      inp.value=v.slice(-1);
+      if(inp.value){
+        /* salta a la siguiente casilla libre de la misma palabra */
+        var sig=campo(r,c+1) || campo(r+1,c);
+        if(sig && !sig.readOnly) sig.focus();
+      }
+      A.palabras.forEach(function(w){
+        var dentro=false;
+        for(var j=0;j<w.p.length;j++){
+          if(w.r+(w.dir==='V'?j:0)===r && w.c+(w.dir==='H'?j:0)===c){ dentro=true; break; }
+        }
+        if(dentro) revisa(w);
+      });
+    });
+    inp.addEventListener('keydown', function(e){
+      var d={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,0],ArrowUp:[-1,0]}[e.key];
+      if(d){ var x=campo(r+d[0], c+d[1]); if(x){ e.preventDefault(); x.focus(); } return; }
+      if(e.key==='Backspace' && !inp.value){
+        var a=campo(r,c-1) || campo(r-1,c);
+        if(a && !a.readOnly){ e.preventDefault(); a.value=''; a.focus(); }
+      }
+    });
+  });
+}
+
+/* ================= navegación ================= */
+function va(n){
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc');
+  e.classList.toggle('full');
+  document.body.style.overflow = e.classList.contains('full') ? 'hidden' : '';
+  $('btnFull').textContent = e.classList.contains('full') ? '✕ Salir' : '⛶ Pantalla completa';
+}
+$('btnFull').addEventListener('click', full);
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    if(e.target && e.target.closest && e.target.closest('.cruz')){ x0=null; return; }
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+}
+if(window.Aula){
+  Aula.iniciar({ sala:'REGT7', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true,
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(dentro) pinta();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
