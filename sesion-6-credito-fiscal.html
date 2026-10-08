@@ -314,63 +314,10 @@
   .elenco img{ height:104px; width:auto; display:block; }
   @media (max-width:560px){ .elenco img{ height:66px; } }
 
-  /* ---------- mini hoja de cálculo ---------- */
-  .hojaenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin-top:12px; }
-  table.hoja{ border-collapse:collapse; table-layout:fixed; width:max-content; background:#fff;
-              font-variant-numeric:tabular-nums; }
-  table.hoja th, table.hoja td{ border:1px solid #C9D2E6; padding:0; height:44px; }
-  table.hoja thead th{ background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
-                       text-align:center; letter-spacing:.06em; height:30px; }
-  table.hoja th.esq{ width:40px; background:#DFE6F5; }
-  table.hoja th.nf{ width:40px; background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
-                    text-align:center; }
-  table.hoja td{ font-size:20px; color:var(--tinta); }
-  table.hoja td .q{ display:block; padding:7px 9px; white-space:nowrap; overflow:hidden;
-                    text-overflow:ellipsis; }
-  table.hoja td.rot .q{ font-weight:700; }
-  table.hoja tr.enc td{ background:var(--marino); color:#fff; }
-  table.hoja tr.enc td .q{ font-weight:800; font-size:17px; letter-spacing:.02em; }
-  table.hoja td.num .q{ text-align:right; }
-  table.hoja td.dada{ background:#F3F6FD; }
-  table.hoja td.dada .q{ text-align:right; color:#44506F; }
-  table.hoja td.libre{ background:#FFFBEA; }
-  table.hoja td.libre input{ width:100%; height:44px; border:0; background:transparent; font:inherit;
-                             font-size:20px; text-align:right; padding:0 9px; color:var(--tinta);
-                             font-variant-numeric:tabular-nums; }
-  table.hoja td.libre input:focus{ outline:2px solid var(--fucsia); outline-offset:-2px;
-                                   background:#fff; text-align:left; }
-  table.hoja td.libre.ok{ background:#EAF7F7; }
-  table.hoja td.libre.ok input{ color:var(--verde); font-weight:700; }
-  table.hoja td.libre.mal{ background:#FBEDEC; }
-  table.hoja td.libre.mal input{ color:#8A201B; }
-  table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
-  .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#44506F; }
-  /* al escribir una fórmula se puede señalar la celda con el dedo o el ratón */
-  table.hoja.apunta td[data-cel]{ cursor:cell; }
-  table.hoja.apunta td[data-cel]:hover{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
-  table.hoja td.senalada{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
-  table.hoja.apunta td[data-cel]{ touch-action:none; }
-  table.hoja td.rango{ background:#FDE7EF; outline:2px dashed var(--fucsia); outline-offset:-2px; }
-  /* la celda elegida y el cuadradito de relleno, como en Excel */
-  table.hoja td.libre{ position:relative; }
-  table.hoja td.elegida{ outline:2px solid #217346; outline-offset:-2px; }
-  table.hoja td.relleno{ outline:2px dashed #217346; outline-offset:-2px; background:#EAF5EE; }
-  .asa{ position:absolute; right:-5px; bottom:-5px; width:11px; height:11px; z-index:3;
-        background:#217346; border:2px solid #fff; cursor:crosshair; touch-action:none; }
-  @media (pointer:coarse){ .asa{ width:18px; height:18px; right:-8px; bottom:-8px; } }
-  .avisofx{ display:none; margin:9px 0 0; font-size:18px; font-weight:700; color:var(--fucsia); }
-  .avisofx.ve{ display:block; }
-  .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
-  .hbar .fx{ font-size:18px; color:#55607F; line-height:1.5; }
-  .hbar .fx b{ color:var(--marino); font-weight:700; }
-  .pista-fx{ margin:12px 0 0; font-size:19px; line-height:1.6; color:#44506F;
-             border-left:3px solid var(--celeste); padding-left:11px; }
-  .pista-fx code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:18px;
-                  background:#EEF3FC; border-radius:4px; padding:1px 5px; color:var(--marino); }
-  @media (max-width:560px){
-    table.hoja td{ font-size:18px; } table.hoja td .q{ padding:6px 8px; }
-    table.hoja td.libre input{ font-size:18px; padding:0 8px; }
-  }
+  /* ---------- cálculos con casilla ---------- */
+  .caso{ margin:4px 0 14px; }
+  .linea .r button.o-btn{ white-space:nowrap; }
+  .linea .u{ min-width:22px; }
 
   /* ---------- crucigrama ---------- */
   .cruz{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
@@ -572,173 +519,6 @@ function globo2(a, b, et, txt){
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }
 
-/* ============ mini hoja de cálculo: fórmulas tipo Excel ============ */
-/* Soporta: + - * / ^ % ( ) , referencias A1, rangos A1:B4, comparaciones,
-   texto entre comillas y las funciones de uso diario, en español e inglés. */
-function HojaFx(leeCelda){
-
-  function letras(n){ var s=''; n++; while(n>0){ var r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=(n-1-r)/26; } return s; }
-  function col(s){ var n=0; for(var i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64); return n-1; }
-
-  function aNumero(v){
-    if(typeof v==='number') return v;
-    if(v===null || v===undefined) return 0;
-    var s=String(v).trim();
-    if(s==='') return 0;
-    s=s.replace(/\s/g,'').replace(/^S\/\.?/i,'');
-    /* 1,234.56 -> 1234.56 ; 1,234 -> 1234 (la coma solo separa miles) */
-    if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,'');
-    if(/%$/.test(s)){ var b=parseFloat(s.slice(0,-1)); return isNaN(b)?NaN:b/100; }
-    var n=parseFloat(s);
-    return (isNaN(n) || !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.test(s)) ? NaN : n;
-  }
-  function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
-  function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
-
-  var FN={
-    SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
-    PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
-                           if(!v.length) throw new Error('#DIV/0'); return v.reduce(function(x,y){return x+y;},0)/v.length; },
-    MIN:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.min.apply(null,v); },
-    MAX:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.max.apply(null,v); },
-    CONTAR:function(a){ return a.map(aNumero).filter(function(n){return !isNaN(n);}).length; },
-    PRODUCTO:function(a){ var p=1; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) p*=n; }); return p; },
-    ABS:   function(a){ return Math.abs(num(a[0])); },
-    ENTERO:function(a){ return Math.floor(num(a[0])); },
-    REDONDEAR: function(a){
-      var d=a.length>1 ? num(a[1]) : 0, f=Math.pow(10,d);
-      var x=num(a[0])*f;
-      /* Excel redondea el 0.5 hacia afuera */
-      return (x<0 ? -Math.round(-x) : Math.round(x))/f; },
-    SI:    function(a){ return bool(a[0]) ? a[1] : (a.length>2 ? a[2] : false); },
-    Y:     function(a){ return a.every(bool); },
-    O:     function(a){ return a.some(bool); },
-    NO:    function(a){ return !bool(a[0]); },
-    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
-  };
-  /* nombres en inglés y variantes con punto */
-  var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
-              ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
-              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
-
-  /* ---------- analizador ---------- */
-  function evalua(txt, pide){
-    var s=txt, i=0;
-    function esp(){ while(i<s.length && /\s/.test(s[i])) i++; }
-    function ojo(){ esp(); return s[i]; }
-    function come(t){ esp(); if(s.substr(i,t.length).toUpperCase()===t){ i+=t.length; return true; } return false; }
-
-    function expr(){
-      var a=suma();
-      for(;;){
-        esp();
-        var op=null;
-        if(s.substr(i,2)==='<>'||s.substr(i,2)==='>='||s.substr(i,2)==='<='){ op=s.substr(i,2); i+=2; }
-        else if(s[i]==='='||s[i]==='>'||s[i]==='<'){ op=s[i]; i++; }
-        else return a;
-        var b=suma(), x=aNumero(a), y=aNumero(b), cmp;
-        if(isNaN(x)||isNaN(y)) cmp=String(a).trim().toUpperCase().localeCompare(String(b).trim().toUpperCase());
-        else cmp = x<y ? -1 : x>y ? 1 : 0;
-        a = op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
-            op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
-      }
-    }
-    function suma(){
-      var a=mult();
-      for(;;){ esp();
-        if(s[i]==='+'){ i++; a=num(a)+num(mult()); }
-        else if(s[i]==='-'){ i++; a=num(a)-num(mult()); }
-        else if(s[i]==='&'){ i++; a=String(fmt(a))+String(fmt(mult())); }
-        else return a; }
-    }
-    function mult(){
-      var a=pot();
-      for(;;){ esp();
-        if(s[i]==='*'){ i++; a=num(a)*num(pot()); }
-        else if(s[i]==='/'){ i++; var d=num(pot()); if(d===0) throw new Error('#DIV/0'); a=num(a)/d; }
-        else return a; }
-    }
-    function pot(){ var a=unario(); esp(); if(s[i]==='^'){ i++; return Math.pow(num(a), num(pot())); } return a; }
-    function unario(){ esp();
-      if(s[i]==='-'){ i++; return -num(unario()); }
-      if(s[i]==='+'){ i++; return num(unario()); }
-      return porciento(); }
-    function porciento(){ var a=atomo(); esp(); if(s[i]==='%'){ i++; return num(a)/100; } return a; }
-
-    function atomo(){
-      esp();
-      if(s[i]==='('){ i++; var v=expr(); esp(); if(s[i]!==')') throw new Error('#FALTA )'); i++; return v; }
-      if(s[i]==='"'){ i++; var t=''; while(i<s.length && s[i]!=='"'){ t+=s[i++]; } i++; return t; }
-      var m=/^([A-Za-zÁÉÍÓÚÑ_][A-Za-z0-9ÁÉÍÓÚÑ_.]*)\s*\(/.exec(s.slice(i));
-      if(m){
-        var nom=m[1].toUpperCase(); nom=ALIAS[nom]||nom;
-        if(!FN[nom]) throw new Error('#NOMBRE');
-        i+=m[0].length;
-        var args=[];
-        esp();
-        if(s[i]===')'){ i++; }
-        else{
-          for(;;){
-            args.push(arg());
-            esp();
-            if(s[i]===','||s[i]===';'){ i++; continue; }
-            if(s[i]===')'){ i++; break; }
-            throw new Error('#FALTA )');
-          }
-        }
-        var llanos=[];
-        args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
-        return FN[nom](llanos);
-      }
-      var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
-      if(r){
-        var ini=i; i+=r[0].length;
-        esp();
-        if(s[i]===':'){
-          var j=i+1, resto=s.slice(j);
-          var r2=/^\s*(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(resto);
-          if(r2){
-            i=j+r2[0].length;
-            return { rango:true, valores:rango(r[2],+r[4],r2[2],+r2[4]) };
-          }
-        }
-        i=ini+r[0].length;
-        return pide(r[2].toUpperCase()+r[4]);
-      }
-      var n=/^\d*\.?\d+([eE][-+]?\d+)?/.exec(s.slice(i));
-      if(n){ i+=n[0].length; return parseFloat(n[0]); }
-      throw new Error('#ERROR');
-    }
-    function arg(){ return expr(); }
-    function rango(c1,f1,c2,f2){
-      var a=col(c1.toUpperCase()), b=col(c2.toUpperCase());
-      var x1=Math.min(a,b), x2=Math.max(a,b), y1=Math.min(f1,f2), y2=Math.max(f1,f2);
-      if((x2-x1+1)*(y2-y1+1) > 400) throw new Error('#RANGO');
-      var out=[];
-      for(var y=y1;y<=y2;y++) for(var x=x1;x<=x2;x++) out.push(pide(letras(x)+y));
-      return out;
-    }
-
-    var v=expr();
-    esp();
-    if(i<s.length) throw new Error('#ERROR');
-    if(v && v.rango) throw new Error('#VALOR');
-    return v;
-  }
-
-  function fmt(v){
-    if(typeof v==='boolean') return v?'VERDADERO':'FALSO';
-    if(typeof v==='number'){
-      if(!isFinite(v)) return '#NUM';
-      var r=Math.round(v*100)/100;
-      return r.toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
-    }
-    return String(v);
-  }
-
-  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras, col:col };
-}
-
 /* ================= sonido ================= */
 var son=true, ac=null;
 try{ son = localStorage.getItem('cf6_son')!=='0'; }catch(e){}
@@ -795,28 +575,21 @@ a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
         'En la práctica siempre se aplica junto, como 18 %.' } ] },
 
 /* 2 ------------------------------------------------------------- */
-a1:{ tipo:'hoja', titulo:'Actividad 2 · Tu Registro de Compras de marzo',
-  intro:'Seis comprobantes con el IGV incluido en el total. Saca la base, el IGV y decide cuánto es crédito '+
-        'fiscal. Escribe la fórmula en la fila 2 y arrástrala hacia abajo con el cuadradito verde de la esquina.',
-  cols:[{w:140},{w:300},{w:130},{w:150},{w:160},{w:130},{w:150}],
-  filas:[
-   [{x:'Comprobante'},{x:'Concepto'},{x:'Destino'},{x:'Total pagado'},{x:'Base imponible'},{x:'IGV'},{x:'Crédito fiscal'}],
-   [{x:'Factura'},{x:'Mercadería para revender'},{x:'Gravada'},{n:14927},{e:12650, f:true},{e:2277, f:true},{e:2277, f:true}],
-   [{x:'Factura'},{x:'Flete de la mercadería'},{x:'Gravada'},{n:1557.60},{e:1320, f:true},{e:237.60, f:true},{e:237.60, f:true}],
-   [{x:'Boleta'},{x:'Consumo en restaurante'},{x:'Gravada'},{n:2845.90},{e:2411.78, f:true},{e:434.12, f:true},{e:0, f:true}],
-   [{x:'Factura'},{x:'Envases para fruta fresca'},{x:'Exonerada'},{n:5251},{e:4450, f:true},{e:801, f:true},{e:0, f:true}],
-   [{x:'Factura'},{x:'Alquiler del local'},{x:'Gravada'},{n:4720},{e:4000, f:true},{e:720, f:true},{e:720, f:true}],
-   [{x:'Factura'},{x:'Reparación de la camioneta'},{x:'Gravada'},{n:3129.36},{e:2652, f:true},{e:477.36, f:true},{e:477.36, f:true}],
-   [{x:'TOTAL'},{x:''},{x:''},{e:32430.86, f:true},{e:27483.78, f:true},{e:4947.08, f:true},{e:3711.96, f:true}],
-   [{x:''},{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''},{x:''},{x:''}],
-   [{x:''},{x:'IGV que no da crédito: va al costo o gasto'},{x:''},{x:''},{x:''},{x:''},{e:1235.12, f:true}] ],
-  ayuda:'La base sale de dividir el total entre (1 + tasa) y redondear a 2 decimales con <b>REDONDEAR</b>. '+
-        'La tasa está en C9: fíjala con <b>$</b> (o pulsa <b>F4</b>) para que no se mueva al arrastrar. '+
-        'El IGV es el total menos la base. En G usa <b>SI</b> con <b>Y</b>: solo da crédito si es '+
-        '<b>Factura</b> y el destino es <b>Gravada</b>; si no, 0. Para los totales arrastra sobre el cuadro '+
-        'y arma el rango.',
-  fin:globo(P.idea,'Resuelto','De S/ 4,947.08 de IGV que pagaste, solo S/ 3,711.96 son crédito fiscal. '+
-      'La boleta no lo da y la compra para la fruta exonerada tampoco: esos S/ 1,235.12 se van al costo o al gasto.') },
+a1:{ tipo:'calc', titulo:'Actividad 2 · La factura con el IGV adentro',
+  intro:'Usa la calculadora de la esquina y escribe solo el resultado, con dos decimales.',
+  caso:'<div class="tabenv caso"><table class="t chica"><tbody>'+
+    '<tr><td>Factura por mercadería que vas a revender (total pagado, IGV incluido)</td><td style="text-align:right">S/ 14,927.00</td></tr>'+
+    '<tr><td>Boleta de un consumo en restaurante (total pagado)</td><td style="text-align:right">S/ 2,845.90</td></tr>'+
+    '</tbody></table></div>',
+  lista:[
+   { q:'¿Cuál es la base imponible de la factura? (total ÷ 1.18)', u:'S/', e:12650,
+     pq:'14,927 ÷ 1.18 = 12,650.00. El total ya trae el IGV adentro: no se le saca el 18 %, se divide entre 1.18.' },
+   { q:'¿Cuánto IGV tiene la factura?', u:'S/', e:2277,
+     pq:'Total menos base: 14,927.00 − 12,650.00 = 2,277.00.' },
+   { q:'Sumando las dos compras, ¿cuánto crédito fiscal tienes este mes?', u:'S/', e:2277,
+     pq:'Solo los 2,277.00 de la factura. La boleta no discrimina el IGV y no da crédito fiscal.' } ],
+  fin:globo(P.idea,'Resuelto','Un error muy común es calcular 18 % sobre el total: 14,927 × 18 % daría 2,686.86 '+
+      'y estarías tomando crédito de más. Si el total incluye el IGV, primero divides entre 1.18.') },
 
 /* 3 ------------------------------------------------------------- */
 a2:{ tipo:'arr', titulo:'Actividad 3 · ¿Da derecho a crédito fiscal?',
@@ -857,54 +630,41 @@ a3:{ tipo:'quiz', titulo:'Actividad 4 · Los requisitos formales',
      pq:'La boleta no discrimina el IGV y no da crédito fiscal. Por eso, si necesitas el crédito, pides factura.' } ] },
 
 /* 5 ------------------------------------------------------------- */
-a4:{ tipo:'hoja', titulo:'Actividad 7 · Tu Registro de Ventas y el IGV de marzo',
-  intro:'Cinco comprobantes de venta, uno de ellos una nota de crédito. Calcula el IGV de cada uno, los totales '+
-        'y cierra el mes con el crédito de la Actividad 2 y el saldo que venía de febrero.',
-  cols:[{w:190},{w:340},{w:160},{w:150},{w:200}],
-  filas:[
-   [{x:'Comprobante'},{x:'Cliente o detalle'},{x:'Valor de venta'},{x:'IGV'},{x:'Total'}],
-   [{x:'Factura F001-120'},{x:'Distribuidora Lima SAC'},{n:18457.30},{e:3322.31, f:true},{e:21779.61, f:true}],
-   [{x:'Factura F001-121'},{x:'Comercial Norte EIRL'},{n:26300},{e:4734, f:true},{e:31034, f:true}],
-   [{x:'Boletas del día'},{x:'Consumidores finales'},{n:7812.50},{e:1406.25, f:true},{e:9218.75, f:true}],
-   [{x:'Nota de crédito'},{x:'Devolución de Comercial Norte'},{n:-2150},{e:-387, f:true},{e:-2537, f:true}],
-   [{x:'Factura F001-122'},{x:'Tienda Sur SAC'},{n:11640.80},{e:2095.34, f:true},{e:13736.14, f:true}],
-   [{x:'TOTAL'},{x:''},{e:62060.60, f:true},{e:11170.90, f:true},{e:73231.50, f:true}],
-   [{x:''},{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''}],
-   [{x:''},{x:'Crédito fiscal del mes (Actividad 2)'},{x:''},{n:3711.96},{x:''}],
-   [{x:''},{x:'Saldo a favor que viene de febrero'},{x:''},{n:1250},{x:''}],
-   [{x:''},{x:'IGV a pagar'},{x:''},{e:6208.94, f:true},{x:''}],
-   [{x:''},{x:'Saldo a favor para abril'},{x:''},{e:0, f:true},{x:''}],
-   [{x:''},{x:'¿Qué haces este mes?'},{x:''},{e:'PAGAR', f:true},{x:''}] ],
-  ayuda:'IGV = valor de venta por la tasa de C8 (con <b>$</b>), redondeado a 2 decimales. La nota de crédito '+
-        'va en negativo y resta sola en la <b>SUMA</b>. El débito fiscal es D7. Para el pago usa '+
-        '<b>MAX</b>(débito − crédito − saldo anterior, 0); para el saldo, al revés. En D13 usa <b>SI</b> '+
-        'para que salga <b>"PAGAR"</b> o <b>"ARRASTRAR SALDO"</b>.',
-  fin:globo2(P.pres, P.bien,'Resuelto','Débito 11,170.90 menos crédito 3,711.96 menos el saldo de febrero '+
-      '1,250.00: pagas S/ 6,208.94. La nota de crédito bajó el débito en 387.00: sin ella pagarías de más.') },
+a4:{ tipo:'calc', titulo:'Actividad 7 · Cuánto IGV pagas en marzo',
+  intro:'Escribe el resultado con dos decimales. Puedes usar la calculadora de la esquina.',
+  caso:'<div class="tabenv caso"><table class="t chica"><tbody>'+
+    '<tr><td>Ventas gravadas de marzo (valor de venta)</td><td style="text-align:right">S/ 64,210.60</td></tr>'+
+    '<tr><td>Nota de crédito por una devolución (valor)</td><td style="text-align:right">S/ 2,150.00</td></tr>'+
+    '<tr><td>Crédito fiscal del mes</td><td style="text-align:right">S/ 3,711.96</td></tr>'+
+    '<tr><td>Saldo a favor que viene de febrero</td><td style="text-align:right">S/ 1,250.00</td></tr>'+
+    '</tbody></table></div>',
+  lista:[
+   { q:'¿Cuánto suman las ventas netas, restando la nota de crédito?', u:'S/', e:62060.60,
+     pq:'64,210.60 − 2,150.00 = 62,060.60. La nota de crédito baja la venta y también su IGV.' },
+   { q:'¿Cuál es el débito fiscal del mes? (18 % de las ventas netas)', u:'S/', e:11170.91,
+     pq:'62,060.60 × 18 % = 11,170.91.' },
+   { q:'¿Cuánto IGV pagas? (débito − crédito − saldo de febrero)', u:'S/', e:6208.95,
+     pq:'11,170.91 − 3,711.96 − 1,250.00 = 6,208.95. El saldo de febrero también se descuenta.' } ],
+  fin:globo2(P.pres, P.bien,'Resuelto','Si te olvidas de la nota de crédito pagas 387.00 de más, y si te '+
+      'olvidas del saldo de febrero, 1,250.00 de más. Esa es la cifra que va a la declaración del mes.') },
 
 /* 6 ------------------------------------------------------------- */
-a5:{ tipo:'hoja', titulo:'Actividad 8 · El saldo a favor de enero a junio',
-  intro:'En enero la empresa compró fuerte para una campaña. Arma la columna de enero con fórmulas y '+
-        'arrástrala hacia la derecha hasta junio. El saldo de cada mes tiene que llegar solo al siguiente.',
-  cols:[{w:350},{w:130},{w:130},{w:130},{w:130},{w:130},{w:130}],
-  filas:[
-   [{x:'Concepto'},{x:'Enero'},{x:'Febrero'},{x:'Marzo'},{x:'Abril'},{x:'Mayo'},{x:'Junio'}],
-   [{x:'Ventas gravadas (valor de venta)'},{n:42000},{n:38500},{n:51200},{n:47800},{n:60300},{n:55900}],
-   [{x:'Compras con derecho a crédito (valor)'},{n:96000},{n:30200},{n:36900},{n:38400},{n:41700},{n:39950}],
-   [{x:'Débito fiscal (IGV de ventas)'},{e:7560, f:true},{e:6930, f:true},{e:9216, f:true},{e:8604, f:true},{e:10854, f:true},{e:10062, f:true}],
-   [{x:'Crédito fiscal (IGV de compras)'},{e:17280, f:true},{e:5436, f:true},{e:6642, f:true},{e:6912, f:true},{e:7506, f:true},{e:7191, f:true}],
-   [{x:'Saldo a favor del mes anterior'},{n:0},{e:9720, f:true},{e:8226, f:true},{e:5652, f:true},{e:3960, f:true},{e:612, f:true}],
-   [{x:'IGV a pagar'},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:2259, f:true}],
-   [{x:'Saldo a favor para el mes siguiente'},{e:9720, f:true},{e:8226, f:true},{e:5652, f:true},{e:3960, f:true},{e:612, f:true},{e:0, f:true}],
-   [{x:'¿Qué sale?'},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'PAGAR', f:true}],
-   [{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''},{x:''},{x:''},{x:''}] ],
-  ayuda:'Débito y crédito: el valor por la tasa de B10, fijada con <b>$B$10</b> para que no se corra al '+
-        'arrastrar a la derecha. IGV a pagar con <b>MAX</b>(débito − crédito − saldo anterior, 0) y saldo '+
-        'siguiente con <b>MAX</b>(crédito + saldo anterior − débito, 0). En C6 el saldo anterior es el '+
-        '<b>B8</b> de la columna de al lado. En la fila 9 usa <b>SI</b>: <b>"PAGAR"</b> o <b>"A FAVOR"</b>.',
-  fin:globo(P.full,'Resuelto','Los S/ 9,720 que sobraron en enero cubrieron cinco meses seguidos: recién en '+
-      'junio se agotaron y se pagaron S/ 2,259. Es lo que manda el artículo 25°: el saldo se aplica en los '+
-      'meses siguientes hasta agotarlo.') },
+a5:{ tipo:'calc', titulo:'Actividad 8 · El saldo que se arrastra',
+  intro:'Sigue el saldo mes a mes y escribe solo el resultado.',
+  caso:'<div class="tabenv caso"><table class="t chica"><tbody>'+
+    '<tr><td>Enero · IGV de ventas / IGV de compras</td><td style="text-align:right">7,560.00 / 17,280.00</td></tr>'+
+    '<tr><td>Febrero · IGV de ventas / IGV de compras</td><td style="text-align:right">6,930.00 / 5,436.00</td></tr>'+
+    '<tr><td>Marzo · IGV de ventas / IGV de compras</td><td style="text-align:right">16,200.00 / 6,642.00</td></tr>'+
+    '</tbody></table></div>',
+  lista:[
+   { q:'¿Qué saldo a favor queda al cerrar enero?', u:'S/', e:9720,
+     pq:'17,280 − 7,560 = 9,720.00. En enero no pagas nada.' },
+   { q:'¿Qué saldo a favor queda al cerrar febrero?', u:'S/', e:8226,
+     pq:'9,720 + 5,436 − 6,930 = 8,226.00. El saldo de enero cubrió todo febrero.' },
+   { q:'¿Cuánto IGV pagas en marzo?', u:'S/', e:1332,
+     pq:'16,200 − 6,642 − 8,226 = 1,332.00. Recién en marzo se agota el saldo y toca pagar.' } ],
+  fin:globo(P.full,'Resuelto','El saldo a favor no se pierde ni se devuelve: se descuenta en los meses '+
+      'siguientes hasta agotarlo, como manda el artículo 25°.') },
 
 /* exoneradas e inafectas ---------------------------------------- */
 aE:{ tipo:'arr', titulo:'Actividad 5 · ¿Gravada, exonerada o inafecta?',
@@ -924,39 +684,26 @@ aE:{ tipo:'arr', titulo:'Actividad 5 · ¿Gravada, exonerada o inafecta?',
       'fuera de la ley; la exonerada está dentro, pero liberada por los Apéndices I y II mientras dure la exoneración.') },
 
 /* prorrata ------------------------------------------------------ */
-aP:{ tipo:'hoja', titulo:'Actividad 6 · La prorrata de marzo',
-  intro:'Esta empresa vende jugos (gravados) y fruta fresca (exonerada). Calcula el porcentaje de prorrata con '+
-        'los últimos 12 meses, marzo incluido, y cuánto IGV de las compras comunes puede usar.',
-  cols:[{w:420},{w:160},{w:190},{w:160}],
-  filas:[
-   [{x:'Mes'},{x:'Gravadas'},{x:'No gravadas'},{x:'Total'}],
-   [{x:'Abril'},{n:38200},{n:9800},{e:48000, f:true}],
-   [{x:'Mayo'},{n:41500},{n:11200},{e:52700, f:true}],
-   [{x:'Junio'},{n:36900},{n:12400},{e:49300, f:true}],
-   [{x:'Julio'},{n:44100},{n:10600},{e:54700, f:true}],
-   [{x:'Agosto'},{n:40250},{n:8950},{e:49200, f:true}],
-   [{x:'Septiembre'},{n:39800},{n:9300},{e:49100, f:true}],
-   [{x:'Octubre'},{n:42600},{n:10100},{e:52700, f:true}],
-   [{x:'Noviembre'},{n:47300},{n:12800},{e:60100, f:true}],
-   [{x:'Diciembre'},{n:58900},{n:15600},{e:74500, f:true}],
-   [{x:'Enero'},{n:35400},{n:8700},{e:44100, f:true}],
-   [{x:'Febrero'},{n:33750},{n:7900},{e:41650, f:true}],
-   [{x:'Marzo (mes que declaras)'},{n:45100},{n:11300},{e:56400, f:true}],
-   [{x:'TOTAL 12 MESES'},{e:503800, f:true},{e:128650, f:true},{e:632450, f:true}],
-   [{x:'Porcentaje de prorrata (%)'},{x:''},{x:''},{e:79.66, f:true}],
-   [{x:'IGV de compras solo para ventas gravadas'},{x:''},{x:''},{n:4230}],
-   [{x:'IGV de compras solo para ventas exoneradas'},{x:''},{x:''},{n:1180}],
-   [{x:'IGV de compras comunes (sirven a las dos)'},{x:''},{x:''},{n:6480}],
-   [{x:'Crédito por las compras comunes'},{x:''},{x:''},{e:5161.97, f:true}],
-   [{x:'Crédito fiscal total de marzo'},{x:''},{x:''},{e:9391.97, f:true}],
-   [{x:'IGV que va al costo o gasto'},{x:''},{x:''},{e:2498.03, f:true}] ],
-  ayuda:'Total de cada mes = gravadas + no gravadas: escribe D2 y arrástrala hasta D13. Totales con '+
-        '<b>SUMA</b>. El porcentaje es gravadas ÷ total × 100, con <b>REDONDEAR</b> a 2 decimales, como pide '+
-        'el Reglamento. Lo común se usa solo en ese porcentaje (también redondeado). Al crédito total súmale lo '+
-        'exclusivo de gravadas; lo exclusivo de exoneradas no entra nunca.',
-  fin:globo2(P.pres, P.bien,'Resuelto','El 79.66 % de las ventas del año fue gravado, así que de los S/ 6,480 '+
-      'comunes solo usas S/ 5,161.97. Con los S/ 4,230 exclusivos, tu crédito de marzo es S/ 9,391.97. '+
-      'El resto, S/ 2,498.03, es costo.') },
+aP:{ tipo:'calc', titulo:'Actividad 6 · La prorrata de marzo',
+  intro:'Esta empresa vende jugos (gravados) y fruta fresca (exonerada). Escribe solo el resultado.',
+  caso:'<div class="tabenv caso"><table class="t chica"><tbody>'+
+    '<tr><td>Ventas gravadas de los últimos 12 meses (marzo incluido)</td><td style="text-align:right">S/ 503,800.00</td></tr>'+
+    '<tr><td>Ventas exoneradas de los mismos 12 meses</td><td style="text-align:right">S/ 128,650.00</td></tr>'+
+    '<tr><td>IGV de compras solo para ventas gravadas</td><td style="text-align:right">S/ 4,230.00</td></tr>'+
+    '<tr><td>IGV de compras solo para ventas exoneradas</td><td style="text-align:right">S/ 1,180.00</td></tr>'+
+    '<tr><td>IGV de compras comunes (sirven a las dos)</td><td style="text-align:right">S/ 6,480.00</td></tr>'+
+    '</tbody></table></div>',
+  lista:[
+   { q:'¿Cuál es el porcentaje de prorrata? (gravadas ÷ total × 100, con dos decimales)', u:'%', e:79.66,
+     pq:'503,800 ÷ 632,450 × 100 = 79.66 %.' },
+   { q:'¿Cuánto crédito fiscal sale de las compras comunes?', u:'S/', e:5161.97,
+     pq:'6,480.00 × 79.66 % = 5,161.97. Lo común se usa solo en ese porcentaje.' },
+   { q:'¿Cuál es el crédito fiscal total de marzo?', u:'S/', e:9391.97,
+     pq:'4,230.00 de lo exclusivo de gravadas + 5,161.97 de lo común = 9,391.97. Lo exclusivo de exoneradas no entra.' },
+   { q:'¿Cuánto IGV de compras se va al costo o gasto?', u:'S/', e:2498.03,
+     pq:'1,180.00 + (6,480.00 − 5,161.97) = 2,498.03.' } ],
+  fin:globo2(P.pres, P.bien,'Resuelto','La prorrata solo toca lo común. Aplicarla a todo el IGV de compras, '+
+      'o no aplicarla, es el error que más se observa en una fiscalización.') },
 
 /* 7 ------------------------------------------------------------- */
 a6:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
@@ -1053,7 +800,7 @@ var D=[
       'Antes de declarar el IGV hay que entender una sola cosa: no entregas todo el impuesto que cobraste, '+
       'sino la diferencia con el que pagaste en tus compras. Ese descuento es el crédito fiscal, y solo lo '+
       'puedes usar si cumples ciertos requisitos, y si vendes exonerado o inafecto lo repartes con la prorrata. '+
-      'Once diapositivas, once actividades y cuatro hojas de cálculo donde trabajas como en Excel.') },
+      'Son 30 minutos: once diapositivas cortas, cada una con su actividad.') },
 
 /* 2 ------------------------------------------------------------- */
 { et:'Qué es', t:'Qué es el crédito fiscal', clave:'a1',
@@ -1066,7 +813,7 @@ var D=[
       'tu cliente. Cuando declaras, al IGV que cobraste le restas esos 2,160 que ya pagaste. Si no existiera '+
       'el crédito fiscal, el mismo impuesto se pagaría dos veces sobre el mismo producto.')+
     '<div class="av">La tasa es 18 %: 16 % de IGV y 2 % del Impuesto de Promoción Municipal. '+
-    'En la hoja de abajo se calcula junto, como 18 %, y los totales vienen con el IGV adentro.</div>' },
+    'Abajo se calcula junto, como 18 %. Ojo: cuando el total ya trae el IGV adentro, se divide entre 1.18.</div>' },
 
 /* 3 ------------------------------------------------------------- */
 { et:'Requisitos', t:'Requisitos sustanciales', clave:'a2',
@@ -1174,7 +921,7 @@ var D=[
     'y se descuenta ahí. Pasa mucho cuando la empresa compró mucho en un mes, por ejemplo al abrir o al '+
     'hacer una campaña.</div>'+
     globo(P.expl,'Tres meses seguidos',
-      'En la hoja de abajo vas a seguir el saldo de enero a junio. Fíjate cómo lo que sobra en un mes baja '+
+      'Abajo vas a seguir el saldo de enero a marzo. Fíjate cómo lo que sobra en un mes baja '+
       'el pago del siguiente, hasta que se agota.') },
 
 /* 7 ------------------------------------------------------------- */
@@ -1207,10 +954,10 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='cf_sem6_v2';
+var LS='cf_sem6_v3';
 /* en el mismo orden en que aparecen las diapositivas */
 var CLAVES=['a0','a1','a2','a3','aE','aP','a4','a5','a6','a7','a8'];
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+function vacio(){ var g={ visto:{}, mal:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 try{
@@ -1224,7 +971,7 @@ function graba(){
 /* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
 function fusiona(d){
   if(!d || typeof d!=='object') return;
-  ['visto','mal','hoja'].forEach(function(k){
+  ['visto','mal'].forEach(function(k){
     if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
   });
   CLAVES.forEach(function(k){
@@ -1241,11 +988,6 @@ function cuantas(k){
   if(A.tipo==='par')  return A.huecos.length;
   if(A.tipo==='arr')  return A.fichas.length;
   if(A.tipo==='cruz') return A.palabras.length;
-  if(A.tipo==='hoja'){
-    var n=0;
-    A.filas.forEach(function(fi){ fi.forEach(function(c){ if(c.e!==undefined) n++; }); });
-    return n;
-  }
   return A.lista.length;
 }
 function hechas(k){ return Object.keys(G[k]||{}).length; }
@@ -1457,92 +1199,32 @@ function vSel(k){
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
-/* ---- mini hoja de cálculo ---- */
-var FX=HojaFx(function(ref){ return pideCelda(ref); });
-var HOJA=null;   /* { k, celdas, memo, curso } mientras se calcula */
-
-function LET(j){ return FX.letras(j); }
-function txtCelda(k, id){
-  var t=(G.hoja||{})[k+'|'+id];
-  return (t===undefined || t===null) ? '' : String(t);
+/* ---- cálculo con casilla: se escribe solo el resultado ---- */
+function aNumero(t){
+  var s=String(t||'').replace(/\s/g,'').replace(/^S\/\.?/i,'').replace(/%$/,'');
+  if(/^-?\d+,\d{1,2}$/.test(s)) s=s.replace(',','.');      /* 12650,5 -> 12650.5 */
+  s=s.replace(/,/g,'');
+  return /^-?\d*\.?\d+$/.test(s) ? parseFloat(s) : NaN;
 }
-/* qué hay escrito en cada celda de la hoja que se está calculando */
-function crudoDe(k, id){
-  var A=ACT[k];
-  for(var r=0;r<A.filas.length;r++){
-    var fila=A.filas[r];
-    for(var j=0;j<fila.length;j++){
-      if(LET(j)+(r+1)!==id) continue;
-      var c=fila[j];
-      if(c.e!==undefined) return txtCelda(k, id);
-      if(c.form!==undefined) return c.form;
-      if(c.n!==undefined) return c.n;
-      return c.x===undefined ? '' : c.x;
-    }
-  }
-  return '';
-}
-function pideCelda(ref){
-  if(!HOJA) return 0;
-  if(Object.prototype.hasOwnProperty.call(HOJA.memo, ref)) return HOJA.memo[ref];
-  if(HOJA.curso[ref]) throw new Error('#CIRCULAR');
-  HOJA.curso[ref]=1;
-  var crudo=crudoDe(HOJA.k, ref), v;
-  if(crudo===undefined || crudo==='') v=0;
-  else if(typeof crudo==='number') v=crudo;
-  else if(/^\s*=/.test(String(crudo))) v=FX.evalua(String(crudo).replace(/^\s*=/,''), pideCelda);
-  else { var n=FX.aNumero(crudo); v = isNaN(n) ? String(crudo) : n; }
-  delete HOJA.curso[ref];
-  HOJA.memo[ref]=v;
-  return v;
-}
-function abreHoja(k){ HOJA={ k:k, memo:{}, curso:{} }; }
-function valorCelda(k, id){
-  try{ return { v:pideCelda(id) }; }
-  catch(e){ return { err:String(e.message||'#ERROR') }; }
-}
-
-function vHoja(k){
+function vCalc(k){
   var A=ACT[k], g=G[k]||{};
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="hojaenv"><table class="hoja"><thead><tr><th class="esq"></th>';
-  A.cols.forEach(function(c,j){ h+='<th style="width:'+c.w+'px">'+LET(j)+'</th>'; });
-  h+='</tr></thead><tbody>';
-  abreHoja(k);
-  A.filas.forEach(function(fila,r){
-    h+='<tr'+(r===0?' class="enc"':'')+'><th class="nf">'+(r+1)+'</th>';
-    fila.forEach(function(c,j){
-      var id=LET(j)+(r+1);
-      if(c.e!==undefined){
-        var hecho=(g[id]!==undefined), t=txtCelda(k,id), muestra=t;
-        if(t && /^\s*=/.test(t)){ var rv=valorCelda(k,id); muestra = rv.err ? rv.err : FX.fmt(rv.v); }
-        h+='<td class="libre'+(hecho?' ok':'')+'" data-cel="'+id+'">'+
-           '<input type="text" class="hc" spellcheck="false" autocomplete="off" inputmode="text" '+
-           'data-k="'+k+'" data-id="'+id+'" aria-label="celda '+id+'" '+
-           (hecho?'readonly ':'')+(c.ph?'placeholder="'+esc(c.ph)+'" ':'')+
-           'value="'+esc(muestra)+'"></td>';
-      }else if(c.form!==undefined){
-        var rf=valorCelda(k,id);
-        h+='<td class="dada'+(rf.err?' malf':'')+'" data-cel="'+id+'" data-fx="'+id+'" title="'+esc(c.form)+'"><span class="q">'+
-           esc(rf.err ? rf.err : FX.fmt(rf.v))+'</span></td>';
-      }else if(c.n!==undefined){
-        h+='<td class="dada num" data-cel="'+id+'"><span class="q">'+
-           esc(c.pct ? Math.round(c.n*10000)/100+'%' : FX.fmt(c.n))+'</span></td>';
-      }else{
-        h+='<td'+(r===0?'':' class="rot"')+' data-cel="'+id+'"><span class="q">'+esc(c.x||'')+'</span></td>';
-      }
-    });
-    h+='</tr>';
+  if(A.caso) h+=A.caso;
+  h+='<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+(n+1)+'. '+esc(x.q)+
+         (ok?'<small class="pre">'+esc(x.pq)+'</small>':'')+'</span>'+
+       '<span class="r"><span class="u">'+esc(x.u||'')+'</span>'+
+         '<input type="text" class="cel'+(ok?' bien':'')+'" inputmode="decimal" autocomplete="off" '+
+         'data-c="'+k+'" data-n="'+n+'" aria-label="'+esc(x.q)+'"'+
+         (ok?' readonly value="'+esc(x.e.toLocaleString('es-PE',{minimumFractionDigits:2}))+'"':'')+'>'+
+         (ok?'':'<button type="button" class="o-btn o-btn-primary" data-cc="'+k+'" data-n="'+n+'">Comprobar</button>')+
+       '</span></div>';
   });
-  h+='</tbody></table></div>';
-  h+='<p class="avisofx">Toca una celda para meterla en la f&oacute;rmula, o arrastra sobre el cuadro '+
-     'para meter un rango. <b>F4</b> fija la celda con $.</p>';
-  h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
-     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b> y '+
-     'c&oacute;piala arrastrando el <b>cuadradito verde</b> de la esquina. Funciones: <b>SUMA</b>, '+
-     '<b>REDONDEAR</b>, <b>SI</b>, <b>Y</b>, <b>O</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
-  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  h+='</div>';
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1550,7 +1232,7 @@ function vHoja(k){
 function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
-       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : vQuiz(k);
+       : t==='sel' ? vSel(k) : t==='calc' ? vCalc(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1630,356 +1312,22 @@ function cablea(){
     });
   });
 
-  if(A.tipo==='hoja') cableaHoja(k, A, lam);
+  if(A.tipo==='calc'){
+    qq('#lam input[data-c]', lam).forEach(function(inp){
+      var n=+inp.dataset.n, x=A.lista[n];
+      function revisa(){
+        var v=aNumero(inp.value);
+        if(isNaN(v)){ sopla('Escribe solo el número, por ejemplo 1250.50'); inp.focus(); return; }
+        if(Math.abs(v-x.e) < 0.05){ G[k][n]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+        else{ G.mal[k+'|'+n+'|'+v]=1; graba(); mal(); inp.classList.add('mal'); sacude(inp.closest('.linea'));
+              setTimeout(function(){ inp.classList.remove('mal'); }, 900); }
+      }
+      inp.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+      var b=lam.querySelector('button[data-cc="'+k+'"][data-n="'+n+'"]');
+      if(b) b.addEventListener('click', revisa);
+    });
+  }
   if(A.tipo==='cruz') cableaCruz(k, A, lam);
-}
-
-/* lo que hay escrito antes del cursor, sin espacios al final */
-function antesDelCursor(inp){
-  var v=inp.value;
-  var pos = (inp.selectionStart===null || inp.selectionStart===undefined) ? v.length : inp.selectionStart;
-  return v.slice(0, pos).replace(/\s+$/,'');
-}
-function enFormula(inp){ return !!(inp && inp.value && /^\s*=/.test(inp.value)); }
-/* ¿la fórmula espera una referencia? (justo después de = o de un operador) */
-function esperaRef(inp){
-  if(!enFormula(inp)) return false;
-  var antes=antesDelCursor(inp);
-  /* el % va detrás del número, así que ahí ya no se espera nada */
-  return /(^\s*=|[+\-*/^(,;:&<>=])$/.test(antes);
-}
-/* ¿lo último escrito es el nombre de una celda? entonces se puede cambiar o ampliar */
-function terminaEnRef(inp){
-  if(!enFormula(inp)) return false;
-  return /[A-Za-z]{1,2}\d{1,4}$/.test(antesDelCursor(inp));
-}
-/* mete el nombre de la celda donde está el cursor, como hace Excel.
-   Devuelve lo que queda antes y después, para poder estirarlo a un rango al arrastrar. */
-function meteRef(inp, ref, modo){
-  var v=inp.value;
-  var a = inp.selectionStart===null ? v.length : inp.selectionStart;
-  var b = inp.selectionEnd===null   ? v.length : inp.selectionEnd;
-  var izq=v.slice(0,a), der=v.slice(b), m=/([A-Za-z]{1,2}\d{1,4})$/.exec(izq);
-  var pre;
-  if(modo==='extender' && m){
-    pre = izq.slice(0, izq.length-m[1].length) + m[1].toUpperCase() + ':';
-  }else if(modo==='reemplazar' && m){
-    pre = izq.slice(0, izq.length-m[1].length);
-  }else{
-    pre = izq;
-  }
-  ponTexto(inp, pre, ref, der);
-  return { pre:pre, der:der, ini:(modo==='extender' ? null : ref) };
-}
-function ponTexto(inp, pre, ref, der){
-  inp.value = pre + ref + der;
-  var p = (pre+ref).length;
-  try{ inp.setSelectionRange(p,p); }catch(e){}
-}
-function partes(id){ var m=/^([A-Z]{1,2})(\d+)$/.exec(id); return { c:FX.col(m[1]), r:+m[2] }; }
-/* rango ordenado de arriba-izquierda a abajo-derecha, como lo escribe Excel */
-function rangoDe(a, b){
-  var x=partes(a), y=partes(b);
-  return LET(Math.min(x.c,y.c))+Math.min(x.r,y.r)+':'+LET(Math.max(x.c,y.c))+Math.max(x.r,y.r);
-}
-function celdasDe(a, b){
-  var x=partes(a), y=partes(b), out=[];
-  for(var r=Math.min(x.r,y.r); r<=Math.max(x.r,y.r); r++)
-    for(var c=Math.min(x.c,y.c); c<=Math.max(x.c,y.c); c++) out.push(LET(c)+r);
-  return out;
-}
-/* copia una fórmula a otra celda: las referencias se corren salvo las fijadas con $ */
-function desplaza(f, dr, dc){
-  if(!/^\s*=/.test(f)) return f;
-  return f.replace(/"[^"]*"?|[A-Za-z_$][A-Za-z0-9_.$]*\(?/g, function(t){
-    if(t[0]==='"' || /\($/.test(t)) return t;
-    var m=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(t);
-    if(!m) return t;
-    var c=FX.col(m[2].toUpperCase()) + (m[1] ? 0 : dc), r=(+m[4]) + (m[3] ? 0 : dr);
-    if(c<0 || r<1) return '#REF!';
-    return m[1]+LET(c)+m[3]+r;
-  });
-}
-/* F4: A1 -> $A$1 -> A$1 -> $A1 -> A1 en la referencia junto al cursor */
-function fijaRef(inp){
-  var v=inp.value, a=inp.selectionStart===null ? v.length : inp.selectionStart;
-  var izq=v.slice(0,a), der=v.slice(a);
-  var m=/(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(izq);
-  if(!m){ var md=/^(\$?[A-Za-z]{0,2}\$?\d{0,4})/.exec(der);
-          if(md && md[1]){ izq+=md[1]; der=der.slice(md[1].length); m=/(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(izq); } }
-  if(!m) return false;
-  var sig = (!m[1]&&!m[3]) ? ['$','$'] : (m[1]&&m[3]) ? ['','$'] : (!m[1]&&m[3]) ? ['$',''] : ['',''];
-  var nueva=sig[0]+m[2].toUpperCase()+sig[1]+m[4];
-  izq=izq.slice(0, izq.length-m[0].length)+nueva;
-  inp.value=izq+der;
-  try{ inp.setSelectionRange(izq.length, izq.length); }catch(e){}
-  return true;
-}
-
-/* ---- la hoja: escribir, recalcular, arrastrar y comprobar ---- */
-var SEL=null;   /* { k, id } la celda elegida, la del cuadradito de relleno */
-function cableaHoja(k, A, lam){
-  var inps=qq('#lam td.libre input', lam);
-  var tabla=lam.querySelector('table.hoja');
-  var aviso=lam.querySelector('.avisofx');
-  var asa=document.createElement('div'); asa.className='asa';
-  asa.title='Arrastra para copiar la fórmula';
-
-  function defDe(id){ var p=partes(id), f=A.filas[p.r-1]; return f ? f[p.c] : null; }
-  function tdDe(id){ return lam.querySelector('table.hoja td[data-cel="'+id+'"]'); }
-  function libre(id){ var c=defDe(id); return !!(c && c.e!==undefined); }
-
-  function pintaApunta(){
-    var act=document.activeElement;
-    var on = !!(act && act.classList && act.classList.contains('hc') &&
-                (esperaRef(act) || terminaEnRef(act)));
-    if(tabla) tabla.classList.toggle('apunta', on);
-    if(aviso) aviso.classList.toggle('ve', on);
-  }
-  /* la celda elegida lleva el borde verde y, si tiene algo, el cuadradito */
-  function elige(id){
-    qq('td.elegida', tabla).forEach(function(x){ x.classList.remove('elegida'); });
-    SEL = id ? { k:k, id:id } : null;
-    if(asa.parentNode) asa.parentNode.removeChild(asa);
-    if(!id) return;
-    var td=tdDe(id); if(!td) return;
-    td.classList.add('elegida');
-    if(txtCelda(k,id).trim()!=='') td.appendChild(asa);
-  }
-
-  function recalcula(salvo){
-    abreHoja(k);
-    inps.forEach(function(x){
-      if(x===salvo) return;
-      var t=txtCelda(k, x.dataset.id);
-      if(t && /^\s*=/.test(t)){
-        var r=valorCelda(k, x.dataset.id);
-        x.value = r.err ? r.err : FX.fmt(r.v);
-        x.classList.toggle('malf', !!r.err);
-      }else{
-        x.value = t;
-        x.classList.remove('malf');
-      }
-    });
-    /* las celdas fijas con fórmula también se refrescan */
-    A.filas.forEach(function(fila,r){
-      fila.forEach(function(c,j){
-        if(c.form===undefined) return;
-        var id=LET(j)+(r+1);
-        var td=lam.querySelector('td.dada[data-fx="'+id+'"]');
-        if(!td) return;
-        var rr=valorCelda(k, id);
-        td.querySelector('.q').textContent = rr.err ? rr.err : FX.fmt(rr.v);
-        td.classList.toggle('malf', !!rr.err);
-      });
-    });
-  }
-
-  inps.forEach(function(x){
-    x.addEventListener('focus', function(){ elige(x.dataset.id); });
-    if(x.readOnly) return;
-    x.addEventListener('focus', function(){
-      var t = txtCelda(k, x.dataset.id);
-      x.value = t;
-      /* se selecciona al entrar, como en Excel, pero sin comerse lo que ya escribió */
-      setTimeout(function(){ if(x.value===t){ try{ x.select(); }catch(e){} } pintaApunta(); }, 0);
-    });
-    x.addEventListener('input', function(){
-      G.hoja[k+'|'+x.dataset.id] = x.value;
-      pintaApunta();
-    });
-    ['keyup','click','select'].forEach(function(ev){
-      x.addEventListener(ev, pintaApunta);
-    });
-    x.addEventListener('blur', function(){
-      G.hoja[k+'|'+x.dataset.id] = x.value;
-      graba();
-      recalcula(null);
-      pintaApunta();
-      if(SEL && SEL.id===x.dataset.id) elige(x.dataset.id);
-    });
-    x.addEventListener('keydown', function(e){
-      if(e.key==='F4' && enFormula(x)){
-        e.preventDefault();
-        if(fijaRef(x)){ G.hoja[k+'|'+x.dataset.id]=x.value; pintaApunta(); }
-      }else if(e.key==='Enter'){
-        /* Enter baja a la celda de abajo, como en Excel */
-        e.preventDefault();
-        var p=partes(x.dataset.id), td=tdDe(LET(p.c)+(p.r+(e.shiftKey?-1:1)));
-        var sig=td ? td.querySelector('input.hc') : null;
-        if(sig) sig.focus(); else x.blur();
-      }else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
-    });
-  });
-
-  /* tocar una celda del cuadro mete su nombre en la fórmula; arrastrar arma el rango */
-  var arr=null;
-  function marcaRango(ids){
-    qq('td.rango', tabla).forEach(function(x){ x.classList.remove('rango'); });
-    (ids||[]).forEach(function(id){ var td=tdDe(id); if(td) td.classList.add('rango'); });
-  }
-  function celdaBajo(ev){
-    var el=document.elementFromPoint(ev.clientX, ev.clientY);
-    var td=el && el.closest ? el.closest('td[data-cel]') : null;
-    return (td && tabla.contains(td)) ? td.dataset.cel : null;
-  }
-  qq('#lam table.hoja td[data-cel]', lam).forEach(function(td){
-    td.addEventListener('pointerdown', function(ev){
-      var act=document.activeElement;
-      if(!act || !act.classList || !act.classList.contains('hc') || act.readOnly) return;
-      if(td.contains(act)) return;                 /* es la celda que estoy editando */
-      var modo = esperaRef(act) ? 'insertar'
-               : (terminaEnRef(act) ? (ev.shiftKey ? 'extender' : 'reemplazar') : null);
-      if(!modo) return;                            /* la fórmula no admite una celda aquí */
-      ev.preventDefault(); ev.stopPropagation();   /* no se pierde el foco */
-      var m=meteRef(act, td.dataset.cel, modo);
-      arr={ inp:act, pre:m.pre, der:m.der, ini:m.ini || td.dataset.cel, ext:!m.ini, fin:td.dataset.cel };
-      G.hoja[k+'|'+act.dataset.id] = act.value;
-      marcaRango([td.dataset.cel]);
-      pintaApunta();
-    });
-  });
-  function arrMueve(ev){
-    if(!arr) return;
-    var id=celdaBajo(ev);
-    if(!id || id===arr.fin) return;
-    arr.fin=id;
-    var ref = arr.ext ? id : (id===arr.ini ? id : rangoDe(arr.ini, id));
-    ponTexto(arr.inp, arr.pre, ref, arr.der);
-    G.hoja[k+'|'+arr.inp.dataset.id] = arr.inp.value;
-    marcaRango(arr.ext ? [id] : celdasDe(arr.ini, id));
-  }
-  function arrSuelta(){
-    if(!arr) return;
-    var inp=arr.inp; arr=null;
-    setTimeout(function(){ marcaRango([]); }, 380);
-    try{ inp.focus(); }catch(e){}
-    pintaApunta();
-  }
-
-  /* el cuadradito de relleno: copia la fórmula hacia abajo o hacia el costado */
-  var rel=null;
-  function destinos(desde, hasta){
-    var a=partes(desde), b=partes(hasta), out=[];
-    if(Math.abs(b.r-a.r) >= Math.abs(b.c-a.c)){
-      var pr = b.r>a.r ? 1 : -1;
-      for(var r=a.r+pr; b.r!==a.r && r!==b.r+pr; r+=pr) out.push({ id:LET(a.c)+r, dr:r-a.r, dc:0 });
-    }else{
-      var pc = b.c>a.c ? 1 : -1;
-      for(var c=a.c+pc; c!==b.c+pc; c+=pc) out.push({ id:LET(c)+a.r, dr:0, dc:c-a.c });
-    }
-    return out.filter(function(d){ return d.id.indexOf('-')<0 && partes(d.id).r>=1 && defDe(d.id); });
-  }
-  asa.addEventListener('pointerdown', function(ev){
-    if(!SEL) return;
-    ev.preventDefault(); ev.stopPropagation();
-    var act=document.activeElement;
-    if(act && act.classList && act.classList.contains('hc')) act.blur();   /* guarda lo escrito */
-    rel={ desde:SEL.id, lista:[] };
-    try{ asa.setPointerCapture(ev.pointerId); }catch(e){}
-  });
-  function relMueve(ev){
-    if(!rel) return;
-    var id=celdaBajo(ev); if(!id) return;
-    rel.lista=destinos(rel.desde, id);
-    qq('td.relleno', tabla).forEach(function(x){ x.classList.remove('relleno'); });
-    rel.lista.forEach(function(d){ var td=tdDe(d.id); if(td) td.classList.add('relleno'); });
-  }
-  function relSuelta(){
-    if(!rel) return;
-    var r=rel; rel=null;
-    qq('td.relleno', tabla).forEach(function(x){ x.classList.remove('relleno'); });
-    var f=txtCelda(k, r.desde), n=0;
-    r.lista.forEach(function(d){
-      if(!libre(d.id) || G[k][d.id]!==undefined) return;   /* datos fijos y celdas ya resueltas no se tocan */
-      G.hoja[k+'|'+d.id] = desplaza(f, d.dr, d.dc); n++;
-      var td=tdDe(d.id); if(td) td.classList.remove('mal');
-    });
-    if(!n) return;
-    graba();
-    recalcula(null);
-    elige(r.desde);
-  }
-
-  /* al arrastrar cerca del borde, la lámina se desplaza sola, como en Excel */
-  var ultimo=null, reloj=null, env=lam.querySelector('.hojaenv');
-  function bordea(){
-    if(!ultimo || (!arr && !rel)){ clearInterval(reloj); reloj=null; return; }
-    var r=lam.getBoundingClientRect(), y=ultimo.clientY, x=ultimo.clientX, h=0, v=0;
-    if(y > r.bottom-48) v=16; else if(y < r.top+48) v=-16;
-    if(env){ var e=env.getBoundingClientRect();
-             if(x > e.right-40) h=16; else if(x < e.left+40) h=-16; }
-    if(v) lam.scrollTop+=v;
-    if(h && env) env.scrollLeft+=h;
-    if(v || h){ arrMueve(ultimo); relMueve(ultimo); }
-  }
-  function mueve(ev){
-    if(!arr && !rel) return;
-    ultimo={ clientX:ev.clientX, clientY:ev.clientY };
-    arrMueve(ev); relMueve(ev);
-    if(!reloj) reloj=setInterval(bordea, 40);
-  }
-  function suelta(){ ultimo=null; arrSuelta(); relSuelta(); }
-  document.addEventListener('pointermove', mueve);
-  document.addEventListener('pointerup', suelta);
-  document.addEventListener('pointercancel', suelta);
-  /* la hoja se vuelve a dibujar al comprobar: se sueltan los oyentes viejos */
-  if(window._sueltaHoja) window._sueltaHoja();
-  window._sueltaHoja=function(){
-    document.removeEventListener('pointermove', mueve);
-    document.removeEventListener('pointerup', suelta);
-    document.removeEventListener('pointercancel', suelta);
-  };
-
-  var btn=lam.querySelector('button[data-chk]');
-  if(btn) btn.addEventListener('click', function(){ compruebaHoja(k, A, lam, recalcula); });
-
-  recalcula(null);
-  if(SEL && SEL.k===k && tdDe(SEL.id)) elige(SEL.id);
-}
-
-function compruebaHoja(k, A, lam, recalcula){
-  recalcula(null);
-  abreHoja(k);
-  var nuevas=0, fallas=0, faltan=0, primerFallo=null;
-  A.filas.forEach(function(fila,r){
-    fila.forEach(function(c,j){
-      if(c.e===undefined) return;
-      var id=LET(j)+(r+1);
-      if(G[k][id]!==undefined) return;                 /* ya estaba bien */
-      var td=lam.querySelector('td.libre[data-cel="'+id+'"]');
-      var t=txtCelda(k, id).trim();
-      td.classList.remove('mal');
-      if(t===''){ faltan++; return; }
-      if(c.f && !/^=/.test(t)){
-        fallas++; td.classList.add('mal');
-        if(!primerFallo) primerFallo='En '+id+' escribe la f&oacute;rmula, no el resultado. Empieza con =';
-        return;
-      }
-      var rv=valorCelda(k, id);
-      if(rv.err){
-        fallas++; td.classList.add('mal');
-        if(!primerFallo) primerFallo='La f&oacute;rmula de '+id+' no se entiende ('+esc(rv.err)+').';
-        return;
-      }
-      var acierta;
-      if(typeof c.e==='string'){
-        acierta = String(rv.v).trim().toUpperCase() === c.e.trim().toUpperCase();
-      }else{
-        var n=FX.aNumero(rv.v);
-        acierta = !isNaN(n) && Math.abs(n-c.e) < 0.05;
-      }
-      if(acierta){ G[k][id]=1; nuevas++; td.classList.add('ok'); }
-      else{ fallas++; td.classList.add('mal');
-            if(!primerFallo) primerFallo='El resultado de '+id+' todav&iacute;a no cuadra.'; }
-    });
-  });
-  graba();
-  if(nuevas && !fallas) { if(lista(k)) fanfarria(); else bien(); }
-  else if(fallas) mal();
-  if(fallas) sopla(primerFallo ? primerFallo.replace(/&oacute;/g,'ó').replace(/&iacute;/g,'í') : 'Revisa las celdas en rojo');
-  else if(!nuevas && faltan) sopla('Todavía te faltan '+faltan+(faltan===1?' celda':' celdas'));
-  pinta(true);
 }
 
 function cableaCruz(k, A, lam){
