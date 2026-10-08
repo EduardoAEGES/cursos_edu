@@ -41,6 +41,12 @@
                 padding:8px 11px; background:#F3F5F8; border-bottom:1px solid var(--o-border); }
 .aula-vtna .vn{ font-size:13px; font-weight:800; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .aula-vtna .vs{ font-size:10.5px; font-weight:700; color:var(--o-muted); flex:none; }
+/* la ✕ para sacar de la sala a quien no es de la clase */
+.aula-saca{ flex:none; font:inherit; font-size:12px; line-height:1; cursor:pointer;
+  border:0; border-radius:5px; padding:3px 6px; margin:-2px -3px -2px 0;
+  background:transparent; color:#B9B9C0; }
+.aula-saca:hover{ background:#FBEDEC; color:#C0392B; }
+.aula-saca:focus-visible{ outline:2px solid #C0392B; outline-offset:1px; }
 .aula-vtna .ve{ padding:6px 11px 2px; font-size:11px; color:var(--o-muted);
                 display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
 .aula-vtna .vp{ padding:6px 11px 9px; font-size:11.5px; display:flex; justify-content:space-between; gap:8px; }
