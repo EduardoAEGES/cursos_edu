@@ -417,10 +417,11 @@
   </div>
 
   <div class="puerta" id="puerta">
-    <h2>Antes de empezar, reg&iacute;strate</h2>
-    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente. La primera vez agrega tus apellidos y
-       nombres; despu&eacute;s basta con el DNI. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas
-       aunque cierres la sesi&oacute;n o entres desde otro equipo.</p>
+    <h2>Ingresa con tu DNI</h2>
+    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
+       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
+       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
+       sesi&oacute;n o entres desde otro equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -1470,7 +1471,10 @@ function pantalla(e, alumno, cont){
 if(window.Aula){
   Aula.iniciar({ sala:'REGT7', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
-    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; } },
+    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
+            limpia:function(){ G=vacio(); yaCruz={}; i=0;
+              try{ localStorage.removeItem(LS); }catch(e){}
+              pinta(); } },
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }

@@ -20,7 +20,8 @@
 
 /* ficha del alumno: el DNI y el aviso de registro */
 #aulaCdni input{ width:112px; letter-spacing:.14em; font-variant-numeric:tabular-nums; }
-#aulaCnom input{ min-width:200px; }
+#aulaCnom input{ width:230px; }
+#aulaCnom[hidden]{ display:none !important; }
 .aula-ficha{ flex-basis:100%; font-size:12.5px; line-height:1.5; color:#5A5A5A; }
 .aula-ficha:empty{ display:none; }
 .aula-ficha.ok{ color:#1C6E4E; }
