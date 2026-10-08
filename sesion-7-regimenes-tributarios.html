@@ -66,6 +66,22 @@
              background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
              border-radius:7px; padding:7px 10px; }
   .cab .btf:hover{ background:rgba(252,0,69,.85); border-color:transparent; }
+  /* interruptor del modo de clase: solo lo ve el docente */
+  .cab .btm{ flex:none; font:inherit; font-size:12.5px; font-weight:800; line-height:1; cursor:pointer;
+             display:flex; align-items:center; gap:7px; white-space:nowrap;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:99px; padding:6px 12px 6px 7px; }
+  .cab .btm .bola{ width:30px; height:16px; border-radius:99px; background:rgba(255,255,255,.3);
+                   position:relative; flex:none; transition:background .18s ease; }
+  .cab .btm .bola::after{ content:''; position:absolute; top:2px; left:2px; width:12px; height:12px;
+                          border-radius:50%; background:#fff; transition:transform .18s ease; }
+  .cab .btm.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+  .cab .btm.on .bola{ background:rgba(7,23,103,.35); }
+  .cab .btm.on .bola::after{ transform:translateX(14px); }
+  .cab .pil{ flex:none; font-size:12px; font-weight:800; letter-spacing:.03em; white-space:nowrap;
+             background:var(--celeste); color:var(--marino); border-radius:99px; padding:5px 11px; }
+  @media (max-width:860px){ .cab .btm .tx{ display:none; } .cab .btm{ padding:6px 8px; }
+                            .cab .pil .tx{ display:none; } }
   @media (max-width:620px){
     .cab{ padding:9px 11px; gap:8px; }
     .cab .t{ font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -279,6 +295,16 @@
                       40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
                       80%{transform:translateX(6px)} }
 
+  /* aviso de que el docente movió la diapositiva */
+  .soplo{ position:fixed; left:50%; transform:translateX(-50%); bottom:26px; z-index:10004;
+          background:var(--marino); color:#fff; border-radius:99px; padding:11px 20px;
+          font-size:14.5px; font-weight:700; box-shadow:0 10px 26px rgba(7,23,103,.36);
+          opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; }
+  .soplo.ve{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  /* cuando el alumno va atado al docente, la botonera se ve apagada */
+  .esc.atado .pts button{ cursor:default; }
+  .esc.atado .nav .o-btn[disabled]{ opacity:.45; }
+
   .cierre{ text-align:center; padding:8px 0; }
   .cierre .ic{ font-size:54px; line-height:1; }
   .cierre h2{ margin:8px 0 4px; font-size:24px; font-weight:800; color:var(--tinta); }
@@ -392,8 +418,9 @@
 
   <div class="puerta" id="puerta">
     <h2>Antes de empezar, reg&iacute;strate</h2>
-    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente. Las diapositivas se abren al entrar
-       y tu avance queda guardado.</p>
+    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente. La primera vez agrega tus apellidos y
+       nombres; despu&eacute;s basta con el DNI. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas
+       aunque cierres la sesi&oacute;n o entres desde otro equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -403,6 +430,9 @@
         <span class="et" id="eti">Portada</span>
         <span class="t" id="tit">&mdash;</span>
         <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
         <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
         <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
                 aria-label="Pantalla completa">&#9974;</button>
@@ -446,6 +476,7 @@
         aria-expanded="false" aria-controls="panelPart">
   &#128101; Participantes <span class="bo" id="nPart">0</span>
 </button>
+<div class="soplo" id="soplo" hidden></div>
 <div class="panpart" id="panelPart" hidden>
   <div class="hd"><span id="salaPart">El aula</span>
     <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
@@ -862,6 +893,21 @@ function graba(){
   try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
   if(window.Aula && Aula.enSala) Aula.empuja();
 }
+/* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
+function fusiona(d){
+  if(!d || typeof d!=='object') return;
+  ['visto','mal'].forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  CLAVES.forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  yaCruz={};
+  pinta(true);
+  sopla('Recuperamos tu avance: '+totalOk()+' de '+totalMax()+' respuestas');
+}
+
 function cuantas(k){
   var A=ACT[k];
   if(A.tipo==='par')  return A.huecos.length;
@@ -1085,8 +1131,10 @@ function vista(k){
 }
 
 /* ================= dibujo ================= */
-function pinta(){
+function pinta(quieto){
   var s=D[i];
+  /* al responder dentro de la misma diapositiva no se pierde el sitio */
+  var alto = quieto ? $('lam').scrollTop : 0;
   G.visto[i]=1; graba();
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
@@ -1094,7 +1142,7 @@ function pinta(){
   var h=s.h||'';
   if(s.clave) h+=vista(s.clave);
   $('lam').innerHTML=h;
-  $('lam').scrollTop=0;
+  $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
   $('sig').disabled=(i===D.length-1);
   var ok=totalOk(), mx=totalMax();
@@ -1106,9 +1154,14 @@ function pinta(){
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
-    b.addEventListener('click', function(){ i=+b.dataset.p; elegida=null; pinta(); });
+    b.addEventListener('click', function(){
+      if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+      i=+b.dataset.p; elegida=null; pinta(); enfoca();
+      if(modoClase==='guiado') difunde();
+    });
   });
   cablea();
+  pintaModo();
 }
 
 var yaCruz={};
@@ -1121,7 +1174,7 @@ function cablea(){
     montaArrastre(lam, function(fid, zona, el){
       var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
       if(!f || !zona) return;
-      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
       else{ mal(); sacude(el); }
     });
   }
@@ -1129,14 +1182,14 @@ function cablea(){
     montaArrastre(lam, function(fid, zona, el){
       var caja=lam.querySelector('.par[data-z="'+zona+'"]');
       if(!caja) return;
-      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
       else{ mal(); sacude(el); }
     });
   }
   qq('#lam button[data-q]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
-      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(); }
+      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
       else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
             b.classList.add('mala','temblor'); b.disabled=true;
             setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
@@ -1147,7 +1200,7 @@ function cablea(){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
       var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
-      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(); }
+      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
       else{ mal(); sacude(sl.closest('.linea'));
             sl.classList.add('mal'); sl.value='';
             setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
@@ -1175,7 +1228,7 @@ function cableaCruz(k, A, lam){
     if(s.indexOf(' ')>=0){ yaCruz[w.p]=''; return; }
     if(yaCruz[w.p]===s) return;
     yaCruz[w.p]=s;
-    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(); }
+    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
     else{
       mal();
       for(var j=0;j<w.p.length;j++){
@@ -1217,6 +1270,80 @@ function cableaCruz(k, A, lam){
   });
 }
 
+/* ================= modo de clase ================= */
+/* guiado: todos van en la diapositiva del docente · libre: cada uno avanza solo */
+var modoClase='libre';
+try{ if(localStorage.getItem('rt7_modo')==='guiado') modoClase='guiado'; }catch(e){}
+
+function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+function enSala(){ return !!(window.Aula && Aula.enSala); }
+function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
+
+var tSoplo=null;
+function sopla(txt){
+  var e=$('soplo');
+  e.hidden=false; e.textContent=txt;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tSoplo);
+  tSoplo=setTimeout(function(){
+    e.classList.remove('ve');
+    setTimeout(function(){ e.hidden=true; }, 300);
+  }, 2600);
+}
+
+function pintaModo(){
+  var doc=soyDocente(), guiado=(modoClase==='guiado'), preso=atado();
+  var b=$('btnBatuta');
+  b.hidden=!doc;
+  if(doc){
+    b.classList.toggle('on', guiado);
+    b.setAttribute('aria-pressed', guiado?'true':'false');
+    $('txBatuta').textContent = guiado ? 'Modo guiado' : 'Modo libre';
+    b.title = guiado
+      ? 'Los alumnos están en tu misma diapositiva. Toca para dejarlos avanzar solos.'
+      : 'Cada alumno avanza solo. Toca para llevarlos a tu ritmo.';
+  }
+  $('pilModo').hidden=!preso;
+  $('esc').classList.toggle('atado', preso);
+  $('ant').disabled = preso || (i===0);
+  $('sig').disabled = preso || (i===D.length-1);
+  qq('#pts button').forEach(function(x){ x.disabled=preso; });
+}
+
+/* el docente publica dónde está la clase */
+function difunde(){
+  if(!soyDocente() || !window.Aula || !Aula.dirige) return;
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i } : { modo:'libre' });
+}
+function cambiaModo(){
+  if(!soyDocente()) return;
+  modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
+  try{ localStorage.setItem('rt7_modo', modoClase); }catch(e){}
+  pintaModo(); difunde();
+  sopla(modoClase==='guiado'
+        ? 'Modo guiado · la clase va contigo, diapositiva '+(i+1)
+        : 'Modo libre · cada alumno avanza a su ritmo');
+}
+$('btnBatuta').addEventListener('click', cambiaModo);
+
+/* el alumno recibe la orden del docente */
+function recibeBatuta(d){
+  var antes=modoClase;
+  modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
+  if(modoClase==='guiado' && d && typeof d.lamina==='number'){
+    var k=Math.max(0, Math.min(D.length-1, d.lamina));
+    if(k!==i){
+      i=k; elegida=null; pinta(); enfoca();
+      nota(880,0,.1,.04,'triangle');
+      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+D.length);
+      return;
+    }
+  }
+  pintaModo();
+  if(antes==='guiado' && modoClase==='libre') sopla('Ya puedes avanzar a tu ritmo');
+  if(antes==='libre' && modoClase==='guiado') sopla('Vas al ritmo del docente');
+}
+
 /* ================= navegación ================= */
 /* deja la diapositiva centrada en la pantalla cuando se sale de cuadro */
 function enfoca(){
@@ -1229,8 +1356,10 @@ function enfoca(){
   catch(x){ window.scrollTo(0, Math.max(0,y)); }
 }
 function va(n){
+  if(atado()){ sopla('La clase va al ritmo del docente'); return; }
   var k=Math.max(0, Math.min(D.length-1, n));
-  if(k!==i){ i=k; elegida=null; pinta(); enfoca(); }
+  if(k!==i){ i=k; elegida=null; pinta(); enfoca();
+             if(modoClase==='guiado') difunde(); }
 }
 $('ant').addEventListener('click', function(){ va(i-1); });
 $('sig').addEventListener('click', function(){ va(i+1); });
@@ -1340,7 +1469,8 @@ function pantalla(e, alumno, cont){
 }
 if(window.Aula){
   Aula.iniciar({ sala:'REGT7', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
-    pantalla:pantalla, musica:true,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; } },
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
@@ -1348,7 +1478,10 @@ if(window.Aula){
       $('mazo').hidden=!dentro;
       $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
       $('puerta').querySelector('p').hidden=dentro;
+      if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
       if(dentro){ pinta(); setTimeout(enfoca, 120); }
+      pintaModo();
+      if(doc) difunde();
     } });
 }else{
   $('mazo').hidden=false;
@@ -1356,7 +1489,8 @@ if(window.Aula){
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
   aviso:'Se borrarán tus respuestas de las ocho actividades.',
-  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta(); }
+  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+                    if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
 
 pinta();

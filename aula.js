@@ -27,6 +27,24 @@
        lo da, una hoja «Detalle» (una fila por respuesta). Sin esta función
        se arma un resumen con los datos sueltos que envía cada alumno.
 
+   Opcional: ficha: { clave:'mi_pagina_v1', lee:function(d){}, da:function(){} }
+       Enciende el registro con DNI. El alumno entra con su DNI; la primera vez
+       escribe además sus apellidos y nombres y queda registrado. A partir de
+       ahí solo pone el DNI: la página recupera su nombre y su avance desde
+       Supabase, aunque cierre la sesión o entre desde otro equipo.
+         clave : nombre con que se guarda el avance de esta página
+         lee(d): la página recibe el avance guardado y lo aplica
+         da()  : la página devuelve lo que hay que guardar
+       Necesita las funciones entra_alumno, lee_avance y graba_avance en la
+       base; están en supabase-alumnos-avance.sql.
+
+   Opcional: batuta: function(d){ }   y   Aula.dirige(d)
+       El docente marca el paso de la clase. Aula.dirige({modo:'guiado', lamina:3})
+       publica el estado de la clase en la sala; cada alumno lo recibe en su
+       función batuta a los pocos segundos. Con esto la página puede tener un
+       modo guiado (todos en la diapositiva del docente) y otro libre (cada
+       uno avanza solo). Al salir el docente, la sala vuelve sola al modo libre.
+
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
        equipo, una pista al azar de la carpeta sonidos/ del repositorio
@@ -43,6 +61,9 @@ var CLAVE='46069339';
 
 var cfg=null, sala=null, yo=null, docente=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
+var batuta=null, tBatuta=null, selloBatuta='';
+var dni='', tFicha=null, buscando=false;
+var RPC=SUPA+'/rest/v1/rpc/';
 
 var BASE=(function(){
   var s=document.currentScript && document.currentScript.src;
@@ -73,11 +94,16 @@ function pintaControles(){
   $('aula').innerHTML=
     '<div class="aula-filas">'+
       '<div class="aula-fila" id="aulaEntrada">'+
-        '<label class="aula-campo" id="aulaCnom">Tu nombre'+
-          '<input id="aulaNombre" type="text" maxlength="40" placeholder="Nombre y apellido" autocomplete="off"></label>'+
+        (conFicha() ? '<label class="aula-campo" id="aulaCdni">Tu DNI'+
+          '<input id="aulaDni" type="text" inputmode="numeric" maxlength="8" '+
+          'placeholder="8 dígitos" autocomplete="off"></label>' : '')+
+        '<label class="aula-campo" id="aulaCnom">'+(conFicha()?'Apellidos y nombres':'Tu nombre')+
+          '<input id="aulaNombre" type="text" maxlength="60" placeholder="'+
+          (conFicha()?'Apellidos y nombres':'Nombre y apellido')+'" autocomplete="off"></label>'+
         '<label class="aula-campo">Código de sala'+
           '<input id="aulaSala" type="text" maxlength="20" placeholder="'+esc(codigoClase())+'" autocomplete="off"></label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">Entrar a la sala</button>'+
+        (conFicha() ? '<span class="aula-ficha" id="aulaFicha"></span>' : '')+
         '<label class="aula-sw"><input type="checkbox" id="aulaSw">'+
           '<span class="riel"><span class="bola"></span></span>'+
           '<span class="tx">Entrar como docente</span></label>'+
@@ -109,7 +135,7 @@ function pintaControles(){
       '</div>'+
     '</div>';
 
-  $('aulaNombre').value=leeLocal('nombre');
+  if(!conFicha()) $('aulaNombre').value=leeLocal('nombre');
   $('aulaSala').value=leeLocal(claveSala())||codigoClase();
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
@@ -130,6 +156,21 @@ function pintaControles(){
   ['aulaNombre','aulaSala'].forEach(function(id){
     $(id).addEventListener('keydown', function(e){ if(e.key==='Enter') entraAlumno(); });
   });
+  if(conFicha()){
+    $('aulaDni').value=leeLocal('dni');
+    $('aulaDni').addEventListener('input', function(){
+      var v=$('aulaDni').value.replace(/\D/g,'').slice(0,8);
+      if(v!==$('aulaDni').value) $('aulaDni').value=v;
+      $('aulaCdni').classList.remove('falta');
+      if(dniBueno(v)) buscaDni(); else avisaFicha('','');
+    });
+    $('aulaDni').addEventListener('blur', buscaDni);
+    $('aulaDni').addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault();
+        if($('aulaNombre').value.trim().length>=2) entraAlumno(); else $('aulaNombre').focus(); }
+    });
+    if(dniBueno($('aulaDni').value)) setTimeout(buscaDni, 200);
+  }
 
   /* el interruptor abre la ventana de la clave */
   $('aulaSw').addEventListener('change', function(){
@@ -175,12 +216,39 @@ function entraAlumno(){
   var n=$('aulaNombre').value.trim(), s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
   $('aulaCnom').classList.toggle('falta', n.length<2);
   if(n.length<2){ $('aulaNombre').focus(); estado('malo','Escribe tu nombre para entrar'); return; }
-  yo=n; sala=s; docente=false;
+
+  if(!conFicha()){ adentro(n, s, ''); return; }
+
+  var d=$('aulaDni').value.replace(/\D/g,'');
+  $('aulaCdni').classList.toggle('falta', !dniBueno(d));
+  if(!dniBueno(d)){ $('aulaDni').focus(); estado('malo','Tu DNI son 8 números'); return; }
+  avisaFicha('', 'Registrando…');
+  rpc('entra_alumno', { p_dni:d, p_nombres:n })
+    .then(function(filas){
+      var r=(filas && filas[0]) || {};
+      adentro(r.nombres || n, s, d);
+      avisaFicha('ok', r.nuevo ? 'Registrado. Tu avance se guarda con tu DNI.'
+                               : 'Tu avance se guarda con tu DNI.');
+      return traeAvance();
+    })
+    .then(function(hubo){
+      if(hubo) estado('vivo','En vivo · recuperamos tu avance anterior');
+    })
+    .catch(function(){
+      /* sin registro igual se puede trabajar: no se deja a nadie fuera */
+      adentro(n, s, '');
+      avisaFicha('malo', 'No se pudo guardar tu registro. Sigues trabajando en este equipo.');
+    });
+}
+function adentro(n, s, d){
+  yo=n; sala=s; docente=false; dni=d||'';
   guardaLocal('nombre',n); guardaLocal(claveSala(),s);
+  if(dni) guardaLocal('dni', dni);
   dentro(n);
   estado('vivo','Conectando…');
   fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
+  escucha();
 }
 function entraDocente(){
   var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
@@ -203,8 +271,13 @@ function entraDocente(){
 function sale(){
   cierraPantalla();
   callaMusica();
-  sala=null; yo=null; docente=false; gente=[];
+  /* al irse el docente, la clase vuelve sola al modo libre */
+  if(docente && batuta) dirige({ modo:'libre' });
+  if(dni) guardaAvance(true);
+  sala=null; yo=null; docente=false; gente=[]; dni='';
+  batuta=null; selloBatuta='';
   if(tSala){ clearInterval(tSala); tSala=null; }
+  if(tBatuta){ clearInterval(tBatuta); tBatuta=null; }
   fuera(); estado('solo','Modo individual'); pintaMuro();
   if(cfg.alModo) cfg.alModo(false);
 }
@@ -216,12 +289,13 @@ function arranca(){
 
 /* ---------------- sincronización ---------------- */
 function empuja(ya){
+  guardaAvance(ya);
   if(!sala || !yo || docente) return;
   clearTimeout(tEnvio);
   tEnvio=setTimeout(function(){
     fetch(TABLA+'?on_conflict=sala,alumno', {
       method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
-      body:JSON.stringify([{ sala:cfg.sala+'-'+sala, alumno:yo, caso:'',
+      body:JSON.stringify([{ sala:cfg.sala+'-'+sala, alumno:yo, caso:dni,
                              estado:cfg.resumen(), actualizado:new Date().toISOString() }])
     }).then(function(r){
       if(!r.ok) return Promise.reject(r.status);
@@ -233,7 +307,7 @@ function empuja(ya){
 function trae(){
   if(!sala) return;
   var desde=new Date(Date.now()-3*3600*1000).toISOString();
-  fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
+  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
@@ -254,6 +328,107 @@ function falla(e){
   else if(e===400)             m='la tabla existe pero le falta alguna columna';
   else                         m='no se pudo conectar ('+e+')';
   estado('malo','Sala no disponible: '+m+' · sigues trabajando en tu equipo');
+}
+
+/* ---------------- la ficha del alumno (DNI) ---------------- */
+function conFicha(){ return !!(cfg && cfg.ficha && cfg.ficha.clave); }
+function claveFicha(){ return String(cfg.ficha.clave); }
+function dniBueno(v){ return /^[0-9]{8}$/.test(String(v||'').trim()); }
+function avisaFicha(clase, txt){
+  var e=$('aulaFicha'); if(!e) return;
+  e.className='aula-ficha '+(clase||'');
+  e.innerHTML=txt||'';
+}
+function rpc(fn, cuerpo){
+  return fetch(RPC+fn, { method:'POST', headers:hdr(), body:JSON.stringify(cuerpo) })
+    .then(function(r){ return r.ok ? r.json() : r.text().then(function(t){
+      return Promise.reject(new Error(r.status+' '+t.slice(0,120))); }); });
+}
+/* busca el DNI: si ya está registrado, trae el nombre */
+function buscaDni(){
+  if(!conFicha()) return;
+  var v=$('aulaDni').value.replace(/\D/g,'').slice(0,8);
+  $('aulaDni').value=v;
+  if(!dniBueno(v)){ avisaFicha('', ''); return; }
+  if(buscando) return;
+  buscando=true;
+  avisaFicha('', 'Buscando tu registro…');
+  rpc('entra_alumno', { p_dni:v })
+    .then(function(filas){
+      buscando=false;
+      var r=(filas && filas[0]) || {};
+      if(r.nombres){
+        $('aulaNombre').value=r.nombres;
+        $('aulaCnom').classList.remove('falta');
+        avisaFicha('ok', 'Hola de nuevo, <b>'+esc(r.nombres)+'</b>. Entra y sigues donde quedaste.');
+      }else{
+        avisaFicha('nuevo', 'Es tu primera vez: escribe tus apellidos y nombres para registrarte.');
+        setTimeout(function(){ if(!$('aulaNombre').value) $('aulaNombre').focus(); }, 30);
+      }
+    })
+    .catch(function(){
+      buscando=false;
+      avisaFicha('malo', 'No se pudo consultar el registro. Escribe tus apellidos y nombres y entra igual.');
+    });
+}
+/* trae el avance guardado y se lo pasa a la página */
+function traeAvance(){
+  if(!conFicha() || !dni || !cfg.ficha.lee) return Promise.resolve(false);
+  return rpc('lee_avance', { p_dni:dni, p_clave:claveFicha() })
+    .then(function(d){
+      if(d && typeof d==='object' && Object.keys(d).length){ cfg.ficha.lee(d); return true; }
+      return false;
+    })
+    .catch(function(){ return false; });
+}
+/* guarda el avance, sin apurarse */
+function guardaAvance(ya){
+  if(!conFicha() || !dni || !cfg.ficha.da) return;
+  clearTimeout(tFicha);
+  tFicha=setTimeout(function(){
+    var d;
+    try{ d=cfg.ficha.da(); }catch(e){ return; }
+    rpc('graba_avance', { p_dni:dni, p_clave:claveFicha(), p_datos:d||{} }).catch(function(){});
+  }, ya ? 0 : 1500);
+}
+
+/* ---------------- la batuta del docente ---------------- */
+/* va en una sala aparte, para que no se mezcle con las filas de los alumnos */
+function salaBatuta(){ return cfg.sala+'-'+sala+'-BATUTA'; }
+function dirige(d){
+  if(!sala || !docente) return;
+  batuta=d||null;
+  fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:salaBatuta(), alumno:'docente', caso:'',
+                           estado:d||{modo:'libre'}, actualizado:new Date().toISOString() }])
+  }).catch(function(){});
+  /* un latido cada minuto y medio: así la orden no se queda vieja */
+  if(!tBatuta) tBatuta=setInterval(function(){
+    if(docente && sala && batuta) dirige(batuta);
+  }, 90000);
+}
+function escucha(){
+  if(!cfg.batuta) return;
+  if(tBatuta){ clearInterval(tBatuta); tBatuta=null; }
+  oye();
+  tBatuta=setInterval(oye, 3000);
+}
+function oye(){
+  if(!sala || docente || !cfg.batuta) return;
+  var desde=new Date(Date.now()-3*3600*1000).toISOString();
+  fetch(TABLA+'?select=estado,actualizado&sala=eq.'+encodeURIComponent(salaBatuta())+
+        '&actualizado=gte.'+desde+'&limit=1', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){
+      var fila=rows && rows[0];
+      if(!fila){ if(selloBatuta!==''){ selloBatuta=''; batuta=null; cfg.batuta({modo:'libre'}); } return; }
+      var sello=String(fila.actualizado)+'|'+JSON.stringify(fila.estado||{});
+      if(sello===selloBatuta) return;
+      selloBatuta=sello; batuta=fila.estado||{};
+      cfg.batuta(batuta);
+    })
+    .catch(function(){});
 }
 
 /* ---------------- muro ---------------- */
@@ -339,12 +514,16 @@ function armaReporte(rows){
   rows.forEach(function(g){
     var e=g.estado||{}, r=null;
     try{ r=cfg.reporte ? cfg.reporte(e, g.alumno) : null; }catch(err){ r=null; }
-    var base={ 'Alumno':g.alumno, 'Último cambio':fechaLocal(g.actualizado) };
+    var base={ 'Alumno':g.alumno };
+    if(g.caso) base['DNI']=g.caso;
+    base['Último cambio']=fechaLocal(g.actualizado);
     var fila=(r && r.fila) || filaSimple(e);
     for(var k in fila) base[k]=fila[k];
     resumen.push(base);
     ((r && r.detalle) || []).forEach(function(d){
-      var x={ 'Alumno':g.alumno }; for(var k2 in d) x[k2]=d[k2]; detalle.push(x);
+      var x={ 'Alumno':g.alumno };
+      if(g.caso) x['DNI']=g.caso;
+      for(var k2 in d) x[k2]=d[k2]; detalle.push(x);
     });
   });
   return { resumen:resumen, detalle:detalle };
@@ -371,7 +550,7 @@ function descargaReporte(){
   /* para el reporte se mira todo el día, no solo las últimas horas del muro */
   var desde=new Date(Date.now()-24*3600*1000).toISOString();
   var nombre='reporte-'+String(cfg.sala).toLowerCase()+'-'+sala.toLowerCase()+'-'+fechaLocal(new Date().toISOString()).slice(0,10);
-  fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
+  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
@@ -512,6 +691,10 @@ window.Aula={
     pintaControles(); pintaMuro();
   },
   empuja:function(){ empuja(); },
+  dirige:function(d){ dirige(d); },
+  guardaFicha:function(){ guardaAvance(true); },
+  get dni(){ return dni; },
+  get batuta(){ return batuta; },
   refresca:function(){ pintaMuro(); },
   verPantalla:function(nombre){ abrePantalla(nombre); },
   cambiaMusica:function(){ otraPista(); },

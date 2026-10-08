@@ -17,6 +17,15 @@
   width:180px; max-width:100%; color:var(--o-text); }
 .aula-campo input:focus{ outline:2px solid var(--o-purple); outline-offset:1px; }
 .aula-campo.falta input{ border-color:#C0392B; background:#FDECEA; }
+
+/* ficha del alumno: el DNI y el aviso de registro */
+#aulaCdni input{ width:112px; letter-spacing:.14em; font-variant-numeric:tabular-nums; }
+#aulaCnom input{ min-width:200px; }
+.aula-ficha{ flex-basis:100%; font-size:12.5px; line-height:1.5; color:#5A5A5A; }
+.aula-ficha:empty{ display:none; }
+.aula-ficha.ok{ color:#1C6E4E; }
+.aula-ficha.nuevo{ color:#9A5B07; }
+.aula-ficha.malo{ color:#C0392B; }
 .aula-estado{ font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:99px; justify-self:start; }
 .aula-estado.solo{ background:var(--o-line); color:var(--o-muted); }
 .aula-estado.vivo{ background:#E6F4EA; color:#14532D; }
