@@ -62,7 +62,7 @@ var CLAVE='46069339';
 var cfg=null, sala=null, yo=null, docente=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var batuta=null, tBatuta=null, selloBatuta='';
-var dni='', tFicha=null, buscando=false;
+var dni='', tFicha=null, buscando=false, modoAlta=false;
 var RPC=SUPA+'/rest/v1/rpc/';
 
 var BASE=(function(){
@@ -97,20 +97,25 @@ function pintaControles(){
         (conFicha() ? '<label class="aula-campo" id="aulaCdni">Tu DNI'+
           '<input id="aulaDni" type="text" inputmode="numeric" maxlength="8" '+
           'placeholder="8 dígitos" autocomplete="off"></label>' : '')+
-        '<label class="aula-campo" id="aulaCnom">'+(conFicha()?'Apellidos y nombres':'Tu nombre')+
+        '<label class="aula-campo" id="aulaCnom"'+(conFicha()?' hidden':'')+'>'+
+          (conFicha()?'Apellidos y nombres':'Tu nombre')+
           '<input id="aulaNombre" type="text" maxlength="60" placeholder="'+
           (conFicha()?'Apellidos y nombres':'Nombre y apellido')+'" autocomplete="off"></label>'+
         '<label class="aula-campo">Código de sala'+
           '<input id="aulaSala" type="text" maxlength="20" placeholder="'+esc(codigoClase())+'" autocomplete="off"></label>'+
-        '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">Entrar a la sala</button>'+
-        (conFicha() ? '<span class="aula-ficha" id="aulaFicha"></span>' : '')+
+        '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">'+
+          (conFicha()?'Ingresar':'Entrar a la sala')+'</button>'+
+        (conFicha() ? '<button class="o-btn o-btn-secondary" id="aulaNuevo" type="button">Es mi primera vez</button>'+
+          '<button class="o-btn o-btn-secondary" id="aulaVuelve" type="button" hidden>Ya estoy registrado</button>'+
+          '<span class="aula-ficha" id="aulaFicha"></span>' : '')+
         '<label class="aula-sw"><input type="checkbox" id="aulaSw">'+
           '<span class="riel"><span class="bola"></span></span>'+
           '<span class="tx">Entrar como docente</span></label>'+
       '</div>'+
       '<div class="aula-fila" id="aulaDentro" hidden>'+
         '<span class="aula-rol" id="aulaQuien"></span>'+
-        '<button class="o-btn" id="aulaSalir" type="button">Salir</button>'+
+        '<button class="o-btn o-btn-secondary" id="aulaSalir" type="button">Salir</button>'+
+
         '<button class="o-btn" id="aulaGrande" type="button" hidden>🔍 Ventanas grandes</button>'+
         '<button class="o-btn" id="aulaRefresca" type="button" hidden>↻ Actualizar</button>'+
         '<span class="aula-mus" id="aulaMus" hidden>'+
@@ -158,18 +163,19 @@ function pintaControles(){
   });
   if(conFicha()){
     $('aulaDni').value=leeLocal('dni');
+    pintaAlta();
     $('aulaDni').addEventListener('input', function(){
       var v=$('aulaDni').value.replace(/\D/g,'').slice(0,8);
       if(v!==$('aulaDni').value) $('aulaDni').value=v;
       $('aulaCdni').classList.remove('falta');
-      if(dniBueno(v)) buscaDni(); else avisaFicha('','');
+      if(dniBueno(v)) buscaDni(); else if(!modoAlta) avisaFicha('','');
     });
-    $('aulaDni').addEventListener('blur', buscaDni);
     $('aulaDni').addEventListener('keydown', function(e){
-      if(e.key==='Enter'){ e.preventDefault();
-        if($('aulaNombre').value.trim().length>=2) entraAlumno(); else $('aulaNombre').focus(); }
+      if(e.key==='Enter'){ e.preventDefault(); entraAlumno(); }
     });
-    if(dniBueno($('aulaDni').value)) setTimeout(buscaDni, 200);
+    $('aulaNuevo').addEventListener('click', function(){ abreAlta(true); });
+    $('aulaVuelve').addEventListener('click', function(){ abreAlta(false); });
+    if(dniBueno($('aulaDni').value)) setTimeout(buscaDni, 300);
   }
 
   /* el interruptor abre la ventana de la clave */
@@ -201,6 +207,7 @@ function dentro(txt){
   $('aulaEntrada').hidden=true;
   $('aulaDentro').hidden=false;
   $('aulaQuien').textContent=txt;
+  $('aulaSalir').textContent = (conFicha() && !docente) ? 'Cerrar sesión' : 'Salir';
   $('aulaGrande').hidden=!docente;
   $('aulaRefresca').hidden=!docente;
   $('aulaMus').hidden=!(docente && cfg.musica);
@@ -213,38 +220,77 @@ function fuera(){
 
 /* ---------------- entrar y salir ---------------- */
 function entraAlumno(){
-  var n=$('aulaNombre').value.trim(), s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
-  $('aulaCnom').classList.toggle('falta', n.length<2);
-  if(n.length<2){ $('aulaNombre').focus(); estado('malo','Escribe tu nombre para entrar'); return; }
+  var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
 
-  if(!conFicha()){ adentro(n, s, ''); return; }
+  if(!conFicha()){
+    var n0=$('aulaNombre').value.trim();
+    $('aulaCnom').classList.toggle('falta', n0.length<2);
+    if(n0.length<2){ $('aulaNombre').focus(); estado('malo','Escribe tu nombre para entrar'); return; }
+    adentro(n0, s, ''); return;
+  }
 
   var d=$('aulaDni').value.replace(/\D/g,'');
   $('aulaCdni').classList.toggle('falta', !dniBueno(d));
-  if(!dniBueno(d)){ $('aulaDni').focus(); estado('malo','Tu DNI son 8 números'); return; }
-  avisaFicha('', 'Registrando…');
-  rpc('entra_alumno', { p_dni:d, p_nombres:n })
+  if(!dniBueno(d)){
+    $('aulaDni').focus();
+    avisaFicha('malo','Tu DNI son 8 números, sin puntos ni espacios.');
+    return;
+  }
+
+  /* --- registrarse --- */
+  if(modoAlta){
+    var n=$('aulaNombre').value.trim();
+    $('aulaCnom').classList.toggle('falta', n.length<3);
+    if(n.length<3){ $('aulaNombre').focus(); avisaFicha('malo','Escribe tus apellidos y nombres.'); return; }
+    avisaFicha('', 'Registrando…');
+    rpc('entra_alumno', { p_dni:d, p_nombres:n })
+      .then(function(filas){
+        var r=(filas && filas[0]) || {};
+        modoAlta=false; pintaAlta();
+        cambiaDueno(d);
+        adentro(r.nombres || n, s, d);
+        avisaFicha('ok', r.nuevo ? 'Registrado. Desde ahora entras solo con tu DNI.'
+                                 : 'Ese DNI ya estaba registrado: te ingresamos.');
+        return traeAvance();
+      })
+      .then(function(hubo){ if(hubo) estado('vivo','En vivo · recuperamos tu avance'); })
+      .catch(function(){ sinRegistro($('aulaNombre').value.trim(), s); });
+    return;
+  }
+
+  /* --- ingresar --- */
+  avisaFicha('', 'Comprobando tu DNI…');
+  rpc('entra_alumno', { p_dni:d })
     .then(function(filas){
       var r=(filas && filas[0]) || {};
-      adentro(r.nombres || n, s, d);
-      avisaFicha('ok', r.nuevo ? 'Registrado. Tu avance se guarda con tu DNI.'
-                               : 'Tu avance se guarda con tu DNI.');
+      if(!r.nombres){
+        abreAlta(true, 'Ese DNI todavía no está registrado. Escribe tus apellidos y nombres '+
+                       'para registrarte: solo se hace una vez.');
+        return null;
+      }
+      cambiaDueno(d);
+      adentro(r.nombres, s, d);
+      avisaFicha('ok', 'Hola, <b>'+esc(r.nombres)+'</b>. Tu avance se guarda con tu DNI.');
       return traeAvance();
     })
-    .then(function(hubo){
-      if(hubo) estado('vivo','En vivo · recuperamos tu avance anterior');
-    })
-    .catch(function(){
-      /* sin registro igual se puede trabajar: no se deja a nadie fuera */
-      adentro(n, s, '');
-      avisaFicha('malo', 'No se pudo guardar tu registro. Sigues trabajando en este equipo.');
-    });
+    .then(function(hubo){ if(hubo) estado('vivo','En vivo · recuperamos tu avance'); })
+    .catch(function(){ sinRegistro('', s); });
+}
+/* si la base no responde, nadie se queda fuera: se entra sin registro */
+function sinRegistro(n, s){
+  if(n.length<3){
+    abreAlta(true, 'No se pudo conectar con el registro. Escribe tus apellidos y nombres '+
+                   'para entrar; tu avance quedará guardado en este equipo.');
+    return;
+  }
+  adentro(n, s, '');
+  avisaFicha('malo','Sin conexión con el registro: tu avance se guarda solo en este equipo.');
 }
 function adentro(n, s, d){
   yo=n; sala=s; docente=false; dni=d||'';
   guardaLocal('nombre',n); guardaLocal(claveSala(),s);
   if(dni) guardaLocal('dni', dni);
-  dentro(n);
+  dentro(dni ? (n+' · DNI '+dni) : n);
   estado('vivo','Conectando…');
   fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
@@ -269,12 +315,18 @@ function entraDocente(){
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
+  if(conFicha() && !docente && dni &&
+     !window.confirm('¿Cerrar tu sesión?\n\nTu avance ya quedó guardado con tu DNI '+dni+
+                     '. Lo recuperas al volver a ingresar, aquí o en otro equipo.\n\n'+
+                     'Este equipo quedará limpio para el siguiente alumno.')) return;
   cierraPantalla();
   callaMusica();
   /* al irse el docente, la clase vuelve sola al modo libre */
   if(docente && batuta) dirige({ modo:'libre' });
+  var eraAlumno = !docente && !!dni;
   if(dni) guardaAvance(true);
   sala=null; yo=null; docente=false; gente=[]; dni='';
+  if(eraAlumno) setTimeout(olvida, 400);   /* primero se guarda, después se limpia */
   batuta=null; selloBatuta='';
   if(tSala){ clearInterval(tSala); tSala=null; }
   if(tBatuta){ clearInterval(tBatuta); tBatuta=null; }
@@ -344,32 +396,53 @@ function rpc(fn, cuerpo){
     .then(function(r){ return r.ok ? r.json() : r.text().then(function(t){
       return Promise.reject(new Error(r.status+' '+t.slice(0,120))); }); });
 }
-/* busca el DNI: si ya está registrado, trae el nombre */
-function buscaDni(){
+/* el formulario tiene dos caminos: ingresar o registrarse */
+function pintaAlta(){
   if(!conFicha()) return;
+  $('aulaCnom').hidden=!modoAlta;
+  $('aulaNuevo').hidden=modoAlta;
+  $('aulaVuelve').hidden=!modoAlta;
+  $('aulaEntrar').textContent = modoAlta ? 'Registrarme y entrar' : 'Ingresar';
+}
+function abreAlta(v, aviso){
+  modoAlta=!!v;
+  pintaAlta();
+  avisaFicha(v?'nuevo':'', aviso || (v
+    ? 'Escribe tus apellidos y nombres. Solo se hace una vez: después entras con tu DNI.'
+    : ''));
+  if(v) setTimeout(function(){ $('aulaNombre').focus(); }, 40);
+}
+/* al escribir los 8 dígitos saluda si ya está registrado; si falla, se calla */
+function buscaDni(){
+  if(!conFicha() || modoAlta) return;
   var v=$('aulaDni').value.replace(/\D/g,'').slice(0,8);
-  $('aulaDni').value=v;
-  if(!dniBueno(v)){ avisaFicha('', ''); return; }
-  if(buscando) return;
+  if(!dniBueno(v) || buscando) return;
   buscando=true;
-  avisaFicha('', 'Buscando tu registro…');
   rpc('entra_alumno', { p_dni:v })
     .then(function(filas){
       buscando=false;
+      if(modoAlta) return;
       var r=(filas && filas[0]) || {};
-      if(r.nombres){
-        $('aulaNombre').value=r.nombres;
-        $('aulaCnom').classList.remove('falta');
-        avisaFicha('ok', 'Hola de nuevo, <b>'+esc(r.nombres)+'</b>. Entra y sigues donde quedaste.');
-      }else{
-        avisaFicha('nuevo', 'Es tu primera vez: escribe tus apellidos y nombres para registrarte.');
-        setTimeout(function(){ if(!$('aulaNombre').value) $('aulaNombre').focus(); }, 30);
-      }
+      if(r.nombres) avisaFicha('ok', 'Hola de nuevo, <b>'+esc(r.nombres)+'</b>. Ingresa y sigues donde quedaste.');
+      else avisaFicha('', '');
     })
-    .catch(function(){
-      buscando=false;
-      avisaFicha('malo', 'No se pudo consultar el registro. Escribe tus apellidos y nombres y entra igual.');
-    });
+    .catch(function(){ buscando=false; });
+}
+/* si el avance de este equipo es de otro DNI, se limpia antes de cargar el suyo */
+function cambiaDueno(d){
+  var antes=leeLocal('dueno');
+  if(antes && antes!==d && cfg.ficha.limpia){ try{ cfg.ficha.limpia(); }catch(e){} }
+  guardaLocal('dueno', d);
+}
+function olvida(){
+  if(!conFicha()) return;
+  guardaLocal('dni',''); guardaLocal('dueno','');
+  /* el equipo queda listo para el siguiente alumno */
+  if($('aulaDni')){ $('aulaDni').value=''; $('aulaCdni').classList.remove('falta'); }
+  if($('aulaNombre')) $('aulaNombre').value='';
+  modoAlta=false; pintaAlta();
+  avisaFicha('', 'Sesión cerrada. Tu avance quedó guardado con tu DNI.');
+  if(cfg.ficha.limpia){ try{ cfg.ficha.limpia(); }catch(e){} }
 }
 /* trae el avance guardado y se lo pasa a la página */
 function traeAvance(){
