@@ -245,7 +245,7 @@ function entraAlumno(){
     avisaFicha('', 'Registrando…');
     rpc('entra_alumno', { p_dni:d, p_nombres:n })
       .then(function(filas){
-        var r=(filas && filas[0]) || {};
+        var r=unaFila(filas);
         modoAlta=false; pintaAlta();
         cambiaDueno(d);
         adentro(r.nombres || n, s, d);
@@ -262,7 +262,7 @@ function entraAlumno(){
   avisaFicha('', 'Comprobando tu DNI…');
   rpc('entra_alumno', { p_dni:d })
     .then(function(filas){
-      var r=(filas && filas[0]) || {};
+      var r=unaFila(filas);
       if(!r.nombres){
         abreAlta(true, 'Ese DNI todavía no está registrado. Escribe tus apellidos y nombres '+
                        'para registrarte: solo se hace una vez.');
@@ -391,6 +391,11 @@ function avisaFicha(clase, txt){
   e.className='aula-ficha '+(clase||'');
   e.innerHTML=txt||'';
 }
+/* entra_alumno devuelve un objeto; las versiones viejas devolvían una lista */
+function unaFila(res){
+  if(res && typeof res.length==='number') return res[0] || {};
+  return res || {};
+}
 function rpc(fn, cuerpo){
   return fetch(RPC+fn, { method:'POST', headers:hdr(), body:JSON.stringify(cuerpo) })
     .then(function(r){ return r.ok ? r.json() : r.text().then(function(t){
@@ -422,7 +427,7 @@ function buscaDni(){
     .then(function(filas){
       buscando=false;
       if(modoAlta) return;
-      var r=(filas && filas[0]) || {};
+      var r=unaFila(filas);
       if(r.nombres) avisaFicha('ok', 'Hola de nuevo, <b>'+esc(r.nombres)+'</b>. Ingresa y sigues donde quedaste.');
       else avisaFicha('', '');
     })
