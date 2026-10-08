@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi&oacute;n 6 &middot; Cr&eacute;dito fiscal del IGV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  /* colores de la plantilla institucional Certus 2026 */
+  :root{
+    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
+  }
+  .cf{
+    --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
+    --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
+    --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+    font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  .cf button, .cf input, .cf select, .cf table{ font-family:inherit; }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--fucsia); padding-bottom:14px; }
+  .marca .lgc{ flex:none; height:40px; width:auto; display:block; }
+  @media (max-width:560px){ .marca .lgc{ height:30px; } }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:14px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 4px; font-size:17px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:14px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; min-height:70vh;
+        scroll-margin-top:12px; }
+  /* cada diapositiva ocupa una pantalla, con la proporcion 16:9 de la plantilla */
+  @media (min-width:820px){
+    .esc{ aspect-ratio:16/9; min-height:0; max-height:calc(100vh - 128px); }
+  }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none;
+             aspect-ratio:auto; max-height:none; min-height:0; border:0; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--marino); color:#fff; padding:10px 16px; display:flex;
+        align-items:center; gap:11px; flex:none; }
+  .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--fucsia); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+  .cab .lgb{ flex:none; height:26px; width:auto; display:block; opacity:.95; }
+  .cab .btf{ flex:none; font:inherit; font-size:15px; line-height:1; cursor:pointer;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:7px; padding:7px 10px; }
+  .cab .btf:hover{ background:rgba(252,0,69,.85); border-color:transparent; }
+  /* interruptor del modo de clase: solo lo ve el docente */
+  .cab .btm{ flex:none; font:inherit; font-size:12.5px; font-weight:800; line-height:1; cursor:pointer;
+             display:flex; align-items:center; gap:7px; white-space:nowrap;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:99px; padding:6px 12px 6px 7px; }
+  .cab .btm .bola{ width:30px; height:16px; border-radius:99px; background:rgba(255,255,255,.3);
+                   position:relative; flex:none; transition:background .18s ease; }
+  .cab .btm .bola::after{ content:''; position:absolute; top:2px; left:2px; width:12px; height:12px;
+                          border-radius:50%; background:#fff; transition:transform .18s ease; }
+  .cab .btm.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+  .cab .btm.on .bola{ background:rgba(7,23,103,.35); }
+  .cab .btm.on .bola::after{ transform:translateX(14px); }
+  .cab .pil{ flex:none; font-size:12px; font-weight:800; letter-spacing:.03em; white-space:nowrap;
+             background:var(--celeste); color:var(--marino); border-radius:99px; padding:5px 11px; }
+  @media (max-width:860px){ .cab .btm .tx{ display:none; } .cab .btm{ padding:6px 8px; }
+                            .cab .pil .tx{ display:none; } }
+  @media (max-width:620px){
+    .cab{ padding:9px 11px; gap:8px; }
+    .cab .t{ font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cab .lgb{ display:none; } .cab .cu{ font-size:12px; }
+    .cab .btf{ padding:6px 9px; font-size:14px; }
+  }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1 1 0; min-height:0;
+        font-size:17px; line-height:1.72; color:var(--tinta);
+        background:
+          radial-gradient(760px 380px at 108% -12%, rgba(32,211,255,.17), transparent 62%),
+          radial-gradient(620px 320px at -10% 112%, rgba(198,0,163,.09), transparent 62%),
+          #F7F9FE; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:#55607F; font-weight:600; }
+  .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- portada con los colores de la plantilla ---------- */
+  .tapa{ position:relative; overflow:hidden; border-radius:14px; color:#fff; margin:0 0 18px;
+         padding:22px clamp(18px,3vw,30px) 24px; background:var(--marino); }
+  .tapa::after{ content:''; position:absolute; right:-70px; top:-110px; width:300px; height:300px;
+                border-radius:50%; background:radial-gradient(circle at 35% 35%,
+                rgba(252,0,69,.95), rgba(198,0,163,.55) 58%, transparent 72%); }
+  .tapa .fil{ position:relative; z-index:1; display:flex; align-items:center; gap:11px;
+              flex-wrap:wrap; margin-bottom:16px; }
+  .tapa .fil img{ height:34px; width:auto; display:block; }
+  .tapa .fil span{ font-size:13.5px; font-weight:600; opacity:.86; }
+  .tapa h2{ position:relative; z-index:1; margin:0; font-size:clamp(23px,4vw,38px);
+            font-weight:900; letter-spacing:-.6px; line-height:1.14; }
+  .tapa p{ position:relative; z-index:1; margin:8px 0 0; font-size:clamp(14px,2.2vw,17px);
+           font-weight:600; color:var(--celeste); }
+  .tapa .via{ position:relative; z-index:1; display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; }
+  .tapa .via b{ color:#fff; font-size:12.5px; font-weight:800; letter-spacing:.04em;
+                text-transform:uppercase; border:1px solid rgba(255,255,255,.42);
+                border-radius:99px; padding:5px 12px; }
+  .lam .tapa b, .lam .tapa strong{ color:#fff; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  @media (max-width:620px){
+    .nav{ padding:10px 60px 10px 11px; gap:7px; }
+    .nav .o-btn{ font-size:14px; padding:9px 13px; }
+  }
+  .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .cf .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .cf .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:13px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:128px; height:auto; max-height:200px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  .perso.dos{ align-items:flex-end; }
+  .perso.dos img.b{ margin-left:-10px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:88px; }
+    .perso.dos img{ width:70px; }
+    .perso .globo{ font-size:15px; padding:11px 13px; }
+  }
+  .tabenv table.t.chica{ font-size:14px; }
+  .tabenv table.t.chica th, .tabenv table.t.chica td{ padding:7px 9px; }
+  table.t tr.gris td{ background:#EEF1F6; font-weight:700; font-size:13px;
+                      text-transform:uppercase; letter-spacing:.04em; color:var(--gris); }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:14px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:13px 15px; font-size:15.5px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:15px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(17px,2.6vw,22px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:13.5px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:13px 17px; font-size:15.5px; line-height:1.68;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:15.5px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:13px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:13px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:15px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(138,43,43,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:14px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:15.5px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:13.5px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:16px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:17px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 22px; font-size:14.5px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:16px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(138,43,43,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:13.5px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:15.5px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+  .linea select.cel{ max-width:min(340px, 100%); }
+  .linea .q .pre{ color:var(--verde); font-weight:600; }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:16px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:150px; font-size:15px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  /* aviso de que el docente movió la diapositiva */
+  .soplo{ position:fixed; left:50%; transform:translateX(-50%); bottom:26px; z-index:10004;
+          background:var(--marino); color:#fff; border-radius:99px; padding:11px 20px;
+          font-size:14.5px; font-weight:700; box-shadow:0 10px 26px rgba(7,23,103,.36);
+          opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; }
+  .soplo.ve{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  /* cuando el alumno va atado al docente, la botonera se ve apagada */
+  .esc.atado .pts button{ cursor:default; }
+  .esc.atado .nav .o-btn[disabled]{ opacity:.45; }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:24px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+
+  /* ---------- mini hoja de cálculo ---------- */
+  .hojaenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin-top:12px; }
+  table.hoja{ border-collapse:collapse; table-layout:fixed; width:max-content; background:#fff;
+              font-variant-numeric:tabular-nums; }
+  table.hoja th, table.hoja td{ border:1px solid #C9D2E6; padding:0; height:34px; }
+  table.hoja thead th{ background:#E9EEF9; color:#55607F; font-size:12px; font-weight:800;
+                       text-align:center; letter-spacing:.06em; height:26px; }
+  table.hoja th.esq{ width:34px; background:#DFE6F5; }
+  table.hoja th.nf{ width:34px; background:#E9EEF9; color:#55607F; font-size:12px; font-weight:800;
+                    text-align:center; }
+  table.hoja td{ font-size:14.5px; color:var(--tinta); }
+  table.hoja td .q{ display:block; padding:7px 9px; white-space:nowrap; overflow:hidden;
+                    text-overflow:ellipsis; }
+  table.hoja td.rot .q{ font-weight:700; }
+  table.hoja tr.enc td{ background:var(--marino); color:#fff; }
+  table.hoja tr.enc td .q{ font-weight:800; font-size:13px; letter-spacing:.02em; }
+  table.hoja td.num .q{ text-align:right; }
+  table.hoja td.dada{ background:#F3F6FD; }
+  table.hoja td.dada .q{ text-align:right; color:#44506F; }
+  table.hoja td.libre{ background:#FFFBEA; }
+  table.hoja td.libre input{ width:100%; height:34px; border:0; background:transparent; font:inherit;
+                             font-size:14.5px; text-align:right; padding:0 9px; color:var(--tinta);
+                             font-variant-numeric:tabular-nums; }
+  table.hoja td.libre input:focus{ outline:2px solid var(--fucsia); outline-offset:-2px;
+                                   background:#fff; text-align:left; }
+  table.hoja td.libre.ok{ background:#EAF7F7; }
+  table.hoja td.libre.ok input{ color:var(--verde); font-weight:700; }
+  table.hoja td.libre.mal{ background:#FBEDEC; }
+  table.hoja td.libre.mal input{ color:#8A201B; }
+  table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
+  .hint{ margin:0 0 2px; font-size:14.5px; line-height:1.6; color:#44506F; }
+  .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
+  .hbar .fx{ font-size:13px; color:#55607F; line-height:1.5; }
+  .hbar .fx b{ color:var(--marino); font-weight:700; }
+  .pista-fx{ margin:10px 0 0; font-size:14px; line-height:1.6; color:#44506F;
+             border-left:3px solid var(--celeste); padding-left:11px; }
+  .pista-fx code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13.5px;
+                  background:#EEF3FC; border-radius:4px; padding:1px 5px; color:var(--marino); }
+  @media (max-width:560px){
+    table.hoja td{ font-size:13.5px; } table.hoja td .q{ padding:6px 7px; }
+    table.hoja td.libre input{ font-size:13.5px; padding:0 7px; }
+  }
+
+  /* ---------- crucigrama ---------- */
+  .cruz{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+  .cuad{ border-collapse:collapse; margin:0 auto; table-layout:fixed; width:max-content; }
+  .cuad td{ width:34px; height:34px; padding:0; border:0; position:relative; }
+  .cuad td.v{ border:1.5px solid var(--gris); background:#fff; }
+  .cuad td .n{ position:absolute; top:1px; left:2px; font-size:9px; font-weight:800;
+               color:var(--gris); line-height:1; pointer-events:none; }
+  .cuad input{ width:100%; height:100%; border:0; background:transparent; text-align:center;
+               font:inherit; font-size:17px; font-weight:700; text-transform:uppercase;
+               color:var(--tinta); padding:0; }
+  .cuad input:focus{ outline:none; background:#FFF3CD; }
+  .cuad td.lista{ background:#EFF7F2; border-color:var(--verde); }
+  .cuad td.lista input{ color:var(--verde); }
+  .cuad td.foco{ background:#FFF8E1; }
+  .pistas{ display:grid; gap:14px; grid-template-columns:1fr; margin-top:16px; }
+  @media (min-width:760px){ .pistas{ grid-template-columns:1fr 1fr; } }
+  .pistas h5{ margin:0 0 7px; font-size:13px; font-weight:800; text-transform:uppercase;
+              letter-spacing:.06em; color:var(--rojo); }
+  .pistas ol{ margin:0; padding-left:22px; font-size:14.5px; line-height:1.65; }
+  .pistas li{ margin-bottom:5px; }
+  .pistas li.ok{ color:var(--verde); text-decoration:line-through; }
+  .cruz .desliza{ display:none; font-size:12.5px; color:var(--gris); text-align:center;
+                  margin:0 0 7px; }
+  @media (max-width:700px){
+    .cuad td{ width:26px; height:26px; } .cuad input{ font-size:14px; }
+    .cruz .desliza{ display:block; }
+  }
+
+  /* ---------- participantes flotantes (en pantalla completa) ---------- */
+  .flopart{ position:fixed; left:16px; bottom:104px; z-index:10002; font:inherit; cursor:pointer;
+            display:flex; align-items:center; gap:8px; border:0; border-radius:99px;
+            background:var(--marino); color:#fff; padding:11px 16px; font-size:14px; font-weight:800;
+            box-shadow:0 8px 22px rgba(7,23,103,.34); }
+  .flopart:hover{ background:var(--fucsia); }
+  .flopart .bo{ background:var(--celeste); color:var(--marino); border-radius:99px;
+                padding:1px 8px; font-size:12.5px; font-weight:900; }
+  .panpart{ position:fixed; left:16px; bottom:158px; z-index:10003; width:min(420px, calc(100vw - 32px));
+            max-height:min(70vh, 560px); overflow:auto; background:#fff; border-radius:14px;
+            border:1px solid var(--linea); box-shadow:0 18px 44px rgba(7,23,103,.3); }
+  .panpart .hd{ position:sticky; top:0; display:flex; align-items:center; gap:10px;
+                background:var(--marino); color:#fff; padding:10px 14px; font-size:14px; font-weight:800; }
+  .panpart .hd span{ flex:1; min-width:0; }
+  .panpart .hd button{ font:inherit; font-size:15px; line-height:1; cursor:pointer; color:#fff;
+                       background:rgba(255,255,255,.16); border:0; border-radius:6px; padding:6px 9px; }
+  .panpart .nido{ padding:4px 10px 10px; }
+  /* dentro del panel el titulo ya va en la barra: no se repite */
+  .panpart .nido .titsec, .panpart .nido .aviso{ display:none; }
+  .panpart .nido .o-sheet{ box-shadow:none; border:0; margin:0 !important; padding:8px 2px !important; }
+  @media (max-width:560px){ .panpart{ max-height:62vh; } .flopart{ padding:10px 13px; font-size:13px; } }
+
+  /* ---------- fichas de régimen ---------- */
+  .reg{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff;
+        margin-bottom:14px; }
+  .reg > h4{ margin:0; padding:11px 15px; color:#fff; font-size:15px; font-weight:800;
+             letter-spacing:.02em; }
+  .reg.n > h4{ background:var(--nrus); } .reg.e > h4{ background:var(--rer); }
+  .reg.m > h4{ background:var(--rmt); }  .reg.g > h4{ background:var(--rg); }
+  .reg .c{ padding:0; }
+  .reg table{ width:100%; border-collapse:collapse; font-size:15px; }
+  .reg td{ padding:9px 14px; border-bottom:1px solid var(--linea); vertical-align:top; }
+  .reg tr:last-child td{ border-bottom:0; }
+  .reg td:first-child{ width:38%; color:var(--gris); font-weight:600; }
+  @media (max-width:560px){ .reg td{ font-size:14px; padding:8px 11px; }
+                            .reg td:first-child{ width:42%; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a></span> / <b>Sesi&oacute;n 6</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 6</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="cf">
+
+  <div class="marca">
+    <img class="lgc" src="marca/certus-azul.png" alt="Certus">
+    <span class="tx">
+      <h1>El cr&eacute;dito fiscal del IGV</h1>
+      <p><span class="sem">Sesi&oacute;n 6</span> &middot; Sistemas de Procesos Contables &middot; Lo que hay que saber antes de declarar el IGV</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Ingresa con tu DNI</h2>
+    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
+       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
+       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
+       sesi&oacute;n o entres desde otro equipo.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Base: art&iacute;culos 18&deg;, 19&deg; y 25&deg; del TUO de la Ley del
+    IGV y art&iacute;culo 2&deg; de la Ley N&deg; 29215, seg&uacute;n la orientaci&oacute;n de la SUNAT en
+    <a href="https://orientacion.sunat.gob.pe/3111-06-credito-fiscal" target="_blank" rel="noopener">06. Cr&eacute;dito
+    fiscal</a>. Los plazos de anotaci&oacute;n se revisan en sunat.gob.pe antes de cada declaraci&oacute;n.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
+        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
+        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+function globo2(a, b, et, txt){
+  return '<div class="perso dos"><img src="'+a+'" alt="" loading="lazy">'+
+         '<img class="b" src="'+b+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ============ mini hoja de cálculo: fórmulas tipo Excel ============ */
+/* Soporta: + - * / ^ % ( ) , referencias A1, rangos A1:B4, comparaciones,
+   texto entre comillas y las funciones de uso diario, en español e inglés. */
+function HojaFx(leeCelda){
+
+  function letras(n){ var s=''; n++; while(n>0){ var r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=(n-1-r)/26; } return s; }
+  function col(s){ var n=0; for(var i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64); return n-1; }
+
+  function aNumero(v){
+    if(typeof v==='number') return v;
+    if(v===null || v===undefined) return 0;
+    var s=String(v).trim();
+    if(s==='') return 0;
+    s=s.replace(/\s/g,'').replace(/^S\/\.?/i,'');
+    /* 1,234.56 -> 1234.56 ; 1,234 -> 1234 (la coma solo separa miles) */
+    if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,'');
+    if(/%$/.test(s)){ var b=parseFloat(s.slice(0,-1)); return isNaN(b)?NaN:b/100; }
+    var n=parseFloat(s);
+    return (isNaN(n) || !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.test(s)) ? NaN : n;
+  }
+  function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
+  function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
+
+  var FN={
+    SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
+    PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
+                           if(!v.length) throw new Error('#DIV/0'); return v.reduce(function(x,y){return x+y;},0)/v.length; },
+    MIN:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.min.apply(null,v); },
+    MAX:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.max.apply(null,v); },
+    CONTAR:function(a){ return a.map(aNumero).filter(function(n){return !isNaN(n);}).length; },
+    PRODUCTO:function(a){ var p=1; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) p*=n; }); return p; },
+    ABS:   function(a){ return Math.abs(num(a[0])); },
+    ENTERO:function(a){ return Math.floor(num(a[0])); },
+    REDONDEAR: function(a){
+      var d=a.length>1 ? num(a[1]) : 0, f=Math.pow(10,d);
+      var x=num(a[0])*f;
+      /* Excel redondea el 0.5 hacia afuera */
+      return (x<0 ? -Math.round(-x) : Math.round(x))/f; },
+    SI:    function(a){ return bool(a[0]) ? a[1] : (a.length>2 ? a[2] : false); },
+    Y:     function(a){ return a.every(bool); },
+    O:     function(a){ return a.some(bool); },
+    NO:    function(a){ return !bool(a[0]); },
+    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
+  };
+  /* nombres en inglés y variantes con punto */
+  var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
+              ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
+              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
+
+  /* ---------- analizador ---------- */
+  function evalua(txt, pide){
+    var s=txt, i=0;
+    function esp(){ while(i<s.length && /\s/.test(s[i])) i++; }
+    function ojo(){ esp(); return s[i]; }
+    function come(t){ esp(); if(s.substr(i,t.length).toUpperCase()===t){ i+=t.length; return true; } return false; }
+
+    function expr(){
+      var a=suma();
+      for(;;){
+        esp();
+        var op=null;
+        if(s.substr(i,2)==='<>'||s.substr(i,2)==='>='||s.substr(i,2)==='<='){ op=s.substr(i,2); i+=2; }
+        else if(s[i]==='='||s[i]==='>'||s[i]==='<'){ op=s[i]; i++; }
+        else return a;
+        var b=suma(), x=aNumero(a), y=aNumero(b), cmp;
+        if(isNaN(x)||isNaN(y)) cmp=String(a).trim().toUpperCase().localeCompare(String(b).trim().toUpperCase());
+        else cmp = x<y ? -1 : x>y ? 1 : 0;
+        a = op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
+            op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
+      }
+    }
+    function suma(){
+      var a=mult();
+      for(;;){ esp();
+        if(s[i]==='+'){ i++; a=num(a)+num(mult()); }
+        else if(s[i]==='-'){ i++; a=num(a)-num(mult()); }
+        else if(s[i]==='&'){ i++; a=String(fmt(a))+String(fmt(mult())); }
+        else return a; }
+    }
+    function mult(){
+      var a=pot();
+      for(;;){ esp();
+        if(s[i]==='*'){ i++; a=num(a)*num(pot()); }
+        else if(s[i]==='/'){ i++; var d=num(pot()); if(d===0) throw new Error('#DIV/0'); a=num(a)/d; }
+        else return a; }
+    }
+    function pot(){ var a=unario(); esp(); if(s[i]==='^'){ i++; return Math.pow(num(a), num(pot())); } return a; }
+    function unario(){ esp();
+      if(s[i]==='-'){ i++; return -num(unario()); }
+      if(s[i]==='+'){ i++; return num(unario()); }
+      return porciento(); }
+    function porciento(){ var a=atomo(); esp(); if(s[i]==='%'){ i++; return num(a)/100; } return a; }
+
+    function atomo(){
+      esp();
+      if(s[i]==='('){ i++; var v=expr(); esp(); if(s[i]!==')') throw new Error('#FALTA )'); i++; return v; }
+      if(s[i]==='"'){ i++; var t=''; while(i<s.length && s[i]!=='"'){ t+=s[i++]; } i++; return t; }
+      var m=/^([A-Za-zÁÉÍÓÚÑ_][A-Za-z0-9ÁÉÍÓÚÑ_.]*)\s*\(/.exec(s.slice(i));
+      if(m){
+        var nom=m[1].toUpperCase(); nom=ALIAS[nom]||nom;
+        if(!FN[nom]) throw new Error('#NOMBRE');
+        i+=m[0].length;
+        var args=[];
+        esp();
+        if(s[i]===')'){ i++; }
+        else{
+          for(;;){
+            args.push(arg());
+            esp();
+            if(s[i]===','||s[i]===';'){ i++; continue; }
+            if(s[i]===')'){ i++; break; }
+            throw new Error('#FALTA )');
+          }
+        }
+        var llanos=[];
+        args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
+        return FN[nom](llanos);
+      }
+      var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
+      if(r){
+        var ini=i; i+=r[0].length;
+        esp();
+        if(s[i]===':'){
+          var j=i+1, resto=s.slice(j);
+          var r2=/^\s*(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(resto);
+          if(r2){
+            i=j+r2[0].length;
+            return { rango:true, valores:rango(r[2],+r[4],r2[2],+r2[4]) };
+          }
+        }
+        i=ini+r[0].length;
+        return pide(r[2].toUpperCase()+r[4]);
+      }
+      var n=/^\d*\.?\d+([eE][-+]?\d+)?/.exec(s.slice(i));
+      if(n){ i+=n[0].length; return parseFloat(n[0]); }
+      throw new Error('#ERROR');
+    }
+    function arg(){ return expr(); }
+    function rango(c1,f1,c2,f2){
+      var a=col(c1.toUpperCase()), b=col(c2.toUpperCase());
+      var x1=Math.min(a,b), x2=Math.max(a,b), y1=Math.min(f1,f2), y2=Math.max(f1,f2);
+      if((x2-x1+1)*(y2-y1+1) > 400) throw new Error('#RANGO');
+      var out=[];
+      for(var y=y1;y<=y2;y++) for(var x=x1;x<=x2;x++) out.push(pide(letras(x)+y));
+      return out;
+    }
+
+    var v=expr();
+    esp();
+    if(i<s.length) throw new Error('#ERROR');
+    if(v && v.rango) throw new Error('#VALOR');
+    return v;
+  }
+
+  function fmt(v){
+    if(typeof v==='boolean') return v?'VERDADERO':'FALSO';
+    if(typeof v==='number'){
+      if(!isFinite(v)) return '#NUM';
+      var r=Math.round(v*100)/100;
+      return r.toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    return String(v);
+  }
+
+  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras };
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('cf6_son')!=='0'; }catch(e){}
+function nota(f,ini,dur,vol,tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{ fallo.currentTime=0; var p=fallo.play();
+       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false'); }
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('cf6_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien(); });
+pintaSon();
+
+/* ================= las actividades ================= */
+var ACT={
+
+/* 1 ------------------------------------------------------------- */
+a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
+  lista:[
+   { q:'Este mes cobraste IGV a tus clientes y también pagaste IGV en tus compras. ¿Qué le entregas a la SUNAT?',
+     ops:['Todo el IGV que cobraste en tus ventas',
+          'La diferencia entre el IGV que cobraste y el que pagaste',
+          'El IGV que pagaste en tus compras'], ok:1,
+     pq:'El IGV se paga por diferencia: al impuesto de tus ventas le restas el de tus compras. '+
+        'Ese descuento es el crédito fiscal.' },
+   { q:'¿De cuánto es la tasa del IGV en el Perú?',
+     ops:['16 %','18 %','19 %'], ok:1,
+     pq:'18 %: 16 % del IGV propiamente dicho más 2 % del Impuesto de Promoción Municipal. '+
+        'En la práctica siempre se aplica junto, como 18 %.' } ] },
+
+/* 2 ------------------------------------------------------------- */
+a1:{ tipo:'hoja', titulo:'Actividad 2 · El IGV de cada compra',
+  intro:'Las celdas amarillas son tuyas. Escribe la fórmula, no el resultado, y pulsa Comprobar.',
+  cols:[{w:220},{w:122},{w:122},{w:128}],
+  filas:[
+   [{x:'Compra del mes'},{x:'Valor de venta'},{x:'IGV 18 %'},{x:'Total pagado'}],
+   [{x:'Mercadería para revender'},{n:12000},{form:'=B2*18%'},{form:'=B2+C2'}],
+   [{x:'Servicio de flete'},{n:3500},{e:630, f:true, ph:'=B3*18%'},{e:4130, f:true, ph:'=B3+C3'}],
+   [{x:'Útiles de oficina'},{n:800},{e:144, f:true},{e:944, f:true}],
+   [{x:'TOTAL'},{e:16300, f:true, ph:'=SUMA(B2:B4)'},{e:2934, f:true},{e:19234, f:true}] ],
+  ayuda:'La fila 2 ya está resuelta: mira sus fórmulas pasando el mouse por encima. '+
+        'Para el total usa <code>=SUMA(B2:B4)</code>. El crédito fiscal de este mes es la columna C.',
+  fin:globo(P.idea,'Resuelto','Esos S/ 2,934 de la columna C son tu crédito fiscal del mes: el IGV que ya '+
+      'pagaste a tus proveedores y que vas a descontar del IGV de tus ventas.') },
+
+/* 3 ------------------------------------------------------------- */
+a2:{ tipo:'arr', titulo:'Actividad 3 · ¿Da derecho a crédito fiscal?',
+  fichas:[ {id:'s1', t:'Factura por mercadería que vas a revender', g:'SI'},
+           {id:'s2', t:'Factura del alquiler del local donde atiendes', g:'SI'},
+           {id:'s3', t:'Recibo de luz del local, a nombre de la empresa', g:'SI'},
+           {id:'s4', t:'Factura del transportista que te trae la mercadería', g:'SI'},
+           {id:'n1', t:'Boleta de venta del almuerzo del gerente', g:'NO'},
+           {id:'n2', t:'Factura emitida a nombre de otra empresa', g:'NO'},
+           {id:'n3', t:'Factura por un televisor para la casa del dueño', g:'NO'},
+           {id:'n4', t:'Factura de una compra destinada a una venta exonerada', g:'NO'} ],
+  cajas:[ {id:'SI', t:'Sí da crédito fiscal'}, {id:'NO', t:'No da crédito fiscal'} ],
+  fin:globo(P.expl,'Resuelto','Los dos requisitos del artículo 18°: que la compra sea gasto o costo aceptado '+
+      'para el Impuesto a la Renta, y que se destine a operaciones gravadas con IGV. Si falla uno de los dos, '+
+      'no hay crédito fiscal, por más factura que tengas.') },
+
+/* 4 ------------------------------------------------------------- */
+a3:{ tipo:'quiz', titulo:'Actividad 4 · Los requisitos formales',
+  lista:[
+   { q:'La factura dice solo «total S/ 1,180, IGV incluido», sin separar el monto del impuesto. ¿Puedes usar el crédito?',
+     ops:['Sí, basta con que diga que el IGV está incluido',
+          'No: el IGV tiene que estar consignado por separado en el comprobante',
+          'Sí, si lo calculas tú mismo y lo anotas'], ok:1,
+     pq:'Es el primer requisito formal del artículo 19°: el impuesto va discriminado en el comprobante.' },
+   { q:'¿Dónde tiene que estar anotado el comprobante para poder usar el crédito fiscal?',
+     ops:['En el Registro de Ventas','En el Registro de Compras','En el Libro Diario'], ok:1,
+     pq:'En el Registro de Compras, que además debe estar legalizado antes de usarse.' },
+   { q:'Te llega una factura de marzo que te olvidaste de anotar. ¿Hasta cuándo puedes anotarla?',
+     ops:['Solo en marzo, después se pierde',
+          'En marzo o en cualquiera de los 12 meses siguientes',
+          'En cualquier momento, no hay plazo'], ok:1,
+     pq:'El artículo 2° de la Ley N° 29215 permite anotarla en la hoja del mes de emisión, en la del pago '+
+        'del impuesto o en la de los 12 meses siguientes. El crédito se usa en el período de la hoja donde quedó anotada.' },
+   { q:'Compraste con una boleta de venta a un proveedor del NRUS. ¿Tienes crédito fiscal?',
+     ops:['Sí, la boleta sirve igual que la factura',
+          'No: la boleta de venta no da derecho a crédito fiscal',
+          'Sí, pero solo por la mitad del IGV'], ok:1,
+     pq:'La boleta no discrimina el IGV y no da crédito fiscal. Por eso, si necesitas el crédito, pides factura.' } ] },
+
+/* 5 ------------------------------------------------------------- */
+a4:{ tipo:'hoja', titulo:'Actividad 5 · Cuánto IGV pagas este mes',
+  intro:'Completa las celdas amarillas con fórmulas y comprueba.',
+  cols:[{w:250},{w:130},{w:150}],
+  filas:[
+   [{x:'Marzo'},{x:'Base imponible'},{x:'IGV'}],
+   [{x:'Ventas del mes'},{n:85000},{e:15300, f:true, ph:'=B2*18%'}],
+   [{x:'Compras del mes'},{n:52000},{e:9360, f:true}],
+   [{x:'IGV a pagar'},{x:''},{e:5940, f:true, ph:'=C2-C3'}],
+   [{x:'¿Qué sale este mes?'},{x:''},{e:'PAGAR', f:true, ph:'=SI(C4>0,…)'}] ],
+  ayuda:'En C5 usa la función SI, igual que en Excel: '+
+        '<code>=SI(C4&gt;0,"PAGAR","SALDO A FAVOR")</code>. El IGV de ventas se llama débito fiscal o '+
+        'impuesto bruto; el de compras es el crédito fiscal.',
+  fin:globo2(P.pres, P.bien,'Resuelto','Débito menos crédito: 15,300 − 9,360 = 5,940. Esa es la cifra que '+
+      'termina en la casilla del formulario cuando declaras el IGV del mes.') },
+
+/* 6 ------------------------------------------------------------- */
+a5:{ tipo:'hoja', titulo:'Actividad 6 · El saldo a favor que se arrastra',
+  intro:'Abril ya está resuelto como ejemplo. Completa mayo y junio con fórmulas.',
+  cols:[{w:236},{w:112},{w:112},{w:112}],
+  filas:[
+   [{x:'Concepto'},{x:'Abril'},{x:'Mayo'},{x:'Junio'}],
+   [{x:'IGV de ventas'},{n:9000},{n:16200},{n:21600}],
+   [{x:'IGV de compras'},{n:14000},{n:11000},{n:12400}],
+   [{x:'Saldo a favor del mes anterior'},{n:0},{e:5000, f:true, ph:'=B6'},{e:0, f:true}],
+   [{x:'IGV a pagar'},{form:'=MAX(B2-B3-B4,0)'},{e:200, f:true},{e:9200, f:true}],
+   [{x:'Saldo a favor para el mes siguiente'},{form:'=MAX(B3+B4-B2,0)'},{e:0, f:true},{e:0, f:true}] ],
+  ayuda:'Copia la lógica de abril: en la fila 5 <code>=MAX(C2-C3-C4,0)</code> y en la fila 6 '+
+        '<code>=MAX(C3+C4-C2,0)</code>. En la fila 4 el saldo del mes anterior se toma de la fila 6 '+
+        'de la columna de la izquierda.',
+  fin:globo(P.full,'Resuelto','En abril el crédito superó al débito, así que no se pagó nada y quedaron '+
+      'S/ 5,000 a favor. Ese saldo se usó en mayo y bajó el pago a S/ 200. Es lo que manda el artículo 25°: '+
+      'el saldo se aplica en los meses siguientes hasta agotarlo.') },
+
+/* 7 ------------------------------------------------------------- */
+a6:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
+  filas:12, cols:10,
+  palabras:[
+   {p:'COMPRAS', r:0, c:0, dir:'H', pista:'El registro donde hay que anotar el comprobante'},
+   {p:'REGISTRO', r:0, c:4, dir:'V', pista:'Libro donde se anota la compra para usar el crédito'},
+   {p:'SALDO', r:0, c:6, dir:'V', pista:'Lo que queda a tu favor cuando el crédito supera al débito'},
+   {p:'FACTURA', r:1, c:9, dir:'V', pista:'El comprobante que sí da derecho a crédito fiscal'},
+   {p:'CREDITO', r:2, c:0, dir:'V', pista:'El IGV de tus compras que descuentas del IGV de tus ventas'},
+   {p:'RUC', r:3, c:0, dir:'H', pista:'El número del emisor que debe figurar en el comprobante'},
+   {p:'DEBITO', r:5, c:0, dir:'H', pista:'El IGV de tus ventas, también llamado impuesto bruto'},
+   {p:'GRAVADA', r:5, c:7, dir:'V', pista:'Así debe ser la operación a la que destinas la compra'},
+   {p:'PRORRATA', r:7, c:2, dir:'H', pista:'El reparto del crédito cuando hay ventas gravadas y no gravadas'},
+   {p:'BOLETA', r:9, c:2, dir:'H', pista:'El comprobante que no da derecho a crédito fiscal'},
+   {p:'VENTAS', r:11, c:3, dir:'H', pista:'El registro donde se anotan las facturas que emites'} ],
+  fin:globo(P.bien,'Resuelto','Once palabras y ya tienes el vocabulario completo del IGV.') },
+
+/* 8 ------------------------------------------------------------- */
+a7:{ tipo:'quiz', titulo:'Actividad 8 · Quiz final',
+  lista:[
+   { q:'IGV de ventas 9,000 e IGV de compras 11,500. ¿Qué pasa este mes?',
+     ops:['Pagas 2,500','Pagas 20,500','No pagas nada y te quedan 2,500 de saldo a favor'], ok:2,
+     pq:'El crédito supera al débito, así que no hay impuesto por pagar y el exceso de 2,500 queda como '+
+        'saldo a favor para el mes siguiente.' },
+   { q:'Una empresa compra un equipo que usará solo para fabricar un producto exonerado del IGV. ¿Usa el crédito?',
+     ops:['Sí, porque tiene factura','No, porque la compra no se destina a operaciones gravadas',
+          'Sí, pero recién el año siguiente'], ok:1,
+     pq:'Falla el segundo requisito sustancial del artículo 18°: la compra debe destinarse a operaciones '+
+        'por las que se pague el IGV.' },
+   { q:'¿Cómo se llama el IGV de tus ventas?',
+     ops:['Crédito fiscal','Débito fiscal o impuesto bruto','Saldo a favor'], ok:1,
+     pq:'El de las ventas es el débito o impuesto bruto; el de las compras es el crédito fiscal. '+
+        'La resta de los dos es lo que pagas.' },
+   { q:'El proveedor te emitió la factura con un RUC que no coincide con el de la SUNAT. ¿Qué pasa con el crédito?',
+     ops:['No hay problema, basta con el monto',
+          'Se pierde: el comprobante debe identificar bien al emisor',
+          'Se usa solo la mitad'], ok:1,
+     pq:'El artículo 19° pide que el comprobante consigne el nombre y el número de RUC del emisor de forma '+
+        'que no haya confusión al contrastarlo con la información de la SUNAT.' },
+   { q:'Una empresa tiene ventas gravadas y ventas exoneradas, y hace compras que sirven para las dos. ¿Qué aplica?',
+     ops:['Usa todo el crédito fiscal','Usa la prorrata para separar la parte que sí puede usar',
+          'No usa nada de crédito'], ok:1,
+     pq:'Cuando una compra sirve a los dos tipos de operación y no se puede separar, el crédito se reparte '+
+        'en proporción a las ventas gravadas. A eso se le llama prorrata.' } ] },
+
+/* 9 ------------------------------------------------------------- */
+a8:{ tipo:'sel', titulo:'Actividad 9 · Antes de declarar',
+  lista:[
+   { q:'Tienes una factura de un proveedor, a nombre de tu empresa, por mercadería que vas a vender gravada, con el IGV separado y anotada en el Registro de Compras',
+     ops:['Sí uso el crédito fiscal','No uso el crédito fiscal'], ok:0,
+     pq:'Cumple los dos requisitos sustanciales y los formales: el crédito se usa sin problema.' },
+   { q:'Tienes la factura correcta, pero todavía no la anotas en el Registro de Compras',
+     ops:['Uso el crédito igual','Primero la anoto, y la uso en el período de esa hoja'], ok:1,
+     pq:'Sin anotación no hay crédito. Tienes el mes de emisión o los 12 meses siguientes para anotarla.' },
+   { q:'Compraste con boleta de venta en una bodega del NRUS',
+     ops:['Uso el crédito fiscal','No hay crédito fiscal, solo gasto'], ok:1,
+     pq:'La boleta no da crédito fiscal. Puede servir como gasto para la renta si cumple sus propias reglas, '+
+        'pero el IGV no se recupera.' } ],
+  fin:globo2(P.pres, P.bien,'Para cerrar','Antes de declarar el IGV, revisa siempre lo mismo: factura a tu '+
+      'nombre, IGV separado, compra destinada a venta gravada y anotada en el Registro de Compras. '+
+      'Si falta uno, ese crédito no entra.') }
+};
+
+/* ================= las diapositivas ================= */
+function ficha(cl, nom, filas){
+  return '<div class="reg '+cl+'"><h4>'+nom+'</h4><div class="c"><table><tbody>'+
+    filas.map(function(f){ return '<tr><td>'+f[0]+'</td><td>'+f[1]+'</td></tr>'; }).join('')+
+    '</tbody></table></div></div>';
+}
+
+var D=[
+
+/* 1 ------------------------------------------------------------- */
+{ et:'Inicio', t:'El crédito fiscal del IGV', clave:'a0',
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
+        '<span>| www.certus.edu.pe</span></div>'+
+      '<h2>El IGV se paga por diferencia</h2>'+
+      '<p>Sesión 6 · Sistemas de Procesos Contables</p>'+
+      '<div class="via"><b>Débito</b><b>Crédito</b><b>Saldo a favor</b></div>'+
+    '</div>'+
+    globo(P.pres,'De qué va la sesión',
+      'Antes de declarar el IGV hay que entender una sola cosa: no entregas todo el impuesto que cobraste, '+
+      'sino la diferencia con el que pagaste en tus compras. Ese descuento es el crédito fiscal, y solo lo '+
+      'puedes usar si cumples ciertos requisitos. Nueve diapositivas, nueve actividades y tres mini hojas de '+
+      'cálculo donde vas a escribir fórmulas como en Excel.') },
+
+/* 2 ------------------------------------------------------------- */
+{ et:'Qué es', t:'Qué es el crédito fiscal', clave:'a1',
+  h:'<p class="enc">El IGV que ya pagaste en tus compras</p>'+
+    '<p class="sub">Crédito fiscal: el impuesto que figura por separado en el comprobante de tu compra</p>'+
+    '<div class="form">IGV a pagar = débito fiscal &minus; crédito fiscal'+
+      '<small>débito: el IGV de tus ventas · crédito: el IGV de tus compras</small></div>'+
+    globo(P.expl,'Cómo funciona',
+      'Compras a 12,000 más IGV y pagas 2,160 de impuesto a tu proveedor. Después vendes y le cobras IGV a '+
+      'tu cliente. Cuando declaras, al IGV que cobraste le restas esos 2,160 que ya pagaste. Si no existiera '+
+      'el crédito fiscal, el mismo impuesto se pagaría dos veces sobre el mismo producto.')+
+    '<div class="av">La tasa es 18 %: 16 % de IGV y 2 % del Impuesto de Promoción Municipal. '+
+    'En la hoja de abajo se calcula junto, como 18 %.</div>' },
+
+/* 3 ------------------------------------------------------------- */
+{ et:'Requisitos', t:'Requisitos sustanciales', clave:'a2',
+  h:'<p class="enc">Los dos requisitos de fondo</p>'+
+    '<p class="sub">Artículo 18° de la Ley del IGV: si falla uno, no hay crédito fiscal</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>1 · Gasto o costo aceptado</h4><div class="c">'+
+      '<p>La compra tiene que ser admitida como gasto o costo según la Ley del Impuesto a la Renta, '+
+      'aunque la empresa no esté afecta a ese impuesto.</p></div></div>'+
+    '<div class="fc rj"><h4>2 · Destinada a operación gravada</h4><div class="c">'+
+      '<p>Lo comprado tiene que usarse en operaciones por las que se paga IGV. Si se destina a una venta '+
+      'exonerada o inafecta, ese IGV no se recupera.</p></div></div>'+
+    '</div>'+
+    globo(P.alum,'La pregunta de siempre',
+      'Para cada factura pregúntate dos cosas: ¿esto es gasto del negocio o del dueño?, y ¿lo que compré '+
+      'sirve para una venta con IGV? Pruébalo con los ocho casos de abajo.') },
+
+/* 4 ------------------------------------------------------------- */
+{ et:'Formales', t:'Requisitos formales', clave:'a3',
+  h:'<p class="enc">Los tres requisitos de forma</p>'+
+    '<p class="sub">Artículo 19° de la Ley del IGV y artículo 2° de la Ley N° 29215</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Requisito</th><th>Qué significa en la práctica</th></tr></thead><tbody>'+
+    '<tr><td>IGV por separado</td><td>El comprobante muestra el valor de venta y el IGV en líneas distintas, '+
+      'no un total con el impuesto adentro</td></tr>'+
+    '<tr><td>Emisor identificado</td><td>El nombre y el RUC del emisor están bien puestos, de modo que '+
+      'coincidan con lo que tiene la SUNAT, y el emisor estaba habilitado para emitir</td></tr>'+
+    '<tr><td>Anotado en el Registro de Compras</td><td>En la hoja del mes de emisión, en la del pago del '+
+      'impuesto o en la de los 12 meses siguientes. El crédito se usa en el período de la hoja donde quedó '+
+      'anotado</td></tr>'+
+    '<tr class="res"><td>Registro legalizado</td><td>El Registro de Compras debe estar legalizado antes de '+
+      'empezar a usarlo</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.idea,'Lo que más se falla',
+      'La anotación. La factura existe, el gasto es real, pero nadie la registró a tiempo y el crédito se '+
+      'discute en la fiscalización. Por eso el Registro de Compras se cierra mes a mes, no al final del año.') },
+
+/* 5 ------------------------------------------------------------- */
+{ et:'A pagar', t:'Cuánto IGV pagas este mes', clave:'a4',
+  h:'<p class="enc">Débito menos crédito</p>'+
+    '<p class="sub">La cuenta que haces cada mes antes de declarar</p>'+
+    globo(P.full,'Ojo con el orden',
+      'Primero calculas el IGV de tus ventas, después el de tus compras y recién restas. Si el resultado es '+
+      'positivo, eso pagas. Si es negativo, no pagas nada este mes.') },
+
+/* 6 ------------------------------------------------------------- */
+{ et:'Saldo', t:'El saldo a favor', clave:'a5',
+  h:'<p class="enc">Cuando el crédito es mayor que el débito</p>'+
+    '<p class="sub">Artículo 25°: el exceso queda a tu favor y se aplica en los meses siguientes hasta agotarlo</p>'+
+    '<div class="av">El saldo a favor no se devuelve en efectivo ni se pierde: se arrastra al mes siguiente '+
+    'y se descuenta ahí. Pasa mucho cuando la empresa compró mucho en un mes, por ejemplo al abrir o al '+
+    'hacer una campaña.</div>'+
+    globo(P.expl,'Tres meses seguidos',
+      'En la hoja de abajo vas a seguir el saldo de abril a junio. Fíjate cómo lo que sobra en un mes baja '+
+      'el pago del siguiente, hasta que se agota.') },
+
+/* 7 ------------------------------------------------------------- */
+{ et:'Crucigrama', t:'Crucigrama del IGV', clave:'a6',
+  h:'<p class="enc">Crucigrama</p>'+
+    '<p class="sub">Once palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
+
+/* 8 ------------------------------------------------------------- */
+{ et:'Quiz final', t:'Quiz final del crédito fiscal', clave:'a7',
+  h:'<p class="enc">Quiz final</p>'+
+    '<p class="sub">Cinco preguntas que cruzan todo lo de la sesión.</p>' },
+
+/* 9 ------------------------------------------------------------- */
+{ et:'Cierre', t:'Lo que te llevas', clave:'a8',
+  h:'<p class="enc">La lista que revisas antes de declarar</p>'+
+    '<p class="sub">Cuatro preguntas por cada factura</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>1 · ¿Está a nombre de la empresa?</h4><div class="c">'+
+      '<p>Con el RUC y el nombre correctos, y de un emisor habilitado.</p></div></div>'+
+    '<div class="fc rj"><h4>2 · ¿El IGV está separado?</h4><div class="c">'+
+      '<p>Valor de venta en una línea y el impuesto en otra. Un total con el IGV adentro no sirve.</p></div></div>'+
+    '<div class="fc"><h4>3 · ¿Es gasto del negocio y va a una venta gravada?</h4><div class="c">'+
+      '<p>Los dos requisitos del artículo 18°, juntos.</p></div></div>'+
+    '<div class="fc rj"><h4>4 · ¿Está en el Registro de Compras?</h4><div class="c">'+
+      '<p>En el mes de emisión o dentro de los 12 meses siguientes, en un registro legalizado.</p></div></div>'+
+    '</div>' }
+];
+
+/* ================= estado ================= */
+var LS='cf_sem6_v1';
+/* en el mismo orden en que aparecen las diapositivas */
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8'];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+                  CLAVES.forEach(function(k){ g[k]={}; }); return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+/* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
+function fusiona(d){
+  if(!d || typeof d!=='object') return;
+  ['visto','mal','hoja'].forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  CLAVES.forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  yaCruz={};
+  pinta(true);
+  sopla('Recuperamos tu avance: '+totalOk()+' de '+totalMax()+' respuestas');
+}
+
+function cuantas(k){
+  var A=ACT[k];
+  if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arr')  return A.fichas.length;
+  if(A.tipo==='cruz') return A.palabras.length;
+  if(A.tipo==='hoja'){
+    var n=0;
+    A.filas.forEach(function(fi){ fi.forEach(function(c){ if(c.e!==undefined) n++; }); });
+    return n;
+  }
+  return A.lista.length;
+}
+function hechas(k){ return Object.keys(G[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+var i=0;
+
+/* ================= arrastre ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[data-f]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true); ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35'; f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display=''; f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null; f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    });
+    f.addEventListener('pointercancel', function(){
+      if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){ if(!el) return; el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450); }
+
+/* ================= vistas ================= */
+function cabTarea(k){
+  var A=ACT[k];
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">';
+}
+function vArr(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="cajas'+(A.cajas.length===2?' c2':'')+'">';
+  A.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>'; }).join('')+
+       '</div></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vPar(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var puesto=g[x.id], nom='';
+    A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelta aquí')+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vQuiz(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : (G.mal[k+'|'+n+'|'+j] ? ' mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         ((resuelto||cls===' mala')?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- crucigrama ---- */
+var CZ=null;
+function armaCruz(k){
+  var A=ACT[k];
+  var cel={}, num={}, orden=[];
+  A.palabras.forEach(function(w,n){
+    for(var j=0;j<w.p.length;j++){
+      var r=w.r+(w.dir==='V'?j:0), c=w.c+(w.dir==='H'?j:0);
+      var id=r+','+c;
+      if(!cel[id]) cel[id]={ r:r, c:c, letra:w.p.charAt(j), de:[] };
+      cel[id].de.push(n);
+    }
+  });
+  /* numeración de izquierda a derecha y de arriba a abajo */
+  var inicios=A.palabras.map(function(w,n){ return {n:n, r:w.r, c:w.c}; })
+    .sort(function(a,b){ return a.r-b.r || a.c-b.c; });
+  var sig=1, vistos={};
+  inicios.forEach(function(x){
+    var id=x.r+','+x.c;
+    if(vistos[id]===undefined){ vistos[id]=sig++; }
+    num[x.n]=vistos[id];
+  });
+  CZ={ cel:cel, num:num, clave:k };
+  return CZ;
+}
+function vCruz(k){
+  var A=ACT[k], g=G[k]||{}, z=armaCruz(k);
+  var h=cabTarea(k)+'<div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
+          '<table class="cuad"><tbody>';
+  for(var r=0;r<A.filas;r++){
+    h+='<tr>';
+    for(var c=0;c<A.cols;c++){
+      var cl=z.cel[r+','+c];
+      if(!cl){ h+='<td></td>'; continue; }
+      var inicio=null;
+      A.palabras.forEach(function(w,n){ if(w.r===r && w.c===c && inicio===null) inicio=z.num[n]; });
+      var resuelta=cl.de.some(function(n){ return g[A.palabras[n].p]; });
+      var todas=cl.de.every(function(n){ return g[A.palabras[n].p]; });
+      h+='<td class="v'+(todas?' lista':'')+'" data-r="'+r+'" data-c="'+c+'">'+
+         (inicio!==null?'<span class="n">'+inicio+'</span>':'')+
+         '<input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="fila '+(r+1)+' columna '+(c+1)+'"'+
+         (todas?' value="'+cl.letra+'" readonly':(resuelta?' value="'+cl.letra+'" readonly':''))+'>'+
+         '</td>';
+    }
+    h+='</tr>';
+  }
+  h+='</tbody></table></div><div class="pistas">';
+  ['H','V'].forEach(function(dir){
+    h+='<div><h5>'+(dir==='H'?'Horizontales':'Verticales')+'</h5><ol>';
+    A.palabras.map(function(w,n){ return {w:w,n:n}; })
+      .filter(function(x){ return x.w.dir===dir; })
+      .sort(function(a,b){ return z.num[a.n]-z.num[b.n]; })
+      .forEach(function(x){
+        h+='<li value="'+z.num[x.n]+'" class="'+(g[x.w.p]?'ok':'')+'">'+esc(x.w.pista)+
+           ' <span style="opacity:.6">('+x.w.p.length+')</span></li>';
+      });
+    h+='</ol></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vSel(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+(n+1)+'. '+esc(x.q)+
+         (ok?'<small class="pre">'+esc(x.pq)+'</small>':'')+'</span>'+
+       '<span class="r"><select class="cel'+(ok?' bien':'')+'" data-s="'+k+'" data-n="'+n+'"'+
+         (ok?' disabled':'')+' aria-label="'+esc(x.q)+'">'+
+         '<option value="">elige&hellip;</option>'+
+         x.ops.map(function(o,j){
+           return '<option value="'+j+'"'+(ok&&j===x.ok?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
+       '</select></span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+/* ---- mini hoja de cálculo ---- */
+var FX=HojaFx(function(ref){ return pideCelda(ref); });
+var HOJA=null;   /* { k, celdas, memo, curso } mientras se calcula */
+
+function LET(j){ return FX.letras(j); }
+function txtCelda(k, id){
+  var t=(G.hoja||{})[k+'|'+id];
+  return (t===undefined || t===null) ? '' : String(t);
+}
+/* qué hay escrito en cada celda de la hoja que se está calculando */
+function crudoDe(k, id){
+  var A=ACT[k];
+  for(var r=0;r<A.filas.length;r++){
+    var fila=A.filas[r];
+    for(var j=0;j<fila.length;j++){
+      if(LET(j)+(r+1)!==id) continue;
+      var c=fila[j];
+      if(c.e!==undefined) return txtCelda(k, id);
+      if(c.form!==undefined) return c.form;
+      if(c.n!==undefined) return c.n;
+      return c.x===undefined ? '' : c.x;
+    }
+  }
+  return '';
+}
+function pideCelda(ref){
+  if(!HOJA) return 0;
+  if(Object.prototype.hasOwnProperty.call(HOJA.memo, ref)) return HOJA.memo[ref];
+  if(HOJA.curso[ref]) throw new Error('#CIRCULAR');
+  HOJA.curso[ref]=1;
+  var crudo=crudoDe(HOJA.k, ref), v;
+  if(crudo===undefined || crudo==='') v=0;
+  else if(typeof crudo==='number') v=crudo;
+  else if(/^\s*=/.test(String(crudo))) v=FX.evalua(String(crudo).replace(/^\s*=/,''), pideCelda);
+  else { var n=FX.aNumero(crudo); v = isNaN(n) ? String(crudo) : n; }
+  delete HOJA.curso[ref];
+  HOJA.memo[ref]=v;
+  return v;
+}
+function abreHoja(k){ HOJA={ k:k, memo:{}, curso:{} }; }
+function valorCelda(k, id){
+  try{ return { v:pideCelda(id) }; }
+  catch(e){ return { err:String(e.message||'#ERROR') }; }
+}
+
+function vHoja(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="hojaenv"><table class="hoja"><thead><tr><th class="esq"></th>';
+  A.cols.forEach(function(c,j){ h+='<th style="width:'+c.w+'px">'+LET(j)+'</th>'; });
+  h+='</tr></thead><tbody>';
+  abreHoja(k);
+  A.filas.forEach(function(fila,r){
+    h+='<tr'+(r===0?' class="enc"':'')+'><th class="nf">'+(r+1)+'</th>';
+    fila.forEach(function(c,j){
+      var id=LET(j)+(r+1);
+      if(c.e!==undefined){
+        var hecho=(g[id]!==undefined), t=txtCelda(k,id), muestra=t;
+        if(t && /^\s*=/.test(t)){ var rv=valorCelda(k,id); muestra = rv.err ? rv.err : FX.fmt(rv.v); }
+        h+='<td class="libre'+(hecho?' ok':'')+'" data-cel="'+id+'">'+
+           '<input type="text" spellcheck="false" autocomplete="off" inputmode="text" '+
+           'data-k="'+k+'" data-id="'+id+'" aria-label="celda '+id+'" '+
+           (hecho?'readonly ':'')+(c.ph?'placeholder="'+esc(c.ph)+'" ':'')+
+           'value="'+esc(muestra)+'"></td>';
+      }else if(c.form!==undefined){
+        var rf=valorCelda(k,id);
+        h+='<td class="dada'+(rf.err?' malf':'')+'" data-fx="'+id+'" title="'+esc(c.form)+'"><span class="q">'+
+           esc(rf.err ? rf.err : FX.fmt(rf.v))+'</span></td>';
+      }else if(c.n!==undefined){
+        h+='<td class="dada num"><span class="q">'+esc(FX.fmt(c.n))+'</span></td>';
+      }else{
+        h+='<td'+(r===0?'':' class="rot"')+'><span class="q">'+esc(c.x||'')+'</span></td>';
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
+     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
+     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+function vista(k){
+  var t=ACT[k].tipo;
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : vQuiz(k);
+}
+
+/* ================= dibujo ================= */
+function pinta(quieto){
+  var s=D[i];
+  /* al responder dentro de la misma diapositiva no se pierde el sitio */
+  var alto = quieto ? $('lam').scrollTop : 0;
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.clave) h+=vista(s.clave);
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=alto;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
+    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+      i=+b.dataset.p; elegida=null; pinta(); enfoca();
+      if(modoClase==='guiado') difunde();
+    });
+  });
+  cablea();
+  pintaModo();
+}
+
+var yaCruz={};
+function cablea(){
+  var lam=$('lam'), s=D[i];
+  if(!s.clave) return;
+  var k=s.clave, A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
+      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+            b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  qq('#lam select[data-s]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
+      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(sl.closest('.linea'));
+            sl.classList.add('mal'); sl.value='';
+            setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
+    });
+  });
+
+  if(A.tipo==='hoja') cableaHoja(k, A, lam);
+  if(A.tipo==='cruz') cableaCruz(k, A, lam);
+}
+
+/* ---- la hoja: escribir, recalcular y comprobar ---- */
+function cableaHoja(k, A, lam){
+  var inps=qq('#lam td.libre input', lam);
+
+  function recalcula(salvo){
+    abreHoja(k);
+    inps.forEach(function(x){
+      if(x===salvo) return;
+      var t=txtCelda(k, x.dataset.id);
+      if(t && /^\s*=/.test(t)){
+        var r=valorCelda(k, x.dataset.id);
+        x.value = r.err ? r.err : FX.fmt(r.v);
+        x.classList.toggle('malf', !!r.err);
+      }else{
+        x.value = t;
+        x.classList.remove('malf');
+      }
+    });
+    /* las celdas fijas con fórmula también se refrescan */
+    A.filas.forEach(function(fila,r){
+      fila.forEach(function(c,j){
+        if(c.form===undefined) return;
+        var id=LET(j)+(r+1);
+        var td=lam.querySelector('td.dada[data-fx="'+id+'"]');
+        if(!td) return;
+        var rr=valorCelda(k, id);
+        td.querySelector('.q').textContent = rr.err ? rr.err : FX.fmt(rr.v);
+        td.classList.toggle('malf', !!rr.err);
+      });
+    });
+  }
+
+  inps.forEach(function(x){
+    if(x.readOnly) return;
+    x.addEventListener('focus', function(){
+      var t = txtCelda(k, x.dataset.id);
+      x.value = t;
+      /* se selecciona al entrar, como en Excel, pero sin comerse lo que ya escribió */
+      setTimeout(function(){ if(x.value===t){ try{ x.select(); }catch(e){} } }, 0);
+    });
+    x.addEventListener('input', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+    });
+    x.addEventListener('blur', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+      graba();
+      recalcula(null);
+    });
+    x.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); x.blur(); }
+      else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
+    });
+  });
+
+  var btn=lam.querySelector('button[data-chk]');
+  if(btn) btn.addEventListener('click', function(){ compruebaHoja(k, A, lam, recalcula); });
+
+  recalcula(null);
+}
+
+function compruebaHoja(k, A, lam, recalcula){
+  recalcula(null);
+  abreHoja(k);
+  var nuevas=0, fallas=0, faltan=0, primerFallo=null;
+  A.filas.forEach(function(fila,r){
+    fila.forEach(function(c,j){
+      if(c.e===undefined) return;
+      var id=LET(j)+(r+1);
+      if(G[k][id]!==undefined) return;                 /* ya estaba bien */
+      var td=lam.querySelector('td.libre[data-cel="'+id+'"]');
+      var t=txtCelda(k, id).trim();
+      td.classList.remove('mal');
+      if(t===''){ faltan++; return; }
+      if(c.f && !/^=/.test(t)){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='En '+id+' escribe la f&oacute;rmula, no el resultado. Empieza con =';
+        return;
+      }
+      var rv=valorCelda(k, id);
+      if(rv.err){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='La f&oacute;rmula de '+id+' no se entiende ('+esc(rv.err)+').';
+        return;
+      }
+      var acierta;
+      if(typeof c.e==='string'){
+        acierta = String(rv.v).trim().toUpperCase() === c.e.trim().toUpperCase();
+      }else{
+        var n=FX.aNumero(rv.v);
+        acierta = !isNaN(n) && Math.abs(n-c.e) < 0.05;
+      }
+      if(acierta){ G[k][id]=1; nuevas++; td.classList.add('ok'); }
+      else{ fallas++; td.classList.add('mal');
+            if(!primerFallo) primerFallo='El resultado de '+id+' todav&iacute;a no cuadra.'; }
+    });
+  });
+  graba();
+  if(nuevas && !fallas) { if(lista(k)) fanfarria(); else bien(); }
+  else if(fallas) mal();
+  if(fallas) sopla(primerFallo ? primerFallo.replace(/&oacute;/g,'ó').replace(/&iacute;/g,'í') : 'Revisa las celdas en rojo');
+  else if(!nuevas && faltan) sopla('Todavía te faltan '+faltan+(faltan===1?' celda':' celdas'));
+  pinta(true);
+}
+
+function cableaCruz(k, A, lam){
+  var g=G[k]||{};
+  function campo(r,c){ var td=lam.querySelector('.cuad td[data-r="'+r+'"][data-c="'+c+'"]');
+                       return td ? td.querySelector('input') : null; }
+  function letras(w){
+    var s='';
+    for(var j=0;j<w.p.length;j++){
+      var e=campo(w.r+(w.dir==='V'?j:0), w.c+(w.dir==='H'?j:0));
+      s += (e && e.value ? e.value.toUpperCase() : ' ');
+    }
+    return s;
+  }
+  function revisa(w){
+    if(g[w.p]) return;
+    var s=letras(w);
+    if(s.indexOf(' ')>=0){ yaCruz[w.p]=''; return; }
+    if(yaCruz[w.p]===s) return;
+    yaCruz[w.p]=s;
+    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+    else{
+      mal();
+      for(var j=0;j<w.p.length;j++){
+        var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
+        if(td) sacude(td);
+      }
+    }
+  }
+  qq('.cuad input', lam).forEach(function(inp){
+    var td=inp.parentNode, r=+td.dataset.r, c=+td.dataset.c;
+    inp.addEventListener('focus', function(){
+      qq('.cuad td.foco', lam).forEach(function(x){ x.classList.remove('foco'); });
+      td.classList.add('foco');
+    });
+    inp.addEventListener('input', function(){
+      var v=inp.value.replace(/[^A-Za-zÑñ]/g,'').toUpperCase();
+      inp.value=v.slice(-1);
+      if(inp.value){
+        /* salta a la siguiente casilla libre de la misma palabra */
+        var sig=campo(r,c+1) || campo(r+1,c);
+        if(sig && !sig.readOnly) sig.focus();
+      }
+      A.palabras.forEach(function(w){
+        var dentro=false;
+        for(var j=0;j<w.p.length;j++){
+          if(w.r+(w.dir==='V'?j:0)===r && w.c+(w.dir==='H'?j:0)===c){ dentro=true; break; }
+        }
+        if(dentro) revisa(w);
+      });
+    });
+    inp.addEventListener('keydown', function(e){
+      var d={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,0],ArrowUp:[-1,0]}[e.key];
+      if(d){ var x=campo(r+d[0], c+d[1]); if(x){ e.preventDefault(); x.focus(); } return; }
+      if(e.key==='Backspace' && !inp.value){
+        var a=campo(r,c-1) || campo(r-1,c);
+        if(a && !a.readOnly){ e.preventDefault(); a.value=''; a.focus(); }
+      }
+    });
+  });
+}
+
+/* ================= modo de clase ================= */
+/* guiado: todos van en la diapositiva del docente · libre: cada uno avanza solo */
+var modoClase='libre';
+try{ if(localStorage.getItem('cf6_modo')==='guiado') modoClase='guiado'; }catch(e){}
+
+function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+function enSala(){ return !!(window.Aula && Aula.enSala); }
+function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
+
+var tSoplo=null;
+function sopla(txt){
+  var e=$('soplo');
+  e.hidden=false; e.textContent=txt;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tSoplo);
+  tSoplo=setTimeout(function(){
+    e.classList.remove('ve');
+    setTimeout(function(){ e.hidden=true; }, 300);
+  }, 2600);
+}
+
+function pintaModo(){
+  var doc=soyDocente(), guiado=(modoClase==='guiado'), preso=atado();
+  var b=$('btnBatuta');
+  b.hidden=!doc;
+  if(doc){
+    b.classList.toggle('on', guiado);
+    b.setAttribute('aria-pressed', guiado?'true':'false');
+    $('txBatuta').textContent = guiado ? 'Modo guiado' : 'Modo libre';
+    b.title = guiado
+      ? 'Los alumnos están en tu misma diapositiva. Toca para dejarlos avanzar solos.'
+      : 'Cada alumno avanza solo. Toca para llevarlos a tu ritmo.';
+  }
+  $('pilModo').hidden=!preso;
+  $('esc').classList.toggle('atado', preso);
+  $('ant').disabled = preso || (i===0);
+  $('sig').disabled = preso || (i===D.length-1);
+  qq('#pts button').forEach(function(x){ x.disabled=preso; });
+}
+
+/* el docente publica dónde está la clase */
+function difunde(){
+  if(!soyDocente() || !window.Aula || !Aula.dirige) return;
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i } : { modo:'libre' });
+}
+function cambiaModo(){
+  if(!soyDocente()) return;
+  modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
+  try{ localStorage.setItem('cf6_modo', modoClase); }catch(e){}
+  pintaModo(); difunde();
+  sopla(modoClase==='guiado'
+        ? 'Modo guiado · la clase va contigo, diapositiva '+(i+1)
+        : 'Modo libre · cada alumno avanza a su ritmo');
+}
+$('btnBatuta').addEventListener('click', cambiaModo);
+
+/* el alumno recibe la orden del docente */
+function recibeBatuta(d){
+  var antes=modoClase;
+  modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
+  if(modoClase==='guiado' && d && typeof d.lamina==='number'){
+    var k=Math.max(0, Math.min(D.length-1, d.lamina));
+    if(k!==i){
+      i=k; elegida=null; pinta(); enfoca();
+      nota(880,0,.1,.04,'triangle');
+      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+D.length);
+      return;
+    }
+  }
+  pintaModo();
+  if(antes==='guiado' && modoClase==='libre') sopla('Ya puedes avanzar a tu ritmo');
+  if(antes==='libre' && modoClase==='guiado') sopla('Vas al ritmo del docente');
+}
+
+/* ================= navegación ================= */
+/* deja la diapositiva centrada en la pantalla cuando se sale de cuadro */
+function enfoca(){
+  var e=$('esc');
+  if(e.classList.contains('full')) return;
+  var r=e.getBoundingClientRect();
+  if(r.top>=-2 && r.bottom<=window.innerHeight+4) return;
+  var y=window.pageYOffset + r.top - Math.max(8, (window.innerHeight-r.height)/2);
+  try{ window.scrollTo({ top:Math.max(0,y), behavior:'smooth' }); }
+  catch(x){ window.scrollTo(0, Math.max(0,y)); }
+}
+function va(n){
+  if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); enfoca();
+             if(modoClase==='guiado') difunde(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc'), dentro;
+  e.classList.toggle('full');
+  dentro=e.classList.contains('full');
+  document.body.style.overflow = dentro ? 'hidden' : '';
+  $('btnFull').textContent = dentro ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa';
+  $('btnFull2').innerHTML = dentro ? '&#10005;' : '&#9974;';
+  $('btnFull2').title = dentro ? 'Salir de pantalla completa' : 'Pantalla completa';
+  if(dentro) participaDentro(); else participaFuera();
+  var raiz=document.documentElement;
+  if(dentro && !document.fullscreenElement && raiz.requestFullscreen){
+    try{ var pr=raiz.requestFullscreen(); if(pr && pr.catch) pr.catch(function(){}); }catch(x){}
+  }else if(!dentro && document.fullscreenElement && document.exitFullscreen){
+    try{ document.exitFullscreen(); }catch(x){}
+  }
+}
+$('btnFull').addEventListener('click', full);
+$('btnFull2').addEventListener('click', full);
+document.addEventListener('fullscreenchange', function(){
+  /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
+  if(!document.fullscreenElement && $('esc').classList.contains('full')) full();
+});
+
+/* ---------- los participantes, flotando en una esquina ---------- */
+function cuentaPart(){
+  var m=$('muro'), n = m ? m.querySelectorAll('.aula-vtna').length : 0;
+  $('nPart').textContent=n;
+  $('salaPart').textContent = n===1 ? 'El aula · 1 participante'
+                                    : 'El aula · '+n+' participantes';
+}
+function participaDentro(){
+  var hoja=$('hojaMuro');
+  if(!hoja || hoja.hidden){ $('flotaPart').hidden=true; $('panelPart').hidden=true; return; }
+  $('nidoPart').appendChild(hoja);
+  hoja.style.margin='0';
+  $('flotaPart').hidden=false;
+  cuentaPart();
+}
+function participaFuera(){
+  var hoja=$('hojaMuro');
+  if(hoja && hoja.parentNode===$('nidoPart')){
+    hoja.style.margin='18px 0 0';
+    $('anclaMuro').appendChild(hoja);
+  }
+  $('flotaPart').hidden=true;
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+}
+$('flotaPart').addEventListener('click', function(){
+  var p=$('panelPart'); p.hidden=!p.hidden;
+  $('flotaPart').setAttribute('aria-expanded', p.hidden?'false':'true');
+  if(!p.hidden) cuentaPart();
+});
+$('cierraPart').addEventListener('click', function(){
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+});
+if(window.MutationObserver && $('muro')){
+  new MutationObserver(function(){ if(!$('flotaPart').hidden) cuentaPart(); })
+    .observe($('muro'), {childList:true, subtree:true});
+}
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    if(e.target && e.target.closest && e.target.closest('.cruz')){ x0=null; return; }
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+}
+if(window.Aula){
+  Aula.iniciar({ sala:'CREDF6', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
+            limpia:function(){ G=vacio(); yaCruz={}; i=0;
+              try{ localStorage.removeItem(LS); }catch(e){}
+              pinta(); } },
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
+      if(dentro){ pinta(); setTimeout(enfoca, 120); }
+      pintaModo();
+      if(doc) difunde();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+                    if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
