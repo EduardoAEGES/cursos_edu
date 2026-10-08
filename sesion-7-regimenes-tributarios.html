@@ -6,21 +6,29 @@
 <title>Sesi&oacute;n 7 &middot; Reg&iacute;menes tributarios</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="odoo.css">
 <link rel="stylesheet" href="aula.css">
 <style>
-  .rt{
-    --gris:#5A5A5A; --rojo:#8A2B2B; --tinta:#1F2933; --verde:#147A5C; --ambar:#B25E09;
-    --nrus:#1F6FB2; --rer:#147A5C; --rmt:#B25E09; --rg:#714B67; --humo:#F4F4F6; --linea:#DCDCE0;
-    --verde:#1C6E4E; --ambar:#9A5B07; --papel:#FFFFFF;
-    max-width:1180px; margin:0 auto;
+  /* colores de la plantilla institucional Certus 2026 */
+  :root{
+    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
   }
+  .rt{
+    --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
+    --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
+    --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+    font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  .rt button, .rt input, .rt select, .rt table{ font-family:inherit; }
   [hidden]{ display:none !important; }
 
   /* ---------- cabecera ---------- */
   .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-          border-bottom:3px solid var(--rojo); padding-bottom:14px; }
+          border-bottom:3px solid var(--fucsia); padding-bottom:14px; }
+  .marca .lgc{ flex:none; height:40px; width:auto; display:block; }
+  @media (max-width:560px){ .marca .lgc{ height:30px; } }
   .marca .tx{ flex:1; min-width:230px; }
   .marca .tx h1{ margin:0; font-size:clamp(19px,2.7vw,26px); font-weight:800;
                  color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
@@ -35,38 +43,84 @@
 
   /* ---------- escenario de diapositivas ---------- */
   .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
-        background:var(--papel); display:flex; flex-direction:column; }
-  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none; }
+        background:var(--papel); display:flex; flex-direction:column; min-height:70vh;
+        scroll-margin-top:12px; }
+  /* cada diapositiva ocupa una pantalla, con la proporcion 16:9 de la plantilla */
+  @media (min-width:820px){
+    .esc{ aspect-ratio:16/9; min-height:0; max-height:calc(100vh - 128px); }
+  }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none;
+             aspect-ratio:auto; max-height:none; min-height:0; border:0; }
   /* la calculadora flotante se queda encima, incluso en pantalla completa */
   .ca-btn{ z-index:10000 !important; }
   .ca-p{ z-index:10001 !important; }
 
-  .cab{ background:var(--gris); color:#fff; padding:11px 18px; display:flex;
-        align-items:center; gap:12px; flex:none; }
+  .cab{ background:var(--marino); color:#fff; padding:10px 16px; display:flex;
+        align-items:center; gap:11px; flex:none; }
   .cab .et{ font-size:11.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
-            background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+            background:var(--fucsia); border-radius:4px; padding:4px 9px; flex:none; }
   .cab .t{ font-size:15px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
   .cab .cu{ font-size:13px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+  .cab .lgb{ flex:none; height:26px; width:auto; display:block; opacity:.95; }
+  .cab .btf{ flex:none; font:inherit; font-size:15px; line-height:1; cursor:pointer;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:7px; padding:7px 10px; }
+  .cab .btf:hover{ background:rgba(252,0,69,.85); border-color:transparent; }
+  @media (max-width:620px){
+    .cab{ padding:9px 11px; gap:8px; }
+    .cab .t{ font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cab .lgb{ display:none; } .cab .cu{ font-size:12px; }
+    .cab .btf{ padding:6px 9px; font-size:14px; }
+  }
 
-  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1;
-        min-height:clamp(380px,56vh,620px); font-size:17px; line-height:1.72; color:var(--tinta); }
-  .esc.full .lam{ min-height:0; }
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1 1 0; min-height:0;
+        font-size:17px; line-height:1.72; color:var(--tinta);
+        background:
+          radial-gradient(760px 380px at 108% -12%, rgba(32,211,255,.17), transparent 62%),
+          radial-gradient(620px 320px at -10% 112%, rgba(198,0,163,.09), transparent 62%),
+          #F7F9FE; }
   .lam p{ margin:0 0 14px; }
   .lam p:last-child{ margin-bottom:0; }
   .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
   .lam .enc{ margin:0 0 4px; font-size:clamp(21px,3.2vw,28px); font-weight:800;
              color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
-  .lam .sub{ margin:0 0 20px; font-size:15px; color:var(--gris); font-weight:500; }
+  .lam .sub{ margin:0 0 20px; font-size:15px; color:#55607F; font-weight:600; }
   .lam h3{ margin:22px 0 10px; font-size:17px; font-weight:800; color:var(--gris);
            text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
            padding-bottom:6px; }
+
+  /* ---------- portada con los colores de la plantilla ---------- */
+  .tapa{ position:relative; overflow:hidden; border-radius:14px; color:#fff; margin:0 0 18px;
+         padding:22px clamp(18px,3vw,30px) 24px; background:var(--marino); }
+  .tapa::after{ content:''; position:absolute; right:-70px; top:-110px; width:300px; height:300px;
+                border-radius:50%; background:radial-gradient(circle at 35% 35%,
+                rgba(252,0,69,.95), rgba(198,0,163,.55) 58%, transparent 72%); }
+  .tapa .fil{ position:relative; z-index:1; display:flex; align-items:center; gap:11px;
+              flex-wrap:wrap; margin-bottom:16px; }
+  .tapa .fil img{ height:34px; width:auto; display:block; }
+  .tapa .fil span{ font-size:13.5px; font-weight:600; opacity:.86; }
+  .tapa h2{ position:relative; z-index:1; margin:0; font-size:clamp(23px,4vw,38px);
+            font-weight:900; letter-spacing:-.6px; line-height:1.14; }
+  .tapa p{ position:relative; z-index:1; margin:8px 0 0; font-size:clamp(14px,2.2vw,17px);
+           font-weight:600; color:var(--celeste); }
+  .tapa .via{ position:relative; z-index:1; display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; }
+  .tapa .via b{ color:#fff; font-size:12.5px; font-weight:800; letter-spacing:.04em;
+                text-transform:uppercase; border:1px solid rgba(255,255,255,.42);
+                border-radius:99px; padding:5px 12px; }
+  .lam .tapa b, .lam .tapa strong{ color:#fff; }
 
   /* ---------- navegación ---------- */
   .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
         padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
   /* el rincón derecho es de la calculadora: la botonera se aparta */
   .nav{ padding-right:84px; }
+  @media (max-width:620px){
+    .nav{ padding:10px 60px 10px 11px; gap:7px; }
+    .nav .o-btn{ font-size:14px; padding:9px 13px; }
+  }
   .nav .o-btn{ font-size:15px; padding:10px 18px; }
+  .rt .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .rt .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
   .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
   .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
                background:#fff; padding:0; cursor:pointer; }
@@ -212,6 +266,8 @@
   .linea .q{ font-size:15.5px; line-height:1.55; }
   .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .linea .u{ font-size:15px; font-weight:700; color:var(--gris); }
+  .linea select.cel{ max-width:min(340px, 100%); }
+  .linea .q .pre{ color:var(--verde); font-weight:600; }
 
   .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
               margin:12px 0; font-size:16px; font-weight:700; display:flex; flex-wrap:wrap;
@@ -260,6 +316,28 @@
     .cruz .desliza{ display:block; }
   }
 
+  /* ---------- participantes flotantes (en pantalla completa) ---------- */
+  .flopart{ position:fixed; left:16px; bottom:104px; z-index:10002; font:inherit; cursor:pointer;
+            display:flex; align-items:center; gap:8px; border:0; border-radius:99px;
+            background:var(--marino); color:#fff; padding:11px 16px; font-size:14px; font-weight:800;
+            box-shadow:0 8px 22px rgba(7,23,103,.34); }
+  .flopart:hover{ background:var(--fucsia); }
+  .flopart .bo{ background:var(--celeste); color:var(--marino); border-radius:99px;
+                padding:1px 8px; font-size:12.5px; font-weight:900; }
+  .panpart{ position:fixed; left:16px; bottom:158px; z-index:10003; width:min(420px, calc(100vw - 32px));
+            max-height:min(70vh, 560px); overflow:auto; background:#fff; border-radius:14px;
+            border:1px solid var(--linea); box-shadow:0 18px 44px rgba(7,23,103,.3); }
+  .panpart .hd{ position:sticky; top:0; display:flex; align-items:center; gap:10px;
+                background:var(--marino); color:#fff; padding:10px 14px; font-size:14px; font-weight:800; }
+  .panpart .hd span{ flex:1; min-width:0; }
+  .panpart .hd button{ font:inherit; font-size:15px; line-height:1; cursor:pointer; color:#fff;
+                       background:rgba(255,255,255,.16); border:0; border-radius:6px; padding:6px 9px; }
+  .panpart .nido{ padding:4px 10px 10px; }
+  /* dentro del panel el titulo ya va en la barra: no se repite */
+  .panpart .nido .titsec, .panpart .nido .aviso{ display:none; }
+  .panpart .nido .o-sheet{ box-shadow:none; border:0; margin:0 !important; padding:8px 2px !important; }
+  @media (max-width:560px){ .panpart{ max-height:62vh; } .flopart{ padding:10px 13px; font-size:13px; } }
+
   /* ---------- fichas de régimen ---------- */
   .reg{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff;
         margin-bottom:14px; }
@@ -301,6 +379,7 @@
 <div class="rt">
 
   <div class="marca">
+    <img class="lgc" src="marca/certus-azul.png" alt="Certus">
     <span class="tx">
       <h1>Los reg&iacute;menes tributarios</h1>
       <p><span class="sem">Sesi&oacute;n 7</span> &middot; Sistemas de Procesos Contables &middot; NRUS, RER, RMT y R&eacute;gimen General</p>
@@ -324,6 +403,9 @@
         <span class="et" id="eti">Portada</span>
         <span class="t" id="tit">&mdash;</span>
         <span class="cu" id="cu">1 / 1</span>
+        <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
       </div>
       <div class="lam" id="lam"></div>
       <div class="avance">
@@ -339,10 +421,12 @@
     <div id="reinicio" style="margin-top:14px"></div>
   </div>
 
-  <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
-    <h3 class="titsec">El aula</h3>
-    <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
-    <div id="muro"></div>
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
   </div>
 
   <p class="aviso" style="margin-top:16px">Datos tomados de las cartillas de la SUNAT: Nuevo R&eacute;gimen
@@ -356,6 +440,16 @@
 </div>
 </div>
 </div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
 </div>
 
 <script src="aula.js"></script>
@@ -423,7 +517,18 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a1:{ tipo:'quiz', titulo:'Actividad 1 · NRUS',
+a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
+  lista:[
+   { q:'¿Cuántos regímenes tributarios tiene hoy un negocio para elegir en el Perú?',
+     ops:['Dos','Cuatro','Seis'], ok:1,
+     pq:'Son cuatro: NRUS, RER, RMT y Régimen General. Cada uno tiene su propio tope de ingresos, '+
+        'sus comprobantes y su forma de pagar.' },
+   { q:'¿Qué dato conviene mirar primero para saber en qué régimen puede estar un negocio?',
+     ops:['Cuántos trabajadores tiene','Cuánto vende al año','En qué distrito está el local'], ok:1,
+     pq:'El monto que vende al año es el primer filtro. Después se revisa a qué se dedica y si necesita '+
+        'emitir facturas.' } ] },
+
+a1:{ tipo:'quiz', titulo:'Actividad 2 · NRUS',
   lista:[
    { q:'Doña Rosa tiene una bodega y vende S/ 7,500 al mes. Un cliente le pide factura. ¿Qué pasa?',
      ops:['Se la emite sin problema','No puede: en el NRUS solo se emiten boletas de venta y tickets',
@@ -441,7 +546,7 @@ a1:{ tipo:'quiz', titulo:'Actividad 1 · NRUS',
           'Nada, el límite es anual'], ok:1,
      pq:'Si en cualquier mes supera los S/ 8,000 en ventas o en compras, ya no puede seguir en el NRUS.' } ] },
 
-a2:{ tipo:'arr', titulo:'Actividad 2 · RER',
+a2:{ tipo:'arr', titulo:'Actividad 3 · RER',
   fichas:[ {id:'s1', t:'Bodega que vende abarrotes y factura S/ 400,000 al año', g:'SI'},
            {id:'s2', t:'Taller que fabrica muebles de madera', g:'SI'},
            {id:'s3', t:'Empresa de servicio de delivery con 8 trabajadores', g:'SI'},
@@ -456,7 +561,7 @@ a2:{ tipo:'arr', titulo:'Actividad 2 · RER',
       'los casinos, las agencias de viaje, la venta de inmuebles y casi todas las actividades profesionales: '+
       'médicos, abogados, contadores, arquitectos, ingenieros e informáticos.') },
 
-a3:{ tipo:'par', titulo:'Actividad 3 · RMT',
+a3:{ tipo:'par', titulo:'Actividad 4 · RMT',
   fichas:[ {id:'m1', t:'1 %'}, {id:'m2', t:'Coeficiente o 1.5 %'},
            {id:'m3', t:'10 %'}, {id:'m4', t:'29.5 %'} ],
   huecos:[ {id:'m1', q:'Pago a cuenta del mes, con ingresos netos de hasta 300 UIT'},
@@ -466,7 +571,7 @@ a3:{ tipo:'par', titulo:'Actividad 3 · RMT',
   fin:globo(P.idea,'Resuelto','Esa escala de 10 % y 29.5 % es lo que hace atractivo al RMT: la empresa chica '+
       'paga menos por su primer tramo de ganancia, y recién sobre el exceso paga la tasa completa.') },
 
-a4:{ tipo:'quiz', titulo:'Actividad 4 · Régimen General',
+a4:{ tipo:'quiz', titulo:'Actividad 5 · Régimen General',
   lista:[
    { q:'¿Qué empresas entran al Régimen General?',
      ops:['Solo las personas jurídicas','Solo las que superan las 1,700 UIT',
@@ -485,7 +590,7 @@ a4:{ tipo:'quiz', titulo:'Actividad 4 · Régimen General',
      pq:'El Régimen General y el RMT presentan la declaración jurada anual con el Formulario Virtual 710. '+
         'El NRUS y el RER no presentan declaración anual.' } ] },
 
-a5:{ tipo:'arr', titulo:'Actividad 5',
+a5:{ tipo:'arr', titulo:'Actividad 7 · Cada negocio a su régimen',
   fichas:[ {id:'c1', t:'Puesto de jugos en el mercado, vende S/ 4,000 al mes a vecinos', g:'NRUS'},
            {id:'c2', t:'Gasfitero que atiende casas y cobra en efectivo', g:'NRUS'},
            {id:'c3', t:'Peluquería de barrio con ventas de S/ 7,500 al mes', g:'NRUS'},
@@ -504,7 +609,7 @@ a5:{ tipo:'arr', titulo:'Actividad 5',
       'después la actividad y al final la forma jurídica. La constructora no puede ir al RER aunque venda poco, '+
       'y la sucursal extranjera queda fuera del RMT aunque facture poco.') },
 
-a6:{ tipo:'par', titulo:'Actividad 6',
+a6:{ tipo:'par', titulo:'Actividad 8 · Cada régimen con su rasgo',
   fichas:[ {id:'r1', t:'NRUS'}, {id:'r2', t:'RER'}, {id:'r3', t:'RMT'}, {id:'r4', t:'Régimen General'} ],
   huecos:[ {id:'r2', q:'Paga 1.5 % de sus ingresos netos cada mes y no presenta declaración anual'},
            {id:'r4', q:'No tiene ningún límite de ingresos y paga 29.5 % al año'},
@@ -512,7 +617,7 @@ a6:{ tipo:'par', titulo:'Actividad 6',
            {id:'r3', q:'Tope de 1,700 UIT y una escala anual de 10 % y 29.5 %'} ],
   fin:globo(P.bien,'Resuelto','Con esas cuatro frases ya puedes reconocer cualquier régimen. Lo demás son detalles.') },
 
-a7:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
+a7:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
   filas:9, cols:16,
   palabras:[
    {p:'CUOTA', r:0, c:0, dir:'H', pista:'Lo que paga el NRUS cada mes: S/ 20 o S/ 50'},
@@ -530,7 +635,7 @@ a7:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
    {p:'BOLETA', r:8, c:1, dir:'H', pista:'Junto con el ticket, lo único que emite el NRUS'} ],
   fin:globo(P.full,'Resuelto','Trece palabras que resumen toda la sesión. Si las sabes, sabes el tema.') },
 
-a8:{ tipo:'quiz', titulo:'Actividad 8',
+a8:{ tipo:'quiz', titulo:'Actividad 10 · Quiz final',
   lista:[
    { q:'¿Cuál de los cuatro regímenes no lleva ningún libro ni registro contable?',
      ops:['El NRUS','El RER','El RMT'], ok:0,
@@ -552,7 +657,45 @@ a8:{ tipo:'quiz', titulo:'Actividad 8',
      ops:['Quedarse y pagar una cuota mayor','Pasar al Régimen Especial de Renta, que es el más sencillo después del NRUS',
           'Pasar directamente al Régimen General'], ok:1,
      pq:'La propia cartilla de la SUNAT lo sugiere: el siguiente escalón natural es el RER, que sigue siendo '+
-        'sencillo y ya permite emitir facturas.' } ] }
+        'sencillo y ya permite emitir facturas.' } ] },
+
+a9:{ tipo:'sel', titulo:'Actividad 6 · Completa la tabla',
+  lista:[
+   { q:'Tope de ingresos al año en el NRUS',
+     ops:['S/ 96,000','S/ 525,000','1,700 UIT','No tiene tope'], ok:0,
+     pq:'S/ 96,000 al año, que es lo mismo que S/ 8,000 al mes.' },
+   { q:'Tope de ingresos al año en el RER',
+     ops:['S/ 96,000','S/ 525,000','1,700 UIT','No tiene tope'], ok:1,
+     pq:'S/ 525,000 en ingresos netos o en compras.' },
+   { q:'Tope de ingresos al año en el RMT',
+     ops:['S/ 96,000','S/ 525,000','1,700 UIT','No tiene tope'], ok:2,
+     pq:'1,700 UIT. Al pasar ese monto, el negocio se va al Régimen General.' },
+   { q:'Impuesto a la renta que paga el RER cada mes',
+     ops:['Una cuota fija de S/ 20 o S/ 50','1.5 % de los ingresos netos del mes',
+          '1 % o coeficiente','29.5 % de la renta neta'], ok:1,
+     pq:'1.5 % de los ingresos netos del mes, y con eso queda cerrado el año: el RER no declara al año.' },
+   { q:'Regímenes que presentan declaración jurada anual',
+     ops:['Los cuatro','Solo el NRUS y el RER','El RMT y el Régimen General'], ok:2,
+     pq:'Solo el RMT y el Régimen General, y lo hacen con el Formulario Virtual 710.' },
+   { q:'El único de los cuatro que no puede emitir factura',
+     ops:['NRUS','RER','RMT','Régimen General'], ok:0,
+     pq:'El NRUS emite solo boleta de venta y ticket.' } ],
+  fin:globo(P.full,'Resuelto','Esta tabla es la chuleta de la sesión: tope, actividad y comprobantes. '+
+      'Con eso decides el régimen en menos de un minuto.') },
+
+a10:{ tipo:'sel', titulo:'Actividad 11 · La regla de decisión',
+  lista:[
+   { q:'Vende S/ 7,000 al mes, es persona natural, le compran los vecinos y nadie le pide factura',
+     ops:['NRUS','RER','RMT','Régimen General'], ok:0,
+     pq:'Está debajo de S/ 8,000 al mes, es persona natural y no necesita facturar: NRUS.' },
+   { q:'Empresa constructora con ingresos de 900 UIT al año',
+     ops:['NRUS','RER','RMT','Régimen General'], ok:2,
+     pq:'La construcción no puede estar en el RER, y 900 UIT está debajo de las 1,700: le toca el RMT.' },
+   { q:'Sucursal peruana de una empresa extranjera',
+     ops:['NRUS','RER','RMT','Régimen General'], ok:3,
+     pq:'Las sucursales de empresas del exterior quedan fuera del RMT, y el NRUS es solo para personas '+
+        'naturales: va al Régimen General.' } ],
+  fin:globo(P.bien,'Resuelto','Monto, actividad y forma jurídica. En ese orden, siempre.') }
 };
 
 /* ================= las diapositivas ================= */
@@ -564,28 +707,22 @@ function ficha(cl, nom, filas){
 
 var D=[
 
-{ et:'Portada', t:'Los regímenes tributarios',
-  h:'<p class="enc">¿En qué régimen va cada negocio?</p>'+
-    '<p class="sub">Sesión 7 · Sistemas de Procesos Contables</p>'+
+/* 1 ------------------------------------------------------------- */
+{ et:'Inicio', t:'Los regímenes tributarios', clave:'a0',
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
+        '<span>| www.certus.edu.pe</span></div>'+
+      '<h2>¿En qué régimen va cada negocio?</h2>'+
+      '<p>Sesión 7 · Sistemas de Procesos Contables</p>'+
+      '<div class="via"><b>NRUS</b><b>RER</b><b>RMT</b><b>Régimen General</b></div>'+
+    '</div>'+
     globo(P.pres,'De qué va la sesión',
       'Cuatro regímenes, cuatro formas de pagar. Hoy vas a aprender a reconocer cuál le toca a cada negocio '+
-      'mirando tres cosas: cuánto vende, a qué se dedica y qué comprobantes necesita.')+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Los cuatro</h4><div class="c"><ul>'+
-      '<li>NRUS · Nuevo Régimen Único Simplificado</li>'+
-      '<li>RER · Régimen Especial de Renta</li>'+
-      '<li>RMT · Régimen MYPE Tributario</li>'+
-      '<li>Régimen General</li>'+
-      '</ul></div></div>'+
-    '<div class="fc rj"><h4>Lo que vas a hacer</h4><div class="c"><ul>'+
-      '<li>Una actividad por cada régimen.</li>'+
-      '<li>Unir parejas y elegir grupos.</li>'+
-      '<li>Un crucigrama de trece palabras.</li>'+
-      '<li>Un quiz final de repaso.</li>'+
-      '</ul></div></div>'+
-    '</div>' },
+      'mirando tres cosas: cuánto vende, a qué se dedica y qué comprobantes necesita. Once diapositivas, '+
+      'once actividades, nada de escuchar sin hacer. Empezamos con dos preguntas para ver de dónde partes.') },
 
-{ et:'NRUS', t:'Nuevo Régimen Único Simplificado',
+/* 2 ------------------------------------------------------------- */
+{ et:'NRUS', t:'Nuevo Régimen Único Simplificado', clave:'a1',
   h:'<p class="enc">NRUS · el más sencillo de todos</p>'+
     '<p class="sub">Para el negocio pequeño que le vende al consumidor final</p>'+
     ficha('n','NRUS',[
@@ -596,15 +733,12 @@ var D=[
       ['Cuánto paga','Una cuota fija al mes: categoría 1 hasta S/ 5,000 paga S/ 20 · categoría 2 hasta S/ 8,000 paga S/ 50'],
       ['Libros contables','Ninguno'],
       ['Declaración anual','No presenta']])+
-    globo(P.idea,'La idea en una frase',
+    globo(P.idea,'La bodega de doña Rosa',
       'Paga una cuota fija, no lleva libros y no declara al año. A cambio, no puede emitir facturas ni crecer '+
-      'más allá de S/ 96,000.') },
+      'más allá de S/ 96,000. Responde las cuatro preguntas de su caso.') },
 
-{ et:'Actividad 1', t:'La bodega de doña Rosa', clave:'a1',
-  h:'<p class="enc">La bodega de doña Rosa</p>'+
-    '<p class="sub">Cuatro preguntas sobre el NRUS. Si te equivocas, esa opción queda tachada.</p>' },
-
-{ et:'RER', t:'Régimen Especial de Renta',
+/* 3 ------------------------------------------------------------- */
+{ et:'RER', t:'Régimen Especial de Renta', clave:'a2',
   h:'<p class="enc">RER · el siguiente escalón</p>'+
     '<p class="sub">Para la pequeña empresa que ya necesita emitir facturas</p>'+
     ficha('e','RER',[
@@ -618,13 +752,10 @@ var D=[
       ['Declaración anual','No presenta']])+
     globo(P.expl,'Ojo con esto',
       'Aquí el filtro más importante no es el monto sino la actividad. Hay un montón de rubros que no pueden '+
-      'estar en el RER, aunque vendan poco.') },
+      'estar en el RER, aunque vendan poco. Lleva cada negocio a su columna y lo compruebas.') },
 
-{ et:'Actividad 2', t:'¿Puede o no puede?', clave:'a2',
-  h:'<p class="enc">¿Puede estar en el RER?</p>'+
-    '<p class="sub">Lleva cada negocio a su columna. En el celular, toca la ficha y después la columna.</p>' },
-
-{ et:'RMT', t:'Régimen MYPE Tributario',
+/* 4 ------------------------------------------------------------- */
+{ et:'RMT', t:'Régimen MYPE Tributario', clave:'a3',
   h:'<p class="enc">RMT · pensado para la micro y pequeña empresa</p>'+
     '<p class="sub">Paga menos mientras gana poco, y la tasa sube recién sobre el exceso</p>'+
     ficha('m','RMT',[
@@ -638,13 +769,10 @@ var D=[
       ['Libros contables','Según los ingresos: desde registro de ventas, compras y diario simplificado, hasta contabilidad completa']])+
     globo(P.alum,'Lo que hay que retener',
       'Es el único régimen con una escala: la primera parte de la ganancia paga 10 % y recién el exceso paga '+
-      '29.5 %. Por eso conviene tanto a la empresa que está creciendo.') },
+      '29.5 %. Lleva cada tasa a la situación que le toca.') },
 
-{ et:'Actividad 3', t:'Las tasas del RMT', clave:'a3',
-  h:'<p class="enc">¿Qué tasa va en cada caso?</p>'+
-    '<p class="sub">Lleva cada tasa junto a la situación que le corresponde.</p>' },
-
-{ et:'General', t:'Régimen General',
+/* 5 ------------------------------------------------------------- */
+{ et:'General', t:'Régimen General', clave:'a4',
   h:'<p class="enc">Régimen General · sin límites y sin excusas</p>'+
     '<p class="sub">Donde caen todos los que no entran en los otros tres</p>'+
     ficha('g','Régimen General',[
@@ -660,13 +788,10 @@ var D=[
       'Se divide el impuesto calculado del año anterior entre los ingresos netos de ese mismo año, y se '+
       'redondea a cuatro decimales. Si no hubo impuesto calculado, se usa directamente el 1.5 %.') },
 
-{ et:'Actividad 4', t:'Comprueba el Régimen General', clave:'a4',
-  h:'<p class="enc">Comprueba el Régimen General</p>'+
-    '<p class="sub">Cuatro preguntas, incluida la del coeficiente.</p>' },
-
-{ et:'Comparar', t:'Los cuatro, uno al lado del otro',
+/* 6 ------------------------------------------------------------- */
+{ et:'Comparar', t:'Los cuatro, uno al lado del otro', clave:'a9',
   h:'<p class="enc">Los cuatro, uno al lado del otro</p>'+
-    '<p class="sub">Esta es la tabla que conviene llevarse a la memoria</p>'+
+    '<p class="sub">Lee la tabla y después complétala con los desplegables</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
     '<th>&nbsp;</th><th>NRUS</th><th>RER</th><th>RMT</th><th>General</th></tr></thead><tbody>'+
     '<tr><td>Tope al año</td><td>S/ 96,000</td><td>S/ 525,000</td><td>1,700 UIT</td><td>Sin tope</td></tr>'+
@@ -677,27 +802,32 @@ var D=[
     '<tr><td>Renta anual</td><td>—</td><td>—</td><td>10 % y 29.5 %</td><td>29.5 %</td></tr>'+
     '<tr><td>Declaración anual</td><td>No</td><td>No</td><td>Sí, con el 710</td><td>Sí, con el 710</td></tr>'+
     '<tr class="res"><td>Libros</td><td>Ninguno</td><td>Compras y ventas</td><td>Según ingresos</td><td>Según ingresos</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="av">Para decidir mira en este orden: cuánto vende al año, a qué se dedica y si necesita '+
-    'emitir facturas. Con esas tres preguntas casi siempre basta.</div>' },
+    '</tbody></table></div>' },
 
-{ et:'Actividad 5', t:'¿A qué régimen va cada negocio?', clave:'a5',
+/* 7 ------------------------------------------------------------- */
+{ et:'Clasificar', t:'¿A qué régimen va cada negocio?', clave:'a5',
   h:'<p class="enc">¿A qué régimen va cada negocio?</p>'+
-    '<p class="sub">Doce negocios, cuatro columnas. Toca la ficha y después la columna.</p>' },
+    '<p class="sub">Doce negocios, cuatro columnas. Toca la ficha y después la columna.</p>'+
+    '<div class="av">Mira en este orden: cuánto vende al año, a qué se dedica y si es persona natural o '+
+    'empresa. Con esas tres preguntas casi siempre basta.</div>' },
 
-{ et:'Actividad 6', t:'Une cada régimen con su rasgo', clave:'a6',
+/* 8 ------------------------------------------------------------- */
+{ et:'Parejas', t:'Une cada régimen con su rasgo', clave:'a6',
   h:'<p class="enc">Une cada régimen con su rasgo</p>'+
-    '<p class="sub">Cuatro frases que resumen cada uno.</p>' },
+    '<p class="sub">Cuatro frases que resumen cada uno. Toca la ficha y después la fila.</p>' },
 
-{ et:'Actividad 7', t:'Crucigrama', clave:'a7',
+/* 9 ------------------------------------------------------------- */
+{ et:'Crucigrama', t:'Crucigrama de trece palabras', clave:'a7',
   h:'<p class="enc">Crucigrama</p>'+
     '<p class="sub">Trece palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
 
-{ et:'Actividad 8', t:'Quiz final', clave:'a8',
+/* 10 ------------------------------------------------------------ */
+{ et:'Quiz final', t:'Quiz final de los cuatro regímenes', clave:'a8',
   h:'<p class="enc">Quiz final</p>'+
     '<p class="sub">Cinco preguntas que cruzan los cuatro regímenes.</p>' },
 
-{ et:'Cierre', t:'Lo que te llevas',
+/* 11 ------------------------------------------------------------ */
+{ et:'Cierre', t:'Lo que te llevas', clave:'a10',
   h:'<p class="enc">Lo que te llevas de la sesión</p>'+
     '<p class="sub">Tres preguntas y ya sabes el régimen</p>'+
     '<div class="dos">'+
@@ -715,14 +845,13 @@ var D=[
     '</div>'+
     globo2(P.pres, P.bien,'Para cerrar',
       'Elegir mal el régimen le cuesta caro al negocio: o paga de más, o no puede facturarle a sus clientes, '+
-      'o termina con una multa de la SUNAT. Por eso esta decisión la toma el contador, no el dueño.')+
-    '<div class="av">Fuente: cartillas de la SUNAT del NRUS, el RER, el RMT y el Régimen General. '+
-    'Los montos en UIT y las cuotas se revisan cada año en sunat.gob.pe.</div>' }
+      'o termina con una multa de la SUNAT. Aplica la regla en estos tres casos y cierras la sesión.') }
 ];
 
 /* ================= estado ================= */
-var LS='rt_sem7_v1';
-var CLAVES=['a1','a2','a3','a4','a5','a6','a7','a8'];
+var LS='rt_sem7_v2';
+/* en el mismo orden en que aparecen las diapositivas */
+var CLAVES=['a0','a1','a2','a3','a4','a9','a5','a6','a7','a8','a10'];
 function vacio(){ var g={ visto:{}, mal:{} }; CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 try{
@@ -930,9 +1059,29 @@ function vCruz(k){
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
+function vSel(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+(n+1)+'. '+esc(x.q)+
+         (ok?'<small class="pre">'+esc(x.pq)+'</small>':'')+'</span>'+
+       '<span class="r"><select class="cel'+(ok?' bien':'')+'" data-s="'+k+'" data-n="'+n+'"'+
+         (ok?' disabled':'')+' aria-label="'+esc(x.q)+'">'+
+         '<option value="">elige&hellip;</option>'+
+         x.ops.map(function(o,j){
+           return '<option value="'+j+'"'+(ok&&j===x.ok?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
+       '</select></span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
 function vista(k){
   var t=ACT[k].tipo;
-  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k) : vQuiz(k);
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+       : t==='sel' ? vSel(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -991,6 +1140,17 @@ function cablea(){
       else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
             b.classList.add('mala','temblor'); b.disabled=true;
             setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  qq('#lam select[data-s]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
+      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(); }
+      else{ mal(); sacude(sl.closest('.linea'));
+            sl.classList.add('mal'); sl.value='';
+            setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
     });
   });
 
@@ -1058,19 +1218,83 @@ function cableaCruz(k, A, lam){
 }
 
 /* ================= navegación ================= */
+/* deja la diapositiva centrada en la pantalla cuando se sale de cuadro */
+function enfoca(){
+  var e=$('esc');
+  if(e.classList.contains('full')) return;
+  var r=e.getBoundingClientRect();
+  if(r.top>=-2 && r.bottom<=window.innerHeight+4) return;
+  var y=window.pageYOffset + r.top - Math.max(8, (window.innerHeight-r.height)/2);
+  try{ window.scrollTo({ top:Math.max(0,y), behavior:'smooth' }); }
+  catch(x){ window.scrollTo(0, Math.max(0,y)); }
+}
 function va(n){
   var k=Math.max(0, Math.min(D.length-1, n));
-  if(k!==i){ i=k; elegida=null; pinta(); }
+  if(k!==i){ i=k; elegida=null; pinta(); enfoca(); }
 }
 $('ant').addEventListener('click', function(){ va(i-1); });
 $('sig').addEventListener('click', function(){ va(i+1); });
 function full(){
-  var e=$('esc');
+  var e=$('esc'), dentro;
   e.classList.toggle('full');
-  document.body.style.overflow = e.classList.contains('full') ? 'hidden' : '';
-  $('btnFull').textContent = e.classList.contains('full') ? '✕ Salir' : '⛶ Pantalla completa';
+  dentro=e.classList.contains('full');
+  document.body.style.overflow = dentro ? 'hidden' : '';
+  $('btnFull').textContent = dentro ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa';
+  $('btnFull2').innerHTML = dentro ? '&#10005;' : '&#9974;';
+  $('btnFull2').title = dentro ? 'Salir de pantalla completa' : 'Pantalla completa';
+  if(dentro) participaDentro(); else participaFuera();
+  var raiz=document.documentElement;
+  if(dentro && !document.fullscreenElement && raiz.requestFullscreen){
+    try{ var pr=raiz.requestFullscreen(); if(pr && pr.catch) pr.catch(function(){}); }catch(x){}
+  }else if(!dentro && document.fullscreenElement && document.exitFullscreen){
+    try{ document.exitFullscreen(); }catch(x){}
+  }
 }
 $('btnFull').addEventListener('click', full);
+$('btnFull2').addEventListener('click', full);
+document.addEventListener('fullscreenchange', function(){
+  /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
+  if(!document.fullscreenElement && $('esc').classList.contains('full')) full();
+});
+
+/* ---------- los participantes, flotando en una esquina ---------- */
+function cuentaPart(){
+  var m=$('muro'), n = m ? m.querySelectorAll('.aula-vtna').length : 0;
+  $('nPart').textContent=n;
+  $('salaPart').textContent = n===1 ? 'El aula · 1 participante'
+                                    : 'El aula · '+n+' participantes';
+}
+function participaDentro(){
+  var hoja=$('hojaMuro');
+  if(!hoja || hoja.hidden){ $('flotaPart').hidden=true; $('panelPart').hidden=true; return; }
+  $('nidoPart').appendChild(hoja);
+  hoja.style.margin='0';
+  $('flotaPart').hidden=false;
+  cuentaPart();
+}
+function participaFuera(){
+  var hoja=$('hojaMuro');
+  if(hoja && hoja.parentNode===$('nidoPart')){
+    hoja.style.margin='18px 0 0';
+    $('anclaMuro').appendChild(hoja);
+  }
+  $('flotaPart').hidden=true;
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+}
+$('flotaPart').addEventListener('click', function(){
+  var p=$('panelPart'); p.hidden=!p.hidden;
+  $('flotaPart').setAttribute('aria-expanded', p.hidden?'false':'true');
+  if(!p.hidden) cuentaPart();
+});
+$('cierraPart').addEventListener('click', function(){
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+});
+if(window.MutationObserver && $('muro')){
+  new MutationObserver(function(){ if(!$('flotaPart').hidden) cuentaPart(); })
+    .observe($('muro'), {childList:true, subtree:true});
+}
 document.addEventListener('keydown', function(e){
   if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
   if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
@@ -1119,11 +1343,12 @@ if(window.Aula){
     pantalla:pantalla, musica:true,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
+      if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
       var dentro=Aula.enSala;
       $('mazo').hidden=!dentro;
       $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
       $('puerta').querySelector('p').hidden=dentro;
-      if(dentro) pinta();
+      if(dentro){ pinta(); setTimeout(enfoca, 120); }
     } });
 }else{
   $('mazo').hidden=false;
