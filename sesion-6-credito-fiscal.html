@@ -349,6 +349,15 @@
   table.hoja.apunta td[data-cel]{ cursor:cell; }
   table.hoja.apunta td[data-cel]:hover{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
   table.hoja td.senalada{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  table.hoja.apunta td[data-cel]{ touch-action:none; }
+  table.hoja td.rango{ background:#FDE7EF; outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  /* la celda elegida y el cuadradito de relleno, como en Excel */
+  table.hoja td.libre{ position:relative; }
+  table.hoja td.elegida{ outline:2px solid #217346; outline-offset:-2px; }
+  table.hoja td.relleno{ outline:2px dashed #217346; outline-offset:-2px; background:#EAF5EE; }
+  .asa{ position:absolute; right:-5px; bottom:-5px; width:11px; height:11px; z-index:3;
+        background:#217346; border:2px solid #fff; cursor:crosshair; touch-action:none; }
+  @media (pointer:coarse){ .asa{ width:18px; height:18px; right:-8px; bottom:-8px; } }
   .avisofx{ display:none; margin:9px 0 0; font-size:18px; font-weight:700; color:var(--fucsia); }
   .avisofx.ve{ display:block; }
   .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
@@ -379,6 +388,11 @@
   .cuad td.foco{ background:#FFF8E1; }
   .pistas{ display:grid; gap:14px; grid-template-columns:1fr; margin-top:16px; }
   @media (min-width:760px){ .pistas{ grid-template-columns:1fr 1fr; } }
+  /* en pantalla ancha las pistas van al lado del tablero, a la vista */
+  @media (min-width:1100px){
+    .cruzbox{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:28px; align-items:start; }
+    .cruzbox .pistas{ grid-template-columns:1fr; margin-top:0; }
+  }
   .pistas h5{ margin:0 0 8px; font-size:17px; font-weight:800; text-transform:uppercase;
               letter-spacing:.06em; color:var(--rojo); }
   .pistas ol{ margin:0; padding-left:24px; font-size:19px; line-height:1.65; }
@@ -509,8 +523,8 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Base: art&iacute;culos 18&deg;, 19&deg; y 25&deg; del TUO de la Ley del
-    IGV y art&iacute;culo 2&deg; de la Ley N&deg; 29215, seg&uacute;n la orientaci&oacute;n de la SUNAT en
+  <p class="aviso" style="margin-top:16px">Base: art&iacute;culos 2&deg;, 5&deg;, 18&deg;, 19&deg;, 23&deg; y 25&deg; y Ap&eacute;ndices I y II del TUO de la Ley del
+    IGV, art&iacute;culo 6&deg; de su Reglamento (prorrata) y art&iacute;culo 2&deg; de la Ley N&deg; 29215, seg&uacute;n la orientaci&oacute;n de la SUNAT en
     <a href="https://orientacion.sunat.gob.pe/3111-06-credito-fiscal" target="_blank" rel="noopener">06. Cr&eacute;dito
     fiscal</a>. Los plazos de anotaci&oacute;n se revisan en sunat.gob.pe antes de cada declaraci&oacute;n.</p>
 
@@ -722,7 +736,7 @@ function HojaFx(leeCelda){
     return String(v);
   }
 
-  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras };
+  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras, col:col };
 }
 
 /* ================= sonido ================= */
@@ -781,19 +795,28 @@ a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
         'En la práctica siempre se aplica junto, como 18 %.' } ] },
 
 /* 2 ------------------------------------------------------------- */
-a1:{ tipo:'hoja', titulo:'Actividad 2 · El IGV de cada compra',
-  intro:'Las celdas amarillas son tuyas. Escribe la fórmula, no el resultado, y pulsa Comprobar.',
-  cols:[{w:280},{w:152},{w:152},{w:160}],
+a1:{ tipo:'hoja', titulo:'Actividad 2 · Tu Registro de Compras de marzo',
+  intro:'Seis comprobantes con el IGV incluido en el total. Saca la base, el IGV y decide cuánto es crédito '+
+        'fiscal. Escribe la fórmula en la fila 2 y arrástrala hacia abajo con el cuadradito verde de la esquina.',
+  cols:[{w:140},{w:300},{w:130},{w:150},{w:160},{w:130},{w:150}],
   filas:[
-   [{x:'Compra del mes'},{x:'Valor de venta'},{x:'IGV 18 %'},{x:'Total pagado'}],
-   [{x:'Mercadería para revender'},{n:12000},{form:'=B2*18%'},{form:'=B2+C2'}],
-   [{x:'Servicio de flete'},{n:3500},{e:630, f:true, ph:'=B3*18%'},{e:4130, f:true, ph:'=B3+C3'}],
-   [{x:'Útiles de oficina'},{n:800},{e:144, f:true},{e:944, f:true}],
-   [{x:'TOTAL'},{e:16300, f:true, ph:'=SUMA(B2:B4)'},{e:2934, f:true},{e:19234, f:true}] ],
-  ayuda:'La fila 2 ya está resuelta: mira sus fórmulas pasando el mouse por encima. '+
-        'Para el total usa <code>=SUMA(B2:B4)</code>. El crédito fiscal de este mes es la columna C.',
-  fin:globo(P.idea,'Resuelto','Esos S/ 2,934 de la columna C son tu crédito fiscal del mes: el IGV que ya '+
-      'pagaste a tus proveedores y que vas a descontar del IGV de tus ventas.') },
+   [{x:'Comprobante'},{x:'Concepto'},{x:'Destino'},{x:'Total pagado'},{x:'Base imponible'},{x:'IGV'},{x:'Crédito fiscal'}],
+   [{x:'Factura'},{x:'Mercadería para revender'},{x:'Gravada'},{n:14927},{e:12650, f:true},{e:2277, f:true},{e:2277, f:true}],
+   [{x:'Factura'},{x:'Flete de la mercadería'},{x:'Gravada'},{n:1557.60},{e:1320, f:true},{e:237.60, f:true},{e:237.60, f:true}],
+   [{x:'Boleta'},{x:'Consumo en restaurante'},{x:'Gravada'},{n:2845.90},{e:2411.78, f:true},{e:434.12, f:true},{e:0, f:true}],
+   [{x:'Factura'},{x:'Envases para fruta fresca'},{x:'Exonerada'},{n:5251},{e:4450, f:true},{e:801, f:true},{e:0, f:true}],
+   [{x:'Factura'},{x:'Alquiler del local'},{x:'Gravada'},{n:4720},{e:4000, f:true},{e:720, f:true},{e:720, f:true}],
+   [{x:'Factura'},{x:'Reparación de la camioneta'},{x:'Gravada'},{n:3129.36},{e:2652, f:true},{e:477.36, f:true},{e:477.36, f:true}],
+   [{x:'TOTAL'},{x:''},{x:''},{e:32430.86, f:true},{e:27483.78, f:true},{e:4947.08, f:true},{e:3711.96, f:true}],
+   [{x:''},{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''},{x:''},{x:''}],
+   [{x:''},{x:'IGV que no da crédito: va al costo o gasto'},{x:''},{x:''},{x:''},{x:''},{e:1235.12, f:true}] ],
+  ayuda:'La base sale de dividir el total entre (1 + tasa) y redondear a 2 decimales con <b>REDONDEAR</b>. '+
+        'La tasa está en C9: fíjala con <b>$</b> (o pulsa <b>F4</b>) para que no se mueva al arrastrar. '+
+        'El IGV es el total menos la base. En G usa <b>SI</b> con <b>Y</b>: solo da crédito si es '+
+        '<b>Factura</b> y el destino es <b>Gravada</b>; si no, 0. Para los totales arrastra sobre el cuadro '+
+        'y arma el rango.',
+  fin:globo(P.idea,'Resuelto','De S/ 4,947.08 de IGV que pagaste, solo S/ 3,711.96 son crédito fiscal. '+
+      'La boleta no lo da y la compra para la fruta exonerada tampoco: esos S/ 1,235.12 se van al costo o al gasto.') },
 
 /* 3 ------------------------------------------------------------- */
 a2:{ tipo:'arr', titulo:'Actividad 3 · ¿Da derecho a crédito fiscal?',
@@ -834,41 +857,109 @@ a3:{ tipo:'quiz', titulo:'Actividad 4 · Los requisitos formales',
      pq:'La boleta no discrimina el IGV y no da crédito fiscal. Por eso, si necesitas el crédito, pides factura.' } ] },
 
 /* 5 ------------------------------------------------------------- */
-a4:{ tipo:'hoja', titulo:'Actividad 5 · Cuánto IGV pagas este mes',
-  intro:'Completa las celdas amarillas con fórmulas y comprueba.',
-  cols:[{w:320},{w:162},{w:188}],
+a4:{ tipo:'hoja', titulo:'Actividad 7 · Tu Registro de Ventas y el IGV de marzo',
+  intro:'Cinco comprobantes de venta, uno de ellos una nota de crédito. Calcula el IGV de cada uno, los totales '+
+        'y cierra el mes con el crédito de la Actividad 2 y el saldo que venía de febrero.',
+  cols:[{w:190},{w:340},{w:160},{w:150},{w:200}],
   filas:[
-   [{x:'Marzo'},{x:'Base imponible'},{x:'IGV'}],
-   [{x:'Ventas del mes'},{n:85000},{e:15300, f:true, ph:'=B2*18%'}],
-   [{x:'Compras del mes'},{n:52000},{e:9360, f:true}],
-   [{x:'IGV a pagar'},{x:''},{e:5940, f:true, ph:'=C2-C3'}],
-   [{x:'¿Qué sale este mes?'},{x:''},{e:'PAGAR', f:true, ph:'=SI(C4>0,…)'}] ],
-  ayuda:'En C5 usa la función SI, igual que en Excel: '+
-        '<code>=SI(C4&gt;0,"PAGAR","SALDO A FAVOR")</code>. El IGV de ventas se llama débito fiscal o '+
-        'impuesto bruto; el de compras es el crédito fiscal.',
-  fin:globo2(P.pres, P.bien,'Resuelto','Débito menos crédito: 15,300 − 9,360 = 5,940. Esa es la cifra que '+
-      'termina en la casilla del formulario cuando declaras el IGV del mes.') },
+   [{x:'Comprobante'},{x:'Cliente o detalle'},{x:'Valor de venta'},{x:'IGV'},{x:'Total'}],
+   [{x:'Factura F001-120'},{x:'Distribuidora Lima SAC'},{n:18457.30},{e:3322.31, f:true},{e:21779.61, f:true}],
+   [{x:'Factura F001-121'},{x:'Comercial Norte EIRL'},{n:26300},{e:4734, f:true},{e:31034, f:true}],
+   [{x:'Boletas del día'},{x:'Consumidores finales'},{n:7812.50},{e:1406.25, f:true},{e:9218.75, f:true}],
+   [{x:'Nota de crédito'},{x:'Devolución de Comercial Norte'},{n:-2150},{e:-387, f:true},{e:-2537, f:true}],
+   [{x:'Factura F001-122'},{x:'Tienda Sur SAC'},{n:11640.80},{e:2095.34, f:true},{e:13736.14, f:true}],
+   [{x:'TOTAL'},{x:''},{e:62060.60, f:true},{e:11170.90, f:true},{e:73231.50, f:true}],
+   [{x:''},{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''}],
+   [{x:''},{x:'Crédito fiscal del mes (Actividad 2)'},{x:''},{n:3711.96},{x:''}],
+   [{x:''},{x:'Saldo a favor que viene de febrero'},{x:''},{n:1250},{x:''}],
+   [{x:''},{x:'IGV a pagar'},{x:''},{e:6208.94, f:true},{x:''}],
+   [{x:''},{x:'Saldo a favor para abril'},{x:''},{e:0, f:true},{x:''}],
+   [{x:''},{x:'¿Qué haces este mes?'},{x:''},{e:'PAGAR', f:true},{x:''}] ],
+  ayuda:'IGV = valor de venta por la tasa de C8 (con <b>$</b>), redondeado a 2 decimales. La nota de crédito '+
+        'va en negativo y resta sola en la <b>SUMA</b>. El débito fiscal es D7. Para el pago usa '+
+        '<b>MAX</b>(débito − crédito − saldo anterior, 0); para el saldo, al revés. En D13 usa <b>SI</b> '+
+        'para que salga <b>"PAGAR"</b> o <b>"ARRASTRAR SALDO"</b>.',
+  fin:globo2(P.pres, P.bien,'Resuelto','Débito 11,170.90 menos crédito 3,711.96 menos el saldo de febrero '+
+      '1,250.00: pagas S/ 6,208.94. La nota de crédito bajó el débito en 387.00: sin ella pagarías de más.') },
 
 /* 6 ------------------------------------------------------------- */
-a5:{ tipo:'hoja', titulo:'Actividad 6 · El saldo a favor que se arrastra',
-  intro:'Abril ya está resuelto como ejemplo. Completa mayo y junio con fórmulas.',
-  cols:[{w:300},{w:140},{w:140},{w:140}],
+a5:{ tipo:'hoja', titulo:'Actividad 8 · El saldo a favor de enero a junio',
+  intro:'En enero la empresa compró fuerte para una campaña. Arma la columna de enero con fórmulas y '+
+        'arrástrala hacia la derecha hasta junio. El saldo de cada mes tiene que llegar solo al siguiente.',
+  cols:[{w:350},{w:130},{w:130},{w:130},{w:130},{w:130},{w:130}],
   filas:[
-   [{x:'Concepto'},{x:'Abril'},{x:'Mayo'},{x:'Junio'}],
-   [{x:'IGV de ventas'},{n:9000},{n:16200},{n:21600}],
-   [{x:'IGV de compras'},{n:14000},{n:11000},{n:12400}],
-   [{x:'Saldo a favor del mes anterior'},{n:0},{e:5000, f:true, ph:'=B6'},{e:0, f:true}],
-   [{x:'IGV a pagar'},{form:'=MAX(B2-B3-B4,0)'},{e:200, f:true},{e:9200, f:true}],
-   [{x:'Saldo a favor para el mes siguiente'},{form:'=MAX(B3+B4-B2,0)'},{e:0, f:true},{e:0, f:true}] ],
-  ayuda:'Copia la lógica de abril: en la fila 5 <code>=MAX(C2-C3-C4,0)</code> y en la fila 6 '+
-        '<code>=MAX(C3+C4-C2,0)</code>. En la fila 4 el saldo del mes anterior se toma de la fila 6 '+
-        'de la columna de la izquierda.',
-  fin:globo(P.full,'Resuelto','En abril el crédito superó al débito, así que no se pagó nada y quedaron '+
-      'S/ 5,000 a favor. Ese saldo se usó en mayo y bajó el pago a S/ 200. Es lo que manda el artículo 25°: '+
-      'el saldo se aplica en los meses siguientes hasta agotarlo.') },
+   [{x:'Concepto'},{x:'Enero'},{x:'Febrero'},{x:'Marzo'},{x:'Abril'},{x:'Mayo'},{x:'Junio'}],
+   [{x:'Ventas gravadas (valor de venta)'},{n:42000},{n:38500},{n:51200},{n:47800},{n:60300},{n:55900}],
+   [{x:'Compras con derecho a crédito (valor)'},{n:96000},{n:30200},{n:36900},{n:38400},{n:41700},{n:39950}],
+   [{x:'Débito fiscal (IGV de ventas)'},{e:7560, f:true},{e:6930, f:true},{e:9216, f:true},{e:8604, f:true},{e:10854, f:true},{e:10062, f:true}],
+   [{x:'Crédito fiscal (IGV de compras)'},{e:17280, f:true},{e:5436, f:true},{e:6642, f:true},{e:6912, f:true},{e:7506, f:true},{e:7191, f:true}],
+   [{x:'Saldo a favor del mes anterior'},{n:0},{e:9720, f:true},{e:8226, f:true},{e:5652, f:true},{e:3960, f:true},{e:612, f:true}],
+   [{x:'IGV a pagar'},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:0, f:true},{e:2259, f:true}],
+   [{x:'Saldo a favor para el mes siguiente'},{e:9720, f:true},{e:8226, f:true},{e:5652, f:true},{e:3960, f:true},{e:612, f:true},{e:0, f:true}],
+   [{x:'¿Qué sale?'},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'A FAVOR', f:true},{e:'PAGAR', f:true}],
+   [{x:'Tasa del IGV'},{n:0.18, pct:true},{x:''},{x:''},{x:''},{x:''},{x:''}] ],
+  ayuda:'Débito y crédito: el valor por la tasa de B10, fijada con <b>$B$10</b> para que no se corra al '+
+        'arrastrar a la derecha. IGV a pagar con <b>MAX</b>(débito − crédito − saldo anterior, 0) y saldo '+
+        'siguiente con <b>MAX</b>(crédito + saldo anterior − débito, 0). En C6 el saldo anterior es el '+
+        '<b>B8</b> de la columna de al lado. En la fila 9 usa <b>SI</b>: <b>"PAGAR"</b> o <b>"A FAVOR"</b>.',
+  fin:globo(P.full,'Resuelto','Los S/ 9,720 que sobraron en enero cubrieron cinco meses seguidos: recién en '+
+      'junio se agotaron y se pagaron S/ 2,259. Es lo que manda el artículo 25°: el saldo se aplica en los '+
+      'meses siguientes hasta agotarlo.') },
+
+/* exoneradas e inafectas ---------------------------------------- */
+aE:{ tipo:'arr', titulo:'Actividad 5 · ¿Gravada, exonerada o inafecta?',
+  fichas:[ {id:'g1', t:'Una tienda vende polos a sus clientes', g:'GRAV'},
+           {id:'g2', t:'Un estudio contable cobra sus honorarios a una empresa', g:'GRAV'},
+           {id:'g3', t:'Una empresa importa una máquina para su planta', g:'GRAV'},
+           {id:'e1', t:'Un mercado mayorista vende papas y frutas frescas sin procesar', g:'EXO'},
+           {id:'e2', t:'Una empresa de buses vende pasajes de Lima a Huancayo', g:'EXO'},
+           {id:'e3', t:'Un establo vende leche cruda entera', g:'EXO'},
+           {id:'i1', t:'Una persona sin negocio alquila su departamento', g:'INA'},
+           {id:'i2', t:'Una persona sin negocio vende su auto usado', g:'INA'},
+           {id:'i3', t:'Dos empresas se fusionan y una le pasa sus bienes a la otra', g:'INA'},
+           {id:'i4', t:'Un instituto educativo cobra la pensión de enseñanza', g:'INA'} ],
+  cajas:[ {id:'GRAV', t:'Gravada con IGV'}, {id:'EXO', t:'Exonerada'}, {id:'INA', t:'Inafecta'} ],
+  fin:globo(P.expl,'Resuelto','En las exoneradas y en las inafectas no cobras IGV, así que el IGV de lo que '+
+      'compras para ellas no es crédito fiscal: se va al costo. La diferencia es de origen: la inafecta está '+
+      'fuera de la ley; la exonerada está dentro, pero liberada por los Apéndices I y II mientras dure la exoneración.') },
+
+/* prorrata ------------------------------------------------------ */
+aP:{ tipo:'hoja', titulo:'Actividad 6 · La prorrata de marzo',
+  intro:'Esta empresa vende jugos (gravados) y fruta fresca (exonerada). Calcula el porcentaje de prorrata con '+
+        'los últimos 12 meses, marzo incluido, y cuánto IGV de las compras comunes puede usar.',
+  cols:[{w:420},{w:160},{w:190},{w:160}],
+  filas:[
+   [{x:'Mes'},{x:'Gravadas'},{x:'No gravadas'},{x:'Total'}],
+   [{x:'Abril'},{n:38200},{n:9800},{e:48000, f:true}],
+   [{x:'Mayo'},{n:41500},{n:11200},{e:52700, f:true}],
+   [{x:'Junio'},{n:36900},{n:12400},{e:49300, f:true}],
+   [{x:'Julio'},{n:44100},{n:10600},{e:54700, f:true}],
+   [{x:'Agosto'},{n:40250},{n:8950},{e:49200, f:true}],
+   [{x:'Septiembre'},{n:39800},{n:9300},{e:49100, f:true}],
+   [{x:'Octubre'},{n:42600},{n:10100},{e:52700, f:true}],
+   [{x:'Noviembre'},{n:47300},{n:12800},{e:60100, f:true}],
+   [{x:'Diciembre'},{n:58900},{n:15600},{e:74500, f:true}],
+   [{x:'Enero'},{n:35400},{n:8700},{e:44100, f:true}],
+   [{x:'Febrero'},{n:33750},{n:7900},{e:41650, f:true}],
+   [{x:'Marzo (mes que declaras)'},{n:45100},{n:11300},{e:56400, f:true}],
+   [{x:'TOTAL 12 MESES'},{e:503800, f:true},{e:128650, f:true},{e:632450, f:true}],
+   [{x:'Porcentaje de prorrata (%)'},{x:''},{x:''},{e:79.66, f:true}],
+   [{x:'IGV de compras solo para ventas gravadas'},{x:''},{x:''},{n:4230}],
+   [{x:'IGV de compras solo para ventas exoneradas'},{x:''},{x:''},{n:1180}],
+   [{x:'IGV de compras comunes (sirven a las dos)'},{x:''},{x:''},{n:6480}],
+   [{x:'Crédito por las compras comunes'},{x:''},{x:''},{e:5161.97, f:true}],
+   [{x:'Crédito fiscal total de marzo'},{x:''},{x:''},{e:9391.97, f:true}],
+   [{x:'IGV que va al costo o gasto'},{x:''},{x:''},{e:2498.03, f:true}] ],
+  ayuda:'Total de cada mes = gravadas + no gravadas: escribe D2 y arrástrala hasta D13. Totales con '+
+        '<b>SUMA</b>. El porcentaje es gravadas ÷ total × 100, con <b>REDONDEAR</b> a 2 decimales, como pide '+
+        'el Reglamento. Lo común se usa solo en ese porcentaje (también redondeado). Al crédito total súmale lo '+
+        'exclusivo de gravadas; lo exclusivo de exoneradas no entra nunca.',
+  fin:globo2(P.pres, P.bien,'Resuelto','El 79.66 % de las ventas del año fue gravado, así que de los S/ 6,480 '+
+      'comunes solo usas S/ 5,161.97. Con los S/ 4,230 exclusivos, tu crédito de marzo es S/ 9,391.97. '+
+      'El resto, S/ 2,498.03, es costo.') },
 
 /* 7 ------------------------------------------------------------- */
-a6:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
+a6:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
   filas:12, cols:10,
   palabras:[
    {p:'COMPRAS', r:0, c:0, dir:'H', pista:'El registro donde hay que anotar el comprobante'},
@@ -885,7 +976,7 @@ a6:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
   fin:globo(P.bien,'Resuelto','Once palabras y ya tienes el vocabulario completo del IGV.') },
 
 /* 8 ------------------------------------------------------------- */
-a7:{ tipo:'quiz', titulo:'Actividad 8 · Quiz final',
+a7:{ tipo:'quiz', titulo:'Actividad 10 · Quiz final',
   lista:[
    { q:'IGV de ventas 9,000 e IGV de compras 11,500. ¿Qué pasa este mes?',
      ops:['Pagas 2,500','Pagas 20,500','No pagas nada y te quedan 2,500 de saldo a favor'], ok:2,
@@ -910,10 +1001,20 @@ a7:{ tipo:'quiz', titulo:'Actividad 8 · Quiz final',
      ops:['Usa todo el crédito fiscal','Usa la prorrata para separar la parte que sí puede usar',
           'No usa nada de crédito'], ok:1,
      pq:'Cuando una compra sirve a los dos tipos de operación y no se puede separar, el crédito se reparte '+
-        'en proporción a las ventas gravadas. A eso se le llama prorrata.' } ] },
+        'en proporción a las ventas gravadas. A eso se le llama prorrata.' },
+   { q:'Para calcular la prorrata de marzo, ¿qué ventas tomas?',
+     ops:['Solo las de marzo','Las de los últimos 12 meses, incluido marzo','Las del año anterior completo'], ok:1,
+     pq:'El Reglamento manda tomar las operaciones de los últimos 12 meses, incluido el mes que declaras, y '+
+        'expresar el porcentaje con dos decimales.' },
+   { q:'¿Cuál es la diferencia entre una venta exonerada y una inafecta?',
+     ops:['Ninguna, son sinónimos',
+          'La inafecta está fuera del campo del IGV; la exonerada está dentro pero liberada por un plazo',
+          'La exonerada paga la mitad del IGV'], ok:1,
+     pq:'La inafectación la da la propia ley (artículo 2°); la exoneración está en los Apéndices I y II y es '+
+        'temporal. En las dos, el IGV de las compras destinadas a ellas no es crédito fiscal.' } ] },
 
 /* 9 ------------------------------------------------------------- */
-a8:{ tipo:'sel', titulo:'Actividad 9 · Antes de declarar',
+a8:{ tipo:'sel', titulo:'Actividad 11 · Antes de declarar',
   lista:[
    { q:'Tienes una factura de un proveedor, a nombre de tu empresa, por mercadería que vas a vender gravada, con el IGV separado y anotada en el Registro de Compras',
      ops:['Sí uso el crédito fiscal','No uso el crédito fiscal'], ok:0,
@@ -951,8 +1052,8 @@ var D=[
     globo(P.pres,'De qué va la sesión',
       'Antes de declarar el IGV hay que entender una sola cosa: no entregas todo el impuesto que cobraste, '+
       'sino la diferencia con el que pagaste en tus compras. Ese descuento es el crédito fiscal, y solo lo '+
-      'puedes usar si cumples ciertos requisitos. Nueve diapositivas, nueve actividades y tres mini hojas de '+
-      'cálculo donde vas a escribir fórmulas como en Excel.') },
+      'puedes usar si cumples ciertos requisitos, y si vendes exonerado o inafecto lo repartes con la prorrata. '+
+      'Once diapositivas, once actividades y cuatro hojas de cálculo donde trabajas como en Excel.') },
 
 /* 2 ------------------------------------------------------------- */
 { et:'Qué es', t:'Qué es el crédito fiscal', clave:'a1',
@@ -965,7 +1066,7 @@ var D=[
       'tu cliente. Cuando declaras, al IGV que cobraste le restas esos 2,160 que ya pagaste. Si no existiera '+
       'el crédito fiscal, el mismo impuesto se pagaría dos veces sobre el mismo producto.')+
     '<div class="av">La tasa es 18 %: 16 % de IGV y 2 % del Impuesto de Promoción Municipal. '+
-    'En la hoja de abajo se calcula junto, como 18 %.</div>' },
+    'En la hoja de abajo se calcula junto, como 18 %, y los totales vienen con el IGV adentro.</div>' },
 
 /* 3 ------------------------------------------------------------- */
 { et:'Requisitos', t:'Requisitos sustanciales', clave:'a2',
@@ -979,6 +1080,13 @@ var D=[
       '<p>Lo comprado tiene que usarse en operaciones por las que se paga IGV. Si se destina a una venta '+
       'exonerada o inafecta, ese IGV no se recupera.</p></div></div>'+
     '</div>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Compra con factura</th><th>¿Gasto del negocio?</th><th>¿Va a venta gravada?</th><th>Crédito</th></tr></thead><tbody>'+
+    '<tr><td>Mercadería que revendes con IGV</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>'+
+    '<tr><td>Televisor para la casa del dueño</td><td>No</td><td>&mdash;</td><td>No</td></tr>'+
+    '<tr><td>Envases para fruta fresca exonerada</td><td>Sí</td><td>No</td><td>No</td></tr>'+
+    '<tr class="res"><td>Luz del local donde vendes gravado y exonerado</td><td>Sí</td><td>En parte</td><td>Con prorrata</td></tr>'+
+    '</tbody></table></div>'+
     globo(P.alum,'La pregunta de siempre',
       'Para cada factura pregúntate dos cosas: ¿esto es gasto del negocio o del dueño?, y ¿lo que compré '+
       'sirve para una venta con IGV? Pruébalo con los ocho casos de abajo.') },
@@ -1003,6 +1111,53 @@ var D=[
       'La anotación. La factura existe, el gasto es real, pero nadie la registró a tiempo y el crédito se '+
       'discute en la fiscalización. Por eso el Registro de Compras se cierra mes a mes, no al final del año.') },
 
+/* exoneradas e inafectas ------------------------------------------ */
+{ et:'No gravadas', t:'Operaciones exoneradas e inafectas', clave:'aE',
+  h:'<p class="enc">Cuando la venta no lleva IGV</p>'+
+    '<p class="sub">Exonerada e inafecta no son lo mismo, pero las dos te dejan sin crédito fiscal</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Inafecta · fuera del campo del IGV</h4><div class="c">'+
+      '<p>La ley nunca la grava. El artículo 2° de la Ley del IGV las lista: alquiler de una persona sin '+
+      'negocio, venta de bienes usados por quien no hace empresa, transferencias por fusión o escisión, '+
+      'servicios educativos de instituciones educativas, entre otras.</p></div></div>'+
+    '<div class="fc rj"><h4>Exonerada · dentro, pero liberada</h4><div class="c">'+
+      '<p>Está gravada por naturaleza, pero los Apéndices I y II la liberan por un plazo. Ejemplos: frutas, '+
+      'verduras y papas frescas, leche cruda entera, transporte público de pasajeros dentro del país '+
+      '(salvo el aéreo). Se puede renunciar a la exoneración ante la SUNAT.</p></div></div>'+
+    '</div>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Venta</th><th>¿Cobras IGV?</th><th>El IGV de tus compras para esa venta</th></tr></thead><tbody>'+
+    '<tr><td>Gravada</td><td>Sí, 18 %</td><td>Es crédito fiscal</td></tr>'+
+    '<tr><td>Exonerada</td><td>No</td><td>No es crédito: va al costo o gasto</td></tr>'+
+    '<tr><td>Inafecta</td><td>No</td><td>No es crédito: va al costo o gasto</td></tr>'+
+    '<tr class="res"><td>Exportación</td><td>No</td><td>Sí se recupera: saldo a favor del exportador</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.full,'Lo que conecta con la prorrata',
+      'El segundo requisito sustancial pide que la compra vaya a una operación gravada. Si vendes solo '+
+      'gravado, todo tu IGV es crédito. Si vendes gravado y exonerado a la vez, tienes que separar, y para '+
+      'lo que no se puede separar existe la prorrata.') },
+
+/* prorrata -------------------------------------------------------- */
+{ et:'Prorrata', t:'La prorrata del IGV', clave:'aP',
+  h:'<p class="enc">Cuando la compra sirve a las dos ventas</p>'+
+    '<p class="sub">Artículo 23° de la Ley del IGV y artículo 6°, numeral 6.2, de su Reglamento</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Tus compras</th><th>Cuánto IGV usas como crédito</th></tr></thead><tbody>'+
+    '<tr><td>Solo para ventas gravadas</td><td>Todo: el 100 %</td></tr>'+
+    '<tr><td>Solo para ventas exoneradas o inafectas</td><td>Nada: va al costo o gasto</td></tr>'+
+    '<tr class="res"><td>Comunes: sirven a las dos y no se pueden separar (luz, alquiler, contador)</td>'+
+      '<td>Solo el porcentaje de prorrata</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="form">% prorrata = ventas gravadas &divide; ventas totales &times; 100'+
+      '<small>de los últimos 12 meses, incluido el mes que declaras · el porcentaje con dos decimales · '+
+      'las exportaciones cuentan como gravadas</small></div>'+
+    globo(P.expl,'Paso a paso',
+      'Sumas las ventas gravadas de 12 meses, las divides entre todas las ventas de esos 12 meses y sacas el '+
+      'porcentaje. Ese porcentaje lo aplicas al IGV de las compras comunes. Si la empresa tiene menos de '+
+      '12 meses, usas los meses que tenga. Cada mes el porcentaje se vuelve a calcular.')+
+    '<div class="av">Primero se separa lo que se puede separar. La prorrata es solo para lo común: aplicarla '+
+    'a todo el IGV de compras es el error más frecuente.</div>' },
+
 /* 5 ------------------------------------------------------------- */
 { et:'A pagar', t:'Cuánto IGV pagas este mes', clave:'a4',
   h:'<p class="enc">Débito menos crédito</p>'+
@@ -1019,18 +1174,21 @@ var D=[
     'y se descuenta ahí. Pasa mucho cuando la empresa compró mucho en un mes, por ejemplo al abrir o al '+
     'hacer una campaña.</div>'+
     globo(P.expl,'Tres meses seguidos',
-      'En la hoja de abajo vas a seguir el saldo de abril a junio. Fíjate cómo lo que sobra en un mes baja '+
+      'En la hoja de abajo vas a seguir el saldo de enero a junio. Fíjate cómo lo que sobra en un mes baja '+
       'el pago del siguiente, hasta que se agota.') },
 
 /* 7 ------------------------------------------------------------- */
 { et:'Crucigrama', t:'Crucigrama del IGV', clave:'a6',
   h:'<p class="enc">Crucigrama</p>'+
-    '<p class="sub">Once palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
+    '<p class="sub">Once palabras. Lee la pista con su número, escribe en el tablero y cada palabra completa '+
+    'se revisa sola.</p>'+
+    '<div class="av">Haz clic en la primera casilla del número y escribe: el cursor avanza solo. Las pistas '+
+    'están junto al tablero (en el celular, debajo).</div>' },
 
 /* 8 ------------------------------------------------------------- */
 { et:'Quiz final', t:'Quiz final del crédito fiscal', clave:'a7',
   h:'<p class="enc">Quiz final</p>'+
-    '<p class="sub">Cinco preguntas que cruzan todo lo de la sesión.</p>' },
+    '<p class="sub">Siete preguntas que cruzan todo lo de la sesión.</p>' },
 
 /* 9 ------------------------------------------------------------- */
 { et:'Cierre', t:'Lo que te llevas', clave:'a8',
@@ -1049,9 +1207,9 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='cf_sem6_v1';
+var LS='cf_sem6_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8'];
+var CLAVES=['a0','a1','a2','a3','aE','aP','a4','a5','a6','a7','a8'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1245,7 +1403,7 @@ function armaCruz(k){
 }
 function vCruz(k){
   var A=ACT[k], g=G[k]||{}, z=armaCruz(k);
-  var h=cabTarea(k)+'<div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
+  var h=cabTarea(k)+'<div class="cruzbox"><div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
           '<table class="cuad"><tbody>';
   for(var r=0;r<A.filas;r++){
     h+='<tr>';
@@ -1276,7 +1434,7 @@ function vCruz(k){
       });
     h+='</ol></div>';
   });
-  h+='</div>';
+  h+='</div></div>';
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1369,7 +1527,8 @@ function vHoja(k){
         h+='<td class="dada'+(rf.err?' malf':'')+'" data-cel="'+id+'" data-fx="'+id+'" title="'+esc(c.form)+'"><span class="q">'+
            esc(rf.err ? rf.err : FX.fmt(rf.v))+'</span></td>';
       }else if(c.n!==undefined){
-        h+='<td class="dada num" data-cel="'+id+'"><span class="q">'+esc(FX.fmt(c.n))+'</span></td>';
+        h+='<td class="dada num" data-cel="'+id+'"><span class="q">'+
+           esc(c.pct ? Math.round(c.n*10000)/100+'%' : FX.fmt(c.n))+'</span></td>';
       }else{
         h+='<td'+(r===0?'':' class="rot"')+' data-cel="'+id+'"><span class="q">'+esc(c.x||'')+'</span></td>';
       }
@@ -1377,11 +1536,12 @@ function vHoja(k){
     h+='</tr>';
   });
   h+='</tbody></table></div>';
-  h+='<p class="avisofx">Toca una celda del cuadro para meterla en la f&oacute;rmula. '+
-     'Con Mays&uacute;s + clic armas un rango.</p>';
+  h+='<p class="avisofx">Toca una celda para meterla en la f&oacute;rmula, o arrastra sobre el cuadro '+
+     'para meter un rango. <b>F4</b> fija la celda con $.</p>';
   h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
-     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
-     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b> y '+
+     'c&oacute;piala arrastrando el <b>cuadradito verde</b> de la esquina. Funciones: <b>SUMA</b>, '+
+     '<b>REDONDEAR</b>, <b>SI</b>, <b>Y</b>, <b>O</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
   if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
@@ -1493,29 +1653,81 @@ function terminaEnRef(inp){
   if(!enFormula(inp)) return false;
   return /[A-Za-z]{1,2}\d{1,4}$/.test(antesDelCursor(inp));
 }
-/* mete el nombre de la celda donde está el cursor, como hace Excel */
+/* mete el nombre de la celda donde está el cursor, como hace Excel.
+   Devuelve lo que queda antes y después, para poder estirarlo a un rango al arrastrar. */
 function meteRef(inp, ref, modo){
   var v=inp.value;
   var a = inp.selectionStart===null ? v.length : inp.selectionStart;
   var b = inp.selectionEnd===null   ? v.length : inp.selectionEnd;
   var izq=v.slice(0,a), der=v.slice(b), m=/([A-Za-z]{1,2}\d{1,4})$/.exec(izq);
+  var pre;
   if(modo==='extender' && m){
-    izq = izq.slice(0, izq.length-m[1].length) + m[1].toUpperCase() + ':' + ref;
+    pre = izq.slice(0, izq.length-m[1].length) + m[1].toUpperCase() + ':';
   }else if(modo==='reemplazar' && m){
-    izq = izq.slice(0, izq.length-m[1].length) + ref;
+    pre = izq.slice(0, izq.length-m[1].length);
   }else{
-    izq += ref;
+    pre = izq;
   }
-  inp.value = izq + der;
-  var p = izq.length;
+  ponTexto(inp, pre, ref, der);
+  return { pre:pre, der:der, ini:(modo==='extender' ? null : ref) };
+}
+function ponTexto(inp, pre, ref, der){
+  inp.value = pre + ref + der;
+  var p = (pre+ref).length;
   try{ inp.setSelectionRange(p,p); }catch(e){}
 }
+function partes(id){ var m=/^([A-Z]{1,2})(\d+)$/.exec(id); return { c:FX.col(m[1]), r:+m[2] }; }
+/* rango ordenado de arriba-izquierda a abajo-derecha, como lo escribe Excel */
+function rangoDe(a, b){
+  var x=partes(a), y=partes(b);
+  return LET(Math.min(x.c,y.c))+Math.min(x.r,y.r)+':'+LET(Math.max(x.c,y.c))+Math.max(x.r,y.r);
+}
+function celdasDe(a, b){
+  var x=partes(a), y=partes(b), out=[];
+  for(var r=Math.min(x.r,y.r); r<=Math.max(x.r,y.r); r++)
+    for(var c=Math.min(x.c,y.c); c<=Math.max(x.c,y.c); c++) out.push(LET(c)+r);
+  return out;
+}
+/* copia una fórmula a otra celda: las referencias se corren salvo las fijadas con $ */
+function desplaza(f, dr, dc){
+  if(!/^\s*=/.test(f)) return f;
+  return f.replace(/"[^"]*"?|[A-Za-z_$][A-Za-z0-9_.$]*\(?/g, function(t){
+    if(t[0]==='"' || /\($/.test(t)) return t;
+    var m=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(t);
+    if(!m) return t;
+    var c=FX.col(m[2].toUpperCase()) + (m[1] ? 0 : dc), r=(+m[4]) + (m[3] ? 0 : dr);
+    if(c<0 || r<1) return '#REF!';
+    return m[1]+LET(c)+m[3]+r;
+  });
+}
+/* F4: A1 -> $A$1 -> A$1 -> $A1 -> A1 en la referencia junto al cursor */
+function fijaRef(inp){
+  var v=inp.value, a=inp.selectionStart===null ? v.length : inp.selectionStart;
+  var izq=v.slice(0,a), der=v.slice(a);
+  var m=/(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(izq);
+  if(!m){ var md=/^(\$?[A-Za-z]{0,2}\$?\d{0,4})/.exec(der);
+          if(md && md[1]){ izq+=md[1]; der=der.slice(md[1].length); m=/(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})$/.exec(izq); } }
+  if(!m) return false;
+  var sig = (!m[1]&&!m[3]) ? ['$','$'] : (m[1]&&m[3]) ? ['','$'] : (!m[1]&&m[3]) ? ['$',''] : ['',''];
+  var nueva=sig[0]+m[2].toUpperCase()+sig[1]+m[4];
+  izq=izq.slice(0, izq.length-m[0].length)+nueva;
+  inp.value=izq+der;
+  try{ inp.setSelectionRange(izq.length, izq.length); }catch(e){}
+  return true;
+}
 
-/* ---- la hoja: escribir, recalcular y comprobar ---- */
+/* ---- la hoja: escribir, recalcular, arrastrar y comprobar ---- */
+var SEL=null;   /* { k, id } la celda elegida, la del cuadradito de relleno */
 function cableaHoja(k, A, lam){
   var inps=qq('#lam td.libre input', lam);
   var tabla=lam.querySelector('table.hoja');
   var aviso=lam.querySelector('.avisofx');
+  var asa=document.createElement('div'); asa.className='asa';
+  asa.title='Arrastra para copiar la fórmula';
+
+  function defDe(id){ var p=partes(id), f=A.filas[p.r-1]; return f ? f[p.c] : null; }
+  function tdDe(id){ return lam.querySelector('table.hoja td[data-cel="'+id+'"]'); }
+  function libre(id){ var c=defDe(id); return !!(c && c.e!==undefined); }
 
   function pintaApunta(){
     var act=document.activeElement;
@@ -1523,6 +1735,16 @@ function cableaHoja(k, A, lam){
                 (esperaRef(act) || terminaEnRef(act)));
     if(tabla) tabla.classList.toggle('apunta', on);
     if(aviso) aviso.classList.toggle('ve', on);
+  }
+  /* la celda elegida lleva el borde verde y, si tiene algo, el cuadradito */
+  function elige(id){
+    qq('td.elegida', tabla).forEach(function(x){ x.classList.remove('elegida'); });
+    SEL = id ? { k:k, id:id } : null;
+    if(asa.parentNode) asa.parentNode.removeChild(asa);
+    if(!id) return;
+    var td=tdDe(id); if(!td) return;
+    td.classList.add('elegida');
+    if(txtCelda(k,id).trim()!=='') td.appendChild(asa);
   }
 
   function recalcula(salvo){
@@ -1554,6 +1776,7 @@ function cableaHoja(k, A, lam){
   }
 
   inps.forEach(function(x){
+    x.addEventListener('focus', function(){ elige(x.dataset.id); });
     if(x.readOnly) return;
     x.addEventListener('focus', function(){
       var t = txtCelda(k, x.dataset.id);
@@ -1573,35 +1796,146 @@ function cableaHoja(k, A, lam){
       graba();
       recalcula(null);
       pintaApunta();
+      if(SEL && SEL.id===x.dataset.id) elige(x.dataset.id);
     });
     x.addEventListener('keydown', function(e){
-      if(e.key==='Enter'){ e.preventDefault(); x.blur(); }
-      else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
+      if(e.key==='F4' && enFormula(x)){
+        e.preventDefault();
+        if(fijaRef(x)){ G.hoja[k+'|'+x.dataset.id]=x.value; pintaApunta(); }
+      }else if(e.key==='Enter'){
+        /* Enter baja a la celda de abajo, como en Excel */
+        e.preventDefault();
+        var p=partes(x.dataset.id), td=tdDe(LET(p.c)+(p.r+(e.shiftKey?-1:1)));
+        var sig=td ? td.querySelector('input.hc') : null;
+        if(sig) sig.focus(); else x.blur();
+      }else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
     });
   });
 
-  /* tocar una celda del cuadro mete su nombre en la fórmula que se está escribiendo */
+  /* tocar una celda del cuadro mete su nombre en la fórmula; arrastrar arma el rango */
+  var arr=null;
+  function marcaRango(ids){
+    qq('td.rango', tabla).forEach(function(x){ x.classList.remove('rango'); });
+    (ids||[]).forEach(function(id){ var td=tdDe(id); if(td) td.classList.add('rango'); });
+  }
+  function celdaBajo(ev){
+    var el=document.elementFromPoint(ev.clientX, ev.clientY);
+    var td=el && el.closest ? el.closest('td[data-cel]') : null;
+    return (td && tabla.contains(td)) ? td.dataset.cel : null;
+  }
   qq('#lam table.hoja td[data-cel]', lam).forEach(function(td){
     td.addEventListener('pointerdown', function(ev){
       var act=document.activeElement;
-      if(!act || !act.classList || !act.classList.contains('hc')) return;
+      if(!act || !act.classList || !act.classList.contains('hc') || act.readOnly) return;
       if(td.contains(act)) return;                 /* es la celda que estoy editando */
       var modo = esperaRef(act) ? 'insertar'
                : (terminaEnRef(act) ? (ev.shiftKey ? 'extender' : 'reemplazar') : null);
       if(!modo) return;                            /* la fórmula no admite una celda aquí */
       ev.preventDefault(); ev.stopPropagation();   /* no se pierde el foco */
-      meteRef(act, td.dataset.cel, modo);
+      var m=meteRef(act, td.dataset.cel, modo);
+      arr={ inp:act, pre:m.pre, der:m.der, ini:m.ini || td.dataset.cel, ext:!m.ini, fin:td.dataset.cel };
       G.hoja[k+'|'+act.dataset.id] = act.value;
-      td.classList.add('senalada');
-      setTimeout(function(){ td.classList.remove('senalada'); }, 420);
+      marcaRango([td.dataset.cel]);
       pintaApunta();
     });
   });
+  function arrMueve(ev){
+    if(!arr) return;
+    var id=celdaBajo(ev);
+    if(!id || id===arr.fin) return;
+    arr.fin=id;
+    var ref = arr.ext ? id : (id===arr.ini ? id : rangoDe(arr.ini, id));
+    ponTexto(arr.inp, arr.pre, ref, arr.der);
+    G.hoja[k+'|'+arr.inp.dataset.id] = arr.inp.value;
+    marcaRango(arr.ext ? [id] : celdasDe(arr.ini, id));
+  }
+  function arrSuelta(){
+    if(!arr) return;
+    var inp=arr.inp; arr=null;
+    setTimeout(function(){ marcaRango([]); }, 380);
+    try{ inp.focus(); }catch(e){}
+    pintaApunta();
+  }
+
+  /* el cuadradito de relleno: copia la fórmula hacia abajo o hacia el costado */
+  var rel=null;
+  function destinos(desde, hasta){
+    var a=partes(desde), b=partes(hasta), out=[];
+    if(Math.abs(b.r-a.r) >= Math.abs(b.c-a.c)){
+      var pr = b.r>a.r ? 1 : -1;
+      for(var r=a.r+pr; b.r!==a.r && r!==b.r+pr; r+=pr) out.push({ id:LET(a.c)+r, dr:r-a.r, dc:0 });
+    }else{
+      var pc = b.c>a.c ? 1 : -1;
+      for(var c=a.c+pc; c!==b.c+pc; c+=pc) out.push({ id:LET(c)+a.r, dr:0, dc:c-a.c });
+    }
+    return out.filter(function(d){ return d.id.indexOf('-')<0 && partes(d.id).r>=1 && defDe(d.id); });
+  }
+  asa.addEventListener('pointerdown', function(ev){
+    if(!SEL) return;
+    ev.preventDefault(); ev.stopPropagation();
+    var act=document.activeElement;
+    if(act && act.classList && act.classList.contains('hc')) act.blur();   /* guarda lo escrito */
+    rel={ desde:SEL.id, lista:[] };
+    try{ asa.setPointerCapture(ev.pointerId); }catch(e){}
+  });
+  function relMueve(ev){
+    if(!rel) return;
+    var id=celdaBajo(ev); if(!id) return;
+    rel.lista=destinos(rel.desde, id);
+    qq('td.relleno', tabla).forEach(function(x){ x.classList.remove('relleno'); });
+    rel.lista.forEach(function(d){ var td=tdDe(d.id); if(td) td.classList.add('relleno'); });
+  }
+  function relSuelta(){
+    if(!rel) return;
+    var r=rel; rel=null;
+    qq('td.relleno', tabla).forEach(function(x){ x.classList.remove('relleno'); });
+    var f=txtCelda(k, r.desde), n=0;
+    r.lista.forEach(function(d){
+      if(!libre(d.id) || G[k][d.id]!==undefined) return;   /* datos fijos y celdas ya resueltas no se tocan */
+      G.hoja[k+'|'+d.id] = desplaza(f, d.dr, d.dc); n++;
+      var td=tdDe(d.id); if(td) td.classList.remove('mal');
+    });
+    if(!n) return;
+    graba();
+    recalcula(null);
+    elige(r.desde);
+  }
+
+  /* al arrastrar cerca del borde, la lámina se desplaza sola, como en Excel */
+  var ultimo=null, reloj=null, env=lam.querySelector('.hojaenv');
+  function bordea(){
+    if(!ultimo || (!arr && !rel)){ clearInterval(reloj); reloj=null; return; }
+    var r=lam.getBoundingClientRect(), y=ultimo.clientY, x=ultimo.clientX, h=0, v=0;
+    if(y > r.bottom-48) v=16; else if(y < r.top+48) v=-16;
+    if(env){ var e=env.getBoundingClientRect();
+             if(x > e.right-40) h=16; else if(x < e.left+40) h=-16; }
+    if(v) lam.scrollTop+=v;
+    if(h && env) env.scrollLeft+=h;
+    if(v || h){ arrMueve(ultimo); relMueve(ultimo); }
+  }
+  function mueve(ev){
+    if(!arr && !rel) return;
+    ultimo={ clientX:ev.clientX, clientY:ev.clientY };
+    arrMueve(ev); relMueve(ev);
+    if(!reloj) reloj=setInterval(bordea, 40);
+  }
+  function suelta(){ ultimo=null; arrSuelta(); relSuelta(); }
+  document.addEventListener('pointermove', mueve);
+  document.addEventListener('pointerup', suelta);
+  document.addEventListener('pointercancel', suelta);
+  /* la hoja se vuelve a dibujar al comprobar: se sueltan los oyentes viejos */
+  if(window._sueltaHoja) window._sueltaHoja();
+  window._sueltaHoja=function(){
+    document.removeEventListener('pointermove', mueve);
+    document.removeEventListener('pointerup', suelta);
+    document.removeEventListener('pointercancel', suelta);
+  };
 
   var btn=lam.querySelector('button[data-chk]');
   if(btn) btn.addEventListener('click', function(){ compruebaHoja(k, A, lam, recalcula); });
 
   recalcula(null);
+  if(SEL && SEL.k===k && tdDe(SEL.id)) elige(SEL.id);
 }
 
 function compruebaHoja(k, A, lam, recalcula){
@@ -1929,7 +2263,7 @@ if(window.Aula){
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
-  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  aviso:'Se borrarán tus respuestas de las once actividades.',
   hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
