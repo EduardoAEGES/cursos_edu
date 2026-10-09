@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesi&oacute;n 6 &middot; Cr&eacute;dito fiscal del IGV</title>
+<title>Sesi&oacute;n 7 &middot; An&aacute;lisis e interpretaci&oacute;n de estados financieros</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -14,14 +14,14 @@
   :root{
     --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
   }
-  .cf{
+  .ai{
     --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
     --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
     --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
     max-width:1180px; margin:0 auto;
     font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   }
-  .cf button, .cf input, .cf select, .cf table{ font-family:inherit; }
+  .ai button, .ai input, .ai select, .ai table{ font-family:inherit; }
   [hidden]{ display:none !important; }
 
   /* ---------- cabecera ---------- */
@@ -135,8 +135,8 @@
     .nav .o-btn{ font-size:17px; padding:10px 14px; }
   }
   .nav .o-btn{ font-size:19px; padding:11px 20px; }
-  .cf .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
-  .cf .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
+  .ai .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .ai .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
   .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
   .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
                background:#fff; padding:0; cursor:pointer; }
@@ -443,21 +443,21 @@
 </div>
 
 <div class="o-cp">
-  <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
-  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="sistemas-procesos-contables.html">Sistemas de Procesos Contables</a></span> / <b>Sesi&oacute;n 6</b></span>
-  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 6</span></div>
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesi&oacute;n 7</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
 </div>
 
 <div class="o-content">
 <div class="o-wrap">
 <div class="o-sheet">
-<div class="cf">
+<div class="ai">
 
   <div class="marca">
     <img class="lgc" src="marca/certus-azul.png" alt="Certus">
     <span class="tx">
-      <h1>El cr&eacute;dito fiscal del IGV</h1>
-      <p><span class="sem">Sesi&oacute;n 6</span> &middot; Sistemas de Procesos Contables &middot; Lo que hay que saber antes de declarar el IGV</p>
+      <h1>An&aacute;lisis e interpretaci&oacute;n de estados financieros</h1>
+      <p><span class="sem">Sesi&oacute;n 7</span> &middot; Estados Financieros &middot; Diagn&oacute;stico econ&oacute;mico y financiero de la empresa</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -509,13 +509,13 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Base: art&iacute;culos 18&deg;, 19&deg; y 25&deg; del TUO de la Ley del
-    IGV y art&iacute;culo 2&deg; de la Ley N&deg; 29215, seg&uacute;n la orientaci&oacute;n de la SUNAT en
-    <a href="https://orientacion.sunat.gob.pe/3111-06-credito-fiscal" target="_blank" rel="noopener">06. Cr&eacute;dito
-    fiscal</a>. Los plazos de anotaci&oacute;n se revisan en sunat.gob.pe antes de cada declaraci&oacute;n.</p>
+  <p class="aviso" style="margin-top:16px">Contenido tomado del material de la semana 7 de la unidad
+    did&aacute;ctica: diagn&oacute;stico econ&oacute;mico y financiero, pol&iacute;tica de inversi&oacute;n y
+    pol&iacute;tica de endeudamiento. Las cifras de Distribuidora El Progreso S.A. son un caso de clase, no
+    de una empresa real.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
-    <a class="o-btn o-btn-primary" href="sistemas-procesos-contables.html">Volver al curso</a>
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
   </div>
 
 </div>
@@ -727,7 +727,7 @@ function HojaFx(leeCelda){
 
 /* ================= sonido ================= */
 var son=true, ac=null;
-try{ son = localStorage.getItem('cf6_son')!=='0'; }catch(e){}
+try{ son = localStorage.getItem('ai7_son')!=='0'; }catch(e){}
 function nota(f,ini,dur,vol,tipo){
   if(!son) return;
   try{
@@ -759,7 +759,7 @@ function pintaSon(){ var b=$('btnSon');
   b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
   b.setAttribute('aria-pressed', son?'true':'false'); }
 $('btnSon').addEventListener('click', function(){
-  son=!son; try{ localStorage.setItem('cf6_son', son?'1':'0'); }catch(e){}
+  son=!son; try{ localStorage.setItem('ai7_son', son?'1':'0'); }catch(e){}
   pintaSon(); if(son) bien(); });
 pintaSon();
 
@@ -767,167 +767,205 @@ pintaSon();
 var ACT={
 
 /* 1 ------------------------------------------------------------- */
-a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
+a0:{ tipo:'quiz', titulo:'Actividad 1 · Conectemos',
   lista:[
-   { q:'Este mes cobraste IGV a tus clientes y también pagaste IGV en tus compras. ¿Qué le entregas a la SUNAT?',
-     ops:['Todo el IGV que cobraste en tus ventas',
-          'La diferencia entre el IGV que cobraste y el que pagaste',
-          'El IGV que pagaste en tus compras'], ok:1,
-     pq:'El IGV se paga por diferencia: al impuesto de tus ventas le restas el de tus compras. '+
-        'Ese descuento es el crédito fiscal.' },
-   { q:'¿De cuánto es la tasa del IGV en el Perú?',
-     ops:['16 %','18 %','19 %'], ok:1,
-     pq:'18 %: 16 % del IGV propiamente dicho más 2 % del Impuesto de Promoción Municipal. '+
-        'En la práctica siempre se aplica junto, como 18 %.' } ] },
+   { q:'Una pyme de alimentos vende bien todos los meses, pero acumula deudas y casi no tiene efectivo. ¿Por qué puede pasar eso?',
+     ops:['Porque vender y cobrar no es lo mismo: puede ser rentable y aun así quedarse sin liquidez',
+          'Porque si vende bien no puede tener deudas: hay un error en sus cuentas',
+          'Porque la rentabilidad y la liquidez son siempre lo mismo'], ok:0,
+     pq:'Una empresa puede ser rentable y tener problemas de caja al mismo tiempo. Por eso el diagnóstico '+
+        'económico y el financiero son dos cosas distintas y se miran juntos.' },
+   { q:'Esa misma empresa tiene costos fijos altos y no controla sus inventarios. ¿Qué indicadores miraría primero?',
+     ops:['Solo el margen bruto','La razón corriente y la prueba ácida, junto con los márgenes',
+          'Solo la cantidad de trabajadores'], ok:1,
+     pq:'La liquidez dice si puede pagar en el corto plazo y los márgenes dicen si el negocio deja ganancia. '+
+        'Con inventarios altos, la prueba ácida es la que más avisa.' } ] },
 
 /* 2 ------------------------------------------------------------- */
-a1:{ tipo:'hoja', titulo:'Actividad 2 · El IGV de cada compra',
-  intro:'Las celdas amarillas son tuyas. Escribe la fórmula, no el resultado, y pulsa Comprobar.',
-  cols:[{w:280},{w:152},{w:152},{w:160}],
-  filas:[
-   [{x:'Compra del mes'},{x:'Valor de venta'},{x:'IGV 18 %'},{x:'Total pagado'}],
-   [{x:'Mercadería para revender'},{n:12000},{form:'=B2*18%'},{form:'=B2+C2'}],
-   [{x:'Servicio de flete'},{n:3500},{e:630, f:true, ph:'=B3*18%'},{e:4130, f:true, ph:'=B3+C3'}],
-   [{x:'Útiles de oficina'},{n:800},{e:144, f:true},{e:944, f:true}],
-   [{x:'TOTAL'},{e:16300, f:true, ph:'=SUMA(B2:B4)'},{e:2934, f:true},{e:19234, f:true}] ],
-  ayuda:'La fila 2 ya está resuelta: mira sus fórmulas pasando el mouse por encima. '+
-        'Para el total usa <code>=SUMA(B2:B4)</code>. El crédito fiscal de este mes es la columna C.',
-  fin:globo(P.idea,'Resuelto','Esos S/ 2,934 de la columna C son tu crédito fiscal del mes: el IGV que ya '+
-      'pagaste a tus proveedores y que vas a descontar del IGV de tus ventas.') },
+a1:{ tipo:'arr', titulo:'Actividad 2 · ¿De dónde sale la información?',
+  fichas:[ {id:'e1', t:'Estado de situación financiera', g:'EF'},
+           {id:'e2', t:'Estado de resultados', g:'EF'},
+           {id:'e3', t:'Estado de flujos de efectivo', g:'EF'},
+           {id:'i1', t:'Razón corriente y prueba ácida', g:'IN'},
+           {id:'i2', t:'Margen neto y ROE', g:'IN'},
+           {id:'i3', t:'Rotación de activos', g:'IN'},
+           {id:'d1', t:'La inflación del año', g:'EN'},
+           {id:'d2', t:'Los precios de la competencia', g:'EN'},
+           {id:'d3', t:'El tamaño del mercado', g:'EN'} ],
+  cajas:[ {id:'EF', t:'Estados financieros'}, {id:'IN', t:'Indicadores'}, {id:'EN', t:'Datos del entorno'} ],
+  fin:globo(P.expl,'Resuelto','El diagnóstico se arma con las tres fuentes. Si solo miras los estados '+
+      'financieros te falta el contexto, y si solo miras el entorno no tienes con qué medir a la empresa.') },
 
 /* 3 ------------------------------------------------------------- */
-a2:{ tipo:'arr', titulo:'Actividad 3 · ¿Da derecho a crédito fiscal?',
-  fichas:[ {id:'s1', t:'Factura por mercadería que vas a revender', g:'SI'},
-           {id:'s2', t:'Factura del alquiler del local donde atiendes', g:'SI'},
-           {id:'s3', t:'Recibo de luz del local, a nombre de la empresa', g:'SI'},
-           {id:'s4', t:'Factura del transportista que te trae la mercadería', g:'SI'},
-           {id:'n1', t:'Boleta de venta del almuerzo del gerente', g:'NO'},
-           {id:'n2', t:'Factura emitida a nombre de otra empresa', g:'NO'},
-           {id:'n3', t:'Factura por un televisor para la casa del dueño', g:'NO'},
-           {id:'n4', t:'Factura de una compra destinada a una venta exonerada', g:'NO'} ],
-  cajas:[ {id:'SI', t:'Sí da crédito fiscal'}, {id:'NO', t:'No da crédito fiscal'} ],
-  fin:globo(P.expl,'Resuelto','Los dos requisitos del artículo 18°: que la compra sea gasto o costo aceptado '+
-      'para el Impuesto a la Renta, y que se destine a operaciones gravadas con IGV. Si falla uno de los dos, '+
-      'no hay crédito fiscal, por más factura que tengas.') },
+a2:{ tipo:'hoja', titulo:'Actividad 3 · Diagnóstico económico',
+  intro:'Distribuidora El Progreso S.A., año 2025. Calcula los cuatro indicadores con fórmulas.',
+  cols:[{w:300},{w:170},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
+   [{x:'Ventas netas'},{n:1200000},{x:''}],
+   [{x:'Utilidad bruta'},{n:420000},{x:''}],
+   [{x:'Utilidad neta'},{n:96000},{x:''}],
+   [{x:'Activo total'},{n:960000},{x:''}],
+   [{x:'Patrimonio'},{n:480000},{x:''}],
+   [{x:'Margen bruto %'},{x:''},{e:35, f:true, ph:'=B3/B2*100'}],
+   [{x:'Margen neto %'},{x:''},{e:8, f:true}],
+   [{x:'ROA %'},{x:''},{e:10, f:true}],
+   [{x:'ROE %'},{x:''},{e:20, f:true}] ],
+  ayuda:'Margen bruto <code>=B3/B2*100</code> · margen neto <code>=B4/B2*100</code> · '+
+        'ROA <code>=B4/B5*100</code> · ROE <code>=B4/B6*100</code>.',
+  fin:globo(P.idea,'Resuelto','35 % de margen bruto, 8 % de margen neto, 10 % de ROA y 20 % de ROE. '+
+      'El ROE duplica al ROA porque la mitad del activo está financiada con deuda: eso es apalancamiento.') },
 
 /* 4 ------------------------------------------------------------- */
-a3:{ tipo:'quiz', titulo:'Actividad 4 · Los requisitos formales',
-  lista:[
-   { q:'La factura dice solo «total S/ 1,180, IGV incluido», sin separar el monto del impuesto. ¿Puedes usar el crédito?',
-     ops:['Sí, basta con que diga que el IGV está incluido',
-          'No: el IGV tiene que estar consignado por separado en el comprobante',
-          'Sí, si lo calculas tú mismo y lo anotas'], ok:1,
-     pq:'Es el primer requisito formal del artículo 19°: el impuesto va discriminado en el comprobante.' },
-   { q:'¿Dónde tiene que estar anotado el comprobante para poder usar el crédito fiscal?',
-     ops:['En el Registro de Ventas','En el Registro de Compras','En el Libro Diario'], ok:1,
-     pq:'En el Registro de Compras, que además debe estar legalizado antes de usarse.' },
-   { q:'Te llega una factura de marzo que te olvidaste de anotar. ¿Hasta cuándo puedes anotarla?',
-     ops:['Solo en marzo, después se pierde',
-          'En marzo o en cualquiera de los 12 meses siguientes',
-          'En cualquier momento, no hay plazo'], ok:1,
-     pq:'El artículo 2° de la Ley N° 29215 permite anotarla en la hoja del mes de emisión, en la del pago '+
-        'del impuesto o en la de los 12 meses siguientes. El crédito se usa en el período de la hoja donde quedó anotada.' },
-   { q:'Compraste con una boleta de venta a un proveedor del NRUS. ¿Tienes crédito fiscal?',
-     ops:['Sí, la boleta sirve igual que la factura',
-          'No: la boleta de venta no da derecho a crédito fiscal',
-          'Sí, pero solo por la mitad del IGV'], ok:1,
-     pq:'La boleta no discrimina el IGV y no da crédito fiscal. Por eso, si necesitas el crédito, pides factura.' } ] },
+a3:{ tipo:'hoja', titulo:'Actividad 4 · Diagnóstico financiero',
+  intro:'La misma empresa, al 31 de diciembre. Ahora toca la liquidez, la solvencia y el endeudamiento.',
+  cols:[{w:300},{w:170},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
+   [{x:'Activo corriente'},{n:480000},{x:''}],
+   [{x:'Inventarios'},{n:240000},{x:''}],
+   [{x:'Pasivo corriente'},{n:300000},{x:''}],
+   [{x:'Pasivo total'},{n:480000},{x:''}],
+   [{x:'Activo total'},{n:960000},{x:''}],
+   [{x:'Utilidad operativa'},{n:160000},{x:''}],
+   [{x:'Gastos por intereses'},{n:32000},{x:''}],
+   [{x:'Razón corriente'},{x:''},{e:1.6, f:true, ph:'=B2/B4'}],
+   [{x:'Prueba ácida'},{x:''},{e:0.8, f:true, ph:'=(B2-B3)/B4'}],
+   [{x:'Endeudamiento total %'},{x:''},{e:50, f:true}],
+   [{x:'Cobertura de intereses'},{x:''},{e:5, f:true}] ],
+  ayuda:'Endeudamiento <code>=B5/B6*100</code> · cobertura <code>=B7/B8</code>. '+
+        'Fíjate en los paréntesis de la prueba ácida: primero se resta y después se divide.',
+  fin:globo2(P.pres, P.bien,'Resuelto','Razón corriente 1.60, dentro del rango sano de 1.5 a 2. '+
+      'Prueba ácida 0.80: sin los inventarios ya no alcanza, y ahí está el riesgo. Endeudamiento 50 %, '+
+      'por debajo del 60 %. Cobertura 5 veces: la utilidad operativa paga cinco veces los intereses.') },
 
 /* 5 ------------------------------------------------------------- */
-a4:{ tipo:'hoja', titulo:'Actividad 5 · Cuánto IGV pagas este mes',
-  intro:'Completa las celdas amarillas con fórmulas y comprueba.',
-  cols:[{w:320},{w:162},{w:188}],
-  filas:[
-   [{x:'Marzo'},{x:'Base imponible'},{x:'IGV'}],
-   [{x:'Ventas del mes'},{n:85000},{e:15300, f:true, ph:'=B2*18%'}],
-   [{x:'Compras del mes'},{n:52000},{e:9360, f:true}],
-   [{x:'IGV a pagar'},{x:''},{e:5940, f:true, ph:'=C2-C3'}],
-   [{x:'¿Qué sale este mes?'},{x:''},{e:'PAGAR', f:true, ph:'=SI(C4>0,…)'}] ],
-  ayuda:'En C5 usa la función SI, igual que en Excel: '+
-        '<code>=SI(C4&gt;0,"PAGAR","SALDO A FAVOR")</code>. El IGV de ventas se llama débito fiscal o '+
-        'impuesto bruto; el de compras es el crédito fiscal.',
-  fin:globo2(P.pres, P.bien,'Resuelto','Débito menos crédito: 15,300 − 9,360 = 5,940. Esa es la cifra que '+
-      'termina en la casilla del formulario cuando declaras el IGV del mes.') },
+a4:{ tipo:'sel', titulo:'Actividad 5 · Interpretar el resultado',
+  lista:[
+   { q:'Razón corriente 1.60', ops:['Sana: está entre 1.5 y 2','Muy baja: no cubre sus deudas','Demasiado alta: dinero ocioso'], ok:0,
+     pq:'Tiene S/ 1.60 de activo corriente por cada S/ 1.00 de deuda de corto plazo.' },
+   { q:'Prueba ácida 0.80', ops:['No hay nada que mirar','Alerta: sin los inventarios no alcanza a cubrir el pasivo corriente','Excelente liquidez'], ok:1,
+     pq:'Depende de vender los inventarios para pagar. Si la mercadería se mueve lento, la empresa se queda sin caja.' },
+   { q:'Endeudamiento total 50 %', ops:['Riesgoso: pasa del 60 %','Aceptable: la mitad del activo se financia con deuda','No se puede interpretar'], ok:1,
+     pq:'La referencia habitual es mantenerlo por debajo del 60 %.' },
+   { q:'Cobertura de intereses 5 veces', ops:['No puede pagar sus intereses','La utilidad operativa cubre cinco veces los intereses','Indica que no tiene deuda'], ok:1,
+     pq:'Mientras más alta, más holgura para pagar el costo de la deuda.' },
+   { q:'ROE 20 % con ROA 10 %', ops:['Hay un error de cálculo','El apalancamiento está potenciando el retorno del accionista','La empresa no es rentable'], ok:1,
+     pq:'Como la mitad del activo lo pone la deuda, la ganancia se reparte entre menos capital propio y el ROE sube.' } ],
+  fin:globo(P.full,'Resuelto','Un indicador solo no dice nada: se lee contra una referencia, contra el año '+
+      'anterior y contra el sector. Y siempre de a varios, nunca uno suelto.') },
 
 /* 6 ------------------------------------------------------------- */
-a5:{ tipo:'hoja', titulo:'Actividad 6 · El saldo a favor que se arrastra',
-  intro:'Abril ya está resuelto como ejemplo. Completa mayo y junio con fórmulas.',
-  cols:[{w:300},{w:140},{w:140},{w:140}],
-  filas:[
-   [{x:'Concepto'},{x:'Abril'},{x:'Mayo'},{x:'Junio'}],
-   [{x:'IGV de ventas'},{n:9000},{n:16200},{n:21600}],
-   [{x:'IGV de compras'},{n:14000},{n:11000},{n:12400}],
-   [{x:'Saldo a favor del mes anterior'},{n:0},{e:5000, f:true, ph:'=B6'},{e:0, f:true}],
-   [{x:'IGV a pagar'},{form:'=MAX(B2-B3-B4,0)'},{e:200, f:true},{e:9200, f:true}],
-   [{x:'Saldo a favor para el mes siguiente'},{form:'=MAX(B3+B4-B2,0)'},{e:0, f:true},{e:0, f:true}] ],
-  ayuda:'Copia la lógica de abril: en la fila 5 <code>=MAX(C2-C3-C4,0)</code> y en la fila 6 '+
-        '<code>=MAX(C3+C4-C2,0)</code>. En la fila 4 el saldo del mes anterior se toma de la fila 6 '+
-        'de la columna de la izquierda.',
-  fin:globo(P.full,'Resuelto','En abril el crédito superó al débito, así que no se pagó nada y quedaron '+
-      'S/ 5,000 a favor. Ese saldo se usó en mayo y bajó el pago a S/ 200. Es lo que manda el artículo 25°: '+
-      'el saldo se aplica en los meses siguientes hasta agotarlo.') },
+a5:{ tipo:'arr', titulo:'Actividad 6 · Política de inversión',
+  fichas:[ {id:'c1', t:'Caja y bancos', g:'CP'},
+           {id:'c2', t:'Cuentas por cobrar comerciales', g:'CP'},
+           {id:'c3', t:'Inventarios de mercadería', g:'CP'},
+           {id:'c4', t:'Inversiones financieras a 90 días', g:'CP'},
+           {id:'l1', t:'Maquinaria de la planta', g:'LP'},
+           {id:'l2', t:'Edificio del almacén', g:'LP'},
+           {id:'l3', t:'Apertura de una sucursal', g:'LP'},
+           {id:'l4', t:'Sistema informático de gestión', g:'LP'} ],
+  cajas:[ {id:'CP', t:'Inversión de corto plazo'}, {id:'LP', t:'Inversión de largo plazo'} ],
+  fin:globo(P.alum,'Resuelto','La política de inversión decide en qué se ponen los fondos buscando el '+
+      'equilibrio entre rentabilidad, riesgo y liquidez. Mucho en el largo plazo da rentabilidad pero quita caja; '+
+      'todo en el corto plazo da liquidez pero no hace crecer al negocio.') },
 
 /* 7 ------------------------------------------------------------- */
-a6:{ tipo:'cruz', titulo:'Actividad 7 · Crucigrama',
-  filas:12, cols:10,
-  palabras:[
-   {p:'COMPRAS', r:0, c:0, dir:'H', pista:'El registro donde hay que anotar el comprobante'},
-   {p:'REGISTRO', r:0, c:4, dir:'V', pista:'Libro donde se anota la compra para usar el crédito'},
-   {p:'SALDO', r:0, c:6, dir:'V', pista:'Lo que queda a tu favor cuando el crédito supera al débito'},
-   {p:'FACTURA', r:1, c:9, dir:'V', pista:'El comprobante que sí da derecho a crédito fiscal'},
-   {p:'CREDITO', r:2, c:0, dir:'V', pista:'El IGV de tus compras que descuentas del IGV de tus ventas'},
-   {p:'RUC', r:3, c:0, dir:'H', pista:'El número del emisor que debe figurar en el comprobante'},
-   {p:'DEBITO', r:5, c:0, dir:'H', pista:'El IGV de tus ventas, también llamado impuesto bruto'},
-   {p:'GRAVADA', r:5, c:7, dir:'V', pista:'Así debe ser la operación a la que destinas la compra'},
-   {p:'PRORRATA', r:7, c:2, dir:'H', pista:'El reparto del crédito cuando hay ventas gravadas y no gravadas'},
-   {p:'BOLETA', r:9, c:2, dir:'H', pista:'El comprobante que no da derecho a crédito fiscal'},
-   {p:'VENTAS', r:11, c:3, dir:'H', pista:'El registro donde se anotan las facturas que emites'} ],
-  fin:globo(P.bien,'Resuelto','Once palabras y ya tienes el vocabulario completo del IGV.') },
+a6:{ tipo:'hoja', titulo:'Actividad 7 · Rotación y endeudamiento',
+  intro:'Dos años de la empresa. Para la rotación se usa el activo total promedio: ahí entra la función PROMEDIO.',
+  cols:[{w:280},{w:150},{w:150},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'2024'},{x:'2025'},{x:'Resultado'}],
+   [{x:'Activo total'},{n:840000},{n:960000},{x:''}],
+   [{x:'Ventas netas'},{x:'—'},{n:1200000},{x:''}],
+   [{x:'Utilidad neta'},{x:'—'},{n:96000},{x:''}],
+   [{x:'Pasivo total'},{x:'—'},{n:480000},{x:''}],
+   [{x:'Activo total promedio'},{x:''},{x:''},{e:900000, f:true, ph:'=PROMEDIO(B2:C2)'}],
+   [{x:'Rotación de activos'},{x:''},{x:''},{e:1.33, f:true, ph:'=C3/D6'}],
+   [{x:'ROA en veces'},{x:''},{x:''},{e:0.10, f:true}],
+   [{x:'Endeudamiento %'},{x:''},{x:''},{e:50, f:true}] ],
+  ayuda:'Promedio <code>=PROMEDIO(B2:C2)</code> · rotación <code>=C3/D6</code> · '+
+        'ROA <code>=C4/C2</code> · endeudamiento <code>=C5/C2*100</code>.',
+  fin:globo(P.expl,'Resuelto','Rotación 1.33: cada sol invertido en activos genera S/ 1.33 de ventas al año. '+
+      'Una inversión se juzga por su efecto en la rentabilidad y en la rotación; un endeudamiento, por su '+
+      'efecto en la solvencia y el apalancamiento.') },
 
 /* 8 ------------------------------------------------------------- */
-a7:{ tipo:'quiz', titulo:'Actividad 8 · Quiz final',
-  lista:[
-   { q:'IGV de ventas 9,000 e IGV de compras 11,500. ¿Qué pasa este mes?',
-     ops:['Pagas 2,500','Pagas 20,500','No pagas nada y te quedan 2,500 de saldo a favor'], ok:2,
-     pq:'El crédito supera al débito, así que no hay impuesto por pagar y el exceso de 2,500 queda como '+
-        'saldo a favor para el mes siguiente.' },
-   { q:'Una empresa compra un equipo que usará solo para fabricar un producto exonerado del IGV. ¿Usa el crédito?',
-     ops:['Sí, porque tiene factura','No, porque la compra no se destina a operaciones gravadas',
-          'Sí, pero recién el año siguiente'], ok:1,
-     pq:'Falla el segundo requisito sustancial del artículo 18°: la compra debe destinarse a operaciones '+
-        'por las que se pague el IGV.' },
-   { q:'¿Cómo se llama el IGV de tus ventas?',
-     ops:['Crédito fiscal','Débito fiscal o impuesto bruto','Saldo a favor'], ok:1,
-     pq:'El de las ventas es el débito o impuesto bruto; el de las compras es el crédito fiscal. '+
-        'La resta de los dos es lo que pagas.' },
-   { q:'El proveedor te emitió la factura con un RUC que no coincide con el de la SUNAT. ¿Qué pasa con el crédito?',
-     ops:['No hay problema, basta con el monto',
-          'Se pierde: el comprobante debe identificar bien al emisor',
-          'Se usa solo la mitad'], ok:1,
-     pq:'El artículo 19° pide que el comprobante consigne el nombre y el número de RUC del emisor de forma '+
-        'que no haya confusión al contrastarlo con la información de la SUNAT.' },
-   { q:'Una empresa tiene ventas gravadas y ventas exoneradas, y hace compras que sirven para las dos. ¿Qué aplica?',
-     ops:['Usa todo el crédito fiscal','Usa la prorrata para separar la parte que sí puede usar',
-          'No usa nada de crédito'], ok:1,
-     pq:'Cuando una compra sirve a los dos tipos de operación y no se puede separar, el crédito se reparte '+
-        'en proporción a las ventas gravadas. A eso se le llama prorrata.' } ] },
+a7:{ tipo:'par', titulo:'Actividad 8 · Inversión, deuda y resultado',
+  fichas:[ {id:'r1', t:'Posición sólida'}, {id:'r2', t:'Posible crisis financiera'},
+           {id:'r3', t:'Crecimiento sostenible'},
+           {id:'p1', t:'Eficiente y conservadora'}, {id:'p2', t:'Ineficiente y riesgosa'},
+           {id:'p3', t:'Activa y balanceada'} ],
+  huecos:[ {id:'r1', q:'Alta rentabilidad y baja deuda · ¿qué resultado da?'},
+           {id:'p1', q:'Alta rentabilidad y baja deuda · ¿cómo son sus políticas?'},
+           {id:'r2', q:'Baja rentabilidad y alta deuda · ¿qué resultado da?'},
+           {id:'p2', q:'Baja rentabilidad y alta deuda · ¿cómo son sus políticas?'},
+           {id:'r3', q:'Alta inversión financiada con deuda controlada · ¿qué resultado da?'},
+           {id:'p3', q:'Alta inversión financiada con deuda controlada · ¿cómo son sus políticas?'} ],
+  fin:globo(P.bien,'Resuelto','Endeudarse no es malo por sí mismo: lo malo es endeudarse sin rentabilidad '+
+      'que lo sostenga. Deuda controlada con inversión que rinde es crecimiento.') },
 
 /* 9 ------------------------------------------------------------- */
-a8:{ tipo:'sel', titulo:'Actividad 9 · Antes de declarar',
+a8:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
+  filas:13, cols:16,
+  palabras:[
+   {p:'RENTABILIDAD', r:0, c:0, dir:'H', pista:'Lo que mide el diagnóstico económico'},
+   {p:'INVERSION', r:0, c:6, dir:'V', pista:'Política que define en qué se colocan los recursos'},
+   {p:'PATRIMONIO', r:2, c:1, dir:'V', pista:'Lo que divide a la utilidad neta en el ROE'},
+   {p:'SOLVENCIA', r:2, c:3, dir:'H', pista:'Capacidad de responder por todas las deudas'},
+   {p:'ACIDA', r:2, c:11, dir:'V', pista:'Prueba de liquidez que deja fuera los inventarios'},
+   {p:'LIQUIDEZ', r:2, c:13, dir:'V', pista:'Capacidad de cubrir las deudas de corto plazo'},
+   {p:'INVENTARIOS', r:2, c:15, dir:'V', pista:'Inversión de corto plazo que la prueba ácida descuenta'},
+   {p:'MARGEN', r:4, c:4, dir:'H', pista:'Bruto o neto: el porcentaje que queda de las ventas'},
+   {p:'ROTACION', r:6, c:8, dir:'H', pista:'De activos: ventas netas entre activo total promedio'},
+   {p:'CORRIENTE', r:8, c:0, dir:'H', pista:'Razón que divide el activo de corto plazo entre el pasivo de corto plazo'},
+   {p:'COBERTURA', r:11, c:0, dir:'H', pista:'De intereses: utilidad operativa entre gasto financiero'} ],
+  fin:globo(P.full,'Resuelto','Once palabras que son el vocabulario del diagnóstico. Si las manejas, puedes '+
+      'leer el informe financiero de cualquier empresa.') },
+
+/* 10 ------------------------------------------------------------ */
+a9:{ tipo:'quiz', titulo:'Actividad 10 · Quiz final',
   lista:[
-   { q:'Tienes una factura de un proveedor, a nombre de tu empresa, por mercadería que vas a vender gravada, con el IGV separado y anotada en el Registro de Compras',
-     ops:['Sí uso el crédito fiscal','No uso el crédito fiscal'], ok:0,
-     pq:'Cumple los dos requisitos sustanciales y los formales: el crédito se usa sin problema.' },
-   { q:'Tienes la factura correcta, pero todavía no la anotas en el Registro de Compras',
-     ops:['Uso el crédito igual','Primero la anoto, y la uso en el período de esa hoja'], ok:1,
-     pq:'Sin anotación no hay crédito. Tienes el mes de emisión o los 12 meses siguientes para anotarla.' },
-   { q:'Compraste con boleta de venta en una bodega del NRUS',
-     ops:['Uso el crédito fiscal','No hay crédito fiscal, solo gasto'], ok:1,
-     pq:'La boleta no da crédito fiscal. Puede servir como gasto para la renta si cumple sus propias reglas, '+
-        'pero el IGV no se recupera.' } ],
-  fin:globo2(P.pres, P.bien,'Para cerrar','Antes de declarar el IGV, revisa siempre lo mismo: factura a tu '+
-      'nombre, IGV separado, compra destinada a venta gravada y anotada en el Registro de Compras. '+
-      'Si falta uno, ese crédito no entra.') }
+   { q:'¿Qué evalúa el diagnóstico económico?',
+     ops:['La liquidez y la solvencia','La rentabilidad y la eficiencia operativa','Solo el nivel de deuda'], ok:1,
+     pq:'El económico mira la rentabilidad y la eficiencia; el financiero mira liquidez, solvencia y endeudamiento.' },
+   { q:'Una empresa tiene utilidad neta de 50,000 y activos totales de 500,000. ¿Cuál es su ROA?',
+     ops:['5 %','10 %','20 %'], ok:1,
+     pq:'ROA = 50,000 / 500,000 × 100 = 10 %. Por cada sol invertido en activos genera 10 céntimos de utilidad.' },
+   { q:'Activo corriente 80,000 y pasivo corriente 50,000. ¿Cuánto es la razón corriente y qué significa?',
+     ops:['1.6: tiene S/ 1.60 para cubrir cada S/ 1.00 de deuda de corto plazo',
+          '0.625: no alcanza a cubrir sus deudas','30,000: es el capital de trabajo'], ok:0,
+     pq:'80,000 / 50,000 = 1.6, dentro del rango sano de 1.5 a 2.' },
+   { q:'El endeudamiento total de una empresa llega al 75 %. ¿Cómo se lee?',
+     ops:['Muy bueno: usa poca deuda','Alerta: pasa del 60 % que se toma como referencia',
+          'Es indiferente, el ratio no dice nada'], ok:1,
+     pq:'Tres cuartas partes de sus activos están financiados con deuda. Su solvencia queda comprometida y '+
+        'cualquier caída de ventas la pone en aprietos.' },
+   { q:'¿Cuáles son los dos pilares de la política financiera?',
+     ops:['La política de precios y la de cobranzas','La política de inversión y la de endeudamiento',
+          'La política de ventas y la de personal'], ok:1,
+     pq:'La de inversión dice en qué se colocan los recursos y la de endeudamiento dice de dónde salen. '+
+        'El equilibrio entre las dos define la solidez de la empresa.' } ] },
+
+/* 11 ------------------------------------------------------------ */
+a10:{ tipo:'sel', titulo:'Actividad 11 · Decide y sustenta',
+  lista:[
+   { q:'La empresa tiene prueba ácida 0.80 y los inventarios rotan muy lento. ¿Qué haces primero?',
+     ops:['Liberar caja: ordenar inventarios y apurar las cobranzas','Pedir un préstamo de largo plazo',
+          'Repartir las utilidades entre los socios'], ok:0,
+     pq:'El problema es de liquidez, no de capital. Primero se libera el dinero que está dormido en inventarios '+
+        'y en cuentas por cobrar.' },
+   { q:'El endeudamiento llega al 70 % y la cobertura de intereses baja a 1.2 veces. ¿Qué significa?',
+     ops:['Puede endeudarse más sin riesgo','Apenas alcanza a pagar los intereses: hay que bajar la deuda',
+          'Que la empresa es muy rentable'], ok:1,
+     pq:'Con cobertura de 1.2 la utilidad operativa casi no cubre los intereses. Un mal mes y no paga.' },
+   { q:'Rentabilidad alta, deuda baja y una inversión que rinde. ¿Cómo se llama esa situación?',
+     ops:['Posible crisis financiera','Crecimiento sostenible con política activa y balanceada',
+          'Posición de riesgo'], ok:1,
+     pq:'Inversión activa financiada con deuda controlada es justamente el escenario de crecimiento sostenible.' } ],
+  fin:globo2(P.pres, P.bien,'Para cerrar','El diagnóstico económico y el financiero son complementarios: una '+
+      'empresa rentable puede tener problemas de caja y una empresa líquida puede no estar ganando nada. '+
+      'Interpretar es juntar los dos y decidir.') }
 };
 
 /* ================= las diapositivas ================= */
@@ -940,118 +978,152 @@ function ficha(cl, nom, filas){
 var D=[
 
 /* 1 ------------------------------------------------------------- */
-{ et:'Inicio', t:'El crédito fiscal del IGV', clave:'a0',
+{ et:'Conectemos', t:'Análisis e interpretación de estados financieros', clave:'a0',
   h:'<div class="tapa">'+
       '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
         '<span>| www.certus.edu.pe</span></div>'+
-      '<h2>El IGV se paga por diferencia</h2>'+
-      '<p>Sesión 6 · Sistemas de Procesos Contables</p>'+
-      '<div class="via"><b>Débito</b><b>Crédito</b><b>Saldo a favor</b></div>'+
+      '<h2>Los números ya están. Falta leerlos</h2>'+
+      '<p>Semana 7 · Estados Financieros</p>'+
+      '<div class="via"><b>Diagnóstico económico</b><b>Diagnóstico financiero</b><b>Decisiones</b></div>'+
     '</div>'+
-    globo(P.pres,'De qué va la sesión',
-      'Antes de declarar el IGV hay que entender una sola cosa: no entregas todo el impuesto que cobraste, '+
-      'sino la diferencia con el que pagaste en tus compras. Ese descuento es el crédito fiscal, y solo lo '+
-      'puedes usar si cumples ciertos requisitos. Nueve diapositivas, nueve actividades y tres mini hojas de '+
-      'cálculo donde vas a escribir fórmulas como en Excel.') },
+    globo(P.pres,'El caso de entrada',
+      'Una pyme de alimentos tiene buenas ventas todos los meses, pero acumula deudas por falta de control '+
+      'en gastos e inventarios. Su liquidez es limitada y su rentabilidad se ve afectada por los costos fijos '+
+      'altos. Al terminar la semana vas a poder interpretar ese cuadro con indicadores y decir qué debería '+
+      'hacer la empresa.') },
 
 /* 2 ------------------------------------------------------------- */
-{ et:'Qué es', t:'Qué es el crédito fiscal', clave:'a1',
-  h:'<p class="enc">El IGV que ya pagaste en tus compras</p>'+
-    '<p class="sub">Crédito fiscal: el impuesto que figura por separado en el comprobante de tu compra</p>'+
-    '<div class="form">IGV a pagar = débito fiscal &minus; crédito fiscal'+
-      '<small>débito: el IGV de tus ventas · crédito: el IGV de tus compras</small></div>'+
-    globo(P.expl,'Cómo funciona',
-      'Compras a 12,000 más IGV y pagas 2,160 de impuesto a tu proveedor. Después vendes y le cobras IGV a '+
-      'tu cliente. Cuando declaras, al IGV que cobraste le restas esos 2,160 que ya pagaste. Si no existiera '+
-      'el crédito fiscal, el mismo impuesto se pagaría dos veces sobre el mismo producto.')+
-    '<div class="av">La tasa es 18 %: 16 % de IGV y 2 % del Impuesto de Promoción Municipal. '+
-    'En la hoja de abajo se calcula junto, como 18 %.</div>' },
+{ et:'Diagnóstico', t:'Qué es el diagnóstico económico-financiero', clave:'a1',
+  h:'<p class="enc">Leer la contabilidad para decidir</p>'+
+    '<p class="sub">El proceso de análisis de la información contable y financiera de una empresa</p>'+
+    '<div class="av">El diagnóstico económico-financiero evalúa la situación actual de la empresa, su '+
+    'desempeño y su capacidad de generar valor en el tiempo.</div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Qué busca</h4><div class="c"><ul>'+
+      '<li>Identificar fortalezas y debilidades.</li>'+
+      '<li>Evaluar la eficiencia operativa.</li>'+
+      '<li>Apoyar la toma de decisiones estratégicas.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>De dónde sale</h4><div class="c"><ul>'+
+      '<li>Estados financieros.</li>'+
+      '<li>Indicadores financieros y económicos.</li>'+
+      '<li>Datos del entorno: mercado, inflación, competencia.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
 
 /* 3 ------------------------------------------------------------- */
-{ et:'Requisitos', t:'Requisitos sustanciales', clave:'a2',
-  h:'<p class="enc">Los dos requisitos de fondo</p>'+
-    '<p class="sub">Artículo 18° de la Ley del IGV: si falla uno, no hay crédito fiscal</p>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>1 · Gasto o costo aceptado</h4><div class="c">'+
-      '<p>La compra tiene que ser admitida como gasto o costo según la Ley del Impuesto a la Renta, '+
-      'aunque la empresa no esté afecta a ese impuesto.</p></div></div>'+
-    '<div class="fc rj"><h4>2 · Destinada a operación gravada</h4><div class="c">'+
-      '<p>Lo comprado tiene que usarse en operaciones por las que se paga IGV. Si se destina a una venta '+
-      'exonerada o inafecta, ese IGV no se recupera.</p></div></div>'+
-    '</div>'+
-    globo(P.alum,'La pregunta de siempre',
-      'Para cada factura pregúntate dos cosas: ¿esto es gasto del negocio o del dueño?, y ¿lo que compré '+
-      'sirve para una venta con IGV? Pruébalo con los ocho casos de abajo.') },
+{ et:'Económico', t:'Diagnóstico económico', clave:'a2',
+  h:'<p class="enc">Diagnóstico económico</p>'+
+    '<p class="sub">Evalúa la rentabilidad y la eficiencia operativa</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Indicador</th><th>Fórmula</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>Margen bruto</td><td>(Utilidad bruta / Ventas) × 100</td>'+
+      '<td>Qué porcentaje de las ventas queda tras cubrir el costo de ventas</td></tr>'+
+    '<tr><td>Margen neto</td><td>(Utilidad neta / Ventas) × 100</td>'+
+      '<td>Qué tan rentable es la empresa después de todos los gastos</td></tr>'+
+    '<tr><td>ROA</td><td>(Utilidad neta / Activo total) × 100</td>'+
+      '<td>Qué tan eficientemente se usan los activos para generar utilidades</td></tr>'+
+    '<tr class="res"><td>ROE</td><td>(Utilidad neta / Patrimonio) × 100</td>'+
+      '<td>La rentabilidad que se llevan los accionistas</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.idea,'Un ejemplo rápido',
+      'Si la utilidad neta es 50,000 y los activos totales 500,000, el ROA es 10 %. Léelo así: por cada sol '+
+      'invertido en activos, la empresa genera 10 céntimos de utilidad.') },
 
 /* 4 ------------------------------------------------------------- */
-{ et:'Formales', t:'Requisitos formales', clave:'a3',
-  h:'<p class="enc">Los tres requisitos de forma</p>'+
-    '<p class="sub">Artículo 19° de la Ley del IGV y artículo 2° de la Ley N° 29215</p>'+
+{ et:'Financiero', t:'Diagnóstico financiero', clave:'a3',
+  h:'<p class="enc">Diagnóstico financiero</p>'+
+    '<p class="sub">Analiza la liquidez, la solvencia y el endeudamiento</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Requisito</th><th>Qué significa en la práctica</th></tr></thead><tbody>'+
-    '<tr><td>IGV por separado</td><td>El comprobante muestra el valor de venta y el IGV en líneas distintas, '+
-      'no un total con el impuesto adentro</td></tr>'+
-    '<tr><td>Emisor identificado</td><td>El nombre y el RUC del emisor están bien puestos, de modo que '+
-      'coincidan con lo que tiene la SUNAT, y el emisor estaba habilitado para emitir</td></tr>'+
-    '<tr><td>Anotado en el Registro de Compras</td><td>En la hoja del mes de emisión, en la del pago del '+
-      'impuesto o en la de los 12 meses siguientes. El crédito se usa en el período de la hoja donde quedó '+
-      'anotado</td></tr>'+
-    '<tr class="res"><td>Registro legalizado</td><td>El Registro de Compras debe estar legalizado antes de '+
-      'empezar a usarlo</td></tr>'+
+    '<th>Indicador</th><th>Fórmula</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>Razón corriente</td><td>Activo corriente / Pasivo corriente</td>'+
+      '<td>Capacidad para cubrir deudas a corto plazo, ideal entre 1.5 y 2</td></tr>'+
+    '<tr><td>Prueba ácida</td><td>(Activo corriente − Inventarios) / Pasivo corriente</td>'+
+      '<td>Liquidez más estricta, sin contar los inventarios</td></tr>'+
+    '<tr><td>Endeudamiento total</td><td>Pasivo total / Activo total × 100</td>'+
+      '<td>Nivel de dependencia de la deuda, ideal por debajo del 60 %</td></tr>'+
+    '<tr class="res"><td>Cobertura de intereses</td><td>Utilidad operativa / Gastos por intereses</td>'+
+      '<td>Capacidad para pagar los intereses de la deuda</td></tr>'+
     '</tbody></table></div>'+
-    globo(P.idea,'Lo que más se falla',
-      'La anotación. La factura existe, el gasto es real, pero nadie la registró a tiempo y el crédito se '+
-      'discute en la fiscalización. Por eso el Registro de Compras se cierra mes a mes, no al final del año.') },
+    globo(P.expl,'Un ejemplo rápido',
+      'Con activo corriente de 80,000 y pasivo corriente de 50,000, la razón corriente es 1.6: tiene S/ 1.60 '+
+      'para cubrir cada S/ 1.00 de deuda de corto plazo.') },
 
 /* 5 ------------------------------------------------------------- */
-{ et:'A pagar', t:'Cuánto IGV pagas este mes', clave:'a4',
-  h:'<p class="enc">Débito menos crédito</p>'+
-    '<p class="sub">La cuenta que haces cada mes antes de declarar</p>'+
-    globo(P.full,'Ojo con el orden',
-      'Primero calculas el IGV de tus ventas, después el de tus compras y recién restas. Si el resultado es '+
-      'positivo, eso pagas. Si es negativo, no pagas nada este mes.') },
+{ et:'Interpretar', t:'Interpretar los resultados', clave:'a4',
+  h:'<p class="enc">El número solo no dice nada</p>'+
+    '<p class="sub">Interpretar es comparar contra una referencia, contra el año anterior y contra el sector</p>'+
+    globo2(P.alum, P.bien,'Lo que hay que retener',
+      'Un ratio se lee siempre acompañado. La razón corriente alta con prueba ácida baja significa inventario '+
+      'parado. El ROE alto con endeudamiento alto significa que la ganancia viene del apalancamiento y no de '+
+      'la operación. Abajo tienes los resultados de la empresa del caso: dales lectura.') },
 
 /* 6 ------------------------------------------------------------- */
-{ et:'Saldo', t:'El saldo a favor', clave:'a5',
-  h:'<p class="enc">Cuando el crédito es mayor que el débito</p>'+
-    '<p class="sub">Artículo 25°: el exceso queda a tu favor y se aplica en los meses siguientes hasta agotarlo</p>'+
-    '<div class="av">El saldo a favor no se devuelve en efectivo ni se pierde: se arrastra al mes siguiente '+
-    'y se descuenta ahí. Pasa mucho cuando la empresa compró mucho en un mes, por ejemplo al abrir o al '+
-    'hacer una campaña.</div>'+
-    globo(P.expl,'Tres meses seguidos',
-      'En la hoja de abajo vas a seguir el saldo de abril a junio. Fíjate cómo lo que sobra en un mes baja '+
-      'el pago del siguiente, hasta que se agota.') },
+{ et:'Inversión', t:'Política de inversión', clave:'a5',
+  h:'<p class="enc">Política de inversión</p>'+
+    '<p class="sub">Determina en qué se destinan los fondos, buscando equilibrio entre rentabilidad, riesgo y liquidez</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Corto plazo</h4><div class="c">'+
+      '<p>Caja, cuentas por cobrar e inventarios. Dan liquidez, pero rinden poco.</p></div></div>'+
+    '<div class="fc rj"><h4>Largo plazo</h4><div class="c">'+
+      '<p>Maquinaria, edificios, expansión y tecnología. Hacen crecer el negocio, pero inmovilizan el dinero.</p></div></div>'+
+    '</div>'+
+    '<div class="form">Rotación de activos = Ventas netas / Activo total promedio'+
+      '<small>mide la eficiencia en el uso de los recursos</small></div>' },
 
 /* 7 ------------------------------------------------------------- */
-{ et:'Crucigrama', t:'Crucigrama del IGV', clave:'a6',
+{ et:'Endeudamiento', t:'Política de endeudamiento', clave:'a6',
+  h:'<p class="enc">Política de endeudamiento</p>'+
+    '<p class="sub">Determina cuánto y de qué forma se usa la deuda para financiar las actividades y las inversiones</p>'+
+    '<div class="av">El objetivo es lograr un nivel óptimo de apalancamiento, sin poner en riesgo la solvencia.</div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Razón de endeudamiento</h4><div class="c">'+
+      '<p>Pasivo total / Activo total. Mide la proporción de activos financiados con deuda.</p></div></div>'+
+    '<div class="fc rj"><h4>Cobertura de intereses</h4><div class="c">'+
+      '<p>Utilidad operativa / Gasto por intereses. Mide la capacidad de pagar esos intereses.</p></div></div>'+
+    '</div>' },
+
+/* 8 ------------------------------------------------------------- */
+{ et:'Relación', t:'Inversión, endeudamiento y análisis', clave:'a7',
+  h:'<p class="enc">Cómo se leen juntas las dos políticas</p>'+
+    '<p class="sub">Una inversión se evalúa por su impacto en la rentabilidad y la rotación; un endeudamiento, por su impacto en la solvencia y el apalancamiento</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Situación</th><th>Política de inversión</th><th>Política de endeudamiento</th><th>Resultado</th>'+
+    '</tr></thead><tbody>'+
+    '<tr><td>Alta rentabilidad y baja deuda</td><td>Eficiente</td><td>Conservadora</td><td>Posición sólida</td></tr>'+
+    '<tr><td>Baja rentabilidad y alta deuda</td><td>Ineficiente</td><td>Riesgosa</td><td>Posible crisis financiera</td></tr>'+
+    '<tr class="res"><td>Alta inversión financiada con deuda controlada</td><td>Activa</td><td>Balanceada</td>'+
+      '<td>Crecimiento sostenible</td></tr>'+
+    '</tbody></table></div>' },
+
+/* 9 ------------------------------------------------------------- */
+{ et:'Crucigrama', t:'Crucigrama del análisis financiero', clave:'a8',
   h:'<p class="enc">Crucigrama</p>'+
     '<p class="sub">Once palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
 
-/* 8 ------------------------------------------------------------- */
-{ et:'Quiz final', t:'Quiz final del crédito fiscal', clave:'a7',
+/* 10 ------------------------------------------------------------ */
+{ et:'Quiz final', t:'Quiz final del diagnóstico', clave:'a9',
   h:'<p class="enc">Quiz final</p>'+
-    '<p class="sub">Cinco preguntas que cruzan todo lo de la sesión.</p>' },
+    '<p class="sub">Cinco preguntas que cruzan todo lo de la semana.</p>' },
 
-/* 9 ------------------------------------------------------------- */
-{ et:'Cierre', t:'Lo que te llevas', clave:'a8',
-  h:'<p class="enc">La lista que revisas antes de declarar</p>'+
-    '<p class="sub">Cuatro preguntas por cada factura</p>'+
+/* 11 ------------------------------------------------------------ */
+{ et:'Cierre', t:'Conclusiones', clave:'a10',
+  h:'<p class="enc">Lo que te llevas de la semana</p>'+
+    '<p class="sub">Consolidando saberes</p>'+
     '<div class="dos">'+
-    '<div class="fc"><h4>1 · ¿Está a nombre de la empresa?</h4><div class="c">'+
-      '<p>Con el RUC y el nombre correctos, y de un emisor habilitado.</p></div></div>'+
-    '<div class="fc rj"><h4>2 · ¿El IGV está separado?</h4><div class="c">'+
-      '<p>Valor de venta en una línea y el impuesto en otra. Un total con el IGV adentro no sirve.</p></div></div>'+
-    '<div class="fc"><h4>3 · ¿Es gasto del negocio y va a una venta gravada?</h4><div class="c">'+
-      '<p>Los dos requisitos del artículo 18°, juntos.</p></div></div>'+
-    '<div class="fc rj"><h4>4 · ¿Está en el Registro de Compras?</h4><div class="c">'+
-      '<p>En el mes de emisión o dentro de los 12 meses siguientes, en un registro legalizado.</p></div></div>'+
+    '<div class="fc"><h4>Los dos diagnósticos</h4><div class="c">'+
+      '<p>El económico evalúa la rentabilidad. El financiero mide liquidez, solvencia y endeudamiento. '+
+      'Son complementarios: una empresa rentable puede tener problemas financieros y al revés.</p></div></div>'+
+    '<div class="fc rj"><h4>Las dos políticas</h4><div class="c">'+
+      '<p>La de inversión define en qué se usan los recursos. La de endeudamiento define de dónde provienen. '+
+      'El equilibrio entre ambas determina la solidez y la rentabilidad financiera.</p></div></div>'+
     '</div>' }
 ];
 
 /* ================= estado ================= */
-var LS='cf_sem6_v1';
+var LS='aief_sem7_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8'];
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1711,7 +1783,7 @@ function cableaCruz(k, A, lam){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente · libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('cf6_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ai7_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
@@ -1756,7 +1828,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('cf6_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ai7_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado · la clase va contigo, diapositiva '+(i+1)
@@ -1906,7 +1978,7 @@ function pantalla(e, alumno, cont){
     '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
 }
 if(window.Aula){
-  Aula.iniciar({ sala:'CREDF6', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'ANAEF7', codigo:'EEFF', resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
             limpia:function(){ G=vacio(); yaCruz={}; i=0;
