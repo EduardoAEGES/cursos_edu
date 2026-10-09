@@ -967,8 +967,17 @@ a7:{ tipo:'par', titulo:'Actividad 8 · Inversión, deuda y resultado',
            {id:'p2', q:'Baja rentabilidad y alta deuda · ¿cómo son sus políticas?'},
            {id:'r3', q:'Alta inversión financiada con deuda controlada · ¿qué resultado da?'},
            {id:'p3', q:'Alta inversión financiada con deuda controlada · ¿cómo son sus políticas?'} ],
-  fin:globo(P.bien,'Resuelto','Endeudarse no es malo por sí mismo: lo malo es endeudarse sin rentabilidad '+
-      'que lo sostenga. Deuda controlada con inversión que rinde es crecimiento.') },
+  fin:'<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Situación</th><th>Política de inversión</th><th>Política de endeudamiento</th><th>Resultado</th>'+
+    '</tr></thead><tbody>'+
+    '<tr><td>Alta rentabilidad y baja deuda</td><td>Eficiente</td><td>Conservadora</td><td>Posición sólida</td></tr>'+
+    '<tr><td>Baja rentabilidad y alta deuda</td><td>Ineficiente</td><td>Riesgosa</td><td>Posible crisis financiera</td></tr>'+
+    '<tr class="res"><td>Alta inversión financiada con deuda controlada</td><td>Activa</td><td>Balanceada</td>'+
+      '<td>Crecimiento sostenible</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.bien,'Resuelto','Este es el cuadro que acabas de armar. Endeudarse no es malo por sí mismo: '+
+      'lo malo es endeudarse sin rentabilidad que lo sostenga. Deuda controlada con inversión que rinde '+
+      'es crecimiento.') },
 
 /* 9 ------------------------------------------------------------- */
 a8:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
@@ -1058,12 +1067,14 @@ var D=[
       'hacer la empresa.')+
     '<div class="dos">'+
     '<div class="fc"><h4>Diagnóstico económico</h4><div class="c">'+
-      '<p>Mira si el negocio gana dinero: rentabilidad y eficiencia operativa.</p></div></div>'+
+      '<p>Trabaja con el estado de resultados: ventas, costos, gastos y utilidad. Sus indicadores son '+
+      'los márgenes, el ROA y el ROE.</p></div></div>'+
     '<div class="fc rj"><h4>Diagnóstico financiero</h4><div class="c">'+
-      '<p>Mira si el negocio puede pagar: liquidez, solvencia y endeudamiento.</p></div></div>'+
+      '<p>Trabaja con el estado de situación: activo, pasivo y patrimonio. Sus indicadores son la '+
+      'razón corriente, la prueba ácida, el endeudamiento y la cobertura.</p></div></div>'+
     '</div>'+
-    '<div class="av">Los dos se leen juntos, porque una empresa puede ganar dinero y aun así quedarse '+
-    'sin efectivo para pagar. Con eso en mente, responde las dos preguntas.</div>' },
+    '<div class="av">Son dos miradas distintas sobre la misma empresa, y por eso se leen juntas. '+
+    'Con eso en mente, responde las dos preguntas de abajo.</div>' },
 
 /* 2 ------------------------------------------------------------- */
 { et:'Diagnóstico', t:'Qué es el diagnóstico económico-financiero', clave:'a1',
@@ -1078,9 +1089,9 @@ var D=[
       '<li>Apoyar la toma de decisiones estratégicas.</li>'+
       '</ul></div></div>'+
     '<div class="fc rj"><h4>De dónde sale</h4><div class="c"><ul>'+
-      '<li>Estados financieros.</li>'+
-      '<li>Indicadores financieros y económicos.</li>'+
-      '<li>Datos del entorno: mercado, inflación, competencia.</li>'+
+      '<li>De lo que la empresa reporta en sus estados.</li>'+
+      '<li>De lo que se calcula a partir de esos estados.</li>'+
+      '<li>De lo que pasa afuera y la empresa no controla.</li>'+
       '</ul></div></div>'+
     '</div>' },
 
@@ -1200,47 +1211,52 @@ var D=[
 /* 8 ------------------------------------------------------------- */
 { et:'Relación', t:'Inversión, endeudamiento y análisis', clave:'a7',
   h:'<p class="enc">Cómo se leen juntas las dos políticas</p>'+
-    '<p class="sub">Una inversión se evalúa por su impacto en la rentabilidad y la rotación; un endeudamiento, por su impacto en la solvencia y el apalancamiento</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Situación</th><th>Política de inversión</th><th>Política de endeudamiento</th><th>Resultado</th>'+
-    '</tr></thead><tbody>'+
-    '<tr><td>Alta rentabilidad y baja deuda</td><td>Eficiente</td><td>Conservadora</td><td>Posición sólida</td></tr>'+
-    '<tr><td>Baja rentabilidad y alta deuda</td><td>Ineficiente</td><td>Riesgosa</td><td>Posible crisis financiera</td></tr>'+
-    '<tr class="res"><td>Alta inversión financiada con deuda controlada</td><td>Activa</td><td>Balanceada</td>'+
-      '<td>Crecimiento sostenible</td></tr>'+
-    '</tbody></table></div>' },
+    '<p class="sub">Dos reglas bastan para juzgar cualquiera de los dos lados</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Cómo se juzga una inversión</h4><div class="c">'+
+      '<p>Por su impacto en la rentabilidad y en la rotación. Si el activo crece pero vende y gana '+
+      'igual que antes, la inversión no está rindiendo.</p></div></div>'+
+    '<div class="fc rj"><h4>Cómo se juzga un endeudamiento</h4><div class="c">'+
+      '<p>Por su impacto en la solvencia y en el apalancamiento. Deuda que potencia el retorno sin '+
+      'comprometer el pago es deuda bien usada.</p></div></div>'+
+    '</div>'+
+    '<div class="av">Con esas dos reglas, arma tú el cuadro: tres situaciones, y para cada una el '+
+    'resultado que produce y cómo quedan sus dos políticas.</div>' },
 
 /* 9 ------------------------------------------------------------- */
 { et:'Crucigrama', t:'Crucigrama del análisis financiero', clave:'a8',
-  h:'<p class="enc">Antes del crucigrama, el vocabulario</p>'+
-    '<p class="sub">Las once palabras salen de estas ideas. Escribe en el tablero; cada palabra completa se revisa sola.</p>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Del diagnóstico económico</h4><div class="c"><ul>'+
-      '<li>Rentabilidad: lo que mide este diagnóstico.</li>'+
-      '<li>Margen: bruto o neto, el porcentaje que queda de las ventas.</li>'+
-      '<li>Rotación: ventas netas entre activo total promedio.</li>'+
-      '<li>Patrimonio: lo que divide a la utilidad neta en el ROE.</li>'+
-      '</ul></div></div>'+
-    '<div class="fc rj"><h4>Del diagnóstico financiero</h4><div class="c"><ul>'+
-      '<li>Liquidez y solvencia: pagar a corto y a largo plazo.</li>'+
-      '<li>Corriente y ácida: las dos razones de liquidez.</li>'+
-      '<li>Inventarios: lo que la prueba ácida descuenta.</li>'+
-      '<li>Cobertura: utilidad operativa entre gasto financiero.</li>'+
-      '</ul></div></div>'+
-    '</div>' },
+  h:'<p class="enc">¿Cómo se llama cada una?</p>'+
+    '<p class="sub">Cada fila de este cuadro es una palabra del tablero. La fórmula te dice de qué '+
+    'está hablando; el nombre lo pones tú en el crucigrama.</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Se calcula así</th><th>Sirve para saber</th></tr></thead><tbody>'+
+    '<tr><td>Utilidad bruta / Ventas &times; 100</td><td>Qué queda de la venta después del costo</td></tr>'+
+    '<tr><td>Utilidad neta / capital de los dueños &times; 100</td><td>Cuánto gana el dueño por lo que puso</td></tr>'+
+    '<tr><td>Ventas netas / Activo total promedio</td><td>Cuántas veces se vende el activo en el año</td></tr>'+
+    '<tr><td>Activo de corto plazo / deuda de corto plazo</td><td>Si puede pagar en el corto plazo</td></tr>'+
+    '<tr><td>(Activo de corto plazo &minus; mercadería en almacén) / deuda de corto plazo</td>'+
+      '<td>Si puede pagar sin vender esa mercadería</td></tr>'+
+    '<tr><td>Pasivo total / Activo total &times; 100</td><td>Cuánto del activo lo financió la deuda</td></tr>'+
+    '<tr class="res"><td>Utilidad operativa / Gasto por intereses</td><td>Si la operación cubre los intereses</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av">Escribe en el tablero: cada palabra completa se revisa sola. Si una se te resiste, '+
+    'las pistas están debajo del cuadro.</div>' },
 
 /* 10 ------------------------------------------------------------ */
 { et:'Quiz final', t:'Quiz final del diagnóstico', clave:'a9',
-  h:'<p class="enc">Repaso en seis líneas, y después el quiz</p>'+
-    '<p class="sub">Todo lo de la semana, junto</p>'+
+  h:'<p class="enc">El formulario, y después el quiz</p>'+
+    '<p class="sub">Las fórmulas y los valores de referencia, a la mano. Las respuestas no están '+
+    'aquí: eso lo pones tú.</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Concepto</th><th>En una frase</th></tr></thead><tbody>'+
-    '<tr><td>Diagnóstico económico</td><td>Mide la rentabilidad y la eficiencia: márgenes, ROA y ROE</td></tr>'+
-    '<tr><td>Diagnóstico financiero</td><td>Mide liquidez, solvencia y endeudamiento</td></tr>'+
-    '<tr><td>Razón corriente</td><td>Activo corriente entre pasivo corriente, ideal de 1.5 a 2</td></tr>'+
-    '<tr><td>Endeudamiento</td><td>Pasivo total entre activo total, ideal por debajo del 60 %</td></tr>'+
-    '<tr><td>Política de inversión</td><td>En qué se colocan los recursos, entre corto y largo plazo</td></tr>'+
-    '<tr class="res"><td>Política de endeudamiento</td><td>De dónde salen esos recursos, sin arriesgar la solvencia</td></tr>'+
+    '<th>Indicador</th><th>Fórmula</th><th>Referencia</th></tr></thead><tbody>'+
+    '<tr><td>Margen bruto</td><td>Utilidad bruta / Ventas &times; 100</td><td>Mientras más alto, mejor</td></tr>'+
+    '<tr><td>Margen neto</td><td>Utilidad neta / Ventas &times; 100</td><td>Mientras más alto, mejor</td></tr>'+
+    '<tr><td>ROA</td><td>Utilidad neta / Activo total &times; 100</td><td>Se compara con el sector</td></tr>'+
+    '<tr><td>ROE</td><td>Utilidad neta / Patrimonio &times; 100</td><td>Mayor que el ROA si hay deuda</td></tr>'+
+    '<tr><td>Razón corriente</td><td>Activo corriente / Pasivo corriente</td><td>De 1.5 a 2</td></tr>'+
+    '<tr><td>Prueba ácida</td><td>(Activo corriente &minus; Inventarios) / Pasivo corriente</td><td>Cerca de 1</td></tr>'+
+    '<tr><td>Endeudamiento</td><td>Pasivo total / Activo total &times; 100</td><td>Menos de 60 %</td></tr>'+
+    '<tr class="res"><td>Cobertura de intereses</td><td>Utilidad operativa / Gasto por intereses</td><td>Más de 3 veces</td></tr>'+
     '</tbody></table></div>' },
 
 /* 11 ------------------------------------------------------------ */
