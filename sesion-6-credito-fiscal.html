@@ -212,6 +212,12 @@
                letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
   .tarea .c{ padding:15px; }
   .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+  /* solo el docente: llenar la actividad con la solución o dejarla en blanco */
+  .tarea > h4{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .tarea > h4 .solu{ margin-left:auto; font:inherit; font-size:14px; font-weight:800; letter-spacing:.04em;
+                     text-transform:uppercase; cursor:pointer; border:2px solid #fff; border-radius:99px;
+                     background:transparent; color:#fff; padding:4px 13px; }
+  .tarea > h4 .solu:hover{ background:#fff; color:var(--tinta); }
 
   /* arrastre */
   .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
@@ -1067,8 +1073,20 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
-         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">';
+  var sol = !soyDocente() ? '' :
+    '<button type="button" class="solu" data-sol="'+k+'">'+(lista(k)?'Borrar respuestas':'Ver solución')+'</button>';
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</span>'+sol+'</h4><div class="c">';
+}
+/* el docente llena la actividad con la solución para mostrarla en clase */
+function resuelve(k){
+  var A=ACT[k], g={};
+  if(A.tipo==='arr')       A.fichas.forEach(function(f){ g[f.id]=f.g; });
+  else if(A.tipo==='par')  A.huecos.forEach(function(x){ g[x.id]=1; });
+  else if(A.tipo==='cruz') A.palabras.forEach(function(w){ g[w.p]=1; });
+  else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ g[n]=x.ok; });
+  else                     A.lista.forEach(function(x,n){ g[n]=1; });
+  G[k]=g;
 }
 function vArr(k){
   var A=ACT[k], g=G[k]||{};
@@ -1335,6 +1353,14 @@ function cablea(){
     });
   }
   if(A.tipo==='cruz') cableaCruz(k, A, lam);
+
+  var bs=lam.querySelector('button[data-sol]');
+  if(bs) bs.addEventListener('click', function(){
+    if(!soyDocente()) return;
+    if(lista(k)){ G[k]={}; if(A.tipo==='cruz') yaCruz={}; }
+    else{ resuelve(k); fanfarria(); }
+    graba(); pinta(true);
+  });
 }
 
 function cableaCruz(k, A, lam){
