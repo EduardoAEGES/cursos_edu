@@ -471,7 +471,7 @@
   </div>
 
   <p class="aviso" style="margin-top:16px">Base: art&iacute;culos 2&deg;, 5&deg;, 18&deg;, 19&deg;, 23&deg; y 25&deg; y Ap&eacute;ndices I y II del TUO de la Ley del
-    IGV, art&iacute;culo 6&deg; de su Reglamento (prorrata) y art&iacute;culo 2&deg; de la Ley N&deg; 29215, seg&uacute;n la orientaci&oacute;n de la SUNAT en
+    IGV, art&iacute;culo 6&deg; de su Reglamento (prorrata), art&iacute;culo 2&deg; de la Ley N&deg; 29215 y Ley N&deg; 32387 (reparto IGV e IPM), seg&uacute;n la orientaci&oacute;n de la SUNAT en
     <a href="https://orientacion.sunat.gob.pe/3111-06-credito-fiscal" target="_blank" rel="noopener">06. Cr&eacute;dito
     fiscal</a>. Los plazos de anotaci&oacute;n se revisan en sunat.gob.pe antes de cada declaraci&oacute;n.</p>
 
@@ -569,10 +569,17 @@ a0:{ tipo:'quiz', titulo:'Actividad 1 · Para empezar',
           'El IGV que pagaste en tus compras'], ok:1,
      pq:'El IGV se paga por diferencia: al impuesto de tus ventas le restas el de tus compras. '+
         'Ese descuento es el crédito fiscal.' },
-   { q:'¿De cuánto es la tasa del IGV en el Perú?',
+   { q:'¿De cuánto es la tasa que pagas en una compra gravada en el Perú?',
      ops:['16 %','18 %','19 %'], ok:1,
-     pq:'18 %: 16 % del IGV propiamente dicho más 2 % del Impuesto de Promoción Municipal. '+
-        'En la práctica siempre se aplica junto, como 18 %.' } ] },
+     pq:'18 % en total. Desde 2026, por la Ley N° 32387, se reparte en 15.5 % de IGV y 2.5 % de '+
+        'Impuesto de Promoción Municipal (IPM). El total no cambia: siempre se aplica junto, como 18 %.' },
+   { q:'Con la Ley N° 32387, ¿qué cambia entre 2026 y 2029?',
+     ops:['La tasa total baja de 18 % a 14 %',
+          'El total sigue en 18 %, pero el IGV baja de a poco a 14 % y el IPM sube a 4 %',
+          'Desaparece el IPM'], ok:1,
+     pq:'El IPM sube 0.5 % por año: 2.5 % en 2026, 3 % en 2027, 3.5 % en 2028 y 4 % en 2029, y el IGV baja '+
+        'en la misma medida hasta 14 %. Quien compra sigue pagando 18 %: cambia el reparto entre el Gobierno '+
+        'Central y las municipalidades.' } ] },
 
 /* 2 ------------------------------------------------------------- */
 a1:{ tipo:'calc', titulo:'Actividad 2 · La factura con el IGV adentro',
@@ -811,7 +818,8 @@ var D=[
       'Compras a 12,000 más IGV y pagas 2,160 de impuesto a tu proveedor. Después vendes y le cobras IGV a '+
       'tu cliente. Cuando declaras, al IGV que cobraste le restas esos 2,160 que ya pagaste. Si no existiera '+
       'el crédito fiscal, el mismo impuesto se pagaría dos veces sobre el mismo producto.')+
-    '<div class="av">La tasa es 18 %: 16 % de IGV y 2 % del Impuesto de Promoción Municipal. '+
+    '<div class="av">La tasa es 18 %. Desde 2026 (Ley N° 32387) se reparte en 15.5 % de IGV y 2.5 % de '+
+    'Impuesto de Promoción Municipal; hacia 2029 quedará en 14 % y 4 %, siempre sumando 18 %. '+
     'Abajo se calcula junto, como 18 %. Ojo: cuando el total ya trae el IGV adentro, se divide entre 1.18.</div>' },
 
 /* 3 ------------------------------------------------------------- */
