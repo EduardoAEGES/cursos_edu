@@ -345,6 +345,20 @@
   table.hoja td.libre.mal input{ color:#8A201B; }
   table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
   .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#44506F; }
+  .linea .q b{ display:block; font-size:21px; font-weight:800; color:var(--tinta); }
+  .linea .q .fx2{ display:block; margin-top:3px; font-size:17px; color:#55607F; font-weight:600; }
+  .linea .q .fx2 i{ font-style:normal; color:var(--marino); font-weight:800; }
+  /* ficha de datos de la empresa, para tenerlos a la vista al calcular */
+  .datos{ display:grid; gap:0; border:2px dashed var(--linea); border-radius:12px; overflow:hidden;
+          background:#fff; margin:14px 0; }
+  .datos > h4{ margin:0; background:var(--marino); color:#fff; font-size:17px; font-weight:800;
+               padding:10px 16px; letter-spacing:.02em; }
+  .datos .fl{ display:flex; justify-content:space-between; gap:14px; align-items:baseline;
+              padding:9px 16px; border-bottom:1px solid var(--linea); font-size:20px; }
+  .datos .fl:last-child{ border-bottom:0; }
+  .datos .fl b{ font-variant-numeric:tabular-nums; font-weight:800; white-space:nowrap; }
+  @media (min-width:760px){ .datos.c2{ grid-template-columns:1fr 1fr; }
+                            .datos.c2 > h4{ grid-column:1 / -1; } }
   /* al escribir una fórmula se puede señalar la celda con el dedo o el ratón */
   table.hoja.apunta td[data-cel]{ cursor:cell; }
   table.hoja.apunta td[data-cel]:hover{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
@@ -797,47 +811,44 @@ a1:{ tipo:'arr', titulo:'Actividad 2 · ¿De dónde sale la información?',
       'financieros te falta el contexto, y si solo miras el entorno no tienes con qué medir a la empresa.') },
 
 /* 3 ------------------------------------------------------------- */
-a2:{ tipo:'hoja', titulo:'Actividad 3 · Diagnóstico económico',
-  intro:'Distribuidora El Progreso S.A., año 2025. Calcula los cuatro indicadores con fórmulas.',
-  cols:[{w:300},{w:170},{w:170}],
-  filas:[
-   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
-   [{x:'Ventas netas'},{n:1200000},{x:''}],
-   [{x:'Utilidad bruta'},{n:420000},{x:''}],
-   [{x:'Utilidad neta'},{n:96000},{x:''}],
-   [{x:'Activo total'},{n:960000},{x:''}],
-   [{x:'Patrimonio'},{n:480000},{x:''}],
-   [{x:'Margen bruto %'},{x:''},{e:35, f:true, ph:'=B3/B2*100'}],
-   [{x:'Margen neto %'},{x:''},{e:8, f:true}],
-   [{x:'ROA %'},{x:''},{e:10, f:true}],
-   [{x:'ROE %'},{x:''},{e:20, f:true}] ],
-  ayuda:'Margen bruto <code>=B3/B2*100</code> · margen neto <code>=B4/B2*100</code> · '+
-        'ROA <code>=B4/B5*100</code> · ROE <code>=B4/B6*100</code>.',
+a2:{ tipo:'cal', titulo:'Actividad 3 · Diagnóstico económico',
+  intro:'Con los datos del cuadro de arriba, calcula los cuatro indicadores y escribe el resultado.',
+  lista:[
+   { q:'Margen bruto', f:'(Utilidad bruta / Ventas) × 100', d:'(420,000 / 1,200,000) × 100',
+     e:35, u:'%', ph:'35', pq:'De cada 100 soles que vende, le quedan 35 después de pagar el costo de ventas.' },
+   { q:'Margen neto', f:'(Utilidad neta / Ventas) × 100', d:'(96,000 / 1,200,000) × 100',
+     e:8, u:'%', pq:'Después de todos los gastos y el impuesto, de esos 100 soles le quedan 8 limpios.' },
+   { q:'ROA · rentabilidad sobre activos', f:'(Utilidad neta / Activo total) × 100',
+     d:'(96,000 / 960,000) × 100', e:10, u:'%',
+     pq:'Por cada sol invertido en activos, la empresa genera 10 céntimos de utilidad.' },
+   { q:'ROE · rentabilidad sobre el patrimonio', f:'(Utilidad neta / Patrimonio) × 100',
+     d:'(96,000 / 480,000) × 100', e:20, u:'%',
+     pq:'Los accionistas ganan 20 céntimos por cada sol que pusieron.' } ],
+  ayuda:'Escribe solo el número, con punto decimal si hace falta. Para el margen bruto, por ejemplo, '+
+        'la respuesta es <code>35</code>.',
   fin:globo(P.idea,'Resuelto','35 % de margen bruto, 8 % de margen neto, 10 % de ROA y 20 % de ROE. '+
-      'El ROE duplica al ROA porque la mitad del activo está financiada con deuda: eso es apalancamiento.') },
+      'Fíjate en algo: el ROE es el doble del ROA. Eso pasa porque la mitad del activo está financiada con '+
+      'deuda, así que la ganancia se reparte entre menos capital propio. A eso se le llama apalancamiento.') },
 
 /* 4 ------------------------------------------------------------- */
-a3:{ tipo:'hoja', titulo:'Actividad 4 · Diagnóstico financiero',
-  intro:'La misma empresa, al 31 de diciembre. Ahora toca la liquidez, la solvencia y el endeudamiento.',
-  cols:[{w:300},{w:170},{w:170}],
-  filas:[
-   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
-   [{x:'Activo corriente'},{n:480000},{x:''}],
-   [{x:'Inventarios'},{n:240000},{x:''}],
-   [{x:'Pasivo corriente'},{n:300000},{x:''}],
-   [{x:'Pasivo total'},{n:480000},{x:''}],
-   [{x:'Activo total'},{n:960000},{x:''}],
-   [{x:'Utilidad operativa'},{n:160000},{x:''}],
-   [{x:'Gastos por intereses'},{n:32000},{x:''}],
-   [{x:'Razón corriente'},{x:''},{e:1.6, f:true, ph:'=B2/B4'}],
-   [{x:'Prueba ácida'},{x:''},{e:0.8, f:true, ph:'=(B2-B3)/B4'}],
-   [{x:'Endeudamiento total %'},{x:''},{e:50, f:true}],
-   [{x:'Cobertura de intereses'},{x:''},{e:5, f:true}] ],
-  ayuda:'Endeudamiento <code>=B5/B6*100</code> · cobertura <code>=B7/B8</code>. '+
-        'Fíjate en los paréntesis de la prueba ácida: primero se resta y después se divide.',
-  fin:globo2(P.pres, P.bien,'Resuelto','Razón corriente 1.60, dentro del rango sano de 1.5 a 2. '+
-      'Prueba ácida 0.80: sin los inventarios ya no alcanza, y ahí está el riesgo. Endeudamiento 50 %, '+
-      'por debajo del 60 %. Cobertura 5 veces: la utilidad operativa paga cinco veces los intereses.') },
+a3:{ tipo:'cal', titulo:'Actividad 4 · Diagnóstico financiero',
+  intro:'Misma empresa, ahora con los datos del estado de situación. Calcula y escribe el resultado.',
+  lista:[
+   { q:'Razón corriente', f:'Activo corriente / Pasivo corriente', d:'480,000 / 300,000',
+     e:1.6, tol:0.01, ph:'1.60',
+     pq:'Tiene S/ 1.60 de activo corriente por cada S/ 1.00 de deuda de corto plazo. Está en el rango sano de 1.5 a 2.' },
+   { q:'Prueba ácida', f:'(Activo corriente − Inventarios) / Pasivo corriente', d:'(480,000 − 240,000) / 300,000',
+     e:0.8, tol:0.01,
+     pq:'Sin contar los inventarios ya no alcanza: 0.80 por cada sol de deuda. Ahí está el riesgo de esta empresa.' },
+   { q:'Endeudamiento total', f:'(Pasivo total / Activo total) × 100', d:'(480,000 / 960,000) × 100',
+     e:50, u:'%',
+     pq:'La mitad de sus activos está financiada con deuda. La referencia habitual es no pasar del 60 %.' },
+   { q:'Cobertura de intereses', f:'Utilidad operativa / Gastos por intereses', d:'160,000 / 32,000',
+     e:5, tol:0.02, u:'veces',
+     pq:'La utilidad operativa alcanza cinco veces para pagar los intereses. Mientras más alta, más holgura.' } ],
+  fin:globo2(P.pres, P.bien,'Resuelto','Razón corriente 1.60 y endeudamiento 50 % se ven bien. '+
+      'Pero la prueba ácida de 0.80 avisa que la liquidez depende de vender los inventarios: si la mercadería '+
+      'se mueve lento, la empresa se queda sin caja aunque siga vendiendo.') },
 
 /* 5 ------------------------------------------------------------- */
 a4:{ tipo:'sel', titulo:'Actividad 5 · Interpretar el resultado',
@@ -871,24 +882,24 @@ a5:{ tipo:'arr', titulo:'Actividad 6 · Política de inversión',
       'todo en el corto plazo da liquidez pero no hace crecer al negocio.') },
 
 /* 7 ------------------------------------------------------------- */
-a6:{ tipo:'hoja', titulo:'Actividad 7 · Rotación y endeudamiento',
-  intro:'Dos años de la empresa. Para la rotación se usa el activo total promedio: ahí entra la función PROMEDIO.',
-  cols:[{w:280},{w:150},{w:150},{w:170}],
-  filas:[
-   [{x:'Concepto'},{x:'2024'},{x:'2025'},{x:'Resultado'}],
-   [{x:'Activo total'},{n:840000},{n:960000},{x:''}],
-   [{x:'Ventas netas'},{x:'—'},{n:1200000},{x:''}],
-   [{x:'Utilidad neta'},{x:'—'},{n:96000},{x:''}],
-   [{x:'Pasivo total'},{x:'—'},{n:480000},{x:''}],
-   [{x:'Activo total promedio'},{x:''},{x:''},{e:900000, f:true, ph:'=PROMEDIO(B2:C2)'}],
-   [{x:'Rotación de activos'},{x:''},{x:''},{e:1.33, f:true, ph:'=C3/D6'}],
-   [{x:'ROA en veces'},{x:''},{x:''},{e:0.10, f:true}],
-   [{x:'Endeudamiento %'},{x:''},{x:''},{e:50, f:true}] ],
-  ayuda:'Promedio <code>=PROMEDIO(B2:C2)</code> · rotación <code>=C3/D6</code> · '+
-        'ROA <code>=C4/C2</code> · endeudamiento <code>=C5/C2*100</code>.',
-  fin:globo(P.expl,'Resuelto','Rotación 1.33: cada sol invertido en activos genera S/ 1.33 de ventas al año. '+
-      'Una inversión se juzga por su efecto en la rentabilidad y en la rotación; un endeudamiento, por su '+
-      'efecto en la solvencia y el apalancamiento.') },
+a6:{ tipo:'cal', titulo:'Actividad 7 · Rotación y apalancamiento',
+  intro:'La empresa creció de un año al otro. Con los dos años del cuadro, calcula estos cuatro resultados.',
+  lista:[
+   { q:'Activo total promedio', f:'(Activo 2024 + Activo 2025) / 2', d:'(840,000 + 960,000) / 2',
+     e:900000, tol:1, u:'soles', ph:'900000',
+     pq:'Se usa el promedio porque las ventas del año se generaron con un activo que fue cambiando.' },
+   { q:'Rotación de activos', f:'Ventas netas / Activo total promedio', d:'1,200,000 / 900,000',
+     e:1.33, tol:0.01, u:'veces',
+     pq:'Cada sol invertido en activos genera S/ 1.33 de ventas al año. Mide la eficiencia del uso de los recursos.' },
+   { q:'Apalancamiento', f:'Activo total / Patrimonio', d:'960,000 / 480,000',
+     e:2, tol:0.01, u:'veces',
+     pq:'Por cada sol de los dueños hay dos soles de activo. Esa es la razón de que el ROE duplique al ROA.' },
+   { q:'Variación del activo 2024 a 2025', f:'((Activo 2025 − Activo 2024) / Activo 2024) × 100',
+     d:'((960,000 − 840,000) / 840,000) × 100', e:14.29, tol:0.05, u:'%',
+     pq:'Creció 14.29 %. Invertir está bien mientras la rotación y la rentabilidad acompañen ese crecimiento.' } ],
+  fin:globo(P.expl,'Resuelto','Una inversión se juzga por su efecto en la rentabilidad y en la rotación. '+
+      'Un endeudamiento, por su efecto en la solvencia y el apalancamiento. Aquí el activo creció 14 % y la '+
+      'rotación se mantiene sana, así que la inversión está rindiendo.') },
 
 /* 8 ------------------------------------------------------------- */
 a7:{ tipo:'par', titulo:'Actividad 8 · Inversión, deuda y resultado',
@@ -990,7 +1001,15 @@ var D=[
       'Una pyme de alimentos tiene buenas ventas todos los meses, pero acumula deudas por falta de control '+
       'en gastos e inventarios. Su liquidez es limitada y su rentabilidad se ve afectada por los costos fijos '+
       'altos. Al terminar la semana vas a poder interpretar ese cuadro con indicadores y decir qué debería '+
-      'hacer la empresa.') },
+      'hacer la empresa.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Diagnóstico económico</h4><div class="c">'+
+      '<p>Mira si el negocio gana dinero: rentabilidad y eficiencia operativa.</p></div></div>'+
+    '<div class="fc rj"><h4>Diagnóstico financiero</h4><div class="c">'+
+      '<p>Mira si el negocio puede pagar: liquidez, solvencia y endeudamiento.</p></div></div>'+
+    '</div>'+
+    '<div class="av">Los dos se leen juntos, porque una empresa puede ganar dinero y aun así quedarse '+
+    'sin efectivo para pagar. Con eso en mente, responde las dos preguntas.</div>' },
 
 /* 2 ------------------------------------------------------------- */
 { et:'Diagnóstico', t:'Qué es el diagnóstico económico-financiero', clave:'a1',
@@ -1028,7 +1047,17 @@ var D=[
     '</tbody></table></div>'+
     globo(P.idea,'Un ejemplo rápido',
       'Si la utilidad neta es 50,000 y los activos totales 500,000, el ROA es 10 %. Léelo así: por cada sol '+
-      'invertido en activos, la empresa genera 10 céntimos de utilidad.') },
+      'invertido en activos, la empresa genera 10 céntimos de utilidad.')+
+    '<div class="datos c2"><h4>Distribuidora El Progreso S.A. &middot; resultados del 2025</h4>'+
+    '<div class="fl"><span>Ventas netas</span><b>1,200,000</b></div>'+
+    '<div class="fl"><span>Costo de ventas</span><b>780,000</b></div>'+
+    '<div class="fl"><span>Utilidad bruta</span><b>420,000</b></div>'+
+    '<div class="fl"><span>Utilidad operativa</span><b>160,000</b></div>'+
+    '<div class="fl"><span>Utilidad neta</span><b>96,000</b></div>'+
+    '<div class="fl"><span>Activo total</span><b>960,000</b></div>'+
+    '<div class="fl"><span>Patrimonio</span><b>480,000</b></div>'+
+    '<div class="fl"><span>Pasivo total</span><b>480,000</b></div>'+
+    '</div>' },
 
 /* 4 ------------------------------------------------------------- */
 { et:'Financiero', t:'Diagnóstico financiero', clave:'a3',
@@ -1047,7 +1076,17 @@ var D=[
     '</tbody></table></div>'+
     globo(P.expl,'Un ejemplo rápido',
       'Con activo corriente de 80,000 y pasivo corriente de 50,000, la razón corriente es 1.6: tiene S/ 1.60 '+
-      'para cubrir cada S/ 1.00 de deuda de corto plazo.') },
+      'para cubrir cada S/ 1.00 de deuda de corto plazo.')+
+    '<div class="datos c2"><h4>Distribuidora El Progreso S.A. &middot; al 31 de diciembre de 2025</h4>'+
+    '<div class="fl"><span>Activo corriente</span><b>480,000</b></div>'+
+    '<div class="fl"><span>Inventarios</span><b>240,000</b></div>'+
+    '<div class="fl"><span>Activo total</span><b>960,000</b></div>'+
+    '<div class="fl"><span>Pasivo corriente</span><b>300,000</b></div>'+
+    '<div class="fl"><span>Pasivo total</span><b>480,000</b></div>'+
+    '<div class="fl"><span>Utilidad operativa</span><b>160,000</b></div>'+
+    '<div class="fl"><span>Gastos por intereses</span><b>32,000</b></div>'+
+    '<div class="fl"><span>Patrimonio</span><b>480,000</b></div>'+
+    '</div>' },
 
 /* 5 ------------------------------------------------------------- */
 { et:'Interpretar', t:'Interpretar los resultados', clave:'a4',
@@ -1056,7 +1095,15 @@ var D=[
     globo2(P.alum, P.bien,'Lo que hay que retener',
       'Un ratio se lee siempre acompañado. La razón corriente alta con prueba ácida baja significa inventario '+
       'parado. El ROE alto con endeudamiento alto significa que la ganancia viene del apalancamiento y no de '+
-      'la operación. Abajo tienes los resultados de la empresa del caso: dales lectura.') },
+      'la operación. Abajo tienes los resultados de la empresa del caso: dales lectura.')+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Indicador</th><th>Referencia</th><th>Qué dice cuando se cumple</th></tr></thead><tbody>'+
+    '<tr><td>Razón corriente</td><td>entre 1.5 y 2</td><td>Puede pagar sus deudas de corto plazo con holgura</td></tr>'+
+    '<tr><td>Prueba ácida</td><td>cerca de 1</td><td>Paga sin depender de vender los inventarios</td></tr>'+
+    '<tr><td>Endeudamiento</td><td>menos de 60 %</td><td>La deuda no compromete la solvencia</td></tr>'+
+    '<tr><td>Cobertura de intereses</td><td>más de 3 veces</td><td>La operación cubre de sobra el costo de la deuda</td></tr>'+
+    '<tr class="res"><td>ROE frente al ROA</td><td>ROE mayor</td><td>La deuda está potenciando el retorno del accionista</td></tr>'+
+    '</tbody></table></div>' },
 
 /* 6 ------------------------------------------------------------- */
 { et:'Inversión', t:'Política de inversión', clave:'a5',
@@ -1081,6 +1128,14 @@ var D=[
       '<p>Pasivo total / Activo total. Mide la proporción de activos financiados con deuda.</p></div></div>'+
     '<div class="fc rj"><h4>Cobertura de intereses</h4><div class="c">'+
       '<p>Utilidad operativa / Gasto por intereses. Mide la capacidad de pagar esos intereses.</p></div></div>'+
+    '</div>'+
+    '<div class="av">El apalancamiento se mide con activo total entre patrimonio: dice cuántos soles de '+
+    'activo sostiene cada sol de los dueños. Si sale 2, la mitad del activo la puso la deuda.</div>'+
+    '<div class="datos c2"><h4>Distribuidora El Progreso S.A. &middot; dos a&ntilde;os</h4>'+
+    '<div class="fl"><span>Activo total 2024</span><b>840,000</b></div>'+
+    '<div class="fl"><span>Activo total 2025</span><b>960,000</b></div>'+
+    '<div class="fl"><span>Ventas netas 2025</span><b>1,200,000</b></div>'+
+    '<div class="fl"><span>Patrimonio 2025</span><b>480,000</b></div>'+
     '</div>' },
 
 /* 8 ------------------------------------------------------------- */
@@ -1098,13 +1153,36 @@ var D=[
 
 /* 9 ------------------------------------------------------------- */
 { et:'Crucigrama', t:'Crucigrama del análisis financiero', clave:'a8',
-  h:'<p class="enc">Crucigrama</p>'+
-    '<p class="sub">Once palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
+  h:'<p class="enc">Antes del crucigrama, el vocabulario</p>'+
+    '<p class="sub">Las once palabras salen de estas ideas. Escribe en el tablero; cada palabra completa se revisa sola.</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Del diagnóstico económico</h4><div class="c"><ul>'+
+      '<li>Rentabilidad: lo que mide este diagnóstico.</li>'+
+      '<li>Margen: bruto o neto, el porcentaje que queda de las ventas.</li>'+
+      '<li>Rotación: ventas netas entre activo total promedio.</li>'+
+      '<li>Patrimonio: lo que divide a la utilidad neta en el ROE.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>Del diagnóstico financiero</h4><div class="c"><ul>'+
+      '<li>Liquidez y solvencia: pagar a corto y a largo plazo.</li>'+
+      '<li>Corriente y ácida: las dos razones de liquidez.</li>'+
+      '<li>Inventarios: lo que la prueba ácida descuenta.</li>'+
+      '<li>Cobertura: utilidad operativa entre gasto financiero.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
 
 /* 10 ------------------------------------------------------------ */
 { et:'Quiz final', t:'Quiz final del diagnóstico', clave:'a9',
-  h:'<p class="enc">Quiz final</p>'+
-    '<p class="sub">Cinco preguntas que cruzan todo lo de la semana.</p>' },
+  h:'<p class="enc">Repaso en seis líneas, y después el quiz</p>'+
+    '<p class="sub">Todo lo de la semana, junto</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Concepto</th><th>En una frase</th></tr></thead><tbody>'+
+    '<tr><td>Diagnóstico económico</td><td>Mide la rentabilidad y la eficiencia: márgenes, ROA y ROE</td></tr>'+
+    '<tr><td>Diagnóstico financiero</td><td>Mide liquidez, solvencia y endeudamiento</td></tr>'+
+    '<tr><td>Razón corriente</td><td>Activo corriente entre pasivo corriente, ideal de 1.5 a 2</td></tr>'+
+    '<tr><td>Endeudamiento</td><td>Pasivo total entre activo total, ideal por debajo del 60 %</td></tr>'+
+    '<tr><td>Política de inversión</td><td>En qué se colocan los recursos, entre corto y largo plazo</td></tr>'+
+    '<tr class="res"><td>Política de endeudamiento</td><td>De dónde salen esos recursos, sin arriesgar la solvencia</td></tr>'+
+    '</tbody></table></div>' },
 
 /* 11 ------------------------------------------------------------ */
 { et:'Cierre', t:'Conclusiones', clave:'a10',
@@ -1459,10 +1537,44 @@ function vHoja(k){
   return h+'</div></div>';
 }
 
+/* ---- calcular: el alumno escribe el resultado ---- */
+function leeNum(t){
+  var x=String(t==null?'':t).trim().replace(/\s/g,'').replace(/^S\/\.?/i,'').replace(/%$/,'');
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(x)) x=x.replace(/,/g,'');
+  else if(/^-?\d+,\d{1,2}$/.test(x)) x=x.replace(',','.');   /* por si usan coma decimal */
+  var n=parseFloat(x);
+  return (isNaN(n) || !/^-?\d*\.?\d+$/.test(x)) ? null : n;
+}
+function vCal(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q"><b>'+(n+1)+'. '+esc(x.q)+'</b>'+
+         (x.f ? '<small class="fx2">'+x.f+'</small>' : '')+
+         (x.d ? '<small class="fx2"><i>'+x.d+'</i></small>' : '')+
+         (ok  ? '<small class="pre">'+esc(x.pq)+'</small>' : '')+'</span>'+
+       '<span class="r">'+
+         '<input class="cel'+(ok?' bien':'')+'" type="text" inputmode="decimal" '+
+           'data-c="'+k+'" data-n="'+n+'" autocomplete="off" '+
+           (ok ? 'readonly value="'+esc(FX.fmt(x.e))+'"' : (x.ph?'placeholder="'+esc(x.ph)+'"':''))+
+           ' aria-label="'+esc(x.q)+'">'+
+         (x.u ? '<span class="u">'+esc(x.u)+'</span>' : '')+
+       '</span></div>';
+  });
+  h+='</div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
 function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
-       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : vQuiz(k);
+       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1540,6 +1652,26 @@ function cablea(){
             sl.classList.add('mal'); sl.value='';
             setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
     });
+  });
+
+  qq('#lam input[data-c]', lam).forEach(function(x){
+    function revisa(){
+      if(x.readOnly) return;
+      var cl=x.dataset.c, n=+x.dataset.n, p=ACT[cl].lista[n];
+      var v=leeNum(x.value);
+      if(x.value.trim()==='') { x.classList.remove('mal'); return; }
+      if(v===null){ mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450); return; }
+      if(Math.abs(v-p.e) <= (p.tol===undefined ? 0.05 : p.tol)){
+        G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
+      }else{
+        mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450);
+      }
+    }
+    x.addEventListener('change', revisa);
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    x.addEventListener('input', function(){ x.classList.remove('mal'); });
   });
 
   if(A.tipo==='hoja') cableaHoja(k, A, lam);
@@ -1962,20 +2094,73 @@ function resumenAula(){
   return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
            rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
 }
+/* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
+function etiActividad(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  return 'A'+(n+1);
+}
+function tituloActividad(n){
+  var k=CLAVES[n], A=k && ACT[k];
+  return (A && A.titulo) ? A.titulo : ('Actividad '+(n+1));
+}
+function diapoDe(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  return 0;
+}
+
 function ventanaAula(e){
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var h='<div class="vmini">'+
-        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
-        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="lin"><span>Va en la diapositiva</span><b>'+esc(e.lamina||'—')+'</b></div>'+
+        '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
+        '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
-    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+    var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
+    h+='<div class="cel2'+cl+'" title="'+esc(tituloActividad(r.b))+'">'+
+       '<span>'+esc(etiActividad(r.b))+'</span><b>'+r.n+'/'+r.t+'</b></div>';
   });
   return h+'</div></div>';
 }
+
 function pantalla(e, alumno, cont){
-  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
-    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
-    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
+  var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
+  var h='<div class="apdet">'+
+    '<div class="apcab">'+
+      '<span class="dato">Alumno<b>'+esc(alumno||'—')+'</b></span>'+
+      '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
+      '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
+      '<span class="dato">Avance<b>'+ok+' de '+tot+' · '+pct+' %</b></span>'+
+    '</div>'+
+    '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
+    '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
+      '<th>Avance</th><th class="n">Estado</th></tr></thead><tbody>';
+  (e.rejilla||[]).forEach(function(r){
+    var p = r.t ? Math.round(r.n/r.t*100) : 0;
+    var lleno = r.t && r.n>=r.t;
+    var cl = lleno ? ' class="ok"' : (r.n ? '' : ' class="nada"');
+    var dia = diapoDe(r.b);
+    h+='<tr'+cl+(dia===aqui?' data-aqui="1"':'')+'>'+
+       '<td>'+(dia||'—')+'</td>'+
+       '<td>'+esc(tituloActividad(r.b))+(dia===aqui?' &nbsp;<b style="color:#16307A">· aquí está</b>':'')+'</td>'+
+       '<td class="n">'+r.n+' / '+r.t+'</td>'+
+       '<td class="mini"><span><i style="width:'+p+'%"></i></span></td>'+
+       '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
+       '</tr>';
+  });
+  h+='</tbody></table>'+
+     '<div class="apacc"><button type="button" class="o-btn o-btn-secondary" id="apSaca">'+
+     '&#10005; Sacar de la sala a '+esc(alumno||'')+'</button></div>'+
+     '</div>';
+  cont.innerHTML=h;
+  var b=cont.querySelector('#apSaca');
+  if(b) b.addEventListener('click', function(){
+    if(window.Aula && Aula.saca) Aula.saca(alumno);
+  });
 }
 if(window.Aula){
   Aula.iniciar({ sala:'ANAEF7', codigo:'EEFF', resumen:resumenAula, ventana:ventanaAula,
