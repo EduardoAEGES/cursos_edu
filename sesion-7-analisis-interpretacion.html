@@ -78,6 +78,22 @@
   .cab .btm.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
   .cab .btm.on .bola{ background:rgba(7,23,103,.35); }
   .cab .btm.on .bola::after{ transform:translateX(14px); }
+  /* botón de ver las respuestas: solo el docente */
+  .cab .bts{ flex:none; font:inherit; font-size:15px; font-weight:800; line-height:1; cursor:pointer;
+             white-space:nowrap; background:rgba(255,255,255,.14); color:#fff;
+             border:1px solid rgba(255,255,255,.34); border-radius:99px; padding:6px 12px; }
+  .cab .bts.on{ background:#FFD166; color:var(--marino); border-color:transparent; }
+  .cab .bts:hover{ background:rgba(255,209,102,.85); color:var(--marino); border-color:transparent; }
+  @media (max-width:860px){ .cab .bts .tx{ display:none; } .cab .bts{ padding:6px 9px; } }
+  .solu{ border:2px solid #C9A227; border-radius:12px; overflow:hidden; background:#FFFDF5;
+         margin:16px 0 0; }
+  .solu > h5{ margin:0; background:#C9A227; color:#2B2000; font-size:17px; font-weight:800;
+              padding:10px 16px; letter-spacing:.02em; }
+  .solu ol{ margin:0; padding:6px 16px 12px 38px; }
+  .solu li{ margin:7px 0; font-size:19px; line-height:1.5; color:var(--tinta); }
+  .solu li span{ color:#55607F; }
+  .solu li b{ color:#7A5C00; font-weight:800; }
+  .solu li span::after{ content:' → '; color:#A08A3A; font-weight:800; }
   .cab .pil{ flex:none; font-size:15px; font-weight:800; letter-spacing:.03em; white-space:nowrap;
              background:var(--celeste); color:var(--marino); border-radius:99px; padding:5px 11px; }
   @media (max-width:860px){ .cab .btm .tx{ display:none; } .cab .btm{ padding:6px 8px; }
@@ -494,6 +510,9 @@
         <span class="et" id="eti">Portada</span>
         <span class="t" id="tit">&mdash;</span>
         <span class="cu" id="cu">1 / 1</span>
+        <button class="bts" id="btnSol" type="button" hidden aria-pressed="false"
+                title="Mostrar las respuestas correctas de esta diapositiva">&#128273;
+          <span class="tx">Respuestas</span></button>
         <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
           <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
         <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
@@ -1588,6 +1607,7 @@ function pinta(quieto){
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
   if(s.clave) h+=vista(s.clave);
+  if(s.clave && verSol && soyDocente()) h+=solucion(s.clave);
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1912,6 +1932,48 @@ function cableaCruz(k, A, lam){
   });
 }
 
+/* ================= las respuestas, para el docente ================= */
+var verSol=false;
+function solLetra(j){ var s=''; j++; while(j>0){ var r=(j-1)%26; s=String.fromCharCode(65+r)+s; j=(j-1-r)/26; } return s; }
+function solNum(v){
+  if(typeof v!=='number') return String(v);
+  var r=Math.round(v*100)/100;
+  return r.toLocaleString('es-PE',{ minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function solucion(k){
+  var A=ACT[k], t=A.tipo, f=[];
+  function li(q, r){ f.push('<li><span>'+q+'</span><b>'+r+'</b></li>'); }
+  if(t==='quiz' || t==='sel'){
+    A.lista.forEach(function(p){ li(esc(p.q), esc(p.ops[p.ok])); });
+  }else if(t==='cal'){
+    A.lista.forEach(function(p){ li(esc(p.q), solNum(p.e)+(p.u?' '+esc(p.u):'')); });
+  }else if(t==='arr'){
+    var caja={}; A.cajas.forEach(function(c){ caja[c.id]=c.t; });
+    A.fichas.forEach(function(x){ li(esc(x.t), esc(caja[x.g]||x.g)); });
+  }else if(t==='par'){
+    var nom={}; A.fichas.forEach(function(x){ nom[x.id]=x.t; });
+    A.huecos.forEach(function(x){ li(esc(x.q), esc(nom[x.id]||x.id)); });
+  }else if(t==='cruz'){
+    var z=armaCruz(k);
+    A.palabras.map(function(w,n){ return {w:w, n:n}; })
+      .sort(function(a,b){ return z.num[a.n]-z.num[b.n] || (a.w.dir>b.w.dir?1:-1); })
+      .forEach(function(x){
+        li(z.num[x.n]+' '+(x.w.dir==='H'?'horizontal':'vertical')+' &middot; '+esc(x.w.pista), esc(x.w.p));
+      });
+  }else if(t==='hoja'){
+    A.filas.forEach(function(fila,r){
+      fila.forEach(function(c,j){
+        if(c.e===undefined) return;
+        li('Celda '+solLetra(j)+(r+1)+(c.ph ? ' &middot; '+esc(c.ph) : ''),
+           (typeof c.e==='string') ? esc(c.e) : solNum(c.e));
+      });
+    });
+  }
+  if(!f.length) return '';
+  return '<div class="solu"><h5>&#128273; Respuestas &middot; '+esc(A.titulo)+'</h5><ol>'+
+         f.join('')+'</ol></div>';
+}
+
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente · libre: cada uno avanza solo */
 var modoClase='libre';
@@ -1935,6 +1997,11 @@ function sopla(txt){
 
 function pintaModo(){
   var doc=soyDocente(), guiado=(modoClase==='guiado'), preso=atado();
+  var sb=$('btnSol');
+  sb.hidden=!doc;
+  if(!doc && verSol) verSol=false;
+  sb.classList.toggle('on', verSol);
+  sb.setAttribute('aria-pressed', verSol?'true':'false');
   var b=$('btnBatuta');
   b.hidden=!doc;
   if(doc){
@@ -1967,6 +2034,13 @@ function cambiaModo(){
         : 'Modo libre · cada alumno avanza a su ritmo');
 }
 $('btnBatuta').addEventListener('click', cambiaModo);
+$('btnSol').addEventListener('click', function(){
+  if(!soyDocente()) return;
+  verSol=!verSol;
+  pintaModo(); pinta(true);
+  sopla(verSol ? 'Respuestas a la vista · solo tú las ves'
+               : 'Respuestas ocultas');
+});
 
 /* el alumno recibe la orden del docente */
 function recibeBatuta(d){
