@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi&oacute;n 7 &middot; An&aacute;lisis e interpretaci&oacute;n de estados financieros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  /* colores de la plantilla institucional Certus 2026 */
+  :root{
+    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
+  }
+  .ai{
+    --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
+    --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
+    --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+    font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  .ai button, .ai input, .ai select, .ai table{ font-family:inherit; }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--fucsia); padding-bottom:14px; }
+  .marca .lgc{ flex:none; height:40px; width:auto; display:block; }
+  @media (max-width:560px){ .marca .lgc{ height:30px; } }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(22px,3vw,31px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:17px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 5px; font-size:22px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:18px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; min-height:70vh;
+        scroll-margin-top:12px; }
+  /* cada diapositiva ocupa una pantalla, con la proporcion 16:9 de la plantilla */
+  @media (min-width:820px){
+    .esc{ aspect-ratio:16/9; min-height:0; max-height:calc(100vh - 128px); }
+  }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none;
+             aspect-ratio:auto; max-height:none; min-height:0; border:0; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--marino); color:#fff; padding:10px 16px; display:flex;
+        align-items:center; gap:11px; flex:none; }
+  .cab .et{ font-size:14px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--fucsia); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:19px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:16px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+  .cab .lgb{ flex:none; height:26px; width:auto; display:block; opacity:.95; }
+  .cab .btf{ flex:none; font:inherit; font-size:18px; line-height:1; cursor:pointer;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:7px; padding:7px 10px; }
+  .cab .btf:hover{ background:rgba(252,0,69,.85); border-color:transparent; }
+  /* interruptor del modo de clase: solo lo ve el docente */
+  .cab .btm{ flex:none; font:inherit; font-size:15px; font-weight:800; line-height:1; cursor:pointer;
+             display:flex; align-items:center; gap:7px; white-space:nowrap;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:99px; padding:6px 12px 6px 7px; }
+  .cab .btm .bola{ width:30px; height:16px; border-radius:99px; background:rgba(255,255,255,.3);
+                   position:relative; flex:none; transition:background .18s ease; }
+  .cab .btm .bola::after{ content:''; position:absolute; top:2px; left:2px; width:12px; height:12px;
+                          border-radius:50%; background:#fff; transition:transform .18s ease; }
+  .cab .btm.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+  .cab .btm.on .bola{ background:rgba(7,23,103,.35); }
+  .cab .btm.on .bola::after{ transform:translateX(14px); }
+  .cab .pil{ flex:none; font-size:15px; font-weight:800; letter-spacing:.03em; white-space:nowrap;
+             background:var(--celeste); color:var(--marino); border-radius:99px; padding:5px 11px; }
+  @media (max-width:860px){ .cab .btm .tx{ display:none; } .cab .btm{ padding:6px 8px; }
+                            .cab .pil .tx{ display:none; } }
+  @media (max-width:620px){
+    .cab{ padding:9px 11px; gap:8px; }
+    .cab .t{ font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cab .lgb{ display:none; } .cab .cu{ font-size:14px; }
+    .cab .btf{ padding:6px 9px; font-size:17px; }
+  }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1 1 0; min-height:0;
+        font-size:24px; line-height:1.62; color:var(--tinta);
+        background:
+          radial-gradient(760px 380px at 108% -12%, rgba(32,211,255,.17), transparent 62%),
+          radial-gradient(620px 320px at -10% 112%, rgba(198,0,163,.09), transparent 62%),
+          #F7F9FE; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 6px; font-size:clamp(29px,4.2vw,42px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 22px; font-size:21px; color:#55607F; font-weight:600; }
+  .lam h3{ margin:24px 0 11px; font-size:22px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- portada con los colores de la plantilla ---------- */
+  .tapa{ position:relative; overflow:hidden; border-radius:14px; color:#fff; margin:0 0 18px;
+         padding:22px clamp(18px,3vw,30px) 24px; background:var(--marino); }
+  .tapa::after{ content:''; position:absolute; right:-70px; top:-110px; width:300px; height:300px;
+                border-radius:50%; background:radial-gradient(circle at 35% 35%,
+                rgba(252,0,69,.95), rgba(198,0,163,.55) 58%, transparent 72%); }
+  .tapa .fil{ position:relative; z-index:1; display:flex; align-items:center; gap:11px;
+              flex-wrap:wrap; margin-bottom:16px; }
+  .tapa .fil img{ height:34px; width:auto; display:block; }
+  .tapa .fil span{ font-size:17px; font-weight:600; opacity:.86; }
+  .tapa h2{ position:relative; z-index:1; margin:0; font-size:clamp(29px,4.6vw,47px);
+            font-weight:900; letter-spacing:-.6px; line-height:1.14; }
+  .tapa p{ position:relative; z-index:1; margin:9px 0 0; font-size:clamp(18px,2.8vw,24px);
+           font-weight:600; color:var(--celeste); }
+  .tapa .via{ position:relative; z-index:1; display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; }
+  .tapa .via b{ color:#fff; font-size:16px; font-weight:800; letter-spacing:.04em;
+                text-transform:uppercase; border:1px solid rgba(255,255,255,.42);
+                border-radius:99px; padding:5px 12px; }
+  .lam .tapa b, .lam .tapa strong{ color:#fff; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  @media (max-width:620px){
+    .nav{ padding:10px 60px 10px 11px; gap:7px; }
+    .nav .o-btn{ font-size:17px; padding:10px 14px; }
+  }
+  .nav .o-btn{ font-size:19px; padding:11px 20px; }
+  .ai .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .ai .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:17px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  .perso img{ flex:none; width:152px; height:auto; max-height:232px; object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:23px; line-height:1.58; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:14px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  .perso.dos{ align-items:flex-end; }
+  .perso.dos img.b{ margin-left:-10px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ width:104px; }
+    .perso.dos img{ width:84px; }
+    .perso .globo{ font-size:21px; padding:12px 14px; }
+  }
+  .tabenv table.t.chica{ font-size:19px; }
+  .tabenv table.t.chica th, .tabenv table.t.chica td{ padding:7px 9px; }
+  table.t tr.gris td{ background:#EEF1F6; font-weight:700; font-size:17px;
+                      text-transform:uppercase; letter-spacing:.04em; color:var(--gris); }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:19px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:14px 17px; font-size:21px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:21px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(24px,3.4vw,33px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:18px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:14px 18px; font-size:21px; line-height:1.6;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:21px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:17px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:17px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:21px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(138,43,43,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:19px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:21px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:18px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:22px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:23px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 24px; font-size:19px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:22px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(138,43,43,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:18px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:21px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:21px; font-weight:700; color:var(--gris); }
+  .linea select.cel{ max-width:min(340px, 100%); }
+  .linea .q .pre{ color:var(--verde); font-weight:600; }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:22px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:168px; font-size:21px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  /* aviso de que el docente movió la diapositiva */
+  .soplo{ position:fixed; left:50%; transform:translateX(-50%); bottom:26px; z-index:10004;
+          background:var(--marino); color:#fff; border-radius:99px; padding:11px 20px;
+          font-size:18px; font-weight:700; box-shadow:0 10px 26px rgba(7,23,103,.36);
+          opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; }
+  .soplo.ve{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  /* cuando el alumno va atado al docente, la botonera se ve apagada */
+  .esc.atado .pts button{ cursor:default; }
+  .esc.atado .nav .o-btn[disabled]{ opacity:.45; }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:31px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+
+  /* ---------- mini hoja de cálculo ---------- */
+  .hojaenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin-top:12px; }
+  table.hoja{ border-collapse:collapse; table-layout:fixed; width:max-content; background:#fff;
+              font-variant-numeric:tabular-nums; }
+  table.hoja th, table.hoja td{ border:1px solid #C9D2E6; padding:0; height:44px; }
+  table.hoja thead th{ background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+                       text-align:center; letter-spacing:.06em; height:30px; }
+  table.hoja th.esq{ width:40px; background:#DFE6F5; }
+  table.hoja th.nf{ width:40px; background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+                    text-align:center; }
+  table.hoja td{ font-size:20px; color:var(--tinta); }
+  table.hoja td .q{ display:block; padding:7px 9px; white-space:nowrap; overflow:hidden;
+                    text-overflow:ellipsis; }
+  table.hoja td.rot .q{ font-weight:700; }
+  table.hoja tr.enc td{ background:var(--marino); color:#fff; }
+  table.hoja tr.enc td .q{ font-weight:800; font-size:17px; letter-spacing:.02em; }
+  table.hoja td.num .q{ text-align:right; }
+  table.hoja td.dada{ background:#F3F6FD; }
+  table.hoja td.dada .q{ text-align:right; color:#44506F; }
+  table.hoja td.libre{ background:#FFFBEA; }
+  table.hoja td.libre input{ width:100%; height:44px; border:0; background:transparent; font:inherit;
+                             font-size:20px; text-align:right; padding:0 9px; color:var(--tinta);
+                             font-variant-numeric:tabular-nums; }
+  table.hoja td.libre input:focus{ outline:2px solid var(--fucsia); outline-offset:-2px;
+                                   background:#fff; text-align:left; }
+  table.hoja td.libre.ok{ background:#EAF7F7; }
+  table.hoja td.libre.ok input{ color:var(--verde); font-weight:700; }
+  table.hoja td.libre.mal{ background:#FBEDEC; }
+  table.hoja td.libre.mal input{ color:#8A201B; }
+  table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
+  .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#44506F; }
+  /* al escribir una fórmula se puede señalar la celda con el dedo o el ratón */
+  table.hoja.apunta td[data-cel]{ cursor:cell; }
+  table.hoja.apunta td[data-cel]:hover{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  table.hoja td.senalada{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  .avisofx{ display:none; margin:9px 0 0; font-size:18px; font-weight:700; color:var(--fucsia); }
+  .avisofx.ve{ display:block; }
+  .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
+  .hbar .fx{ font-size:18px; color:#55607F; line-height:1.5; }
+  .hbar .fx b{ color:var(--marino); font-weight:700; }
+  .pista-fx{ margin:12px 0 0; font-size:19px; line-height:1.6; color:#44506F;
+             border-left:3px solid var(--celeste); padding-left:11px; }
+  .pista-fx code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:18px;
+                  background:#EEF3FC; border-radius:4px; padding:1px 5px; color:var(--marino); }
+  @media (max-width:560px){
+    table.hoja td{ font-size:18px; } table.hoja td .q{ padding:6px 8px; }
+    table.hoja td.libre input{ font-size:18px; padding:0 8px; }
+  }
+
+  /* ---------- crucigrama ---------- */
+  .cruz{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+  .cuad{ border-collapse:collapse; margin:0 auto; table-layout:fixed; width:max-content; }
+  .cuad td{ width:40px; height:40px; padding:0; border:0; position:relative; }
+  .cuad td.v{ border:1.5px solid var(--gris); background:#fff; }
+  .cuad td .n{ position:absolute; top:1px; left:3px; font-size:11px; font-weight:800;
+               color:var(--gris); line-height:1; pointer-events:none; }
+  .cuad input{ width:100%; height:100%; border:0; background:transparent; text-align:center;
+               font:inherit; font-size:21px; font-weight:700; text-transform:uppercase;
+               color:var(--tinta); padding:0; }
+  .cuad input:focus{ outline:none; background:#FFF3CD; }
+  .cuad td.lista{ background:#EFF7F2; border-color:var(--verde); }
+  .cuad td.lista input{ color:var(--verde); }
+  .cuad td.foco{ background:#FFF8E1; }
+  .pistas{ display:grid; gap:14px; grid-template-columns:1fr; margin-top:16px; }
+  @media (min-width:760px){ .pistas{ grid-template-columns:1fr 1fr; } }
+  .pistas h5{ margin:0 0 8px; font-size:17px; font-weight:800; text-transform:uppercase;
+              letter-spacing:.06em; color:var(--rojo); }
+  .pistas ol{ margin:0; padding-left:24px; font-size:19px; line-height:1.65; }
+  .pistas li{ margin-bottom:5px; }
+  .pistas li.ok{ color:var(--verde); text-decoration:line-through; }
+  .cruz .desliza{ display:none; font-size:16px; color:var(--gris); text-align:center;
+                  margin:0 0 7px; }
+  @media (max-width:700px){
+    .cuad td{ width:32px; height:32px; } .cuad input{ font-size:17px; }
+    .cruz .desliza{ display:block; }
+  }
+
+  /* ---------- participantes flotantes (en pantalla completa) ---------- */
+  .flopart{ position:fixed; left:16px; bottom:104px; z-index:10002; font:inherit; cursor:pointer;
+            display:flex; align-items:center; gap:8px; border:0; border-radius:99px;
+            background:var(--marino); color:#fff; padding:11px 16px; font-size:14px; font-weight:800;
+            box-shadow:0 8px 22px rgba(7,23,103,.34); }
+  .flopart:hover{ background:var(--fucsia); }
+  .flopart .bo{ background:var(--celeste); color:var(--marino); border-radius:99px;
+                padding:1px 8px; font-size:12.5px; font-weight:900; }
+  .panpart{ position:fixed; left:16px; bottom:158px; z-index:10003; width:min(420px, calc(100vw - 32px));
+            max-height:min(70vh, 560px); overflow:auto; background:#fff; border-radius:14px;
+            border:1px solid var(--linea); box-shadow:0 18px 44px rgba(7,23,103,.3); }
+  .panpart .hd{ position:sticky; top:0; display:flex; align-items:center; gap:10px;
+                background:var(--marino); color:#fff; padding:10px 14px; font-size:14px; font-weight:800; }
+  .panpart .hd span{ flex:1; min-width:0; }
+  .panpart .hd button{ font:inherit; font-size:15px; line-height:1; cursor:pointer; color:#fff;
+                       background:rgba(255,255,255,.16); border:0; border-radius:6px; padding:6px 9px; }
+  .panpart .nido{ padding:4px 10px 10px; }
+  /* dentro del panel el titulo ya va en la barra: no se repite */
+  .panpart .nido .titsec, .panpart .nido .aviso{ display:none; }
+  .panpart .nido .o-sheet{ box-shadow:none; border:0; margin:0 !important; padding:8px 2px !important; }
+  @media (max-width:560px){ .panpart{ max-height:62vh; } .flopart{ padding:10px 13px; font-size:13px; } }
+
+  /* ---------- fichas de régimen ---------- */
+  .reg{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff;
+        margin-bottom:14px; }
+  .reg > h4{ margin:0; padding:11px 15px; color:#fff; font-size:15px; font-weight:800;
+             letter-spacing:.02em; }
+  .reg.n > h4{ background:var(--nrus); } .reg.e > h4{ background:var(--rer); }
+  .reg.m > h4{ background:var(--rmt); }  .reg.g > h4{ background:var(--rg); }
+  .reg .c{ padding:0; }
+  .reg table{ width:100%; border-collapse:collapse; font-size:15px; }
+  .reg td{ padding:9px 14px; border-bottom:1px solid var(--linea); vertical-align:top; }
+  .reg tr:last-child td{ border-bottom:0; }
+  .reg td:first-child{ width:38%; color:var(--gris); font-weight:600; }
+  @media (max-width:560px){ .reg td{ font-size:14px; padding:8px 11px; }
+                            .reg td:first-child{ width:42%; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Sesi&oacute;n 7</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/certus-azul.png" alt="Certus">
+    <span class="tx">
+      <h1>An&aacute;lisis e interpretaci&oacute;n de estados financieros</h1>
+      <p><span class="sem">Sesi&oacute;n 7</span> &middot; Estados Financieros &middot; Diagn&oacute;stico econ&oacute;mico y financiero de la empresa</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Ingresa con tu DNI</h2>
+    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
+       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
+       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
+       sesi&oacute;n o entres desde otro equipo.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Contenido tomado del material de la semana 7 de la unidad
+    did&aacute;ctica: diagn&oacute;stico econ&oacute;mico y financiero, pol&iacute;tica de inversi&oacute;n y
+    pol&iacute;tica de endeudamiento. Las cifras de Distribuidora El Progreso S.A. son un caso de clase, no
+    de una empresa real.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
+        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
+        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+function globo2(a, b, et, txt){
+  return '<div class="perso dos"><img src="'+a+'" alt="" loading="lazy">'+
+         '<img class="b" src="'+b+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ============ mini hoja de cálculo: fórmulas tipo Excel ============ */
+/* Soporta: + - * / ^ % ( ) , referencias A1, rangos A1:B4, comparaciones,
+   texto entre comillas y las funciones de uso diario, en español e inglés. */
+function HojaFx(leeCelda){
+
+  function letras(n){ var s=''; n++; while(n>0){ var r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=(n-1-r)/26; } return s; }
+  function col(s){ var n=0; for(var i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64); return n-1; }
+
+  function aNumero(v){
+    if(typeof v==='number') return v;
+    if(v===null || v===undefined) return 0;
+    var s=String(v).trim();
+    if(s==='') return 0;
+    s=s.replace(/\s/g,'').replace(/^S\/\.?/i,'');
+    /* 1,234.56 -> 1234.56 ; 1,234 -> 1234 (la coma solo separa miles) */
+    if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,'');
+    if(/%$/.test(s)){ var b=parseFloat(s.slice(0,-1)); return isNaN(b)?NaN:b/100; }
+    var n=parseFloat(s);
+    return (isNaN(n) || !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.test(s)) ? NaN : n;
+  }
+  function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
+  function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
+
+  var FN={
+    SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
+    PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
+                           if(!v.length) throw new Error('#DIV/0'); return v.reduce(function(x,y){return x+y;},0)/v.length; },
+    MIN:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.min.apply(null,v); },
+    MAX:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.max.apply(null,v); },
+    CONTAR:function(a){ return a.map(aNumero).filter(function(n){return !isNaN(n);}).length; },
+    PRODUCTO:function(a){ var p=1; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) p*=n; }); return p; },
+    ABS:   function(a){ return Math.abs(num(a[0])); },
+    ENTERO:function(a){ return Math.floor(num(a[0])); },
+    REDONDEAR: function(a){
+      var d=a.length>1 ? num(a[1]) : 0, f=Math.pow(10,d);
+      var x=num(a[0])*f;
+      /* Excel redondea el 0.5 hacia afuera */
+      return (x<0 ? -Math.round(-x) : Math.round(x))/f; },
+    SI:    function(a){ return bool(a[0]) ? a[1] : (a.length>2 ? a[2] : false); },
+    Y:     function(a){ return a.every(bool); },
+    O:     function(a){ return a.some(bool); },
+    NO:    function(a){ return !bool(a[0]); },
+    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
+  };
+  /* nombres en inglés y variantes con punto */
+  var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
+              ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
+              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
+
+  /* ---------- analizador ---------- */
+  function evalua(txt, pide){
+    var s=txt, i=0;
+    function esp(){ while(i<s.length && /\s/.test(s[i])) i++; }
+    function ojo(){ esp(); return s[i]; }
+    function come(t){ esp(); if(s.substr(i,t.length).toUpperCase()===t){ i+=t.length; return true; } return false; }
+
+    function expr(){
+      var a=suma();
+      for(;;){
+        esp();
+        var op=null;
+        if(s.substr(i,2)==='<>'||s.substr(i,2)==='>='||s.substr(i,2)==='<='){ op=s.substr(i,2); i+=2; }
+        else if(s[i]==='='||s[i]==='>'||s[i]==='<'){ op=s[i]; i++; }
+        else return a;
+        var b=suma(), x=aNumero(a), y=aNumero(b), cmp;
+        if(isNaN(x)||isNaN(y)) cmp=String(a).trim().toUpperCase().localeCompare(String(b).trim().toUpperCase());
+        else cmp = x<y ? -1 : x>y ? 1 : 0;
+        a = op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
+            op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
+      }
+    }
+    function suma(){
+      var a=mult();
+      for(;;){ esp();
+        if(s[i]==='+'){ i++; a=num(a)+num(mult()); }
+        else if(s[i]==='-'){ i++; a=num(a)-num(mult()); }
+        else if(s[i]==='&'){ i++; a=String(fmt(a))+String(fmt(mult())); }
+        else return a; }
+    }
+    function mult(){
+      var a=pot();
+      for(;;){ esp();
+        if(s[i]==='*'){ i++; a=num(a)*num(pot()); }
+        else if(s[i]==='/'){ i++; var d=num(pot()); if(d===0) throw new Error('#DIV/0'); a=num(a)/d; }
+        else return a; }
+    }
+    function pot(){ var a=unario(); esp(); if(s[i]==='^'){ i++; return Math.pow(num(a), num(pot())); } return a; }
+    function unario(){ esp();
+      if(s[i]==='-'){ i++; return -num(unario()); }
+      if(s[i]==='+'){ i++; return num(unario()); }
+      return porciento(); }
+    function porciento(){ var a=atomo(); esp(); if(s[i]==='%'){ i++; return num(a)/100; } return a; }
+
+    function atomo(){
+      esp();
+      if(s[i]==='('){ i++; var v=expr(); esp(); if(s[i]!==')') throw new Error('#FALTA )'); i++; return v; }
+      if(s[i]==='"'){ i++; var t=''; while(i<s.length && s[i]!=='"'){ t+=s[i++]; } i++; return t; }
+      var m=/^([A-Za-zÁÉÍÓÚÑ_][A-Za-z0-9ÁÉÍÓÚÑ_.]*)\s*\(/.exec(s.slice(i));
+      if(m){
+        var nom=m[1].toUpperCase(); nom=ALIAS[nom]||nom;
+        if(!FN[nom]) throw new Error('#NOMBRE');
+        i+=m[0].length;
+        var args=[];
+        esp();
+        if(s[i]===')'){ i++; }
+        else{
+          for(;;){
+            args.push(arg());
+            esp();
+            if(s[i]===','||s[i]===';'){ i++; continue; }
+            if(s[i]===')'){ i++; break; }
+            throw new Error('#FALTA )');
+          }
+        }
+        var llanos=[];
+        args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
+        return FN[nom](llanos);
+      }
+      var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
+      if(r){
+        var ini=i; i+=r[0].length;
+        esp();
+        if(s[i]===':'){
+          var j=i+1, resto=s.slice(j);
+          var r2=/^\s*(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(resto);
+          if(r2){
+            i=j+r2[0].length;
+            return { rango:true, valores:rango(r[2],+r[4],r2[2],+r2[4]) };
+          }
+        }
+        i=ini+r[0].length;
+        return pide(r[2].toUpperCase()+r[4]);
+      }
+      var n=/^\d*\.?\d+([eE][-+]?\d+)?/.exec(s.slice(i));
+      if(n){ i+=n[0].length; return parseFloat(n[0]); }
+      throw new Error('#ERROR');
+    }
+    function arg(){ return expr(); }
+    function rango(c1,f1,c2,f2){
+      var a=col(c1.toUpperCase()), b=col(c2.toUpperCase());
+      var x1=Math.min(a,b), x2=Math.max(a,b), y1=Math.min(f1,f2), y2=Math.max(f1,f2);
+      if((x2-x1+1)*(y2-y1+1) > 400) throw new Error('#RANGO');
+      var out=[];
+      for(var y=y1;y<=y2;y++) for(var x=x1;x<=x2;x++) out.push(pide(letras(x)+y));
+      return out;
+    }
+
+    var v=expr();
+    esp();
+    if(i<s.length) throw new Error('#ERROR');
+    if(v && v.rango) throw new Error('#VALOR');
+    return v;
+  }
+
+  function fmt(v){
+    if(typeof v==='boolean') return v?'VERDADERO':'FALSO';
+    if(typeof v==='number'){
+      if(!isFinite(v)) return '#NUM';
+      var r=Math.round(v*100)/100;
+      return r.toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    return String(v);
+  }
+
+  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras };
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('ai7_son')!=='0'; }catch(e){}
+function nota(f,ini,dur,vol,tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{ fallo.currentTime=0; var p=fallo.play();
+       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false'); }
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('ai7_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien(); });
+pintaSon();
+
+/* ================= las actividades ================= */
+var ACT={
+
+/* 1 ------------------------------------------------------------- */
+a0:{ tipo:'quiz', titulo:'Actividad 1 · Conectemos',
+  lista:[
+   { q:'Una pyme de alimentos vende bien todos los meses, pero acumula deudas y casi no tiene efectivo. ¿Por qué puede pasar eso?',
+     ops:['Porque vender y cobrar no es lo mismo: puede ser rentable y aun así quedarse sin liquidez',
+          'Porque si vende bien no puede tener deudas: hay un error en sus cuentas',
+          'Porque la rentabilidad y la liquidez son siempre lo mismo'], ok:0,
+     pq:'Una empresa puede ser rentable y tener problemas de caja al mismo tiempo. Por eso el diagnóstico '+
+        'económico y el financiero son dos cosas distintas y se miran juntos.' },
+   { q:'Esa misma empresa tiene costos fijos altos y no controla sus inventarios. ¿Qué indicadores miraría primero?',
+     ops:['Solo el margen bruto','La razón corriente y la prueba ácida, junto con los márgenes',
+          'Solo la cantidad de trabajadores'], ok:1,
+     pq:'La liquidez dice si puede pagar en el corto plazo y los márgenes dicen si el negocio deja ganancia. '+
+        'Con inventarios altos, la prueba ácida es la que más avisa.' } ] },
+
+/* 2 ------------------------------------------------------------- */
+a1:{ tipo:'arr', titulo:'Actividad 2 · ¿De dónde sale la información?',
+  fichas:[ {id:'e1', t:'Estado de situación financiera', g:'EF'},
+           {id:'e2', t:'Estado de resultados', g:'EF'},
+           {id:'e3', t:'Estado de flujos de efectivo', g:'EF'},
+           {id:'i1', t:'Razón corriente y prueba ácida', g:'IN'},
+           {id:'i2', t:'Margen neto y ROE', g:'IN'},
+           {id:'i3', t:'Rotación de activos', g:'IN'},
+           {id:'d1', t:'La inflación del año', g:'EN'},
+           {id:'d2', t:'Los precios de la competencia', g:'EN'},
+           {id:'d3', t:'El tamaño del mercado', g:'EN'} ],
+  cajas:[ {id:'EF', t:'Estados financieros'}, {id:'IN', t:'Indicadores'}, {id:'EN', t:'Datos del entorno'} ],
+  fin:globo(P.expl,'Resuelto','El diagnóstico se arma con las tres fuentes. Si solo miras los estados '+
+      'financieros te falta el contexto, y si solo miras el entorno no tienes con qué medir a la empresa.') },
+
+/* 3 ------------------------------------------------------------- */
+a2:{ tipo:'hoja', titulo:'Actividad 3 · Diagnóstico económico',
+  intro:'Distribuidora El Progreso S.A., año 2025. Calcula los cuatro indicadores con fórmulas.',
+  cols:[{w:300},{w:170},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
+   [{x:'Ventas netas'},{n:1200000},{x:''}],
+   [{x:'Utilidad bruta'},{n:420000},{x:''}],
+   [{x:'Utilidad neta'},{n:96000},{x:''}],
+   [{x:'Activo total'},{n:960000},{x:''}],
+   [{x:'Patrimonio'},{n:480000},{x:''}],
+   [{x:'Margen bruto %'},{x:''},{e:35, f:true, ph:'=B3/B2*100'}],
+   [{x:'Margen neto %'},{x:''},{e:8, f:true}],
+   [{x:'ROA %'},{x:''},{e:10, f:true}],
+   [{x:'ROE %'},{x:''},{e:20, f:true}] ],
+  ayuda:'Margen bruto <code>=B3/B2*100</code> · margen neto <code>=B4/B2*100</code> · '+
+        'ROA <code>=B4/B5*100</code> · ROE <code>=B4/B6*100</code>.',
+  fin:globo(P.idea,'Resuelto','35 % de margen bruto, 8 % de margen neto, 10 % de ROA y 20 % de ROE. '+
+      'El ROE duplica al ROA porque la mitad del activo está financiada con deuda: eso es apalancamiento.') },
+
+/* 4 ------------------------------------------------------------- */
+a3:{ tipo:'hoja', titulo:'Actividad 4 · Diagnóstico financiero',
+  intro:'La misma empresa, al 31 de diciembre. Ahora toca la liquidez, la solvencia y el endeudamiento.',
+  cols:[{w:300},{w:170},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Importe en soles'},{x:'Indicador'}],
+   [{x:'Activo corriente'},{n:480000},{x:''}],
+   [{x:'Inventarios'},{n:240000},{x:''}],
+   [{x:'Pasivo corriente'},{n:300000},{x:''}],
+   [{x:'Pasivo total'},{n:480000},{x:''}],
+   [{x:'Activo total'},{n:960000},{x:''}],
+   [{x:'Utilidad operativa'},{n:160000},{x:''}],
+   [{x:'Gastos por intereses'},{n:32000},{x:''}],
+   [{x:'Razón corriente'},{x:''},{e:1.6, f:true, ph:'=B2/B4'}],
+   [{x:'Prueba ácida'},{x:''},{e:0.8, f:true, ph:'=(B2-B3)/B4'}],
+   [{x:'Endeudamiento total %'},{x:''},{e:50, f:true}],
+   [{x:'Cobertura de intereses'},{x:''},{e:5, f:true}] ],
+  ayuda:'Endeudamiento <code>=B5/B6*100</code> · cobertura <code>=B7/B8</code>. '+
+        'Fíjate en los paréntesis de la prueba ácida: primero se resta y después se divide.',
+  fin:globo2(P.pres, P.bien,'Resuelto','Razón corriente 1.60, dentro del rango sano de 1.5 a 2. '+
+      'Prueba ácida 0.80: sin los inventarios ya no alcanza, y ahí está el riesgo. Endeudamiento 50 %, '+
+      'por debajo del 60 %. Cobertura 5 veces: la utilidad operativa paga cinco veces los intereses.') },
+
+/* 5 ------------------------------------------------------------- */
+a4:{ tipo:'sel', titulo:'Actividad 5 · Interpretar el resultado',
+  lista:[
+   { q:'Razón corriente 1.60', ops:['Sana: está entre 1.5 y 2','Muy baja: no cubre sus deudas','Demasiado alta: dinero ocioso'], ok:0,
+     pq:'Tiene S/ 1.60 de activo corriente por cada S/ 1.00 de deuda de corto plazo.' },
+   { q:'Prueba ácida 0.80', ops:['No hay nada que mirar','Alerta: sin los inventarios no alcanza a cubrir el pasivo corriente','Excelente liquidez'], ok:1,
+     pq:'Depende de vender los inventarios para pagar. Si la mercadería se mueve lento, la empresa se queda sin caja.' },
+   { q:'Endeudamiento total 50 %', ops:['Riesgoso: pasa del 60 %','Aceptable: la mitad del activo se financia con deuda','No se puede interpretar'], ok:1,
+     pq:'La referencia habitual es mantenerlo por debajo del 60 %.' },
+   { q:'Cobertura de intereses 5 veces', ops:['No puede pagar sus intereses','La utilidad operativa cubre cinco veces los intereses','Indica que no tiene deuda'], ok:1,
+     pq:'Mientras más alta, más holgura para pagar el costo de la deuda.' },
+   { q:'ROE 20 % con ROA 10 %', ops:['Hay un error de cálculo','El apalancamiento está potenciando el retorno del accionista','La empresa no es rentable'], ok:1,
+     pq:'Como la mitad del activo lo pone la deuda, la ganancia se reparte entre menos capital propio y el ROE sube.' } ],
+  fin:globo(P.full,'Resuelto','Un indicador solo no dice nada: se lee contra una referencia, contra el año '+
+      'anterior y contra el sector. Y siempre de a varios, nunca uno suelto.') },
+
+/* 6 ------------------------------------------------------------- */
+a5:{ tipo:'arr', titulo:'Actividad 6 · Política de inversión',
+  fichas:[ {id:'c1', t:'Caja y bancos', g:'CP'},
+           {id:'c2', t:'Cuentas por cobrar comerciales', g:'CP'},
+           {id:'c3', t:'Inventarios de mercadería', g:'CP'},
+           {id:'c4', t:'Inversiones financieras a 90 días', g:'CP'},
+           {id:'l1', t:'Maquinaria de la planta', g:'LP'},
+           {id:'l2', t:'Edificio del almacén', g:'LP'},
+           {id:'l3', t:'Apertura de una sucursal', g:'LP'},
+           {id:'l4', t:'Sistema informático de gestión', g:'LP'} ],
+  cajas:[ {id:'CP', t:'Inversión de corto plazo'}, {id:'LP', t:'Inversión de largo plazo'} ],
+  fin:globo(P.alum,'Resuelto','La política de inversión decide en qué se ponen los fondos buscando el '+
+      'equilibrio entre rentabilidad, riesgo y liquidez. Mucho en el largo plazo da rentabilidad pero quita caja; '+
+      'todo en el corto plazo da liquidez pero no hace crecer al negocio.') },
+
+/* 7 ------------------------------------------------------------- */
+a6:{ tipo:'hoja', titulo:'Actividad 7 · Rotación y endeudamiento',
+  intro:'Dos años de la empresa. Para la rotación se usa el activo total promedio: ahí entra la función PROMEDIO.',
+  cols:[{w:280},{w:150},{w:150},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'2024'},{x:'2025'},{x:'Resultado'}],
+   [{x:'Activo total'},{n:840000},{n:960000},{x:''}],
+   [{x:'Ventas netas'},{x:'—'},{n:1200000},{x:''}],
+   [{x:'Utilidad neta'},{x:'—'},{n:96000},{x:''}],
+   [{x:'Pasivo total'},{x:'—'},{n:480000},{x:''}],
+   [{x:'Activo total promedio'},{x:''},{x:''},{e:900000, f:true, ph:'=PROMEDIO(B2:C2)'}],
+   [{x:'Rotación de activos'},{x:''},{x:''},{e:1.33, f:true, ph:'=C3/D6'}],
+   [{x:'ROA en veces'},{x:''},{x:''},{e:0.10, f:true}],
+   [{x:'Endeudamiento %'},{x:''},{x:''},{e:50, f:true}] ],
+  ayuda:'Promedio <code>=PROMEDIO(B2:C2)</code> · rotación <code>=C3/D6</code> · '+
+        'ROA <code>=C4/C2</code> · endeudamiento <code>=C5/C2*100</code>.',
+  fin:globo(P.expl,'Resuelto','Rotación 1.33: cada sol invertido en activos genera S/ 1.33 de ventas al año. '+
+      'Una inversión se juzga por su efecto en la rentabilidad y en la rotación; un endeudamiento, por su '+
+      'efecto en la solvencia y el apalancamiento.') },
+
+/* 8 ------------------------------------------------------------- */
+a7:{ tipo:'par', titulo:'Actividad 8 · Inversión, deuda y resultado',
+  fichas:[ {id:'r1', t:'Posición sólida'}, {id:'r2', t:'Posible crisis financiera'},
+           {id:'r3', t:'Crecimiento sostenible'},
+           {id:'p1', t:'Eficiente y conservadora'}, {id:'p2', t:'Ineficiente y riesgosa'},
+           {id:'p3', t:'Activa y balanceada'} ],
+  huecos:[ {id:'r1', q:'Alta rentabilidad y baja deuda · ¿qué resultado da?'},
+           {id:'p1', q:'Alta rentabilidad y baja deuda · ¿cómo son sus políticas?'},
+           {id:'r2', q:'Baja rentabilidad y alta deuda · ¿qué resultado da?'},
+           {id:'p2', q:'Baja rentabilidad y alta deuda · ¿cómo son sus políticas?'},
+           {id:'r3', q:'Alta inversión financiada con deuda controlada · ¿qué resultado da?'},
+           {id:'p3', q:'Alta inversión financiada con deuda controlada · ¿cómo son sus políticas?'} ],
+  fin:globo(P.bien,'Resuelto','Endeudarse no es malo por sí mismo: lo malo es endeudarse sin rentabilidad '+
+      'que lo sostenga. Deuda controlada con inversión que rinde es crecimiento.') },
+
+/* 9 ------------------------------------------------------------- */
+a8:{ tipo:'cruz', titulo:'Actividad 9 · Crucigrama',
+  filas:13, cols:16,
+  palabras:[
+   {p:'RENTABILIDAD', r:0, c:0, dir:'H', pista:'Lo que mide el diagnóstico económico'},
+   {p:'INVERSION', r:0, c:6, dir:'V', pista:'Política que define en qué se colocan los recursos'},
+   {p:'PATRIMONIO', r:2, c:1, dir:'V', pista:'Lo que divide a la utilidad neta en el ROE'},
+   {p:'SOLVENCIA', r:2, c:3, dir:'H', pista:'Capacidad de responder por todas las deudas'},
+   {p:'ACIDA', r:2, c:11, dir:'V', pista:'Prueba de liquidez que deja fuera los inventarios'},
+   {p:'LIQUIDEZ', r:2, c:13, dir:'V', pista:'Capacidad de cubrir las deudas de corto plazo'},
+   {p:'INVENTARIOS', r:2, c:15, dir:'V', pista:'Inversión de corto plazo que la prueba ácida descuenta'},
+   {p:'MARGEN', r:4, c:4, dir:'H', pista:'Bruto o neto: el porcentaje que queda de las ventas'},
+   {p:'ROTACION', r:6, c:8, dir:'H', pista:'De activos: ventas netas entre activo total promedio'},
+   {p:'CORRIENTE', r:8, c:0, dir:'H', pista:'Razón que divide el activo de corto plazo entre el pasivo de corto plazo'},
+   {p:'COBERTURA', r:11, c:0, dir:'H', pista:'De intereses: utilidad operativa entre gasto financiero'} ],
+  fin:globo(P.full,'Resuelto','Once palabras que son el vocabulario del diagnóstico. Si las manejas, puedes '+
+      'leer el informe financiero de cualquier empresa.') },
+
+/* 10 ------------------------------------------------------------ */
+a9:{ tipo:'quiz', titulo:'Actividad 10 · Quiz final',
+  lista:[
+   { q:'¿Qué evalúa el diagnóstico económico?',
+     ops:['La liquidez y la solvencia','La rentabilidad y la eficiencia operativa','Solo el nivel de deuda'], ok:1,
+     pq:'El económico mira la rentabilidad y la eficiencia; el financiero mira liquidez, solvencia y endeudamiento.' },
+   { q:'Una empresa tiene utilidad neta de 50,000 y activos totales de 500,000. ¿Cuál es su ROA?',
+     ops:['5 %','10 %','20 %'], ok:1,
+     pq:'ROA = 50,000 / 500,000 × 100 = 10 %. Por cada sol invertido en activos genera 10 céntimos de utilidad.' },
+   { q:'Activo corriente 80,000 y pasivo corriente 50,000. ¿Cuánto es la razón corriente y qué significa?',
+     ops:['1.6: tiene S/ 1.60 para cubrir cada S/ 1.00 de deuda de corto plazo',
+          '0.625: no alcanza a cubrir sus deudas','30,000: es el capital de trabajo'], ok:0,
+     pq:'80,000 / 50,000 = 1.6, dentro del rango sano de 1.5 a 2.' },
+   { q:'El endeudamiento total de una empresa llega al 75 %. ¿Cómo se lee?',
+     ops:['Muy bueno: usa poca deuda','Alerta: pasa del 60 % que se toma como referencia',
+          'Es indiferente, el ratio no dice nada'], ok:1,
+     pq:'Tres cuartas partes de sus activos están financiados con deuda. Su solvencia queda comprometida y '+
+        'cualquier caída de ventas la pone en aprietos.' },
+   { q:'¿Cuáles son los dos pilares de la política financiera?',
+     ops:['La política de precios y la de cobranzas','La política de inversión y la de endeudamiento',
+          'La política de ventas y la de personal'], ok:1,
+     pq:'La de inversión dice en qué se colocan los recursos y la de endeudamiento dice de dónde salen. '+
+        'El equilibrio entre las dos define la solidez de la empresa.' } ] },
+
+/* 11 ------------------------------------------------------------ */
+a10:{ tipo:'sel', titulo:'Actividad 11 · Decide y sustenta',
+  lista:[
+   { q:'La empresa tiene prueba ácida 0.80 y los inventarios rotan muy lento. ¿Qué haces primero?',
+     ops:['Liberar caja: ordenar inventarios y apurar las cobranzas','Pedir un préstamo de largo plazo',
+          'Repartir las utilidades entre los socios'], ok:0,
+     pq:'El problema es de liquidez, no de capital. Primero se libera el dinero que está dormido en inventarios '+
+        'y en cuentas por cobrar.' },
+   { q:'El endeudamiento llega al 70 % y la cobertura de intereses baja a 1.2 veces. ¿Qué significa?',
+     ops:['Puede endeudarse más sin riesgo','Apenas alcanza a pagar los intereses: hay que bajar la deuda',
+          'Que la empresa es muy rentable'], ok:1,
+     pq:'Con cobertura de 1.2 la utilidad operativa casi no cubre los intereses. Un mal mes y no paga.' },
+   { q:'Rentabilidad alta, deuda baja y una inversión que rinde. ¿Cómo se llama esa situación?',
+     ops:['Posible crisis financiera','Crecimiento sostenible con política activa y balanceada',
+          'Posición de riesgo'], ok:1,
+     pq:'Inversión activa financiada con deuda controlada es justamente el escenario de crecimiento sostenible.' } ],
+  fin:globo2(P.pres, P.bien,'Para cerrar','El diagnóstico económico y el financiero son complementarios: una '+
+      'empresa rentable puede tener problemas de caja y una empresa líquida puede no estar ganando nada. '+
+      'Interpretar es juntar los dos y decidir.') }
+};
+
+/* ================= las diapositivas ================= */
+function ficha(cl, nom, filas){
+  return '<div class="reg '+cl+'"><h4>'+nom+'</h4><div class="c"><table><tbody>'+
+    filas.map(function(f){ return '<tr><td>'+f[0]+'</td><td>'+f[1]+'</td></tr>'; }).join('')+
+    '</tbody></table></div></div>';
+}
+
+var D=[
+
+/* 1 ------------------------------------------------------------- */
+{ et:'Conectemos', t:'Análisis e interpretación de estados financieros', clave:'a0',
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
+        '<span>| www.certus.edu.pe</span></div>'+
+      '<h2>Los números ya están. Falta leerlos</h2>'+
+      '<p>Semana 7 · Estados Financieros</p>'+
+      '<div class="via"><b>Diagnóstico económico</b><b>Diagnóstico financiero</b><b>Decisiones</b></div>'+
+    '</div>'+
+    globo(P.pres,'El caso de entrada',
+      'Una pyme de alimentos tiene buenas ventas todos los meses, pero acumula deudas por falta de control '+
+      'en gastos e inventarios. Su liquidez es limitada y su rentabilidad se ve afectada por los costos fijos '+
+      'altos. Al terminar la semana vas a poder interpretar ese cuadro con indicadores y decir qué debería '+
+      'hacer la empresa.') },
+
+/* 2 ------------------------------------------------------------- */
+{ et:'Diagnóstico', t:'Qué es el diagnóstico económico-financiero', clave:'a1',
+  h:'<p class="enc">Leer la contabilidad para decidir</p>'+
+    '<p class="sub">El proceso de análisis de la información contable y financiera de una empresa</p>'+
+    '<div class="av">El diagnóstico económico-financiero evalúa la situación actual de la empresa, su '+
+    'desempeño y su capacidad de generar valor en el tiempo.</div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Qué busca</h4><div class="c"><ul>'+
+      '<li>Identificar fortalezas y debilidades.</li>'+
+      '<li>Evaluar la eficiencia operativa.</li>'+
+      '<li>Apoyar la toma de decisiones estratégicas.</li>'+
+      '</ul></div></div>'+
+    '<div class="fc rj"><h4>De dónde sale</h4><div class="c"><ul>'+
+      '<li>Estados financieros.</li>'+
+      '<li>Indicadores financieros y económicos.</li>'+
+      '<li>Datos del entorno: mercado, inflación, competencia.</li>'+
+      '</ul></div></div>'+
+    '</div>' },
+
+/* 3 ------------------------------------------------------------- */
+{ et:'Económico', t:'Diagnóstico económico', clave:'a2',
+  h:'<p class="enc">Diagnóstico económico</p>'+
+    '<p class="sub">Evalúa la rentabilidad y la eficiencia operativa</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Indicador</th><th>Fórmula</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>Margen bruto</td><td>(Utilidad bruta / Ventas) × 100</td>'+
+      '<td>Qué porcentaje de las ventas queda tras cubrir el costo de ventas</td></tr>'+
+    '<tr><td>Margen neto</td><td>(Utilidad neta / Ventas) × 100</td>'+
+      '<td>Qué tan rentable es la empresa después de todos los gastos</td></tr>'+
+    '<tr><td>ROA</td><td>(Utilidad neta / Activo total) × 100</td>'+
+      '<td>Qué tan eficientemente se usan los activos para generar utilidades</td></tr>'+
+    '<tr class="res"><td>ROE</td><td>(Utilidad neta / Patrimonio) × 100</td>'+
+      '<td>La rentabilidad que se llevan los accionistas</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.idea,'Un ejemplo rápido',
+      'Si la utilidad neta es 50,000 y los activos totales 500,000, el ROA es 10 %. Léelo así: por cada sol '+
+      'invertido en activos, la empresa genera 10 céntimos de utilidad.') },
+
+/* 4 ------------------------------------------------------------- */
+{ et:'Financiero', t:'Diagnóstico financiero', clave:'a3',
+  h:'<p class="enc">Diagnóstico financiero</p>'+
+    '<p class="sub">Analiza la liquidez, la solvencia y el endeudamiento</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Indicador</th><th>Fórmula</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>Razón corriente</td><td>Activo corriente / Pasivo corriente</td>'+
+      '<td>Capacidad para cubrir deudas a corto plazo, ideal entre 1.5 y 2</td></tr>'+
+    '<tr><td>Prueba ácida</td><td>(Activo corriente − Inventarios) / Pasivo corriente</td>'+
+      '<td>Liquidez más estricta, sin contar los inventarios</td></tr>'+
+    '<tr><td>Endeudamiento total</td><td>Pasivo total / Activo total × 100</td>'+
+      '<td>Nivel de dependencia de la deuda, ideal por debajo del 60 %</td></tr>'+
+    '<tr class="res"><td>Cobertura de intereses</td><td>Utilidad operativa / Gastos por intereses</td>'+
+      '<td>Capacidad para pagar los intereses de la deuda</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.expl,'Un ejemplo rápido',
+      'Con activo corriente de 80,000 y pasivo corriente de 50,000, la razón corriente es 1.6: tiene S/ 1.60 '+
+      'para cubrir cada S/ 1.00 de deuda de corto plazo.') },
+
+/* 5 ------------------------------------------------------------- */
+{ et:'Interpretar', t:'Interpretar los resultados', clave:'a4',
+  h:'<p class="enc">El número solo no dice nada</p>'+
+    '<p class="sub">Interpretar es comparar contra una referencia, contra el año anterior y contra el sector</p>'+
+    globo2(P.alum, P.bien,'Lo que hay que retener',
+      'Un ratio se lee siempre acompañado. La razón corriente alta con prueba ácida baja significa inventario '+
+      'parado. El ROE alto con endeudamiento alto significa que la ganancia viene del apalancamiento y no de '+
+      'la operación. Abajo tienes los resultados de la empresa del caso: dales lectura.') },
+
+/* 6 ------------------------------------------------------------- */
+{ et:'Inversión', t:'Política de inversión', clave:'a5',
+  h:'<p class="enc">Política de inversión</p>'+
+    '<p class="sub">Determina en qué se destinan los fondos, buscando equilibrio entre rentabilidad, riesgo y liquidez</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Corto plazo</h4><div class="c">'+
+      '<p>Caja, cuentas por cobrar e inventarios. Dan liquidez, pero rinden poco.</p></div></div>'+
+    '<div class="fc rj"><h4>Largo plazo</h4><div class="c">'+
+      '<p>Maquinaria, edificios, expansión y tecnología. Hacen crecer el negocio, pero inmovilizan el dinero.</p></div></div>'+
+    '</div>'+
+    '<div class="form">Rotación de activos = Ventas netas / Activo total promedio'+
+      '<small>mide la eficiencia en el uso de los recursos</small></div>' },
+
+/* 7 ------------------------------------------------------------- */
+{ et:'Endeudamiento', t:'Política de endeudamiento', clave:'a6',
+  h:'<p class="enc">Política de endeudamiento</p>'+
+    '<p class="sub">Determina cuánto y de qué forma se usa la deuda para financiar las actividades y las inversiones</p>'+
+    '<div class="av">El objetivo es lograr un nivel óptimo de apalancamiento, sin poner en riesgo la solvencia.</div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Razón de endeudamiento</h4><div class="c">'+
+      '<p>Pasivo total / Activo total. Mide la proporción de activos financiados con deuda.</p></div></div>'+
+    '<div class="fc rj"><h4>Cobertura de intereses</h4><div class="c">'+
+      '<p>Utilidad operativa / Gasto por intereses. Mide la capacidad de pagar esos intereses.</p></div></div>'+
+    '</div>' },
+
+/* 8 ------------------------------------------------------------- */
+{ et:'Relación', t:'Inversión, endeudamiento y análisis', clave:'a7',
+  h:'<p class="enc">Cómo se leen juntas las dos políticas</p>'+
+    '<p class="sub">Una inversión se evalúa por su impacto en la rentabilidad y la rotación; un endeudamiento, por su impacto en la solvencia y el apalancamiento</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Situación</th><th>Política de inversión</th><th>Política de endeudamiento</th><th>Resultado</th>'+
+    '</tr></thead><tbody>'+
+    '<tr><td>Alta rentabilidad y baja deuda</td><td>Eficiente</td><td>Conservadora</td><td>Posición sólida</td></tr>'+
+    '<tr><td>Baja rentabilidad y alta deuda</td><td>Ineficiente</td><td>Riesgosa</td><td>Posible crisis financiera</td></tr>'+
+    '<tr class="res"><td>Alta inversión financiada con deuda controlada</td><td>Activa</td><td>Balanceada</td>'+
+      '<td>Crecimiento sostenible</td></tr>'+
+    '</tbody></table></div>' },
+
+/* 9 ------------------------------------------------------------- */
+{ et:'Crucigrama', t:'Crucigrama del análisis financiero', clave:'a8',
+  h:'<p class="enc">Crucigrama</p>'+
+    '<p class="sub">Once palabras. Escribe en el tablero; cada palabra completa se revisa sola.</p>' },
+
+/* 10 ------------------------------------------------------------ */
+{ et:'Quiz final', t:'Quiz final del diagnóstico', clave:'a9',
+  h:'<p class="enc">Quiz final</p>'+
+    '<p class="sub">Cinco preguntas que cruzan todo lo de la semana.</p>' },
+
+/* 11 ------------------------------------------------------------ */
+{ et:'Cierre', t:'Conclusiones', clave:'a10',
+  h:'<p class="enc">Lo que te llevas de la semana</p>'+
+    '<p class="sub">Consolidando saberes</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Los dos diagnósticos</h4><div class="c">'+
+      '<p>El económico evalúa la rentabilidad. El financiero mide liquidez, solvencia y endeudamiento. '+
+      'Son complementarios: una empresa rentable puede tener problemas financieros y al revés.</p></div></div>'+
+    '<div class="fc rj"><h4>Las dos políticas</h4><div class="c">'+
+      '<p>La de inversión define en qué se usan los recursos. La de endeudamiento define de dónde provienen. '+
+      'El equilibrio entre ambas determina la solidez y la rentabilidad financiera.</p></div></div>'+
+    '</div>' }
+];
+
+/* ================= estado ================= */
+var LS='aief_sem7_v1';
+/* en el mismo orden en que aparecen las diapositivas */
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10'];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+                  CLAVES.forEach(function(k){ g[k]={}; }); return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+/* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
+function fusiona(d){
+  if(!d || typeof d!=='object') return;
+  ['visto','mal','hoja'].forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  CLAVES.forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  yaCruz={};
+  pinta(true);
+  sopla('Recuperamos tu avance: '+totalOk()+' de '+totalMax()+' respuestas');
+}
+
+function cuantas(k){
+  var A=ACT[k];
+  if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arr')  return A.fichas.length;
+  if(A.tipo==='cruz') return A.palabras.length;
+  if(A.tipo==='hoja'){
+    var n=0;
+    A.filas.forEach(function(fi){ fi.forEach(function(c){ if(c.e!==undefined) n++; }); });
+    return n;
+  }
+  return A.lista.length;
+}
+function hechas(k){ return Object.keys(G[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+var i=0;
+
+/* ================= arrastre ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[data-f]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true); ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35'; f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display=''; f.dataset.arrastro='1';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null; f.style.opacity='';
+      qq('.caja,.par', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    });
+    f.addEventListener('pointercancel', function(){
+      if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){ if(!el) return; el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450); }
+
+/* ================= vistas ================= */
+function cabTarea(k){
+  var A=ACT[k];
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4>'+esc(A.titulo)+' · '+
+         hechas(k)+' de '+cuantas(k)+'</h4><div class="c">';
+}
+function vArr(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="cajas'+(A.cajas.length===2?' c2':'')+'">';
+  A.cajas.forEach(function(c){
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>'; }).join('')+
+       '</div></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vPar(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var puesto=g[x.id], nom='';
+    A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelta aquí')+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vQuiz(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : (G.mal[k+'|'+n+'|'+j] ? ' mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         ((resuelto||cls===' mala')?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+  });
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- crucigrama ---- */
+var CZ=null;
+function armaCruz(k){
+  var A=ACT[k];
+  var cel={}, num={}, orden=[];
+  A.palabras.forEach(function(w,n){
+    for(var j=0;j<w.p.length;j++){
+      var r=w.r+(w.dir==='V'?j:0), c=w.c+(w.dir==='H'?j:0);
+      var id=r+','+c;
+      if(!cel[id]) cel[id]={ r:r, c:c, letra:w.p.charAt(j), de:[] };
+      cel[id].de.push(n);
+    }
+  });
+  /* numeración de izquierda a derecha y de arriba a abajo */
+  var inicios=A.palabras.map(function(w,n){ return {n:n, r:w.r, c:w.c}; })
+    .sort(function(a,b){ return a.r-b.r || a.c-b.c; });
+  var sig=1, vistos={};
+  inicios.forEach(function(x){
+    var id=x.r+','+x.c;
+    if(vistos[id]===undefined){ vistos[id]=sig++; }
+    num[x.n]=vistos[id];
+  });
+  CZ={ cel:cel, num:num, clave:k };
+  return CZ;
+}
+function vCruz(k){
+  var A=ACT[k], g=G[k]||{}, z=armaCruz(k);
+  var h=cabTarea(k)+'<div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
+          '<table class="cuad"><tbody>';
+  for(var r=0;r<A.filas;r++){
+    h+='<tr>';
+    for(var c=0;c<A.cols;c++){
+      var cl=z.cel[r+','+c];
+      if(!cl){ h+='<td></td>'; continue; }
+      var inicio=null;
+      A.palabras.forEach(function(w,n){ if(w.r===r && w.c===c && inicio===null) inicio=z.num[n]; });
+      var resuelta=cl.de.some(function(n){ return g[A.palabras[n].p]; });
+      var todas=cl.de.every(function(n){ return g[A.palabras[n].p]; });
+      h+='<td class="v'+(todas?' lista':'')+'" data-r="'+r+'" data-c="'+c+'">'+
+         (inicio!==null?'<span class="n">'+inicio+'</span>':'')+
+         '<input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="fila '+(r+1)+' columna '+(c+1)+'"'+
+         (todas?' value="'+cl.letra+'" readonly':(resuelta?' value="'+cl.letra+'" readonly':''))+'>'+
+         '</td>';
+    }
+    h+='</tr>';
+  }
+  h+='</tbody></table></div><div class="pistas">';
+  ['H','V'].forEach(function(dir){
+    h+='<div><h5>'+(dir==='H'?'Horizontales':'Verticales')+'</h5><ol>';
+    A.palabras.map(function(w,n){ return {w:w,n:n}; })
+      .filter(function(x){ return x.w.dir===dir; })
+      .sort(function(a,b){ return z.num[a.n]-z.num[b.n]; })
+      .forEach(function(x){
+        h+='<li value="'+z.num[x.n]+'" class="'+(g[x.w.p]?'ok':'')+'">'+esc(x.w.pista)+
+           ' <span style="opacity:.6">('+x.w.p.length+')</span></li>';
+      });
+    h+='</ol></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vSel(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+(n+1)+'. '+esc(x.q)+
+         (ok?'<small class="pre">'+esc(x.pq)+'</small>':'')+'</span>'+
+       '<span class="r"><select class="cel'+(ok?' bien':'')+'" data-s="'+k+'" data-n="'+n+'"'+
+         (ok?' disabled':'')+' aria-label="'+esc(x.q)+'">'+
+         '<option value="">elige&hellip;</option>'+
+         x.ops.map(function(o,j){
+           return '<option value="'+j+'"'+(ok&&j===x.ok?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
+       '</select></span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+/* ---- mini hoja de cálculo ---- */
+var FX=HojaFx(function(ref){ return pideCelda(ref); });
+var HOJA=null;   /* { k, celdas, memo, curso } mientras se calcula */
+
+function LET(j){ return FX.letras(j); }
+function txtCelda(k, id){
+  var t=(G.hoja||{})[k+'|'+id];
+  return (t===undefined || t===null) ? '' : String(t);
+}
+/* qué hay escrito en cada celda de la hoja que se está calculando */
+function crudoDe(k, id){
+  var A=ACT[k];
+  for(var r=0;r<A.filas.length;r++){
+    var fila=A.filas[r];
+    for(var j=0;j<fila.length;j++){
+      if(LET(j)+(r+1)!==id) continue;
+      var c=fila[j];
+      if(c.e!==undefined) return txtCelda(k, id);
+      if(c.form!==undefined) return c.form;
+      if(c.n!==undefined) return c.n;
+      return c.x===undefined ? '' : c.x;
+    }
+  }
+  return '';
+}
+function pideCelda(ref){
+  if(!HOJA) return 0;
+  if(Object.prototype.hasOwnProperty.call(HOJA.memo, ref)) return HOJA.memo[ref];
+  if(HOJA.curso[ref]) throw new Error('#CIRCULAR');
+  HOJA.curso[ref]=1;
+  var crudo=crudoDe(HOJA.k, ref), v;
+  if(crudo===undefined || crudo==='') v=0;
+  else if(typeof crudo==='number') v=crudo;
+  else if(/^\s*=/.test(String(crudo))) v=FX.evalua(String(crudo).replace(/^\s*=/,''), pideCelda);
+  else { var n=FX.aNumero(crudo); v = isNaN(n) ? String(crudo) : n; }
+  delete HOJA.curso[ref];
+  HOJA.memo[ref]=v;
+  return v;
+}
+function abreHoja(k){ HOJA={ k:k, memo:{}, curso:{} }; }
+function valorCelda(k, id){
+  try{ return { v:pideCelda(id) }; }
+  catch(e){ return { err:String(e.message||'#ERROR') }; }
+}
+
+function vHoja(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="hojaenv"><table class="hoja"><thead><tr><th class="esq"></th>';
+  A.cols.forEach(function(c,j){ h+='<th style="width:'+c.w+'px">'+LET(j)+'</th>'; });
+  h+='</tr></thead><tbody>';
+  abreHoja(k);
+  A.filas.forEach(function(fila,r){
+    h+='<tr'+(r===0?' class="enc"':'')+'><th class="nf">'+(r+1)+'</th>';
+    fila.forEach(function(c,j){
+      var id=LET(j)+(r+1);
+      if(c.e!==undefined){
+        var hecho=(g[id]!==undefined), t=txtCelda(k,id), muestra=t;
+        if(t && /^\s*=/.test(t)){ var rv=valorCelda(k,id); muestra = rv.err ? rv.err : FX.fmt(rv.v); }
+        h+='<td class="libre'+(hecho?' ok':'')+'" data-cel="'+id+'">'+
+           '<input type="text" class="hc" spellcheck="false" autocomplete="off" inputmode="text" '+
+           'data-k="'+k+'" data-id="'+id+'" aria-label="celda '+id+'" '+
+           (hecho?'readonly ':'')+(c.ph?'placeholder="'+esc(c.ph)+'" ':'')+
+           'value="'+esc(muestra)+'"></td>';
+      }else if(c.form!==undefined){
+        var rf=valorCelda(k,id);
+        h+='<td class="dada'+(rf.err?' malf':'')+'" data-cel="'+id+'" data-fx="'+id+'" title="'+esc(c.form)+'"><span class="q">'+
+           esc(rf.err ? rf.err : FX.fmt(rf.v))+'</span></td>';
+      }else if(c.n!==undefined){
+        h+='<td class="dada num" data-cel="'+id+'"><span class="q">'+esc(FX.fmt(c.n))+'</span></td>';
+      }else{
+        h+='<td'+(r===0?'':' class="rot"')+' data-cel="'+id+'"><span class="q">'+esc(c.x||'')+'</span></td>';
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<p class="avisofx">Toca una celda del cuadro para meterla en la f&oacute;rmula. '+
+     'Con Mays&uacute;s + clic armas un rango.</p>';
+  h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
+     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
+     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+function vista(k){
+  var t=ACT[k].tipo;
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : vQuiz(k);
+}
+
+/* ================= dibujo ================= */
+function pinta(quieto){
+  var s=D[i];
+  /* al responder dentro de la misma diapositiva no se pierde el sitio */
+  var alto = quieto ? $('lam').scrollTop : 0;
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.clave) h+=vista(s.clave);
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=alto;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
+    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+      i=+b.dataset.p; elegida=null; pinta(); enfoca();
+      if(modoClase==='guiado') difunde();
+    });
+  });
+  cablea();
+  pintaModo();
+}
+
+var yaCruz={};
+function cablea(){
+  var lam=$('lam'), s=D[i];
+  if(!s.clave) return;
+  var k=s.clave, A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
+      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+            b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  qq('#lam select[data-s]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
+      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(sl.closest('.linea'));
+            sl.classList.add('mal'); sl.value='';
+            setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
+    });
+  });
+
+  if(A.tipo==='hoja') cableaHoja(k, A, lam);
+  if(A.tipo==='cruz') cableaCruz(k, A, lam);
+}
+
+/* lo que hay escrito antes del cursor, sin espacios al final */
+function antesDelCursor(inp){
+  var v=inp.value;
+  var pos = (inp.selectionStart===null || inp.selectionStart===undefined) ? v.length : inp.selectionStart;
+  return v.slice(0, pos).replace(/\s+$/,'');
+}
+function enFormula(inp){ return !!(inp && inp.value && /^\s*=/.test(inp.value)); }
+/* ¿la fórmula espera una referencia? (justo después de = o de un operador) */
+function esperaRef(inp){
+  if(!enFormula(inp)) return false;
+  var antes=antesDelCursor(inp);
+  /* el % va detrás del número, así que ahí ya no se espera nada */
+  return /(^\s*=|[+\-*/^(,;:&<>=])$/.test(antes);
+}
+/* ¿lo último escrito es el nombre de una celda? entonces se puede cambiar o ampliar */
+function terminaEnRef(inp){
+  if(!enFormula(inp)) return false;
+  return /[A-Za-z]{1,2}\d{1,4}$/.test(antesDelCursor(inp));
+}
+/* mete el nombre de la celda donde está el cursor, como hace Excel */
+function meteRef(inp, ref, modo){
+  var v=inp.value;
+  var a = inp.selectionStart===null ? v.length : inp.selectionStart;
+  var b = inp.selectionEnd===null   ? v.length : inp.selectionEnd;
+  var izq=v.slice(0,a), der=v.slice(b), m=/([A-Za-z]{1,2}\d{1,4})$/.exec(izq);
+  if(modo==='extender' && m){
+    izq = izq.slice(0, izq.length-m[1].length) + m[1].toUpperCase() + ':' + ref;
+  }else if(modo==='reemplazar' && m){
+    izq = izq.slice(0, izq.length-m[1].length) + ref;
+  }else{
+    izq += ref;
+  }
+  inp.value = izq + der;
+  var p = izq.length;
+  try{ inp.setSelectionRange(p,p); }catch(e){}
+}
+
+/* ---- la hoja: escribir, recalcular y comprobar ---- */
+function cableaHoja(k, A, lam){
+  var inps=qq('#lam td.libre input', lam);
+  var tabla=lam.querySelector('table.hoja');
+  var aviso=lam.querySelector('.avisofx');
+
+  function pintaApunta(){
+    var act=document.activeElement;
+    var on = !!(act && act.classList && act.classList.contains('hc') &&
+                (esperaRef(act) || terminaEnRef(act)));
+    if(tabla) tabla.classList.toggle('apunta', on);
+    if(aviso) aviso.classList.toggle('ve', on);
+  }
+
+  function recalcula(salvo){
+    abreHoja(k);
+    inps.forEach(function(x){
+      if(x===salvo) return;
+      var t=txtCelda(k, x.dataset.id);
+      if(t && /^\s*=/.test(t)){
+        var r=valorCelda(k, x.dataset.id);
+        x.value = r.err ? r.err : FX.fmt(r.v);
+        x.classList.toggle('malf', !!r.err);
+      }else{
+        x.value = t;
+        x.classList.remove('malf');
+      }
+    });
+    /* las celdas fijas con fórmula también se refrescan */
+    A.filas.forEach(function(fila,r){
+      fila.forEach(function(c,j){
+        if(c.form===undefined) return;
+        var id=LET(j)+(r+1);
+        var td=lam.querySelector('td.dada[data-fx="'+id+'"]');
+        if(!td) return;
+        var rr=valorCelda(k, id);
+        td.querySelector('.q').textContent = rr.err ? rr.err : FX.fmt(rr.v);
+        td.classList.toggle('malf', !!rr.err);
+      });
+    });
+  }
+
+  inps.forEach(function(x){
+    if(x.readOnly) return;
+    x.addEventListener('focus', function(){
+      var t = txtCelda(k, x.dataset.id);
+      x.value = t;
+      /* se selecciona al entrar, como en Excel, pero sin comerse lo que ya escribió */
+      setTimeout(function(){ if(x.value===t){ try{ x.select(); }catch(e){} } pintaApunta(); }, 0);
+    });
+    x.addEventListener('input', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+      pintaApunta();
+    });
+    ['keyup','click','select'].forEach(function(ev){
+      x.addEventListener(ev, pintaApunta);
+    });
+    x.addEventListener('blur', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+      graba();
+      recalcula(null);
+      pintaApunta();
+    });
+    x.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); x.blur(); }
+      else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
+    });
+  });
+
+  /* tocar una celda del cuadro mete su nombre en la fórmula que se está escribiendo */
+  qq('#lam table.hoja td[data-cel]', lam).forEach(function(td){
+    td.addEventListener('pointerdown', function(ev){
+      var act=document.activeElement;
+      if(!act || !act.classList || !act.classList.contains('hc')) return;
+      if(td.contains(act)) return;                 /* es la celda que estoy editando */
+      var modo = esperaRef(act) ? 'insertar'
+               : (terminaEnRef(act) ? (ev.shiftKey ? 'extender' : 'reemplazar') : null);
+      if(!modo) return;                            /* la fórmula no admite una celda aquí */
+      ev.preventDefault(); ev.stopPropagation();   /* no se pierde el foco */
+      meteRef(act, td.dataset.cel, modo);
+      G.hoja[k+'|'+act.dataset.id] = act.value;
+      td.classList.add('senalada');
+      setTimeout(function(){ td.classList.remove('senalada'); }, 420);
+      pintaApunta();
+    });
+  });
+
+  var btn=lam.querySelector('button[data-chk]');
+  if(btn) btn.addEventListener('click', function(){ compruebaHoja(k, A, lam, recalcula); });
+
+  recalcula(null);
+}
+
+function compruebaHoja(k, A, lam, recalcula){
+  recalcula(null);
+  abreHoja(k);
+  var nuevas=0, fallas=0, faltan=0, primerFallo=null;
+  A.filas.forEach(function(fila,r){
+    fila.forEach(function(c,j){
+      if(c.e===undefined) return;
+      var id=LET(j)+(r+1);
+      if(G[k][id]!==undefined) return;                 /* ya estaba bien */
+      var td=lam.querySelector('td.libre[data-cel="'+id+'"]');
+      var t=txtCelda(k, id).trim();
+      td.classList.remove('mal');
+      if(t===''){ faltan++; return; }
+      if(c.f && !/^=/.test(t)){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='En '+id+' escribe la f&oacute;rmula, no el resultado. Empieza con =';
+        return;
+      }
+      var rv=valorCelda(k, id);
+      if(rv.err){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='La f&oacute;rmula de '+id+' no se entiende ('+esc(rv.err)+').';
+        return;
+      }
+      var acierta;
+      if(typeof c.e==='string'){
+        acierta = String(rv.v).trim().toUpperCase() === c.e.trim().toUpperCase();
+      }else{
+        var n=FX.aNumero(rv.v);
+        acierta = !isNaN(n) && Math.abs(n-c.e) < 0.05;
+      }
+      if(acierta){ G[k][id]=1; nuevas++; td.classList.add('ok'); }
+      else{ fallas++; td.classList.add('mal');
+            if(!primerFallo) primerFallo='El resultado de '+id+' todav&iacute;a no cuadra.'; }
+    });
+  });
+  graba();
+  if(nuevas && !fallas) { if(lista(k)) fanfarria(); else bien(); }
+  else if(fallas) mal();
+  if(fallas) sopla(primerFallo ? primerFallo.replace(/&oacute;/g,'ó').replace(/&iacute;/g,'í') : 'Revisa las celdas en rojo');
+  else if(!nuevas && faltan) sopla('Todavía te faltan '+faltan+(faltan===1?' celda':' celdas'));
+  pinta(true);
+}
+
+function cableaCruz(k, A, lam){
+  var g=G[k]||{};
+  function campo(r,c){ var td=lam.querySelector('.cuad td[data-r="'+r+'"][data-c="'+c+'"]');
+                       return td ? td.querySelector('input') : null; }
+  function letras(w){
+    var s='';
+    for(var j=0;j<w.p.length;j++){
+      var e=campo(w.r+(w.dir==='V'?j:0), w.c+(w.dir==='H'?j:0));
+      s += (e && e.value ? e.value.toUpperCase() : ' ');
+    }
+    return s;
+  }
+  function revisa(w){
+    if(g[w.p]) return;
+    var s=letras(w);
+    if(s.indexOf(' ')>=0){ yaCruz[w.p]=''; return; }
+    if(yaCruz[w.p]===s) return;
+    yaCruz[w.p]=s;
+    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+    else{
+      mal();
+      for(var j=0;j<w.p.length;j++){
+        var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
+        if(td) sacude(td);
+      }
+    }
+  }
+  qq('.cuad input', lam).forEach(function(inp){
+    var td=inp.parentNode, r=+td.dataset.r, c=+td.dataset.c;
+    inp.addEventListener('focus', function(){
+      qq('.cuad td.foco', lam).forEach(function(x){ x.classList.remove('foco'); });
+      td.classList.add('foco');
+    });
+    inp.addEventListener('input', function(){
+      var v=inp.value.replace(/[^A-Za-zÑñ]/g,'').toUpperCase();
+      inp.value=v.slice(-1);
+      if(inp.value){
+        /* salta a la siguiente casilla libre de la misma palabra */
+        var sig=campo(r,c+1) || campo(r+1,c);
+        if(sig && !sig.readOnly) sig.focus();
+      }
+      A.palabras.forEach(function(w){
+        var dentro=false;
+        for(var j=0;j<w.p.length;j++){
+          if(w.r+(w.dir==='V'?j:0)===r && w.c+(w.dir==='H'?j:0)===c){ dentro=true; break; }
+        }
+        if(dentro) revisa(w);
+      });
+    });
+    inp.addEventListener('keydown', function(e){
+      var d={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,0],ArrowUp:[-1,0]}[e.key];
+      if(d){ var x=campo(r+d[0], c+d[1]); if(x){ e.preventDefault(); x.focus(); } return; }
+      if(e.key==='Backspace' && !inp.value){
+        var a=campo(r,c-1) || campo(r-1,c);
+        if(a && !a.readOnly){ e.preventDefault(); a.value=''; a.focus(); }
+      }
+    });
+  });
+}
+
+/* ================= modo de clase ================= */
+/* guiado: todos van en la diapositiva del docente · libre: cada uno avanza solo */
+var modoClase='libre';
+try{ if(localStorage.getItem('ai7_modo')==='guiado') modoClase='guiado'; }catch(e){}
+
+function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+function enSala(){ return !!(window.Aula && Aula.enSala); }
+function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
+
+var tSoplo=null;
+function sopla(txt){
+  var e=$('soplo');
+  e.hidden=false; e.textContent=txt;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tSoplo);
+  tSoplo=setTimeout(function(){
+    e.classList.remove('ve');
+    setTimeout(function(){ e.hidden=true; }, 300);
+  }, 2600);
+}
+
+function pintaModo(){
+  var doc=soyDocente(), guiado=(modoClase==='guiado'), preso=atado();
+  var b=$('btnBatuta');
+  b.hidden=!doc;
+  if(doc){
+    b.classList.toggle('on', guiado);
+    b.setAttribute('aria-pressed', guiado?'true':'false');
+    $('txBatuta').textContent = guiado ? 'Modo guiado' : 'Modo libre';
+    b.title = guiado
+      ? 'Los alumnos están en tu misma diapositiva. Toca para dejarlos avanzar solos.'
+      : 'Cada alumno avanza solo. Toca para llevarlos a tu ritmo.';
+  }
+  $('pilModo').hidden=!preso;
+  $('esc').classList.toggle('atado', preso);
+  $('ant').disabled = preso || (i===0);
+  $('sig').disabled = preso || (i===D.length-1);
+  qq('#pts button').forEach(function(x){ x.disabled=preso; });
+}
+
+/* el docente publica dónde está la clase */
+function difunde(){
+  if(!soyDocente() || !window.Aula || !Aula.dirige) return;
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i } : { modo:'libre' });
+}
+function cambiaModo(){
+  if(!soyDocente()) return;
+  modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
+  try{ localStorage.setItem('ai7_modo', modoClase); }catch(e){}
+  pintaModo(); difunde();
+  sopla(modoClase==='guiado'
+        ? 'Modo guiado · la clase va contigo, diapositiva '+(i+1)
+        : 'Modo libre · cada alumno avanza a su ritmo');
+}
+$('btnBatuta').addEventListener('click', cambiaModo);
+
+/* el alumno recibe la orden del docente */
+function recibeBatuta(d){
+  var antes=modoClase;
+  modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
+  if(modoClase==='guiado' && d && typeof d.lamina==='number'){
+    var k=Math.max(0, Math.min(D.length-1, d.lamina));
+    if(k!==i){
+      i=k; elegida=null; pinta(); enfoca();
+      nota(880,0,.1,.04,'triangle');
+      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+D.length);
+      return;
+    }
+  }
+  pintaModo();
+  if(antes==='guiado' && modoClase==='libre') sopla('Ya puedes avanzar a tu ritmo');
+  if(antes==='libre' && modoClase==='guiado') sopla('Vas al ritmo del docente');
+}
+
+/* ================= navegación ================= */
+/* deja la diapositiva centrada en la pantalla cuando se sale de cuadro */
+function enfoca(){
+  var e=$('esc');
+  if(e.classList.contains('full')) return;
+  var r=e.getBoundingClientRect();
+  if(r.top>=-2 && r.bottom<=window.innerHeight+4) return;
+  var y=window.pageYOffset + r.top - Math.max(8, (window.innerHeight-r.height)/2);
+  try{ window.scrollTo({ top:Math.max(0,y), behavior:'smooth' }); }
+  catch(x){ window.scrollTo(0, Math.max(0,y)); }
+}
+function va(n){
+  if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); enfoca();
+             if(modoClase==='guiado') difunde(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc'), dentro;
+  e.classList.toggle('full');
+  dentro=e.classList.contains('full');
+  document.body.style.overflow = dentro ? 'hidden' : '';
+  $('btnFull').textContent = dentro ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa';
+  $('btnFull2').innerHTML = dentro ? '&#10005;' : '&#9974;';
+  $('btnFull2').title = dentro ? 'Salir de pantalla completa' : 'Pantalla completa';
+  if(dentro) participaDentro(); else participaFuera();
+  var raiz=document.documentElement;
+  if(dentro && !document.fullscreenElement && raiz.requestFullscreen){
+    try{ var pr=raiz.requestFullscreen(); if(pr && pr.catch) pr.catch(function(){}); }catch(x){}
+  }else if(!dentro && document.fullscreenElement && document.exitFullscreen){
+    try{ document.exitFullscreen(); }catch(x){}
+  }
+}
+$('btnFull').addEventListener('click', full);
+$('btnFull2').addEventListener('click', full);
+document.addEventListener('fullscreenchange', function(){
+  /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
+  if(!document.fullscreenElement && $('esc').classList.contains('full')) full();
+});
+
+/* ---------- los participantes, flotando en una esquina ---------- */
+function cuentaPart(){
+  var m=$('muro'), n = m ? m.querySelectorAll('.aula-vtna').length : 0;
+  $('nPart').textContent=n;
+  $('salaPart').textContent = n===1 ? 'El aula · 1 participante'
+                                    : 'El aula · '+n+' participantes';
+}
+function participaDentro(){
+  var hoja=$('hojaMuro');
+  if(!hoja || hoja.hidden){ $('flotaPart').hidden=true; $('panelPart').hidden=true; return; }
+  $('nidoPart').appendChild(hoja);
+  hoja.style.margin='0';
+  $('flotaPart').hidden=false;
+  cuentaPart();
+}
+function participaFuera(){
+  var hoja=$('hojaMuro');
+  if(hoja && hoja.parentNode===$('nidoPart')){
+    hoja.style.margin='18px 0 0';
+    $('anclaMuro').appendChild(hoja);
+  }
+  $('flotaPart').hidden=true;
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+}
+$('flotaPart').addEventListener('click', function(){
+  var p=$('panelPart'); p.hidden=!p.hidden;
+  $('flotaPart').setAttribute('aria-expanded', p.hidden?'false':'true');
+  if(!p.hidden) cuentaPart();
+});
+$('cierraPart').addEventListener('click', function(){
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+});
+if(window.MutationObserver && $('muro')){
+  new MutationObserver(function(){ if(!$('flotaPart').hidden) cuentaPart(); })
+    .observe($('muro'), {childList:true, subtree:true});
+}
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    if(e.target && e.target.closest && e.target.closest('.cruz')){ x0=null; return; }
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+function ventanaAula(e){
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+function pantalla(e, alumno, cont){
+  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
+    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
+    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+}
+if(window.Aula){
+  Aula.iniciar({ sala:'ANAEF7', codigo:'EEFF', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
+            limpia:function(){ G=vacio(); yaCruz={}; i=0;
+              try{ localStorage.removeItem(LS); }catch(e){}
+              pinta(); } },
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
+      if(dentro){ pinta(); setTimeout(enfoca, 120); }
+      pintaModo();
+      if(doc) difunde();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+                    if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
