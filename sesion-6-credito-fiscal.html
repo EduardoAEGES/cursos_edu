@@ -1890,20 +1890,73 @@ function resumenAula(){
   return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
            rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
 }
+/* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
+function etiActividad(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  return 'A'+(n+1);
+}
+function tituloActividad(n){
+  var k=CLAVES[n], A=k && ACT[k];
+  return (A && A.titulo) ? A.titulo : ('Actividad '+(n+1));
+}
+function diapoDe(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  return 0;
+}
+
 function ventanaAula(e){
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var h='<div class="vmini">'+
-        '<div class="lin"><span>'+esc(e.titulo||'—')+'</span><b>'+esc(e.lamina||'')+'</b></div>'+
-        '<div class="lin"><span>Respuestas correctas</span><b>'+(e.ok||0)+'/'+(e.total||0)+'</b></div>'+
+        '<div class="lin"><span>Va en la diapositiva</span><b>'+esc(e.lamina||'—')+'</b></div>'+
+        '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
+        '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
-    h+='<div class="cel2'+(r.n===r.t?' full':'')+'">A'+(r.b+1)+'<b>'+r.n+'/'+r.t+'</b></div>';
+    var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
+    h+='<div class="cel2'+cl+'" title="'+esc(tituloActividad(r.b))+'">'+
+       '<span>'+esc(etiActividad(r.b))+'</span><b>'+r.n+'/'+r.t+'</b></div>';
   });
   return h+'</div></div>';
 }
+
 function pantalla(e, alumno, cont){
-  cont.innerHTML='<div style="padding:14px"><h3 style="margin:0 0 8px">'+esc(alumno||'')+'</h3>'+
-    '<p style="margin:0 0 10px">Diapositiva <b>'+esc(e.lamina||'')+'</b> · '+esc(e.titulo||'')+'</p>'+
-    '<p style="margin:0">Respuestas correctas: <b>'+(e.ok||0)+' de '+(e.total||0)+'</b></p></div>';
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
+  var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
+  var h='<div class="apdet">'+
+    '<div class="apcab">'+
+      '<span class="dato">Alumno<b>'+esc(alumno||'—')+'</b></span>'+
+      '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
+      '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
+      '<span class="dato">Avance<b>'+ok+' de '+tot+' · '+pct+' %</b></span>'+
+    '</div>'+
+    '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
+    '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
+      '<th>Avance</th><th class="n">Estado</th></tr></thead><tbody>';
+  (e.rejilla||[]).forEach(function(r){
+    var p = r.t ? Math.round(r.n/r.t*100) : 0;
+    var lleno = r.t && r.n>=r.t;
+    var cl = lleno ? ' class="ok"' : (r.n ? '' : ' class="nada"');
+    var dia = diapoDe(r.b);
+    h+='<tr'+cl+(dia===aqui?' data-aqui="1"':'')+'>'+
+       '<td>'+(dia||'—')+'</td>'+
+       '<td>'+esc(tituloActividad(r.b))+(dia===aqui?' &nbsp;<b style="color:#16307A">· aquí está</b>':'')+'</td>'+
+       '<td class="n">'+r.n+' / '+r.t+'</td>'+
+       '<td class="mini"><span><i style="width:'+p+'%"></i></span></td>'+
+       '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
+       '</tr>';
+  });
+  h+='</tbody></table>'+
+     '<div class="apacc"><button type="button" class="o-btn o-btn-secondary" id="apSaca">'+
+     '&#10005; Sacar de la sala a '+esc(alumno||'')+'</button></div>'+
+     '</div>';
+  cont.innerHTML=h;
+  var b=cont.querySelector('#apSaca');
+  if(b) b.addEventListener('click', function(){
+    if(window.Aula && Aula.saca) Aula.saca(alumno);
+  });
 }
 if(window.Aula){
   Aula.iniciar({ sala:'CREDF6', codigo:'SPC', resumen:resumenAula, ventana:ventanaAula,
