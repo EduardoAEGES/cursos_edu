@@ -85,6 +85,39 @@
   .cab .bts.on{ background:#FFD166; color:var(--marino); border-color:transparent; }
   .cab .bts:hover{ background:rgba(255,209,102,.85); color:var(--marino); border-color:transparent; }
   @media (max-width:860px){ .cab .bts .tx{ display:none; } .cab .bts{ padding:6px 9px; } }
+  /* ---------- diagrama de flujo del diagnóstico ---------- */
+  .ruta{ border:2px dashed var(--linea); border-radius:14px; background:#fff; padding:16px 18px;
+         margin:16px 0 0; }
+  .ruta > h4{ margin:0 0 4px; font-size:21px; font-weight:800; color:var(--tinta); }
+  .ruta > p.su{ margin:0 0 14px; font-size:18px; color:#55607F; font-weight:600; }
+  .ruta .via2{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
+  .ruta .nodo{ flex:1 1 170px; min-width:0; border:2px solid var(--linea); border-radius:12px;
+               padding:11px 13px; background:#F7F9FE; display:flex; flex-direction:column; gap:8px; }
+  .ruta .nodo.act{ border-color:var(--fucsia); background:#fff; box-shadow:0 0 0 4px rgba(252,0,69,.12); }
+  .ruta .nodo.si{ border-color:var(--verde); background:#EAF7F7; }
+  .ruta .nodo.no{ border-color:#C9A227; background:#FFFBEA; }
+  .ruta .nodo .pg{ font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+                   color:#8A93AC; }
+  .ruta .nodo .tx{ font-size:18px; font-weight:700; line-height:1.4; color:var(--tinta); flex:1; }
+  .ruta .nodo .bt{ display:flex; gap:7px; }
+  .ruta .nodo .bt button{ flex:1; font:inherit; font-size:16px; font-weight:800; cursor:pointer;
+                          border:2px solid var(--linea); background:#fff; color:var(--tinta);
+                          border-radius:9px; padding:7px 4px; }
+  .ruta .nodo .bt button:hover{ border-color:var(--marino); background:#EEF3FC; }
+  .ruta .nodo .ver{ font-size:17px; font-weight:800; }
+  .ruta .nodo.si .ver{ color:var(--verde); } .ruta .nodo.no .ver{ color:#8A6A00; }
+  .ruta .fle{ flex:0 0 26px; display:flex; align-items:center; justify-content:center;
+              color:#B9C2D8; font-size:22px; font-weight:800; }
+  @media (max-width:860px){
+    .ruta .via2{ flex-direction:column; } .ruta .fle{ flex:none; height:22px; transform:rotate(90deg); }
+  }
+  .ruta .fin{ margin-top:14px; border-radius:12px; padding:13px 16px; font-size:19px; line-height:1.5;
+              border:2px solid var(--linea); background:#F7F9FE; color:var(--tinta); }
+  .ruta .fin b{ display:block; font-size:22px; margin-bottom:3px; }
+  .ruta .fin.v1{ border-color:var(--verde); background:#EAF7F7; } .ruta .fin.v1 b{ color:var(--verde); }
+  .ruta .fin.v2{ border-color:#C9A227; background:#FFFBEA; } .ruta .fin.v2 b{ color:#8A6A00; }
+  .ruta .fin.v3{ border-color:var(--fucsia); background:#FFF1F4; } .ruta .fin.v3 b{ color:var(--fucsia); }
+  .ruta .otra{ margin-top:12px; }
   .solu{ border:2px solid #C9A227; border-radius:12px; overflow:hidden; background:#FFFDF5;
          margin:16px 0 0; }
   .solu > h5{ margin:0; background:#C9A227; color:#2B2000; font-size:17px; font-weight:800;
@@ -169,18 +202,20 @@
 
   /* ---------- personajes ---------- */
   .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
-  .perso img{ flex:none; width:152px; height:auto; max-height:232px; object-fit:contain; display:block; }
+  /* se miden por altura: los personajes tienen proporciones muy distintas */
+  .perso img{ flex:none; height:clamp(150px,20vh,215px); width:auto; max-width:34%;
+              object-fit:contain; display:block; }
   .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
                  border:2px dashed var(--linea); border-left:4px solid var(--rojo);
                  border-radius:4px 12px 12px 4px; padding:13px 17px;
                  font-size:23px; line-height:1.58; color:var(--tinta); margin-bottom:16px; }
   .perso .globo .et{ display:block; font-size:14px; font-weight:800; letter-spacing:.08em;
                      text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
-  .perso.dos{ align-items:flex-end; }
-  .perso.dos img.b{ margin-left:-10px; }
+  .perso.duo{ align-items:flex-end; }
+  .perso.duo img.b{ margin-left:-10px; }
   @media (max-width:620px){
-    .perso{ gap:10px; } .perso img{ width:104px; }
-    .perso.dos img{ width:84px; }
+    .perso{ gap:10px; } .perso img{ height:118px; max-width:30%; }
+    .perso.duo img{ height:104px; }
     .perso .globo{ font-size:21px; padding:12px 14px; }
   }
   .tabenv table.t.chica{ font-size:19px; }
@@ -586,7 +621,7 @@ function globo(img, et, txt){
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }
 function globo2(a, b, et, txt){
-  return '<div class="perso dos"><img src="'+a+'" alt="" loading="lazy">'+
+  return '<div class="perso duo"><img src="'+a+'" alt="" loading="lazy">'+
          '<img class="b" src="'+b+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }
@@ -1122,7 +1157,12 @@ var D=[
     '<tr><td>Endeudamiento</td><td>menos de 60 %</td><td>La deuda no compromete la solvencia</td></tr>'+
     '<tr><td>Cobertura de intereses</td><td>más de 3 veces</td><td>La operación cubre de sobra el costo de la deuda</td></tr>'+
     '<tr class="res"><td>ROE frente al ROA</td><td>ROE mayor</td><td>La deuda está potenciando el retorno del accionista</td></tr>'+
-    '</tbody></table></div>' },
+    '</tbody></table></div>'+
+    '<div class="ruta" id="ruta">'+
+      '<h4>Ruta del diagnóstico</h4>'+
+      '<p class="su">Recorre las cuatro preguntas con los datos de Distribuidora El Progreso y mira a '+
+      'qué conclusión llegas. Se puede volver a empezar las veces que quieras.</p>'+
+      '<div class="via2" id="rutaVia"></div><div id="rutaFin"></div></div>' },
 
 /* 6 ------------------------------------------------------------- */
 { et:'Inversión', t:'Política de inversión', clave:'a5',
@@ -1628,6 +1668,7 @@ function pinta(quieto){
     });
   });
   cablea();
+  if($('rutaVia')) pintaRuta();
   pintaModo();
 }
 
@@ -1930,6 +1971,71 @@ function cableaCruz(k, A, lam){
       }
     });
   });
+}
+
+/* ================= diagrama de flujo del diagnóstico ================= */
+var RUTA=[
+  { pg:'Paso 1 · Liquidez', tx:'¿La razón corriente está entre 1.5 y 2?',
+    si:'1.60: sí', no:'Fuera del rango' },
+  { pg:'Paso 2 · Liquidez fina', tx:'¿La prueba ácida llega a 1?',
+    si:'Llega', no:'0.80: no llega' },
+  { pg:'Paso 3 · Deuda', tx:'¿El endeudamiento se mantiene por debajo del 60 %?',
+    si:'50 %: sí', no:'Lo pasa' },
+  { pg:'Paso 4 · Intereses', tx:'¿La cobertura de intereses supera las 3 veces?',
+    si:'5 veces: sí', no:'No llega' }
+];
+var rutaResp=[];
+function rutaVeredicto(){
+  var liq = rutaResp[0] && rutaResp[1];        /* liquidez holgada */
+  var med = rutaResp[0] && !rutaResp[1];       /* depende del inventario */
+  var deu = rutaResp[2] && rutaResp[3];        /* deuda bajo control */
+  if(liq && deu) return { c:'v1', t:'Posición sólida',
+    d:'Paga sin apretarse y la deuda no la compromete. Es el escenario de política de inversión '+
+      'eficiente y endeudamiento conservador.' };
+  if(med && deu) return { c:'v2', t:'Rentable, pero con la caja justa',
+    d:'La deuda está controlada, pero la liquidez depende de vender los inventarios. Es el caso de '+
+      'Distribuidora El Progreso: hay que ordenar inventarios y apurar las cobranzas antes de invertir más.' };
+  if(liq && !deu) return { c:'v2', t:'Líquida pero endeudada',
+    d:'Hoy puede pagar, pero el peso de la deuda le quita margen. Conviene bajar el endeudamiento '+
+      'antes de que una caída de ventas la alcance.' };
+  return { c:'v3', t:'Alerta: posible crisis financiera',
+    d:'Ni la liquidez ni la deuda acompañan. Es el escenario de política de inversión ineficiente con '+
+      'endeudamiento riesgoso.' };
+}
+function pintaRuta(){
+  var via=$('rutaVia'), fin=$('rutaFin');
+  if(!via) return;
+  var h='';
+  RUTA.forEach(function(p,n){
+    var r=rutaResp[n], hecho=(r!==undefined), activo=(!hecho && rutaResp.length===n);
+    if(n) h+='<span class="fle">&rsaquo;</span>';
+    h+='<div class="nodo'+(hecho?(r?' si':' no'):'')+(activo?' act':'')+'">'+
+       '<span class="pg">'+esc(p.pg)+'</span>'+
+       '<span class="tx">'+esc(p.tx)+'</span>'+
+       (hecho ? '<span class="ver">'+(r?'&#10003; ':'&#10007; ')+esc(r?p.si:p.no)+'</span>'
+              : (activo ? '<span class="bt"><button type="button" data-ruta="'+n+'" data-v="1">Sí</button>'+
+                          '<button type="button" data-ruta="'+n+'" data-v="0">No</button></span>'
+                        : '<span class="ver" style="color:#B9C2D8">—</span>'))+
+       '</div>';
+  });
+  via.innerHTML=h;
+  if(rutaResp.length===RUTA.length){
+    var v=rutaVeredicto();
+    fin.innerHTML='<div class="fin '+v.c+'"><b>'+esc(v.t)+'</b>'+esc(v.d)+'</div>'+
+      '<div class="otra"><button type="button" class="o-btn o-btn-secondary" id="rutaOtra">'+
+      '&#8635; Empezar de nuevo</button></div>';
+  }else{
+    fin.innerHTML='';
+  }
+  qq('#rutaVia button[data-ruta]').forEach(function(b){
+    b.addEventListener('click', function(){
+      rutaResp[+b.dataset.ruta] = (b.dataset.v==='1');
+      if(son) nota(b.dataset.v==='1'?660:420, 0, .1, .045, 'triangle');
+      pintaRuta();
+    });
+  });
+  var otra=$('rutaOtra');
+  if(otra) otra.addEventListener('click', function(){ rutaResp=[]; pintaRuta(); });
 }
 
 /* ================= las respuestas, para el docente ================= */
