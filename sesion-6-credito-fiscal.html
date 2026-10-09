@@ -169,18 +169,20 @@
 
   /* ---------- personajes ---------- */
   .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
-  .perso img{ flex:none; width:152px; height:auto; max-height:232px; object-fit:contain; display:block; }
+  /* se miden por altura: los personajes tienen proporciones muy distintas */
+  .perso img{ flex:none; height:clamp(150px,20vh,215px); width:auto; max-width:34%;
+              object-fit:contain; display:block; }
   .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
                  border:2px dashed var(--linea); border-left:4px solid var(--rojo);
                  border-radius:4px 12px 12px 4px; padding:13px 17px;
                  font-size:23px; line-height:1.58; color:var(--tinta); margin-bottom:16px; }
   .perso .globo .et{ display:block; font-size:14px; font-weight:800; letter-spacing:.08em;
                      text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
-  .perso.dos{ align-items:flex-end; }
-  .perso.dos img.b{ margin-left:-10px; }
+  .perso.duo{ align-items:flex-end; }
+  .perso.duo img.b{ margin-left:-10px; }
   @media (max-width:620px){
-    .perso{ gap:10px; } .perso img{ width:104px; }
-    .perso.dos img{ width:84px; }
+    .perso{ gap:10px; } .perso img{ height:118px; max-width:30%; }
+    .perso.duo img{ height:104px; }
     .perso .globo{ font-size:21px; padding:12px 14px; }
   }
   .tabenv table.t.chica{ font-size:19px; }
@@ -572,7 +574,7 @@ function globo(img, et, txt){
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }
 function globo2(a, b, et, txt){
-  return '<div class="perso dos"><img src="'+a+'" alt="" loading="lazy">'+
+  return '<div class="perso duo"><img src="'+a+'" alt="" loading="lazy">'+
          '<img class="b" src="'+b+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }

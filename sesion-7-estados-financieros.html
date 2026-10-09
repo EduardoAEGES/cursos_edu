@@ -89,11 +89,11 @@
                  font-size:16px; line-height:1.65; color:var(--tinta); margin-bottom:16px; }
   .perso .globo .et{ display:block; font-size:11px; font-weight:800; letter-spacing:.08em;
                      text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
-  .perso.dos{ align-items:flex-end; }
-  .perso.dos img.b{ margin-left:-10px; }
+  .perso.duo{ align-items:flex-end; }
+  .perso.duo img.b{ margin-left:-10px; }
   @media (max-width:620px){
     .perso{ gap:10px; } .perso img{ width:88px; }
-    .perso.dos img{ width:70px; }
+    .perso.duo img{ width:70px; }
     .perso .globo{ font-size:15px; padding:11px 13px; }
   }
   .tabenv table.t.chica{ font-size:14px; }
@@ -336,7 +336,7 @@ function globo(img, et, txt){
 }
 /* como máximo dos personajes por lámina */
 function globo2(imgA, imgB, et, txt){
-  return '<div class="perso dos"><img src="'+imgA+'" alt="" loading="lazy">'+
+  return '<div class="perso duo"><img src="'+imgA+'" alt="" loading="lazy">'+
          '<img class="b" src="'+imgB+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
 }
