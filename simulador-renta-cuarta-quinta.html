@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador de Renta de Cuarta y Quinta Categor&iacute;a</title>
+<title>Sesi&oacute;n 8 - Renta de Cuarta y Quinta Categor&iacute;a</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap">
@@ -138,6 +138,95 @@
   .sim .fuente{ margin:14px 0 0; font-size:15px; color:var(--gris); line-height:1.6; font-weight:600; }
   .sim .fuente a{ color:var(--azul); }
 
+  /* ---------- secciones de teoría y caso ---------- */
+  .sim .nav{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 18px; }
+  .sim .nav a{ text-decoration:none; border:2px solid var(--linea); border-radius:99px;
+               padding:8px 16px; font-size:17px; font-weight:800; color:var(--azul);
+               background:#fff; }
+  .sim .nav a:hover{ background:var(--humo); border-color:var(--azul); }
+  .sim .bloque{ margin-top:30px; padding-top:24px; border-top:3px solid var(--linea); }
+  .sim .tit{ margin:0 0 16px; font-size:clamp(23px,3.2vw,30px); font-weight:900; color:var(--azul);
+             letter-spacing:-.01em; }
+  .sim .sub2{ margin:26px 0 10px; font-size:20px; font-weight:900; color:var(--azul); }
+  .sim .intro{ margin:0 0 10px; font-size:18px; line-height:1.6; }
+  .sim .pie{ margin:9px 0 0; font-size:16px; line-height:1.6; color:var(--gris); font-weight:600; }
+  .sim .dos2{ display:grid; gap:14px; }
+  @media (min-width:820px){ .sim .dos2{ grid-template-columns:1fr 1fr; } }
+  .sim .tar{ border:2px solid var(--linea); border-radius:12px; padding:15px 18px; background:#fff;
+             border-left-width:7px; }
+  .sim .tar.az{ border-left-color:var(--azul); }
+  .sim .tar.ver{ border-left-color:var(--verde); }
+  .sim .tar.nar{ border-left-color:#D4683B; }
+  .sim .tar.mor{ border-left-color:#7A3D9E; }
+  .sim .tar.gri{ border-left-color:var(--gris); background:var(--humo); }
+  .sim .tar h3{ margin:0 0 8px; font-size:19px; font-weight:900; color:var(--azul); }
+  .sim .tar p{ margin:0 0 8px; font-size:18px; line-height:1.6; }
+  .sim .tar p:last-child{ margin-bottom:0; }
+  .sim .tar ul{ margin:0; padding-left:21px; }
+  .sim .tar li{ font-size:18px; line-height:1.55; margin-bottom:6px; }
+  .sim .tar li:last-child{ margin-bottom:0; }
+
+  .sim table.paso4 td{ font-size:18px; vertical-align:middle; }
+  .sim table.paso4 td.p{ width:46px; text-align:center; background:var(--azul); color:#fff;
+                         font-size:23px; font-weight:900; }
+  .sim table.paso4 .op{ color:var(--rojo); font-weight:900; }
+  .sim table.crono th{ text-align:center; } .sim table.crono td{ text-align:center; font-weight:700; }
+  .sim table td small{ display:block; font-size:14px; color:var(--gris); font-weight:700; }
+  .sim table tr.res td{ background:#F2F9F5; font-weight:800; }
+
+  .sim .ficha{ border:2px solid var(--azul); border-radius:12px; overflow:hidden; }
+  .sim .ficha .id{ display:grid; gap:0; background:var(--azul); color:#fff; }
+  @media (min-width:760px){ .sim .ficha .id{ grid-template-columns:repeat(4,1fr); } }
+  .sim .ficha .id span{ padding:11px 16px; border-right:1px solid rgba(255,255,255,.22); }
+  .sim .ficha .id span:last-child{ border-right:0; }
+  .sim .ficha .id small{ display:block; font-size:14px; font-weight:800; letter-spacing:.05em;
+                         text-transform:uppercase; opacity:.78; }
+  .sim .ficha .id b{ font-size:19px; font-weight:900; }
+  .sim .ficha .enc{ margin:0; padding:14px 16px; font-size:19px; font-weight:700; line-height:1.55;
+                    background:var(--humo); }
+
+  .sim details.doc{ border:2px solid var(--linea); border-radius:11px; margin-bottom:10px;
+                    background:#fff; overflow:hidden; }
+  .sim details.doc > summary{ cursor:pointer; padding:12px 16px; font-size:18px; line-height:1.5;
+                              list-style:none; display:flex; flex-wrap:wrap; gap:4px 12px;
+                              align-items:baseline; }
+  .sim details.doc > summary::-webkit-details-marker{ display:none; }
+  .sim details.doc > summary::before{ content:'\25B8'; color:var(--azul); font-weight:900;
+                                      margin-right:6px; }
+  .sim details.doc[open] > summary{ background:var(--humo); border-bottom:1px solid var(--linea); }
+  .sim details.doc[open] > summary::before{ content:'\25BE'; }
+  .sim details.doc summary .tt{ color:var(--gris); font-weight:700; font-size:16px; }
+  .sim details.doc .pie{ padding:0 16px 12px; }
+
+  .sim .f709{ border:2px solid var(--azul); border-radius:12px; overflow:hidden; }
+  .sim .f709h{ display:grid; grid-template-columns:70px minmax(0,1fr) 130px; background:var(--azul);
+               color:#fff; font-size:14px; font-weight:900; letter-spacing:.05em;
+               text-transform:uppercase; }
+  .sim .f709h span{ padding:9px 12px; }
+  .sim .f709h .n{ text-align:right; }
+  .sim .f709r{ display:grid; grid-template-columns:70px minmax(0,1fr) 130px; align-items:center;
+               border-bottom:1px solid var(--linea); font-size:18px; }
+  .sim .f709r > span{ padding:9px 12px; line-height:1.45; }
+  .sim .f709r > b{ padding:9px 12px; text-align:right; font-variant-numeric:tabular-nums;
+                   font-weight:800; white-space:nowrap; }
+  .sim .f709r .c{ font-weight:900; color:var(--azul); font-variant-numeric:tabular-nums;
+                  background:var(--humo); align-self:stretch; display:flex; align-items:center; }
+  .sim .f709r small{ display:block; margin-top:2px; font-size:15px; color:var(--gris);
+                     font-weight:700; }
+  .sim .f709r.st{ background:#F3F5FA; font-weight:800; color:var(--azul); }
+  .sim .f709r.hit{ background:#E7F0FA; font-weight:900; color:var(--azul); font-size:19px;
+                   border-top:2px solid var(--azul); border-bottom:2px solid var(--azul); }
+  .sim .f709r.fis{ background:#FDF0F2; color:var(--rojo); font-weight:900; }
+  .sim .f709r.fis .c{ background:#F8DFE4; color:var(--rojo); }
+  .sim .f709r:last-child{ border-bottom:0; }
+
+  .sim .veredicto{ margin-top:16px; border:2px solid var(--verde); border-radius:12px;
+                   background:#EAF7EF; padding:15px 18px; font-size:19px; line-height:1.6; }
+  .sim .veredicto b{ color:var(--verde); font-weight:900; }
+  .sim .sesion{ background:#fff; color:var(--azul); border-radius:99px; padding:4px 13px;
+                font-size:15px; font-weight:900; letter-spacing:.05em; text-transform:uppercase;
+                display:inline-block; margin-bottom:7px; }
+
   @media print{
     .o-navbar, .o-cp, .sim .acc, .o-acciones, .o-footer{ display:none !important; }
     .sim .lado{ position:static; }
@@ -161,7 +250,7 @@
   <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
   <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> /
     <a href="sistemas-contables-integrados.html">Sistemas Contables Integrados</a></span> /
-    <b>Simulador de renta de cuarta y quinta</b></span>
+    <b>Sesi&oacute;n 8 &mdash; Renta de cuarta y quinta</b></span>
   <div class="o-cp-right"><span class="o-count" id="rotulo">Renta de persona natural</span></div>
 </div>
 
@@ -173,8 +262,9 @@
 
   <div class="capa">
     <div>
-      <h1>Simulador de Renta de Cuarta y Quinta Categor&iacute;a</h1>
-      <p>Renta de persona natural &mdash; rentas de trabajo y de fuente extranjera</p>
+      <span class="sesion">Sesi&oacute;n 8</span>
+      <h1>Renta de Cuarta y Quinta Categor&iacute;a</h1>
+      <p>Teor&iacute;a, simulador y caso pr&aacute;ctico &mdash; rentas de trabajo y de fuente extranjera</p>
     </div>
     <div class="ej">
       <label for="ejercicio">Ejercicio</label>
@@ -189,6 +279,14 @@
   </div>
 
   <div class="cuerpo">
+
+  <div class="nav">
+    <a href="#teoria">Teor&iacute;a b&aacute;sica</a>
+    <a href="#simulador">Simulador</a>
+    <a href="#caso">Caso pr&aacute;ctico</a>
+  </div>
+
+  <section id="simulador">
   <div class="dos">
 
     <!-- ============ datos ============ -->
@@ -309,6 +407,99 @@
 
   </div>
 
+  </section>
+
+<section id="teoria" class="bloque">
+  <h2 class="tit">Teor&iacute;a b&aacute;sica</h2>
+
+  <div class="dos2">
+    <div class="tar az"><h3>Renta de cuarta categor&iacute;a</h3>
+      <p>Lo que gana un <b>trabajador independiente</b> por servicios de cualquier profesi&oacute;n, arte,
+      ciencia u oficio, y por los que emite <b>recibo por honorarios</b>.</p>
+      <p>Tambi&eacute;n entran los ingresos por contrato CAS y las <b>dietas</b> de directores,
+      s&iacute;ndicos, mandatarios, gestores de negocios, albaceas y regidores. Por las dietas no se emite
+      recibo por honorarios y <b>no se aplica la deducci&oacute;n del 20 %</b>.</p></div>
+    <div class="tar ver"><h3>Renta de quinta categor&iacute;a</h3>
+      <p>Lo que gana un <b>trabajador en planilla</b>: sueldos, remuneraciones, gratificaciones,
+      bonificaciones, aguinaldos, comisiones, compensaciones en dinero o en especie, gastos de
+      representaci&oacute;n y, en general, toda retribuci&oacute;n por servicios personales.</p>
+      <p>Las dos juntas forman las <b>rentas de trabajo</b>, y se declaran en un solo formulario.</p></div>
+  </div>
+
+  <h3 class="sub2">El c&aacute;lculo, en cuatro pasos</h3>
+  <div class="tabwrap"><table class="paso4"><tbody>
+    <tr><td class="p">1</td><td><b>Rentas de trabajo</b><br>
+      Renta de cuarta <span class="op">&minus;</span> 20 % de deducci&oacute;n
+      <span class="op">+</span> renta de quinta</td>
+      <td class="n">el 20 % tiene tope de 24 UIT<br><b>S/ 128,400</b></td></tr>
+    <tr><td class="p">2</td><td><b>Deducciones</b><br>
+      Deducci&oacute;n fija de 7 UIT <span class="op">+</span> deducci&oacute;n adicional de hasta 3 UIT</td>
+      <td class="n">7 UIT <b>S/ 37,450</b><br>3 UIT <b>S/ 16,050</b></td></tr>
+    <tr><td class="p">3</td><td><b>Impuesto</b><br>
+      Total de renta de trabajo <span class="op">&times;</span> la tasa que corresponda</td>
+      <td class="n">8 %, 14 %, 17 %,<br>20 % y 30 %</td></tr>
+    <tr><td class="p">4</td><td><b>Resultado</b><br>
+      Impuesto <span class="op">&minus;</span> retenciones <span class="op">&minus;</span> pagos directos</td>
+      <td class="n">impuesto por pagar o<br>saldo a favor por devolver</td></tr>
+  </tbody></table></div>
+  <p class="pie">Valores del ejercicio 2025, con la UIT en S/ 5,350. El ITF, las donaciones y la renta de
+  fuente extranjera entran entre el paso 2 y el paso 3; el simulador de arriba los toma en cuenta.</p>
+
+  <h3 class="sub2">Los gastos que entran en la deducci&oacute;n adicional de 3 UIT</h3>
+  <div class="tabwrap"><table><thead><tr><th>Gasto</th><th class="n">Se deduce</th>
+    <th>Con qu&eacute; se sustenta</th></tr></thead><tbody>
+    <tr><td>&#127968; Arrendamiento o subarrendamiento de inmuebles</td><td class="n">30 %</td>
+      <td>Formulario N.&deg; 1683 si el arrendador es persona natural; factura electr&oacute;nica si es empresa</td></tr>
+    <tr><td>&#129489;&#8205;&#128295; Servicios de toda profesi&oacute;n, arte, ciencia u oficio</td><td class="n">30 %</td>
+      <td>Solo con recibo por honorarios electr&oacute;nico. No entran las dietas</td></tr>
+    <tr><td>&#129658; Servicios de m&eacute;dicos y odont&oacute;logos</td><td class="n">30 %</td>
+      <td>Solo con recibo por honorarios electr&oacute;nico. Tambi&eacute;n valen los del c&oacute;nyuge y los hijos</td></tr>
+    <tr><td>&#127858; Hoteles y restaurantes</td><td class="n">15 %</td>
+      <td>Boleta de venta electr&oacute;nica, ticket POS o monedero, con tu DNI o RUC registrado</td></tr>
+    <tr class="res"><td>&#128106; Aportaci&oacute;n a EsSalud de trabajadores del hogar</td><td class="n">100 %</td>
+      <td>Constancia del Formulario N.&deg; 1676</td></tr>
+  </tbody></table></div>
+
+  <div class="dos2">
+    <div class="tar nar"><h3>Para que el gasto cuente</h3>
+      <ul>
+        <li>Tener el <b>documento que lo sustenta</b>.</li>
+        <li>El emisor debe estar <b>activo</b> y <b>habido</b> al 31/12/2025.</li>
+        <li>Si es hotel o restaurante, con el <b>CIIU actualizado</b>: 55 para hospedajes, 56 para
+          restaurantes, bares y cantinas.</li>
+        <li>Si el pago es de <b>S/ 2,000 o US$ 500 a m&aacute;s</b>, hay que usar medio de pago:
+          tarjeta, cheque o dep&oacute;sito en cuenta.</li>
+      </ul></div>
+    <div class="tar mor"><h3>Qui&eacute;nes declaran</h3>
+      <ul>
+        <li>Los que les sale <b>saldo por pagar</b> despu&eacute;s de restar pagos a cuenta y
+          cr&eacute;ditos.</li>
+        <li>Los que <b>arrastran saldo a favor</b> de a&ntilde;os anteriores y lo aplican.</li>
+        <li>Los que determinan <b>saldo a favor</b> por rentas de cuarta, de cuarta y quinta, o sumadas
+          a rentas de fuente extranjera.</li>
+        <li>Los que <b>atribuyen gastos</b> de arrendamiento a su c&oacute;nyuge o concubino.</li>
+        <li>Los de <b>solo quinta categor&iacute;a</b> a los que les sale saldo a favor por gastos de
+          arrendamiento.</li>
+      </ul></div>
+  </div>
+
+  <h3 class="sub2">Cu&aacute;ndo se declara el ejercicio 2025</h3>
+  <p class="intro">El Formulario Virtual N.&deg; 709 est&aacute; disponible desde el <b>31 de marzo de
+  2026</b> y vence seg&uacute;n el &uacute;ltimo d&iacute;gito del RUC.</p>
+  <div class="tabwrap"><table class="crono"><thead><tr>
+    <th class="n">&Uacute;ltimo d&iacute;gito</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th>
+    <th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>BC</th></tr></thead><tbody>
+    <tr><td class="n">Vence</td><td>27 may</td><td>28 may</td><td>29 may</td><td>1 jun</td><td>2 jun</td>
+    <td>3 jun</td><td>4 jun</td><td>5 jun</td><td>8 jun</td><td>9 jun</td><td>10 jun</td></tr>
+  </tbody></table></div>
+  <p class="pie">Todas de 2026. BC son los buenos contribuyentes y los sujetos no obligados a inscribirse
+  en el RUC. Si sale saldo a favor, la devoluci&oacute;n se pide con el Formulario Virtual N.&deg; 1649;
+  si sale importe por pagar, se puede fraccionar con el Formulario Virtual N.&deg; 687.</p>
+</section>
+
+
+  <section id="comosecalcula" class="bloque">
+  <h2 class="tit">C&oacute;mo trabaja el simulador</h2>
   <div class="pasos">
     <div class="paso"><h4>Paso 1 &mdash; Renta neta de cuarta y quinta</h4>
       <p>A la renta bruta de cuarta categor&iacute;a de la casilla 107 se le resta el 20 %, hasta un
@@ -341,6 +532,193 @@
   <code>impuesto calculado &divide; (renta neta del trabajo + renta neta de fuente extranjera + 7 UIT + 3 UIT) &times; 100</code>,
   y el cr&eacute;dito no puede pasar de esa tasa media aplicada sobre la renta de fuente extranjera.
   El exceso no se usa ni se arrastra al a&ntilde;o siguiente.</p>
+  </section>
+
+<section id="caso" class="bloque">
+  <h2 class="tit">Caso pr&aacute;ctico</h2>
+
+  <div class="ficha">
+    <div class="id">
+      <span><small>Apellidos y nombres</small><b>Mart&iacute;nez Ayala, Edilberto</b></span>
+      <span><small>Profesi&oacute;n</small><b>Community Manager</b></span>
+      <span><small>RUC</small><b>10463698526</b></span>
+      <span><small>Periodo a declarar</small><b>2025</b></span>
+    </div>
+    <p class="enc">Determinar si debe presentar la Declaraci&oacute;n Jurada Anual del Impuesto a la Renta
+    y si le queda saldo pendiente por pagar.</p>
+  </div>
+
+  <h3 class="sub2">Los documentos del a&ntilde;o</h3>
+  <p class="intro">Abre cada bloque para ver el detalle. Lo que importa para el formulario son los
+  totales.</p>
+<details class="doc"><summary><b>Boletas de pago del empleador</b> <span class="tt">12 boletas &middot; renta bruta S/ 47,852.20 &middot; retenido S/ 844.00</span></summary><div class="tabwrap"><table><thead><tr><th>Periodo</th><th class="n">N.&deg; de boleta</th><th class="n">Remuneraci&oacute;n bruta</th><th class="n">Retenci&oacute;n de 5.&ordf;</th></tr></thead><tbody>
+<tr><td>Enero 2025</td><td class="n">687</td><td class="n">3,400.00</td><td class="n">76.00</td></tr>
+<tr><td>Febrero 2025</td><td class="n">712</td><td class="n">3,551.20</td><td class="n">71.00</td></tr>
+<tr><td>Marzo 2025</td><td class="n">740</td><td class="n">3,400.00</td><td class="n">67.00</td></tr>
+<tr><td>Abril 2025</td><td class="n">765</td><td class="n">3,400.00</td><td class="n">66.00</td></tr>
+<tr><td>Mayo 2025</td><td class="n">793</td><td class="n">3,370.50</td><td class="n">70.00</td></tr>
+<tr><td>Junio 2025</td><td class="n">817</td><td class="n">3,400.00</td><td class="n">65.00</td></tr>
+<tr><td>Julio 2025</td><td class="n">841</td><td class="n">6,820.40</td><td class="n">74.00</td></tr>
+<tr><td>Agosto 2025</td><td class="n">868</td><td class="n">3,400.00</td><td class="n">70.00</td></tr>
+<tr><td>Septiembre 2025</td><td class="n">895</td><td class="n">3,400.00</td><td class="n">67.00</td></tr>
+<tr><td>Octubre 2025</td><td class="n">921</td><td class="n">3,400.00</td><td class="n">76.00</td></tr>
+<tr><td>Noviembre 2025</td><td class="n">945</td><td class="n">3,400.00</td><td class="n">65.00</td></tr>
+<tr><td>Diciembre 2025</td><td class="n">973</td><td class="n">6,910.10</td><td class="n">77.00</td></tr>
+<tr class="tot"><td colspan="2">Total</td><td class="n">47,852.20</td><td class="n">844.00</td></tr></tbody></table></div></details>
+<details class="doc"><summary><b>Recibos por honorarios emitidos</b> <span class="tt">17 recibos &middot; S/ 17,807.00 &middot; retenido S/ 417.60 &middot; pagos a cuenta S/ 513.04</span></summary><div class="tabwrap"><table><thead><tr><th class="n">Fecha</th><th class="n">Serie-N.&deg;</th><th>Usuario del servicio</th><th class="n">Importe</th><th class="n">Retenci&oacute;n</th><th class="n">Pago a cuenta</th></tr></thead><tbody>
+<tr><td class="n">12/01/2025</td><td class="n">E001-145</td><td>Soluciones Integrales S.A.C. <small>RUC 20198765432</small></td><td class="n">1,923.00</td><td class="n">153.84</td><td class="n">—</td></tr>
+<tr><td class="n">02/03/2025</td><td class="n">E001-146</td><td>Herrera Mamani, Esteban <small>DNI 45632145</small></td><td class="n">102.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">22/04/2025</td><td class="n">E001-147</td><td>Innovaciones Delta S.A. <small>RUC 20543210987</small></td><td class="n">183.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">21/05/2025</td><td class="n">E001-148</td><td>GlobalTech S.A.C. <small>RUC 20476543210</small></td><td class="n">985.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">02/07/2025</td><td class="n">E001-149</td><td>Aguilar Ccahuana, Mirella <small>DNI 78965478</small></td><td class="n">1,196.00</td><td class="n">—</td><td class="n">95.68</td></tr>
+<tr><td class="n">29/07/2025</td><td class="n">E001-150</td><td>Desarrollo Empresarial S.A. <small>RUC 20398765432</small></td><td class="n">1,796.00</td><td class="n">143.68</td><td class="n">—</td></tr>
+<tr><td class="n">30/07/2025</td><td class="n">E001-151</td><td>Quispe Condori, Néstor <small>DNI 45698765</small></td><td class="n">1,200.00</td><td class="n">—</td><td class="n">96.00</td></tr>
+<tr><td class="n">09/08/2025</td><td class="n">E001-152</td><td>Corporación Andina EIRL <small>RUC 20567890145</small></td><td class="n">715.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">11/08/2025</td><td class="n">E001-153</td><td>Grupo Empresarial Sigma S.A.C. <small>RUC 20287654321</small></td><td class="n">586.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">17/08/2025</td><td class="n">E001-154</td><td>Innovatech Perú S.A. <small>RUC 20123459876</small></td><td class="n">1,069.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">19/08/2025</td><td class="n">E001-155</td><td>Mendoza Ugarte, Lisbeth <small>DNI 78912378</small></td><td class="n">1,017.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">24/08/2025</td><td class="n">E001-156</td><td>Consultores Estratégicos EIRL <small>RUC 20654321098</small></td><td class="n">326.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">02/09/2025</td><td class="n">E001-157</td><td>Ramos Ticona, Eugenia <small>DNI 45678932</small></td><td class="n">3,010.00</td><td class="n">—</td><td class="n">240.80</td></tr>
+<tr><td class="n">17/09/2025</td><td class="n">E001-158</td><td>Juan Carlos Fernández <small>Sin doc. —</small></td><td class="n">1,007.00</td><td class="n">—</td><td class="n">80.56</td></tr>
+<tr><td class="n">14/10/2025</td><td class="n">E001-159</td><td>Crecimiento Global S.A. <small>RUC 20567843221</small></td><td class="n">344.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td class="n">30/10/2025</td><td class="n">E001-160</td><td>Desarrollo y Expansión S.A.C. <small>RUC 20456712345</small></td><td class="n">1,501.00</td><td class="n">120.08</td><td class="n">—</td></tr>
+<tr><td class="n">17/11/2025</td><td class="n">E001-161</td><td>Cárdenas Salcedo, Iván <small>DNI 78945678</small></td><td class="n">847.00</td><td class="n">—</td><td class="n">—</td></tr>
+<tr class="tot"><td colspan="3">Total</td><td class="n">17,807.00</td><td class="n">417.60</td><td class="n">513.04</td></tr></tbody></table></div><p class="pie">Los recibos de hasta S/ 1,500 emitidos a una empresa no llevan retenci&oacute;n. Cuando el que paga no es agente de retenci&oacute;n, el 8 % lo declara y lo paga el propio trabajador como pago a cuenta.</p></details>
+<details class="doc"><summary><b>Recibos por honorarios de m&eacute;dicos y odont&oacute;logos</b> <span class="tt">5 recibos &middot; S/ 2,184.00 &middot; deducible al 30 %: S/ 655.20</span></summary><div class="tabwrap"><table><thead><tr><th class="n">Fecha</th><th class="n">Serie-N.&deg;</th><th>Profesional</th><th class="n">Importe</th><th class="n">Deducible 30 %</th></tr></thead><tbody>
+<tr><td class="n">18/01/2025</td><td class="n">E001-140</td><td>Flores Gutiérrez, Valeria <small>RUC 10113769380</small></td><td class="n">346.00</td><td class="n">103.80</td></tr>
+<tr><td class="n">03/03/2025</td><td class="n">E001-53</td><td>Ortega Campos, Javier <small>RUC 10918907537</small></td><td class="n">284.00</td><td class="n">85.20</td></tr>
+<tr><td class="n">10/04/2025</td><td class="n">E001-74</td><td>Ortega Campos, Javier <small>RUC 10918907537</small></td><td class="n">1,124.00</td><td class="n">337.20</td></tr>
+<tr><td class="n">03/06/2025</td><td class="n">E001-102</td><td>Ortega Campos, Javier <small>RUC 10918907537</small></td><td class="n">247.00</td><td class="n">74.10</td></tr>
+<tr><td class="n">08/12/2025</td><td class="n">E001-290</td><td>Flores Gutiérrez, Valeria <small>RUC 10113769380</small></td><td class="n">183.00</td><td class="n">54.90</td></tr>
+<tr class="tot"><td colspan="3">Total</td><td class="n">2,184.00</td><td class="n">655.20</td></tr></tbody></table></div></details>
+<details class="doc"><summary><b>Formulario N.&deg; 1676 &mdash; EsSalud de trabajadora del hogar</b> <span class="tt">12 pagos &middot; S/ 1,231.20 &middot; deducible al 100 %: S/ 1,231.20</span></summary><div class="tabwrap"><table><thead><tr><th>Periodo</th><th class="n">Fecha de pago</th><th class="n">N.&deg; de formulario</th><th>Trabajadora</th><th class="n">Importe</th><th class="n">Deducible 100 %</th></tr></thead><tbody>
+<tr><td>Enero 2025</td><td class="n">13/02/2025</td><td class="n">204149758</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Febrero 2025</td><td class="n">14/03/2025</td><td class="n">201281915</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Marzo 2025</td><td class="n">13/04/2025</td><td class="n">208661775</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Abril 2025</td><td class="n">13/05/2025</td><td class="n">208649653</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Mayo 2025</td><td class="n">12/06/2025</td><td class="n">203704445</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Junio 2025</td><td class="n">12/07/2025</td><td class="n">203160265</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Julio 2025</td><td class="n">11/08/2025</td><td class="n">201249901</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Agosto 2025</td><td class="n">10/09/2025</td><td class="n">201685911</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Septiembre 2025</td><td class="n">10/10/2025</td><td class="n">205403832</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Octubre 2025</td><td class="n">09/11/2025</td><td class="n">208104270</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Noviembre 2025</td><td class="n">09/12/2025</td><td class="n">206589652</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr><td>Diciembre 2025</td><td class="n">08/01/2026</td><td class="n">205930226</td><td>Valenzuela Gonzales, Mar&iacute;a <small>DNI 74596584</small></td><td class="n">102.60</td><td class="n">102.60</td></tr>
+<tr class="tot"><td colspan="4">Total</td><td class="n">1,231.20</td><td class="n">1,231.20</td></tr></tbody></table></div></details>
+<details class="doc"><summary><b>Boletas de venta de hoteles y restaurantes</b> <span class="tt">8 boletas &middot; S/ 514.00 &middot; deducible al 15 %: S/ 77.10</span></summary><div class="tabwrap"><table><thead><tr><th class="n">Fecha</th><th class="n">Serie-N.&deg;</th><th>Establecimiento</th><th class="n">Importe</th><th class="n">Deducible 15 %</th></tr></thead><tbody>
+<tr><td class="n">07/01/2025</td><td class="n">EB01-639</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">67.00</td><td class="n">10.05</td></tr>
+<tr><td class="n">22/02/2025</td><td class="n">FE01-140</td><td>Gourmet &amp; Tradición S.R.L.</td><td class="n">35.00</td><td class="n">5.25</td></tr>
+<tr><td class="n">12/04/2025</td><td class="n">FE01-489</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">80.00</td><td class="n">12.00</td></tr>
+<tr><td class="n">29/05/2025</td><td class="n">FA01-360</td><td>Gourmet &amp; Tradición S.R.L.</td><td class="n">89.00</td><td class="n">13.35</td></tr>
+<tr><td class="n">15/07/2025</td><td class="n">EB01-665</td><td>Gourmet &amp; Tradición S.R.L.</td><td class="n">15.00</td><td class="n">2.25</td></tr>
+<tr><td class="n">13/09/2025</td><td class="n">EB01-579</td><td>Corporación Gastronómica del Perú S.A.C.</td><td class="n">97.00</td><td class="n">14.55</td></tr>
+<tr><td class="n">31/10/2025</td><td class="n">EB01-643</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">82.00</td><td class="n">12.30</td></tr>
+<tr><td class="n">26/12/2025</td><td class="n">FE01-284</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">49.00</td><td class="n">7.35</td></tr>
+<tr class="tot"><td colspan="3">Total</td><td class="n">514.00</td><td class="n">77.10</td></tr></tbody></table></div></details>
+  <div class="tar gri" style="margin-top:14px">
+    <h3>ITF pagado en el ejercicio</h3>
+    <p>El Impuesto a las Transacciones Financieras retenido en sus cuentas durante el a&ntilde;o suma
+    <b>S/ 42.30</b>. Se deduce porque tiene rentas de cuarta categor&iacute;a.</p>
+  </div>
+
+  <h3 class="sub2">La soluci&oacute;n en el Formulario Virtual N.&deg; 709</h3>
+  <p class="intro">Secci&oacute;n determinativa, rentas de trabajo y fuente extranjera, ejercicio 2025
+  con la UIT en S/ 5,350.</p>
+
+  <div class="f709">
+    <div class="f709h"><span>Casilla</span><span>Concepto</span><span class="n">Importe S/</span></div>
+    <div class="f709r"><span class="c">107</span><span>Renta bruta obtenida por el ejercicio individual
+      de profesi&oacute;n, arte, ciencia u oficio<small>total de los recibos por honorarios</small></span>
+      <b>17,807.00</b></div>
+    <div class="f709r"><span class="c">507</span><span>Deducci&oacute;n del 20 % de la casilla 107
+      <small>tope de 24 UIT: S/ 128,400</small></span><b>3,561.40</b></div>
+    <div class="f709r"><span class="c">508</span><span>Renta neta obtenida por el ejercicio individual
+      <small>casilla 107 &minus; casilla 507</small></span><b>14,245.60</b></div>
+    <div class="f709r"><span class="c">108</span><span>Otras rentas de cuarta categor&iacute;a
+      <small>dietas y similares: no tuvo</small></span><b>0.00</b></div>
+    <div class="f709r st"><span class="c">509</span><span>Total de rentas de cuarta categor&iacute;a
+      <small>casilla 508 + casilla 108</small></span><b>14,245.60</b></div>
+    <div class="f709r"><span class="c">111</span><span>Total de rentas de quinta categor&iacute;a
+      <small>remuneraci&oacute;n bruta de las doce boletas</small></span><b>47,852.20</b></div>
+    <div class="f709r st"><span class="c">510</span><span>Total de rentas de cuarta y quinta
+      categor&iacute;a<small>casilla 509 + casilla 111</small></span><b>62,097.80</b></div>
+    <div class="f709r"><span class="c">511</span><span>Deducci&oacute;n de 7 UIT
+      <small>7 &times; 5,350, hasta el l&iacute;mite de la casilla 510</small></span><b>37,450.00</b></div>
+    <div class="f709r"><span class="c">514</span><span>Deducci&oacute;n adicional de hasta 3 UIT
+      <small>655.20 de m&eacute;dicos + 1,231.20 de EsSalud + 77.10 de restaurantes &middot;
+      muy por debajo del tope de S/ 16,050</small></span><b>1,963.50</b></div>
+    <div class="f709r st"><span class="c">512</span><span>Total de renta neta de cuarta y quinta
+      categor&iacute;a<small>casilla 510 &minus; casilla 511 &minus; casilla 514</small></span>
+      <b>22,684.30</b></div>
+    <div class="f709r"><span class="c">522</span><span>Deducci&oacute;n por ITF</span><b>42.30</b></div>
+    <div class="f709r"><span class="c">519</span><span>Deducciones por donaciones</span><b>0.00</b></div>
+    <div class="f709r st"><span class="c">513</span><span>Subtotal
+      <small>casilla 512 &minus; (casilla 522 + casilla 519)</small></span><b>22,642.00</b></div>
+    <div class="f709r"><span class="c">116</span><span>Renta neta de fuente extranjera</span><b>0.00</b></div>
+    <div class="f709r hit"><span class="c">517</span><span>Total de renta imponible de trabajo y fuente
+      extranjera<small>casilla 513 + casilla 116</small></span><b>22,642.00</b></div>
+  </div>
+
+  <h3 class="sub2">La tasa del impuesto</h3>
+  <div class="tabwrap"><table><thead><tr><th>Tramo</th><th class="n">Desde</th><th class="n">Hasta</th>
+    <th class="n">Renta de trabajo</th><th class="n">Tasa</th><th class="n">Impuesto</th>
+    </tr></thead><tbody>
+    <tr class="usa"><td>Hasta 5 UIT</td><td class="n">0.00</td><td class="n">26,750.00</td>
+      <td class="n">22,642.00</td><td class="n">8 %</td><td class="n">1,811.36</td></tr>
+    <tr><td>M&aacute;s de 5 hasta 20 UIT</td><td class="n">26,750.00</td><td class="n">107,000.00</td>
+      <td class="n">0.00</td><td class="n">14 %</td><td class="n">0.00</td></tr>
+    <tr class="tot"><td colspan="3">Impuesto calculado &middot; casilla 120</td>
+      <td class="n">22,642.00</td><td class="n"></td><td class="n">1,811.36</td></tr>
+  </tbody></table></div>
+  <p class="pie">Toda la renta imponible cabe en el primer tramo, porque 22,642 es menor que las
+  5 UIT del a&ntilde;o, que son S/ 26,750. Los tramos de 14 %, 17 %, 20 % y 30 % quedan en cero.</p>
+
+  <h3 class="sub2">Los cr&eacute;ditos y el resultado</h3>
+  <div class="f709">
+    <div class="f709r"><span class="c">120</span><span>Impuesto a la renta calculado</span><b>1,811.36</b></div>
+    <div class="f709r"><span class="c">127</span><span>Pago directo del impuesto a la renta de cuarta
+      categor&iacute;a<small>lo que declar&oacute; y pag&oacute; &eacute;l mismo mes a mes</small></span>
+      <b>&minus;513.04</b></div>
+    <div class="f709r"><span class="c">130</span><span>Impuesto retenido sobre rentas de cuarta
+      categor&iacute;a<small>el 8 % que le retuvieron en los recibos</small></span><b>&minus;417.60</b></div>
+    <div class="f709r"><span class="c">131</span><span>Impuesto retenido sobre rentas de quinta
+      categor&iacute;a<small>lo que le descont&oacute; el empleador en planilla</small></span>
+      <b>&minus;844.00</b></div>
+    <div class="f709r st"><span class="c"></span><span>Total de impuesto ya pagado</span><b>1,774.64</b></div>
+    <div class="f709r fis"><span class="c">142</span><span>Saldo a favor del fisco</span><b>36.72</b></div>
+    <div class="f709r fis"><span class="c">168</span><span>Importe a pagar
+      <small>redondeado a soles</small></span><b>37.00</b></div>
+  </div>
+
+  <div class="veredicto">
+    <b>S&iacute; est&aacute; obligado a declarar.</b> Le sale saldo por pagar despu&eacute;s de restar
+    los pagos a cuenta y las retenciones, y ese es el primer supuesto de obligaci&oacute;n. Presenta el
+    Formulario Virtual N.&deg; 709 y paga <b>S/ 37</b>.
+  </div>
+
+  <div class="acc" style="margin-top:16px">
+    <button type="button" class="b pri" id="bCaso">Cargar este caso en el simulador</button>
+  </div>
+
+  <h3 class="sub2">Qu&eacute; cambi&oacute; respecto del 2024</h3>
+  <p class="intro">Los mismos documentos, declarados un a&ntilde;o antes, daban otro resultado. Lo
+  &uacute;nico que se movi&oacute; fue la UIT.</p>
+  <div class="tabwrap"><table><thead><tr><th>Concepto</th><th class="n">2024 &middot; UIT 5,150</th>
+    <th class="n">2025 &middot; UIT 5,350</th><th class="n">Diferencia</th></tr></thead><tbody>
+    <tr><td>Deducci&oacute;n de 7 UIT</td><td class="n">36,050.00</td><td class="n">37,450.00</td>
+      <td class="n">+1,400.00</td></tr>
+    <tr><td>Renta imponible</td><td class="n">24,042.00</td><td class="n">22,642.00</td>
+      <td class="n">&minus;1,400.00</td></tr>
+    <tr><td>Impuesto calculado</td><td class="n">1,923.36</td><td class="n">1,811.36</td>
+      <td class="n">&minus;112.00</td></tr>
+    <tr class="res"><td>Importe a pagar</td><td class="n">149.00</td><td class="n">37.00</td>
+      <td class="n">&minus;112.00</td></tr>
+  </tbody></table></div>
+  <p class="pie">Cuando sube la UIT sube la deducci&oacute;n fija, baja la renta imponible y baja el
+  impuesto. Son S/ 112 menos por los S/ 1,400 que creci&oacute; la deducci&oacute;n: el 8 % del primer
+  tramo.</p>
+</section>
+
 
   <p class="fuente">Copia del
   <a href="https://renta.sunat.gob.pe/simuladores/cuarta_quinta" target="_blank" rel="noopener">simulador
@@ -348,8 +726,12 @@
   c&aacute;lculo, las deducciones y la escala siguen la cartilla de instrucciones de rentas de trabajo
   de SUNAT y el art&iacute;culo 53 de la Ley del Impuesto a la Renta. Valores de la UIT:
   2023 S/&nbsp;4,950 &mdash; 2024 S/&nbsp;5,150 &mdash; 2025 S/&nbsp;5,350 &mdash;
-  2026 S/&nbsp;5,500 (D.S.&nbsp;301-2025-EF). Es una herramienta de apoyo para aprender el
-  c&aacute;lculo: no reemplaza a la declaraci&oacute;n anual ni al simulador oficial.</p>
+  2026 S/&nbsp;5,500 (D.S.&nbsp;301-2025-EF). La teor&iacute;a resume la cartilla de instrucciones
+  <i>Rentas de Trabajo &mdash; Declara y paga Renta 2025</i> de SUNAT. El caso pr&aacute;ctico es el del
+  archivo de clase <i>Soluci&oacute;n &mdash; Renta de Trabajo &mdash; Formulario 709</i>, con los mismos
+  documentos y los mismos importes, trasladado del ejercicio 2024 al 2025: lo &uacute;nico que
+  cambi&oacute; es la UIT, y con ella la deducci&oacute;n de 7 UIT. Es una herramienta de apoyo para
+  aprender el c&aacute;lculo: no reemplaza a la declaraci&oacute;n anual ni al simulador oficial.</p>
 
 </div>
 </div>
@@ -564,6 +946,16 @@ $('bEj').addEventListener('click', function(){
   pinta();
 });
 $('bImp').addEventListener('click', function(){ window.print(); });
+
+/* el caso práctico de Martínez Ayala, ejercicio 2025 */
+$('bCaso').addEventListener('click', function(){
+  $('ejercicio').value='2025';
+  var v={ c107:'17,807', c108:'0', c5:'47,852.2', c3uit:'1,963.5', citf:'42.3', cdon:'0',
+          crfe:'0', cext:'0', cpac:'513.04', cr4:'417.6', cr5:'844', csfa:'0' };
+  CAMPOS.forEach(function(k){ $(k).value=v[k]; $(k).dispatchEvent(new Event('blur')); });
+  pinta();
+  document.getElementById('simulador').scrollIntoView({ behavior:'smooth', block:'start' });
+});
 
 try{
   var g=JSON.parse(localStorage.getItem(LS)||'null');
