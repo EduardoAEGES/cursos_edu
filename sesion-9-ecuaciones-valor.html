@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesi&oacute;n 9 - Ecuaciones de valor y refinanciamiento de deudas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<style>
+  /* colores de la plantilla institucional Certus 2026 */
+  :root{
+    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
+  }
+  .ai{
+    --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
+    --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
+    --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
+    max-width:1180px; margin:0 auto;
+    font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  .ai button, .ai input, .ai select, .ai table{ font-family:inherit; }
+  [hidden]{ display:none !important; }
+
+  /* ---------- cabecera ---------- */
+  .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+          border-bottom:3px solid var(--fucsia); padding-bottom:14px; }
+  .marca .lgc{ flex:none; height:40px; width:auto; display:block; }
+  @media (max-width:560px){ .marca .lgc{ height:30px; } }
+  .marca .tx{ flex:1; min-width:230px; }
+  .marca .tx h1{ margin:0; font-size:clamp(22px,3vw,31px); font-weight:800;
+                 color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+  .marca .tx p{ margin:4px 0 0; font-size:17px; color:var(--gris); }
+  .marca .tx p .sem{ color:var(--rojo); font-weight:600; }
+  .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+  .puerta{ border:2px dashed var(--linea); border-left:5px solid var(--rojo);
+           border-radius:12px; padding:16px 18px; margin-top:18px; background:var(--humo); }
+  .puerta h2{ margin:0 0 5px; font-size:22px; font-weight:800; color:var(--tinta); }
+  .puerta p{ margin:0 0 13px; font-size:18px; color:var(--gris); line-height:1.6; }
+
+  /* ---------- escenario de diapositivas ---------- */
+  .esc{ margin-top:18px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+        background:var(--papel); display:flex; flex-direction:column; min-height:70vh;
+        scroll-margin-top:12px; }
+  /* cada diapositiva ocupa una pantalla, con la proporcion 16:9 de la plantilla */
+  @media (min-width:820px){
+    .esc{ aspect-ratio:16/9; min-height:0; max-height:calc(100vh - 128px); }
+  }
+  .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none;
+             aspect-ratio:auto; max-height:none; min-height:0; border:0; }
+  /* la calculadora flotante se queda encima, incluso en pantalla completa */
+  .ca-btn{ z-index:10000 !important; }
+  .ca-p{ z-index:10001 !important; }
+
+  .cab{ background:var(--marino); color:#fff; padding:10px 16px; display:flex;
+        align-items:center; gap:11px; flex:none; }
+  .cab .et{ font-size:14px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+            background:var(--fucsia); border-radius:4px; padding:4px 9px; flex:none; }
+  .cab .t{ font-size:19px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+  .cab .cu{ font-size:16px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+  .cab .lgb{ flex:none; height:26px; width:auto; display:block; opacity:.95; }
+  .cab .btf{ flex:none; font:inherit; font-size:18px; line-height:1; cursor:pointer;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:7px; padding:7px 10px; }
+  .cab .btf:hover{ background:rgba(252,0,69,.85); border-color:transparent; }
+  /* interruptor del modo de clase: solo lo ve el docente */
+  .cab .btm{ flex:none; font:inherit; font-size:15px; font-weight:800; line-height:1; cursor:pointer;
+             display:flex; align-items:center; gap:7px; white-space:nowrap;
+             background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+             border-radius:99px; padding:6px 12px 6px 7px; }
+  .cab .btm .bola{ width:30px; height:16px; border-radius:99px; background:rgba(255,255,255,.3);
+                   position:relative; flex:none; transition:background .18s ease; }
+  .cab .btm .bola::after{ content:''; position:absolute; top:2px; left:2px; width:12px; height:12px;
+                          border-radius:50%; background:#fff; transition:transform .18s ease; }
+  .cab .btm.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+  .cab .btm.on .bola{ background:rgba(7,23,103,.35); }
+  .cab .btm.on .bola::after{ transform:translateX(14px); }
+  /* botón de ver las respuestas: solo el docente */
+  .cab .bts{ flex:none; font:inherit; font-size:15px; font-weight:800; line-height:1; cursor:pointer;
+             white-space:nowrap; background:rgba(255,255,255,.14); color:#fff;
+             border:1px solid rgba(255,255,255,.34); border-radius:99px; padding:6px 12px; }
+  .cab .bts.on{ background:#FFD166; color:var(--marino); border-color:transparent; }
+  .cab .bts:hover{ background:rgba(255,209,102,.85); color:var(--marino); border-color:transparent; }
+  @media (max-width:860px){ .cab .bts .tx{ display:none; } .cab .bts{ padding:6px 9px; } }
+  /* ---------- diagrama de flujo del diagnóstico ---------- */
+  .ruta{ border:2px dashed var(--linea); border-radius:14px; background:#fff; padding:16px 18px;
+         margin:16px 0 0; }
+  .ruta > h4{ margin:0 0 4px; font-size:21px; font-weight:800; color:var(--tinta); }
+  .ruta > p.su{ margin:0 0 14px; font-size:18px; color:#55607F; font-weight:600; }
+  .ruta .via2{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
+  .ruta .nodo{ flex:1 1 170px; min-width:0; border:2px solid var(--linea); border-radius:12px;
+               padding:11px 13px; background:#F7F9FE; display:flex; flex-direction:column; gap:8px; }
+  .ruta .nodo.act{ border-color:var(--fucsia); background:#fff; box-shadow:0 0 0 4px rgba(252,0,69,.12); }
+  .ruta .nodo.si{ border-color:var(--verde); background:#EAF7F7; }
+  .ruta .nodo.no{ border-color:#C9A227; background:#FFFBEA; }
+  .ruta .nodo .pg{ font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+                   color:#8A93AC; }
+  .ruta .nodo .tx{ font-size:18px; font-weight:700; line-height:1.4; color:var(--tinta); flex:1; }
+  .ruta .nodo .bt{ display:flex; gap:7px; }
+  .ruta .nodo .bt button{ flex:1; font:inherit; font-size:16px; font-weight:800; cursor:pointer;
+                          border:2px solid var(--linea); background:#fff; color:var(--tinta);
+                          border-radius:9px; padding:7px 4px; }
+  .ruta .nodo .bt button:hover{ border-color:var(--marino); background:#EEF3FC; }
+  .ruta .nodo .ver{ font-size:17px; font-weight:800; }
+  .ruta .nodo.si .ver{ color:var(--verde); } .ruta .nodo.no .ver{ color:#8A6A00; }
+  .ruta .fle{ flex:0 0 26px; display:flex; align-items:center; justify-content:center;
+              color:#B9C2D8; font-size:22px; font-weight:800; }
+  @media (max-width:860px){
+    .ruta .via2{ flex-direction:column; } .ruta .fle{ flex:none; height:22px; transform:rotate(90deg); }
+  }
+  .ruta .fin{ margin-top:14px; border-radius:12px; padding:13px 16px; font-size:19px; line-height:1.5;
+              border:2px solid var(--linea); background:#F7F9FE; color:var(--tinta); }
+  .ruta .fin b{ display:block; font-size:22px; margin-bottom:3px; }
+  .ruta .fin.v1{ border-color:var(--verde); background:#EAF7F7; } .ruta .fin.v1 b{ color:var(--verde); }
+  .ruta .fin.v2{ border-color:#C9A227; background:#FFFBEA; } .ruta .fin.v2 b{ color:#8A6A00; }
+  .ruta .fin.v3{ border-color:var(--fucsia); background:#FFF1F4; } .ruta .fin.v3 b{ color:var(--fucsia); }
+  .ruta .otra{ margin-top:12px; }
+  /* botones de respuesta, solo para el docente */
+  .solu{ font:inherit; border:0; background:#FFD84D; color:#2B2000; font-size:14px; font-weight:800;
+         border-radius:99px; padding:6px 14px; cursor:pointer; white-space:nowrap;
+         letter-spacing:.03em; text-transform:none; }
+  .solu:hover{ background:#FFC700; }
+  .verr{ font:inherit; border:0; background:#FFF0B8; color:#6B5200; font-size:15px; font-weight:800;
+         border-radius:99px; padding:5px 12px; cursor:pointer; white-space:nowrap; }
+  .verr:hover{ background:#FFE07A; }
+  .pist{ font:inherit; border:0; background:#E3ECFF; color:var(--marino); font-size:14px;
+         font-weight:800; border-radius:99px; padding:3px 10px; cursor:pointer; margin-left:8px; }
+  .pist:hover{ background:#CBDCFF; }
+
+  /* ---------- cuadro de estados financieros para armar ---------- */
+  .cuadro{ display:grid; gap:14px; }
+  .cuadro .cols{ display:grid; gap:14px; }
+  @media (min-width:900px){ .cuadro .cols.c2{ grid-template-columns:1fr 1fr; align-items:start; } }
+  .cuadro .col{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .cuadro .ctit{ margin:0; padding:10px 15px; color:#fff; font-size:18px; font-weight:800;
+                 letter-spacing:.05em; text-transform:uppercase; background:var(--marino); }
+  .cuadro .ctit.na{ background:#D4683B; }
+  .cuadro h6{ margin:0; padding:8px 15px; font-size:17px; font-weight:800; letter-spacing:.04em;
+              text-transform:uppercase; color:var(--marino); background:#EDF2FF; }
+  .cuadro .cua{ display:flex; gap:12px; align-items:center; justify-content:space-between;
+                padding:9px 15px; border-bottom:1px dashed var(--linea); cursor:pointer;
+                min-height:52px; }
+  .cuadro .cua:hover{ background:#FAFCFF; }
+  .cuadro .cua.encima{ background:#E7F0FF; outline:2px dashed var(--marino); outline-offset:-3px; }
+  .cuadro .cua.ok{ background:#F4FBF7; }
+  .cuadro .cua.fijo{ cursor:default; background:#FFF8E8; }
+  .cuadro .cua .n{ font-size:19px; line-height:1.4; color:var(--tinta); }
+  .cuadro .cua .n small{ display:block; margin-top:2px; font-size:15px; font-weight:700;
+                         color:var(--verde); }
+  .cuadro .cua .n .sg{ font-style:normal; font-weight:800; color:var(--rojo); }
+  .cuadro .cua .v{ font-size:20px; font-weight:800; font-variant-numeric:tabular-nums;
+                   white-space:nowrap; color:var(--tinta); }
+  .cuadro .cua .v.vac{ color:#C3CADA; font-weight:700; }
+  .cuadro .sub{ display:flex; gap:12px; justify-content:space-between; align-items:center;
+                padding:9px 15px; background:#F3F5FA; font-size:19px; font-weight:800;
+                color:var(--marino); border-bottom:1px solid var(--linea); }
+  .cuadro .sub b{ font-variant-numeric:tabular-nums; }
+  .cuadro .gran{ display:flex; gap:12px; justify-content:space-between; align-items:center;
+                 padding:11px 15px; background:var(--marino); color:#fff; font-size:20px;
+                 font-weight:800; letter-spacing:.03em; }
+  .cuadro .gran b, .cuadro .gran span{ color:#fff; font-variant-numeric:tabular-nums; }
+  .cuadro .cuadra{ border-radius:10px; padding:11px 15px; font-size:19px; font-weight:800;
+                   text-align:center; }
+  .cuadro .cuadra.si{ background:#E9F7EF; color:var(--verde); border:2px solid var(--verde); }
+  .cuadro .cuadra.no{ background:#FFF4F6; color:var(--rojo); border:2px dashed var(--rojo); }
+  .cuadro .ficha{ display:flex; gap:10px; align-items:baseline; }
+  .cuadro .ficha .im{ font-weight:800; font-variant-numeric:tabular-nums; color:var(--marino); }
+  .cab .pil{ flex:none; font-size:15px; font-weight:800; letter-spacing:.03em; white-space:nowrap;
+             background:var(--celeste); color:var(--marino); border-radius:99px; padding:5px 11px; }
+  @media (max-width:860px){ .cab .btm .tx{ display:none; } .cab .btm{ padding:6px 8px; }
+                            .cab .pil .tx{ display:none; } }
+  @media (max-width:620px){
+    .cab{ padding:9px 11px; gap:8px; }
+    .cab .t{ font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cab .lgb{ display:none; } .cab .cu{ font-size:14px; }
+    .cab .btf{ padding:6px 9px; font-size:17px; }
+  }
+
+  .lam{ padding:clamp(18px,3vw,30px); overflow:auto; flex:1 1 0; min-height:0;
+        font-size:24px; line-height:1.62; color:var(--tinta);
+        background:
+          radial-gradient(760px 380px at 108% -12%, rgba(32,211,255,.17), transparent 62%),
+          radial-gradient(620px 320px at -10% 112%, rgba(198,0,163,.09), transparent 62%),
+          #F7F9FE; }
+  .lam p{ margin:0 0 14px; }
+  .lam p:last-child{ margin-bottom:0; }
+  .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
+  .lam .enc{ margin:0 0 6px; font-size:clamp(29px,4.2vw,42px); font-weight:800;
+             color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
+  .lam .sub{ margin:0 0 22px; font-size:21px; color:#55607F; font-weight:600; }
+  .lam h3{ margin:24px 0 11px; font-size:22px; font-weight:800; color:var(--gris);
+           text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
+           padding-bottom:6px; }
+
+  /* ---------- portada con los colores de la plantilla ---------- */
+  .tapa{ position:relative; overflow:hidden; border-radius:14px; color:#fff; margin:0 0 18px;
+         padding:22px clamp(18px,3vw,30px) 24px; background:var(--marino); }
+  .tapa::after{ content:''; position:absolute; right:-70px; top:-110px; width:300px; height:300px;
+                border-radius:50%; background:radial-gradient(circle at 35% 35%,
+                rgba(252,0,69,.95), rgba(198,0,163,.55) 58%, transparent 72%); }
+  .tapa .fil{ position:relative; z-index:1; display:flex; align-items:center; gap:11px;
+              flex-wrap:wrap; margin-bottom:16px; }
+  .tapa .fil img{ height:34px; width:auto; display:block; }
+  .tapa .fil span{ font-size:17px; font-weight:600; opacity:.86; }
+  .tapa h2{ position:relative; z-index:1; margin:0; font-size:clamp(29px,4.6vw,47px);
+            font-weight:900; letter-spacing:-.6px; line-height:1.14; }
+  .tapa p{ position:relative; z-index:1; margin:9px 0 0; font-size:clamp(18px,2.8vw,24px);
+           font-weight:600; color:var(--celeste); }
+  .tapa .via{ position:relative; z-index:1; display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; }
+  .tapa .via b{ color:#fff; font-size:16px; font-weight:800; letter-spacing:.04em;
+                text-transform:uppercase; border:1px solid rgba(255,255,255,.42);
+                border-radius:99px; padding:5px 12px; }
+  .lam .tapa b, .lam .tapa strong{ color:#fff; }
+
+  /* ---------- navegación ---------- */
+  .nav{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:none;
+        padding:12px 16px; background:var(--humo); border-top:1px solid var(--linea); }
+  /* el rincón derecho es de la calculadora: la botonera se aparta */
+  .nav{ padding-right:84px; }
+  @media (max-width:620px){
+    .nav{ padding:10px 60px 10px 11px; gap:7px; }
+    .nav .o-btn{ font-size:17px; padding:10px 14px; }
+  }
+  .nav .o-btn{ font-size:19px; padding:11px 20px; }
+  .ai .o-btn-primary{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .ai .o-btn-primary:hover{ background:var(--fucsia); border-color:var(--fucsia); }
+  .pts{ display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .pts button{ width:11px; height:11px; border-radius:50%; border:1.5px solid #B9B9C0;
+               background:#fff; padding:0; cursor:pointer; }
+  .pts button.visto{ background:#B9B9C0; }
+  .pts button.hecho{ background:var(--verde); border-color:var(--verde); }
+  .pts button.on{ background:var(--rojo); border-color:var(--rojo); transform:scale(1.42); }
+
+  .avance{ display:flex; align-items:center; gap:10px; padding:9px 16px;
+           border-top:1px solid var(--linea); background:#fff; font-size:17px; flex:none; }
+  .avance .riel{ flex:1; height:8px; border-radius:99px; background:#E8E8EC; overflow:hidden; }
+  .avance .riel i{ display:block; height:100%; width:0; background:var(--verde);
+                   transition:width .35s ease; }
+  .avance b{ font-variant-numeric:tabular-nums; color:var(--gris); }
+
+  /* ---------- personajes ---------- */
+  .perso{ display:flex; gap:14px; align-items:flex-end; margin:0 0 18px; }
+  /* se miden por altura: los personajes tienen proporciones muy distintas */
+  .perso img{ flex:none; height:clamp(150px,20vh,215px); width:auto; max-width:34%;
+              object-fit:contain; display:block; }
+  .perso .globo{ position:relative; flex:1; min-width:0; background:var(--humo);
+                 border:2px dashed var(--linea); border-left:4px solid var(--rojo);
+                 border-radius:4px 12px 12px 4px; padding:13px 17px;
+                 font-size:23px; line-height:1.58; color:var(--tinta); margin-bottom:16px; }
+  .perso .globo .et{ display:block; font-size:14px; font-weight:800; letter-spacing:.08em;
+                     text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+  .perso.duo{ align-items:flex-end; }
+  .perso.duo img.b{ margin-left:-10px; }
+  @media (max-width:620px){
+    .perso{ gap:10px; } .perso img{ height:118px; max-width:30%; }
+    .perso.duo img{ height:104px; }
+    .perso .globo{ font-size:21px; padding:12px 14px; }
+  }
+  .tabenv table.t.chica{ font-size:19px; }
+  .tabenv table.t.chica th, .tabenv table.t.chica td{ padding:7px 9px; }
+  table.t tr.gris td{ background:#EEF1F6; font-weight:700; font-size:17px;
+                      text-transform:uppercase; letter-spacing:.04em; color:var(--gris); }
+
+  /* ---------- bloques de teoría ---------- */
+  .dos{ display:grid; gap:14px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .dos{ grid-template-columns:1fr 1fr; } }
+  .fc{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .fc > h4{ margin:0; font-size:19px; font-weight:800; padding:10px 15px; color:#fff;
+            background:var(--gris); letter-spacing:.03em; }
+  .fc.rj > h4{ background:var(--rojo); }
+  .fc .c{ padding:14px 17px; font-size:21px; line-height:1.65; }
+  .fc .c ul{ margin:0; padding-left:20px; } .fc .c li{ margin-bottom:6px; }
+  .fc .c .fx{ margin:9px 0 0; padding:8px 11px; background:var(--humo); border-radius:8px;
+              font-weight:700; font-size:21px; color:var(--tinta); text-align:center; }
+  table.t td.neg{ color:var(--rojo); font-weight:700; }
+
+  .form{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px 18px;
+         font-size:clamp(24px,3.4vw,33px); font-weight:700; text-align:center;
+         letter-spacing:.2px; margin:16px 0; line-height:1.5; }
+  .form small{ display:block; font-size:18px; font-weight:500; opacity:.78; margin-top:6px;
+               letter-spacing:0; }
+  .form .v{ color:#FF8A82; }
+
+  .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
+       border-radius:4px 10px 10px 4px; padding:14px 18px; font-size:21px; line-height:1.6;
+       margin:16px 0; }
+  .av b{ color:var(--rojo); }
+
+  table.t{ width:100%; border-collapse:collapse; font-size:21px; margin:14px 0; }
+  table.t th, table.t td{ border:1px solid var(--linea); padding:9px 12px; text-align:left; }
+  table.t thead th{ background:var(--gris); color:#fff; font-size:17px; font-weight:800;
+                    text-transform:uppercase; letter-spacing:.05em; }
+  table.t td.n, table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  table.t tr.tot td{ font-weight:800; background:var(--humo); }
+  table.t tr.res td{ background:#F0F7F3; font-weight:700; }
+  .tabenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+
+  /* ---------- actividades ---------- */
+  .tarea{ border:2px dashed var(--rojo); border-radius:12px; overflow:hidden; margin:4px 0 0; }
+  .tarea > h4{ margin:0; background:var(--rojo); color:#fff; font-size:17px; font-weight:800;
+               letter-spacing:.07em; text-transform:uppercase; padding:9px 15px;
+               display:flex; gap:12px; align-items:center; justify-content:space-between; }
+  .tarea .c{ padding:15px; }
+  .tarea.ok{ border-color:var(--verde); } .tarea.ok > h4{ background:var(--verde); }
+
+  /* arrastre */
+  .banco{ display:flex; gap:9px; flex-wrap:wrap; min-height:56px; padding:11px;
+          border:2px dashed var(--linea); border-radius:10px; background:var(--humo); }
+  .ficha{ font:inherit; font-size:21px; font-weight:600; background:#fff; color:var(--tinta);
+          border:2px dashed var(--gris); border-radius:9px; padding:10px 14px; cursor:grab;
+          touch-action:none; user-select:none; line-height:1.35; max-width:100%; }
+  .ficha:hover{ border-color:var(--rojo); }
+  .ficha.sel{ border-color:var(--rojo); background:#FDEEED; box-shadow:0 0 0 3px rgba(138,43,43,.18); }
+  .ficha.puesta{ cursor:default; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+  .ficha.fantasma{ position:fixed; z-index:10000; pointer-events:none; opacity:.92;
+                   border-style:solid; box-shadow:0 10px 24px rgba(0,0,0,.26); }
+  .cajas{ display:grid; gap:12px; grid-template-columns:1fr; margin-top:14px; }
+  @media (min-width:700px){ .cajas.c2{ grid-template-columns:1fr 1fr; } }
+  .caja{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; background:#fff; }
+  .caja > h5{ margin:0; font-size:19px; font-weight:800; padding:9px 14px; background:var(--gris);
+              color:#fff; letter-spacing:.03em; }
+  .caja .z{ padding:11px; min-height:92px; display:flex; flex-wrap:wrap; gap:9px;
+            align-content:flex-start; }
+  .caja.encima{ border-color:var(--rojo); } .caja.encima .z{ background:#FDF3F2; }
+
+  /* parear */
+  .pares{ display:grid; gap:10px; margin-top:14px; }
+  .par{ display:grid; grid-template-columns:1fr; gap:9px; border:2px dashed var(--linea);
+        border-radius:10px; padding:11px 13px; background:#fff; align-items:center; }
+  @media (min-width:720px){ .par{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); } }
+  .par .q{ font-size:21px; line-height:1.55; }
+  .par .hueco{ min-height:52px; border:2px dashed var(--linea); border-radius:9px;
+               display:flex; align-items:center; justify-content:center; padding:7px;
+               background:var(--humo); font-size:18px; color:#8A8A92; }
+  .par.encima .hueco{ border-color:var(--rojo); background:#FDF3F2; }
+  .par.ok{ border-color:var(--verde); background:#F6FBF8; }
+  .par.ok .hueco{ border-style:solid; border-color:var(--verde); background:#EFF7F2; color:var(--verde); }
+
+  /* quiz */
+  .ops{ display:grid; gap:10px; margin-top:12px; }
+  .ops button{ font:inherit; font-size:22px; font-weight:600; text-align:left; cursor:pointer;
+               border:2px dashed var(--linea); background:#fff; color:var(--tinta);
+               border-radius:10px; padding:14px 16px; line-height:1.5; }
+  .ops button:hover:not([disabled]){ border-color:var(--rojo); background:#FDF7F7; }
+  .ops button.buena, .ops button.mala, .linea.bien, .par.ok, .tarea.ok,
+  .cel.bien, .cel.mal, .ficha.puesta{ border-style:solid; }
+  .ops button.mala{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B;
+                    text-decoration:line-through; }
+  .ops button.buena{ border-color:var(--verde); background:#EFF7F2; color:var(--verde);
+                     font-weight:800; }
+  .ops button[disabled]{ cursor:default; }
+  .preg{ font-size:23px; font-weight:700; line-height:1.55; }
+  .preg + .ops{ margin-bottom:20px; }
+  .pq{ margin:10px 0 24px; font-size:19px; line-height:1.65; color:var(--gris);
+       border-left:3px solid var(--verde); padding-left:12px; }
+
+  /* calcular y completar */
+  input.cel, select.cel{ font:inherit; font-size:22px; border:2px dashed var(--linea);
+          border-radius:8px; padding:9px 11px; color:var(--tinta); background:#fff;
+          max-width:100%; }
+  input.cel{ width:132px; text-align:right; font-variant-numeric:tabular-nums; }
+  select.cel{ width:100%; max-width:260px; cursor:pointer; }
+  .cel:focus{ outline:3px solid rgba(138,43,43,.3); outline-offset:1px; border-color:var(--rojo); }
+  .cel.bien{ border-color:var(--verde); background:#EFF7F2; color:var(--verde); font-weight:700; }
+  .cel.mal{ border-color:#E5A9A5; background:#FBEDEC; color:#8A201B; }
+  .pre{ font-size:18px; color:var(--gris); display:block; margin-top:3px; }
+  .lineas{ display:grid; gap:13px; }
+  .linea{ display:grid; grid-template-columns:1fr; gap:7px; border:2px dashed var(--linea);
+          border-radius:10px; padding:12px 14px; background:#fff; }
+  @media (min-width:640px){ .linea{ grid-template-columns:minmax(0,1fr) auto; align-items:center; } }
+  .linea.bien{ border-color:var(--verde); background:#F6FBF8; }
+  .linea .q{ font-size:21px; line-height:1.55; }
+  .linea .r{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .linea .u{ font-size:21px; font-weight:700; color:var(--gris); }
+  .linea select.cel{ max-width:min(340px, 100%); }
+  .linea .q .pre{ color:var(--verde); font-weight:600; }
+
+  .formhueco{ background:var(--tinta); color:#fff; border-radius:10px; padding:15px;
+              margin:12px 0; font-size:22px; font-weight:700; display:flex; flex-wrap:wrap;
+              gap:9px; align-items:center; justify-content:center; line-height:2.1; }
+  .formhueco select.cel{ width:auto; min-width:168px; font-size:21px; }
+
+  .temblor{ animation:temblor .42s ease; }
+  @keyframes temblor{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+                      40%{transform:translateX(8px)} 60%{transform:translateX(-6px)}
+                      80%{transform:translateX(6px)} }
+
+  /* aviso de que el docente movió la diapositiva */
+  .soplo{ position:fixed; left:50%; transform:translateX(-50%); bottom:26px; z-index:10004;
+          background:var(--marino); color:#fff; border-radius:99px; padding:11px 20px;
+          font-size:18px; font-weight:700; box-shadow:0 10px 26px rgba(7,23,103,.36);
+          opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease; }
+  .soplo.ve{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+  /* cuando el alumno va atado al docente, la botonera se ve apagada */
+  .esc.atado .pts button{ cursor:default; }
+  .esc.atado .nav .o-btn[disabled]{ opacity:.45; }
+
+  .cierre{ text-align:center; padding:8px 0; }
+  .cierre .ic{ font-size:54px; line-height:1; }
+  .cierre h2{ margin:8px 0 4px; font-size:31px; font-weight:800; color:var(--tinta); }
+
+  .elenco{ display:flex; gap:6px; align-items:flex-end; justify-content:center; flex-wrap:wrap;
+           margin-top:20px; }
+  .elenco img{ height:104px; width:auto; display:block; }
+  @media (max-width:560px){ .elenco img{ height:66px; } }
+
+  /* ---------- mini hoja de cálculo ---------- */
+  .hojaenv{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px; margin-top:12px; }
+  table.hoja{ border-collapse:collapse; table-layout:fixed; width:max-content; background:#fff;
+              font-variant-numeric:tabular-nums; }
+  table.hoja th, table.hoja td{ border:1px solid #C9D2E6; padding:0; height:44px; }
+  table.hoja thead th{ background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+                       text-align:center; letter-spacing:.06em; height:30px; }
+  table.hoja th.esq{ width:40px; background:#DFE6F5; }
+  table.hoja th.nf{ width:40px; background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+                    text-align:center; }
+  table.hoja td{ font-size:20px; color:var(--tinta); }
+  table.hoja td .q{ display:block; padding:7px 9px; white-space:nowrap; overflow:hidden;
+                    text-overflow:ellipsis; }
+  table.hoja td.rot .q{ font-weight:700; }
+  table.hoja tr.enc td{ background:var(--marino); color:#fff; }
+  table.hoja tr.enc td .q{ font-weight:800; font-size:17px; letter-spacing:.02em; }
+  table.hoja td.num .q{ text-align:right; }
+  table.hoja td.dada{ background:#F3F6FD; }
+  table.hoja td.dada .q{ text-align:right; color:#44506F; }
+  table.hoja td.libre{ background:#FFFBEA; }
+  table.hoja td.libre input{ width:100%; height:44px; border:0; background:transparent; font:inherit;
+                             font-size:20px; text-align:right; padding:0 9px; color:var(--tinta);
+                             font-variant-numeric:tabular-nums; }
+  table.hoja td.libre input:focus{ outline:2px solid var(--fucsia); outline-offset:-2px;
+                                   background:#fff; text-align:left; }
+  table.hoja td.libre.ok{ background:#EAF7F7; }
+  table.hoja td.libre.ok input{ color:var(--verde); font-weight:700; }
+  table.hoja td.libre.mal{ background:#FBEDEC; }
+  table.hoja td.libre.mal input{ color:#8A201B; }
+  table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
+  .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#44506F; }
+  .linea .q b{ display:block; font-size:21px; font-weight:800; color:var(--tinta); }
+  .linea .q .fx2{ display:block; margin-top:3px; font-size:17px; color:#55607F; font-weight:600; }
+  .linea .q .fx2 i{ font-style:normal; color:var(--marino); font-weight:800; }
+  /* ficha de datos de la empresa, para tenerlos a la vista al calcular */
+  .datos{ display:grid; gap:0; border:2px dashed var(--linea); border-radius:12px; overflow:hidden;
+          background:#fff; margin:14px 0; }
+  .datos > h4{ margin:0; background:var(--marino); color:#fff; font-size:17px; font-weight:800;
+               padding:10px 16px; letter-spacing:.02em; }
+  .datos .fl{ display:flex; justify-content:space-between; gap:14px; align-items:baseline;
+              padding:9px 16px; border-bottom:1px solid var(--linea); font-size:20px; }
+  .datos .fl:last-child{ border-bottom:0; }
+  .datos .fl b{ font-variant-numeric:tabular-nums; font-weight:800; white-space:nowrap; }
+  @media (min-width:760px){ .datos.c2{ grid-template-columns:1fr 1fr; }
+                            .datos.c2 > h4{ grid-column:1 / -1; } }
+  /* al escribir una fórmula se puede señalar la celda con el dedo o el ratón */
+  table.hoja.apunta td[data-cel]{ cursor:cell; }
+  table.hoja.apunta td[data-cel]:hover{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  table.hoja td.senalada{ outline:2px dashed var(--fucsia); outline-offset:-2px; }
+  .avisofx{ display:none; margin:9px 0 0; font-size:18px; font-weight:700; color:var(--fucsia); }
+  .avisofx.ve{ display:block; }
+  .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
+  .hbar .fx{ font-size:18px; color:#55607F; line-height:1.5; }
+  .hbar .fx b{ color:var(--marino); font-weight:700; }
+  .pista-fx{ margin:12px 0 0; font-size:19px; line-height:1.6; color:#44506F;
+             border-left:3px solid var(--celeste); padding-left:11px; }
+  .pista-fx code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:18px;
+                  background:#EEF3FC; border-radius:4px; padding:1px 5px; color:var(--marino); }
+  @media (max-width:560px){
+    table.hoja td{ font-size:18px; } table.hoja td .q{ padding:6px 8px; }
+    table.hoja td.libre input{ font-size:18px; padding:0 8px; }
+  }
+
+  /* ---------- crucigrama ---------- */
+  .cruz{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+  .cuad{ border-collapse:collapse; margin:0 auto; table-layout:fixed; width:max-content; }
+  .cuad td{ width:40px; height:40px; padding:0; border:0; position:relative; }
+  .cuad td.v{ border:1.5px solid var(--gris); background:#fff; }
+  .cuad td .n{ position:absolute; top:1px; left:3px; font-size:11px; font-weight:800;
+               color:var(--gris); line-height:1; pointer-events:none; }
+  .cuad input{ width:100%; height:100%; border:0; background:transparent; text-align:center;
+               font:inherit; font-size:21px; font-weight:700; text-transform:uppercase;
+               color:var(--tinta); padding:0; }
+  .cuad input:focus{ outline:none; background:#FFF3CD; }
+  .cuad td.lista{ background:#EFF7F2; border-color:var(--verde); }
+  .cuad td.lista input{ color:var(--verde); }
+  .cuad td.foco{ background:#FFF8E1; }
+  .pistas{ display:grid; gap:14px; grid-template-columns:1fr; margin-top:16px; }
+  @media (min-width:760px){ .pistas{ grid-template-columns:1fr 1fr; } }
+  .pistas h5{ margin:0 0 8px; font-size:17px; font-weight:800; text-transform:uppercase;
+              letter-spacing:.06em; color:var(--rojo); }
+  .pistas ol{ margin:0; padding-left:24px; font-size:19px; line-height:1.65; }
+  .pistas li{ margin-bottom:5px; }
+  .pistas li.ok{ color:var(--verde); text-decoration:line-through; }
+  .cruz .desliza{ display:none; font-size:16px; color:var(--gris); text-align:center;
+                  margin:0 0 7px; }
+  @media (max-width:700px){
+    .cuad td{ width:32px; height:32px; } .cuad input{ font-size:17px; }
+    .cruz .desliza{ display:block; }
+  }
+
+  /* ---------- participantes flotantes (en pantalla completa) ---------- */
+  .flopart{ position:fixed; left:16px; bottom:104px; z-index:10002; font:inherit; cursor:pointer;
+            display:flex; align-items:center; gap:8px; border:0; border-radius:99px;
+            background:var(--marino); color:#fff; padding:11px 16px; font-size:14px; font-weight:800;
+            box-shadow:0 8px 22px rgba(7,23,103,.34); }
+  .flopart:hover{ background:var(--fucsia); }
+  .flopart .bo{ background:var(--celeste); color:var(--marino); border-radius:99px;
+                padding:1px 8px; font-size:12.5px; font-weight:900; }
+  .panpart{ position:fixed; left:16px; bottom:158px; z-index:10003; width:min(420px, calc(100vw - 32px));
+            max-height:min(70vh, 560px); overflow:auto; background:#fff; border-radius:14px;
+            border:1px solid var(--linea); box-shadow:0 18px 44px rgba(7,23,103,.3); }
+  .panpart .hd{ position:sticky; top:0; display:flex; align-items:center; gap:10px;
+                background:var(--marino); color:#fff; padding:10px 14px; font-size:14px; font-weight:800; }
+  .panpart .hd span{ flex:1; min-width:0; }
+  .panpart .hd button{ font:inherit; font-size:15px; line-height:1; cursor:pointer; color:#fff;
+                       background:rgba(255,255,255,.16); border:0; border-radius:6px; padding:6px 9px; }
+  .panpart .nido{ padding:4px 10px 10px; }
+  /* dentro del panel el titulo ya va en la barra: no se repite */
+  .panpart .nido .titsec, .panpart .nido .aviso{ display:none; }
+  .panpart .nido .o-sheet{ box-shadow:none; border:0; margin:0 !important; padding:8px 2px !important; }
+  @media (max-width:560px){ .panpart{ max-height:62vh; } .flopart{ padding:10px 13px; font-size:13px; } }
+
+  /* ---------- fichas de régimen ---------- */
+  .reg{ border:2px dashed var(--linea); border-radius:12px; overflow:hidden; background:#fff;
+        margin-bottom:14px; }
+  .reg > h4{ margin:0; padding:11px 15px; color:#fff; font-size:15px; font-weight:800;
+             letter-spacing:.02em; }
+  .reg.n > h4{ background:var(--nrus); } .reg.e > h4{ background:var(--rer); }
+  .reg.m > h4{ background:var(--rmt); }  .reg.g > h4{ background:var(--rg); }
+  .reg .c{ padding:0; }
+  .reg table{ width:100%; border-collapse:collapse; font-size:15px; }
+  .reg td{ padding:9px 14px; border-bottom:1px solid var(--linea); vertical-align:top; }
+  .reg tr:last-child td{ border-bottom:0; }
+  .reg td:first-child{ width:38%; color:var(--gris); font-weight:600; }
+  @media (max-width:560px){ .reg td{ font-size:14px; padding:8px 11px; }
+                            .reg td:first-child{ width:42%; } }
+  /* ---------- tabla de trabajo ---------- */
+  .hoja2{ width:100%; border-collapse:collapse; min-width:620px; }
+  .hoja2 th{ background:var(--marino); color:#fff; font-size:16px; font-weight:800; text-align:left;
+             padding:9px 11px; letter-spacing:.03em; vertical-align:bottom; }
+  .hoja2 th.n{ text-align:right; }
+  .hoja2 td{ padding:8px 11px; font-size:19px; border-bottom:1px solid var(--linea);
+             border-right:1px solid var(--linea); vertical-align:middle; }
+  .hoja2 td:last-child{ border-right:0; }
+  .hoja2 td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .hoja2 td.ed{ background:#FFF9E3; }
+  .hoja2 td.ed.bien{ background:#F2FAF6; }
+  .hoja2 tr.tot td{ background:#EDF2FF; font-weight:800; color:var(--marino); font-size:20px; }
+  .hoja2 tr.tot td.ed{ background:#FFF4CC; }
+  .hoja2 tr.tot td.ed.bien{ background:#E6F6EC; }
+  .hoja2 td.ed .cel{ width:100%; min-width:120px; }
+  .hoja2 td.ed select.cel{ min-width:170px; font-size:18px; }
+  .hoja2 td.ed .verr{ margin-top:5px; }
+  .hoja2 td .pre{ display:block; margin-top:4px; font-size:15px; line-height:1.4;
+                  color:var(--verde); font-weight:700; white-space:normal; max-width:280px; }
+  .hoja2 td.n .pre{ text-align:right; margin-left:auto; }
+
+  /* ---------- linea de tiempo ---------- */
+  .linea-t{ margin:14px 0 4px; }
+  .lt{ display:flex; gap:0; align-items:flex-end; overflow-x:auto; padding:6px 0 2px; }
+  .lts{ font:inherit; flex:1 0 62px; background:none; border:0; cursor:pointer; padding:0;
+        display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+        min-height:168px; color:var(--tinta); }
+  .lts:hover .eje{ background:var(--marino); }
+  .lts .fle{ font-size:26px; color:var(--aqua); font-weight:900; line-height:1; }
+  .lts .mo{ font-size:17px; font-weight:900; color:var(--marino); }
+  .lts .et{ font-size:13px; font-weight:700; color:var(--gris); }
+  .lts .eq{ font-size:14px; font-weight:800; color:var(--aqua); margin-bottom:4px; white-space:nowrap; }
+  .lts .eje{ width:100%; height:5px; background:var(--linea); margin-top:auto; }
+  .lts .ms{ font-size:15px; font-weight:800; color:var(--gris); margin-top:5px; }
+  .lts.foc .eje{ background:var(--rojo); height:9px; }
+  .lts.foc .ms{ color:var(--rojo); }
+  .lts .pin{ font-size:12px; font-weight:900; letter-spacing:.04em; text-transform:uppercase;
+             color:#fff; background:var(--rojo); border-radius:99px; padding:2px 8px; margin-top:4px;
+             white-space:nowrap; }
+  .ltres{ margin-top:10px; background:var(--marino); color:#fff; border-radius:10px; padding:11px 15px;
+          font-size:20px; font-weight:800; }
+  .ltres b{ color:#fff; font-variant-numeric:tabular-nums; }
+  .ltres span{ font-size:16px; font-weight:600; opacity:.8; }
+  .pie2{ margin:8px 0 0; font-size:17px; color:var(--gris); font-weight:600; line-height:1.55; }
+  .fc .c .mini{ margin:6px 0 0; font-size:16px; color:var(--gris); font-weight:700; }
+
+  /* ---------- calculadora de equivalencia ---------- */
+  .equi{ margin-top:18px; border:2px solid var(--marino); border-radius:12px; overflow:hidden;
+         background:#fff; }
+  .equi > h4{ margin:0; background:var(--marino); color:#fff; font-size:18px; font-weight:800;
+              padding:10px 16px; letter-spacing:.03em; }
+  .equi .su{ margin:0; padding:11px 16px 0; font-size:17px; line-height:1.55; color:var(--gris);
+             font-weight:600; }
+  .eqf{ display:grid; gap:11px; padding:13px 16px; }
+  @media (min-width:700px){ .eqf{ grid-template-columns:repeat(4,minmax(0,1fr)); align-items:end; } }
+  .eqf.b2{ border-top:1px dashed var(--linea); }
+  .eqc{ display:grid; gap:4px; }
+  .eqc span{ font-size:15px; font-weight:800; color:var(--gris); letter-spacing:.02em; }
+  .eqc input{ border:2px solid var(--linea); border-radius:9px; padding:9px 11px; font-size:20px;
+              font-weight:800; width:100%; color:var(--tinta); }
+  .eqc input:focus{ outline:none; border-color:var(--marino); }
+  .eqr{ display:grid; gap:11px; padding:0 16px 13px; }
+  @media (min-width:700px){ .eqr{ grid-template-columns:repeat(4,minmax(0,1fr)); } }
+  .eqp{ border:2px dashed var(--linea); border-radius:9px; padding:9px 12px; }
+  .eqp span{ display:block; font-size:15px; font-weight:800; color:var(--gris); }
+  .eqp b{ font-size:21px; font-weight:900; color:var(--marino); font-variant-numeric:tabular-nums; }
+  .eqp.fin{ border-style:solid; border-color:var(--verde); background:#F2FAF6; }
+  .eqp.fin b{ color:var(--verde); }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Sesi&oacute;n 9</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/certus-azul.png" alt="Certus">
+    <span class="tx">
+      <h1>Ecuaciones de valor y refinanciamiento de deudas</h1>
+      <p><span class="sem">Sesi&oacute;n 9</span> - Matem&aacute;ticas Aplicadas - Valor del dinero en el tiempo y comparaci&oacute;n de propuestas</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta">
+    <h2>Ingresa con tu DNI</h2>
+    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
+       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
+       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
+       sesi&oacute;n o entres desde otro equipo.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo" hidden>
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Contenido tomado de la ficha de trabajo de la semana 9:
+    ecuaciones de valor y refinanciamiento de deudas. Panificadora Characato, Comercial Chachani y
+    Helader&iacute;a Yanahuara son casos de clase, no empresas reales. Todos los c&aacute;lculos usan
+    inter&eacute;s compuesto y los importes se redondean a dos decimales reci&eacute;n al final de cada
+    fila.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="aula.js"></script>
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
+        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
+        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+function globo(img, et, txt){
+  return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+function globo2(a, b, et, txt){
+  return '<div class="perso duo"><img src="'+a+'" alt="" loading="lazy">'+
+         '<img class="b" src="'+b+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
+}
+
+/* ============ mini hoja de cálculo: fórmulas tipo Excel ============ */
+/* Soporta: + - * / ^ % ( ) , referencias A1, rangos A1:B4, comparaciones,
+   texto entre comillas y las funciones de uso diario, en español e inglés. */
+function HojaFx(leeCelda){
+
+  function letras(n){ var s=''; n++; while(n>0){ var r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=(n-1-r)/26; } return s; }
+  function col(s){ var n=0; for(var i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64); return n-1; }
+
+  function aNumero(v){
+    if(typeof v==='number') return v;
+    if(v===null || v===undefined) return 0;
+    var s=String(v).trim();
+    if(s==='') return 0;
+    s=s.replace(/\s/g,'').replace(/^S\/\.?/i,'');
+    /* 1,234.56 -> 1234.56 ; 1,234 -> 1234 (la coma solo separa miles) */
+    if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s=s.replace(/,/g,'');
+    if(/%$/.test(s)){ var b=parseFloat(s.slice(0,-1)); return isNaN(b)?NaN:b/100; }
+    var n=parseFloat(s);
+    return (isNaN(n) || !/^-?\d*\.?\d+([eE][-+]?\d+)?$/.test(s)) ? NaN : n;
+  }
+  function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
+  function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
+
+  var FN={
+    SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
+    PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
+                           if(!v.length) throw new Error('#DIV/0'); return v.reduce(function(x,y){return x+y;},0)/v.length; },
+    MIN:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.min.apply(null,v); },
+    MAX:   function(a){ var v=a.map(aNumero).filter(function(n){return !isNaN(n);}); if(!v.length) return 0; return Math.max.apply(null,v); },
+    CONTAR:function(a){ return a.map(aNumero).filter(function(n){return !isNaN(n);}).length; },
+    PRODUCTO:function(a){ var p=1; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) p*=n; }); return p; },
+    ABS:   function(a){ return Math.abs(num(a[0])); },
+    ENTERO:function(a){ return Math.floor(num(a[0])); },
+    REDONDEAR: function(a){
+      var d=a.length>1 ? num(a[1]) : 0, f=Math.pow(10,d);
+      var x=num(a[0])*f;
+      /* Excel redondea el 0.5 hacia afuera */
+      return (x<0 ? -Math.round(-x) : Math.round(x))/f; },
+    SI:    function(a){ return bool(a[0]) ? a[1] : (a.length>2 ? a[2] : false); },
+    Y:     function(a){ return a.every(bool); },
+    O:     function(a){ return a.some(bool); },
+    NO:    function(a){ return !bool(a[0]); },
+    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
+  };
+  /* nombres en inglés y variantes con punto */
+  var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
+              ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
+              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
+
+  /* ---------- analizador ---------- */
+  function evalua(txt, pide){
+    var s=txt, i=0;
+    function esp(){ while(i<s.length && /\s/.test(s[i])) i++; }
+    function ojo(){ esp(); return s[i]; }
+    function come(t){ esp(); if(s.substr(i,t.length).toUpperCase()===t){ i+=t.length; return true; } return false; }
+
+    function expr(){
+      var a=suma();
+      for(;;){
+        esp();
+        var op=null;
+        if(s.substr(i,2)==='<>'||s.substr(i,2)==='>='||s.substr(i,2)==='<='){ op=s.substr(i,2); i+=2; }
+        else if(s[i]==='='||s[i]==='>'||s[i]==='<'){ op=s[i]; i++; }
+        else return a;
+        var b=suma(), x=aNumero(a), y=aNumero(b), cmp;
+        if(isNaN(x)||isNaN(y)) cmp=String(a).trim().toUpperCase().localeCompare(String(b).trim().toUpperCase());
+        else cmp = x<y ? -1 : x>y ? 1 : 0;
+        a = op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
+            op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
+      }
+    }
+    function suma(){
+      var a=mult();
+      for(;;){ esp();
+        if(s[i]==='+'){ i++; a=num(a)+num(mult()); }
+        else if(s[i]==='-'){ i++; a=num(a)-num(mult()); }
+        else if(s[i]==='&'){ i++; a=String(fmt(a))+String(fmt(mult())); }
+        else return a; }
+    }
+    function mult(){
+      var a=pot();
+      for(;;){ esp();
+        if(s[i]==='*'){ i++; a=num(a)*num(pot()); }
+        else if(s[i]==='/'){ i++; var d=num(pot()); if(d===0) throw new Error('#DIV/0'); a=num(a)/d; }
+        else return a; }
+    }
+    function pot(){ var a=unario(); esp(); if(s[i]==='^'){ i++; return Math.pow(num(a), num(pot())); } return a; }
+    function unario(){ esp();
+      if(s[i]==='-'){ i++; return -num(unario()); }
+      if(s[i]==='+'){ i++; return num(unario()); }
+      return porciento(); }
+    function porciento(){ var a=atomo(); esp(); if(s[i]==='%'){ i++; return num(a)/100; } return a; }
+
+    function atomo(){
+      esp();
+      if(s[i]==='('){ i++; var v=expr(); esp(); if(s[i]!==')') throw new Error('#FALTA )'); i++; return v; }
+      if(s[i]==='"'){ i++; var t=''; while(i<s.length && s[i]!=='"'){ t+=s[i++]; } i++; return t; }
+      var m=/^([A-Za-zÁÉÍÓÚÑ_][A-Za-z0-9ÁÉÍÓÚÑ_.]*)\s*\(/.exec(s.slice(i));
+      if(m){
+        var nom=m[1].toUpperCase(); nom=ALIAS[nom]||nom;
+        if(!FN[nom]) throw new Error('#NOMBRE');
+        i+=m[0].length;
+        var args=[];
+        esp();
+        if(s[i]===')'){ i++; }
+        else{
+          for(;;){
+            args.push(arg());
+            esp();
+            if(s[i]===','||s[i]===';'){ i++; continue; }
+            if(s[i]===')'){ i++; break; }
+            throw new Error('#FALTA )');
+          }
+        }
+        var llanos=[];
+        args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
+        return FN[nom](llanos);
+      }
+      var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
+      if(r){
+        var ini=i; i+=r[0].length;
+        esp();
+        if(s[i]===':'){
+          var j=i+1, resto=s.slice(j);
+          var r2=/^\s*(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(resto);
+          if(r2){
+            i=j+r2[0].length;
+            return { rango:true, valores:rango(r[2],+r[4],r2[2],+r2[4]) };
+          }
+        }
+        i=ini+r[0].length;
+        return pide(r[2].toUpperCase()+r[4]);
+      }
+      var n=/^\d*\.?\d+([eE][-+]?\d+)?/.exec(s.slice(i));
+      if(n){ i+=n[0].length; return parseFloat(n[0]); }
+      throw new Error('#ERROR');
+    }
+    function arg(){ return expr(); }
+    function rango(c1,f1,c2,f2){
+      var a=col(c1.toUpperCase()), b=col(c2.toUpperCase());
+      var x1=Math.min(a,b), x2=Math.max(a,b), y1=Math.min(f1,f2), y2=Math.max(f1,f2);
+      if((x2-x1+1)*(y2-y1+1) > 400) throw new Error('#RANGO');
+      var out=[];
+      for(var y=y1;y<=y2;y++) for(var x=x1;x<=x2;x++) out.push(pide(letras(x)+y));
+      return out;
+    }
+
+    var v=expr();
+    esp();
+    if(i<s.length) throw new Error('#ERROR');
+    if(v && v.rango) throw new Error('#VALOR');
+    return v;
+  }
+
+  function fmt(v){
+    if(typeof v==='boolean') return v?'VERDADERO':'FALSO';
+    if(typeof v==='number'){
+      if(!isFinite(v)) return '#NUM';
+      var r=Math.round(v*100)/100;
+      return r.toLocaleString('es-PE',{minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+    return String(v);
+  }
+
+  return { evalua:evalua, fmt:fmt, aNumero:aNumero, letras:letras };
+}
+
+/* ================= sonido ================= */
+var son=true, ac=null;
+try{ son = localStorage.getItem('m9_son')!=='0'; }catch(e){}
+function nota(f,ini,dur,vol,tipo){
+  if(!son) return;
+  try{
+    if(!ac) ac=new (window.AudioContext||window.webkitAudioContext)();
+    var o=ac.createOscillator(), g=ac.createGain(), t=ac.currentTime+ini;
+    o.type=tipo||'sine'; o.frequency.value=f;
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(vol||0.08, t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t+dur+0.02);
+  }catch(e){}
+}
+function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
+var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
+var fallo=new Audio(), falloI=0;
+fallo.preload='auto'; fallo.volume=0.7;
+fallo.addEventListener('error', function(){
+  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
+fallo.src=FALLO[0];
+function mal(){
+  if(!son) return;
+  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
+  try{ fallo.currentTime=0; var p=fallo.play();
+       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
+  }catch(e){ nota(200,0,.18,.05,'square'); }
+}
+function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon');
+  b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
+  b.setAttribute('aria-pressed', son?'true':'false'); }
+$('btnSon').addEventListener('click', function(){
+  son=!son; try{ localStorage.setItem('m9_son', son?'1':'0'); }catch(e){}
+  pintaSon(); if(son) bien(); });
+pintaSon();
+
+/* ================= las actividades ================= */
+var ACT={
+
+/* 1 ------------------------------------------------------------- */
+a0:{ tipo:'quiz', titulo:'Actividad 1 - Conectemos',
+  lista:[
+   { q:'Te deben S/ 1,000 y te dejan elegir: cobrarlos hoy o cobrarlos dentro de seis meses, sin intereses. ¿Qué eliges y por qué?',
+     ops:['Hoy, porque ese dinero puesto a trabajar seis meses vale más que S/ 1,000',
+          'Da igual: S/ 1,000 son S/ 1,000 en cualquier fecha',
+          'Dentro de seis meses, porque así se acumulan más intereses a mi favor'], ok:0,
+     pq:'Un mismo importe vale distinto según la fecha en que esté. A eso se le llama valor del dinero '+
+        'en el tiempo, y es la base de todo lo de hoy.' },
+   { q:'La panadería debe dos letras en meses distintos y quiere cambiarlas por un solo pago. ¿Qué hace falta para que el cambio sea justo?',
+     ops:['Sumar las dos letras y pagar ese total',
+          'Mover cada letra a una misma fecha con la tasa pactada y recién ahí sumarlas',
+          'Pagar la letra más grande y negociar la otra'], ok:1,
+     pq:'Importes en fechas distintas no se pueden sumar. Primero se llevan todos a una misma fecha, '+
+        'la fecha focal, y ahí sí se suman.' } ] },
+
+/* 2 ------------------------------------------------------------- */
+a1:{ tipo:'arr', titulo:'Actividad 2 - ¿Se lleva o se trae?',
+  fichas:[ {id:'f1', t:'Una letra vence en el mes 3 y la fecha focal es el mes 6', g:'FU'},
+           {id:'f2', t:'Una deuda vence hoy y la fecha focal es dentro de 4 meses', g:'FU'},
+           {id:'f3', t:'Un pago quedó en el mes 1 y comparamos todo en el mes 5', g:'FU'},
+           {id:'f4', t:'El vencimiento está antes de la fecha focal', g:'FU'},
+           {id:'t1', t:'Una letra vence en el mes 9 y la fecha focal es el mes 6', g:'PR'},
+           {id:'t2', t:'Una cuota vence dentro de 2 meses y queremos su valor de hoy', g:'PR'},
+           {id:'t3', t:'Una propuesta de pago está en el mes 3 y la comparamos en el mes 0', g:'PR'},
+           {id:'t4', t:'El vencimiento está después de la fecha focal', g:'PR'} ],
+  cajas:[ {id:'FU', t:'Se lleva al futuro - se multiplica por (1 + i)ⁿ'},
+          {id:'PR', t:'Se trae al presente - se divide entre (1 + i)ⁿ'} ],
+  fin:globo(P.expl,'Resuelto','La regla es una sola y no falla: mira dónde está el monto y dónde está '+
+      'la fecha focal. Si el monto está antes, lo llevas hacia adelante y crece. Si está después, lo '+
+      'traes hacia atrás y se achica. Y la n es siempre el número de meses que hay entre las dos fechas.') },
+
+/* 3 ------------------------------------------------------------- */
+a2:{ tipo:'sel', titulo:'Actividad 3 - La fecha focal y el diagrama',
+  lista:[
+   { q:'¿Qué es la fecha focal?',
+     ops:['La fecha en que vence la deuda más grande',
+          'La fecha que elegimos para comparar todos los importes',
+          'La fecha de hoy, siempre'], ok:1,
+     pq:'Es la fecha de referencia. La elegimos nosotros, o la fija el problema, y hacia ella movemos todo.' },
+   { q:'En el diagrama de flujo, ¿hacia dónde apunta la flecha de un ingreso?',
+     ops:['Hacia arriba','Hacia abajo','No se dibuja'], ok:0,
+     pq:'Hacia arriba los ingresos y hacia abajo los egresos. El diagrama se dibuja antes de calcular: '+
+        'ahí se ve de un vistazo qué hay que llevar y qué hay que traer.' },
+   { q:'Si cambias la fecha focal, ¿cambia la respuesta del problema?',
+     ops:['Sí, cada fecha focal da un pago único distinto',
+          'No, el resultado es el mismo expresado en otra fecha',
+          'Solo cambia si la tasa es muy alta'], ok:1,
+     pq:'Las ecuaciones de valor son equivalentes: el importe se ve distinto porque está en otra fecha, '+
+        'pero representa el mismo dinero. Por eso el problema dice en qué fecha quieres la respuesta.' },
+   { q:'¿Qué es la n de la fórmula (1 + i)ⁿ?',
+     ops:['El número de deudas que hay','El número de periodos entre el vencimiento y la fecha focal',
+          'El número de la cuota'], ok:1,
+     pq:'Y tiene que estar en la misma unidad que la tasa: si la tasa es mensual, n se cuenta en meses.' } ],
+  fin:globo2(P.alum, P.bien,'Resuelto','Dibuja primero, calcula después. El diagrama te dice cuántos '+
+      'meses hay entre cada monto y la fecha focal, y si ese monto sube o baja. Con eso el cálculo es '+
+      'mecánico.') },
+
+/* 4 ------------------------------------------------------------- */
+a3:{ tipo:'tabla', titulo:'Actividad 4 - Caso 1, la ecuación de valor',
+  intro:'Completa los recuadros. Escribe los importes con dos decimales y sin comas: <code>8489.66</code>.',
+  cols:['Deuda','Monto (S/)','Vence (mes)','Meses hasta el mes 6','¿Se lleva o se trae?','Valor en el mes 6'],
+  tipos:['','n','n','n','','n'],
+  filas:[
+   [{t:'Letra 1'}, {t:'8,000.00'}, {t:'3'},
+    {e:3, tol:0, ph:'3', pq:'Del mes 3 al mes 6 hay 3 meses.'},
+    {ops:['Se lleva al futuro','Se trae al presente'], ok:0,
+     pq:'Vence antes de la fecha focal, así que avanza en el tiempo y gana intereses.'},
+    {e:8489.66, tol:0.02, ph:'8489.66', pq:'8,000 × 1.02³ = 8,000 × 1.061208 = 8,489.66'}],
+   [{t:'Letra 2'}, {t:'12,000.00'}, {t:'9'},
+    {e:3, tol:0, ph:'3', pq:'Del mes 6 al mes 9 hay 3 meses.'},
+    {ops:['Se lleva al futuro','Se trae al presente'], ok:1,
+     pq:'Vence después de la fecha focal, así que retrocede y se descuenta.'},
+    {e:11307.87, tol:0.03, ph:'11307.87', pq:'12,000 ÷ 1.02³ = 12,000 ÷ 1.061208 = 11,307.87'}],
+   [{t:'PAGO ÚNICO EN EL MES 6', cl:'tot'}, {t:''}, {t:''}, {t:''}, {t:''},
+    {e:19797.53, tol:0.05, ph:'19797.53', cl:'tot',
+     pq:'8,489.66 + 11,307.87 = 19,797.53. Ese es el pago único que reemplaza a las dos letras.'}]
+  ],
+  fin:globo(P.idea,'Resuelto','S/ 19,797.53. Fíjate que es menos que los S/ 20,000 que suman las dos '+
+      'letras. No es un descuento del proveedor: es que la letra de 12,000, que vencía después, al '+
+      'traerla al mes 6 pierde más de lo que gana la de 8,000 al llevarla. Las dos se mueven con la '+
+      'misma tasa, pero sobre importes distintos.') },
+
+/* 5 ------------------------------------------------------------- */
+a4:{ tipo:'sel', titulo:'Actividad 5 - Caso 1, qué significa el resultado',
+  lista:[
+   { q:'El pago único salió S/ 19,797.53. ¿Es mayor o menor que los S/ 20,000 que suman las dos letras?',
+     ops:['Mayor, porque se acumulan intereses','Menor, por S/ 202.47','Igual, solo cambia la fecha'], ok:1,
+     pq:'Menor en S/ 202.47. La letra grande es la que vencía después, y traerla al mes 6 la achica más '+
+        'de lo que crece la pequeña al llevarla.' },
+   { q:'Si la fecha focal fuera el mes 9 en vez del mes 6, ¿qué pasaría con el pago único?',
+     ops:['Sería un importe mayor, porque está parado en una fecha posterior',
+          'Sería exactamente el mismo importe','Sería menor'], ok:0,
+     pq:'El mismo dinero visto en una fecha posterior se ve más grande. 19,797.53 × 1.02³ = 21,009.30. '+
+        'Es la misma deuda, expresada en el mes 9.' },
+   { q:'El proveedor propone cobrar S/ 20,000 en el mes 6. ¿Le conviene a la panificadora?',
+     ops:['Sí, es más simple y redondo','No: tendría que pagar S/ 202.47 de más en valor del mes 6',
+          'Da lo mismo, la diferencia es mínima'], ok:1,
+     pq:'Comparar dos propuestas es exactamente esto: llevarlas a una misma fecha y ver cuál es menor. '+
+        'Aquí la ecuación de valor dice 19,797.53 y todo lo que pase de ahí es pagar de más.' } ] },
+
+/* 6 ------------------------------------------------------------- */
+a5:{ tipo:'tabla', titulo:'Actividad 6 - Caso 2, comparar en valor actual',
+  intro:'La fecha focal es hoy, el mes 0. El factor es 1 ÷ (1 + i)ⁿ con i = 1.5 % mensual: escríbelo '+
+        'con seis decimales, por ejemplo <code>0.985222</code>. Los importes, con dos.',
+  cols:['Mes','Cuota A (S/)','Factor 1/(1+i)ⁿ','Valor actual A','Valor actual B'],
+  tipos:['','n','n','n','n'],
+  filas:[
+   [{t:'Mes 1'}, {t:'10,500.00'},
+    {e:0.985222, tol:0.000002, ph:'0.985222', pq:'1 ÷ 1.015 = 0.985222'},
+    {e:10344.83, tol:0.03, ph:'10344.83', pq:'10,500 × 0.985222 = 10,344.83'},
+    {t:'—'}],
+   [{t:'Mes 2'}, {t:'10,500.00'},
+    {e:0.970662, tol:0.000002, ph:'0.970662', pq:'1 ÷ 1.015² = 1 ÷ 1.030225 = 0.970662'},
+    {e:10191.95, tol:0.03, ph:'10191.95', pq:'10,500 × 0.970662 = 10,191.95'},
+    {e:30284.65, tol:0.05, ph:'30284.65',
+     pq:'La propuesta B es un solo pago de 31,200 en el mes 2: 31,200 × 0.970662 = 30,284.65'}],
+   [{t:'Mes 3'}, {t:'10,500.00'},
+    {e:0.956317, tol:0.000002, ph:'0.956317', pq:'1 ÷ 1.015³ = 1 ÷ 1.045678 = 0.956317'},
+    {e:10041.33, tol:0.03, ph:'10041.33', pq:'10,500 × 0.956317 = 10,041.33'},
+    {t:'—'}],
+   [{t:'VALOR ACTUAL', cl:'tot'}, {t:''}, {t:''},
+    {e:30578.11, tol:0.06, ph:'30578.11', cl:'tot',
+     pq:'10,344.83 + 10,191.95 + 10,041.33 = 30,578.11'},
+    {e:30284.65, tol:0.05, ph:'30284.65', cl:'tot', pq:'Un solo pago, un solo valor actual.'}]
+  ],
+  fin:globo(P.expl,'Resuelto','A vale 30,578.11 de hoy y B vale 30,284.65 de hoy. Las dos propuestas '+
+      'dicen números más grandes que la deuda de 30,000, pero eso es normal: el proveedor cobra por '+
+      'esperar. Lo que importa es cuál de las dos pesa menos en soles de hoy.') },
+
+/* 7 ------------------------------------------------------------- */
+a6:{ tipo:'sel', titulo:'Actividad 7 - Caso 2, la decisión',
+  lista:[
+   { q:'¿Qué propuesta le conviene a Comercial Chachani?',
+     ops:['La A, porque paga en partes y cuida la caja',
+          'La B, porque en soles de hoy cuesta menos',
+          'Las dos cuestan lo mismo'], ok:1,
+     pq:'30,284.65 contra 30,578.11. En valor actual, B es la más barata.' },
+   { q:'¿Cuánto ahorra la empresa eligiendo esa propuesta, en soles de hoy?',
+     ops:['S/ 293.46','S/ 1,200.00','S/ 700.00'], ok:0,
+     pq:'30,578.11 − 30,284.65 = 293.46. Ojo: el ahorro se mide en la fecha focal, no sumando los '+
+        'importes nominales.' },
+   { q:'Si sumas los importes sin descontarlos, A paga 31,500 y B paga 31,200. ¿Por qué no basta con esa comparación?',
+     ops:['Porque los montos de A están en fechas distintas y no se pueden sumar directamente',
+          'Porque 31,500 y 31,200 son casi iguales',
+          'Porque falta sumarle el IGV'], ok:0,
+     pq:'La diferencia nominal es 300 y la real, en soles de hoy, es 293.46. Parecido en este caso, pero '+
+        'con plazos largos o tasas altas las dos cifras se separan mucho.' },
+   { q:'La empresa dice que su costo del dinero en realidad es 3 % mensual, no 1.5 %. ¿Qué esperarías?',
+     ops:['Que los dos valores actuales suban','Que los dos bajen, y que A baje más que B',
+          'Que no cambie nada'], ok:1,
+     pq:'Con una tasa mayor se descuenta más fuerte, y lo que está más lejos pierde más. A tiene una '+
+        'cuota en el mes 3, así que baja más rápido. La tasa que se usa para comparar cambia la decisión.' } ],
+  fin:globo2(P.pres, P.bien,'Resuelto','Esta es la pregunta de todo financista: dos formas de pagar lo '+
+      'mismo, ¿cuál pesa menos? La respuesta siempre es traer ambas a una fecha común con el costo del '+
+      'dinero de la empresa, y ahí comparar.') },
+
+/* 8 ------------------------------------------------------------- */
+a7:{ tipo:'tabla', titulo:'Actividad 8 - Tarea, juntar tres deudas',
+  intro:'Primero convierte la TEA en tasa mensual con <b>TEM = (1 + TEA)<sup>1/12</sup> − 1</b> y '+
+        'redondéala a dos decimales en porcentaje; escribe solo el número, sin el signo. Después '+
+        'completa la tabla con esa TEM.',
+  cols:['Concepto','Monto (S/)','Vence (mes)','Meses hasta el mes 5','Valor en el mes 5'],
+  tipos:['','n','n','n','n'],
+  filas:[
+   [{t:'Tasa Efectiva Mensual (TEM) en %'}, {t:''}, {t:''}, {t:''},
+    {e:2, tol:0.005, ph:'2.00', pq:'(1 + 0.2682)^(1/12) − 1 = 0.019997 → 2.00 % mensual'}],
+   [{t:'Deuda que vence en el mes 2'}, {t:'5,000.00'}, {t:'2'},
+    {e:3, tol:0, ph:'3', pq:'Del mes 2 al mes 5 hay 3 meses, y se lleva al futuro.'},
+    {e:5306.04, tol:0.02, ph:'5306.04', pq:'5,000 × 1.02³ = 5,306.04'}],
+   [{t:'Deuda que vence en el mes 5'}, {t:'7,000.00'}, {t:'5'},
+    {e:0, tol:0, ph:'0', pq:'Ya está parada en la fecha focal: no se mueve.'},
+    {e:7000, tol:0.01, ph:'7000.00', pq:'Cuando n = 0, el factor es 1 y el monto se queda igual.'}],
+   [{t:'Deuda que vence en el mes 8'}, {t:'6,000.00'}, {t:'8'},
+    {e:3, tol:0, ph:'3', pq:'Del mes 5 al mes 8 hay 3 meses, y se trae al presente.'},
+    {e:5653.93, tol:0.02, ph:'5653.93', pq:'6,000 ÷ 1.02³ = 5,653.93'}],
+   [{t:'PAGO ÚNICO EN EL MES 5', cl:'tot'}, {t:''}, {t:''}, {t:''},
+    {e:17959.97, tol:0.05, ph:'17959.97', cl:'tot',
+     pq:'5,306.04 + 7,000.00 + 5,653.93 = 17,959.97'}]
+  ],
+  fin:globo(P.full,'Resuelto','S/ 17,959.97 contra los S/ 18,000 que suman las tres deudas: S/ 40.03 '+
+      'menos. Y fíjate en la TEM: una TEA de 26.82 % no se divide entre 12. Hay que sacarle la raíz '+
+      'doceava, porque los intereses se capitalizan mes a mes. Dividir entre 12 daría 2.235 %, que es '+
+      'bastante más.') },
+
+/* 9 ------------------------------------------------------------- */
+a8:{ tipo:'cruz', titulo:'Actividad 9 - Crucigrama',
+  filas:11, cols:11,
+  palabras:[
+   {p:'DESCONTAR', r:0, c:0, dir:'H', pista:'Traer un monto hacia atrás en el tiempo, dividiéndolo'},
+   {p:'CAPITALIZAR', r:0, c:3, dir:'V', pista:'Llevar un monto hacia adelante para que gane intereses'},
+   {p:'TASA', r:2, c:9, dir:'V', pista:'El precio del dinero en el tiempo, la i de la fórmula'},
+   {p:'REFINANCIAR', r:3, c:0, dir:'H', pista:'Cambiar las condiciones de una deuda por otras equivalentes'},
+   {p:'FOCAL', r:5, c:0, dir:'H', pista:'Apellido de la fecha a la que llevamos todos los importes'},
+   {p:'FLUJO', r:6, c:6, dir:'V', pista:'Diagrama de… donde se dibujan las flechas de la línea de tiempo'},
+   {p:'EQUIVALENTE', r:7, c:0, dir:'H', pista:'Lo que es un pago cuando vale lo mismo que otro en la misma fecha'} ],
+  fin:globo(P.idea,'Resuelto','Siete palabras y con eso ya puedes leer cualquier enunciado de '+
+      'reprogramación de deudas sin perderte.') }
+};
+
+/* ================= las diapositivas ================= */
+var D=[
+
+/* 1 ------------------------------------------------------------- */
+{ et:'Conectemos', t:'Ecuaciones de valor y refinanciamiento de deudas', clave:'a0',
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
+        '<span>| www.certus.edu.pe</span></div>'+
+      '<h2>Mil soles de hoy no son mil soles de mañana</h2>'+
+      '<p>Semana 9 - Matemáticas Aplicadas</p>'+
+      '<div class="via"><b>Fecha focal</b><b>Llevar y traer</b><b>Decidir</b></div>'+
+    '</div>'+
+    globo(P.pres,'La situación',
+      'Una panificadora debe dos letras en meses distintos y quiere cambiarlas por un solo pago. Un '+
+      'comercial recibe dos propuestas para pagar la misma deuda y tiene que elegir. Una heladería '+
+      'quiere juntar tres préstamos en uno. Los tres problemas se resuelven igual, y al terminar la '+
+      'sesión vas a saber cómo.')+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Llevar al futuro</h4><div class="c">'+
+      '<p>Un monto que está antes de la fecha focal avanza en el tiempo y gana intereses: se '+
+      '<b>multiplica</b> por (1 + i)ⁿ.</p></div></div>'+
+    '<div class="fc rj"><h4>Traer al presente</h4><div class="c">'+
+      '<p>Un monto que está después de la fecha focal retrocede y se descuenta: se <b>divide</b> '+
+      'entre (1 + i)ⁿ.</p></div></div>'+
+    '</div>'+
+    '<div class="av">La n son los periodos que hay entre el vencimiento y la fecha focal, en la misma '+
+    'unidad que la tasa. Con eso en mente, responde las dos preguntas de abajo.</div>' },
+
+/* 2 ------------------------------------------------------------- */
+{ et:'La regla', t:'El valor del dinero en el tiempo', clave:'a1',
+  h:'<p class="enc">Importes en fechas distintas no se suman</p>'+
+    '<p class="sub">Primero se mueven todos a una misma fecha, y recién ahí se suman o se comparan</p>'+
+    '<div class="form">Llevar al futuro = monto &times; (1 + i)<sup>n</sup>'+
+      '<small>Traer al presente = monto &divide; (1 + i)<sup>n</sup></small></div>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Si el monto está…</th><th>Qué le pasa</th><th>Operación</th></tr></thead><tbody>'+
+    '<tr><td>Antes de la fecha focal</td><td>Gana intereses y crece</td>'+
+      '<td>se multiplica por (1 + i)ⁿ</td></tr>'+
+    '<tr><td>Justo en la fecha focal</td><td>No se mueve</td><td>se queda igual, n = 0</td></tr>'+
+    '<tr class="res"><td>Después de la fecha focal</td><td>Se descuenta y se achica</td>'+
+      '<td>se divide entre (1 + i)ⁿ</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av">Abajo hay ocho situaciones. Lleva cada una a su caja: la pregunta que decide es '+
+    'siempre si el vencimiento cae antes o después de la fecha focal.</div>' },
+
+/* 3 ------------------------------------------------------------- */
+{ et:'Fecha focal', t:'El diagrama de flujo y la fecha focal', clave:'a2',
+  h:'<p class="enc">Dibuja primero, calcula después</p>'+
+    '<p class="sub">La línea de tiempo con todas las fechas, y una marcada como fecha focal</p>'+
+    '<div class="linea-t" id="lineaT"></div>'+
+    '<p class="pie2">Línea de tiempo del caso 1: las dos letras y, en rojo, la fecha focal. Pulsa '+
+    'cualquier mes para mover la fecha focal y mira cómo cambia hacia dónde apunta cada flecha.</p>'+
+    globo(P.expl,'Para qué sirve el diagrama',
+      'En el diagrama se ven de golpe las tres cosas que necesitas: cuántos periodos hay entre cada '+
+      'monto y la fecha focal, si ese monto sube o baja, y si es un ingreso o un egreso. Las flechas '+
+      'hacia arriba son lo que entra y las flechas hacia abajo lo que sale.') },
+
+/* 4 ------------------------------------------------------------- */
+{ et:'Caso 1', t:'Un solo pago en lugar de dos', clave:'a3',
+  h:'<p class="enc">Panificadora Characato E.I.R.L.</p>'+
+    '<p class="sub">Compró un horno a plazos y hoy tiene dos letras pendientes con su proveedor. '+
+    'Quiere reemplazarlas por un solo pago.</p>'+
+    '<div class="datos c2"><h4>Datos del caso</h4>'+
+    '<div class="fl"><span>Letra 1 - vence en el mes 3</span><b>8,000</b></div>'+
+    '<div class="fl"><span>Letra 2 - vence en el mes 9</span><b>12,000</b></div>'+
+    '<div class="fl"><span>Fecha del pago único (fecha focal)</span><b>mes 6</b></div>'+
+    '<div class="fl"><span>Tasa acordada, interés compuesto</span><b>2 % mensual</b></div>'+
+    '</div>'+
+    globo(P.idea,'Antes de empezar',
+      'Las dos letras están en fechas distintas, así que no se pueden sumar todavía. La letra del mes 3 '+
+      'está antes del mes 6 y la del mes 9 está después: una sube y la otra baja. Calcula la misma '+
+      'potencia para las dos, porque en ambos casos hay tres meses de diferencia.')+
+    '<div class="av">1.02³ = 1.061208. Con ese número salen las dos filas de la tabla.</div>' },
+
+/* 5 ------------------------------------------------------------- */
+{ et:'Interpretar', t:'Caso 1, qué nos dice el resultado', clave:'a4',
+  h:'<p class="enc">El número ya está. Ahora hay que leerlo</p>'+
+    '<p class="sub">Un pago único de S/ 19,797.53 en el mes 6 reemplaza a las dos letras</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Concepto</th><th class="n">Importe S/</th><th>Comentario</th></tr></thead><tbody>'+
+    '<tr><td>Letra 1 llevada del mes 3 al mes 6</td><td class="n">8,489.66</td>'+
+      '<td>creció 489.66 en tres meses</td></tr>'+
+    '<tr><td>Letra 2 traída del mes 9 al mes 6</td><td class="n">11,307.87</td>'+
+      '<td>se descontó 692.13 en tres meses</td></tr>'+
+    '<tr class="res"><td>Pago único en el mes 6</td><td class="n">19,797.53</td>'+
+      '<td>frente a 20,000 de valor nominal</td></tr>'+
+    '</tbody></table></div>'+
+    globo2(P.alum, P.bien,'Lo que hay que retener',
+      'Las dos letras se movieron tres meses con la misma tasa, pero una creció 489.66 y la otra se '+
+      'achicó 692.13. La diferencia está en el tamaño: el 6.12 % de tres meses pesa más sobre 12,000 '+
+      'que sobre 8,000. Por eso el pago único queda por debajo de la suma nominal.') },
+
+/* 6 ------------------------------------------------------------- */
+{ et:'Caso 2', t:'¿Qué propuesta de pago conviene?', clave:'a5',
+  h:'<p class="enc">Comercial Chachani S.A.C.</p>'+
+    '<p class="sub">Debe S/ 30,000 a su proveedor de abarrotes y recibe dos propuestas de pago</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Propuesta A</h4><div class="c">'+
+      '<p>Tres cuotas de <b>S/ 10,500</b> al final de los meses 1, 2 y 3.</p>'+
+      '<p class="mini">Suma nominal: 31,500</p></div></div>'+
+    '<div class="fc rj"><h4>Propuesta B</h4><div class="c">'+
+      '<p>Un solo pago de <b>S/ 31,200</b> al final del mes 2.</p>'+
+      '<p class="mini">Suma nominal: 31,200</p></div></div>'+
+    '</div>'+
+    '<div class="form">Tasa de comparación = 1.5 % mensual'+
+      '<small>es el costo del dinero de la empresa, no la tasa del proveedor</small></div>'+
+    '<div class="av">La fecha focal es hoy, el mes 0, porque queremos saber cuánto pesa cada propuesta '+
+    'en soles de hoy. Todas las cuotas vencen después, así que todas se traen al presente.</div>' },
+
+/* 7 ------------------------------------------------------------- */
+{ et:'Decidir', t:'Caso 2, la decisión', clave:'a6',
+  h:'<p class="enc">Dos formas de pagar lo mismo</p>'+
+    '<p class="sub">En valor actual, la que pesa menos es la que conviene</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Propuesta</th><th class="n">Suma nominal</th><th class="n">Valor actual</th>'+
+    '<th>Cómo se paga</th></tr></thead><tbody>'+
+    '<tr><td>A - tres cuotas</td><td class="n">31,500.00</td><td class="n">30,578.11</td>'+
+      '<td>10,500 en los meses 1, 2 y 3</td></tr>'+
+    '<tr class="res"><td>B - un solo pago</td><td class="n">31,200.00</td><td class="n">30,284.65</td>'+
+      '<td>31,200 en el mes 2</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.full,'Ojo con esto',
+      'La diferencia nominal entre las dos propuestas es de 300 soles y la diferencia real, en soles '+
+      'de hoy, es de 293.46. Aquí se parecen porque los plazos son cortos y la tasa es baja. Con '+
+      'cuotas a dos años, o con una tasa del 3 % mensual, las dos cifras se separan tanto que la '+
+      'comparación nominal te puede hacer elegir mal.') },
+
+/* 8 ------------------------------------------------------------- */
+{ et:'Tarea', t:'Juntar tres deudas en un solo pago', clave:'a7',
+  h:'<p class="enc">Heladería Yanahuara S.A.C.</p>'+
+    '<p class="sub">Tiene tres deudas con el banco y quiere pagarlas todas juntas al final del mes 5</p>'+
+    '<div class="datos c2"><h4>Datos del caso</h4>'+
+    '<div class="fl"><span>Deuda 1 - vence en el mes 2</span><b>5,000</b></div>'+
+    '<div class="fl"><span>Deuda 2 - vence en el mes 5</span><b>7,000</b></div>'+
+    '<div class="fl"><span>Deuda 3 - vence en el mes 8</span><b>6,000</b></div>'+
+    '<div class="fl"><span>Tasa del banco, Tasa Efectiva Anual</span><b>26.82 %</b></div>'+
+    '</div>'+
+    '<div class="form">TEM = (1 + TEA)<sup>1/12</sup> &minus; 1'+
+      '<small>la TEA no se divide entre 12: los intereses se capitalizan mes a mes</small></div>'+
+    globo(P.pres,'Dos avisos',
+      'Redondea la TEM a dos decimales en porcentaje antes de usarla, como pide el enunciado. Y mira '+
+      'la deuda del mes 5: vence justo en la fecha focal, así que no se mueve. Su n es cero y su '+
+      'factor es uno.') },
+
+/* 9 ------------------------------------------------------------- */
+{ et:'Crucigrama', t:'Crucigrama de las ecuaciones de valor', clave:'a8',
+  h:'<p class="enc">¿Cómo se llama cada cosa?</p>'+
+    '<p class="sub">Siete palabras salidas de las ocho diapositivas anteriores. Cada pista describe '+
+    'algo que ya viste; el nombre lo pones tú.</p>'+
+    '<div class="av">Escribe en el tablero: cada palabra completa se revisa sola y se queda marcada. '+
+    'Debajo del tablero, cada clave tiene su botón de pista.</div>' },
+
+/* 10 ------------------------------------------------------------ */
+{ et:'Cierre', t:'Conclusiones y avance del proyecto',
+  h:'<p class="enc">Lo que te llevas de la sesión</p>'+
+    '<p class="sub">Tres pasos que sirven para cualquier problema de reprogramación de deudas</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>El método</h4><div class="c"><ol>'+
+      '<li>Dibuja la línea de tiempo y marca la fecha focal.</li>'+
+      '<li>Mueve cada monto a esa fecha: multiplica si está antes, divide si está después.</li>'+
+      '<li>Recién ahí suma o compara.</li>'+
+      '</ol></div></div>'+
+    '<div class="fc rj"><h4>Los errores de siempre</h4><div class="c"><ul>'+
+      '<li>Sumar importes de fechas distintas.</li>'+
+      '<li>Dividir la TEA entre 12 en vez de sacar la raíz doceava.</li>'+
+      '<li>Contar mal la n, o mezclar tasa mensual con periodos anuales.</li>'+
+      '<li>Comparar propuestas por su suma nominal.</li>'+
+      '</ul></div></div>'+
+    '</div>'+
+    '<div class="equi" id="equi">'+
+      '<h4>Calculadora de equivalencia</h4>'+
+      '<p class="su">Para el proyecto: escribe un monto, el mes en que vence, la fecha focal y la tasa '+
+      'mensual, y mira el factor y el valor equivalente. También convierte una TEA en TEM.</p>'+
+      '<div id="equiCuerpo"></div></div>'+
+    '<div class="av"><b>Avance del proyecto.</b> Dibujen el diagrama de flujo de su campaña del mes 0 '+
+    'al mes 3, con flechas hacia arriba para los ingresos y hacia abajo para los gastos, siguiendo el '+
+    'modelo de la figura 10 de Capriccio; va en el punto 3.2.2. Y calculen la tasa de descuento de su '+
+    'marca: el costo de su préstamo, intereses entre deuda, o una TEA bancaria de referencia, y '+
+    'conviértanla a TEM con la calculadora de arriba.</div>'+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Una ecuación de valor no cambia lo que se debe: cambia la fecha en que se mira. Por eso el '+
+      'mismo dinero se ve más grande adelante y más chico atrás, y por eso dos propuestas solo se '+
+      'pueden comparar cuando están paradas en la misma fecha.') }
+];
+
+/* ================= estado ================= */
+var LS='mat_sem9_v1';
+/* en el mismo orden en que aparecen las diapositivas */
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8'];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+                  CLAVES.forEach(function(k){ g[k]={}; }); return g; }
+var G=vacio();
+try{
+  var d=JSON.parse(localStorage.getItem(LS)||'null');
+  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+}catch(e){}
+function graba(){
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  if(window.Aula && Aula.enSala) Aula.empuja();
+}
+/* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
+function fusiona(d){
+  if(!d || typeof d!=='object') return;
+  ['visto','mal','hoja'].forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  CLAVES.forEach(function(k){
+    if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
+  });
+  try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
+  yaCruz={};
+  pinta(true);
+  sopla('Recuperamos tu avance: '+totalOk()+' de '+totalMax()+' respuestas');
+}
+
+function cuantas(k){
+  var A=ACT[k];
+  if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arr')  return A.fichas.length;
+  if(A.tipo==='cruz') return A.palabras.length;
+  if(A.tipo==='cuadro') return A.fichas.length;
+  if(A.tipo==='tabla'){
+    var n=0;
+    A.filas.forEach(function(fi){ fi.forEach(function(c){ if(c.e!==undefined||c.ops) n++; }); });
+    return n;
+  }
+  if(A.tipo==='hoja'){
+    var n=0;
+    A.filas.forEach(function(fi){ fi.forEach(function(c){ if(c.e!==undefined) n++; }); });
+    return n;
+  }
+  return A.lista.length;
+}
+function hechas(k){ return Object.keys(G[k]||{}).length; }
+function lista(k){ return hechas(k)>=cuantas(k); }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+var i=0;
+
+/* ================= arrastre ================= */
+var elegida=null;
+function montaArrastre(cont, alSoltar){
+  var ghost=null;
+  qq('.ficha[data-f]', cont).forEach(function(f){
+    f.addEventListener('pointerdown', function(ev){
+      if(f.classList.contains('puesta')) return;
+      ev.preventDefault();
+      var r=f.getBoundingClientRect();
+      ghost=f.cloneNode(true); ghost.classList.add('fantasma');
+      ghost.style.width=r.width+'px';
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      document.body.appendChild(ghost);
+      f.setPointerCapture(ev.pointerId);
+      f.style.opacity='.35'; f.dataset.arrastro='';
+    });
+    f.addEventListener('pointermove', function(ev){
+      if(!ghost) return;
+      var r=ghost.getBoundingClientRect();
+      ghost.style.left=(ev.clientX-r.width/2)+'px';
+      ghost.style.top=(ev.clientY-r.height/2)+'px';
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.style.display=''; f.dataset.arrastro='1';
+      qq('.caja,.par,.cua', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par,.cua') : null;
+      if(z) z.classList.add('encima');
+    });
+    f.addEventListener('pointerup', function(ev){
+      if(!ghost) return;
+      ghost.style.display='none';
+      var bajo=document.elementFromPoint(ev.clientX, ev.clientY);
+      ghost.remove(); ghost=null; f.style.opacity='';
+      qq('.caja,.par,.cua', cont).forEach(function(z){ z.classList.remove('encima'); });
+      var z=bajo && bajo.closest ? bajo.closest('.caja,.par,.cua') : null;
+      if(z) alSoltar(f.dataset.f, z.dataset.z, f);
+    });
+    f.addEventListener('pointercancel', function(){
+      if(ghost){ ghost.remove(); ghost=null; } f.style.opacity=''; });
+    f.addEventListener('click', function(){
+      if(f.dataset.arrastro==='1'){ f.dataset.arrastro=''; return; }
+      if(f.classList.contains('puesta')) return;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      if(elegida===f.dataset.f){ elegida=null; return; }
+      elegida=f.dataset.f; f.classList.add('sel');
+    });
+  });
+  qq('.caja,.par,.cua', cont).forEach(function(z){
+    z.addEventListener('click', function(){
+      if(!elegida) return;
+      var f=cont.querySelector('.ficha[data-f="'+elegida+'"]');
+      var id=elegida; elegida=null;
+      qq('.ficha.sel', cont).forEach(function(x){ x.classList.remove('sel'); });
+      alSoltar(id, z.dataset.z, f);
+    });
+  });
+}
+function sacude(el){ if(!el) return; el.classList.add('temblor');
+  setTimeout(function(){ el.classList.remove('temblor'); }, 450); }
+
+/* ================= vistas ================= */
+function cabTarea(k){
+  var A=ACT[k];
+  var sol = !soyDocente() ? '' :
+    '<button type="button" class="solu" data-sol="'+k+'">'+
+    (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
+  return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
+         hechas(k)+' de '+cuantas(k)+'</span>'+sol+'</h4><div class="c">';
+}
+/* botón de una sola respuesta: solo lo ve el docente */
+function btnR(k, n, et){
+  if(!soyDocente()) return '';
+  return '<button type="button" class="verr" data-vr="'+k+'" data-vn="'+esc(String(n))+'">'+
+         (et||'Ver Respuesta')+'</button>';
+}
+/* el docente deja resuelto un solo ítem de la actividad */
+function resuelveUno(k, n){
+  var A=ACT[k];
+  if(A.tipo==='arr' || A.tipo==='cuadro'){
+    A.fichas.forEach(function(x){ if(x.g===n) G[k][x.id]=x.g; });
+  }
+  else if(A.tipo==='tabla'){
+    var p=String(n).split('-'), c=A.filas[+p[0]][+p[1]];
+    G[k][n] = c.ops ? c.ok : 1;
+  }
+  else if(A.tipo==='par' || A.tipo==='cruz'){ G[k][n]=1; }
+  else if(A.tipo==='quiz'){ G[k][+n]=A.lista[+n].ok; }
+  else{ G[k][+n]=1; }
+}
+/* y aquí la actividad entera */
+function resuelve(k){
+  var A=ACT[k];
+  if(A.tipo==='arr' || A.tipo==='cuadro') A.fichas.forEach(function(x){ G[k][x.id]=x.g; });
+  else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
+  else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='tabla'){
+    A.filas.forEach(function(fi,r){ fi.forEach(function(c,j){
+      if(c.e!==undefined) G[k][r+'-'+j]=1;
+      else if(c.ops) G[k][r+'-'+j]=c.ok;
+    }); });
+  }
+  else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
+  else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
+}
+function vArr(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="cajas'+(A.cajas.length===2?' c2':'')+'">';
+  A.cajas.forEach(function(c){
+    var falta=A.fichas.some(function(f){ return f.g===c.id && !g[f.id]; });
+    h+='<div class="caja" data-z="'+c.id+'"><h5>'+esc(c.t)+
+       (falta?' '+btnR(k, c.id):'')+'</h5><div class="z">'+
+       A.fichas.filter(function(f){ return g[f.id]===c.id; }).map(function(f){
+         return '<span class="ficha puesta">'+esc(f.t)+'</span>'; }).join('')+
+       '</div></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vPar(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k)+'<div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'</button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+
+    '</div><div class="pares">';
+  A.huecos.forEach(function(x,n){
+    var puesto=g[x.id], nom='';
+    A.fichas.forEach(function(f){ if(f.id===x.id) nom=f.t; });
+    h+='<div class="par'+(puesto?' ok':'')+'" data-z="h'+n+'" data-ok="'+x.id+'">'+
+       '<span class="q">'+esc(x.q)+'</span>'+
+       '<span class="hueco">'+(puesto?'<b>'+esc(nom)+'</b>':'suelta aquí '+btnR(k, x.id))+
+       '</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vQuiz(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    var resuelto=(g[n]!==undefined);
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops">';
+    p.ops.forEach(function(o,j){
+      var cls = resuelto && j===p.ok ? ' buena' : (G.mal[k+'|'+n+'|'+j] ? ' mala' : '');
+      h+='<button type="button" data-q="'+k+'" data-k="'+n+'" data-j="'+j+'"'+
+         ((resuelto||cls===' mala')?' disabled':'')+' class="'+cls.trim()+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(resuelto) h+='<p class="pq">'+esc(p.pq)+'</p>';
+    else if(soyDocente()) h+='<p class="pq">'+btnR(k, n)+'</p>';
+  });
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- crucigrama ---- */
+var CZ=null;
+function armaCruz(k){
+  var A=ACT[k];
+  var cel={}, num={}, orden=[];
+  A.palabras.forEach(function(w,n){
+    for(var j=0;j<w.p.length;j++){
+      var r=w.r+(w.dir==='V'?j:0), c=w.c+(w.dir==='H'?j:0);
+      var id=r+','+c;
+      if(!cel[id]) cel[id]={ r:r, c:c, letra:w.p.charAt(j), de:[] };
+      cel[id].de.push(n);
+    }
+  });
+  /* numeración de izquierda a derecha y de arriba a abajo */
+  var inicios=A.palabras.map(function(w,n){ return {n:n, r:w.r, c:w.c}; })
+    .sort(function(a,b){ return a.r-b.r || a.c-b.c; });
+  var sig=1, vistos={};
+  inicios.forEach(function(x){
+    var id=x.r+','+x.c;
+    if(vistos[id]===undefined){ vistos[id]=sig++; }
+    num[x.n]=vistos[id];
+  });
+  CZ={ cel:cel, num:num, clave:k };
+  return CZ;
+}
+function vCruz(k){
+  var A=ACT[k], g=G[k]||{}, z=armaCruz(k);
+  var h=cabTarea(k)+'<div class="cruz"><p class="desliza">Desliza el tablero de lado para verlo completo</p>'+
+          '<table class="cuad"><tbody>';
+  for(var r=0;r<A.filas;r++){
+    h+='<tr>';
+    for(var c=0;c<A.cols;c++){
+      var cl=z.cel[r+','+c];
+      if(!cl){ h+='<td></td>'; continue; }
+      var inicio=null;
+      A.palabras.forEach(function(w,n){ if(w.r===r && w.c===c && inicio===null) inicio=z.num[n]; });
+      var resuelta=cl.de.some(function(n){ return g[A.palabras[n].p]; });
+      var todas=cl.de.every(function(n){ return g[A.palabras[n].p]; });
+      h+='<td class="v'+(todas?' lista':'')+'" data-r="'+r+'" data-c="'+c+'">'+
+         (inicio!==null?'<span class="n">'+inicio+'</span>':'')+
+         '<input type="text" maxlength="1" inputmode="text" autocomplete="off" aria-label="fila '+(r+1)+' columna '+(c+1)+'"'+
+         (todas?' value="'+cl.letra+'" readonly':(resuelta?' value="'+cl.letra+'" readonly':''))+'>'+
+         '</td>';
+    }
+    h+='</tr>';
+  }
+  h+='</tbody></table></div><div class="pistas">';
+  ['H','V'].forEach(function(dir){
+    h+='<div><h5>'+(dir==='H'?'Horizontales':'Verticales')+'</h5><ol>';
+    A.palabras.map(function(w,n){ return {w:w,n:n}; })
+      .filter(function(x){ return x.w.dir===dir; })
+      .sort(function(a,b){ return z.num[a.n]-z.num[b.n]; })
+      .forEach(function(x){
+        var hecha=!!g[x.w.p];
+        h+='<li value="'+z.num[x.n]+'" class="'+(hecha?'ok':'')+'">'+esc(x.w.pista)+
+           ' <span style="opacity:.6">('+x.w.p.length+' letras)</span>'+
+           (hecha?'':'<button type="button" class="pist" data-pi="'+x.w.p+'">Pista</button>'+
+                     btnR(k, x.w.p))+'</li>';
+      });
+    h+='</ol></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vSel(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k)+'<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q">'+(n+1)+'. '+esc(x.q)+
+         (ok?'<small class="pre">'+esc(x.pq)+'</small>':'')+'</span>'+
+       '<span class="r"><select class="cel'+(ok?' bien':'')+'" data-s="'+k+'" data-n="'+n+'"'+
+         (ok?' disabled':'')+' aria-label="'+esc(x.q)+'">'+
+         '<option value="">elige&hellip;</option>'+
+         x.ops.map(function(o,j){
+           return '<option value="'+j+'"'+(ok&&j===x.ok?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
+       '</select>'+(ok?'':btnR(k, n))+'</span></div>';
+  });
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+/* ---- mini hoja de cálculo ---- */
+var FX=HojaFx(function(ref){ return pideCelda(ref); });
+var HOJA=null;   /* { k, celdas, memo, curso } mientras se calcula */
+
+function LET(j){ return FX.letras(j); }
+function txtCelda(k, id){
+  var t=(G.hoja||{})[k+'|'+id];
+  return (t===undefined || t===null) ? '' : String(t);
+}
+/* qué hay escrito en cada celda de la hoja que se está calculando */
+function crudoDe(k, id){
+  var A=ACT[k];
+  for(var r=0;r<A.filas.length;r++){
+    var fila=A.filas[r];
+    for(var j=0;j<fila.length;j++){
+      if(LET(j)+(r+1)!==id) continue;
+      var c=fila[j];
+      if(c.e!==undefined) return txtCelda(k, id);
+      if(c.form!==undefined) return c.form;
+      if(c.n!==undefined) return c.n;
+      return c.x===undefined ? '' : c.x;
+    }
+  }
+  return '';
+}
+function pideCelda(ref){
+  if(!HOJA) return 0;
+  if(Object.prototype.hasOwnProperty.call(HOJA.memo, ref)) return HOJA.memo[ref];
+  if(HOJA.curso[ref]) throw new Error('#CIRCULAR');
+  HOJA.curso[ref]=1;
+  var crudo=crudoDe(HOJA.k, ref), v;
+  if(crudo===undefined || crudo==='') v=0;
+  else if(typeof crudo==='number') v=crudo;
+  else if(/^\s*=/.test(String(crudo))) v=FX.evalua(String(crudo).replace(/^\s*=/,''), pideCelda);
+  else { var n=FX.aNumero(crudo); v = isNaN(n) ? String(crudo) : n; }
+  delete HOJA.curso[ref];
+  HOJA.memo[ref]=v;
+  return v;
+}
+function abreHoja(k){ HOJA={ k:k, memo:{}, curso:{} }; }
+function valorCelda(k, id){
+  try{ return { v:pideCelda(id) }; }
+  catch(e){ return { err:String(e.message||'#ERROR') }; }
+}
+
+function vHoja(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="hojaenv"><table class="hoja"><thead><tr><th class="esq"></th>';
+  A.cols.forEach(function(c,j){ h+='<th style="width:'+c.w+'px">'+LET(j)+'</th>'; });
+  h+='</tr></thead><tbody>';
+  abreHoja(k);
+  A.filas.forEach(function(fila,r){
+    h+='<tr'+(r===0?' class="enc"':'')+'><th class="nf">'+(r+1)+'</th>';
+    fila.forEach(function(c,j){
+      var id=LET(j)+(r+1);
+      if(c.e!==undefined){
+        var hecho=(g[id]!==undefined), t=txtCelda(k,id), muestra=t;
+        if(t && /^\s*=/.test(t)){ var rv=valorCelda(k,id); muestra = rv.err ? rv.err : FX.fmt(rv.v); }
+        h+='<td class="libre'+(hecho?' ok':'')+'" data-cel="'+id+'">'+
+           '<input type="text" class="hc" spellcheck="false" autocomplete="off" inputmode="text" '+
+           'data-k="'+k+'" data-id="'+id+'" aria-label="celda '+id+'" '+
+           (hecho?'readonly ':'')+(c.ph?'placeholder="'+esc(c.ph)+'" ':'')+
+           'value="'+esc(muestra)+'"></td>';
+      }else if(c.form!==undefined){
+        var rf=valorCelda(k,id);
+        h+='<td class="dada'+(rf.err?' malf':'')+'" data-cel="'+id+'" data-fx="'+id+'" title="'+esc(c.form)+'"><span class="q">'+
+           esc(rf.err ? rf.err : FX.fmt(rf.v))+'</span></td>';
+      }else if(c.n!==undefined){
+        h+='<td class="dada num" data-cel="'+id+'"><span class="q">'+esc(FX.fmt(c.n))+'</span></td>';
+      }else{
+        h+='<td'+(r===0?'':' class="rot"')+' data-cel="'+id+'"><span class="q">'+esc(c.x||'')+'</span></td>';
+      }
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<p class="avisofx">Toca una celda del cuadro para meterla en la f&oacute;rmula. '+
+     'Con Mays&uacute;s + clic armas un rango.</p>';
+  h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
+     'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
+     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- calcular: el alumno escribe el resultado ---- */
+function leeNum(t){
+  var x=String(t==null?'':t).trim().replace(/\s/g,'').replace(/^S\/\.?/i,'').replace(/%$/,'');
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(x)) x=x.replace(/,/g,'');
+  else if(/^-?\d+,\d{1,2}$/.test(x)) x=x.replace(',','.');   /* por si usan coma decimal */
+  var n=parseFloat(x);
+  return (isNaN(n) || !/^-?\d*\.?\d+$/.test(x)) ? null : n;
+}
+function vCal(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="lineas">';
+  A.lista.forEach(function(x,n){
+    var ok=(g[n]!==undefined);
+    h+='<div class="linea'+(ok?' bien':'')+'">'+
+       '<span class="q"><b>'+(n+1)+'. '+esc(x.q)+'</b>'+
+         (x.f ? '<small class="fx2">'+x.f+'</small>' : '')+
+         (x.d ? '<small class="fx2"><i>'+x.d+'</i></small>' : '')+
+         (ok  ? '<small class="pre">'+esc(x.pq)+'</small>' : '')+'</span>'+
+       '<span class="r">'+
+         '<input class="cel'+(ok?' bien':'')+'" type="text" inputmode="decimal" '+
+           'data-c="'+k+'" data-n="'+n+'" autocomplete="off" '+
+           (ok ? 'readonly value="'+esc(FX.fmt(x.e))+'"' : (x.ph?'placeholder="'+esc(x.ph)+'"':''))+
+           ' aria-label="'+esc(x.q)+'">'+
+         (x.u ? '<span class="u">'+esc(x.u)+'</span>' : '')+
+         (ok ? '' : btnR(k, n))+
+       '</span></div>';
+  });
+  h+='</div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- cuadro de estados financieros: se arma arrastrando las partidas ---- */
+function mil(n){
+  var neg = n<0, r=Math.round(Math.abs(n)*100)/100;
+  var s=r.toLocaleString('es-PE',{ minimumFractionDigits:(r%1?2:0), maximumFractionDigits:2 });
+  return neg ? '('+s+')' : s;
+}
+function cuaLinea(A, id){
+  var r=null;
+  A.cols.forEach(function(c){ c.bloques.forEach(function(b){
+    b.lineas.forEach(function(l){ if(l.id===id) r=l; }); }); });
+  return r;
+}
+function cuaTot(A, id){
+  var r=null;
+  A.cols.forEach(function(c){
+    c.bloques.forEach(function(b){ if(b.tot && b.tot.id===id) r=b.tot; });
+    if(c.gran && c.gran.id===id) r=c.gran;
+  });
+  return r;
+}
+function cuaDe(A, b){ return (b.tot && b.tot.de) || b.lineas.map(function(l){ return l.id; }); }
+function cuaValor(A, g, id){
+  var L=cuaLinea(A, id);
+  if(L){
+    if(L.calc) return Math.round(cuaValor(A, g, L.calc.de)*L.calc.pct*100)/100;
+    var s=0;
+    A.fichas.forEach(function(f){ if(g[f.id]===id) s+=f.v; });
+    return s;
+  }
+  var T=cuaTot(A, id);
+  if(!T) return 0;
+  var de = T.de || [];
+  if(!T.de){ A.cols.forEach(function(c){ c.bloques.forEach(function(b){
+      if(b.tot && b.tot.id===id) de=cuaDe(A, b); }); }); }
+  var tot=0;
+  de.forEach(function(x){
+    var ln=cuaLinea(A, x);
+    tot += cuaValor(A, g, x) * (ln && ln.s===-1 ? -1 : 1);
+  });
+  return tot;
+}
+function vCuadro(k){
+  var A=ACT[k], g=G[k]||{};
+  var libres=A.fichas.filter(function(f){ return !g[f.id]; });
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="cuadro"><div class="banco">'+
+    (libres.length ? libres.map(function(f){
+      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
+             '<span class="im">'+mil(f.v)+'</span></button>';
+    }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
+    '</div><div class="cols'+(A.cols.length===2?' c2':'')+'">';
+  A.cols.forEach(function(c){
+    h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    c.bloques.forEach(function(b){
+      if(b.t) h+='<h6>'+esc(b.t)+'</h6>';
+      b.lineas.forEach(function(l){
+        var puestas=A.fichas.filter(function(f){ return g[f.id]===l.id; });
+        var v=cuaValor(A, g, l.id);
+        var falta=A.fichas.some(function(f){ return f.g===l.id && !g[f.id]; });
+        var lleno=(l.calc || (puestas.length && !falta));
+        var det = puestas.length && !(puestas.length===1 && puestas[0].t===l.t)
+                ? '<small>'+puestas.map(function(f){ return esc(f.t); }).join(' + ')+'</small>' : '';
+        h+='<div class="cua'+(lleno?' ok':'')+(l.calc?' fijo':'')+'"'+
+           (l.calc?'':' data-z="'+l.id+'"')+'>'+
+           '<span class="n">'+(l.s===-1?'<i class="sg">(&minus;)</i> ':'')+esc(l.t)+det+
+             (l.calc ? '<small>se calcula solo</small>' : '')+'</span>'+
+           '<span class="v'+((puestas.length||l.calc)?'':' vac')+'">'+
+             ((puestas.length||l.calc) ? (l.s===-1?'('+mil(Math.abs(v))+')':mil(v)) : '—')+'</span>'+
+           (falta && !l.calc ? btnR(k, l.id) : '')+
+           '</div>';
+      });
+      if(b.tot) h+='<div class="sub"><span>'+esc(b.tot.t)+'</span><b>'+
+                   mil(cuaValor(A, g, b.tot.id))+'</b></div>';
+    });
+    if(c.gran) h+='<div class="gran"><span>'+esc(c.gran.t)+'</span><b>'+
+                  mil(cuaValor(A, g, c.gran.id))+'</b></div>';
+    h+='</div>';
+  });
+  h+='</div>';
+  if(A.cuadra && libres.length<A.fichas.length){
+    var a=cuaValor(A, g, A.cuadra[0]), b2=cuaValor(A, g, A.cuadra[1]);
+    var ok=lista(k) && Math.abs(a-b2)<0.005;
+    h+='<div class="cuadra '+(ok?'si':'no')+'">'+
+       (ok ? '&#10003; El estado cuadra: '+mil(a)+' de un lado y '+mil(b2)+' del otro'
+           : 'Los dos lados tienen que terminar en el mismo total. Van '+mil(a)+' y '+mil(b2))+'</div>';
+  }
+  h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+/* ---- tabla de trabajo: cada recuadro se revisa solo ---- */
+/* los decimales de la respuesta son los que muestra la pista de la celda */
+function fmtCel(c){
+  if(c.ph && /^\d+(\.\d+)?$/.test(c.ph)){
+    var d=(c.ph.split('.')[1]||'').length;
+    return c.e.toLocaleString('es-PE',{ minimumFractionDigits:d, maximumFractionDigits:d });
+  }
+  return FX.fmt(c.e);
+}
+function vTabla(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
+  h+='<div class="tabwrap"><table class="hoja2"><thead><tr>'+
+     A.cols.map(function(c,j){
+       return '<th'+((A.tipos&&A.tipos[j]==='n')?' class="n"':'')+'>'+esc(c)+'</th>'; }).join('')+
+     '</tr></thead><tbody>';
+  A.filas.forEach(function(fi,r){
+    var tot=fi.some(function(c){ return c.cl==='tot'; });
+    h+='<tr'+(tot?' class="tot"':'')+'>';
+    fi.forEach(function(c,j){
+      var num=(A.tipos&&A.tipos[j]==='n');
+      var id=r+'-'+j, hecho=(g[id]!==undefined);
+      if(c.e===undefined && !c.ops){
+        h+='<td'+(num?' class="n"':'')+'>'+(c.t||'')+'</td>';
+        return;
+      }
+      h+='<td class="ed'+(num?' n':'')+(hecho?' bien':'')+'">';
+      if(c.ops){
+        h+='<select class="cel'+(hecho?' bien':'')+'" data-ts="'+k+'" data-tn="'+id+'"'+
+           (hecho?' disabled':'')+'>'+
+           '<option value="">elige&hellip;</option>'+
+           c.ops.map(function(o,q){
+             return '<option value="'+q+'"'+(hecho&&q===c.ok?' selected':'')+'>'+esc(o)+'</option>';
+           }).join('')+'</select>';
+      }else{
+        h+='<input class="cel'+(hecho?' bien':'')+'" type="text" inputmode="decimal" '+
+           'data-tc="'+k+'" data-tn="'+id+'" autocomplete="off" '+
+           (hecho ? 'readonly value="'+esc(fmtCel(c))+'"'
+                  : (c.ph?'placeholder="'+esc(c.ph)+'"':''))+'>';
+      }
+      if(!hecho) h+=btnR(k, id, 'Ver');
+      if(hecho && c.pq) h+='<small class="pre">'+esc(c.pq)+'</small>';
+      h+='</td>';
+    });
+    h+='</tr>';
+  });
+  h+='</tbody></table></div>';
+  if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+
+function vista(k){
+  var t=ACT[k].tipo;
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+       : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : vQuiz(k);
+}
+
+/* ================= dibujo ================= */
+function pinta(quieto){
+  var s=D[i];
+  /* al responder dentro de la misma diapositiva no se pierde el sitio */
+  var alto = quieto ? $('lam').scrollTop : 0;
+  G.visto[i]=1; graba();
+  $('eti').textContent=s.et;
+  $('tit').textContent=s.t;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  var h=s.h||'';
+  if(s.clave) h+=vista(s.clave);
+  $('lam').innerHTML=h;
+  $('lam').scrollTop=alto;
+  $('ant').disabled=(i===0);
+  $('sig').disabled=(i===D.length-1);
+  var ok=totalOk(), mx=totalMax();
+  $('riel').style.width=Math.round(ok/mx*100)+'%';
+  $('marcador').textContent=ok+' de '+mx;
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
+    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
+  }).join('');
+  qq('#pts button').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+      i=+b.dataset.p; elegida=null; pinta(); enfoca();
+      if(modoClase==='guiado') difunde();
+    });
+  });
+  cablea();
+  if($('lineaT')) pintaLinea();
+  if($('equiCuerpo')) pintaEqui();
+  pintaModo();
+}
+
+var yaCruz={};
+function cablea(){
+  var lam=$('lam'), s=D[i];
+  if(!s.clave) return;
+  var k=s.clave, A=ACT[k];
+
+  if(A.tipo==='arr'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='cuadro'){
+    montaArrastre(lam, function(fid, zona, el){
+      var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
+      if(!f || !zona) return;
+      if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='par'){
+    montaArrastre(lam, function(fid, zona, el){
+      var caja=lam.querySelector('.par[data-z="'+zona+'"]');
+      if(!caja) return;
+      if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(el); }
+    });
+  }
+  qq('#lam button[data-q]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
+      if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+            b.classList.add('mala','temblor'); b.disabled=true;
+            setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
+    });
+  });
+
+  qq('#lam select[data-s]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
+      if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(sl.closest('.linea'));
+            sl.classList.add('mal'); sl.value='';
+            setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
+    });
+  });
+
+  qq('#lam input[data-c]', lam).forEach(function(x){
+    function revisa(){
+      if(x.readOnly) return;
+      var cl=x.dataset.c, n=+x.dataset.n, p=ACT[cl].lista[n];
+      var v=leeNum(x.value);
+      if(x.value.trim()==='') { x.classList.remove('mal'); return; }
+      if(v===null){ mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450); return; }
+      if(Math.abs(v-p.e) <= (p.tol===undefined ? 0.05 : p.tol)){
+        G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
+      }else{
+        mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450);
+      }
+    }
+    x.addEventListener('change', revisa);
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    x.addEventListener('input', function(){ x.classList.remove('mal'); });
+  });
+
+  /* celdas de la tabla de trabajo */
+  qq('#lam input[data-tc]', lam).forEach(function(x){
+    function revisa(){
+      if(x.readOnly) return;
+      var cl=x.dataset.tc, id=x.dataset.tn, p=id.split('-');
+      var c=ACT[cl].filas[+p[0]][+p[1]];
+      if(x.value.trim()===''){ x.classList.remove('mal'); return; }
+      var v=leeNum(x.value);
+      if(v===null){ mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450); return; }
+      if(Math.abs(v-c.e) <= (c.tol===undefined ? 0.05 : c.tol)){
+        G[cl][id]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
+      }else{
+        mal(); x.classList.add('mal','temblor');
+        setTimeout(function(){ x.classList.remove('temblor'); }, 450);
+      }
+    }
+    x.addEventListener('change', revisa);
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    x.addEventListener('input', function(){ x.classList.remove('mal'); });
+  });
+  qq('#lam select[data-ts]', lam).forEach(function(sl){
+    sl.addEventListener('change', function(){
+      if(sl.value==='') return;
+      var cl=sl.dataset.ts, id=sl.dataset.tn, p=id.split('-');
+      var c=ACT[cl].filas[+p[0]][+p[1]];
+      if(+sl.value===c.ok){ G[cl][id]=+sl.value; graba();
+        if(lista(cl)) fanfarria(); else bien(); pinta(true); }
+      else{ mal(); sacude(sl.closest('td')); sl.classList.add('mal'); sl.value='';
+            setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
+    });
+  });
+
+  if(A.tipo==='hoja') cableaHoja(k, A, lam);
+  if(A.tipo==='cruz') cableaCruz(k, A, lam);
+
+  /* el docente resuelve un ítem suelto, o la actividad entera */
+  qq('#lam button[data-vr]', lam).forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      if(!soyDocente()) return;
+      resuelveUno(b.dataset.vr, b.dataset.vn);
+      if(ACT[b.dataset.vr].tipo==='cruz') yaCruz={};
+      graba(); if(lista(b.dataset.vr)) fanfarria(); else bien(); pinta(true);
+    });
+  });
+  var bs=lam.querySelector('button[data-sol]');
+  if(bs) bs.addEventListener('click', function(){
+    if(!soyDocente()) return;
+    if(lista(k)){ G[k]={}; if(A.tipo==='cruz') yaCruz={}; }
+    else{ resuelve(k); fanfarria(); }
+    graba(); pinta(true);
+  });
+  /* pista del crucigrama: descubre una letra que todavía falte */
+  qq('#lam button[data-pi]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var pal=b.dataset.pi, w=null;
+      A.palabras.forEach(function(x){ if(x.p===pal) w=x; });
+      if(!w) return;
+      for(var j=0;j<w.p.length;j++){
+        var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+
+                                 '"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
+        var inp=td && td.querySelector('input');
+        if(inp && !inp.value){
+          inp.value=w.p.charAt(j); bien();
+          inp.dispatchEvent(new Event('input',{bubbles:true}));
+          inp.focus();
+          return;
+        }
+      }
+      sopla('Esa palabra ya está completa');
+    });
+  });
+}
+
+/* lo que hay escrito antes del cursor, sin espacios al final */
+function antesDelCursor(inp){
+  var v=inp.value;
+  var pos = (inp.selectionStart===null || inp.selectionStart===undefined) ? v.length : inp.selectionStart;
+  return v.slice(0, pos).replace(/\s+$/,'');
+}
+function enFormula(inp){ return !!(inp && inp.value && /^\s*=/.test(inp.value)); }
+/* ¿la fórmula espera una referencia? (justo después de = o de un operador) */
+function esperaRef(inp){
+  if(!enFormula(inp)) return false;
+  var antes=antesDelCursor(inp);
+  /* el % va detrás del número, así que ahí ya no se espera nada */
+  return /(^\s*=|[+\-*/^(,;:&<>=])$/.test(antes);
+}
+/* ¿lo último escrito es el nombre de una celda? entonces se puede cambiar o ampliar */
+function terminaEnRef(inp){
+  if(!enFormula(inp)) return false;
+  return /[A-Za-z]{1,2}\d{1,4}$/.test(antesDelCursor(inp));
+}
+/* mete el nombre de la celda donde está el cursor, como hace Excel */
+function meteRef(inp, ref, modo){
+  var v=inp.value;
+  var a = inp.selectionStart===null ? v.length : inp.selectionStart;
+  var b = inp.selectionEnd===null   ? v.length : inp.selectionEnd;
+  var izq=v.slice(0,a), der=v.slice(b), m=/([A-Za-z]{1,2}\d{1,4})$/.exec(izq);
+  if(modo==='extender' && m){
+    izq = izq.slice(0, izq.length-m[1].length) + m[1].toUpperCase() + ':' + ref;
+  }else if(modo==='reemplazar' && m){
+    izq = izq.slice(0, izq.length-m[1].length) + ref;
+  }else{
+    izq += ref;
+  }
+  inp.value = izq + der;
+  var p = izq.length;
+  try{ inp.setSelectionRange(p,p); }catch(e){}
+}
+
+/* ---- la hoja: escribir, recalcular y comprobar ---- */
+function cableaHoja(k, A, lam){
+  var inps=qq('#lam td.libre input', lam);
+  var tabla=lam.querySelector('table.hoja');
+  var aviso=lam.querySelector('.avisofx');
+
+  function pintaApunta(){
+    var act=document.activeElement;
+    var on = !!(act && act.classList && act.classList.contains('hc') &&
+                (esperaRef(act) || terminaEnRef(act)));
+    if(tabla) tabla.classList.toggle('apunta', on);
+    if(aviso) aviso.classList.toggle('ve', on);
+  }
+
+  function recalcula(salvo){
+    abreHoja(k);
+    inps.forEach(function(x){
+      if(x===salvo) return;
+      var t=txtCelda(k, x.dataset.id);
+      if(t && /^\s*=/.test(t)){
+        var r=valorCelda(k, x.dataset.id);
+        x.value = r.err ? r.err : FX.fmt(r.v);
+        x.classList.toggle('malf', !!r.err);
+      }else{
+        x.value = t;
+        x.classList.remove('malf');
+      }
+    });
+    /* las celdas fijas con fórmula también se refrescan */
+    A.filas.forEach(function(fila,r){
+      fila.forEach(function(c,j){
+        if(c.form===undefined) return;
+        var id=LET(j)+(r+1);
+        var td=lam.querySelector('td.dada[data-fx="'+id+'"]');
+        if(!td) return;
+        var rr=valorCelda(k, id);
+        td.querySelector('.q').textContent = rr.err ? rr.err : FX.fmt(rr.v);
+        td.classList.toggle('malf', !!rr.err);
+      });
+    });
+  }
+
+  inps.forEach(function(x){
+    if(x.readOnly) return;
+    x.addEventListener('focus', function(){
+      var t = txtCelda(k, x.dataset.id);
+      x.value = t;
+      /* se selecciona al entrar, como en Excel, pero sin comerse lo que ya escribió */
+      setTimeout(function(){ if(x.value===t){ try{ x.select(); }catch(e){} } pintaApunta(); }, 0);
+    });
+    x.addEventListener('input', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+      pintaApunta();
+    });
+    ['keyup','click','select'].forEach(function(ev){
+      x.addEventListener(ev, pintaApunta);
+    });
+    x.addEventListener('blur', function(){
+      G.hoja[k+'|'+x.dataset.id] = x.value;
+      graba();
+      recalcula(null);
+      pintaApunta();
+    });
+    x.addEventListener('keydown', function(e){
+      if(e.key==='Enter'){ e.preventDefault(); x.blur(); }
+      else if(e.key==='Escape'){ e.preventDefault(); x.blur(); }
+    });
+  });
+
+  /* tocar una celda del cuadro mete su nombre en la fórmula que se está escribiendo */
+  qq('#lam table.hoja td[data-cel]', lam).forEach(function(td){
+    td.addEventListener('pointerdown', function(ev){
+      var act=document.activeElement;
+      if(!act || !act.classList || !act.classList.contains('hc')) return;
+      if(td.contains(act)) return;                 /* es la celda que estoy editando */
+      var modo = esperaRef(act) ? 'insertar'
+               : (terminaEnRef(act) ? (ev.shiftKey ? 'extender' : 'reemplazar') : null);
+      if(!modo) return;                            /* la fórmula no admite una celda aquí */
+      ev.preventDefault(); ev.stopPropagation();   /* no se pierde el foco */
+      meteRef(act, td.dataset.cel, modo);
+      G.hoja[k+'|'+act.dataset.id] = act.value;
+      td.classList.add('senalada');
+      setTimeout(function(){ td.classList.remove('senalada'); }, 420);
+      pintaApunta();
+    });
+  });
+
+  var btn=lam.querySelector('button[data-chk]');
+  if(btn) btn.addEventListener('click', function(){ compruebaHoja(k, A, lam, recalcula); });
+
+  recalcula(null);
+}
+
+function compruebaHoja(k, A, lam, recalcula){
+  recalcula(null);
+  abreHoja(k);
+  var nuevas=0, fallas=0, faltan=0, primerFallo=null;
+  A.filas.forEach(function(fila,r){
+    fila.forEach(function(c,j){
+      if(c.e===undefined) return;
+      var id=LET(j)+(r+1);
+      if(G[k][id]!==undefined) return;                 /* ya estaba bien */
+      var td=lam.querySelector('td.libre[data-cel="'+id+'"]');
+      var t=txtCelda(k, id).trim();
+      td.classList.remove('mal');
+      if(t===''){ faltan++; return; }
+      if(c.f && !/^=/.test(t)){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='En '+id+' escribe la f&oacute;rmula, no el resultado. Empieza con =';
+        return;
+      }
+      var rv=valorCelda(k, id);
+      if(rv.err){
+        fallas++; td.classList.add('mal');
+        if(!primerFallo) primerFallo='La f&oacute;rmula de '+id+' no se entiende ('+esc(rv.err)+').';
+        return;
+      }
+      var acierta;
+      if(typeof c.e==='string'){
+        acierta = String(rv.v).trim().toUpperCase() === c.e.trim().toUpperCase();
+      }else{
+        var n=FX.aNumero(rv.v);
+        acierta = !isNaN(n) && Math.abs(n-c.e) < 0.05;
+      }
+      if(acierta){ G[k][id]=1; nuevas++; td.classList.add('ok'); }
+      else{ fallas++; td.classList.add('mal');
+            if(!primerFallo) primerFallo='El resultado de '+id+' todav&iacute;a no cuadra.'; }
+    });
+  });
+  graba();
+  if(nuevas && !fallas) { if(lista(k)) fanfarria(); else bien(); }
+  else if(fallas) mal();
+  if(fallas) sopla(primerFallo ? primerFallo.replace(/&oacute;/g,'ó').replace(/&iacute;/g,'í') : 'Revisa las celdas en rojo');
+  else if(!nuevas && faltan) sopla('Todavía te faltan '+faltan+(faltan===1?' celda':' celdas'));
+  pinta(true);
+}
+
+function cableaCruz(k, A, lam){
+  var g=G[k]||{};
+  function campo(r,c){ var td=lam.querySelector('.cuad td[data-r="'+r+'"][data-c="'+c+'"]');
+                       return td ? td.querySelector('input') : null; }
+  function letras(w){
+    var s='';
+    for(var j=0;j<w.p.length;j++){
+      var e=campo(w.r+(w.dir==='V'?j:0), w.c+(w.dir==='H'?j:0));
+      s += (e && e.value ? e.value.toUpperCase() : ' ');
+    }
+    return s;
+  }
+  function revisa(w){
+    if(g[w.p]) return;
+    var s=letras(w);
+    if(s.indexOf(' ')>=0){ yaCruz[w.p]=''; return; }
+    if(yaCruz[w.p]===s) return;
+    yaCruz[w.p]=s;
+    if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
+    else{
+      mal();
+      for(var j=0;j<w.p.length;j++){
+        var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
+        if(td) sacude(td);
+      }
+    }
+  }
+  qq('.cuad input', lam).forEach(function(inp){
+    var td=inp.parentNode, r=+td.dataset.r, c=+td.dataset.c;
+    inp.addEventListener('focus', function(){
+      qq('.cuad td.foco', lam).forEach(function(x){ x.classList.remove('foco'); });
+      td.classList.add('foco');
+    });
+    inp.addEventListener('input', function(){
+      var v=inp.value.replace(/[^A-Za-zÑñ]/g,'').toUpperCase();
+      inp.value=v.slice(-1);
+      if(inp.value){
+        /* salta a la siguiente casilla libre de la misma palabra */
+        var sig=campo(r,c+1) || campo(r+1,c);
+        if(sig && !sig.readOnly) sig.focus();
+      }
+      A.palabras.forEach(function(w){
+        var dentro=false;
+        for(var j=0;j<w.p.length;j++){
+          if(w.r+(w.dir==='V'?j:0)===r && w.c+(w.dir==='H'?j:0)===c){ dentro=true; break; }
+        }
+        if(dentro) revisa(w);
+      });
+    });
+    inp.addEventListener('keydown', function(e){
+      var d={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,0],ArrowUp:[-1,0]}[e.key];
+      if(d){ var x=campo(r+d[0], c+d[1]); if(x){ e.preventDefault(); x.focus(); } return; }
+      if(e.key==='Backspace' && !inp.value){
+        var a=campo(r,c-1) || campo(r-1,c);
+        if(a && !a.readOnly){ e.preventDefault(); a.value=''; a.focus(); }
+      }
+    });
+  });
+}
+
+/* ================= línea de tiempo del caso 1 ================= */
+var LT={ focal:6, montos:[{m:3, v:8000, t:'Letra 1'}, {m:9, v:12000, t:'Letra 2'}], i:0.02 };
+function pintaLinea(){
+  var c=$('lineaT'); if(!c) return;
+  var meses=[0,1,2,3,4,5,6,7,8,9,10,11,12];
+  var h='<div class="lt">';
+  meses.forEach(function(m){
+    var mo=null; LT.montos.forEach(function(x){ if(x.m===m) mo=x; });
+    var foc=(m===LT.focal);
+    var cl='lts'+(foc?' foc':'')+(mo?' con':'');
+    var dir='', val='';
+    if(mo){
+      var n=Math.abs(m-LT.focal);
+      var v = m<LT.focal ? mo.v*Math.pow(1+LT.i,n) : (m>LT.focal ? mo.v/Math.pow(1+LT.i,n) : mo.v);
+      dir = m<LT.focal ? '&rarr;' : (m>LT.focal ? '&larr;' : '=');
+      val = '<span class="eq">'+dir+' '+(Math.round(v*100)/100).toLocaleString('es-PE',
+            {minimumFractionDigits:2, maximumFractionDigits:2})+'</span>';
+    }
+    h+='<button type="button" class="'+cl+'" data-mes="'+m+'" '+
+       'aria-label="Poner la fecha focal en el mes '+m+'">'+
+       (mo?'<span class="fle">&uarr;</span><span class="mo">'+
+           mo.v.toLocaleString('es-PE')+'</span><span class="et">'+esc(mo.t)+'</span>'+val:'')+
+       '<span class="eje"></span><span class="ms">'+m+'</span>'+
+       (foc?'<span class="pin">fecha focal</span>':'')+
+       '</button>';
+  });
+  h+='</div>';
+  var tot=0;
+  LT.montos.forEach(function(x){
+    var n=Math.abs(x.m-LT.focal);
+    tot += x.m<LT.focal ? x.v*Math.pow(1+LT.i,n) : (x.m>LT.focal ? x.v/Math.pow(1+LT.i,n) : x.v);
+  });
+  h+='<div class="ltres">Pago único en el <b>mes '+LT.focal+'</b>: <b>S/ '+
+      (Math.round(tot*100)/100).toLocaleString('es-PE',{minimumFractionDigits:2,maximumFractionDigits:2})+
+      '</b> <span>con la tasa de 2 % mensual</span></div>';
+  c.innerHTML=h;
+  qq('#lineaT button[data-mes]').forEach(function(b){
+    b.addEventListener('click', function(){
+      LT.focal=+b.dataset.mes; if(son) nota(620,0,.09,.04,'triangle'); pintaLinea();
+    });
+  });
+}
+
+/* ================= calculadora de equivalencia ================= */
+var EQ={ monto:10000, mes:9, focal:6, tasa:2, tea:26.82 };
+function pintaEqui(){
+  var c=$('equiCuerpo'); if(!c) return;
+  var n=Math.abs(EQ.mes-EQ.focal), i=EQ.tasa/100;
+  var f=Math.pow(1+i,n);
+  var lleva=(EQ.mes<EQ.focal), igual=(EQ.mes===EQ.focal);
+  var v = igual ? EQ.monto : (lleva ? EQ.monto*f : EQ.monto/f);
+  var tem=(Math.pow(1+EQ.tea/100, 1/12)-1)*100;
+  function num(id, et, val, paso){
+    return '<label class="eqc"><span>'+et+'</span>'+
+           '<input type="number" step="'+(paso||'1')+'" id="'+id+'" value="'+val+'"></label>';
+  }
+  c.innerHTML=
+    '<div class="eqf">'+
+      num('eqMonto','Monto S/', EQ.monto, '0.01')+
+      num('eqMes','Vence en el mes', EQ.mes)+
+      num('eqFocal','Fecha focal, mes', EQ.focal)+
+      num('eqTasa','Tasa mensual %', EQ.tasa, '0.01')+
+    '</div>'+
+    '<div class="eqr">'+
+      '<div class="eqp"><span>n</span><b>'+n+(n===1?' mes':' meses')+'</b></div>'+
+      '<div class="eqp"><span>(1 + i)ⁿ</span><b>'+f.toFixed(6)+'</b></div>'+
+      '<div class="eqp"><span>Operación</span><b>'+
+        (igual ? 'ninguna, n = 0' : (lleva ? 'se multiplica' : 'se divide'))+'</b></div>'+
+      '<div class="eqp fin"><span>Valor en el mes '+EQ.focal+'</span><b>S/ '+
+        (Math.round(v*100)/100).toLocaleString('es-PE',
+          {minimumFractionDigits:2,maximumFractionDigits:2})+'</b></div>'+
+    '</div>'+
+    '<div class="eqf b2">'+
+      num('eqTea','TEA %', EQ.tea, '0.01')+
+      '<div class="eqp fin"><span>TEM = (1 + TEA)<sup>1/12</sup> &minus; 1</span><b>'+
+        tem.toFixed(4)+' %</b></div>'+
+      '<div class="eqp"><span>Redondeada a 2 decimales</span><b>'+tem.toFixed(2)+' %</b></div>'+
+      '<div class="eqp"><span>Si la dividieras entre 12</span><b>'+(EQ.tea/12).toFixed(2)+' %</b></div>'+
+    '</div>';
+  [['eqMonto','monto'],['eqMes','mes'],['eqFocal','focal'],['eqTasa','tasa'],['eqTea','tea']]
+  .forEach(function(p){
+    var x=$(p[0]); if(!x) return;
+    x.addEventListener('input', function(){
+      var v=parseFloat(x.value); if(isNaN(v)) return;
+      EQ[p[1]]=v; var foco=document.activeElement && document.activeElement.id;
+      var sel=x.selectionStart; pintaEqui();
+      var y=$(foco); if(y){ y.focus(); try{ y.setSelectionRange(sel,sel); }catch(e){} }
+    });
+  });
+}
+
+/* ================= modo de clase ================= */
+/* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
+var modoClase='libre';
+try{ if(localStorage.getItem('m9_modo')==='guiado') modoClase='guiado'; }catch(e){}
+
+function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+function enSala(){ return !!(window.Aula && Aula.enSala); }
+function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
+
+var tSoplo=null;
+function sopla(txt){
+  var e=$('soplo');
+  e.hidden=false; e.textContent=txt;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tSoplo);
+  tSoplo=setTimeout(function(){
+    e.classList.remove('ve');
+    setTimeout(function(){ e.hidden=true; }, 300);
+  }, 2600);
+}
+
+function pintaModo(){
+  var doc=soyDocente(), guiado=(modoClase==='guiado'), preso=atado();
+  var b=$('btnBatuta');
+  b.hidden=!doc;
+  if(doc){
+    b.classList.toggle('on', guiado);
+    b.setAttribute('aria-pressed', guiado?'true':'false');
+    $('txBatuta').textContent = guiado ? 'Modo guiado' : 'Modo libre';
+    b.title = guiado
+      ? 'Los alumnos están en tu misma diapositiva. Toca para dejarlos avanzar solos.'
+      : 'Cada alumno avanza solo. Toca para llevarlos a tu ritmo.';
+  }
+  $('pilModo').hidden=!preso;
+  $('esc').classList.toggle('atado', preso);
+  $('ant').disabled = preso || (i===0);
+  $('sig').disabled = preso || (i===D.length-1);
+  qq('#pts button').forEach(function(x){ x.disabled=preso; });
+}
+
+/* el docente publica dónde está la clase */
+function difunde(){
+  if(!soyDocente() || !window.Aula || !Aula.dirige) return;
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i } : { modo:'libre' });
+}
+function cambiaModo(){
+  if(!soyDocente()) return;
+  modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
+  try{ localStorage.setItem('m9_modo', modoClase); }catch(e){}
+  pintaModo(); difunde();
+  sopla(modoClase==='guiado'
+        ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
+        : 'Modo libre - Cada alumno avanza a su ritmo');
+}
+$('btnBatuta').addEventListener('click', cambiaModo);
+/* el alumno recibe la orden del docente */
+function recibeBatuta(d){
+  var antes=modoClase;
+  modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
+  if(modoClase==='guiado' && d && typeof d.lamina==='number'){
+    var k=Math.max(0, Math.min(D.length-1, d.lamina));
+    if(k!==i){
+      i=k; elegida=null; pinta(); enfoca();
+      nota(880,0,.1,.04,'triangle');
+      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+D.length);
+      return;
+    }
+  }
+  pintaModo();
+  if(antes==='guiado' && modoClase==='libre') sopla('Ya puedes avanzar a tu ritmo');
+  if(antes==='libre' && modoClase==='guiado') sopla('Vas al ritmo del docente');
+}
+
+/* ================= navegación ================= */
+/* deja la diapositiva centrada en la pantalla cuando se sale de cuadro */
+function enfoca(){
+  var e=$('esc');
+  if(e.classList.contains('full')) return;
+  var r=e.getBoundingClientRect();
+  if(r.top>=-2 && r.bottom<=window.innerHeight+4) return;
+  var y=window.pageYOffset + r.top - Math.max(8, (window.innerHeight-r.height)/2);
+  try{ window.scrollTo({ top:Math.max(0,y), behavior:'smooth' }); }
+  catch(x){ window.scrollTo(0, Math.max(0,y)); }
+}
+function va(n){
+  if(atado()){ sopla('La clase va al ritmo del docente'); return; }
+  var k=Math.max(0, Math.min(D.length-1, n));
+  if(k!==i){ i=k; elegida=null; pinta(); enfoca();
+             if(modoClase==='guiado') difunde(); }
+}
+$('ant').addEventListener('click', function(){ va(i-1); });
+$('sig').addEventListener('click', function(){ va(i+1); });
+function full(){
+  var e=$('esc'), dentro;
+  e.classList.toggle('full');
+  dentro=e.classList.contains('full');
+  document.body.style.overflow = dentro ? 'hidden' : '';
+  $('btnFull').textContent = dentro ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa';
+  $('btnFull2').innerHTML = dentro ? '&#10005;' : '&#9974;';
+  $('btnFull2').title = dentro ? 'Salir de pantalla completa' : 'Pantalla completa';
+  if(dentro) participaDentro(); else participaFuera();
+  var raiz=document.documentElement;
+  if(dentro && !document.fullscreenElement && raiz.requestFullscreen){
+    try{ var pr=raiz.requestFullscreen(); if(pr && pr.catch) pr.catch(function(){}); }catch(x){}
+  }else if(!dentro && document.fullscreenElement && document.exitFullscreen){
+    try{ document.exitFullscreen(); }catch(x){}
+  }
+}
+$('btnFull').addEventListener('click', full);
+$('btnFull2').addEventListener('click', full);
+document.addEventListener('fullscreenchange', function(){
+  /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
+  if(!document.fullscreenElement && $('esc').classList.contains('full')) full();
+});
+
+/* ---------- los participantes, flotando en una esquina ---------- */
+function cuentaPart(){
+  var m=$('muro'), n = m ? m.querySelectorAll('.aula-vtna').length : 0;
+  $('nPart').textContent=n;
+  $('salaPart').textContent = n===1 ? 'El aula - 1 participante'
+                                    : 'El aula - '+n+' participantes';
+}
+function participaDentro(){
+  var hoja=$('hojaMuro');
+  if(!hoja || hoja.hidden){ $('flotaPart').hidden=true; $('panelPart').hidden=true; return; }
+  $('nidoPart').appendChild(hoja);
+  hoja.style.margin='0';
+  $('flotaPart').hidden=false;
+  cuentaPart();
+}
+function participaFuera(){
+  var hoja=$('hojaMuro');
+  if(hoja && hoja.parentNode===$('nidoPart')){
+    hoja.style.margin='18px 0 0';
+    $('anclaMuro').appendChild(hoja);
+  }
+  $('flotaPart').hidden=true;
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+}
+$('flotaPart').addEventListener('click', function(){
+  var p=$('panelPart'); p.hidden=!p.hidden;
+  $('flotaPart').setAttribute('aria-expanded', p.hidden?'false':'true');
+  if(!p.hidden) cuentaPart();
+});
+$('cierraPart').addEventListener('click', function(){
+  $('panelPart').hidden=true;
+  $('flotaPart').setAttribute('aria-expanded','false');
+});
+if(window.MutationObserver && $('muro')){
+  new MutationObserver(function(){ if(!$('flotaPart').hidden) cuentaPart(); })
+    .observe($('muro'), {childList:true, subtree:true});
+}
+document.addEventListener('keydown', function(e){
+  if(e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
+  else if(e.key==='Home'){ e.preventDefault(); va(0); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
+  else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
+});
+(function(){
+  var x0=null, y0=null, z=$('esc');
+  z.addEventListener('touchstart', function(e){
+    if(e.touches.length!==1) return;
+    x0=e.touches[0].clientX; y0=e.touches[0].clientY;
+  }, {passive:true});
+  z.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    if(e.target && e.target.closest && e.target.closest('.cruz')){ x0=null; return; }
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>62 && Math.abs(dx)>Math.abs(dy)*1.7) va(i + (dx<0?1:-1));
+    x0=null; y0=null;
+  }, {passive:true});
+})();
+
+/* ================= el aula ================= */
+function resumenAula(){
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+}
+/* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
+function etiActividad(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  return 'A'+(n+1);
+}
+function tituloActividad(n){
+  var k=CLAVES[n], A=k && ACT[k];
+  return (A && A.titulo) ? A.titulo : ('Actividad '+(n+1));
+}
+function diapoDe(n){
+  var k=CLAVES[n];
+  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  return 0;
+}
+
+function ventanaAula(e){
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
+  var h='<div class="vmini">'+
+        '<div class="lin"><span>Va en la diapositiva</span><b>'+esc(e.lamina||'—')+'</b></div>'+
+        '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
+        '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
+        '<div class="rej">';
+  (e.rejilla||[]).forEach(function(r){
+    var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
+    h+='<div class="cel2'+cl+'" title="'+esc(tituloActividad(r.b))+'">'+
+       '<span>'+esc(etiActividad(r.b))+'</span><b>'+r.n+'/'+r.t+'</b></div>';
+  });
+  return h+'</div></div>';
+}
+
+function pantalla(e, alumno, cont){
+  var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
+  var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
+  var h='<div class="apdet">'+
+    '<div class="apcab">'+
+      '<span class="dato">Alumno<b>'+esc(alumno||'—')+'</b></span>'+
+      '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
+      '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
+      '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
+    '</div>'+
+    '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
+    '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
+      '<th>Avance</th><th class="n">Estado</th></tr></thead><tbody>';
+  (e.rejilla||[]).forEach(function(r){
+    var p = r.t ? Math.round(r.n/r.t*100) : 0;
+    var lleno = r.t && r.n>=r.t;
+    var cl = lleno ? ' class="ok"' : (r.n ? '' : ' class="nada"');
+    var dia = diapoDe(r.b);
+    h+='<tr'+cl+(dia===aqui?' data-aqui="1"':'')+'>'+
+       '<td>'+(dia||'—')+'</td>'+
+       '<td>'+esc(tituloActividad(r.b))+(dia===aqui?' &nbsp;<b style="color:#16307A">- Aquí está</b>':'')+'</td>'+
+       '<td class="n">'+r.n+' / '+r.t+'</td>'+
+       '<td class="mini"><span><i style="width:'+p+'%"></i></span></td>'+
+       '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
+       '</tr>';
+  });
+  h+='</tbody></table>'+
+     '<div class="apacc"><button type="button" class="o-btn o-btn-secondary" id="apSaca">'+
+     '&#10005; Sacar de la sala a '+esc(alumno||'')+'</button></div>'+
+     '</div>';
+  cont.innerHTML=h;
+  var b=cont.querySelector('#apSaca');
+  if(b) b.addEventListener('click', function(){
+    if(window.Aula && Aula.saca) Aula.saca(alumno);
+  });
+}
+if(window.Aula){
+  Aula.iniciar({ sala:'MATEV9', codigo:'MAT', resumen:resumenAula, ventana:ventanaAula,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
+            limpia:function(){ G=vacio(); yaCruz={}; i=0;
+              try{ localStorage.removeItem(LS); }catch(e){}
+              pinta(); } },
+    alModo:function(doc){
+      $('hojaMuro').hidden=!doc;
+      if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
+      var dentro=Aula.enSala;
+      $('mazo').hidden=!dentro;
+      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
+      $('puerta').querySelector('p').hidden=dentro;
+      if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
+      if(dentro){ pinta(); setTimeout(enfoca, 120); }
+      pintaModo();
+      if(doc) difunde();
+    } });
+}else{
+  $('mazo').hidden=false;
+}
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
+  aviso:'Se borrarán tus respuestas de las nueve actividades.',
+  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+                    if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
+});
+
+pinta();
+})();
+</script>
+
+</body>
+</html>
