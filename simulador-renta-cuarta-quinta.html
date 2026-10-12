@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Renta de Cuarta y Quinta Categor&iacute;a</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .sim{
+    --azul:#17386B; --azul2:#0F2749; --cian:#00A5C8; --verde:#107C41; --rojo:#C0243C;
+    --amb:#B98B00; --linea:#D8DEEA; --humo:#F4F7FC; --tinta:#1A2238; --gris:#5A6782;
+    font-family:Nunito,Inter,system-ui,sans-serif; color:var(--tinta); font-size:18px;
+  }
+  .sim *{ box-sizing:border-box; }
+  .sim button, .sim input, .sim select{ font:inherit; }
+
+  /* ---------- cabecera ---------- */
+  .sim .capa{ background:var(--azul); color:#fff; border-radius:14px 14px 0 0;
+              padding:18px 22px; display:flex; flex-wrap:wrap; gap:14px; align-items:center; }
+  .sim .capa h1{ margin:0; font-size:clamp(21px,3vw,28px); font-weight:900; letter-spacing:-.01em; }
+  .sim .capa p{ margin:4px 0 0; font-size:17px; opacity:.85; font-weight:600; }
+  .sim .capa .ej{ margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .sim .capa label{ font-size:15px; font-weight:800; letter-spacing:.04em; text-transform:uppercase;
+                    opacity:.85; }
+  .sim .capa select{ border:0; border-radius:9px; padding:9px 13px; font-size:19px; font-weight:800;
+                     color:var(--azul); background:#fff; }
+  .sim .uitpil{ background:var(--cian); color:#06283D; border-radius:99px; padding:7px 14px;
+                font-size:16px; font-weight:900; white-space:nowrap; }
+
+  .sim .cuerpo{ background:#fff; border:2px solid var(--linea); border-top:0;
+                border-radius:0 0 14px 14px; padding:20px 22px 24px; }
+  @media (min-width:1050px){
+    .sim .dos{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:24px;
+               align-items:start; }
+    .sim .lado{ position:sticky; top:62px; }
+  }
+
+  /* ---------- formulario ---------- */
+  .sim fieldset{ border:2px solid var(--linea); border-radius:12px; margin:0 0 16px; padding:0; }
+  .sim legend{ margin:0 0 0 12px; padding:3px 11px; background:var(--azul); color:#fff;
+               border-radius:7px; font-size:15px; font-weight:900; letter-spacing:.05em;
+               text-transform:uppercase; }
+  .sim .campos{ padding:6px 15px 14px; }
+  .sim .campo{ display:grid; gap:6px; padding:11px 0; border-bottom:1px dashed var(--linea); }
+  .sim .campo:last-child{ border-bottom:0; }
+  @media (min-width:620px){
+    .sim .campo{ grid-template-columns:minmax(0,1fr) 180px; align-items:center; gap:14px; }
+  }
+  .sim .campo .et{ font-size:18px; line-height:1.45; font-weight:600; }
+  .sim .campo .et b{ font-weight:800; }
+  .sim .campo .et small{ display:block; margin-top:2px; font-size:15px; color:var(--gris);
+                         font-weight:600; line-height:1.4; }
+  .sim .cas{ display:inline-block; background:var(--humo); border:1px solid var(--linea);
+                    border-radius:6px; padding:1px 7px; font-size:14px; font-weight:800;
+                    color:var(--azul); margin-right:6px; }
+  .sim .monto{ display:flex; align-items:center; border:2px solid var(--linea); border-radius:9px;
+               overflow:hidden; background:#fff; }
+  .sim .monto span{ padding:0 9px; font-size:17px; font-weight:800; color:var(--gris);
+                    background:var(--humo); align-self:stretch; display:flex; align-items:center; }
+  .sim .monto input{ border:0; width:100%; min-width:0; padding:11px 10px; font-size:20px;
+                     font-weight:800; text-align:right; font-variant-numeric:tabular-nums;
+                     color:var(--tinta); background:transparent; }
+  .sim .monto input:focus{ outline:none; }
+  .sim .monto:focus-within{ border-color:var(--azul); box-shadow:0 0 0 3px rgba(23,56,107,.14); }
+  .sim .monto.tope{ border-color:var(--amb); }
+  .sim .avisotope{ grid-column:1/-1; font-size:15px; font-weight:700; color:var(--amb); margin:0; }
+
+  .sim .acc{ display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
+  .sim .b{ border:2px solid var(--azul); background:#fff; color:var(--azul); border-radius:10px;
+           padding:10px 17px; font-size:17px; font-weight:800; cursor:pointer; }
+  .sim .b:hover{ background:var(--humo); }
+  .sim .b.pri{ background:var(--azul); color:#fff; }
+  .sim .b.pri:hover{ background:var(--azul2); }
+
+  /* ---------- resultado ---------- */
+  .sim .res{ border:2px solid var(--azul); border-radius:12px; overflow:hidden; }
+  .sim .res > h2{ margin:0; background:var(--azul); color:#fff; font-size:17px; font-weight:900;
+                  letter-spacing:.06em; text-transform:uppercase; padding:11px 16px; }
+  .sim .fila{ display:flex; gap:12px; justify-content:space-between; align-items:baseline;
+              padding:9px 16px; border-bottom:1px solid var(--linea); font-size:18px; }
+  .sim .fila .n{ line-height:1.4; }
+  .sim .fila .n i{ font-style:normal; color:var(--rojo); font-weight:900; }
+  .sim .fila .n em{ font-style:normal; color:var(--verde); font-weight:900; }
+  .sim .fila b{ font-variant-numeric:tabular-nums; font-weight:800; white-space:nowrap; }
+  .sim .fila small{ display:block; font-size:14px; color:var(--gris); font-weight:700; }
+  .sim .fila.sub{ background:var(--humo); font-weight:800; color:var(--azul); font-size:19px; }
+  .sim .fila.hito{ background:#E7F0FA; font-weight:900; color:var(--azul); font-size:20px;
+                   border-top:2px solid var(--azul); border-bottom:2px solid var(--azul); }
+  .sim .fila.cero b{ color:#AEB7C9; }
+  .sim .imp{ background:var(--azul2); color:#fff; display:flex; gap:12px; justify-content:space-between;
+             align-items:baseline; padding:13px 16px; font-size:21px; font-weight:900; }
+  .sim .imp b{ font-variant-numeric:tabular-nums; font-size:25px; }
+
+  .sim .final{ padding:16px; text-align:center; }
+  .sim .final .rot{ font-size:16px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; }
+  .sim .final .cifra{ font-size:clamp(30px,6vw,44px); font-weight:900; line-height:1.1; margin-top:4px;
+                      font-variant-numeric:tabular-nums; }
+  .sim .final .pie{ font-size:16px; font-weight:700; margin-top:6px; line-height:1.45; }
+  .sim .final.pagar{ background:#FDF0F2; color:var(--rojo); }
+  .sim .final.favor{ background:#EAF7EF; color:var(--verde); }
+  .sim .final.cero{ background:var(--humo); color:var(--gris); }
+
+  /* ---------- tramos ---------- */
+  .sim .tramos{ margin-top:16px; border:2px solid var(--linea); border-radius:12px; overflow:hidden; }
+  .sim .tramos h3{ margin:0; background:var(--humo); color:var(--azul); font-size:16px; font-weight:900;
+                   letter-spacing:.05em; text-transform:uppercase; padding:10px 16px;
+                   border-bottom:1px solid var(--linea); }
+  .sim .tabwrap{ overflow-x:auto; }
+  .sim table{ width:100%; border-collapse:collapse; min-width:520px; }
+  .sim table th{ background:var(--humo); color:var(--azul); font-size:15px; font-weight:900;
+                 text-align:left; padding:8px 12px; border-bottom:1px solid var(--linea);
+                 letter-spacing:.03em; }
+  .sim table td{ padding:8px 12px; font-size:16px; border-bottom:1px solid var(--linea);
+                 vertical-align:top; }
+  .sim table td:first-child, .sim table th:first-child{ white-space:nowrap; }
+  .sim table td.n, .sim table th.n{ text-align:right; font-variant-numeric:tabular-nums;
+                                    white-space:nowrap; }
+  .sim table tr:last-child td{ border-bottom:0; }
+  .sim table tr.usa{ background:#F2F9F5; }
+  .sim table tr.usa td{ font-weight:800; }
+  .sim table tr.tot td{ background:var(--azul); color:#fff; font-weight:900; font-size:18px; }
+  .sim table tr.tot td.n{ color:#fff; }
+
+  /* ---------- explicación ---------- */
+  .sim .pasos{ display:grid; gap:12px; margin-top:18px; }
+  @media (min-width:800px){ .sim .pasos{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  .sim .paso{ border:2px dashed var(--linea); border-radius:11px; padding:13px 16px; background:#fff; }
+  .sim .paso h4{ margin:0 0 6px; font-size:17px; font-weight:900; color:var(--azul); }
+  .sim .paso p{ margin:0; font-size:17px; line-height:1.55; }
+  .sim .paso code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:15px;
+                   background:var(--humo); border-radius:5px; padding:1px 5px; }
+  .sim .nota{ margin:16px 0 0; padding:13px 16px; border-left:5px solid var(--cian);
+              background:var(--humo); border-radius:0 10px 10px 0; font-size:17px; line-height:1.6; }
+  .sim .nota b{ font-weight:900; }
+  .sim .fuente{ margin:14px 0 0; font-size:15px; color:var(--gris); line-height:1.6; font-weight:600; }
+  .sim .fuente a{ color:var(--azul); }
+
+  @media print{
+    .o-navbar, .o-cp, .sim .acc, .o-acciones, .o-footer{ display:none !important; }
+    .sim .lado{ position:static; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> /
+    <a href="sistemas-contables-integrados.html">Sistemas Contables Integrados</a></span> /
+    <b>Simulador de renta de cuarta y quinta</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Renta de persona natural</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+
+<div class="sim">
+
+  <div class="capa">
+    <div>
+      <h1>Simulador de Renta de Cuarta y Quinta Categor&iacute;a</h1>
+      <p>Renta de persona natural &mdash; rentas de trabajo y de fuente extranjera</p>
+    </div>
+    <div class="ej">
+      <label for="ejercicio">Ejercicio</label>
+      <select id="ejercicio">
+        <option value="2026">2026</option>
+        <option value="2025" selected>2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+      </select>
+      <span class="uitpil" id="uitpil">UIT S/ 5,350</span>
+    </div>
+  </div>
+
+  <div class="cuerpo">
+  <div class="dos">
+
+    <!-- ============ datos ============ -->
+    <form id="frm" autocomplete="off">
+
+      <fieldset>
+        <legend>Rentas de cuarta categor&iacute;a</legend>
+        <div class="campos">
+          <div class="campo">
+            <span class="et"><span class="cas">107</span><b>Ejercicio individual de profesi&oacute;n,
+              arte, ciencia u oficio</b>
+              <small>Renta bruta del a&ntilde;o. Sobre este importe se aplica la deducci&oacute;n
+              del 20 %, con tope de 24 UIT.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="c107" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><span class="cas">108</span><b>Director, s&iacute;ndico, mandatario,
+              gestor de negocios, albacea y regidor</b>
+              <small>Renta bruta del a&ntilde;o. Estas rentas no tienen la deducci&oacute;n del 20 %.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="c108" value="0"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Rentas de quinta categor&iacute;a</legend>
+        <div class="campos">
+          <div class="campo">
+            <span class="et"><b>Renta bruta de quinta categor&iacute;a</b>
+              <small>Sueldos, gratificaciones, bonificaciones y dem&aacute;s ingresos del trabajo
+              en relaci&oacute;n de dependencia.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="c5" value="0"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Deducciones</legend>
+        <div class="campos">
+          <div class="campo">
+            <span class="et"><b>Deducci&oacute;n adicional de hasta 3 UIT</b>
+              <small>Gastos por arrendamiento, servicios profesionales, hoteles y restaurantes,
+              aportes a EsSalud de trabajadores del hogar y servicios tur&iacute;sticos, debidamente
+              sustentados y bancarizados.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="c3uit" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>ITF pagado</b>
+              <small>Impuesto a las Transacciones Financieras pagado en el ejercicio, cuando se
+              tienen rentas de cuarta categor&iacute;a.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="citf" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>Donaciones</b>
+              <small>A entidades calificadas. El tope es el 10 % de la renta neta del trabajo m&aacute;s
+              la renta neta de fuente extranjera.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="cdon" value="0"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Renta de fuente extranjera</legend>
+        <div class="campos">
+          <div class="campo">
+            <span class="et"><b>Renta neta de fuente extranjera</b>
+              <small>Solo la que corresponde a rentas de trabajo obtenidas en el exterior.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="crfe" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>Impuesto pagado en el exterior</b>
+              <small>Se usa como cr&eacute;dito, hasta el l&iacute;mite de la tasa media aplicada
+              sobre la renta de fuente extranjera.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="cext" value="0"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Cr&eacute;ditos del ejercicio</legend>
+        <div class="campos">
+          <div class="campo">
+            <span class="et"><b>Pagos a cuenta de cuarta categor&iacute;a</b>
+              <small>Los que declaraste y pagaste mes a mes con el 8 %.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="cpac" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>Retenciones de cuarta categor&iacute;a</b>
+              <small>El 8 % que te retuvieron tus clientes en los recibos por honorarios.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="cr4" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>Retenciones de quinta categor&iacute;a</b>
+              <small>Las que te descont&oacute; tu empleador en la planilla.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="cr5" value="0"></span>
+          </div>
+          <div class="campo">
+            <span class="et"><b>Saldo a favor del ejercicio anterior</b>
+              <small>Si el a&ntilde;o pasado te sali&oacute; saldo a favor y decidiste aplicarlo
+              contra este impuesto.</small></span>
+            <span class="monto"><span>S/</span><input type="text" inputmode="decimal" id="csfa" value="0"></span>
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="acc">
+        <button type="button" class="b pri" id="bEj">Cargar un caso de ejemplo</button>
+        <button type="button" class="b" id="bLim">Limpiar todo</button>
+        <button type="button" class="b" id="bImp">Imprimir</button>
+      </div>
+    </form>
+
+    <!-- ============ resultado ============ -->
+    <div class="lado">
+      <div class="res" id="res"></div>
+      <div class="tramos" id="tramos"></div>
+    </div>
+
+  </div>
+
+  <div class="pasos">
+    <div class="paso"><h4>Paso 1 &mdash; Renta neta de cuarta y quinta</h4>
+      <p>A la renta bruta de cuarta categor&iacute;a de la casilla 107 se le resta el 20 %, hasta un
+      tope de 24 UIT. A ese resultado se le suman las rentas de la casilla 108, que no tienen esa
+      deducci&oacute;n, y la renta bruta de quinta categor&iacute;a.</p></div>
+    <div class="paso"><h4>Paso 2 &mdash; Deducciones de 7 UIT y 3 UIT</h4>
+      <p>Se deducen 7 UIT, hasta el l&iacute;mite de la renta neta de cuarta y quinta, y hasta
+      3 UIT adicionales por gastos sustentados y bancarizados. Quien tiene rentas de las dos
+      categor&iacute;as deduce cada una una sola vez. El resultado es la renta neta del trabajo.</p></div>
+    <div class="paso"><h4>Paso 3 &mdash; ITF, donaciones y fuente extranjera</h4>
+      <p>A la renta neta del trabajo se le restan el ITF pagado y las donaciones, con tope del 10 %
+      de la renta neta del trabajo m&aacute;s la de fuente extranjera, y se le suma la renta neta de
+      fuente extranjera. As&iacute; se llega a la renta neta imponible.</p></div>
+    <div class="paso"><h4>Paso 4 &mdash; La escala progresiva</h4>
+      <p>Sobre la renta neta imponible se aplica la escala acumulativa de 8 %, 14 %, 17 %, 20 % y
+      30 % expresada en UIT. Cada tramo paga su propia tasa: no es que al pasar un tramo todo el
+      ingreso cambie de tasa.</p></div>
+    <div class="paso"><h4>Paso 5 &mdash; Los cr&eacute;ditos</h4>
+      <p>Al impuesto calculado se le restan el cr&eacute;dito por impuesto pagado en el exterior,
+      los pagos a cuenta, las retenciones de cuarta y de quinta y el saldo a favor del ejercicio
+      anterior.</p></div>
+    <div class="paso"><h4>Resultado</h4>
+      <p>Si el impuesto es mayor que los cr&eacute;ditos, queda un <b>saldo a favor del fisco</b>
+      que hay que pagar con la declaraci&oacute;n anual. Si los cr&eacute;ditos son mayores, queda un
+      <b>saldo a favor del contribuyente</b>, que se puede pedir en devoluci&oacute;n o compensar.</p></div>
+  </div>
+
+  <p class="nota"><b>El cr&eacute;dito por impuesto pagado en el exterior tiene tope.</b>
+  Se calcula la tasa media con la f&oacute;rmula
+  <code>impuesto calculado &divide; (renta neta del trabajo + renta neta de fuente extranjera + 7 UIT + 3 UIT) &times; 100</code>,
+  y el cr&eacute;dito no puede pasar de esa tasa media aplicada sobre la renta de fuente extranjera.
+  El exceso no se usa ni se arrastra al a&ntilde;o siguiente.</p>
+
+  <p class="fuente">Copia del
+  <a href="https://renta.sunat.gob.pe/simuladores/cuarta_quinta" target="_blank" rel="noopener">simulador
+  de renta de cuarta y quinta categor&iacute;a de SUNAT</a>, hecha para la clase. La secuencia de
+  c&aacute;lculo, las deducciones y la escala siguen la cartilla de instrucciones de rentas de trabajo
+  de SUNAT y el art&iacute;culo 53 de la Ley del Impuesto a la Renta. Valores de la UIT:
+  2023 S/&nbsp;4,950 &mdash; 2024 S/&nbsp;5,150 &mdash; 2025 S/&nbsp;5,350 &mdash;
+  2026 S/&nbsp;5,500 (D.S.&nbsp;301-2025-EF). Es una herramienta de apoyo para aprender el
+  c&aacute;lculo: no reemplaza a la declaraci&oacute;n anual ni al simulador oficial.</p>
+
+</div>
+</div>
+
+</div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="sistemas-contables-integrados.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Sistemas Contables Integrados</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+
+var UIT={ 2023:4950, 2024:5150, 2025:5350, 2026:5500 };
+/* escala del artículo 53 de la Ley del Impuesto a la Renta, en UIT */
+var ESCALA=[ {h:5,  t:0.08}, {h:20, t:0.14}, {h:35, t:0.17}, {h:45, t:0.20}, {h:Infinity, t:0.30} ];
+
+var CAMPOS=['c107','c108','c5','c3uit','citf','cdon','crfe','cext','cpac','cr4','cr5','csfa'];
+var LS='sim_renta_4ta5ta_v1';
+
+function num(t){
+  var x=String(t==null?'':t).trim().replace(/\s/g,'').replace(/^S\/\.?/i,'');
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(x)) x=x.replace(/,/g,'');
+  else x=x.replace(/,/g,'.');
+  var n=parseFloat(x);
+  return (isNaN(n) || n<0) ? 0 : n;
+}
+function sol(n){
+  return (Math.round(n*100)/100).toLocaleString('es-PE',
+    { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+function uits(n, uit){ return (Math.round(n/uit*100)/100).toLocaleString('es-PE',
+    { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+
+/* ---------- el cálculo, en el mismo orden que SUNAT ---------- */
+function calcula(){
+  var uit=UIT[$('ejercicio').value] || 5350;
+  var d={}; CAMPOS.forEach(function(k){ d[k]=num($(k).value); });
+
+  /* paso 1 */
+  var topeVeinte = 24*uit;
+  var veinte = Math.min(d.c107*0.20, topeVeinte);
+  var neta4 = d.c107 - veinte + d.c108;
+  var neta45 = neta4 + d.c5;
+
+  /* paso 2 */
+  var sieteTope = 7*uit, tresTope = 3*uit;
+  var siete = Math.min(sieteTope, neta45);
+  var tres  = Math.min(d.c3uit, tresTope, Math.max(0, neta45 - siete));
+  var rnt = Math.max(0, neta45 - siete - tres);
+
+  /* paso 3 */
+  var itf = Math.min(d.citf, rnt);
+  var topeDon = 0.10*(rnt + d.crfe);
+  var don = Math.min(d.cdon, topeDon, Math.max(0, rnt - itf));
+  var imponible = Math.max(0, rnt - itf - don + d.crfe);
+
+  /* paso 4 */
+  var impuesto=0, piso=0, tramos=[];
+  ESCALA.forEach(function(e){
+    var techo = (e.h===Infinity) ? Infinity : e.h*uit;
+    var base = Math.max(0, Math.min(imponible, techo) - piso);
+    impuesto += base*e.t;
+    tramos.push({ desde:piso, hasta:techo, uitH:e.h, tasa:e.t, base:base, imp:base*e.t });
+    piso = techo;
+  });
+  impuesto = Math.round(impuesto*100)/100;
+
+  /* paso 5 */
+  var baseMedia = rnt + d.crfe + siete + tres;
+  var tasaMedia = baseMedia>0 ? impuesto/baseMedia : 0;
+  var topeExt = tasaMedia*d.crfe;
+  var credExt = Math.min(d.cext, topeExt);
+  var creditos = credExt + d.cpac + d.cr4 + d.cr5 + d.csfa;
+  var saldo = Math.round((impuesto - creditos)*100)/100;
+
+  return { uit:uit, d:d, topeVeinte:topeVeinte, veinte:veinte, neta4:neta4, neta45:neta45,
+           siete:siete, sieteTope:sieteTope, tres:tres, tresTope:tresTope, rnt:rnt,
+           itf:itf, don:don, topeDon:topeDon, imponible:imponible, tramos:tramos,
+           impuesto:impuesto, tasaMedia:tasaMedia, topeExt:topeExt, credExt:credExt,
+           creditos:creditos, saldo:saldo };
+}
+
+/* ---------- pintado ---------- */
+function fila(nom, val, cls, det){
+  return '<div class="fila'+(cls?' '+cls:'')+(val===0?' cero':'')+'">'+
+         '<span class="n">'+nom+(det?'<small>'+det+'</small>':'')+'</span>'+
+         '<b>'+sol(val)+'</b></div>';
+}
+function pinta(){
+  var r=calcula(), d=r.d;
+  $('uitpil').textContent='UIT S/ '+r.uit.toLocaleString('es-PE');
+  $('rotulo').textContent='Ejercicio '+$('ejercicio').value+' · UIT S/ '+r.uit.toLocaleString('es-PE');
+
+  var h='<h2>Determinación del impuesto</h2>';
+  h+=fila('Renta bruta de cuarta categoría <span class="cas">107</span>', d.c107);
+  h+=fila('<i>(&minus;)</i> Deducción del 20 %', r.veinte,
+          '', 'tope de 24 UIT: S/ '+sol(r.topeVeinte));
+  h+=fila('<em>(+)</em> Rentas de la casilla 108, sin deducción', d.c108);
+  h+=fila('<em>(+)</em> Renta bruta de quinta categoría', d.c5);
+  h+=fila('Renta neta de cuarta y quinta categoría', r.neta45, 'sub');
+  h+=fila('<i>(&minus;)</i> Deducción de 7 UIT', r.siete,
+          '', '7 UIT del ejercicio: S/ '+sol(r.sieteTope));
+  h+=fila('<i>(&minus;)</i> Deducción adicional de hasta 3 UIT', r.tres,
+          '', 'tope de 3 UIT: S/ '+sol(r.tresTope));
+  h+=fila('Renta neta del trabajo', r.rnt, 'sub');
+  h+=fila('<i>(&minus;)</i> ITF pagado', r.itf);
+  h+=fila('<i>(&minus;)</i> Donaciones', r.don,
+          '', 'tope del 10 %: S/ '+sol(r.topeDon));
+  h+=fila('<em>(+)</em> Renta neta de fuente extranjera', d.crfe);
+  h+=fila('Renta neta imponible de trabajo y fuente extranjera', r.imponible, 'hito',
+          uits(r.imponible, r.uit)+' UIT');
+  h+='<div class="imp"><span>Impuesto calculado</span><b>S/ '+sol(r.impuesto)+'</b></div>';
+  h+=fila('<i>(&minus;)</i> Crédito por impuesto pagado en el exterior', r.credExt, '',
+          d.cext>0 ? 'tasa media '+(Math.round(r.tasaMedia*10000)/100).toLocaleString('es-PE')+
+                     ' % · tope S/ '+sol(r.topeExt) : '');
+  h+=fila('<i>(&minus;)</i> Pagos a cuenta de cuarta categoría', d.cpac);
+  h+=fila('<i>(&minus;)</i> Retenciones de cuarta categoría', d.cr4);
+  h+=fila('<i>(&minus;)</i> Retenciones de quinta categoría', d.cr5);
+  h+=fila('<i>(&minus;)</i> Saldo a favor del ejercicio anterior', d.csfa);
+  h+=fila('Total de créditos', r.creditos, 'sub');
+
+  if(Math.abs(r.saldo)<0.005){
+    h+='<div class="final cero"><div class="rot">Resultado</div>'+
+       '<div class="cifra">S/ 0.00</div>'+
+       '<div class="pie">El impuesto calculado y los créditos coinciden: no hay nada que pagar '+
+       'ni que devolver.</div></div>';
+  }else if(r.saldo>0){
+    h+='<div class="final pagar"><div class="rot">Saldo a favor del fisco</div>'+
+       '<div class="cifra">S/ '+sol(r.saldo)+'</div>'+
+       '<div class="pie">Este importe se paga junto con la declaración anual.</div></div>';
+  }else{
+    h+='<div class="final favor"><div class="rot">Saldo a favor del contribuyente</div>'+
+       '<div class="cifra">S/ '+sol(-r.saldo)+'</div>'+
+       '<div class="pie">Te retuvieron de más. Puedes pedir la devolución o compensarlo '+
+       'contra futuros pagos.</div></div>';
+  }
+  $('res').innerHTML=h;
+
+  /* desglose por tramos */
+  var t='<h3>Cómo se formó el impuesto, tramo por tramo</h3><div class="tabwrap"><table><thead><tr>'+
+        '<th>Tramo</th><th class="n">Desde</th><th class="n">Hasta</th>'+
+        '<th class="n">Tasa</th><th class="n">Parte gravada</th><th class="n">Impuesto</th>'+
+        '</tr></thead><tbody>';
+  var ant=0;
+  r.tramos.forEach(function(x){
+    var rot = (x.uitH===Infinity) ? 'Más de 45 UIT'
+            : (ant===0 ? 'Hasta '+x.uitH+' UIT' : 'Más de '+ant+' hasta '+x.uitH+' UIT');
+    t+='<tr class="'+(x.base>0?'usa':'')+'">'+
+       '<td>'+rot+'</td>'+
+       '<td class="n">'+sol(x.desde)+'</td>'+
+       '<td class="n">'+(x.hasta===Infinity?'—':sol(x.hasta))+'</td>'+
+       '<td class="n">'+Math.round(x.tasa*100)+' %</td>'+
+       '<td class="n">'+sol(x.base)+'</td>'+
+       '<td class="n">'+sol(x.imp)+'</td></tr>';
+    ant = (x.uitH===Infinity) ? ant : x.uitH;
+  });
+  t+='<tr class="tot"><td colspan="4">Impuesto calculado</td>'+
+     '<td class="n">'+sol(r.imponible)+'</td><td class="n">'+sol(r.impuesto)+'</td></tr>';
+  t+='</tbody></table></div>';
+  $('tramos').innerHTML=t;
+
+  /* avisa cuando un importe se recortó por el tope */
+  marca('c3uit', r.tres < num($('c3uit').value));
+  marca('cdon',  r.don  < num($('cdon').value));
+  marca('cext',  r.credExt < num($('cext').value));
+  marca('citf',  r.itf  < num($('citf').value));
+
+  try{
+    var g={ ej:$('ejercicio').value };
+    CAMPOS.forEach(function(k){ g[k]=$(k).value; });
+    localStorage.setItem(LS, JSON.stringify(g));
+  }catch(e){}
+}
+function marca(id, si){
+  var m=$(id).closest('.monto');
+  if(m) m.classList.toggle('tope', !!si);
+}
+
+/* ---------- eventos ---------- */
+CAMPOS.forEach(function(k){
+  var x=$(k);
+  x.addEventListener('input', pinta);
+  x.addEventListener('focus', function(){ if(num(x.value)===0) x.value=''; x.select(); });
+  x.addEventListener('blur', function(){
+    var v=num(x.value);
+    x.value = v ? v.toLocaleString('es-PE',{ maximumFractionDigits:2 }) : '0';
+    pinta();
+  });
+});
+$('ejercicio').addEventListener('change', pinta);
+
+$('bLim').addEventListener('click', function(){
+  CAMPOS.forEach(function(k){ $(k).value='0'; });
+  pinta(); $('c107').focus();
+});
+$('bEj').addEventListener('click', function(){
+  $('ejercicio').value='2025';
+  var v={ c107:'90,000', c108:'12,000', c5:'60,000', c3uit:'9,000', citf:'150', cdon:'2,000',
+          crfe:'0', cext:'0', cpac:'2,000', cr4:'3,000', cr5:'5,500', csfa:'0' };
+  CAMPOS.forEach(function(k){ $(k).value=v[k]; });
+  pinta();
+});
+$('bImp').addEventListener('click', function(){ window.print(); });
+
+try{
+  var g=JSON.parse(localStorage.getItem(LS)||'null');
+  if(g && typeof g==='object'){
+    if(g.ej && UIT[g.ej]) $('ejercicio').value=g.ej;
+    CAMPOS.forEach(function(k){ if(g[k]!==undefined) $(k).value=g[k]; });
+  }
+}catch(e){}
+pinta();
+})();
+</script>
+
+</body>
+</html>
