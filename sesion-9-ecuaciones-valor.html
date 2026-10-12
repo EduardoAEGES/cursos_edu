@@ -10,14 +10,14 @@
 <link rel="stylesheet" href="odoo.css">
 <link rel="stylesheet" href="aula.css">
 <style>
-  /* colores de la plantilla institucional Certus 2026 */
+  /* colores de la marca Thomas Jefferson */
   :root{
-    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
+    --marino:#505050; --fucsia:#E31E24; --celeste:#FFD9DB; --aqua:#E31E24; --morado:#505050;
   }
   .ai{
-    --gris:#071767; --rojo:#FC0045; --tinta:#0B1B3F; --verde:#0E8F95; --ambar:#C600A3;
-    --nrus:#071767; --rer:#0E8F95; --rmt:#C600A3; --rg:#FC0045;
-    --humo:#F1F5FD; --linea:#D5DDEF; --papel:#FFFFFF;
+    --gris:#505050; --rojo:#E31E24; --tinta:#2B2B2E; --verde:#1C6E4E; --ambar:#9A5B07;
+    --nrus:#505050; --rer:#1C6E4E; --rmt:#9A5B07; --rg:#E31E24;
+    --humo:#F4F4F6; --linea:#DCDCE0; --papel:#FFFFFF;
     max-width:1180px; margin:0 auto;
     font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   }
@@ -61,7 +61,8 @@
             background:var(--fucsia); border-radius:4px; padding:4px 9px; flex:none; }
   .cab .t{ font-size:19px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
   .cab .cu{ font-size:16px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
-  .cab .lgb{ flex:none; height:26px; width:auto; display:block; opacity:.95; }
+  .cab .lgb{ flex:none; height:26px; width:auto; display:block; background:#fff;
+             border-radius:5px; padding:3px 6px; box-sizing:content-box; }
   .cab .btf{ flex:none; font:inherit; font-size:18px; line-height:1; cursor:pointer;
              background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
              border-radius:7px; padding:7px 10px; }
@@ -89,12 +90,12 @@
   .ruta{ border:2px dashed var(--linea); border-radius:14px; background:#fff; padding:16px 18px;
          margin:16px 0 0; }
   .ruta > h4{ margin:0 0 4px; font-size:21px; font-weight:800; color:var(--tinta); }
-  .ruta > p.su{ margin:0 0 14px; font-size:18px; color:#55607F; font-weight:600; }
+  .ruta > p.su{ margin:0 0 14px; font-size:18px; color:#5E5E63; font-weight:600; }
   .ruta .via2{ display:flex; align-items:stretch; gap:0; flex-wrap:wrap; }
   .ruta .nodo{ flex:1 1 170px; min-width:0; border:2px solid var(--linea); border-radius:12px;
-               padding:11px 13px; background:#F7F9FE; display:flex; flex-direction:column; gap:8px; }
+               padding:11px 13px; background:#F8F8FA; display:flex; flex-direction:column; gap:8px; }
   .ruta .nodo.act{ border-color:var(--fucsia); background:#fff; box-shadow:0 0 0 4px rgba(252,0,69,.12); }
-  .ruta .nodo.si{ border-color:var(--verde); background:#EAF7F7; }
+  .ruta .nodo.si{ border-color:var(--verde); background:#F4F4F6; }
   .ruta .nodo.no{ border-color:#C9A227; background:#FFFBEA; }
   .ruta .nodo .pg{ font-size:12px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
                    color:#8A93AC; }
@@ -103,18 +104,18 @@
   .ruta .nodo .bt button{ flex:1; font:inherit; font-size:16px; font-weight:800; cursor:pointer;
                           border:2px solid var(--linea); background:#fff; color:var(--tinta);
                           border-radius:9px; padding:7px 4px; }
-  .ruta .nodo .bt button:hover{ border-color:var(--marino); background:#EEF3FC; }
+  .ruta .nodo .bt button:hover{ border-color:var(--marino); background:#F0F0F3; }
   .ruta .nodo .ver{ font-size:17px; font-weight:800; }
   .ruta .nodo.si .ver{ color:var(--verde); } .ruta .nodo.no .ver{ color:#8A6A00; }
   .ruta .fle{ flex:0 0 26px; display:flex; align-items:center; justify-content:center;
-              color:#B9C2D8; font-size:22px; font-weight:800; }
+              color:#B5B5BA; font-size:22px; font-weight:800; }
   @media (max-width:860px){
     .ruta .via2{ flex-direction:column; } .ruta .fle{ flex:none; height:22px; transform:rotate(90deg); }
   }
   .ruta .fin{ margin-top:14px; border-radius:12px; padding:13px 16px; font-size:19px; line-height:1.5;
-              border:2px solid var(--linea); background:#F7F9FE; color:var(--tinta); }
+              border:2px solid var(--linea); background:#F8F8FA; color:var(--tinta); }
   .ruta .fin b{ display:block; font-size:22px; margin-bottom:3px; }
-  .ruta .fin.v1{ border-color:var(--verde); background:#EAF7F7; } .ruta .fin.v1 b{ color:var(--verde); }
+  .ruta .fin.v1{ border-color:var(--verde); background:#F4F4F6; } .ruta .fin.v1 b{ color:var(--verde); }
   .ruta .fin.v2{ border-color:#C9A227; background:#FFFBEA; } .ruta .fin.v2 b{ color:#8A6A00; }
   .ruta .fin.v3{ border-color:var(--fucsia); background:#FFF1F4; } .ruta .fin.v3 b{ color:var(--fucsia); }
   .ruta .otra{ margin-top:12px; }
@@ -126,9 +127,9 @@
   .verr{ font:inherit; border:0; background:#FFF0B8; color:#6B5200; font-size:15px; font-weight:800;
          border-radius:99px; padding:5px 12px; cursor:pointer; white-space:nowrap; }
   .verr:hover{ background:#FFE07A; }
-  .pist{ font:inherit; border:0; background:#E3ECFF; color:var(--marino); font-size:14px;
+  .pist{ font:inherit; border:0; background:#FBE3E4; color:var(--marino); font-size:14px;
          font-weight:800; border-radius:99px; padding:3px 10px; cursor:pointer; margin-left:8px; }
-  .pist:hover{ background:#CBDCFF; }
+  .pist:hover{ background:#F6CFD1; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
   .cuadro{ display:grid; gap:14px; }
@@ -139,12 +140,12 @@
                  letter-spacing:.05em; text-transform:uppercase; background:var(--marino); }
   .cuadro .ctit.na{ background:#D4683B; }
   .cuadro h6{ margin:0; padding:8px 15px; font-size:17px; font-weight:800; letter-spacing:.04em;
-              text-transform:uppercase; color:var(--marino); background:#EDF2FF; }
+              text-transform:uppercase; color:var(--marino); background:#EFEFF2; }
   .cuadro .cua{ display:flex; gap:12px; align-items:center; justify-content:space-between;
                 padding:9px 15px; border-bottom:1px dashed var(--linea); cursor:pointer;
                 min-height:52px; }
-  .cuadro .cua:hover{ background:#FAFCFF; }
-  .cuadro .cua.encima{ background:#E7F0FF; outline:2px dashed var(--marino); outline-offset:-3px; }
+  .cuadro .cua:hover{ background:#FAFAFB; }
+  .cuadro .cua.encima{ background:#EFEFF2; outline:2px dashed var(--marino); outline-offset:-3px; }
   .cuadro .cua.ok{ background:#F4FBF7; }
   .cuadro .cua.fijo{ cursor:default; background:#FFF8E8; }
   .cuadro .cua .n{ font-size:19px; line-height:1.4; color:var(--tinta); }
@@ -153,9 +154,9 @@
   .cuadro .cua .n .sg{ font-style:normal; font-weight:800; color:var(--rojo); }
   .cuadro .cua .v{ font-size:20px; font-weight:800; font-variant-numeric:tabular-nums;
                    white-space:nowrap; color:var(--tinta); }
-  .cuadro .cua .v.vac{ color:#C3CADA; font-weight:700; }
+  .cuadro .cua .v.vac{ color:#BFBFC4; font-weight:700; }
   .cuadro .sub{ display:flex; gap:12px; justify-content:space-between; align-items:center;
-                padding:9px 15px; background:#F3F5FA; font-size:19px; font-weight:800;
+                padding:9px 15px; background:#F4F4F6; font-size:19px; font-weight:800;
                 color:var(--marino); border-bottom:1px solid var(--linea); }
   .cuadro .sub b{ font-variant-numeric:tabular-nums; }
   .cuadro .gran{ display:flex; gap:12px; justify-content:space-between; align-items:center;
@@ -184,13 +185,13 @@
         background:
           radial-gradient(760px 380px at 108% -12%, rgba(32,211,255,.17), transparent 62%),
           radial-gradient(620px 320px at -10% 112%, rgba(198,0,163,.09), transparent 62%),
-          #F7F9FE; }
+          #F8F8FA; }
   .lam p{ margin:0 0 14px; }
   .lam p:last-child{ margin-bottom:0; }
   .lam b, .lam strong{ color:var(--tinta); font-weight:700; }
   .lam .enc{ margin:0 0 6px; font-size:clamp(29px,4.2vw,42px); font-weight:800;
              color:var(--tinta); letter-spacing:-.4px; line-height:1.22; }
-  .lam .sub{ margin:0 0 22px; font-size:21px; color:#55607F; font-weight:600; }
+  .lam .sub{ margin:0 0 22px; font-size:21px; color:#5E5E63; font-weight:600; }
   .lam h3{ margin:24px 0 11px; font-size:22px; font-weight:800; color:var(--gris);
            text-transform:uppercase; letter-spacing:.06em; border-bottom:2px solid var(--linea);
            padding-bottom:6px; }
@@ -200,10 +201,11 @@
          padding:22px clamp(18px,3vw,30px) 24px; background:var(--marino); }
   .tapa::after{ content:''; position:absolute; right:-70px; top:-110px; width:300px; height:300px;
                 border-radius:50%; background:radial-gradient(circle at 35% 35%,
-                rgba(252,0,69,.95), rgba(198,0,163,.55) 58%, transparent 72%); }
+                rgba(227,30,36,.95), rgba(227,30,36,.42) 58%, transparent 72%); }
   .tapa .fil{ position:relative; z-index:1; display:flex; align-items:center; gap:11px;
               flex-wrap:wrap; margin-bottom:16px; }
-  .tapa .fil img{ height:34px; width:auto; display:block; }
+  .tapa .fil img{ height:34px; width:auto; display:block; background:#fff;
+                  border-radius:7px; padding:5px 9px; box-sizing:content-box; }
   .tapa .fil span{ font-size:17px; font-weight:600; opacity:.86; }
   .tapa h2{ position:relative; z-index:1; margin:0; font-size:clamp(29px,4.6vw,47px);
             font-weight:900; letter-spacing:-.6px; line-height:1.14; }
@@ -412,10 +414,10 @@
   table.hoja{ border-collapse:collapse; table-layout:fixed; width:max-content; background:#fff;
               font-variant-numeric:tabular-nums; }
   table.hoja th, table.hoja td{ border:1px solid #C9D2E6; padding:0; height:44px; }
-  table.hoja thead th{ background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+  table.hoja thead th{ background:#ECECEF; color:#5E5E63; font-size:15px; font-weight:800;
                        text-align:center; letter-spacing:.06em; height:30px; }
   table.hoja th.esq{ width:40px; background:#DFE6F5; }
-  table.hoja th.nf{ width:40px; background:#E9EEF9; color:#55607F; font-size:15px; font-weight:800;
+  table.hoja th.nf{ width:40px; background:#ECECEF; color:#5E5E63; font-size:15px; font-weight:800;
                     text-align:center; }
   table.hoja td{ font-size:20px; color:var(--tinta); }
   table.hoja td .q{ display:block; padding:7px 9px; white-space:nowrap; overflow:hidden;
@@ -425,21 +427,21 @@
   table.hoja tr.enc td .q{ font-weight:800; font-size:17px; letter-spacing:.02em; }
   table.hoja td.num .q{ text-align:right; }
   table.hoja td.dada{ background:#F3F6FD; }
-  table.hoja td.dada .q{ text-align:right; color:#44506F; }
+  table.hoja td.dada .q{ text-align:right; color:#4A4A4E; }
   table.hoja td.libre{ background:#FFFBEA; }
   table.hoja td.libre input{ width:100%; height:44px; border:0; background:transparent; font:inherit;
                              font-size:20px; text-align:right; padding:0 9px; color:var(--tinta);
                              font-variant-numeric:tabular-nums; }
   table.hoja td.libre input:focus{ outline:2px solid var(--fucsia); outline-offset:-2px;
                                    background:#fff; text-align:left; }
-  table.hoja td.libre.ok{ background:#EAF7F7; }
+  table.hoja td.libre.ok{ background:#F4F4F6; }
   table.hoja td.libre.ok input{ color:var(--verde); font-weight:700; }
   table.hoja td.libre.mal{ background:#FBEDEC; }
   table.hoja td.libre.mal input{ color:#8A201B; }
   table.hoja td.malf .q, table.hoja td.libre input.malf{ color:#8A201B; }
-  .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#44506F; }
+  .hint{ margin:0 0 4px; font-size:20px; line-height:1.6; color:#4A4A4E; }
   .linea .q b{ display:block; font-size:21px; font-weight:800; color:var(--tinta); }
-  .linea .q .fx2{ display:block; margin-top:3px; font-size:17px; color:#55607F; font-weight:600; }
+  .linea .q .fx2{ display:block; margin-top:3px; font-size:17px; color:#5E5E63; font-weight:600; }
   .linea .q .fx2 i{ font-style:normal; color:var(--marino); font-weight:800; }
   /* ficha de datos de la empresa, para tenerlos a la vista al calcular */
   .datos{ display:grid; gap:0; border:2px dashed var(--linea); border-radius:12px; overflow:hidden;
@@ -459,12 +461,12 @@
   .avisofx{ display:none; margin:9px 0 0; font-size:18px; font-weight:700; color:var(--fucsia); }
   .avisofx.ve{ display:block; }
   .hbar{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:13px; }
-  .hbar .fx{ font-size:18px; color:#55607F; line-height:1.5; }
+  .hbar .fx{ font-size:18px; color:#5E5E63; line-height:1.5; }
   .hbar .fx b{ color:var(--marino); font-weight:700; }
-  .pista-fx{ margin:12px 0 0; font-size:19px; line-height:1.6; color:#44506F;
+  .pista-fx{ margin:12px 0 0; font-size:19px; line-height:1.6; color:#4A4A4E;
              border-left:3px solid var(--celeste); padding-left:11px; }
   .pista-fx code{ font-family:ui-monospace,Menlo,Consolas,monospace; font-size:18px;
-                  background:#EEF3FC; border-radius:4px; padding:1px 5px; color:var(--marino); }
+                  background:#F0F0F3; border-radius:4px; padding:1px 5px; color:var(--marino); }
   @media (max-width:560px){
     table.hoja td{ font-size:18px; } table.hoja td .q{ padding:6px 8px; }
     table.hoja td.libre input{ font-size:18px; padding:0 8px; }
@@ -545,7 +547,7 @@
   .hoja2 td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
   .hoja2 td.ed{ background:#FFF9E3; }
   .hoja2 td.ed.bien{ background:#F2FAF6; }
-  .hoja2 tr.tot td{ background:#EDF2FF; font-weight:800; color:var(--marino); font-size:20px; }
+  .hoja2 tr.tot td{ background:#EFEFF2; font-weight:800; color:var(--marino); font-size:20px; }
   .hoja2 tr.tot td.ed{ background:#FFF4CC; }
   .hoja2 tr.tot td.ed.bien{ background:#E6F6EC; }
   .hoja2 td.ed .cel{ width:100%; min-width:120px; }
@@ -602,6 +604,8 @@
   .eqp b{ font-size:21px; font-weight:900; color:var(--marino); font-variant-numeric:tabular-nums; }
   .eqp.fin{ border-style:solid; border-color:var(--verde); background:#F2FAF6; }
   .eqp.fin b{ color:var(--verde); }
+  .elenco{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
+           clip-path:inset(50%); white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -629,10 +633,10 @@
 <div class="ai">
 
   <div class="marca">
-    <img class="lgc" src="marca/certus-azul.png" alt="Certus">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
       <h1>Ecuaciones de valor y refinanciamiento de deudas</h1>
-      <p><span class="sem">Sesi&oacute;n 9</span> - Matem&aacute;ticas Aplicadas - Valor del dinero en el tiempo y comparaci&oacute;n de propuestas</p>
+      <p><span class="sem">Sesi&oacute;n 9</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -658,7 +662,7 @@
         <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
           <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
         <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
-        <img class="lgb" src="marca/certus-blanco.png" alt="Certus">
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
         <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
                 aria-label="Pantalla completa">&#9974;</button>
       </div>
@@ -674,6 +678,14 @@
       </div>
     </div>
     <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
   </div>
 
   <div id="anclaMuro">
@@ -721,9 +733,9 @@ function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorA
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
                         .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-var P={ pres:'personajes/profe-presenta.webp', idea:'personajes/profe-idea.webp',
-        full:'personajes/profe-completa.webp', expl:'personajes/tutor-explica.webp',
-        bien:'personajes/tutor-bien.webp',     alum:'personajes/alumno-senala.webp' };
+var P={ pres:'personajes/tj-docente-presenta.webp', idea:'personajes/tj-docente-puntero.webp',
+        full:'personajes/tj-alumna-sorpresa.webp',   expl:'personajes/tj-docente-puntero.webp',
+        bien:'personajes/tj-alumno-senala.webp',     alum:'personajes/tj-alumno-sentado.webp' };
 function globo(img, et, txt){
   return '<div class="perso"><img src="'+img+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+esc(et)+'</span>'+txt+'</div></div>';
@@ -1148,8 +1160,8 @@ var D=[
 /* 1 ------------------------------------------------------------- */
 { et:'Conectemos', t:'Ecuaciones de valor y refinanciamiento de deudas', clave:'a0',
   h:'<div class="tapa">'+
-      '<div class="fil"><img src="marca/certus-blanco.png" alt="Certus">'+
-        '<span>| www.certus.edu.pe</span></div>'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
       '<h2>Mil soles de hoy no son mil soles de mañana</h2>'+
       '<p>Semana 9 - Matemáticas Aplicadas</p>'+
       '<div class="via"><b>Fecha focal</b><b>Llevar y traer</b><b>Decidir</b></div>'+
@@ -2644,7 +2656,7 @@ function pantalla(e, alumno, cont){
     var dia = diapoDe(r.b);
     h+='<tr'+cl+(dia===aqui?' data-aqui="1"':'')+'>'+
        '<td>'+(dia||'—')+'</td>'+
-       '<td>'+esc(tituloActividad(r.b))+(dia===aqui?' &nbsp;<b style="color:#16307A">- Aquí está</b>':'')+'</td>'+
+       '<td>'+esc(tituloActividad(r.b))+(dia===aqui?' &nbsp;<b style="color:#505050">- Aquí está</b>':'')+'</td>'+
        '<td class="n">'+r.n+' / '+r.t+'</td>'+
        '<td class="mini"><span><i style="width:'+p+'%"></i></span></td>'+
        '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
