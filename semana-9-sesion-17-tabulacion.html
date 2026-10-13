@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sesi&oacute;n 9 - Codificaci&oacute;n, base de datos y tabulaci&oacute;n</title>
+<title>Semana 9 - Sesi&oacute;n 17 - Codificaci&oacute;n, base de datos y tabulaci&oacute;n</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -623,7 +623,7 @@
 
 <div class="o-cp">
   <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
-  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="investigacion-cuantitativa.html">Investigaci&oacute;n Cuantitativa</a></span> / <b>Sesi&oacute;n 9</b></span>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="investigacion-cuantitativa.html">Investigaci&oacute;n Cuantitativa</a></span> / <b>Semana 9 &middot; Sesi&oacute;n 17</b></span>
   <div class="o-cp-right"><span class="o-count" id="rotulo">Sesi&oacute;n 7</span></div>
 </div>
 
@@ -636,7 +636,7 @@
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
       <h1>Codificaci&oacute;n, base de datos y tabulaci&oacute;n univariante</h1>
-      <p><span class="sem">Sesi&oacute;n 9</span> - Investigaci&oacute;n Cuantitativa - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+      <p><span class="sem">Semana 9 &middot; Sesi&oacute;n 17</span> - Investigaci&oacute;n Cuantitativa - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -698,11 +698,9 @@
 
   <p class="aviso" style="margin-top:16px">Semana 9 de Investigaci&oacute;n Cuantitativa:
     codificaci&oacute;n y libro de c&oacute;digos, estructura de la base de datos y tabulaci&oacute;n
-    univariante en Excel. La encuesta de consumo de caf&eacute; con veinte respuestas es un caso de
-    clase, no un estudio real. Las hojas de c&aacute;lculo de esta sesi&oacute;n entienden
-    <code>CONTAR.SI</code>, <code>SUMA</code>, <code>PROMEDIO</code>, <code>MEDIANA</code>,
-    <code>MODA</code>, <code>MIN</code>, <code>MAX</code>, <code>DESVEST</code> y
-    <code>REDONDEAR</code>, igual que Excel.</p>
+    univariante. La encuesta de consumo de caf&eacute; con veinte respuestas es un caso de clase, no un
+    estudio real. Todo se resuelve marcando la alternativa correcta: la parte de hoja de c&aacute;lculo
+    se trabaja aparte, en el laboratorio.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
@@ -1105,11 +1103,13 @@ a3:{ tipo:'sel', titulo:'Actividad 4 - Errores en la base de datos',
    { q:'Un compañero puso dos filas para el encuestado 7, una con sus datos y otra con sus respuestas. ¿Qué está mal?',
      ops:['Nada, se ve más ordenado','La regla es una fila por encuestado: todo lo suyo va en la misma fila',
           'Debió poner tres filas, una por bloque de preguntas'], ok:1,
-     pq:'Si un encuestado ocupa dos filas, Excel los cuenta como dos personas y todos los totales salen mal.' },
+     pq:'Si un encuestado ocupa dos filas, al contar salen dos personas donde hay una, y todos los '+
+        'totales quedan mal.' },
    { q:'En la columna P3_Lugar hay celdas con 1, 2, 3, 4 y otras que dicen «bodega» escrito a mano.',
      ops:['Da igual, se entiende','Hay que dejar un solo formato: o todo código o todo texto, nunca mezclado',
           'Conviene dejar las dos cosas por si acaso'], ok:1,
-     pq:'CONTAR.SI cuenta los 2 pero no las palabras, y la tabla sale incompleta sin avisar.' },
+     pq:'Al contar, los 2 y la palabra «bodega» van por caminos distintos, y la tabla sale incompleta '+
+        'sin que nada avise.' },
    { q:'Un encuestado no respondió su edad y la celda quedó vacía.',
      ops:['Se pone 0','Se pone el código de dato perdido que fijaste en el libro de códigos, por ejemplo 99',
           'Se borra toda la fila'], ok:1,
@@ -1127,101 +1127,111 @@ a3:{ tipo:'sel', titulo:'Actividad 4 - Errores en la base de datos',
 
 /* 5 ------------------------------------------------------------- */
 a4:{ tipo:'tabla', titulo:'Actividad 5 - De la encuesta a la fila',
-  intro:'Llegó el cuestionario del encuestado 21. Con el libro de códigos al lado, escribe el número que '+
-        'va en cada columna de la base. Donde falte el dato, usa el código reservado.',
+  intro:'Llegó el cuestionario del encuestado 21. Con el libro de códigos al lado, elige el número que '+
+        'va en cada columna de la base. Donde falte el dato, el código reservado.',
   cols:['Columna de la base','Lo que respondió','Código que va en la celda'],
-  tipos:['','','n'],
+  tipos:['','',''],
   filas:[
    [{t:'<code>ID</code>'}, {t:'Es el encuestado número 21'},
-    {e:21, tol:0, ph:'21', pq:'El ID solo identifica la fila; nunca entra en un promedio.'}],
+    {ops:['1','21','20'], ok:1, pq:'El ID solo identifica la fila; nunca entra en un promedio.'}],
    [{t:'<code>D1_Sexo</code>'}, {t:'Marcó «Femenino»'},
-    {e:1, tol:0, ph:'1', pq:'1 = Femenino, según el libro de códigos.'}],
+    {ops:['1','2','F'], ok:0, pq:'1 = Femenino, según el libro de códigos. Y va el número, no la letra.'}],
    [{t:'<code>P1_Frecuencia</code>'}, {t:'Marcó «Casi siempre»'},
-    {e:3, tol:0, ph:'3', pq:'Nunca 1, A veces 2, Casi siempre 3, Siempre 4.'}],
+    {ops:['4','2','3'], ok:2, pq:'Nunca 1, A veces 2, Casi siempre 3, Siempre 4.'}],
    [{t:'<code>P2_Vasos_sem</code>'}, {t:'Escribió «7 vasos»'},
-    {e:7, tol:0, ph:'7', pq:'Va el número tal cual: es una variable de razón, no un código.'}],
+    {ops:['3','7','1'], ok:1, pq:'Va el número tal cual: es una variable de razón, no un código.'}],
    [{t:'<code>P3_Lugar</code>'}, {t:'Marcó «Lo trae de casa»'},
-    {e:4, tol:0, ph:'4', pq:'Es la cuarta opción de la lista, así que su código es 4.'}],
+    {ops:['1','3','4'], ok:2, pq:'Es la cuarta opción de la lista, así que su código es 4.'}],
    [{t:'<code>Edad</code>'}, {t:'Dejó la pregunta en blanco'},
-    {e:99, tol:0, ph:'99', pq:'El dato perdido lleva su código reservado. Después se le dice a Excel que '+
-        'no lo tome en cuenta; lo que no se puede es dejarlo en cero ni en blanco.'}]
+    {ops:['0','99','se deja vacía'], ok:1,
+     pq:'El dato perdido lleva su código reservado. Un 0 se promediaría como si tuviera cero años, y '+
+        'una celda vacía no se distingue de un olvido al copiar.'}]
   ],
   fin:globo(P.sorp,'Resuelto','21, 1, 3, 7, 4 y 99. Esa es la fila completa del encuestado 21, y así se '+
       'arma la base entera: un cuestionario, una fila.') },
-a5:{ tipo:'hoja', titulo:'Actividad 6 - La tabla de frecuencias con CONTAR.SI',
-  intro:'A la izquierda está la columna P3_Lugar de los veinte encuestados. A la derecha, la tabla de frecuencias a medio hacer. La celda F2 ya trae la fórmula: cópiala para las otras tres categorías y después suma la columna.',
-  fx:'Escribe la fórmula empezando con <b>=</b>. Aquí necesitas <b>CONTAR.SI(rango, criterio)</b> y <b>SUMA</b>. Los signos de dólar de <b>$B$2:$B$21</b> fijan el rango para que no se mueva al copiar.',
-  cols:[{w:58},{w:112},{w:22},{w:78},{w:236},{w:120}],
-  filas:[
-   [{x:'ID'}, {x:'P3_Lugar'}, {x:''}, {x:'Código'}, {x:'Categoría'}, {x:'fi'}],
-   [{n:1}, {n:1}, {x:''}, {n:1}, {x:'Cafetería del instituto'}, {form:'=CONTAR.SI($B$2:$B$21,D2)'}],
-   [{n:2}, {n:1}, {x:''}, {n:2}, {x:'Bodega del barrio'}, {e:5, f:true, ph:'=CONTAR.SI($B$2:$B$21,D3)'}],
-   [{n:3}, {n:2}, {x:''}, {n:3}, {x:'Cafetería de la calle'}, {e:4, f:true}],
-   [{n:4}, {n:1}, {x:''}, {n:4}, {x:'Lo trae de casa'}, {e:3, f:true}],
-   [{n:5}, {n:3}, {x:''}, {x:''}, {x:'Total'}, {e:20, f:true, ph:'=SUMA(F2:F5)'}],
-   [{n:6}, {n:1}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:7}, {n:2}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:8}, {n:4}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:9}, {n:1}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:10}, {n:2}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:11}, {n:1}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:12}, {n:3}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:13}, {n:1}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:14}, {n:2}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:15}, {n:4}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:16}, {n:3}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:17}, {n:1}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:18}, {n:2}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:19}, {n:3}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:20}, {n:4}, {x:''}, {x:''}, {x:''}, {x:''}]
-  ],
-  ayuda:'Si escribes <code>=CONTAR.SI($B$2:$B$21,D3)</code> le estás diciendo a Excel: cuenta cuántas celdas del rango tienen el número que está en D3. Por eso la fórmula sirve igual para las cuatro categorías.',
-  fin:globo(P.punt,'Resuelto','8, 5, 4 y 3. La suma tiene que dar 20, el número de encuestados: si no da, se escapó alguien o se contó dos veces. Y fíjate que ninguna categoría quedó en cero, pero si quedara, la fila no se borra: un cero también es un resultado.') },
 
-a6:{ tipo:'hoja', titulo:'Actividad 7 - Frecuencias relativas y acumuladas',
-  intro:'Ahora las frecuencias absolutas ya están puestas. Calcula el porcentaje de cada categoría y el porcentaje acumulado. Las dos primeras celdas traen la fórmula hecha.',
-  fx:'Aquí solo necesitas dividir, sumar y <b>SUMA</b>. El <b>$C$6</b> con dólares fija el total para que no se mueva al copiar hacia abajo.',
-  cols:[{w:78},{w:236},{w:90},{w:118},{w:118}],
+/* 6 ------------------------------------------------------------- */
+a5:{ tipo:'tabla', titulo:'Actividad 6 - La tabla de frecuencias',
+  intro:'Esta es la columna P3_Lugar de los veinte encuestados, en el orden en que llegaron: '+
+        '<b>1 1 2 1 3 1 2 4 1 2 1 3 1 2 4 3 1 2 3 4</b>. Cuenta cuántas veces aparece cada código y '+
+        'elige el resultado.',
+  cols:['Código','Categoría','Frecuencia absoluta (fi)'],
+  tipos:['','','n'],
   filas:[
-   [{x:'Código'}, {x:'Categoría'}, {x:'fi'}, {x:'hi %'}, {x:'Hi %'}],
-   [{n:1}, {x:'Cafetería del instituto'}, {n:8}, {form:'=C2/$C$6*100'}, {form:'=D2'}],
-   [{n:2}, {x:'Bodega del barrio'}, {n:5}, {e:25, f:true, ph:'=C3/$C$6*100'}, {e:65, f:true, ph:'=E2+D3'}],
-   [{n:3}, {x:'Cafetería de la calle'}, {n:4}, {e:20, f:true}, {e:85, f:true}],
-   [{n:4}, {x:'Lo trae de casa'}, {n:3}, {e:15, f:true}, {e:100, f:true}],
-   [{x:''}, {x:'Total'}, {n:20}, {e:100, f:true, ph:'=SUMA(D2:D5)'}, {x:''}]
+   [{t:'1'}, {t:'Cafetería del instituto'},
+    {ops:['8','6','10'], ok:0, pq:'El 1 aparece ocho veces. Es la categoría más elegida.'}],
+   [{t:'2'}, {t:'Bodega del barrio'},
+    {ops:['4','5','7'], ok:1, pq:'El 2 aparece cinco veces.'}],
+   [{t:'3'}, {t:'Cafetería de la calle'},
+    {ops:['3','4','6'], ok:1, pq:'El 3 aparece cuatro veces.'}],
+   [{t:'4'}, {t:'Lo trae de casa'},
+    {ops:['5','3','2'], ok:1, pq:'El 4 aparece tres veces. Es la menos elegida.'}],
+   [{t:''}, {t:'Total', cl:'tot'},
+    {ops:['19','20','21'], ok:1, cl:'tot',
+     pq:'8 + 5 + 4 + 3 = 20, el número de encuestados. Si no da, se escapó alguien o se contó dos veces.'}]
   ],
-  ayuda:'La frecuencia relativa es cuánto pesa cada categoría sobre el total: fi entre el total, por 100. La acumulada es la relativa de esa fila más todo lo que venía arriba, y la última siempre cierra en 100 %.',
-  fin:globo(P.sorp,'Resuelto','40 %, 25 %, 20 % y 15 %. La columna de acumuladas se lee así: el 65 % compra su café dentro del instituto o en la bodega del barrio. Eso es lo que una acumulada contesta y una relativa sola no.') },
+  ayuda:'El truco para no perderse es el conteo con palotes: recorres la lista una sola vez y vas '+
+        'marcando un palote en la fila que toca. Al final cuentas los palotes de cada fila.',
+  fin:globo(P.punt,'Resuelto','8, 5, 4 y 3. Esa columna es la frecuencia absoluta, y la suma tiene que '+
+      'dar siempre el número de encuestados. Si una categoría quedara en cero, la fila igual se deja: un '+
+      'cero también es un resultado y hay que poder verlo.') },
 
-a7:{ tipo:'hoja', titulo:'Actividad 8 - Media, mediana, moda y dispersión',
-  intro:'La columna A trae los vasos de café por semana de los veinte encuestados. Completa el cuadro de medidas. El mínimo y el máximo ya están resueltos para que veas cómo se arma el rango.',
-  fx:'Funciones de esta hoja: <b>PROMEDIO</b>, <b>MEDIANA</b>, <b>MODA</b>, <b>MIN</b>, <b>MAX</b> y <b>DESVEST</b>. Para el rango y el coeficiente se usan las celdas que ya calculaste.',
-  cols:[{w:138},{w:22},{w:232},{w:112},{w:250}],
+/* 7 ------------------------------------------------------------- */
+a6:{ tipo:'tabla', titulo:'Actividad 7 - Frecuencias relativas y acumuladas',
+  intro:'Con las frecuencias absolutas ya contadas y un total de 20, elige el porcentaje de cada fila y '+
+        'el porcentaje acumulado.',
+  cols:['Código','Categoría','fi','Relativa (hi %)','Acumulada (Hi %)'],
+  tipos:['','','n','',''],
   filas:[
-   [{x:'P2_Vasos_sem'}, {x:''}, {x:'Medida'}, {x:'Resultado'}, {x:'Qué responde'}],
-   [{n:2}, {x:''}, {x:'Media (promedio)'}, {e:5.95, f:true, ph:'=PROMEDIO(A2:A21)'}, {x:'Cuántos vasos toma en promedio'}],
-   [{n:3}, {x:''}, {x:'Mediana'}, {e:5.5, f:true, ph:'=MEDIANA(A2:A21)'}, {x:'El valor que parte al grupo en dos mitades'}],
-   [{n:3}, {x:''}, {x:'Moda'}, {e:5, f:true, ph:'=MODA(A2:A21)'}, {x:'El valor que más se repite'}],
-   [{n:4}, {x:''}, {x:'Mínimo'}, {form:'=MIN(A2:A21)'}, {x:'El que menos toma'}],
-   [{n:4}, {x:''}, {x:'Máximo'}, {form:'=MAX(A2:A21)'}, {x:'El que más toma'}],
-   [{n:4}, {x:''}, {x:'Rango'}, {e:10, f:true, ph:'=D6-D5'}, {x:'Cuánto se abre el grupo de punta a punta'}],
-   [{n:5}, {x:''}, {x:'Desviación estándar'}, {e:2.52, f:true, ph:'=DESVEST(A2:A21)'}, {x:'Cuánto se alejan los datos de la media'}],
-   [{n:5}, {x:''}, {x:'Coeficiente de variación %'}, {e:42.4, f:true, ph:'=D8/D2*100'}, {x:'La desviación comparada con la media'}],
-   [{n:5}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:5}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:6}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:6}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:6}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:7}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:7}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:8}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:8}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:9}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:10}, {x:''}, {x:''}, {x:''}, {x:''}],
-   [{n:12}, {x:''}, {x:''}, {x:''}, {x:''}]
+   [{t:'1'}, {t:'Cafetería del instituto'}, {t:'8'},
+    {ops:['40 %','8 %','20 %'], ok:0, pq:'8 ÷ 20 = 0.40, o sea 40 %.'},
+    {t:'40 %'}],
+   [{t:'2'}, {t:'Bodega del barrio'}, {t:'5'},
+    {ops:['20 %','25 %','5 %'], ok:1, pq:'5 ÷ 20 = 0.25, o sea 25 %.'},
+    {ops:['45 %','65 %','25 %'], ok:1, pq:'40 % + 25 % = 65 %. La acumulada arrastra lo de arriba.'}],
+   [{t:'3'}, {t:'Cafetería de la calle'}, {t:'4'},
+    {ops:['25 %','4 %','20 %'], ok:2, pq:'4 ÷ 20 = 0.20, o sea 20 %.'},
+    {ops:['85 %','45 %','20 %'], ok:0, pq:'65 % + 20 % = 85 %.'}],
+   [{t:'4'}, {t:'Lo trae de casa'}, {t:'3'},
+    {ops:['15 %','30 %','3 %'], ok:0, pq:'3 ÷ 20 = 0.15, o sea 15 %.'},
+    {ops:['95 %','115 %','100 %'], ok:2, pq:'85 % + 15 % = 100 %. La última acumulada siempre cierra en 100.'}],
+   [{t:''}, {t:'Total', cl:'tot'}, {t:'20'}, {t:'100 %', cl:'tot'}, {t:'', cl:'tot'}]
   ],
-  ayuda:'La desviación estándar de Excel, <code>DESVEST</code>, es la de muestra: divide entre n menos uno. Sale 2.52, redondeada a dos decimales. El coeficiente de variación es esa desviación dividida entre la media, en porcentaje, y sirve para comparar grupos que no tienen el mismo tamaño de valores.',
-  fin:globo2(P.pres, P.sena,'Resuelto','Media 5.95, mediana 5.5 y moda 5: las tres cerca, así que el grupo no está torcido hacia un extremo. Pero el rango va de 2 a 12 y la desviación es 2.52, un coeficiente de variación del 42 %. Traducido: el promedio de seis vasos existe, pero hay gente que toma dos y gente que toma doce. El promedio solo nunca cuenta toda la historia.') },
+  ayuda:'La relativa es cuánto pesa esa categoría sobre el total: fi entre el total, por 100. La '+
+        'acumulada es la relativa de esa fila más todo lo que venía arriba.',
+  fin:globo(P.sorp,'Resuelto','40 %, 25 %, 20 % y 15 %. La columna acumulada se lee así: el 65 % compra '+
+      'su café dentro del instituto o en la bodega del barrio. Eso es lo que una acumulada contesta y una '+
+      'relativa sola no. Ojo: solo tiene sentido acumular cuando las categorías llevan algún orden, aunque '+
+      'sea uno que pusiste tú al armar la tabla.') },
+
+/* 8 ------------------------------------------------------------- */
+a7:{ tipo:'tabla', titulo:'Actividad 8 - Media, mediana, moda y dispersión',
+  intro:'Con la tabla de arriba y los veinte datos ordenados, elige cada medida.',
+  cols:['Medida','Cómo se obtiene','Resultado'],
+  tipos:['','',''],
+  filas:[
+   [{t:'Media'}, {t:'Suma de todos los vasos entre el número de encuestados: 119 ÷ 20'},
+    {ops:['5.95','5.5','6.5'], ok:0, pq:'119 ÷ 20 = 5.95 vasos por semana en promedio.'}],
+   [{t:'Mediana'}, {t:'Como son 20 datos, el promedio del que ocupa el puesto 10 y el del puesto 11'},
+    {ops:['6','5.5','5'], ok:1, pq:'El décimo es 5 y el undécimo es 6, así que la mediana es 5.5.'}],
+   [{t:'Moda'}, {t:'El valor con la frecuencia más alta de la tabla'},
+    {ops:['6','4','5'], ok:2, pq:'El 5 aparece cuatro veces, más que cualquier otro valor.'}],
+   [{t:'Rango'}, {t:'El valor más alto menos el más bajo: 12 &minus; 2'},
+    {ops:['12','10','14'], ok:1, pq:'De 2 a 12 vasos hay 10 de diferencia. Es la medida de dispersión más simple.'}],
+   [{t:'Desviación estándar'},
+    {t:'Raíz cuadrada de 120.95 ÷ 19<small>la suma de los cuadrados entre los encuestados menos uno</small>'},
+    {ops:['2.52','6.37','120.95'], ok:0,
+     pq:'120.95 ÷ 19 = 6.37, que es la varianza; su raíz cuadrada es 2.52 vasos.'}],
+   [{t:'Coeficiente de variación', cl:'tot'},
+    {t:'La desviación dividida entre la media, en porcentaje: 2.52 ÷ 5.95'},
+    {ops:['25 %','42 %','58 %'], ok:1, cl:'tot',
+     pq:'42 %. Por debajo del 15 % se considera un grupo parejo, así que este está bastante disperso.'}]
+  ],
+  fin:globo2(P.pres, P.sena,'Resuelto','Media 5.95, mediana 5.5 y moda 5: las tres cerca, así que el '+
+      'grupo no está torcido hacia un extremo. Pero el rango va de 2 a 12 y la desviación es 2.52, un '+
+      'coeficiente de variación del 42 %. Traducido: el promedio de casi seis vasos existe, pero hay '+
+      'gente que toma dos y gente que toma doce. El promedio solo nunca cuenta toda la historia.') },
+
 /* 9 ------------------------------------------------------------- */
 a8:{ tipo:'sel', titulo:'Actividad 9 - Interpretar lo que salió',
   lista:[
@@ -1271,14 +1281,14 @@ var D=[
       '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
         '<span>Instituto de Diseño y Comunicación</span></div>'+
       '<h2>Doscientos cuestionarios no son un resultado</h2>'+
-      '<p>Semana 9 - Investigación Cuantitativa</p>'+
+      '<p>Semana 9 · Sesión 17 - Investigación Cuantitativa</p>'+
       '<div class="via"><b>Codificar</b><b>Tabular</b><b>Interpretar</b></div>'+
     '</div>'+
     globo(P.pres,'El caso de la sesión',
       'Encuestaron a veinte compañeros del instituto sobre su consumo de café: dónde lo compran, '+
       'cuántos vasos toman por semana y qué tan satisfechos están. Los cuestionarios están llenos y '+
       'ahora hay que convertirlos en números que se puedan contar. Al terminar la sesión vas a tener '+
-      'la base armada, la tabla de frecuencias y las medidas, hechas en Excel.')+
+      'la base armada, la tabla de frecuencias y las medidas.')+
     '<div class="dos">'+
     '<div class="fc"><h4>Codificar</h4><div class="c">'+
       '<p>Darle un número a cada respuesta y dejar escrito en el libro de códigos qué significa '+
@@ -1292,7 +1302,7 @@ var D=[
 /* 2 ------------------------------------------------------------- */
 { et:'Codificar', t:'Codificación y libro de códigos', clave:'a1',
   h:'<p class="enc">Un número por respuesta, y una regla escrita</p>'+
-    '<p class="sub">Codificar es traducir lo que marcó el encuestado a un número que Excel pueda contar</p>'+
+    '<p class="sub">Codificar es traducir lo que marcó el encuestado a un número que se pueda contar</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
     '<th>El libro de códigos guarda</th><th>Ejemplo</th></tr></thead><tbody>'+
     '<tr><td>El nombre corto de la variable, sin espacios ni tildes</td><td><code>P3_Lugar</code></td></tr>'+
@@ -1348,55 +1358,75 @@ var D=[
     '<div class="av">Ese cuadro es el libro de códigos de la encuesta. Úsalo para llenar la fila.</div>' },
 
 /* 6 ------------------------------------------------------------- */
-{ et:'Frecuencias', t:'La tabla de frecuencias en Excel', clave:'a5',
+{ et:'Frecuencias', t:'La tabla de frecuencias', clave:'a5',
   h:'<p class="enc">Tabulación univariante: una variable a la vez</p>'+
-    '<p class="sub">Contar cuántas veces aparece cada código, con una función que lo hace sola</p>'+
-    '<div class="form">=CONTAR.SI(rango, criterio)'+
-      '<small>cuenta cuántas celdas del rango cumplen la condición</small></div>'+
-    globo(P.sena,'Los tres tipos de frecuencia',
-      'La absoluta, fi, es el conteo: cuántos eligieron esa opción. La relativa, hi, es ese conteo '+
-      'sobre el total, en porcentaje. Y la acumulada, Hi, va sumando las relativas de arriba hacia '+
-      'abajo y cierra en 100 %. En esta hoja sacamos la primera; en la siguiente, las otras dos.')+
-    '<div class="av">La hoja de abajo funciona como Excel: toca una celda del cuadro para meterla en la '+
-    'fórmula y usa Mayús + clic para armar un rango.</div>' },
+    '<p class="sub">Contar cuántas veces aparece cada código y ordenarlo en un cuadro</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Columna</th><th>Nombre</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>fi</td><td>Frecuencia absoluta</td><td>cuántos eligieron esa opción</td></tr>'+
+    '<tr><td>hi %</td><td>Frecuencia relativa</td><td>qué parte del total representan</td></tr>'+
+    '<tr class="res"><td>Hi %</td><td>Frecuencia relativa acumulada</td>'+
+      '<td>cuántos van sumados hasta esa fila</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.sena,'Cómo se cuenta sin perderse',
+      'Se recorre la lista una sola vez, de principio a fin, marcando un palote en la fila que toca. '+
+      'Nunca se cuenta categoría por categoría volviendo a empezar: así es como se duplican o se '+
+      'saltan respuestas. Al final se cuentan los palotes y la suma tiene que dar el número de '+
+      'encuestados.')+
+    '<div class="av">En esta diapositiva sacamos la frecuencia absoluta; en la siguiente, la relativa '+
+    'y la acumulada.</div>' },
 
 /* 7 ------------------------------------------------------------- */
 { et:'Relativas', t:'Frecuencias relativas y acumuladas', clave:'a6',
   h:'<p class="enc">El conteo solo no se puede comparar</p>'+
     '<p class="sub">Ocho de veinte y ochenta de doscientos no se parecen en nada hasta que los pasas a porcentaje</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Columna</th><th>Qué es</th><th>Cómo se calcula</th></tr></thead><tbody>'+
-    '<tr><td>fi</td><td>Frecuencia absoluta</td><td>el conteo de CONTAR.SI</td></tr>'+
-    '<tr><td>hi %</td><td>Frecuencia relativa</td><td>fi entre el total, por 100</td></tr>'+
-    '<tr class="res"><td>Hi %</td><td>Frecuencia relativa acumulada</td>'+
-      '<td>la hi de esa fila más todo lo acumulado arriba</td></tr>'+
-    '</tbody></table></div>'+
-    globo(P.sorp,'Ojo con la acumulada',
-      'La acumulada solo tiene sentido cuando las categorías llevan un orden. En una variable nominal, '+
-      'como el lugar de compra, el orden lo pones tú al armar la tabla, así que la acumulada se lee con '+
-      'cuidado: sirve si agrupaste las categorías por algo, como «dentro del instituto o cerca».') },
+    '<div class="form">hi = fi &divide; total &times; 100'+
+      '<small>Hi = la hi de esa fila más todo lo acumulado arriba</small></div>'+
+    globo(P.punt,'Dos reglas de control',
+      'La columna de relativas tiene que sumar 100 % y la última acumulada tiene que cerrar en 100 %. '+
+      'Si no cierran, hay un error de conteo o de redondeo. Y la acumulada solo tiene sentido cuando '+
+      'las categorías llevan un orden: en una variable nominal ese orden lo pones tú al armar la '+
+      'tabla, así que conviene agrupar las categorías por algo, como «dentro del instituto o cerca».')+
+    '<div class="av">Abajo tienes la tabla con las frecuencias ya contadas. Elige en cada fila el '+
+    'porcentaje que corresponde.</div>' },
 
 /* 8 ------------------------------------------------------------- */
 { et:'Medidas', t:'Media, mediana, moda y dispersión', clave:'a7',
   h:'<p class="enc">Resumir una columna de números en unas pocas cifras</p>'+
     '<p class="sub">Dos preguntas: por dónde está el centro del grupo y qué tan separados están sus datos</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th class="n">Vasos (xi)</th><th class="n">fi</th><th class="n">xi &times; fi</th>'+
+    '<th class="n">(xi &minus; 5.95)² &times; fi</th></tr></thead><tbody>'+
+    '<tr><td class="n">2</td><td class="n">1</td><td class="n">2</td><td class="n">15.60</td></tr>'+
+    '<tr><td class="n">3</td><td class="n">2</td><td class="n">6</td><td class="n">17.41</td></tr>'+
+    '<tr><td class="n">4</td><td class="n">3</td><td class="n">12</td><td class="n">11.41</td></tr>'+
+    '<tr><td class="n">5</td><td class="n">4</td><td class="n">20</td><td class="n">3.61</td></tr>'+
+    '<tr><td class="n">6</td><td class="n">3</td><td class="n">18</td><td class="n">0.01</td></tr>'+
+    '<tr><td class="n">7</td><td class="n">2</td><td class="n">14</td><td class="n">2.21</td></tr>'+
+    '<tr><td class="n">8</td><td class="n">2</td><td class="n">16</td><td class="n">8.41</td></tr>'+
+    '<tr><td class="n">9</td><td class="n">1</td><td class="n">9</td><td class="n">9.30</td></tr>'+
+    '<tr><td class="n">10</td><td class="n">1</td><td class="n">10</td><td class="n">16.40</td></tr>'+
+    '<tr><td class="n">12</td><td class="n">1</td><td class="n">12</td><td class="n">36.60</td></tr>'+
+    '<tr class="res"><td class="n">Total</td><td class="n">20</td><td class="n">119</td>'+
+      '<td class="n">120.95</td></tr>'+
+    '</tbody></table></div>'+
     '<div class="dos">'+
     '<div class="fc"><h4>Tendencia central</h4><div class="c"><ul>'+
-      '<li><b>Media</b>: el promedio. <code>=PROMEDIO()</code></li>'+
-      '<li><b>Mediana</b>: el valor del medio al ordenarlos. <code>=MEDIANA()</code></li>'+
-      '<li><b>Moda</b>: el que más se repite. <code>=MODA()</code></li>'+
+      '<li><b>Media</b>: la suma entre el número de datos.</li>'+
+      '<li><b>Mediana</b>: el valor del medio al ordenarlos.</li>'+
+      '<li><b>Moda</b>: el que más se repite.</li>'+
       '</ul></div></div>'+
     '<div class="fc rj"><h4>Dispersión</h4><div class="c"><ul>'+
       '<li><b>Rango</b>: máximo menos mínimo.</li>'+
-      '<li><b>Desviación estándar</b>: cuánto se alejan de la media. <code>=DESVEST()</code></li>'+
+      '<li><b>Desviación estándar</b>: raíz de la suma de los cuadrados entre n &minus; 1.</li>'+
       '<li><b>Coeficiente de variación</b>: la desviación sobre la media, en %.</li>'+
       '</ul></div></div>'+
     '</div>'+
     globo(P.punt,'Cuál usar y cuándo',
       'La media solo vale para variables de razón, y se va de sitio cuando hay valores extremos. La '+
       'mediana aguanta esos extremos. La moda es la única que sirve también para variables nominales: '+
-      'es la categoría más elegida. Si reportas una sola, reporta la mediana; si puedes, reporta las '+
-      'tres y la desviación.') },
+      'es la categoría más elegida. Si reportas una sola, reporta la mediana; y nunca reportes una '+
+      'media sin alguna medida de dispersión al lado.') },
 
 /* 9 ------------------------------------------------------------- */
 { et:'Interpretar', t:'Leer los resultados', clave:'a8',
@@ -1422,7 +1452,7 @@ var D=[
     '<div class="fc"><h4>El orden del trabajo</h4><div class="c"><ol>'+
       '<li>Codificar y escribir el libro de códigos.</li>'+
       '<li>Armar la base: una fila por encuestado, una columna por variable.</li>'+
-      '<li>Tabular variable por variable con CONTAR.SI.</li>'+
+      '<li>Tabular variable por variable: frecuencias absolutas, relativas y acumuladas.</li>'+
       '<li>Sacar las medidas de las variables numéricas.</li>'+
       '<li>Escribir la interpretación.</li>'+
       '</ol></div></div>'+
