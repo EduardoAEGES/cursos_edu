@@ -609,6 +609,84 @@
   .eqp.fin b{ color:var(--verde); }
   .elenco{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
            clip-path:inset(50%); white-space:nowrap; }
+  /* ---------- el caso práctico y las dinámicas de grupo ---------- */
+  .caso, .opina{ margin:16px 0 0; border:2px solid var(--linea); border-radius:12px;
+                 overflow:hidden; background:#fff; }
+  .caso > h4, .opina > h4{ margin:0; background:var(--marino); color:#fff; font-size:18px;
+                           font-weight:800; padding:10px 16px; letter-spacing:.02em; }
+  .opina .su{ margin:0; padding:12px 16px 0; font-size:18px; line-height:1.55; color:var(--gris);
+              font-weight:600; }
+  #casoCaja, #sorteoCaja, #opinaCaja{ padding:14px 16px; }
+  .opinapdf{ margin:0; padding:0 0 0 24px; }
+  .opinapdf li{ font-size:19px; line-height:1.55; margin-bottom:7px; }
+  .casovacio{ margin:0; font-size:18px; line-height:1.55; color:var(--gris); font-weight:600; }
+  .casolink{ display:flex; gap:13px; align-items:center; text-decoration:none;
+             border:2px solid var(--verde); background:#F2FAF6; border-radius:11px;
+             padding:13px 16px; color:var(--tinta); }
+  .casolink:hover{ background:#E6F6EC; }
+  .casolink .ic{ font-size:30px; flex:none; }
+  .casolink .tx{ flex:1; min-width:0; }
+  .casolink .tx b{ display:block; font-size:21px; font-weight:800; color:var(--verde);
+                   word-break:break-word; }
+  .casolink .tx small{ display:block; margin-top:2px; font-size:16px; color:var(--gris);
+                       font-weight:600; }
+  .casolink .ab{ flex:none; background:var(--verde); color:#fff; border-radius:99px;
+                 padding:7px 15px; font-size:16px; font-weight:800; white-space:nowrap; }
+  .casoform{ margin-top:13px; padding-top:13px; border-top:1px dashed var(--linea);
+             display:grid; gap:11px; }
+  @media (min-width:860px){ .casoform{ grid-template-columns:1fr 1.3fr; }
+                            .casoform .casoacc{ grid-column:1 / -1; } }
+  .casoform label{ display:grid; gap:4px; }
+  .casoform label span{ font-size:15px; font-weight:800; color:var(--gris); letter-spacing:.02em; }
+  .casoform input{ font:inherit; border:2px solid var(--linea); border-radius:9px; padding:10px 12px;
+                   font-size:18px; font-weight:600; color:var(--tinta); width:100%; }
+  .casoform input:focus{ outline:none; border-color:var(--marino); }
+  .casoacc{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .casoavi{ font-size:16px; font-weight:700; color:var(--gris); }
+  .casoavi.malo{ color:var(--rojo); }
+  .sorteoacc{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+  .sorteonum{ font-size:16px; font-weight:800; color:var(--gris); }
+  .equipos{ display:grid; gap:11px; }
+  @media (min-width:640px){ .equipos{ grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); } }
+  .eq{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; }
+  .eq h5{ margin:0; background:var(--humo); color:var(--marino); font-size:16px; font-weight:900;
+          letter-spacing:.04em; text-transform:uppercase; padding:7px 13px;
+          border-bottom:1px solid var(--linea); }
+  .eq ul{ margin:0; padding:9px 13px 11px 28px; }
+  .eq li{ font-size:19px; font-weight:700; line-height:1.5; }
+
+  /* ---------- la sesión en PDF, una diapositiva por página ---------- */
+  #impreso{ display:none; }
+
+  @media print{
+    @page{ size:A4 landscape; margin:9mm 10mm; }
+    body.imprimiendo > *{ display:none !important; }
+    body.imprimiendo > #impreso{ display:block !important; }
+    #impreso{ background:#fff; font-family:'Nunito','Inter',system-ui,sans-serif;
+              color:var(--tinta); }
+    #impreso .pg{ page-break-after:always; break-after:page; }
+    #impreso .pg:last-child{ page-break-after:auto; break-after:auto; }
+    #impreso .pgcab{ display:flex; align-items:center; gap:12px; background:var(--marino);
+                     color:#fff; padding:7px 12px; border-radius:7px; margin-bottom:9px; }
+    #impreso .pgcab .et{ background:var(--rojo); color:#fff; border-radius:5px; padding:2px 8px;
+                         font-size:10px; font-weight:900; letter-spacing:.07em;
+                         text-transform:uppercase; white-space:nowrap; }
+    #impreso .pgcab .t{ flex:1; font-size:14px; font-weight:800; }
+    #impreso .pgcab .cu{ font-size:12px; font-weight:700; opacity:.85; }
+    #impreso .pgcab img{ height:17px; width:auto; background:#fff; border-radius:3px;
+                         padding:2px 4px; }
+    #impreso .pgcuerpo{ zoom:.5; }
+    #impreso .tarea, #impreso .perso, #impreso .tabenv, #impreso .datos,
+    #impreso .dos, #impreso .form, #impreso .cruz{ break-inside:avoid; }
+    #impreso .verr, #impreso .solu, #impreso .pist, #impreso .hbar,
+    #impreso .avisofx, #impreso .desliza{ display:none !important; }
+    #impreso .tapa{ margin-bottom:12px; }
+    #impreso select.cel{ -webkit-appearance:none; appearance:none; background:#F2FAF6;
+                         border-color:var(--verde); color:var(--tinta); }
+    #impreso .ficha{ cursor:default; }
+    /* el color sí se imprime */
+    #impreso, #impreso *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
 </style>
 </head>
 <body>
@@ -646,6 +724,9 @@
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
       <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+      <button class="o-btn" id="btnPDF" type="button"
+              title="Genera la sesi&oacute;n completa, con todas las respuestas, para guardarla en PDF">
+        &#11015; PDF de la sesi&oacute;n</button>
     </span>
   </div>
 
@@ -721,6 +802,7 @@
   &#128101; Participantes <span class="bo" id="nPart">0</span>
 </button>
 <div class="soplo" id="soplo" hidden></div>
+<div id="impreso" class="ai" aria-hidden="true"></div>
 <div class="panpart" id="panelPart" hidden>
   <div class="hd"><span id="salaPart">El aula</span>
     <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
@@ -1451,7 +1533,41 @@ var D=[
     '</tbody></table></div>'+
     '<div class="av">Con ese cuadro delante, elige en cada caso la lectura correcta.</div>' },
 
-/* 10 ------------------------------------------------------------ */
+/* 10 ----------------------------------------------------------- */
+{ et:'En equipo', t:'Trabajo en equipo sobre el caso práctico',
+  h:'<p class="enc">Ahora con datos de verdad</p>'+
+    '<p class="sub">El docente publica el archivo del caso y la clase se reparte en equipos</p>'+
+    '<div class="caso" id="caso">'+
+      '<h4>&#128202; Caso práctico en Excel</h4>'+
+      '<div id="casoCaja"></div>'+
+    '</div>'+
+    '<div class="caso" id="sorteo">'+
+      '<h4>&#127922; Parejas y equipos al azar</h4>'+
+      '<div id="sorteoCaja"></div>'+
+    '</div>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Paso</th><th>Qué hace cada equipo</th><th class="n">Tiempo</th></tr></thead><tbody>'+
+    '<tr><td>1</td><td>Abren el archivo del caso y hacen una copia antes de escribir</td>'+
+      '<td class="n">3 min</td></tr>'+
+    '<tr><td>2</td><td>Revisan la matriz: ¿una fila por encuestado?, ¿una columna por variable?, '+
+      '¿hay celdas vacías o códigos mezclados con texto?</td><td class="n">7 min</td></tr>'+
+    '<tr><td>3</td><td>Arman la distribución de frecuencias de una variable que elija el equipo</td>'+
+      '<td class="n">10 min</td></tr>'+
+    '<tr class="res"><td>4</td><td>Escriben una sola frase de interpretación y la sustentan ante la clase</td>'+
+      '<td class="n">5 min</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="opina" id="opina">'+
+      '<h4>&#128172; Lo que opina el aula</h4>'+
+      '<p class="su">No hay respuesta correcta: marca lo que piensas y prepárate para sustentarlo '+
+      'con tu pareja. El docente ve lo que eligió cada uno.</p>'+
+      '<div id="opinaCaja"></div>'+
+    '</div>'+
+    globo(P.sena,'Para la plenaria',
+      'Cuando cada pareja exponga, miren si coinciden en la variable que eligieron y en la frase final. '+
+      'Dos equipos con los mismos datos pueden escribir interpretaciones distintas, y eso también es '+
+      'un resultado de la sesión.') },
+
+/* 11 ----------------------------------------------------------- */
 { et:'Cierre', t:'Síntesis de la sesión', clave:'a9',
   h:'<p class="enc">Lo que te llevas de la sesión</p>'+
     '<div class="dos">'+
@@ -1477,7 +1593,7 @@ var D=[
 var LS='inv_sem9_v1';
 /* en el mismo orden en que aparecen las diapositivas */
 var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9'];
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{}, opinion:undefined };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 try{
@@ -1491,6 +1607,7 @@ function graba(){
 /* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
 function fusiona(d){
   if(!d || typeof d!=='object') return;
+  if(d.opinion!==undefined) G.opinion=d.opinion;
   ['visto','mal','hoja'].forEach(function(k){
     if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
   });
@@ -1591,7 +1708,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = !soyDocente() ? '' :
+  var sol = (imprimiendo || !soyDocente()) ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1599,7 +1716,7 @@ function cabTarea(k){
 }
 /* botón de una sola respuesta: solo lo ve el docente */
 function btnR(k, n, et){
-  if(!soyDocente()) return '';
+  if(imprimiendo || !soyDocente()) return '';
   return '<button type="button" class="verr" data-vr="'+k+'" data-vn="'+esc(String(n))+'">'+
          (et||'Ver Respuesta')+'</button>';
 }
@@ -2083,7 +2200,199 @@ function pinta(quieto){
     });
   });
   cablea();
+  if($('casoCaja')) pintaCaso();
+  if($('sorteoCaja')) pintaSorteo();
+  if($('opinaCaja')) pintaOpina();
   pintaModo();
+}
+
+/* ================= el caso práctico en Excel ================= */
+var RECURSO=null;
+var LSREC='inv_s17_recurso';
+try{ RECURSO=JSON.parse(localStorage.getItem(LSREC)||'null'); }catch(e){}
+
+function urlBuena(u){
+  return /^https?:\/\/[^\s]+$/i.test(String(u||'').trim());
+}
+function recibeRecurso(r){
+  RECURSO = (r && r.url) ? r : null;
+  try{ localStorage.setItem(LSREC, JSON.stringify(RECURSO)); }catch(e){}
+  if($('casoCaja')) pintaCaso();
+}
+function pintaCaso(){
+  var c=$('casoCaja'); if(!c) return;
+  var doc=soyDocente(), h='';
+  if(RECURSO && RECURSO.url){
+    h+='<a class="casolink" href="'+esc(RECURSO.url)+'" target="_blank" rel="noopener">'+
+       '<span class="ic">&#128202;</span>'+
+       '<span class="tx"><b>'+esc(RECURSO.titulo||'Caso práctico en Excel')+'</b>'+
+       '<small>'+esc(RECURSO.nota||'Se abre en una pestaña nueva')+'</small></span>'+
+       '<span class="ab">Abrir &rsaquo;</span></a>';
+  }else{
+    h+='<p class="casovacio">'+(doc
+        ? 'Todavía no has publicado el caso. Pega el enlace y toda la clase lo verá al instante.'
+        : 'El docente aún no ha publicado el caso práctico. Aparecerá aquí en cuanto lo haga.')+'</p>';
+  }
+  if(doc){
+    h+='<div class="casoform">'+
+       '<label><span>Título</span><input type="text" id="casoTit" maxlength="80" '+
+         'placeholder="Caso práctico - matriz de datos" value="'+esc(RECURSO&&RECURSO.titulo||'')+'"></label>'+
+       '<label><span>Enlace del archivo</span><input type="url" id="casoUrl" '+
+         'placeholder="https://docs.google.com/spreadsheets/..." value="'+esc(RECURSO&&RECURSO.url||'')+'"></label>'+
+       '<label><span>Nota para la clase</span><input type="text" id="casoNota" maxlength="90" '+
+         'placeholder="Hagan una copia antes de escribir" value="'+esc(RECURSO&&RECURSO.nota||'')+'"></label>'+
+       '<div class="casoacc">'+
+         '<button type="button" class="o-btn o-btn-primary" id="casoGuarda">Publicar para la clase</button>'+
+         (RECURSO&&RECURSO.url ? '<button type="button" class="o-btn" id="casoQuita">Quitar</button>' : '')+
+         '<span class="casoavi" id="casoAvi"></span>'+
+       '</div></div>';
+  }
+  c.innerHTML=h;
+  if(!doc) return;
+  var avi=$('casoAvi');
+  function guarda(r){
+    if(!(window.Aula && Aula.enSala)){
+      RECURSO=r; try{ localStorage.setItem(LSREC, JSON.stringify(r)); }catch(e){}
+      pintaCaso(); sopla('Guardado solo en este equipo: entra a la sala para publicarlo'); return;
+    }
+    Aula.guardaRecurso(r||{}).then(function(){
+      RECURSO=(r&&r.url)?r:null;
+      try{ localStorage.setItem(LSREC, JSON.stringify(RECURSO)); }catch(e){}
+      pintaCaso(); bien(); sopla(r&&r.url ? 'Publicado: la clase ya lo ve' : 'Enlace retirado');
+    }).catch(function(){ if(avi){ avi.className='casoavi malo'; avi.textContent='No se pudo publicar'; } });
+  }
+  $('casoGuarda').addEventListener('click', function(){
+    var u=$('casoUrl').value.trim();
+    if(!urlBuena(u)){
+      avi.className='casoavi malo';
+      avi.textContent='El enlace tiene que empezar con https://';
+      $('casoUrl').focus(); return;
+    }
+    guarda({ titulo:$('casoTit').value.trim()||'Caso práctico en Excel', url:u,
+             nota:$('casoNota').value.trim() });
+  });
+  if($('casoQuita')) $('casoQuita').addEventListener('click', function(){ guarda(null); });
+}
+
+/* ================= parejas y equipos al azar ================= */
+var SORTEO=null;
+function nombresSala(){
+  var n=(window.Aula && Aula.participantes) ? Aula.participantes.slice() : [];
+  return n.filter(function(x){ return x && x!=='docente'; });
+}
+function baraja(a){
+  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1));
+    var t=a[i]; a[i]=a[j]; a[j]=t; }
+  return a;
+}
+function sortea(tam){
+  var n=baraja(nombresSala());
+  if(n.length<2){ sopla('Hacen falta al menos dos participantes en la sala'); return; }
+  var g=[], i=0;
+  while(i<n.length){ g.push(n.slice(i, i+tam)); i+=tam; }
+  /* al último le toca quedarse solo: se reparte en los otros equipos */
+  if(g.length>1 && g[g.length-1].length===1){
+    g[g.length-2].push(g.pop()[0]);
+  }
+  SORTEO={ tam:tam, grupos:g, cuando:new Date() };
+  pintaSorteo(); fanfarria();
+}
+function pintaSorteo(){
+  var c=$('sorteoCaja'); if(!c) return;
+  var doc=soyDocente(), h='';
+  if(doc){
+    h+='<div class="sorteoacc">'+
+       '<button type="button" class="o-btn o-btn-primary" data-sort="2">&#127919; Parejas al azar</button>'+
+       '<button type="button" class="o-btn" data-sort="3">Equipos de 3</button>'+
+       '<button type="button" class="o-btn" data-sort="4">Equipos de 4</button>'+
+       '<span class="sorteonum">'+nombresSala().length+' en la sala</span>'+
+       '</div>';
+  }
+  if(SORTEO && SORTEO.grupos.length){
+    h+='<div class="equipos">'+SORTEO.grupos.map(function(g,n){
+      return '<div class="eq"><h5>'+(SORTEO.tam===2?'Pareja ':'Equipo ')+(n+1)+'</h5><ul>'+
+             g.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+    }).join('')+'</div>';
+  }else if(doc){
+    h+='<p class="casovacio">Pulsa un botón y se reparten los que estén dentro de la sala.</p>';
+  }else{
+    h+='<p class="casovacio">El docente va a sortear las parejas en un momento.</p>';
+  }
+  c.innerHTML=h;
+  qq('#sorteoCaja button[data-sort]').forEach(function(b){
+    b.addEventListener('click', function(){ sortea(+b.dataset.sort); });
+  });
+}
+
+/* ================= la opinión del aula ================= */
+var OPINA=[
+  'La media es lo primero que hay que reportar: resume a todo el grupo en un número.',
+  'La mediana dice más cuando hay valores extremos, así que yo reportaría esa.',
+  'Ninguna sirve sola: siempre hay que acompañarlas con una medida de dispersión.'
+];
+function pintaOpina(){
+  var c=$('opinaCaja'); if(!c) return;
+  var mio=(G.opinion===undefined ? null : G.opinion);
+  c.innerHTML='<div class="ops">'+OPINA.map(function(o,n){
+      return '<button type="button" data-op="'+n+'" class="'+(mio===n?'buena':'')+'">'+esc(o)+'</button>';
+    }).join('')+'</div>'+
+    (mio!==null ? '<p class="pq">Queda registrado. Puedes cambiarlo si tu pareja te convence.</p>' : '');
+  qq('#opinaCaja button[data-op]').forEach(function(b){
+    b.addEventListener('click', function(){
+      G.opinion=+b.dataset.op; graba(); bien(); pintaOpina();
+    });
+  });
+}
+
+/* ================= la sesión en PDF, con todo resuelto ================= */
+var imprimiendo=false;
+/* en el PDF los paneles van en versión fija: ni formularios ni ids repetidos */
+function casoPDF(){
+  if(RECURSO && RECURSO.url){
+    return '<div class="casolink" style="text-decoration:none"><span class="ic">&#128202;</span>'+
+      '<span class="tx"><b>'+esc(RECURSO.titulo||'Caso práctico en Excel')+'</b>'+
+      '<small>'+esc(RECURSO.url)+'</small></span></div>'+
+      (RECURSO.nota ? '<p class="casovacio" style="margin-top:9px">'+esc(RECURSO.nota)+'</p>' : '');
+  }
+  return '<p class="casovacio">El enlace del caso lo publica el docente durante la clase.</p>';
+}
+function sorteoPDF(){
+  if(SORTEO && SORTEO.grupos.length){
+    return '<div class="equipos">'+SORTEO.grupos.map(function(g,n){
+      return '<div class="eq"><h5>'+(SORTEO.tam===2?'Pareja ':'Equipo ')+(n+1)+'</h5><ul>'+
+             g.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
+    }).join('')+'</div>';
+  }
+  return '<p class="casovacio">Las parejas se sortean en clase, con quienes estén en la sala.</p>';
+}
+function opinaPDF(){
+  return '<ol class="opinapdf">'+OPINA.map(function(o){
+    return '<li>'+esc(o)+'</li>'; }).join('')+'</ol>';
+}
+
+function armaPDF(){
+  var antes=JSON.parse(JSON.stringify(G)), cruzAntes=yaCruz;
+  imprimiendo=true; yaCruz={};
+  CLAVES.forEach(function(k){ G[k]={}; resuelve(k); });
+  var h='';
+  D.forEach(function(s,n){
+    h+='<section class="pg">'+
+         '<header class="pgcab">'+
+           '<span class="et">'+esc(s.et)+'</span>'+
+           '<span class="t">'+esc(s.t)+'</span>'+
+           '<span class="cu">'+(n+1)+' / '+D.length+'</span>'+
+           '<img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+         '</header>'+
+         '<div class="pgcuerpo">'+
+            (s.h||'').replace('<div id="casoCaja"></div>', casoPDF())
+                     .replace('<div id="sorteoCaja"></div>', sorteoPDF())
+                     .replace('<div id="opinaCaja"></div>', opinaPDF())+
+            (s.clave ? vista(s.clave) : '')+'</div>'+
+       '</section>';
+  });
+  $('impreso').innerHTML=h;
+  G=antes; yaCruz=cruzAntes; imprimiendo=false;
+  pinta(true);
 }
 
 var yaCruz={};
@@ -2575,6 +2884,18 @@ function full(){
   }
 }
 $('btnFull').addEventListener('click', full);
+$('btnPDF').addEventListener('click', function(){
+  sopla('Armando la sesión con todas las respuestas…');
+  armaPDF();
+  document.body.classList.add('imprimiendo');
+  setTimeout(function(){
+    window.print();
+    setTimeout(function(){
+      document.body.classList.remove('imprimiendo');
+      $('impreso').innerHTML='';
+    }, 400);
+  }, 350);
+});
 $('btnFull2').addEventListener('click', full);
 document.addEventListener('fullscreenchange', function(){
   /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
@@ -2645,6 +2966,7 @@ document.addEventListener('keydown', function(e){
 /* ================= el aula ================= */
 function resumenAula(){
   return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           opinion:(G.opinion===undefined?null:G.opinion),
            rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
@@ -2670,6 +2992,8 @@ function ventanaAula(e){
         '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
         '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
         '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
+        (e.opinion!==null && e.opinion!==undefined
+          ? '<div class="lin"><span>Opina</span><b>Postura '+(e.opinion+1)+'</b></div>' : '')+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
     var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
@@ -2688,6 +3012,8 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
       '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
       '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
+      (e.opinion!==null && e.opinion!==undefined
+        ? '<span class="dato">Opina<b>Postura '+(e.opinion+1)+'</b></span>' : '')+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
     '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
@@ -2717,7 +3043,7 @@ function pantalla(e, alumno, cont){
 }
 if(window.Aula){
   Aula.iniciar({ sala:'INVBD9', codigo:'INV', resumen:resumenAula, ventana:ventanaAula,
-    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta, recurso:recibeRecurso,
     ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
             limpia:function(){ G=vacio(); yaCruz={}; i=0;
               try{ localStorage.removeItem(LS); }catch(e){}

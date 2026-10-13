@@ -65,6 +65,7 @@ var CLAVE='46069339';
 
 var cfg=null, sala=null, yo=null, docente=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
+var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
 var dni='', tFicha=null, buscando=false, modoAlta=false;
 var RPC=SUPA+'/rest/v1/rpc/';
@@ -298,7 +299,7 @@ function adentro(n, s, d){
   estado('vivo','Conectando…');
   fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
-  escucha();
+  escucha(); escuchaRecurso();
 }
 function entraDocente(){
   var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
@@ -314,7 +315,7 @@ function entraDocente(){
   guardaLocal(claveSala(),s);
   dentro('Docente');
   estado('vivo','Conectando…');
-  fallos=0; arranca();
+  fallos=0; arranca(); escuchaRecurso();
   if(cfg.musica) musica(leeLocal('musica')!=='0');
   if(cfg.alModo) cfg.alModo(true);
 }
@@ -334,6 +335,9 @@ function sale(){
   batuta=null; selloBatuta='';
   if(tSala){ clearInterval(tSala); tSala=null; }
   if(tBatuta){ clearInterval(tBatuta); tBatuta=null; }
+  if(tRecurso){ clearInterval(tRecurso); tRecurso=null; }
+  recurso=null; selloRecurso='';
+  if(cfg.recurso) cfg.recurso(null);
   fuera(); estado('solo','Modo individual'); pintaMuro();
   if(cfg.alModo) cfg.alModo(false);
 }
@@ -477,6 +481,36 @@ function guardaAvance(ya){
 /* ---------------- la batuta del docente ---------------- */
 /* va en una sala aparte, para que no se mezcle con las filas de los alumnos */
 function salaBatuta(){ return cfg.sala+'-'+sala+'-BATUTA'; }
+/* el recurso de la sesión: un enlace que el docente publica para toda la clase.
+   Usa la misma tabla de la sala, en una fila aparte, así que no hace falta nada nuevo. */
+function salaRecurso(){ return cfg.sala+'-RECURSO'; }
+function publicaRecurso(r){
+  if(!docente) return Promise.reject('solo el docente');
+  recurso = r || null;
+  return fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:salaRecurso(), alumno:'docente', caso:'',
+                           estado:r||{}, actualizado:new Date().toISOString() }])
+  }).then(function(res){
+    if(!res.ok) return Promise.reject(res.status);
+    if(cfg.recurso) cfg.recurso(recurso);
+    return recurso;
+  });
+}
+function oyeRecurso(){
+  if(!cfg.recurso) return;
+  fetch(TABLA+'?select=estado,actualizado&sala=eq.'+encodeURIComponent(salaRecurso())+'&limit=1',
+        { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){
+      var fila=rows && rows[0], e=(fila && fila.estado) || null;
+      var sello=JSON.stringify(e);
+      if(sello===selloRecurso) return;
+      selloRecurso=sello; recurso=e;
+      cfg.recurso(recurso);
+    })
+    .catch(function(){});
+}
 function dirige(d){
   if(!sala || !docente) return;
   batuta=d||null;
@@ -489,6 +523,12 @@ function dirige(d){
   if(!tBatuta) tBatuta=setInterval(function(){
     if(docente && sala && batuta) dirige(batuta);
   }, 90000);
+}
+function escuchaRecurso(){
+  if(!cfg.recurso) return;
+  if(tRecurso){ clearInterval(tRecurso); tRecurso=null; }
+  oyeRecurso();
+  tRecurso=setInterval(oyeRecurso, 8000);
 }
 function escucha(){
   if(!cfg.batuta) return;
@@ -819,6 +859,11 @@ window.Aula={
   verPantalla:function(nombre){ abrePantalla(nombre); },
   cambiaMusica:function(){ otraPista(); },
   get esDocente(){ return docente; },
-  get enSala(){ return !!sala; }
+  get enSala(){ return !!sala; },
+  /* el enlace del caso práctico que publica el docente */
+  guardaRecurso:function(r){ return publicaRecurso(r); },
+  get recurso(){ return recurso; },
+  /* los nombres de quienes están en la sala, para sortear parejas y equipos */
+  get participantes(){ return gente.map(function(g){ return g.alumno; }); }
 };
 })();
