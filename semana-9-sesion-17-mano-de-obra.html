@@ -1183,25 +1183,24 @@ a1:{ tipo:'arr', titulo:'Actividad 2 - ¿A dónde va cada sueldo?',
       'administra no es costo de producción: es gasto.') },
 
 /* 3 ------------------------------------------------------------- */
-a2:{ tipo:'arr', titulo:'Actividad 3 - Cada concepto en su lugar',
-  fichas:[ {id:'r1', t:'Aporte a la ONP', g:'RET'},
-           {id:'r2', t:'Aporte a la AFP', g:'RET'},
-           {id:'e1', t:'EsSalud', g:'APO'},
-           {id:'e2', t:'SCTR', g:'APO'},
-           {id:'e3', t:'SENATI', g:'APO'},
+a2:{ tipo:'arr', titulo:'Actividad 3 - ¿Ingreso, aporte o beneficio?',
+  fichas:[ {id:'i1', t:'Sueldo básico', g:'ING'},
+           {id:'i2', t:'Jornal diario', g:'ING'},
+           {id:'i3', t:'Horas extras', g:'ING'},
+           {id:'i4', t:'Comisión por ventas', g:'ING'},
+           {id:'a1', t:'EsSalud (9 %)', g:'APO'},
+           {id:'a2', t:'SCTR', g:'APO'},
+           {id:'a3', t:'SENATI', g:'APO'},
            {id:'b1', t:'CTS', g:'BEN'},
-           {id:'b2', t:'Gratificaciones', g:'BEN'},
+           {id:'b2', t:'Gratificaciones de julio y diciembre', g:'BEN'},
            {id:'b3', t:'Vacaciones', g:'BEN'},
-           {id:'c1', t:'Horas extras', g:'CIF'},
-           {id:'c2', t:'Tiempo ocioso: no hay trabajo, pero se paga', g:'CIF'},
-           {id:'c3', t:'Tiempo muerto: se malogró la máquina', g:'CIF'} ],
-  cajas:[ {id:'RET', t:'Retención al trabajador'},
-          {id:'APO', t:'Aporte del empleador'},
-          {id:'BEN', t:'Beneficio laboral'},
-          {id:'CIF', t:'Se carga al CIF'} ],
-  fin:globo2(P.pres, P.sorp,'Resuelto','Las retenciones salen del sueldo del trabajador: no son costo '+
-      'para la empresa. Los aportes y los beneficios sí lo son, y se suman al sueldo. Y el sobretiempo, '+
-      'el tiempo ocioso y el tiempo muerto no se cargan al producto como MOD: van al CIF.') },
+           {id:'b4', t:'Asignación familiar', g:'BEN'} ],
+  cajas:[ {id:'ING', t:'Ingresos (remuneraciones)'},
+          {id:'APO', t:'Aportes del empleador'},
+          {id:'BEN', t:'Beneficios laborales'} ],
+  fin:globo2(P.pres, P.sorp,'Resuelto','Los ingresos son lo que se le paga al trabajador por su trabajo. '+
+      'Los aportes los paga la empresa a otras instituciones por tener a ese trabajador. Y los beneficios '+
+      'son derechos que da la ley además del sueldo. Las tres partes juntas forman el costo de la mano de obra.') },
 
 /* 4 ------------------------------------------------------------- */
 a3:{ tipo:'par', titulo:'Actividad 4 - ¿Qué documento o paso es?',
@@ -1408,20 +1407,18 @@ var D=[
 
 /* 3 ------------------------------------------------------------- */
 { et:'Composición', t:'Composición de la Mano de Obra', clave:'a2',
-  h:'<div class="dfila3 chica">'+
-      '<div class="dele"><span>+</span>Ingresos (remuneraciones)</div>'+
-      '<div class="dele"><span>+</span>Aportes del empleador</div>'+
-      '<div class="dele"><span>+</span>Beneficios laborales</div>'+
-    '</div>'+
-    '<div class="dgrid3">'+
-      '<div class="dmini"><b>Retenciones al trabajador</b>ONP, AFP, etc.</div>'+
-      '<div class="dmini"><b>Aportes del empleador</b>EsSalud, SENATI, SENCICO, SCTR, etc.</div>'+
-      '<div class="dmini"><b>Trabajo nocturno</b>Jornada entre las 10 p. m. y las 6 a. m.</div>'+
-      '<div class="dmini cif"><b>Sobretiempo / horas extras</b>Voluntario al darlo y al hacerlo; es MOI.</div>'+
-      '<div class="dmini cif"><b>Tiempo ocioso</b>No hay trabajo que hacer, pero se paga el tiempo.</div>'+
-      '<div class="dmini cif"><b>Tiempo muerto</b>Fallas de máquinas o faltante de existencias.</div>'+
-    '</div>'+
-    '<p class="dpie2"><span class="dcif">CIF</span> los tres conceptos marcados se cargan a los costos indirectos</p>' },
+  h:'<p class="dlead">El costo de la mano de obra no es solo el sueldo: se compone de tres partes.</p>'+
+    '<div class="dgrid3 alto">'+
+    '<div class="dcard"><h4>Ingresos (remuneraciones)</h4>'+
+      '<p>Lo que el trabajador recibe <b>como pago por su trabajo</b>.</p>'+
+      '<p class="dfx">Sueldo · jornal · horas extras · comisiones</p></div>'+
+    '<div class="dcard gris"><h4>Aportes del empleador</h4>'+
+      '<p>Lo que la empresa paga <b>a otras instituciones</b> por tener al trabajador en planilla.</p>'+
+      '<p class="dfx">EsSalud · SCTR · SENATI · SENCICO</p></div>'+
+    '<div class="dcard"><h4>Beneficios laborales</h4>'+
+      '<p>Derechos que la <b>ley otorga al trabajador</b> además de su remuneración.</p>'+
+      '<p class="dfx">CTS · gratificaciones · vacaciones · asignación familiar</p></div>'+
+    '</div>' },
 
 /* 4 ------------------------------------------------------------- */
 { et:'Control', t:'Métodos de control de Mano de Obra', clave:'a3',
