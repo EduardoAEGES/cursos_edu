@@ -1283,9 +1283,10 @@ var D=[
   h:'<div class="tapa">'+
       '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
         '<span>Instituto de Diseño y Comunicación</span></div>'+
-      '<h2>Doscientos cuestionarios no son un resultado</h2>'+
-      '<p>Semana 9 · Sesión 17 - Procesamiento y análisis univariado de datos cuantitativos</p>'+
-      '<div class="via"><b>Codificar</b><b>Tabular</b><b>Interpretar</b></div>'+
+      '<h2>Procesamiento y análisis univariado de datos cuantitativos</h2>'+
+      '<p>Semana 9 · Sesión 17 - Investigación Cuantitativa</p>'+
+      '<div class="via"><b>Codificación</b><b>Matriz de datos</b><b>Distribución de frecuencias</b>'+
+      '<b>Medidas de resumen</b></div>'+
     '</div>'+
     globo(P.pres,'El caso de la sesión',
       'Encuestaron a veinte compañeros del instituto sobre su consumo de café: dónde lo compran, '+
@@ -1322,14 +1323,14 @@ var D=[
     'de contenido guarda.</div>' },
 
 /* 3 ------------------------------------------------------------- */
-{ et:'Libro', t:'El libro de códigos de la encuesta', clave:'a2',
+{ et:'Libro', t:'Construcción del libro de códigos', clave:'a2',
   h:'<p class="enc">Cuatro de las variables de nuestra encuesta</p>'+
     '<p class="sub">Elige en cada fila cómo se codifica y en qué nivel de medición está</p>'+
     '<div class="av">Recuerda las tres reglas: los valores se escriben uno por uno con su etiqueta, la '+
     'variable que ya es un número no se codifica, y el dato perdido lleva su propio código reservado.</div>' },
 
 /* 4 ------------------------------------------------------------- */
-{ et:'La base', t:'Cómo se arma la base de datos', clave:'a3',
+{ et:'La matriz', t:'Estructura de la matriz de datos', clave:'a3',
   h:'<p class="enc">Una fila por encuestado, una columna por variable</p>'+
     '<p class="sub">Esa frase es toda la regla, y es la que más se incumple</p>'+
     '<div class="dos">'+
@@ -1346,7 +1347,7 @@ var D=[
     'en cada una.</div>' },
 
 /* 5 ------------------------------------------------------------- */
-{ et:'Una fila', t:'De la encuesta a la fila', clave:'a4',
+{ et:'Registro', t:'Del cuestionario al registro en la matriz', clave:'a4',
   h:'<p class="enc">El cuestionario del encuestado 21</p>'+
     '<p class="sub">Marcó Femenino, Casi siempre, 7 vasos a la semana, lo trae de casa, y dejó la edad en blanco</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
@@ -1361,7 +1362,7 @@ var D=[
     '<div class="av">Ese cuadro es el libro de códigos de la encuesta. Úsalo para llenar la fila.</div>' },
 
 /* 6 ------------------------------------------------------------- */
-{ et:'Frecuencias', t:'La tabla de frecuencias', clave:'a5',
+{ et:'Frecuencias', t:'Distribución de frecuencias absolutas', clave:'a5',
   h:'<p class="enc">Tabulación univariante: una variable a la vez</p>'+
     '<p class="sub">Contar cuántas veces aparece cada código y ordenarlo en un cuadro</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
@@ -1394,7 +1395,7 @@ var D=[
     'porcentaje que corresponde.</div>' },
 
 /* 8 ------------------------------------------------------------- */
-{ et:'Medidas', t:'Media, mediana, moda y dispersión', clave:'a7',
+{ et:'Medidas', t:'Medidas de tendencia central y de dispersión', clave:'a7',
   h:'<p class="enc">Resumir una columna de números en unas pocas cifras</p>'+
     '<p class="sub">Dos preguntas: por dónde está el centro del grupo y qué tan separados están sus datos</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
@@ -1432,7 +1433,7 @@ var D=[
       'media sin alguna medida de dispersión al lado.') },
 
 /* 9 ------------------------------------------------------------- */
-{ et:'Interpretar', t:'Leer los resultados', clave:'a8',
+{ et:'Interpretar', t:'Interpretación de los resultados', clave:'a8',
   h:'<p class="enc">Los números ya están. Falta la frase</p>'+
     '<p class="sub">Esto es lo que salió de la encuesta de las veinte personas</p>'+
     '<div class="tabenv"><table class="t chica"><thead><tr>'+
@@ -1449,7 +1450,7 @@ var D=[
     '<div class="av">Con ese cuadro delante, elige en cada caso la lectura correcta.</div>' },
 
 /* 10 ------------------------------------------------------------ */
-{ et:'Crucigrama', t:'Crucigrama y cierre', clave:'a9',
+{ et:'Cierre', t:'Síntesis de la sesión', clave:'a9',
   h:'<p class="enc">Lo que te llevas de la sesión</p>'+
     '<div class="dos">'+
     '<div class="fc"><h4>El orden del trabajo</h4><div class="c"><ol>'+
