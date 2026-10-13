@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<title>Semana 9 - Sesi&oacute;n 17 - Costo de la mano de obra directa</title>
+<title>Semana 9 - Sesi&oacute;n 17 - Mano de Obra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -609,6 +609,85 @@
   .eqp.fin b{ color:var(--verde); }
   .elenco{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
            clip-path:inset(50%); white-space:nowrap; }
+  /* ---------- diapositiva Thomas Jefferson: ocupa la pantalla, la actividad va debajo ---------- */
+  .lam{ container-type:size; }
+  .diapo{ position:relative; min-height:100cqh; box-sizing:border-box; display:flex; flex-direction:column;
+          background:#fff; border-radius:12px; box-shadow:0 2px 14px rgba(0,0,0,.08);
+          padding:3.4cqh 3.6cqh 2.2cqh; font-family:Arial,'Nunito',sans-serif;
+          font-size:clamp(15px,4.3cqh,34px); line-height:1.42; color:#2B2B2E; }
+  .diapo .dcab{ display:flex; align-items:flex-start; justify-content:space-between; gap:3cqh; margin-bottom:2.6cqh; }
+  .diapo .dcab h2{ margin:0; color:#E31E24; font-weight:800; font-size:clamp(24px,7.6cqh,62px);
+                   line-height:1.12; letter-spacing:-.5px; }
+  .diapo .dcab img{ flex:none; height:clamp(30px,10cqh,90px); width:auto; }
+  .diapo .dcue{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:2.4cqh; }
+  .diapo p{ margin:0; }
+  .diapo b{ color:#2B2B2E; }
+  .diapo .dbaja{ text-align:center; font-size:clamp(12px,2.7cqh,22px); font-weight:800; color:#E31E24;
+                 margin-top:1.6cqh; animation:baja 1.6s ease-in-out infinite; min-height:1em; }
+  @keyframes baja{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(5px); } }
+  .diapo .dnum{ position:absolute; right:2.4cqh; bottom:1.6cqh; font-size:clamp(11px,2.2cqh,18px);
+                color:#9A9AA0; font-weight:700; }
+  .acts{ margin-top:22px; }
+  .dcita{ border-left:1.2cqh solid #E31E24; background:#F4F4F6; border-radius:0 12px 12px 0;
+          padding:2.4cqh 3cqh; font-size:clamp(17px,5.6cqh,46px); line-height:1.4; }
+  .dcita.chica{ font-size:clamp(15px,4cqh,34px); }
+  .dcita i{ font-size:.8em; color:#6A6A70; }
+  .dnota{ font-size:clamp(15px,4.6cqh,38px); }
+  .dlead{ font-size:clamp(15px,4cqh,34px); color:#505050; }
+  .dfila3{ display:grid; grid-template-columns:repeat(3,1fr); gap:2cqh; }
+  .dele{ border:2px solid #DCDCE0; border-radius:12px; padding:2cqh; text-align:center; font-weight:800;
+         font-size:clamp(15px,4.8cqh,40px); background:#fff; }
+  .dele span{ display:block; margin:0 auto 1cqh; width:1.9em; height:1.9em; line-height:1.9em; border-radius:50%;
+              background:#505050; color:#fff; }
+  .dele.on{ border-color:#E31E24; background:#FFF1F2; color:#E31E24; }
+  .dele.on span{ background:#E31E24; }
+  .dfila3.chica .dele{ font-size:clamp(14px,3.8cqh,32px); padding:1.4cqh; }
+  .dfila3.chica .dele span{ display:inline-block; width:auto; height:auto; line-height:1; background:none;
+                            color:#E31E24; margin:0 .3em 0 0; }
+  .dcols2{ display:grid; grid-template-columns:1fr 1fr; gap:2.4cqh; }
+  .dgrid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.6cqh; }
+  .dgrid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.6cqh; }
+  .dcard{ border-radius:12px; background:#F7F7F8; border-top:1.1cqh solid #E31E24; padding:2.2cqh 2.6cqh;
+          display:flex; flex-direction:column; gap:1.4cqh; font-size:clamp(14px,3.75cqh,32px); }
+  .dcard.gris{ border-top-color:#505050; }
+  .dcard h4{ margin:0; color:#B5121B; font-size:clamp(16px,4.5cqh,38px); font-weight:800; }
+  .dcard.gris h4{ color:#505050; }
+  .dcard ul, .dcard ol{ margin:0; padding-left:1.2em; } .dcard li{ margin-bottom:.6cqh; }
+  .dtag{ margin-top:auto !important; background:#fff; border-left:4px solid #E31E24; border-radius:6px;
+         padding:1cqh 1.4cqh; font-size:.88em; color:#505050; }
+  .dfx{ margin-top:auto !important; background:#505050; color:#fff; border-radius:8px; text-align:center;
+        padding:1cqh; font-weight:800; }
+  .dmini{ border-left:.8cqh solid #E31E24; background:#F7F7F8; border-radius:0 10px 10px 0;
+          padding:1.4cqh 1.8cqh; font-size:clamp(13px,3.4cqh,29px); line-height:1.38; }
+  .dmini > b:first-child{ display:block; color:#B5121B; font-size:1.05em; }
+  .dmini.cif{ border-left-color:#505050; background:#EDEDF0; }
+  .dmini.cif > b:first-child{ color:#505050; }
+  .dmini.cif > b:first-child::after{ content:' → CIF'; color:#E31E24; }
+  .dpie2{ font-size:clamp(13px,3.2cqh,27px); color:#505050; }
+  .dcif{ background:#505050; color:#fff; border-radius:6px; padding:.2em .6em; font-weight:800; margin-right:.4em; }
+  table.dtab{ width:100%; border-collapse:collapse; font-size:clamp(13px,3.3cqh,28px); }
+  table.dtab th{ background:#505050; color:#fff; padding:.9cqh 1.4cqh; text-align:left; }
+  table.dtab th:nth-child(3){ background:#E31E24; }
+  table.dtab td{ padding:.8cqh 1.4cqh; border-bottom:1px solid #DCDCE0; }
+  table.dtab td:first-child{ font-weight:800; }
+  table.dtab td:nth-child(3){ background:#FFF4F5; font-weight:700; }
+  table.dtab tr.mes td{ background:#F4F4F6; color:#1C1C1F; }
+  table.dtab tr.mes td:nth-child(3){ background:#FFE9EB; }
+  table.dmin{ width:100%; border-collapse:collapse; }
+  table.dmin td{ padding:.5cqh 0; border-bottom:1px dashed #DCDCE0; }
+  table.dmin td:last-child{ text-align:right; font-weight:800; white-space:nowrap; }
+  table.dmin tr.tot td{ border-bottom:0; color:#E31E24; font-weight:900; font-size:1.1em; }
+  @media (max-width:819px){
+    .diapo{ min-height:0; }
+    .dcols2, .dgrid2, .dgrid3, .dfila3{ grid-template-columns:1fr; }
+    .diapo .dcab h2{ font-size:26px; } .diapo{ font-size:17px; }
+  }
+  #impreso .diapo{ min-height:0; box-shadow:none; font-size:22px; padding:20px 24px; }
+  #impreso .diapo .dcab h2{ font-size:40px; } #impreso .diapo .dcab img{ height:60px; }
+  #impreso .diapo .dbaja{ display:none; }
+  #impreso .dcita{ font-size:28px; } #impreso .dcard, #impreso .dmini, #impreso table.dtab{ font-size:20px; }
+  #impreso .dele{ font-size:24px; }
+
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -670,10 +749,9 @@
   <div class="marca">
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
-      <h1>Costo de la mano de obra directa</h1>
-      <p><span class="sem">Semana 9 &middot; Sesi&oacute;n 17</span> - MOD y MOI, tipos de remuneraci&oacute;n,
-        cargas sociales y MOD por unidad</p>
-      <p class="inst">Costos y Presupuestos - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+      <h1>Mano de Obra</h1>
+      <p><span class="sem">Semana 9 &middot; Sesi&oacute;n 17</span> - An&aacute;lisis de Costos y Presupuestos</p>
+      <p class="inst">IES &ldquo;Thomas Jefferson&rdquo; &middot; Marketing &middot; 3er ciclo &middot; 2026-II</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -736,11 +814,11 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Semana 9 de Costos y Presupuestos: mano de obra directa
-    e indirecta, tipos de remuneraci&oacute;n (por tiempo, a destajo, mixto y comisi&oacute;n), cargas sociales
-    del r&eacute;gimen de pequeña empresa y MOD por unidad. Helader&iacute;a Brisa Polar, Antojitos de Arequipa y
-    Ocaso Caf&eacute; Terraza son casos de clase, no empresas reales. Todo se resuelve marcando la alternativa
-    correcta, sin hoja de c&aacute;lculo.</p>
+  <p class="aviso" style="margin-top:16px">Semana 9 de An&aacute;lisis de Costos y Presupuestos: concepto y
+    clasificaci&oacute;n de la mano de obra, composici&oacute;n, m&eacute;todos de control, sistemas de pago,
+    CTS, gratificaciones, vacaciones, reg&iacute;menes laborales y MOD por unidad. Cada diapositiva tiene su
+    actividad debajo: desliza hacia abajo para resolverla. Helader&iacute;a Brisa Polar, Antojitos de Arequipa y
+    Ocaso Caf&eacute; Terraza son casos de clase, no empresas reales.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="analisis-costos-presupuestos.html">Volver al curso</a>
@@ -1065,314 +1143,416 @@ pintaSon();
 var ACT={
 
 /* 1 ------------------------------------------------------------- */
-a0:{ tipo:'quiz', titulo:'Actividad 1 - Conectemos',
+a0:{ tipo:'quiz', titulo:'Actividad 1 - ¿Qué es mano de obra?',
   lista:[
-   { q:'El maestro heladero de Brisa Polar tiene un sueldo de S/ 1,800 al mes. ¿Cuánto le cuesta realmente a la empresa?',
-     ops:['Exactamente S/ 1,800, lo que dice su boleta',
-          'Más de S/ 1,800: hay que sumarle EsSalud, gratificaciones, CTS y vacaciones',
-          'Menos de S/ 1,800, porque se le descuenta la AFP o la ONP'], ok:1,
-     pq:'El sueldo es solo una parte. La empresa además paga EsSalud y va separando cada mes lo que '+
-        'después entregará como gratificación, CTS y vacaciones. La AFP o la ONP, en cambio, sale del '+
-        'bolsillo del trabajador: no es un costo para la empresa.' },
-   { q:'¿Cuál de estos trabajadores transforma con sus manos la materia prima en helado?',
-     ops:['El administrador, que hace las compras',
-          'El maestro heladero, que prepara las mezclas y opera la máquina',
-          'El vendedor-repartidor, que entrega los pedidos'], ok:1,
-     pq:'Ese es el trabajador de mano de obra directa: su trabajo se ve en el producto y se puede medir '+
-        'por unidad. Los otros dos también cobran, pero su sueldo no forma parte del costo del helado.' } ] },
+   { q:'En la Heladería Brisa Polar, ¿cuál de estos es un costo de mano de obra?',
+     ops:['La leche y el azúcar de la mezcla',
+          'El sueldo del maestro heladero que prepara las mezclas',
+          'La luz que consume la máquina de helados'], ok:1,
+     pq:'La leche y el azúcar son materia prima; la luz es CIF. El esfuerzo humano que transforma la '+
+        'materia prima es la mano de obra.' },
+   { q:'¿Qué lugar ocupa la mano de obra entre los elementos del costo de producción?',
+     ops:['Es el primero: va antes que la materia prima',
+          'Es el segundo, junto a la materia prima y los CIF',
+          'No es costo de producción, es un gasto'], ok:1,
+     pq:'Costo de producción = Materia prima + Mano de obra + CIF. La mano de obra es el segundo elemento.' },
+   { q:'El diseñador de la etiqueta del pote trabaja con la mente, no con las manos. ¿Su esfuerzo puede ser mano de obra?',
+     ops:['No, solo cuenta el esfuerzo físico',
+          'Sí: la mano de obra es esfuerzo físico o mental',
+          'Solo si trabaja en la planta'], ok:1,
+     pq:'La definición dice esfuerzo físico o mental. Lo que decide si es directa o indirecta es cuánto '+
+        'se identifica con el producto, como verás en la siguiente diapositiva.' } ] },
 
 /* 2 ------------------------------------------------------------- */
 a1:{ tipo:'arr', titulo:'Actividad 2 - ¿A dónde va cada sueldo?',
   fichas:[ {id:'d1', t:'Maestro pastelero: prepara la masa y hornea', g:'MOD'},
            {id:'d2', t:'Ayudante: rellena y arma los alfajores', g:'MOD'},
            {id:'d3', t:'Barista principal: prepara las bebidas de café', g:'MOD'},
-           {id:'i1', t:'Supervisor de producción: controla la calidad, no elabora', g:'MOI'},
-           {id:'i2', t:'Encargado de lavar la vajilla y los equipos de la barra', g:'MOI'},
+           {id:'i1', t:'Supervisor de producción: controla la calidad', g:'MOI'},
+           {id:'i2', t:'Encargado de almacén de insumos', g:'MOI'},
+           {id:'i3', t:'Vigilante de la planta', g:'MOI'},
            {id:'v1', t:'Vendedora de la tienda del aeropuerto', g:'GV'},
-           {id:'v2', t:'Mozo: toma pedidos y atiende las mesas', g:'GV'},
            {id:'g1', t:'Administradora: contabilidad, compras y pagos', g:'GA'} ],
   cajas:[ {id:'MOD', t:'Mano de obra directa (MOD)'},
-          {id:'MOI', t:'Mano de obra indirecta - va a CIF'},
+          {id:'MOI', t:'Mano de obra indirecta (MOI) - va a CIF'},
           {id:'GV',  t:'Gasto de ventas'},
           {id:'GA',  t:'Gasto administrativo'} ],
-  fin:globo(P.punt,'Resuelto','La pregunta que decide todo es: ¿esta persona transforma el producto con '+
-      'sus manos? Si la respuesta es sí, es MOD. Si trabaja en la zona de producción pero no lo elabora '+
-      '—supervisa, limpia, almacena—, es MOI y entra al costo por el CIF. Si vende o atiende al '+
-      'cliente, es gasto de ventas; y si dirige el negocio, gasto administrativo.') },
+  fin:globo(P.punt,'Resuelto','La pregunta clave: ¿se puede identificar su trabajo en cada unidad del '+
+      'producto? Si sí, es MOD y forma parte del costo primo. Si apoya a la producción —supervisa, '+
+      'almacena, vigila—, es MOI y se reparte con tasas de asignación dentro del CIF. Quien vende o '+
+      'administra no es costo de producción: es gasto.') },
 
 /* 3 ------------------------------------------------------------- */
-a2:{ tipo:'par', titulo:'Actividad 3 - ¿Cómo le pagan?',
-  fichas:[ {id:'T', t:'Por tiempo: sueldo mensual'},
-           {id:'J', t:'Por tiempo: jornal diario'},
-           {id:'D', t:'A destajo'},
-           {id:'M', t:'Mixto: fijo + incentivo'},
-           {id:'C', t:'Comisión sobre ventas'} ],
-  huecos:[ {id:'D', q:'Ana cobra S/ 0.40 por cada paleta que moldea. En octubre moldeó 3,200.'},
-           {id:'T', q:'El maestro heladero recibe S/ 1,800 cada mes, produzca lo que produzca.'},
-           {id:'C', q:'La vendedora gana el 3 % de todo lo que vende a las cafeterías.'},
-           {id:'J', q:'Un ayudante eventual cobra S/ 60 por cada día que viene a la planta.'},
-           {id:'M', q:'Pedro tiene S/ 1,130 fijos y S/ 0.20 más por cada pote que pase de 2,500 al mes.'} ],
-  fin:globo2(P.pres, P.sena,'Resuelto','Por tiempo se paga la presencia: la hora, el día o el mes. A '+
-      'destajo se paga el resultado: cada unidad terminada. El sistema mixto junta las dos cosas para '+
-      'premiar al que produce más que el estándar. Y la comisión es el pago típico del vendedor, por eso '+
-      'nunca termina en el costo del producto.') },
+a2:{ tipo:'arr', titulo:'Actividad 3 - Cada concepto en su lugar',
+  fichas:[ {id:'r1', t:'Aporte a la ONP', g:'RET'},
+           {id:'r2', t:'Aporte a la AFP', g:'RET'},
+           {id:'e1', t:'EsSalud', g:'APO'},
+           {id:'e2', t:'SCTR', g:'APO'},
+           {id:'e3', t:'SENATI', g:'APO'},
+           {id:'b1', t:'CTS', g:'BEN'},
+           {id:'b2', t:'Gratificaciones', g:'BEN'},
+           {id:'b3', t:'Vacaciones', g:'BEN'},
+           {id:'c1', t:'Horas extras', g:'CIF'},
+           {id:'c2', t:'Tiempo ocioso: no hay trabajo, pero se paga', g:'CIF'},
+           {id:'c3', t:'Tiempo muerto: se malogró la máquina', g:'CIF'} ],
+  cajas:[ {id:'RET', t:'Retención al trabajador'},
+          {id:'APO', t:'Aporte del empleador'},
+          {id:'BEN', t:'Beneficio laboral'},
+          {id:'CIF', t:'Se carga al CIF'} ],
+  fin:globo2(P.pres, P.sorp,'Resuelto','Las retenciones salen del sueldo del trabajador: no son costo '+
+      'para la empresa. Los aportes y los beneficios sí lo son, y se suman al sueldo. Y el sobretiempo, '+
+      'el tiempo ocioso y el tiempo muerto no se cargan al producto como MOD: van al CIF.') },
 
 /* 4 ------------------------------------------------------------- */
-a3:{ tipo:'sel', titulo:'Actividad 4 - ¿Cuánto cobra cada uno?',
-  lista:[
-   { q:'Ana moldeó 3,200 paletas a S/ 0.40 cada una. ¿Cuánto cobra en el mes?',
-     ops:['S/ 800','S/ 1,280','S/ 1,130'], ok:1,
-     pq:'3,200 × 0.40 = S/ 1,280. Pasa la remuneración mínima, así que se le paga eso.' },
-   { q:'En noviembre Ana trabajó la jornada completa, pero solo moldeó 2,500 paletas. ¿Cuánto se le paga?',
-     ops:['S/ 1,000','S/ 1,280','S/ 1,130'], ok:2,
-     pq:'2,500 × 0.40 = S/ 1,000, que no llega a la remuneración mínima. Si cumplió la jornada completa, '+
-        'la empresa le completa hasta S/ 1,130.' },
-   { q:'Un ayudante por horas cobra S/ 6.50 la hora. Trabajó 8 horas diarias durante 26 días.',
-     ops:['S/ 1,352','S/ 1,690','S/ 1,248'], ok:0,
-     pq:'8 × 26 = 208 horas, y 208 × 6.50 = S/ 1,352.' },
-   { q:'Pedro tiene S/ 1,130 fijos y S/ 0.20 por cada pote que pase de 2,500. Este mes hizo 3,100 potes.',
-     ops:['S/ 1,750','S/ 620','S/ 1,250'], ok:2,
-     pq:'Solo se premian los 600 potes que pasan el estándar: 600 × 0.20 = S/ 120. Con el fijo, '+
-        '1,130 + 120 = S/ 1,250.' },
-   { q:'La vendedora vendió S/ 40,000 con una comisión del 3 %. ¿Cuánto es y dónde se registra?',
-     ops:['S/ 1,200, como mano de obra directa','S/ 1,200, como gasto de ventas','S/ 120, como CIF'], ok:1,
-     pq:'40,000 × 3 % = S/ 1,200. La vendedora no fabrica nada: su comisión es gasto de ventas.' } ],
-  fin:globo(P.sorp,'Resuelto','Fíjate en la segunda: el destajo premia al que produce más, pero la ley '+
-      'no deja que un trabajador de jornada completa cobre menos de la remuneración mínima. Esa '+
-      'diferencia también es costo de mano de obra.') },
+a3:{ tipo:'par', titulo:'Actividad 4 - ¿Qué documento o paso es?',
+  fichas:[ {id:'TA', t:'Tarjeta de asistencia'},
+           {id:'BT', t:'Boleta de trabajo'},
+           {id:'CN', t:'Cálculo de nómina'},
+           {id:'AC', t:'Asignación del costo'} ],
+  huecos:[ {id:'BT', q:'El ayudante anota que dedicó 5 horas a la orden de potes y 3 a la orden de paletas.'},
+           {id:'CN', q:'Al pago bruto se le restan la ONP o la AFP y se obtiene el pago neto.'},
+           {id:'TA', q:'Registra la hora de entrada y de salida de cada día: es la fuente de la nómina total.'},
+           {id:'AC', q:'Costos manda las horas de la orden de potes a ese producto y las del supervisor al CIF.'} ],
+  fin:globo(P.sena,'Resuelto','La tarjeta dice cuánto tiempo estuvo el trabajador en la empresa; la '+
+      'boleta dice en qué lo usó. Con la primera se paga la planilla y con la segunda se costea la '+
+      'producción.') },
 
 /* 5 ------------------------------------------------------------- */
-a4:{ tipo:'tabla', titulo:'Actividad 5 - El costo laboral de Brisa Polar',
-  intro:'Factor de cargas sociales: <b>26.42 %</b>. En cada fila elige a dónde va el sueldo y cuánto '+
-        'le cuesta en total a la empresa.',
-  cols:['Puesto','Cant.','Sueldo (S/)','¿A dónde va?','Costo laboral mensual'],
-  tipos:['','n','n','',''],
-  filas:[
-   [{t:'Maestro heladero'}, {t:'1'}, {t:'1,800'},
-    {ops:['MOD','MOI (va a CIF)','Gasto de ventas','Gasto administrativo'], ok:0,
-     pq:'Prepara las mezclas y opera la máquina.'},
-    {ops:['S/ 1,800.00','S/ 1,962.00','S/ 2,275.50'], ok:2,
-     pq:'1,800 × 1.2642 = S/ 2,275.50'}],
-   [{t:'Ayudante de producción'}, {t:'2'}, {t:'1,200'},
-    {ops:['MOD','MOI (va a CIF)','Gasto de ventas','Gasto administrativo'], ok:0,
-     pq:'Pesa insumos, llena potes y moldea paletas.'},
-    {ops:['S/ 1,517.00','S/ 3,034.00','S/ 2,400.00'], ok:1,
-     pq:'Son dos: 2 × 1,200 × 1.2642 = S/ 3,034.00'}],
-   [{t:'Encargado de almacén y limpieza de planta'}, {t:'1'}, {t:'1,130'},
-    {ops:['MOD','MOI (va a CIF)','Gasto de ventas','Gasto administrativo'], ok:1,
-     pq:'Trabaja en la planta, pero no elabora el helado.'},
-    {ops:['S/ 1,428.51','S/ 1,231.70','S/ 1,130.00'], ok:0,
-     pq:'1,130 × 1.2642 = S/ 1,428.51'}],
-   [{t:'Vendedor-repartidor'}, {t:'1'}, {t:'1,300'},
-    {ops:['MOD','MOI (va a CIF)','Gasto de ventas','Gasto administrativo'], ok:2,
-     pq:'Visita cafeterías y entrega pedidos.'},
-    {ops:['S/ 1,417.00','S/ 1,643.42','S/ 1,300.00'], ok:1,
-     pq:'1,300 × 1.2642 = S/ 1,643.42'}],
-   [{t:'Administrador'}, {t:'1'}, {t:'2,200'},
-    {ops:['MOD','MOI (va a CIF)','Gasto de ventas','Gasto administrativo'], ok:3,
-     pq:'Compras, pagos y control del negocio.'},
-    {ops:['S/ 2,781.17','S/ 2,398.00','S/ 2,200.00'], ok:0,
-     pq:'2,200 × 1.2642 = S/ 2,781.17'}],
-   [{t:'Total MOD', cl:'tot'}, {t:''}, {t:''}, {t:'solo las filas MOD'},
-    {ops:['S/ 6,738.01','S/ 4,200.00','S/ 5,309.50'], ok:2,
-     pq:'2,275.50 + 3,034.00 = S/ 5,309.50. El almacenero no entra: es MOI.'}]
-  ],
-  fin:globo(P.punt,'Resuelto','Los S/ 4,200 de sueldos de producción se convierten en S/ 5,309.50 de '+
-      'mano de obra directa. Ese es el número que entra al costo del helado. El encargado de almacén '+
-      'también es costo de producción, pero entra por el CIF; y el vendedor y el administrador son '+
-      'gastos del periodo.') },
+a4:{ tipo:'sel', titulo:'Actividad 5 - ¿Qué sistema es y cuánto cobra?',
+  lista:[
+   { q:'Ana cobra S/ 0.40 por cada paleta que moldea y en octubre moldeó 3,200. ¿Sistema y pago?',
+     ops:['A base de tiempo: S/ 1,130','A base de producción: S/ 1,280','A base de incentivos: S/ 800'], ok:1,
+     pq:'Se paga por unidad producida (destajo): 3,200 × 0.40 = S/ 1,280.' },
+   { q:'Un ayudante cobra S/ 6.50 por hora. Trabajó 8 horas diarias durante 26 días.',
+     ops:['A base de tiempo: S/ 1,352','A base de producción: S/ 1,352','A base de tiempo: S/ 1,690'], ok:0,
+     pq:'Se paga por el tiempo: 8 × 26 = 208 horas × 6.50 = S/ 1,352.' },
+   { q:'Pedro tiene S/ 1,130 fijos y gana S/ 0.20 por cada pote que pase el estándar de 2,500. Hizo 3,100.',
+     ops:['A base de incentivos: S/ 1,750','A base de producción: S/ 620','A base de incentivos: S/ 1,250'], ok:2,
+     pq:'Solo se premia lo que pasa el estándar: 600 × 0.20 = S/ 120; 1,130 + 120 = S/ 1,250.' },
+   { q:'La planta premia con S/ 50 al grupo que gasta menos leche de la prevista. ¿Qué sistema es?',
+     ops:['A base de tiempo','A base de incentivos, aplicado en grupo','A base de producción'], ok:1,
+     pq:'Los incentivos premian el ahorro de tiempo o de materiales, y pueden ser individuales o grupales.' },
+   { q:'¿Qué sistema es el más antiguo y sencillo?',
+     ops:['A base de tiempo','A base de producción','A base de incentivos'], ok:0,
+     pq:'Se paga una remuneración fija por hora o jornada, sin medir cuánto se produce.' } ] },
 
 /* 6 ------------------------------------------------------------- */
-a5:{ tipo:'sel', titulo:'Actividad 6 - La MOD por unidad',
+a5:{ tipo:'quiz', titulo:'Actividad 6 - La CTS',
   lista:[
-   { q:'MOD asignada al pote de vainilla (A): 5,309.50 × 60 %',
-     ops:['S/ 2,123.80','S/ 3,185.70','S/ 5,309.50'], ok:1,
-     pq:'5,309.50 × 0.60 = S/ 3,185.70 al mes.' },
-   { q:'Producción mensual del pote de vainilla: 8,844 al año ÷ 12',
-     ops:['737 potes','8,844 potes','1,474 potes'], ok:0,
-     pq:'8,844 ÷ 12 = 737 potes al mes. La MOD es mensual, así que la producción también.' },
-   { q:'MOD por unidad del pote de vainilla',
-     ops:['S/ 0.36','S/ 7.20','S/ 4.32'], ok:2,
-     pq:'3,185.70 ÷ 737 = S/ 4.32 por pote. Si dividías entre 8,844 te salía 0.36: mezclaste un mes con un año.' },
-   { q:'MOD asignada a la paleta de fresa (B): 5,309.50 × 40 %',
-     ops:['S/ 2,123.80','S/ 3,185.70','S/ 1,600.00'], ok:0,
-     pq:'5,309.50 × 0.40 = S/ 2,123.80 al mes.' },
-   { q:'Producción mensual de la paleta: 26,960 al año ÷ 12',
-     ops:['2,696 paletas','2,246.67 paletas','26,960 paletas'], ok:1,
-     pq:'26,960 ÷ 12 = 2,246.67 paletas al mes.' },
-   { q:'MOD por unidad de la paleta de fresa',
-     ops:['S/ 0.95','S/ 0.08','S/ 2.36'], ok:0,
-     pq:'2,123.80 ÷ 2,246.67 = S/ 0.95 por paleta.' } ],
-  fin:globo2(P.pres, P.sorp,'Resuelto','El pote lleva S/ 4.32 de mano de obra y la paleta S/ 0.95. '+
-      'Ese dato va en el informe, en el punto 4.2.2: Mano de obra directa por unidad. Y se suma a la '+
-      'materia prima y al CIF para tener el costo unitario de producción.') },
+   { q:'¿Cuál es el propósito principal de la CTS?',
+     ops:['Premiar al trabajador que produce más',
+          'Ser un auxilio económico si el trabajador queda desempleado',
+          'Pagar las vacaciones que no se tomaron'], ok:1,
+     pq:'Es un beneficio de previsión: ayuda al trabajador y a su familia a afrontar el desempleo.' },
+   { q:'A un trabajador lo despiden por falta grave. ¿Recibe su CTS?',
+     ops:['No, la pierde','Sí: se otorga sin importar el motivo del cese','Solo la mitad'], ok:1,
+     pq:'La ley dice que se otorga con absoluta prescindencia del motivo del cese.' },
+   { q:'Recibió horas extras en 4 de los últimos 6 meses. ¿Entran a la remuneración computable?',
+     ops:['Sí: las cobró al menos 3 meses de cada 6, son regulares',
+          'No: las horas extras nunca entran','Solo si las cobró los 6 meses'], ok:0,
+     pq:'Las remuneraciones variables cuentan como regulares si se perciben al menos 3 meses de cada 6.' },
+   { q:'Para el depósito del semestre mayo - octubre, ¿qué parte de la gratificación de Fiestas Patrias se suma?',
+     ops:['Toda','La mitad','Un sexto (1/6)'], ok:2,
+     pq:'Las remuneraciones semestrales se suman a razón de 1/6 de lo percibido en el semestre.' } ] },
 
 /* 7 ------------------------------------------------------------- */
-a6:{ tipo:'cruz', titulo:'Actividad 7 - Crucigrama de la mano de obra',
-  filas:10, cols:15,
-  palabras:[
-   {p:'GRATIFICACION', r:5, c:2,  dir:'H', pista:'Pago extra de julio y diciembre; en la pequeña empresa es medio sueldo cada vez'},
-   {p:'MIXTO',         r:1, c:2,  dir:'H', pista:'Sistema de pago que junta un monto fijo con un incentivo por producir más'},
-   {p:'ESSALUD',       r:9, c:0,  dir:'H', pista:'Aporte de salud que paga el empleador: el 9 % del sueldo'},
-   {p:'COMISION',      r:0, c:6,  dir:'V', pista:'Lo que gana el vendedor como porcentaje de lo que vende'},
-   {p:'PLANILLA',      r:1, c:8,  dir:'V', pista:'Registro donde figuran los trabajadores con su sueldo y sus beneficios'},
-   {p:'INDIRECTA',     r:1, c:3,  dir:'V', pista:'Mano de obra que no elabora el producto, como la del supervisor: va al CIF'},
-   {p:'DESTAJO',       r:1, c:10, dir:'V', pista:'Forma de pago por cada unidad producida'},
-   {p:'JORNAL',        r:2, c:14, dir:'V', pista:'Pago por cada día trabajado'},
-   {p:'CTS',           r:7, c:1,  dir:'V', pista:'Compensación por tiempo de servicios, en sigla'},
-   {p:'VACACIONES',    r:0, c:12, dir:'V', pista:'Descanso pagado: 15 días al año en la pequeña empresa'} ],
-  fin:globo(P.sena,'Resuelto','Diez palabras que resumen la sesión: cómo se paga (destajo, jornal, '+
-      'mixto, comisión), qué se le suma al sueldo (EsSalud, gratificación, CTS, vacaciones), dónde '+
-      'queda escrito (planilla) y la mano de obra que no va directo al producto (indirecta).') },
+a6:{ tipo:'arr', titulo:'Actividad 7 - ¿Entra o no entra a la CTS?',
+  fichas:[ {id:'s1', t:'Sueldo básico', g:'SI'},
+           {id:'s2', t:'Almuerzo principal dado en especie', g:'SI'},
+           {id:'s3', t:'Horas extras cobradas 4 de 6 meses', g:'SI'},
+           {id:'s4', t:'1/6 de la gratificación', g:'SI'},
+           {id:'n1', t:'Canasta de Navidad', g:'NO'},
+           {id:'n2', t:'Movilidad que se da solo si asiste', g:'NO'},
+           {id:'n3', t:'Participación en las utilidades', g:'NO'},
+           {id:'n4', t:'Bono por matrimonio', g:'NO'},
+           {id:'n5', t:'Gratificación extraordinaria, ocasional', g:'NO'},
+           {id:'n6', t:'Uniforme de trabajo', g:'NO'} ],
+  cajas:[ {id:'SI', t:'Remuneración computable - sí entra'},
+          {id:'NO', t:'No remunerativo - no entra'} ],
+  fin:globo(P.punt,'Resuelto','Entra todo lo que el trabajador recibe con regularidad como pago por su '+
+      'trabajo y puede usar libremente. No entra lo ocasional, lo que se da por liberalidad o lo que es '+
+      'una condición para trabajar, como la movilidad o el uniforme.') },
 
 /* 8 ------------------------------------------------------------- */
-a7:{ tipo:'quiz', titulo:'Actividad 8 - Quiz de cierre',
+a7:{ tipo:'sel', titulo:'Actividad 8 - Gratificaciones y vacaciones',
   lista:[
-   { q:'El supervisor de producción controla la calidad, pero no elabora el producto. Su costo laboral va a…',
-     ops:['Mano de obra directa','CIF, como mano de obra indirecta','Gasto administrativo'], ok:1,
-     pq:'Trabaja para la producción, así que es costo de producción; pero no se puede medir por unidad, '+
-        'por eso entra por el CIF.' },
-   { q:'¿Cuál de estos NO es un costo para la empresa?',
-     ops:['El 9 % de EsSalud','La CTS que se deposita cada semestre',
-          'La AFP u ONP que se le descuenta al trabajador'], ok:2,
-     pq:'La AFP o la ONP se le retiene al trabajador de su propio sueldo. La empresa solo la descuenta '+
-        'y la paga por él.' },
-   { q:'¿Por qué se multiplica el sueldo por 1.2642?',
-     ops:['Para sumar de una vez las cargas sociales del régimen de pequeña empresa',
-          'Porque es el IGV del sueldo','Para convertir el sueldo mensual en anual'], ok:0,
-     pq:'1 + 26.42 %: el sueldo más EsSalud, gratificaciones, bonificación, CTS y vacaciones.' },
-   { q:'La MOD del mes sube y la producción se mantiene igual. La MOD por unidad…',
-     ops:['Sube','Baja','No cambia'], ok:0,
-     pq:'Se reparte más dinero entre las mismas unidades: a cada una le toca más.' } ],
-  fin:'<div class="cierre"><div class="ic">&#127881;</div><h2>¡Sesión terminada!</h2>'+
-      '<p>Ya sabes clasificar al personal, calcular su costo laboral y llevarlo a costo por unidad.</p></div>' }
+   { q:'Un trabajador a plazo fijo de una pequeña empresa, ¿recibe gratificación?',
+     ops:['No, solo los de plazo indeterminado','Sí: aplica a plazo indeterminado, fijo y tiempo parcial',
+          'Solo después de un año'], ok:1,
+     pq:'Corresponde a todo trabajador del régimen privado: plazo indeterminado, fijo o tiempo parcial.' },
+   { q:'¿A quién NO le corresponde gratificación?',
+     ops:['Al trabajador a tiempo parcial','Al practicante con convenio de formación',
+          'Al trabajador a plazo fijo'], ok:1,
+     pq:'Tampoco a los locadores de servicios ni a los trabajadores de microempresa inscrita en el REMYPE.' },
+   { q:'Régimen general: trabajó completo de enero a junio. ¿Cuánto recibe en julio?',
+     ops:['Media remuneración','Una remuneración íntegra','Un sexto de la remuneración'], ok:1,
+     pq:'Si laboró el semestre completo, la gratificación es una remuneración íntegra.' },
+   { q:'Ingresó el 10 de marzo. Para la gratificación de julio, ¿qué meses cuentan?',
+     ops:['Desde el 10 de marzo','Abril, mayo y junio: solo meses calendario completos','Todo el semestre'], ok:1,
+     pq:'El tiempo de servicio se cuenta por cada mes calendario completo.' },
+   { q:'Régimen general: cumplió un año y el récord. ¿Cuántos días de vacaciones le tocan?',
+     ops:['15 días','30 días','6 días'], ok:1,
+     pq:'30 días remunerados en el régimen general; 15 en la micro y pequeña empresa.' },
+   { q:'Trabaja 3 horas diarias desde hace un año. Según el Convenio 52 de la OIT, ¿qué vacaciones tiene?',
+     ops:['Ninguna','Por lo menos seis días laborables pagados','30 días'], ok:1,
+     pq:'Con menos de 4 horas diarias no alcanza los 30 días, pero sí al menos 6 días laborables.' } ] },
+
+/* 9 ------------------------------------------------------------- */
+a8:{ tipo:'tabla', titulo:'Actividad 9 - Completa el cuadro de regímenes',
+  intro:'Elige lo que corresponde en cada casilla vacía.',
+  cols:['Beneficio','Microempresa','Pequeña empresa','Régimen general'],
+  tipos:['','','',''],
+  filas:[
+   [{t:'Vacaciones'},
+    {ops:['15 días al año','30 días al año','No aplica'], ok:0},
+    {t:'15 días al año'},
+    {ops:['15 días al año','30 días al año','No aplica'], ok:1}],
+   [{t:'CTS'},
+    {ops:['No aplica','1/2 sueldo por año','1 sueldo por año'], ok:0},
+    {ops:['No aplica','1/2 sueldo por año','1 sueldo por año'], ok:1},
+    {t:'1 sueldo por año'}],
+   [{t:'Gratificaciones'},
+    {t:'No aplica'},
+    {ops:['No aplica','2 de medio sueldo cada una','2 de un sueldo cada una'], ok:1},
+    {ops:['No aplica','2 de medio sueldo cada una','2 de un sueldo cada una'], ok:2}],
+   [{t:'Gratificación mensual'},
+    {t:'No aplica'},
+    {ops:['Rem. ÷ 6','Rem. ÷ 12','Rem. ÷ 24'], ok:1},
+    {t:'Rem. ÷ 6'}],
+   [{t:'Vacaciones mensuales'},
+    {t:'Rem. ÷ 24'},
+    {t:'Rem. ÷ 24'},
+    {ops:['Rem. ÷ 6','Rem. ÷ 12','Rem. ÷ 24'], ok:1}],
+   [{t:'Asignación familiar'},
+    {t:'No aplica'},
+    {ops:['No aplica','Sí aplica'], ok:0},
+    {t:'Sí aplica'}]
+  ],
+  fin:globo(P.sena,'Resuelto','Mientras más grande el régimen, más beneficios: la microempresa solo '+
+      'tiene vacaciones de 15 días; la pequeña suma media CTS y gratificaciones de medio sueldo; el '+
+      'régimen general da todo completo. Por eso la misma persona con el mismo sueldo cuesta distinto '+
+      'según el régimen de la empresa.') },
+
+/* 10 ------------------------------------------------------------ */
+a9:{ tipo:'sel', titulo:'Actividad 10 - La MOD de Brisa Polar',
+  lista:[
+   { q:'Costo laboral del maestro heladero: S/ 1,800 × 1.2642',
+     ops:['S/ 1,800.00','S/ 2,275.50','S/ 1,962.00'], ok:1,
+     pq:'1,800 × 1.2642 = S/ 2,275.50 al mes.' },
+   { q:'Costo laboral de los 2 ayudantes de producción de S/ 1,200 cada uno',
+     ops:['S/ 1,517.00','S/ 2,400.00','S/ 3,034.00'], ok:2,
+     pq:'2 × 1,200 × 1.2642 = S/ 3,034.00.' },
+   { q:'El encargado de almacén y limpieza de planta, ¿entra en el total MOD?',
+     ops:['Sí, trabaja en la planta','No: es MOI y va al CIF','No: es gasto de ventas'], ok:1,
+     pq:'Apoya a la producción pero no elabora el helado: es mano de obra indirecta.' },
+   { q:'Total MOD del mes',
+     ops:['S/ 5,309.50','S/ 6,738.01','S/ 4,200.00'], ok:0,
+     pq:'2,275.50 + 3,034.00 = S/ 5,309.50. Los S/ 4,200 son solo los sueldos, sin cargas.' },
+   { q:'MOD por unidad del pote de vainilla: 60 % del tiempo, 8,844 potes al año',
+     ops:['S/ 0.36','S/ 4.32','S/ 7.20'], ok:1,
+     pq:'5,309.50 × 60 % = 3,185.70; 8,844 ÷ 12 = 737 potes; 3,185.70 ÷ 737 = S/ 4.32.' },
+   { q:'MOD por unidad de la paleta de fresa: 40 % del tiempo, 26,960 paletas al año',
+     ops:['S/ 0.95','S/ 0.08','S/ 2.36'], ok:0,
+     pq:'5,309.50 × 40 % = 2,123.80; 26,960 ÷ 12 = 2,246.67; 2,123.80 ÷ 2,246.67 = S/ 0.95.' } ],
+  fin:globo2(P.pres, P.sorp,'Resuelto','El pote lleva S/ 4.32 de mano de obra directa y la paleta '+
+      'S/ 0.95. Ese dato va en el informe, en el punto 4.2.2. Con el mismo procedimiento se resuelven '+
+      'Antojitos de Arequipa y Ocaso Café Terraza.') },
+
+a10:{ tipo:'cruz', titulo:'Actividad 11 - Crucigrama de la mano de obra',
+  filas:11, cols:15,
+  palabras:[
+   {p:'GRATIFICACION', r:1, c:2,  dir:'H', pista:'Se paga en julio y en diciembre'},
+   {p:'CTS',           r:4, c:0,  dir:'H', pista:'Beneficio que sirve de auxilio si el trabajador queda desempleado (sigla)'},
+   {p:'NOMINA',        r:5, c:8,  dir:'H', pista:'Cálculo del pago bruto y neto de todos los trabajadores'},
+   {p:'ONP',           r:8, c:11, dir:'H', pista:'Retención de pensiones del sistema público (sigla)'},
+   {p:'DESTAJO',       r:9, c:2,  dir:'H', pista:'Pago según las unidades producidas'},
+   {p:'VACACIONES',    r:0, c:4,  dir:'V', pista:'Descanso pagado: 30 días en el régimen general'},
+   {p:'INDIRECTA',     r:1, c:6,  dir:'V', pista:'Mano de obra del supervisor o del vigilante de la fábrica'},
+   {p:'INCENTIVOS',    r:1, c:8,  dir:'V', pista:'Sistema que premia el ahorro de tiempo o de materiales'},
+   {p:'ESSALUD',       r:3, c:2,  dir:'V', pista:'Aporte de salud que paga el empleador'},
+   {p:'OCIOSO',        r:3, c:11, dir:'V', pista:'Tiempo pagado en que no hay trabajo que realizar'},
+   {p:'BOLETA',        r:0, c:13, dir:'V', pista:'Documento de trabajo donde se anotan las horas por orden'} ],
+  fin:'<div class="cierre"><div class="ic">&#127881;</div><h2>¡Sesión completa!</h2>'+
+      '<p>Ya sabes clasificar la mano de obra, sus beneficios y llevarla a costo por unidad.</p></div>' }
 };
 
 /* ================= las diapositivas ================= */
 var D=[
 
 /* 1 ------------------------------------------------------------- */
-{ et:'Conectemos', t:'Costo de la mano de obra directa', clave:'a0',
-  h:'<div class="tapa">'+
-      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
-        '<span>Instituto de Diseño y Comunicación</span></div>'+
-      '<h2>Costo de la mano de obra directa</h2>'+
-      '<p>Semana 9 · Sesión 17 - Costos y Presupuestos</p>'+
-      '<div class="via"><b>MOD y MOI</b><b>Tipos de remuneración</b><b>Cargas sociales</b>'+
-      '<b>MOD por unidad</b></div>'+
+{ et:'Concepto', t:'Concepto de Mano de Obra', clave:'a0',
+  h:'<div class="dcita">La mano de obra es el <b>esfuerzo físico o mental</b> humano que se emplea en el '+
+    'proceso de <b>transformar las materias primas</b> en productos terminados.</div>'+
+    '<div class="dfila3">'+
+      '<div class="dele"><span>1</span>Materia prima</div>'+
+      '<div class="dele on"><span>2</span>Mano de obra</div>'+
+      '<div class="dele"><span>3</span>CIF</div>'+
     '</div>'+
-    globo(P.pres,'El caso de la sesión',
-      'La Heladería Brisa Polar hace potes de vainilla y paletas de fresa. Tiene cinco puestos en '+
-      'planilla, en el régimen de pequeña empresa, y quiere saber cuánto de mano de obra lleva cada '+
-      'helado. Para responderlo hay que separar quién produce, cuánto cuesta de verdad cada sueldo y '+
-      'cómo se reparte entre los productos.')+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Mano de obra</h4><div class="c">'+
-      '<p>Es el esfuerzo humano que se usa para fabricar el producto o prestar el servicio. Es el '+
-      'segundo elemento del costo, junto con la materia prima y el CIF.</p></div></div>'+
-    '<div class="fc rj"><h4>Su costo</h4><div class="c">'+
-      '<p>No es solo el sueldo: es el sueldo más todo lo que la ley obliga a pagar encima. A eso se '+
-      'le llama costo laboral.</p></div></div>'+
-    '</div>'+
-    '<div class="av">Con eso en mente, responde las dos preguntas de abajo.</div>' },
+    '<div class="dnota">Representa el <b>precio que se paga por emplear los recursos humanos</b> y es el '+
+    '<b>segundo elemento fundamental</b> del costo de producción.</div>' },
 
 /* 2 ------------------------------------------------------------- */
-{ et:'Clasificar', t:'Mano de obra directa, indirecta y gastos', clave:'a1',
-  h:'<p class="enc">No todo sueldo es costo del producto</p>'+
-    '<p class="sub">Depende de lo que hace la persona, no del cargo ni de cuánto gana</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Clasificación</th><th>Quién</th><th>A dónde va</th></tr></thead><tbody>'+
-    '<tr><td><b>MOD</b> - directa</td><td>Transforma el producto con sus manos</td><td>Costo del producto</td></tr>'+
-    '<tr><td><b>MOI</b> - indirecta</td><td>Trabaja en producción, pero no elabora: supervisa, limpia, almacena</td><td>CIF</td></tr>'+
-    '<tr><td><b>Gasto de ventas</b></td><td>Vende, atiende o reparte</td><td>Gasto del periodo</td></tr>'+
-    '<tr><td><b>Gasto administrativo</b></td><td>Dirige, cobra, paga, lleva la contabilidad</td><td>Gasto del periodo</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="form">Costo de producción = MP + <span class="v">MOD</span> + CIF'+
-      '<small>la MOI no desaparece: entra dentro del CIF</small></div>'+
-    '<div class="av">Abajo hay trabajadores de Antojitos de Arequipa y de Ocaso Café Terraza. Lleva '+
-    'cada uno a la caja que le corresponde.</div>' },
+{ et:'Clasificación', t:'Clasificación de los costos laborales', clave:'a1',
+  h:'<p class="dlead">Según su grado de identificación con el producto elaborado, la mano de obra de '+
+    'la fábrica se divide en dos categorías:</p>'+
+    '<div class="dcols2">'+
+    '<div class="dcard"><h4>Mano de Obra Directa (MOD)</h4>'+
+      '<p>Salarios y obligaciones de los trabajadores que <b>participan directamente en la fabricación</b> '+
+      'del producto terminado.</p>'+
+      '<p class="dtag">Se identifica plenamente con el producto · es <b>costo primo</b></p></div>'+
+    '<div class="dcard gris"><h4>Mano de Obra Indirecta (MOI)</h4>'+
+      '<p>Salarios y prestaciones del <b>personal de apoyo</b>: supervisores, mantenimiento, almacenistas '+
+      'o vigilantes de la fábrica.</p>'+
+      '<p class="dtag">No se identifica en un producto · se reparte con <b>tasas de asignación</b> (CIF)</p></div>'+
+    '</div>' },
 
 /* 3 ------------------------------------------------------------- */
-{ et:'Remuneraciones', t:'Tipos de remuneración', clave:'a2',
-  h:'<p class="enc">¿Se paga el tiempo o se paga el resultado?</p>'+
-    '<p class="sub">Esa pregunta separa las formas de remunerar a la mano de obra</p>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Por tiempo</h4><div class="c">'+
-      '<p>Se paga por hora, por día (jornal) o por mes (sueldo), sin importar cuánto se produzca.</p>'+
-      '<p class="fx">Horas × tarifa por hora</p></div></div>'+
-    '<div class="fc rj"><h4>A destajo</h4><div class="c">'+
-      '<p>Se paga por cada unidad terminada. Con jornada completa, nunca menos de la remuneración '+
-      'mínima: S/&nbsp;1,130.</p>'+
-      '<p class="fx">Unidades × tarifa por unidad</p></div></div>'+
-    '<div class="fc rj"><h4>Mixto o con incentivo</h4><div class="c">'+
-      '<p>Un monto fijo más un premio por lo que se produce encima del estándar.</p>'+
-      '<p class="fx">Fijo + (unidades - estándar) × premio</p></div></div>'+
-    '<div class="fc"><h4>Comisión</h4><div class="c">'+
-      '<p>Un porcentaje de lo vendido. Es el pago del vendedor: va a gasto de ventas.</p>'+
-      '<p class="fx">Ventas × % de comisión</p></div></div>'+
+{ et:'Composición', t:'Composición de la Mano de Obra', clave:'a2',
+  h:'<div class="dfila3 chica">'+
+      '<div class="dele"><span>+</span>Ingresos (remuneraciones)</div>'+
+      '<div class="dele"><span>+</span>Aportes del empleador</div>'+
+      '<div class="dele"><span>+</span>Beneficios laborales</div>'+
     '</div>'+
-    '<div class="av">Arrastra cada forma de pago al caso que le corresponde.</div>' },
+    '<div class="dgrid3">'+
+      '<div class="dmini"><b>Retenciones al trabajador</b>ONP, AFP, etc.</div>'+
+      '<div class="dmini"><b>Aportes del empleador</b>EsSalud, SENATI, SENCICO, SCTR, etc.</div>'+
+      '<div class="dmini"><b>Trabajo nocturno</b>Jornada entre las 10 p. m. y las 6 a. m.</div>'+
+      '<div class="dmini cif"><b>Sobretiempo / horas extras</b>Voluntario al darlo y al hacerlo; es MOI.</div>'+
+      '<div class="dmini cif"><b>Tiempo ocioso</b>No hay trabajo que hacer, pero se paga el tiempo.</div>'+
+      '<div class="dmini cif"><b>Tiempo muerto</b>Fallas de máquinas o faltante de existencias.</div>'+
+    '</div>'+
+    '<p class="dpie2"><span class="dcif">CIF</span> los tres conceptos marcados se cargan a los costos indirectos</p>' },
 
 /* 4 ------------------------------------------------------------- */
-{ et:'A calcular', t:'Cuánto cobra cada trabajador', clave:'a3',
-  h:'<p class="enc">Ahora con números</p>'+
-    '<p class="sub">Usa la fórmula de cada tipo de remuneración de la diapositiva anterior</p>'+
-    globo(P.punt,'Antes de elegir',
-      'Haz la cuenta en tu cuaderno o con la calculadora del rincón, y recién después elige. Ojo con '+
-      'el destajo cuando no se llega a la remuneración mínima, y con el sistema mixto: el premio es '+
-      'solo por lo que pasa el estándar, no por toda la producción.')+
-    '<div class="av">Elige el monto correcto en cada caso.</div>' },
+{ et:'Control', t:'Métodos de control de Mano de Obra', clave:'a3',
+  h:'<div class="dcols2">'+
+    '<div class="dcard"><h4>Control de tiempo</h4>'+
+      '<p><b>Tarjetas de asistencia:</b> registran entradas y salidas diarias; son el documento fuente '+
+      'de la nómina total.</p>'+
+      '<p><b>Boletas de trabajo:</b> el empleado anota cuántas horas dedicó a cada orden o departamento; '+
+      'permiten costear la producción.</p></div>'+
+    '<div class="dcard gris"><h4>Cálculo y asignación</h4>'+
+      '<p><b>Cálculo de nómina:</b> se obtiene el pago bruto y, tras las deducciones de ley, el pago neto.</p>'+
+      '<p><b>Asignación del costo:</b> con las boletas de trabajo, costos dirige la nómina a cada orden '+
+      'de trabajo o a los costos indirectos.</p></div>'+
+    '</div>' },
 
 /* 5 ------------------------------------------------------------- */
-{ et:'Costo laboral', t:'Cargas sociales y costo laboral', clave:'a4',
-  h:'<p class="enc">Lo que se paga encima del sueldo</p>'+
-    '<p class="sub">Régimen de la pequeña empresa: cada concepto, como porcentaje del sueldo mensual</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Concepto</th><th>Por qué</th><th class="n">%</th></tr></thead><tbody>'+
-    '<tr><td>EsSalud</td><td>Aporte de salud del empleador</td><td class="n">9.00</td></tr>'+
-    '<tr><td>Gratificaciones</td><td>Medio sueldo en julio y medio en diciembre: 1 sueldo ÷ 12</td><td class="n">8.33</td></tr>'+
-    '<tr><td>Bonificación extraordinaria</td><td>9 % de las gratificaciones</td><td class="n">0.75</td></tr>'+
-    '<tr><td>CTS</td><td>Medio sueldo al año ÷ 12</td><td class="n">4.17</td></tr>'+
-    '<tr><td>Vacaciones</td><td>15 días al año: medio sueldo ÷ 12</td><td class="n">4.17</td></tr>'+
-    '<tr class="tot"><td>Factor de cargas sociales</td><td></td><td class="n">26.42</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="form">Costo laboral = Cantidad × Sueldo × <span class="v">1.2642</span></div>' },
+{ et:'Sistemas de pago', t:'Sistema de Pagos de Salario', clave:'a4',
+  h:'<div class="dgrid3 alto">'+
+    '<div class="dcard"><h4>A base de tiempo</h4><ul>'+
+      '<li>Según el tiempo trabajado.</li><li>El más antiguo y sencillo.</li>'+
+      '<li>Pago fijo por hora o jornada.</li></ul>'+
+      '<p class="dfx">horas × tarifa</p></div>'+
+    '<div class="dcard"><h4>A base de producción</h4><ul>'+
+      '<li>También llamado <b>destajo</b>.</li><li>Depende de las unidades producidas.</li>'+
+      '<li>Prioriza capacidad y rapidez.</li></ul>'+
+      '<p class="dfx">unidades × tarifa</p></div>'+
+    '<div class="dcard"><h4>A base de incentivos</h4><ul>'+
+      '<li>Premia el ahorro de tiempo, materiales o mayor rendimiento.</li>'+
+      '<li>Usa estándares de producción.</li><li>Individual o grupal.</li></ul>'+
+      '<p class="dfx">fijo + premio</p></div>'+
+    '</div>' },
 
 /* 6 ------------------------------------------------------------- */
-{ et:'MOD por unidad', t:'Mano de obra directa por unidad', clave:'a5',
-  h:'<p class="enc">De S/ 5,309.50 al mes a soles por helado</p>'+
-    '<p class="sub">El personal de producción dedica 60 % de su tiempo al pote y 40 % a la paleta</p>'+
-    '<div class="datos"><h4>Datos de Brisa Polar</h4>'+
-      '<div class="fl"><span>Total MOD del mes</span><b>S/ 5,309.50</b></div>'+
-      '<div class="fl"><span>A: Pote de vainilla de 1 L - producción anual</span><b>8,844</b></div>'+
-      '<div class="fl"><span>B: Paleta de fresa con leche - producción anual</span><b>26,960</b></div>'+
-    '</div>'+
-    '<div class="form">MOD por unidad = (Total MOD × % del tiempo) ÷ (producción anual ÷ 12)'+
-      '<small>todo en el mismo periodo: mes con mes</small></div>' },
+{ et:'CTS', t:'Compensación por Tiempo de Servicio (CTS)', clave:'a5',
+  h:'<div class="dcita chica">Beneficio social de previsión de las contingencias que origina el cese en '+
+    'el trabajo y de promoción del trabajador y su familia. <i>(Art. 1º, TUO de la Ley de CTS)</i></div>'+
+    '<div class="dgrid2">'+
+      '<div class="dmini"><b>Propósito</b>Auxilio económico para el trabajador desempleado. Se otorga sin '+
+        'importar el motivo del cese.</div>'+
+      '<div class="dmini"><b>Remuneración computable</b>La básica y todo lo que perciba regularmente, en '+
+        'dinero o en especie, de libre disposición. Incluye la alimentación principal.</div>'+
+      '<div class="dmini"><b>Remuneraciones regulares</b>Las variables cuentan si se percibieron al menos '+
+        '<b>3 meses de cada 6</b>. Ej.: horas extras.</div>'+
+      '<div class="dmini"><b>Remuneraciones periódicas</b>Las semestrales suman <b>1/6</b>: may-oct con la '+
+        'gratificación de julio; nov-abr con la de diciembre.</div>'+
+    '</div>' },
 
 /* 7 ------------------------------------------------------------- */
-{ et:'Crucigrama', t:'Crucigrama de la mano de obra', clave:'a6',
-  h:'<p class="enc">Repasemos jugando</p>'+
-    '<p class="sub">Escribe en el tablero; si te trabas, pide una pista</p>' },
+{ et:'No remunerativo', t:'CTS: ingresos de carácter no remunerativo', clave:'a6',
+  h:'<p class="dlead">No constituyen remuneración para ningún efecto legal:</p>'+
+    '<div class="dgrid2">'+
+      '<div class="dmini"><b>Gratificaciones extraordinarias</b>Ocasionales y por liberalidad.</div>'+
+      '<div class="dmini"><b>Condiciones de trabajo</b>Movilidad, viáticos, vestuario: en cantidad razonable.</div>'+
+      '<div class="dmini"><b>Transporte</b>Solo si depende de la asistencia y no excede el costo del traslado.</div>'+
+      '<div class="dmini"><b>Asignación por educación</b>Monto razonable y sustentado.</div>'+
+      '<div class="dmini"><b>Bienes de la propia producción</b>Para consumo del trabajador y su familia.</div>'+
+      '<div class="dmini"><b>Participación en utilidades</b>En cualquiera de sus formas.</div>'+
+      '<div class="dmini"><b>Canasta de Navidad</b>O similares.</div>'+
+      '<div class="dmini"><b>Bonos por ocasiones</b>Cumpleaños, matrimonio, nacimiento, fallecimiento.</div>'+
+    '</div>' },
 
 /* 8 ------------------------------------------------------------- */
-{ et:'Cierre', t:'Quiz de cierre', clave:'a7',
-  h:'<p class="enc">Lo que te llevas hoy</p>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Clasificar</h4><div class="c"><ul>'+
-      '<li>MOD: transforma el producto.</li><li>MOI: apoya en producción y va al CIF.</li>'+
-      '<li>Ventas y administración: gastos del periodo.</li></ul></div></div>'+
-    '<div class="fc rj"><h4>Calcular</h4><div class="c"><ul>'+
-      '<li>Costo laboral = sueldo × 1.2642.</li><li>Se reparte según el % del tiempo.</li>'+
-      '<li>Se divide entre la producción del mismo mes.</li></ul></div></div>'+
+{ et:'Gratificaciones', t:'Gratificaciones y Vacaciones', clave:'a7',
+  h:'<div class="dcols2">'+
+    '<div class="dcard"><h4>Gratificaciones</h4>'+
+      '<p>Todo trabajador del régimen privado: <b>plazo indeterminado, plazo fijo y tiempo parcial</b>.</p>'+
+      '<p><b>Fiestas Patrias</b> (julio) y <b>Navidad</b> (diciembre). Una remuneración íntegra por '+
+      'semestre completo; se cuenta por mes calendario completo.</p>'+
+      '<p class="dtag">No corresponde: locadores de servicios, jóvenes en formación y microempresa (REMYPE)</p></div>'+
+    '<div class="dcard gris"><h4>Vacaciones</h4>'+
+      '<p>Jornada de <b>4 horas o más</b> y <b>un año</b> con el mismo empleador: <b>30 días</b> '+
+      'remunerados, si cumple el récord.</p>'+
+      '<p>Cuentan como días efectivos: jornada mínima de 4 horas, descanso por enfermedad hasta 60 días, '+
+      'pre y post natal, permiso sindical.</p>'+
+      '<p class="dtag">Menos de 4 horas diarias: al menos 6 días laborables (Convenio 52 OIT)</p></div>'+
+    '</div>' },
+
+/* 9 ------------------------------------------------------------- */
+{ et:'Regímenes', t:'Regímenes laborales y cálculo mensual', clave:'a8',
+  h:'<p class="dlead">Microempresa: ventas hasta 150 UIT · Pequeña empresa: hasta 1,700 UIT</p>'+
+    '<div class="tabenv"><table class="dtab"><thead><tr>'+
+    '<th>Beneficio</th><th>Microempresa</th><th>Pequeña empresa</th><th>Régimen general</th></tr></thead><tbody>'+
+    '<tr><td>Remuneración · jornada</td><td>RMV · 8 h / 48 h</td><td>RMV · 8 h / 48 h</td><td>RMV · 8 h / 48 h</td></tr>'+
+    '<tr><td>Vacaciones</td><td>15 días</td><td>15 días</td><td>30 días</td></tr>'+
+    '<tr><td>CTS</td><td>No aplica</td><td>1/2 sueldo al año</td><td>1 sueldo al año</td></tr>'+
+    '<tr><td>Gratificaciones</td><td>No aplica</td><td>2 de medio sueldo</td><td>2 de un sueldo</td></tr>'+
+    '<tr><td>Utilidades</td><td>No aplica</td><td>Sí, con más de 20 trabajadores</td><td>Sí aplica</td></tr>'+
+    '<tr><td>Asignación familiar</td><td>No aplica</td><td>No aplica</td><td>Sí aplica</td></tr>'+
+    '<tr class="mes"><td>CTS mensual</td><td>No aplica</td><td>(Rem + Grat/6) × 1/24</td><td>(Rem + Grat/6) × 1/12</td></tr>'+
+    '<tr class="mes"><td>Gratificación mensual</td><td>No aplica</td><td>Rem ÷ 12</td><td>Rem ÷ 6</td></tr>'+
+    '<tr class="mes"><td>Vacaciones mensuales</td><td>Rem ÷ 24</td><td>Rem ÷ 24</td><td>Rem ÷ 12</td></tr>'+
+    '</tbody></table></div>' },
+
+/* 10 ------------------------------------------------------------ */
+{ et:'Costo laboral', t:'Del sueldo a la MOD por unidad', claves:['a9','a10'],
+  h:'<div class="dcols2">'+
+    '<div class="dcard"><h4>Factor de cargas · pequeña empresa</h4>'+
+      '<table class="dmin"><tbody>'+
+      '<tr><td>EsSalud</td><td>9.00 %</td></tr>'+
+      '<tr><td>Gratificaciones (Rem ÷ 12)</td><td>8.33 %</td></tr>'+
+      '<tr><td>Bonificación (9 % de la grat.)</td><td>0.75 %</td></tr>'+
+      '<tr><td>CTS (½ sueldo ÷ 12)</td><td>4.17 %</td></tr>'+
+      '<tr><td>Vacaciones (Rem ÷ 24)</td><td>4.17 %</td></tr>'+
+      '<tr class="tot"><td>Factor</td><td>26.42 %</td></tr>'+
+      '</tbody></table></div>'+
+    '<div class="dcard gris"><h4>Tres pasos</h4><ol>'+
+      '<li><b>Costo laboral</b> = cantidad × sueldo × 1.2642</li>'+
+      '<li><b>MOD asignada</b> = total MOD × % del tiempo</li>'+
+      '<li><b>MOD por unidad</b> = MOD asignada ÷ (producción anual ÷ 12)</li></ol>'+
+      '<p class="dtag">Caso Heladería Brisa Polar: maestro heladero S/ 1,800 · 2 ayudantes de S/ 1,200 · '+
+      'almacenero S/ 1,130 · 60 % potes y 40 % paletas</p></div>'+
     '</div>' }
 ];
 
 
 /* ================= estado ================= */
-var LS='cos_sem9_mod_v1';
+var LS='cos_sem9_mod_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7'];
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9','a10'];
+function clavesDe(s){ return s.claves || (s.clave ? [s.clave] : []); }
+/* la diapositiva ocupa la pantalla; la actividad queda debajo */
+function diapo(s, n){
+  var ks=clavesDe(s);
+  return '<section class="diapo"><div class="dcab"><h2>'+esc(s.t)+'</h2>'+
+         '<img src="marca/logo-tj.png" alt="Thomas Jefferson"></div>'+
+         '<div class="dcue">'+(s.h||'')+'</div>'+
+         '<div class="dbaja">'+(ks.length ? '&#8595; Desliza hacia abajo: '+
+            (ks.length>1 ? ks.length+' actividades' : 'actividad')+' &#8595;' : '')+'</div>'+
+         '<span class="dnum">'+(n+1)+'</span></section>'+
+         (ks.length ? '<div class="acts">'+ks.map(vista).join('')+'</div>' : '');
+}
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1957,8 +2137,7 @@ function pinta(quieto){
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
-  var h=s.h||'';
-  if(s.clave) h+=vista(s.clave);
+  var h=diapo(s, i);
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1968,7 +2147,7 @@ function pinta(quieto){
   $('marcador').textContent=ok+' de '+mx;
   $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
   $('pts').innerHTML=D.map(function(x,n){
-    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
@@ -1997,7 +2176,7 @@ function armaPDF(){
            '<span class="cu">'+(n+1)+' / '+D.length+'</span>'+
            '<img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
          '</header>'+
-         '<div class="pgcuerpo">'+(s.h||'')+(s.clave ? vista(s.clave) : '')+'</div>'+
+         '<div class="pgcuerpo">'+diapo(s, n)+'</div>'+
        '</section>';
   });
   $('impreso').innerHTML=h;
@@ -2007,9 +2186,10 @@ function armaPDF(){
 
 var yaCruz={};
 function cablea(){
-  var lam=$('lam'), s=D[i];
-  if(!s.clave) return;
-  var k=s.clave, A=ACT[k];
+  clavesDe(D[i]).forEach(cableaUno);
+}
+function cableaUno(k){
+  var lam=$('lam'), A=ACT[k];
 
   if(A.tipo==='arr'){
     montaArrastre(lam, function(fid, zona, el){
@@ -2035,7 +2215,7 @@ function cablea(){
       else{ mal(); sacude(el); }
     });
   }
-  qq('#lam button[data-q]', lam).forEach(function(b){
+  qq('#lam button[data-q="'+k+'"]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
       if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
@@ -2045,7 +2225,7 @@ function cablea(){
     });
   });
 
-  qq('#lam select[data-s]', lam).forEach(function(sl){
+  qq('#lam select[data-s="'+k+'"]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
       var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
@@ -2056,7 +2236,7 @@ function cablea(){
     });
   });
 
-  qq('#lam input[data-c]', lam).forEach(function(x){
+  qq('#lam input[data-c="'+k+'"]', lam).forEach(function(x){
     function revisa(){
       if(x.readOnly) return;
       var cl=x.dataset.c, n=+x.dataset.n, p=ACT[cl].lista[n];
@@ -2077,7 +2257,7 @@ function cablea(){
   });
 
   /* celdas de la tabla de trabajo */
-  qq('#lam input[data-tc]', lam).forEach(function(x){
+  qq('#lam input[data-tc="'+k+'"]', lam).forEach(function(x){
     function revisa(){
       if(x.readOnly) return;
       var cl=x.dataset.tc, id=x.dataset.tn, p=id.split('-');
@@ -2097,7 +2277,7 @@ function cablea(){
     x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
     x.addEventListener('input', function(){ x.classList.remove('mal'); });
   });
-  qq('#lam select[data-ts]', lam).forEach(function(sl){
+  qq('#lam select[data-ts="'+k+'"]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
       var cl=sl.dataset.ts, id=sl.dataset.tn, p=id.split('-');
@@ -2113,7 +2293,7 @@ function cablea(){
   if(A.tipo==='cruz') cableaCruz(k, A, lam);
 
   /* el docente resuelve un ítem suelto, o la actividad entera */
-  qq('#lam button[data-vr]', lam).forEach(function(b){
+  qq('#lam button[data-vr="'+k+'"]', lam).forEach(function(b){
     b.addEventListener('click', function(ev){
       ev.stopPropagation();
       if(!soyDocente()) return;
@@ -2122,7 +2302,7 @@ function cablea(){
       graba(); if(lista(b.dataset.vr)) fanfarria(); else bien(); pinta(true);
     });
   });
-  var bs=lam.querySelector('button[data-sol]');
+  var bs=lam.querySelector('button[data-sol="'+k+'"]');
   if(bs) bs.addEventListener('click', function(){
     if(!soyDocente()) return;
     if(lista(k)){ G[k]={}; if(A.tipo==='cruz') yaCruz={}; }
@@ -2130,7 +2310,7 @@ function cablea(){
     graba(); pinta(true);
   });
   /* pista del crucigrama: descubre una letra que todavía falte */
-  qq('#lam button[data-pi]', lam).forEach(function(b){
+  if(A.tipo==='cruz') qq('#lam button[data-pi]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var pal=b.dataset.pi, w=null;
       A.palabras.forEach(function(x){ if(x.p===pal) w=x; });
@@ -2581,7 +2761,7 @@ function resumenAula(){
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
 function tituloActividad(n){
@@ -2590,7 +2770,7 @@ function tituloActividad(n){
 }
 function diapoDe(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j+1;
   return 0;
 }
 
@@ -2670,7 +2850,7 @@ if(window.Aula){
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
-  aviso:'Se borrarán tus respuestas de las ocho actividades.',
+  aviso:'Se borrarán tus respuestas de las once actividades.',
   hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
