@@ -609,52 +609,6 @@
   .eqp.fin b{ color:var(--verde); }
   .elenco{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
            clip-path:inset(50%); white-space:nowrap; }
-  /* ---------- el caso práctico y las dinámicas de grupo ---------- */
-  .caso, .opina{ margin:16px 0 0; border:2px solid var(--linea); border-radius:12px;
-                 overflow:hidden; background:#fff; }
-  .caso > h4, .opina > h4{ margin:0; background:var(--marino); color:#fff; font-size:18px;
-                           font-weight:800; padding:10px 16px; letter-spacing:.02em; }
-  .opina .su{ margin:0; padding:12px 16px 0; font-size:18px; line-height:1.55; color:var(--gris);
-              font-weight:600; }
-  #casoCaja, #sorteoCaja, #opinaCaja{ padding:14px 16px; }
-  .opinapdf{ margin:0; padding:0 0 0 24px; }
-  .opinapdf li{ font-size:19px; line-height:1.55; margin-bottom:7px; }
-  .casovacio{ margin:0; font-size:18px; line-height:1.55; color:var(--gris); font-weight:600; }
-  .casolink{ display:flex; gap:13px; align-items:center; text-decoration:none;
-             border:2px solid var(--verde); background:#F2FAF6; border-radius:11px;
-             padding:13px 16px; color:var(--tinta); }
-  .casolink:hover{ background:#E6F6EC; }
-  .casolink .ic{ font-size:30px; flex:none; }
-  .casolink .tx{ flex:1; min-width:0; }
-  .casolink .tx b{ display:block; font-size:21px; font-weight:800; color:var(--verde);
-                   word-break:break-word; }
-  .casolink .tx small{ display:block; margin-top:2px; font-size:16px; color:var(--gris);
-                       font-weight:600; }
-  .casolink .ab{ flex:none; background:var(--verde); color:#fff; border-radius:99px;
-                 padding:7px 15px; font-size:16px; font-weight:800; white-space:nowrap; }
-  .casoform{ margin-top:13px; padding-top:13px; border-top:1px dashed var(--linea);
-             display:grid; gap:11px; }
-  @media (min-width:860px){ .casoform{ grid-template-columns:1fr 1.3fr; }
-                            .casoform .casoacc{ grid-column:1 / -1; } }
-  .casoform label{ display:grid; gap:4px; }
-  .casoform label span{ font-size:15px; font-weight:800; color:var(--gris); letter-spacing:.02em; }
-  .casoform input{ font:inherit; border:2px solid var(--linea); border-radius:9px; padding:10px 12px;
-                   font-size:18px; font-weight:600; color:var(--tinta); width:100%; }
-  .casoform input:focus{ outline:none; border-color:var(--marino); }
-  .casoacc{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-  .casoavi{ font-size:16px; font-weight:700; color:var(--gris); }
-  .casoavi.malo{ color:var(--rojo); }
-  .sorteoacc{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
-  .sorteonum{ font-size:16px; font-weight:800; color:var(--gris); }
-  .equipos{ display:grid; gap:11px; }
-  @media (min-width:640px){ .equipos{ grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); } }
-  .eq{ border:2px dashed var(--linea); border-radius:11px; overflow:hidden; }
-  .eq h5{ margin:0; background:var(--humo); color:var(--marino); font-size:16px; font-weight:900;
-          letter-spacing:.04em; text-transform:uppercase; padding:7px 13px;
-          border-bottom:1px solid var(--linea); }
-  .eq ul{ margin:0; padding:9px 13px 11px 28px; }
-  .eq li{ font-size:19px; font-weight:700; line-height:1.5; }
-
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -1289,74 +1243,7 @@ a6:{ tipo:'tabla', titulo:'Actividad 7 - Frecuencias relativas y acumuladas',
   fin:globo(P.sorp,'Resuelto','40 %, 25 %, 20 % y 15 %. La columna acumulada se lee así: el 65 % compra '+
       'su café dentro del instituto o en la bodega del barrio. Eso es lo que una acumulada contesta y una '+
       'relativa sola no. Ojo: solo tiene sentido acumular cuando las categorías llevan algún orden, aunque '+
-      'sea uno que pusiste tú al armar la tabla.') },
-
-/* 8 ------------------------------------------------------------- */
-a7:{ tipo:'tabla', titulo:'Actividad 8 - Media, mediana, moda y dispersión',
-  intro:'Con la tabla de arriba y los veinte datos ordenados, elige cada medida.',
-  cols:['Medida','Cómo se obtiene','Resultado'],
-  tipos:['','',''],
-  filas:[
-   [{t:'Media'}, {t:'Suma de todos los vasos entre el número de encuestados: 119 ÷ 20'},
-    {ops:['5.95','5.5','6.5'], ok:0, pq:'119 ÷ 20 = 5.95 vasos por semana en promedio.'}],
-   [{t:'Mediana'}, {t:'Como son 20 datos, el promedio del que ocupa el puesto 10 y el del puesto 11'},
-    {ops:['6','5.5','5'], ok:1, pq:'El décimo es 5 y el undécimo es 6, así que la mediana es 5.5.'}],
-   [{t:'Moda'}, {t:'El valor con la frecuencia más alta de la tabla'},
-    {ops:['6','4','5'], ok:2, pq:'El 5 aparece cuatro veces, más que cualquier otro valor.'}],
-   [{t:'Rango'}, {t:'El valor más alto menos el más bajo: 12 &minus; 2'},
-    {ops:['12','10','14'], ok:1, pq:'De 2 a 12 vasos hay 10 de diferencia. Es la medida de dispersión más simple.'}],
-   [{t:'Desviación estándar'},
-    {t:'Raíz cuadrada de 120.95 ÷ 19<small>la suma de los cuadrados entre los encuestados menos uno</small>'},
-    {ops:['2.52','6.37','120.95'], ok:0,
-     pq:'120.95 ÷ 19 = 6.37, que es la varianza; su raíz cuadrada es 2.52 vasos.'}],
-   [{t:'Coeficiente de variación', cl:'tot'},
-    {t:'La desviación dividida entre la media, en porcentaje: 2.52 ÷ 5.95'},
-    {ops:['25 %','42 %','58 %'], ok:1, cl:'tot',
-     pq:'42 %. Por debajo del 15 % se considera un grupo parejo, así que este está bastante disperso.'}]
-  ],
-  fin:globo2(P.pres, P.sena,'Resuelto','Media 5.95, mediana 5.5 y moda 5: las tres cerca, así que el '+
-      'grupo no está torcido hacia un extremo. Pero el rango va de 2 a 12 y la desviación es 2.52, un '+
-      'coeficiente de variación del 42 %. Traducido: el promedio de casi seis vasos existe, pero hay '+
-      'gente que toma dos y gente que toma doce. El promedio solo nunca cuenta toda la historia.') },
-
-/* 9 ------------------------------------------------------------- */
-a8:{ tipo:'sel', titulo:'Actividad 9 - Interpretar lo que salió',
-  lista:[
-   { q:'El 40 % compra en la cafetería del instituto y el acumulado hasta la bodega es 65 %. ¿Cómo se lee eso en un informe?',
-     ops:['Dos de cada tres compran su café dentro del instituto o muy cerca',
-          'El 65 % compra en la bodega','La cafetería del instituto es la peor opción'], ok:0,
-     pq:'La acumulada junta categorías que tienen algo en común. Aquí, las dos de cerca suman 65 %, y esa '+
-        'es la frase que va al informe.' },
-   { q:'En vasos por semana la media es 5.95 y la mediana 5.5. ¿Qué dice esa diferencia?',
-     ops:['Que hay un error de cálculo','Que hay unos pocos que toman mucho y jalan la media hacia arriba',
-          'Que la mayoría toma menos de dos vasos'], ok:1,
-     pq:'Cuando la media queda por encima de la mediana, hay valores altos tirando del promedio: aquí, '+
-        'los de 10 y 12 vasos. Por eso conviene reportar las dos.' },
-   { q:'La desviación estándar es 2.52 sobre una media de 5.95, o sea un 42 % de coeficiente de variación.',
-     ops:['El grupo es muy parejo','El grupo es bastante disperso: el promedio no representa a todos',
-          'La desviación no se puede interpretar sin el gráfico'], ok:1,
-     pq:'Por debajo del 15 % se considera un grupo parejo. Un 42 % dice que hay perfiles muy distintos '+
-        'dentro de la muestra, y eso en marketing suele significar que hay más de un segmento.' },
-   { q:'¿A cuál de estas variables NO tiene sentido sacarle el promedio?',
-     ops:['P2_Vasos de café por semana','P5_Gasto en soles por semana','P3_Lugar donde compra'], ok:2,
-     pq:'El promedio de 1, 2, 3 y 4 en P3_Lugar daría 2.3, y 2.3 no es ningún lugar. En una variable '+
-        'nominal se cuenta y se saca porcentaje, nunca promedio.' } ],
-  fin:globo(P.punt,'Resuelto','Tabular es la mitad del trabajo. La otra mitad es escribir en castellano '+
-      'lo que dicen los números, y para eso hay que mirar la tabla y las medidas juntas, nunca una sola.') },
-
-/* 10 ------------------------------------------------------------ */
-a9:{ tipo:'cruz', titulo:'Actividad 10 - Crucigrama',
-  filas:10, cols:10,
-  palabras:[
-   {p:'MEDIANA', r:0, c:0, dir:'H', pista:'El valor que deja la mitad de los datos a cada lado'},
-   {p:'DISPERSION', r:0, c:2, dir:'V', pista:'Lo que mide la desviación estándar: qué tan separados están los datos'},
-   {p:'ACUMULADA', r:0, c:4, dir:'V', pista:'Apellido de la frecuencia que va sumando lo de las filas de arriba'},
-   {p:'VARIABLE', r:0, c:9, dir:'V', pista:'Cada columna de la base de datos es una'},
-   {p:'FRECUENCIA', r:4, c:0, dir:'H', pista:'Las veces que se repite un valor; la tabla lleva su nombre'},
-   {p:'CODIGO', r:4, c:7, dir:'V', pista:'El número con el que se guarda una respuesta; el libro de… los explica'},
-   {p:'MODA', r:8, c:1, dir:'H', pista:'El valor que más se repite'} ],
-  fin:globo(P.sena,'Resuelto','Siete palabras y con eso ya puedes leer el capítulo de resultados de '+
-      'cualquier informe cuantitativo.') }
+      'sea uno que pusiste tú al armar la tabla.') }
 };
 
 /* ================= las diapositivas ================= */
@@ -1476,124 +1363,14 @@ var D=[
       'las categorías llevan un orden: en una variable nominal ese orden lo pones tú al armar la '+
       'tabla, así que conviene agrupar las categorías por algo, como «dentro del instituto o cerca».')+
     '<div class="av">Abajo tienes la tabla con las frecuencias ya contadas. Elige en cada fila el '+
-    'porcentaje que corresponde.</div>' },
-
-/* 8 ------------------------------------------------------------- */
-{ et:'Medidas', t:'Medidas de tendencia central y de dispersión', clave:'a7',
-  h:'<p class="enc">Resumir una columna de números en unas pocas cifras</p>'+
-    '<p class="sub">Dos preguntas: por dónde está el centro del grupo y qué tan separados están sus datos</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th class="n">Vasos (xi)</th><th class="n">fi</th><th class="n">xi &times; fi</th>'+
-    '<th class="n">(xi &minus; 5.95)² &times; fi</th></tr></thead><tbody>'+
-    '<tr><td class="n">2</td><td class="n">1</td><td class="n">2</td><td class="n">15.60</td></tr>'+
-    '<tr><td class="n">3</td><td class="n">2</td><td class="n">6</td><td class="n">17.41</td></tr>'+
-    '<tr><td class="n">4</td><td class="n">3</td><td class="n">12</td><td class="n">11.41</td></tr>'+
-    '<tr><td class="n">5</td><td class="n">4</td><td class="n">20</td><td class="n">3.61</td></tr>'+
-    '<tr><td class="n">6</td><td class="n">3</td><td class="n">18</td><td class="n">0.01</td></tr>'+
-    '<tr><td class="n">7</td><td class="n">2</td><td class="n">14</td><td class="n">2.21</td></tr>'+
-    '<tr><td class="n">8</td><td class="n">2</td><td class="n">16</td><td class="n">8.41</td></tr>'+
-    '<tr><td class="n">9</td><td class="n">1</td><td class="n">9</td><td class="n">9.30</td></tr>'+
-    '<tr><td class="n">10</td><td class="n">1</td><td class="n">10</td><td class="n">16.40</td></tr>'+
-    '<tr><td class="n">12</td><td class="n">1</td><td class="n">12</td><td class="n">36.60</td></tr>'+
-    '<tr class="res"><td class="n">Total</td><td class="n">20</td><td class="n">119</td>'+
-      '<td class="n">120.95</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>Tendencia central</h4><div class="c"><ul>'+
-      '<li><b>Media</b>: la suma entre el número de datos.</li>'+
-      '<li><b>Mediana</b>: el valor del medio al ordenarlos.</li>'+
-      '<li><b>Moda</b>: el que más se repite.</li>'+
-      '</ul></div></div>'+
-    '<div class="fc rj"><h4>Dispersión</h4><div class="c"><ul>'+
-      '<li><b>Rango</b>: máximo menos mínimo.</li>'+
-      '<li><b>Desviación estándar</b>: raíz de la suma de los cuadrados entre n &minus; 1.</li>'+
-      '<li><b>Coeficiente de variación</b>: la desviación sobre la media, en %.</li>'+
-      '</ul></div></div>'+
-    '</div>'+
-    globo(P.punt,'Cuál usar y cuándo',
-      'La media solo vale para variables de razón, y se va de sitio cuando hay valores extremos. La '+
-      'mediana aguanta esos extremos. La moda es la única que sirve también para variables nominales: '+
-      'es la categoría más elegida. Si reportas una sola, reporta la mediana; y nunca reportes una '+
-      'media sin alguna medida de dispersión al lado.') },
-
-/* 9 ------------------------------------------------------------- */
-{ et:'Interpretar', t:'Interpretación de los resultados', clave:'a8',
-  h:'<p class="enc">Los números ya están. Falta la frase</p>'+
-    '<p class="sub">Esto es lo que salió de la encuesta de las veinte personas</p>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Resultado</th><th class="n">Valor</th><th>Qué habría que decir</th></tr></thead><tbody>'+
-    '<tr><td>Compra en la cafetería del instituto</td><td class="n">40 %</td>'+
-      '<td>la opción más elegida</td></tr>'+
-    '<tr><td>Acumulado hasta la bodega del barrio</td><td class="n">65 %</td>'+
-      '<td>dentro del instituto o muy cerca</td></tr>'+
-    '<tr><td>Media de vasos por semana</td><td class="n">5.95</td><td>casi seis vasos</td></tr>'+
-    '<tr><td>Mediana de vasos por semana</td><td class="n">5.5</td><td>por debajo de la media</td></tr>'+
-    '<tr class="res"><td>Desviación estándar</td><td class="n">2.52</td>'+
-      '<td>coeficiente de variación del 42 %</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="av">Con ese cuadro delante, elige en cada caso la lectura correcta.</div>' },
-
-/* 10 ----------------------------------------------------------- */
-{ et:'En equipo', t:'Trabajo en equipo sobre el caso práctico',
-  h:'<p class="enc">Ahora con datos de verdad</p>'+
-    '<p class="sub">El docente publica el archivo del caso y la clase se reparte en equipos</p>'+
-    '<div class="caso" id="caso">'+
-      '<h4>&#128202; Caso práctico en Excel</h4>'+
-      '<div id="casoCaja"></div>'+
-    '</div>'+
-    '<div class="caso" id="sorteo">'+
-      '<h4>&#127922; Parejas y equipos al azar</h4>'+
-      '<div id="sorteoCaja"></div>'+
-    '</div>'+
-    '<div class="tabenv"><table class="t chica"><thead><tr>'+
-    '<th>Paso</th><th>Qué hace cada equipo</th><th class="n">Tiempo</th></tr></thead><tbody>'+
-    '<tr><td>1</td><td>Abren el archivo del caso y hacen una copia antes de escribir</td>'+
-      '<td class="n">3 min</td></tr>'+
-    '<tr><td>2</td><td>Revisan la matriz: ¿una fila por encuestado?, ¿una columna por variable?, '+
-      '¿hay celdas vacías o códigos mezclados con texto?</td><td class="n">7 min</td></tr>'+
-    '<tr><td>3</td><td>Arman la distribución de frecuencias de una variable que elija el equipo</td>'+
-      '<td class="n">10 min</td></tr>'+
-    '<tr class="res"><td>4</td><td>Escriben una sola frase de interpretación y la sustentan ante la clase</td>'+
-      '<td class="n">5 min</td></tr>'+
-    '</tbody></table></div>'+
-    '<div class="opina" id="opina">'+
-      '<h4>&#128172; Lo que opina el aula</h4>'+
-      '<p class="su">No hay respuesta correcta: marca lo que piensas y prepárate para sustentarlo '+
-      'con tu pareja. El docente ve lo que eligió cada uno.</p>'+
-      '<div id="opinaCaja"></div>'+
-    '</div>'+
-    globo(P.sena,'Para la plenaria',
-      'Cuando cada pareja exponga, miren si coinciden en la variable que eligieron y en la frase final. '+
-      'Dos equipos con los mismos datos pueden escribir interpretaciones distintas, y eso también es '+
-      'un resultado de la sesión.') },
-
-/* 11 ----------------------------------------------------------- */
-{ et:'Cierre', t:'Síntesis de la sesión', clave:'a9',
-  h:'<p class="enc">Lo que te llevas de la sesión</p>'+
-    '<div class="dos">'+
-    '<div class="fc"><h4>El orden del trabajo</h4><div class="c"><ol>'+
-      '<li>Codificar y escribir el libro de códigos.</li>'+
-      '<li>Armar la base: una fila por encuestado, una columna por variable.</li>'+
-      '<li>Tabular variable por variable: frecuencias absolutas, relativas y acumuladas.</li>'+
-      '<li>Sacar las medidas de las variables numéricas.</li>'+
-      '<li>Escribir la interpretación.</li>'+
-      '</ol></div></div>'+
-    '<div class="fc rj"><h4>Lo que no hay que hacer</h4><div class="c"><ul>'+
-      '<li>Promediar una variable nominal.</li>'+
-      '<li>Dejar celdas en blanco en vez del código de dato perdido.</li>'+
-      '<li>Mezclar códigos y texto en la misma columna.</li>'+
-      '<li>Reportar la media sin ninguna medida de dispersión.</li>'+
-      '</ul></div></div>'+
-    '</div>'+
-    '<div class="av">Las siete palabras del tablero salieron de las nueve diapositivas anteriores. '+
-    'Cada clave tiene su botón de pista.</div>' }
+    'porcentaje que corresponde.</div>' }
 ];
 
 /* ================= estado ================= */
 var LS='inv_sem9_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8','a9'];
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{}, opinion:undefined };
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6'];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 try{
@@ -1607,7 +1384,6 @@ function graba(){
 /* el avance guardado se suma al de este equipo: nunca se pierde una respuesta */
 function fusiona(d){
   if(!d || typeof d!=='object') return;
-  if(d.opinion!==undefined) G.opinion=d.opinion;
   ['visto','mal','hoja'].forEach(function(k){
     if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
   });
@@ -2200,176 +1976,11 @@ function pinta(quieto){
     });
   });
   cablea();
-  if($('casoCaja')) pintaCaso();
-  if($('sorteoCaja')) pintaSorteo();
-  if($('opinaCaja')) pintaOpina();
   pintaModo();
-}
-
-/* ================= el caso práctico en Excel ================= */
-var RECURSO=null;
-var LSREC='inv_s17_recurso';
-try{ RECURSO=JSON.parse(localStorage.getItem(LSREC)||'null'); }catch(e){}
-
-function urlBuena(u){
-  return /^https?:\/\/[^\s]+$/i.test(String(u||'').trim());
-}
-function recibeRecurso(r){
-  RECURSO = (r && r.url) ? r : null;
-  try{ localStorage.setItem(LSREC, JSON.stringify(RECURSO)); }catch(e){}
-  if($('casoCaja')) pintaCaso();
-}
-function pintaCaso(){
-  var c=$('casoCaja'); if(!c) return;
-  var doc=soyDocente(), h='';
-  if(RECURSO && RECURSO.url){
-    h+='<a class="casolink" href="'+esc(RECURSO.url)+'" target="_blank" rel="noopener">'+
-       '<span class="ic">&#128202;</span>'+
-       '<span class="tx"><b>'+esc(RECURSO.titulo||'Caso práctico en Excel')+'</b>'+
-       '<small>'+esc(RECURSO.nota||'Se abre en una pestaña nueva')+'</small></span>'+
-       '<span class="ab">Abrir &rsaquo;</span></a>';
-  }else{
-    h+='<p class="casovacio">'+(doc
-        ? 'Todavía no has publicado el caso. Pega el enlace y toda la clase lo verá al instante.'
-        : 'El docente aún no ha publicado el caso práctico. Aparecerá aquí en cuanto lo haga.')+'</p>';
-  }
-  if(doc){
-    h+='<div class="casoform">'+
-       '<label><span>Título</span><input type="text" id="casoTit" maxlength="80" '+
-         'placeholder="Caso práctico - matriz de datos" value="'+esc(RECURSO&&RECURSO.titulo||'')+'"></label>'+
-       '<label><span>Enlace del archivo</span><input type="url" id="casoUrl" '+
-         'placeholder="https://docs.google.com/spreadsheets/..." value="'+esc(RECURSO&&RECURSO.url||'')+'"></label>'+
-       '<label><span>Nota para la clase</span><input type="text" id="casoNota" maxlength="90" '+
-         'placeholder="Hagan una copia antes de escribir" value="'+esc(RECURSO&&RECURSO.nota||'')+'"></label>'+
-       '<div class="casoacc">'+
-         '<button type="button" class="o-btn o-btn-primary" id="casoGuarda">Publicar para la clase</button>'+
-         (RECURSO&&RECURSO.url ? '<button type="button" class="o-btn" id="casoQuita">Quitar</button>' : '')+
-         '<span class="casoavi" id="casoAvi"></span>'+
-       '</div></div>';
-  }
-  c.innerHTML=h;
-  if(!doc) return;
-  var avi=$('casoAvi');
-  function guarda(r){
-    if(!(window.Aula && Aula.enSala)){
-      RECURSO=r; try{ localStorage.setItem(LSREC, JSON.stringify(r)); }catch(e){}
-      pintaCaso(); sopla('Guardado solo en este equipo: entra a la sala para publicarlo'); return;
-    }
-    Aula.guardaRecurso(r||{}).then(function(){
-      RECURSO=(r&&r.url)?r:null;
-      try{ localStorage.setItem(LSREC, JSON.stringify(RECURSO)); }catch(e){}
-      pintaCaso(); bien(); sopla(r&&r.url ? 'Publicado: la clase ya lo ve' : 'Enlace retirado');
-    }).catch(function(){ if(avi){ avi.className='casoavi malo'; avi.textContent='No se pudo publicar'; } });
-  }
-  $('casoGuarda').addEventListener('click', function(){
-    var u=$('casoUrl').value.trim();
-    if(!urlBuena(u)){
-      avi.className='casoavi malo';
-      avi.textContent='El enlace tiene que empezar con https://';
-      $('casoUrl').focus(); return;
-    }
-    guarda({ titulo:$('casoTit').value.trim()||'Caso práctico en Excel', url:u,
-             nota:$('casoNota').value.trim() });
-  });
-  if($('casoQuita')) $('casoQuita').addEventListener('click', function(){ guarda(null); });
-}
-
-/* ================= parejas y equipos al azar ================= */
-var SORTEO=null;
-function nombresSala(){
-  var n=(window.Aula && Aula.participantes) ? Aula.participantes.slice() : [];
-  return n.filter(function(x){ return x && x!=='docente'; });
-}
-function baraja(a){
-  for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1));
-    var t=a[i]; a[i]=a[j]; a[j]=t; }
-  return a;
-}
-function sortea(tam){
-  var n=baraja(nombresSala());
-  if(n.length<2){ sopla('Hacen falta al menos dos participantes en la sala'); return; }
-  var g=[], i=0;
-  while(i<n.length){ g.push(n.slice(i, i+tam)); i+=tam; }
-  /* al último le toca quedarse solo: se reparte en los otros equipos */
-  if(g.length>1 && g[g.length-1].length===1){
-    g[g.length-2].push(g.pop()[0]);
-  }
-  SORTEO={ tam:tam, grupos:g, cuando:new Date() };
-  pintaSorteo(); fanfarria();
-}
-function pintaSorteo(){
-  var c=$('sorteoCaja'); if(!c) return;
-  var doc=soyDocente(), h='';
-  if(doc){
-    h+='<div class="sorteoacc">'+
-       '<button type="button" class="o-btn o-btn-primary" data-sort="2">&#127919; Parejas al azar</button>'+
-       '<button type="button" class="o-btn" data-sort="3">Equipos de 3</button>'+
-       '<button type="button" class="o-btn" data-sort="4">Equipos de 4</button>'+
-       '<span class="sorteonum">'+nombresSala().length+' en la sala</span>'+
-       '</div>';
-  }
-  if(SORTEO && SORTEO.grupos.length){
-    h+='<div class="equipos">'+SORTEO.grupos.map(function(g,n){
-      return '<div class="eq"><h5>'+(SORTEO.tam===2?'Pareja ':'Equipo ')+(n+1)+'</h5><ul>'+
-             g.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
-    }).join('')+'</div>';
-  }else if(doc){
-    h+='<p class="casovacio">Pulsa un botón y se reparten los que estén dentro de la sala.</p>';
-  }else{
-    h+='<p class="casovacio">El docente va a sortear las parejas en un momento.</p>';
-  }
-  c.innerHTML=h;
-  qq('#sorteoCaja button[data-sort]').forEach(function(b){
-    b.addEventListener('click', function(){ sortea(+b.dataset.sort); });
-  });
-}
-
-/* ================= la opinión del aula ================= */
-var OPINA=[
-  'La media es lo primero que hay que reportar: resume a todo el grupo en un número.',
-  'La mediana dice más cuando hay valores extremos, así que yo reportaría esa.',
-  'Ninguna sirve sola: siempre hay que acompañarlas con una medida de dispersión.'
-];
-function pintaOpina(){
-  var c=$('opinaCaja'); if(!c) return;
-  var mio=(G.opinion===undefined ? null : G.opinion);
-  c.innerHTML='<div class="ops">'+OPINA.map(function(o,n){
-      return '<button type="button" data-op="'+n+'" class="'+(mio===n?'buena':'')+'">'+esc(o)+'</button>';
-    }).join('')+'</div>'+
-    (mio!==null ? '<p class="pq">Queda registrado. Puedes cambiarlo si tu pareja te convence.</p>' : '');
-  qq('#opinaCaja button[data-op]').forEach(function(b){
-    b.addEventListener('click', function(){
-      G.opinion=+b.dataset.op; graba(); bien(); pintaOpina();
-    });
-  });
 }
 
 /* ================= la sesión en PDF, con todo resuelto ================= */
 var imprimiendo=false;
-/* en el PDF los paneles van en versión fija: ni formularios ni ids repetidos */
-function casoPDF(){
-  if(RECURSO && RECURSO.url){
-    return '<div class="casolink" style="text-decoration:none"><span class="ic">&#128202;</span>'+
-      '<span class="tx"><b>'+esc(RECURSO.titulo||'Caso práctico en Excel')+'</b>'+
-      '<small>'+esc(RECURSO.url)+'</small></span></div>'+
-      (RECURSO.nota ? '<p class="casovacio" style="margin-top:9px">'+esc(RECURSO.nota)+'</p>' : '');
-  }
-  return '<p class="casovacio">El enlace del caso lo publica el docente durante la clase.</p>';
-}
-function sorteoPDF(){
-  if(SORTEO && SORTEO.grupos.length){
-    return '<div class="equipos">'+SORTEO.grupos.map(function(g,n){
-      return '<div class="eq"><h5>'+(SORTEO.tam===2?'Pareja ':'Equipo ')+(n+1)+'</h5><ul>'+
-             g.map(function(x){ return '<li>'+esc(x)+'</li>'; }).join('')+'</ul></div>';
-    }).join('')+'</div>';
-  }
-  return '<p class="casovacio">Las parejas se sortean en clase, con quienes estén en la sala.</p>';
-}
-function opinaPDF(){
-  return '<ol class="opinapdf">'+OPINA.map(function(o){
-    return '<li>'+esc(o)+'</li>'; }).join('')+'</ol>';
-}
-
 function armaPDF(){
   var antes=JSON.parse(JSON.stringify(G)), cruzAntes=yaCruz;
   imprimiendo=true; yaCruz={};
@@ -2383,11 +1994,7 @@ function armaPDF(){
            '<span class="cu">'+(n+1)+' / '+D.length+'</span>'+
            '<img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
          '</header>'+
-         '<div class="pgcuerpo">'+
-            (s.h||'').replace('<div id="casoCaja"></div>', casoPDF())
-                     .replace('<div id="sorteoCaja"></div>', sorteoPDF())
-                     .replace('<div id="opinaCaja"></div>', opinaPDF())+
-            (s.clave ? vista(s.clave) : '')+'</div>'+
+         '<div class="pgcuerpo">'+(s.h||'')+(s.clave ? vista(s.clave) : '')+'</div>'+
        '</section>';
   });
   $('impreso').innerHTML=h;
@@ -2966,7 +2573,6 @@ document.addEventListener('keydown', function(e){
 /* ================= el aula ================= */
 function resumenAula(){
   return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
-           opinion:(G.opinion===undefined?null:G.opinion),
            rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
@@ -2992,8 +2598,6 @@ function ventanaAula(e){
         '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
         '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
         '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
-        (e.opinion!==null && e.opinion!==undefined
-          ? '<div class="lin"><span>Opina</span><b>Postura '+(e.opinion+1)+'</b></div>' : '')+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
     var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
@@ -3012,8 +2616,6 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
       '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
       '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
-      (e.opinion!==null && e.opinion!==undefined
-        ? '<span class="dato">Opina<b>Postura '+(e.opinion+1)+'</b></span>' : '')+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
     '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
@@ -3043,7 +2645,7 @@ function pantalla(e, alumno, cont){
 }
 if(window.Aula){
   Aula.iniciar({ sala:'INVBD9', codigo:'INV', resumen:resumenAula, ventana:ventanaAula,
-    pantalla:pantalla, musica:true, batuta:recibeBatuta, recurso:recibeRecurso,
+    pantalla:pantalla, musica:true, batuta:recibeBatuta,
     ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
             limpia:function(){ G=vacio(); yaCruz={}; i=0;
               try{ localStorage.removeItem(LS); }catch(e){}
@@ -3065,7 +2667,7 @@ if(window.Aula){
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
-  aviso:'Se borrarán tus respuestas de las diez actividades.',
+  aviso:'Se borrarán tus respuestas de las siete actividades.',
   hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
