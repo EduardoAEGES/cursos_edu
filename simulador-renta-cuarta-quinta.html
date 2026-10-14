@@ -113,13 +113,24 @@
   /* ---------- teoría ---------- */
   .sim .teo{ display:grid; gap:14px; }
   @media (min-width:820px){ .sim .teo{ grid-template-columns:1fr 1fr; } }
-  .sim .tar{ border:2px solid var(--linea); border-left-width:7px; border-radius:12px;
-             padding:14px 18px; background:#fff; }
-  .sim .tar.az{ border-left-color:var(--azul); } .sim .tar.ver{ border-left-color:var(--verde); }
-  .sim .tar.nar{ border-left-color:#D4683B; } .sim .tar.mor{ border-left-color:#7A3D9E; }
-  .sim .tar h3{ margin:0 0 8px; font-size:19px; font-weight:900; color:var(--azul); }
+  .sim .tar{ border:2px dashed var(--linea); border-radius:14px; padding:16px 18px; background:#fff; }
+  .sim .tar.az{ border-color:#7F98C2; } .sim .tar.ver{ border-color:#7DBB98; }
+  .sim .tar.nar{ border-color:#E3A27F; } .sim .tar.mor{ border-color:#B391CB; }
+  .sim .tar h3{ margin:0 0 10px; font-size:19px; font-weight:900; color:var(--azul);
+                display:flex; align-items:center; gap:10px; }
+  .sim .tar h3 .nu{ flex:none; width:30px; height:30px; border-radius:50%; border:2px dashed currentColor;
+                    display:inline-flex; align-items:center; justify-content:center; font-size:15px; }
   .sim .tar p{ margin:0 0 8px; font-size:17px; line-height:1.55; }
   .sim .tar p:last-child{ margin-bottom:0; }
+  .sim .form{ display:flex; gap:8px; align-items:flex-start; margin:10px 0 0; padding:9px 12px;
+              border:2px dotted var(--azul); border-radius:10px; background:var(--humo);
+              font-size:16px; line-height:1.45; }
+  .sim .form b{ color:var(--azul); }
+  .sim .form .ic{ flex:none; font-weight:900; color:var(--azul); }
+  .sim .grafico{ border:2px dashed var(--linea); border-radius:14px; padding:14px 14px 8px;
+                 margin-bottom:16px; background:#fff; }
+  .sim .grafico h3{ margin:0 0 10px; font-size:19px; font-weight:900; color:var(--azul); }
+  .sim .grafico .tw svg{ display:block; width:100%; min-width:720px; height:auto; }
   .sim .tw{ overflow-x:auto; }
   .sim table{ width:100%; border-collapse:collapse; }
   .sim table th, .sim table td{ padding:7px 10px; border-bottom:1px solid var(--linea); font-size:16px;
@@ -175,17 +186,82 @@
 
   <!-- ================= TEORÍA ================= -->
   <section class="panel" id="teoria" role="tabpanel" hidden>
+
+    <div class="grafico">
+      <h3>&iquest;C&oacute;mo llega tu impuesto a SUNAT durante el a&ntilde;o?</h3>
+      <div class="tw">
+      <svg viewBox="0 0 880 470" role="img" aria-label="Retenci&oacute;n de quinta y de cuarta por PLAME, pago a cuenta por Formulario 1662, y al a&ntilde;o siguiente el Formulario 709 resta todo lo pagado">
+        <defs>
+          <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M0,0 L10,5 L0,10 z" fill="#17386B"/></marker>
+        </defs>
+        <g font-family="Nunito, Inter, system-ui, sans-serif">
+          <!-- fila 1: quinta -->
+          <rect x="10" y="20" width="230" height="84" rx="12" fill="#F4F7FC" stroke="#7DBB98" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="125" y="54" text-anchor="middle" font-size="18" font-weight="900" fill="#107C41">Trabajas en planilla</text>
+          <text x="125" y="80" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">boleta de pago mensual</text>
+          <line x1="244" y1="62" x2="306" y2="62" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <rect x="310" y="20" width="270" height="84" rx="12" fill="#fff" stroke="#7DBB98" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="445" y="54" text-anchor="middle" font-size="18" font-weight="900" fill="#1A2238">El empleador te RETIENE</text>
+          <text x="445" y="80" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">lo descuenta en tu boleta (quinta)</text>
+          <line x1="584" y1="62" x2="676" y2="62" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <text x="630" y="52" text-anchor="middle" font-size="13" font-weight="900" fill="#17386B">PLAME</text>
+
+          <!-- fila 2: cuarta con retención -->
+          <rect x="10" y="130" width="230" height="84" rx="12" fill="#F4F7FC" stroke="#7F98C2" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="125" y="164" text-anchor="middle" font-size="18" font-weight="900" fill="#17386B">Cobras a una empresa</text>
+          <text x="125" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">recibo de S/ 2,000</text>
+          <line x1="244" y1="172" x2="306" y2="172" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <rect x="310" y="130" width="270" height="84" rx="12" fill="#fff" stroke="#7F98C2" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="445" y="164" text-anchor="middle" font-size="18" font-weight="900" fill="#1A2238">La empresa te RETIENE 8 %</text>
+          <text x="445" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">te paga S/ 1,840 &middot; retiene S/ 160</text>
+          <line x1="584" y1="172" x2="676" y2="172" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <text x="630" y="162" text-anchor="middle" font-size="13" font-weight="900" fill="#17386B">PLAME</text>
+
+          <!-- fila 3: cuarta con pago a cuenta -->
+          <rect x="10" y="240" width="230" height="84" rx="12" fill="#F4F7FC" stroke="#E3A27F" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="125" y="274" text-anchor="middle" font-size="18" font-weight="900" fill="#B4521F">Cobras a una persona</text>
+          <text x="125" y="300" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">recibo de S/ 1,000</text>
+          <line x1="244" y1="282" x2="306" y2="282" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <rect x="310" y="240" width="270" height="84" rx="12" fill="#fff" stroke="#E3A27F" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="445" y="274" text-anchor="middle" font-size="18" font-weight="900" fill="#1A2238">T&Uacute; haces el PAGO A CUENTA</text>
+          <text x="445" y="300" text-anchor="middle" font-size="15" font-weight="700" fill="#5A6782">cobras S/ 1,000 &middot; pagas S/ 80 (8 %)</text>
+          <line x1="584" y1="282" x2="676" y2="282" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <text x="630" y="272" text-anchor="middle" font-size="13" font-weight="900" fill="#17386B">Form. 1662</text>
+
+          <!-- SUNAT -->
+          <rect x="680" y="20" width="190" height="304" rx="14" fill="#17386B"/>
+          <text x="775" y="160" text-anchor="middle" font-size="28" font-weight="900" fill="#fff">SUNAT</text>
+          <text x="775" y="190" text-anchor="middle" font-size="15" font-weight="700" fill="#CFE0F5">cada mes</text>
+
+          <!-- 709 -->
+          <line x1="775" y1="328" x2="775" y2="376" stroke="#17386B" stroke-width="2.5" marker-end="url(#fl)"/>
+          <rect x="10" y="380" width="860" height="80" rx="12" fill="#E7F0FA" stroke="#17386B" stroke-width="2" stroke-dasharray="7 5"/>
+          <text x="440" y="412" text-anchor="middle" font-size="19" font-weight="900" fill="#17386B">Al a&ntilde;o siguiente: Formulario Virtual N.&#176; 709 (declaraci&oacute;n anual)</text>
+          <text x="440" y="440" text-anchor="middle" font-size="16" font-weight="700" fill="#1A2238">impuesto del a&ntilde;o &minus; retenciones &minus; pagos a cuenta = pagas la diferencia o te devuelven</text>
+        </g>
+      </svg>
+      </div>
+    </div>
+
     <div class="teo">
-      <div class="tar az"><h3>Retenci&oacute;n</h3>
+      <div class="tar az"><h3><span class="nu">1</span>Retenci&oacute;n</h3>
         <p>Es el impuesto que <b>te descuenta quien te paga</b> y lo entrega a SUNAT por ti.</p>
         <p><b>Quinta:</b> tu empleador te retiene cada mes en la boleta de pago.</p>
         <p><b>Cuarta:</b> la empresa te retiene el <b>8 %</b> del recibo por honorarios cuando el
-        recibo es mayor a S/ 1,500.</p></div>
-      <div class="tar ver"><h3>Pago a cuenta</h3>
+        recibo es mayor a S/ 1,500.</p>
+        <div class="form"><span class="ic">&#9998;</span><span>La declara y paga <b>quien retiene</b>
+        (empleador o empresa) en la <b>PLAME &mdash; PDT 601</b>, cada mes. T&uacute; no presentas
+        nada.</span></div></div>
+      <div class="tar ver"><h3><span class="nu">2</span>Pago a cuenta</h3>
         <p>Es el <b>8 %</b> que <b>pagas t&uacute; mismo</b> cada mes por tus recibos por honorarios
         cuando nadie te retuvo (por ejemplo, si cobraste a una persona natural).</p>
-        <p>Retenciones y pagos a cuenta se <b>restan</b> del impuesto del a&ntilde;o.</p></div>
-      <div class="tar nar"><h3>Deducci&oacute;n de 7 UIT y de 3 UIT</h3>
+        <p>Retenciones y pagos a cuenta se <b>restan</b> del impuesto del a&ntilde;o.</p>
+        <div class="form"><span class="ic">&#9998;</span><span>Lo declaras t&uacute; con el
+        <b>Formulario Virtual N.&deg; 1662</b> (o PDT 616), cada mes seg&uacute;n tu &uacute;ltimo
+        d&iacute;gito del RUC. Si tus ingresos no pasar&aacute;n el l&iacute;mite del a&ntilde;o,
+        puedes pedir la suspensi&oacute;n con el <b>Formulario N.&deg; 1609</b>.</span></div></div>
+      <div class="tar nar"><h3><span class="nu">3</span>Deducci&oacute;n de 7 UIT y de 3 UIT</h3>
         <p>Primero se deducen <b>7 UIT</b> (S/ 37,450) de forma autom&aacute;tica.</p>
         <p>Luego, hasta <b>3 UIT</b> (S/ 16,050) por gastos pagados con comprobante electr&oacute;nico:</p>
         <div class="tw"><table><thead><tr><th>Gasto</th><th class="n">Se deduce</th></tr></thead><tbody>
@@ -193,10 +269,11 @@
           <tr><td>Honorarios de m&eacute;dicos y profesionales</td><td class="n">30 %</td></tr>
           <tr><td>Hoteles y restaurantes</td><td class="n">15 %</td></tr>
           <tr><td>EsSalud de trabajadores del hogar</td><td class="n">100 %</td></tr>
-        </tbody></table></div></div>
-      <div class="tar mor"><h3>Cronograma &mdash; Renta 2025</h3>
-        <p>Se declara en el Formulario Virtual N.&deg; 709 en 2026, seg&uacute;n el &uacute;ltimo
-        d&iacute;gito del RUC:</p>
+        </tbody></table></div>
+        <div class="form"><span class="ic">&#9998;</span><span>Se aplican en el
+        <b>Formulario Virtual N.&deg; 709</b>; SUNAT ya trae los gastos cargados.</span></div></div>
+      <div class="tar mor"><h3><span class="nu">4</span>Cronograma &mdash; Renta 2025</h3>
+        <p>Se declara en 2026 seg&uacute;n el &uacute;ltimo d&iacute;gito del RUC:</p>
         <div class="tw"><table class="crono"><thead><tr><th>D&iacute;gito</th><th>Vence</th>
           <th>D&iacute;gito</th><th>Vence</th></tr></thead><tbody>
           <tr><td>0</td><td>27 may</td><td>5</td><td>3 jun</td></tr>
@@ -205,7 +282,9 @@
           <tr><td>3</td><td>1 jun</td><td>8</td><td>8 jun</td></tr>
           <tr><td>4</td><td>2 jun</td><td>9</td><td>9 jun</td></tr>
           <tr><td colspan="2">Buenos contribuyentes</td><td colspan="2">10 jun</td></tr>
-        </tbody></table></div></div>
+        </tbody></table></div>
+        <div class="form"><span class="ic">&#9998;</span><span>Declaraci&oacute;n anual:
+        <b>Formulario Virtual N.&deg; 709</b>. Devoluci&oacute;n: <b>Formulario N.&deg; 1649</b>.</span></div></div>
     </div>
   </section>
 
