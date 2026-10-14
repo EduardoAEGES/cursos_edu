@@ -47,9 +47,6 @@
   .sim .enun .preg{ background:var(--humo); border-top:1px solid var(--linea); padding:12px 16px;
                     font-weight:800; color:var(--azul); }
 
-  .sim .casos{ display:grid; gap:16px; margin-bottom:22px; }
-  .sim .casos .enun{ margin-bottom:0; }
-  @media (min-width:900px){ .sim .casos{ grid-template-columns:1fr 1fr; } }
 
   /* ---------- formulario 709 ---------- */
   .sim .f709{ border:2px solid var(--azul); border-radius:12px; overflow:hidden; }
@@ -104,6 +101,32 @@
   @media print{
     .o-navbar, .o-cp, .sim .acc, .o-acciones, .o-footer{ display:none !important; }
   }
+
+  /* ---------- pestañas ---------- */
+  .sim .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 20px; }
+  .sim .tabs button{ border:2px solid var(--linea); border-radius:99px; padding:9px 18px;
+                     font-size:17px; font-weight:800; color:var(--azul); background:#fff; cursor:pointer; }
+  .sim .tabs button:hover{ border-color:var(--azul); background:var(--humo); }
+  .sim .tabs button[aria-selected="true"]{ background:var(--azul); border-color:var(--azul); color:#fff; }
+  .sim .panel[hidden]{ display:none; }
+
+  /* ---------- teoría ---------- */
+  .sim .teo{ display:grid; gap:14px; }
+  @media (min-width:820px){ .sim .teo{ grid-template-columns:1fr 1fr; } }
+  .sim .tar{ border:2px solid var(--linea); border-left-width:7px; border-radius:12px;
+             padding:14px 18px; background:#fff; }
+  .sim .tar.az{ border-left-color:var(--azul); } .sim .tar.ver{ border-left-color:var(--verde); }
+  .sim .tar.nar{ border-left-color:#D4683B; } .sim .tar.mor{ border-left-color:#7A3D9E; }
+  .sim .tar h3{ margin:0 0 8px; font-size:19px; font-weight:900; color:var(--azul); }
+  .sim .tar p{ margin:0 0 8px; font-size:17px; line-height:1.55; }
+  .sim .tar p:last-child{ margin-bottom:0; }
+  .sim .tw{ overflow-x:auto; }
+  .sim table{ width:100%; border-collapse:collapse; }
+  .sim table th, .sim table td{ padding:7px 10px; border-bottom:1px solid var(--linea); font-size:16px;
+                                text-align:left; }
+  .sim table th{ background:var(--humo); color:var(--azul); font-weight:900; }
+  .sim table td.n, .sim table th.n{ text-align:right; white-space:nowrap; }
+  .sim table.crono th, .sim table.crono td{ text-align:center; white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -124,7 +147,7 @@
   <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> /
     <a href="sistemas-contables-integrados.html">Sistemas Contables Integrados</a></span> /
     <b>Sesi&oacute;n 8 &mdash; Renta de cuarta y quinta</b></span>
-  <div class="o-cp-right"><span class="o-count" id="rotulo">Formulario 709</span></div>
+  <div class="o-cp-right"><span class="o-count">Formulario 709 &middot; Ejercicio 2025</span></div>
 </div>
 
 <div class="o-content">
@@ -139,99 +162,88 @@
       <h1>Renta de Cuarta y Quinta Categor&iacute;a</h1>
       <p>Simulador del Formulario Virtual N.&deg; 709</p>
     </div>
-    <div class="ej">
-      <label for="ejercicio">Ejercicio</label>
-      <select id="ejercicio">
-        <option value="2026">2026</option>
-        <option value="2025" selected>2025</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-      </select>
-      <span class="uitpil" id="uitpil">UIT S/ 5,350</span>
-    </div>
+    <div class="ej"><span class="uitpil">Ejercicio 2025 &middot; UIT S/ 5,350</span></div>
   </div>
 
   <div class="cuerpo">
 
-  <div class="casos">
-  <div class="enun">
-    <h2>Caso 1 &mdash; Ana Torres</h2>
-    <p>Trabaja en planilla y tambi&eacute;n emite recibos por honorarios. Ejercicio 2025:</p>
-    <ul>
-      <li>Boletas de pago: sueldo de <b>S/ 3,500</b> &times; 12 meses + 2 gratificaciones de
-        <b>S/ 3,500</b> = <b>S/ 49,000.00</b></li>
-      <li>Retenci&oacute;n de quinta en sus boletas: <b>S/ 924.00</b></li>
-      <li>Recibos por honorarios emitidos: <b>S/ 18,000.00</b></li>
-      <li>Retenciones de cuarta (8 % que le retuvieron): <b>S/ 960.00</b></li>
-      <li>Pagos a cuenta de cuarta (8 % que pag&oacute; ella): <b>S/ 480.00</b></li>
-    </ul>
-    <div class="preg">&iquest;Paga o le devuelven?</div>
-  </div>
-  <div class="enun">
-    <h2>Caso 2 &mdash; Luis Quispe</h2>
-    <p>Trabaja en planilla y tambi&eacute;n emite recibos por honorarios. Ejercicio 2025:</p>
-    <ul>
-      <li>Boletas de pago: sueldo de <b>S/ 2,500</b> &times; 12 meses + 2 gratificaciones de
-        <b>S/ 2,500</b> = <b>S/ 35,000.00</b></li>
-      <li>Retenci&oacute;n de quinta en sus boletas: <b>S/ 0.00</b></li>
-      <li>Recibos por honorarios emitidos: <b>S/ 40,000.00</b></li>
-      <li>Retenciones de cuarta (8 % que le retuvieron): <b>S/ 2,000.00</b></li>
-      <li>Pagos a cuenta de cuarta (8 % que pag&oacute; &eacute;l): <b>S/ 400.00</b></li>
-    </ul>
-    <div class="preg">&iquest;Paga o le devuelven?</div>
-  </div>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" data-tab="teoria" aria-selected="false">Teor&iacute;a b&aacute;sica</button>
+    <button type="button" role="tab" data-tab="caso1" aria-selected="true">Caso 1</button>
+    <button type="button" role="tab" data-tab="caso2" aria-selected="false">Caso 2</button>
   </div>
 
-  <div class="leyenda"><span class="li">T&uacute; llenas</span><span class="lo">Se calcula solo</span></div>
+  <!-- ================= TEORÍA ================= -->
+  <section class="panel" id="teoria" role="tabpanel" hidden>
+    <div class="teo">
+      <div class="tar az"><h3>Retenci&oacute;n</h3>
+        <p>Es el impuesto que <b>te descuenta quien te paga</b> y lo entrega a SUNAT por ti.</p>
+        <p><b>Quinta:</b> tu empleador te retiene cada mes en la boleta de pago.</p>
+        <p><b>Cuarta:</b> la empresa te retiene el <b>8 %</b> del recibo por honorarios cuando el
+        recibo es mayor a S/ 1,500.</p></div>
+      <div class="tar ver"><h3>Pago a cuenta</h3>
+        <p>Es el <b>8 %</b> que <b>pagas t&uacute; mismo</b> cada mes por tus recibos por honorarios
+        cuando nadie te retuvo (por ejemplo, si cobraste a una persona natural).</p>
+        <p>Retenciones y pagos a cuenta se <b>restan</b> del impuesto del a&ntilde;o.</p></div>
+      <div class="tar nar"><h3>Deducci&oacute;n de 7 UIT y de 3 UIT</h3>
+        <p>Primero se deducen <b>7 UIT</b> (S/ 37,450) de forma autom&aacute;tica.</p>
+        <p>Luego, hasta <b>3 UIT</b> (S/ 16,050) por gastos pagados con comprobante electr&oacute;nico:</p>
+        <div class="tw"><table><thead><tr><th>Gasto</th><th class="n">Se deduce</th></tr></thead><tbody>
+          <tr><td>Alquiler de vivienda</td><td class="n">30 %</td></tr>
+          <tr><td>Honorarios de m&eacute;dicos y profesionales</td><td class="n">30 %</td></tr>
+          <tr><td>Hoteles y restaurantes</td><td class="n">15 %</td></tr>
+          <tr><td>EsSalud de trabajadores del hogar</td><td class="n">100 %</td></tr>
+        </tbody></table></div></div>
+      <div class="tar mor"><h3>Cronograma &mdash; Renta 2025</h3>
+        <p>Se declara en el Formulario Virtual N.&deg; 709 en 2026, seg&uacute;n el &uacute;ltimo
+        d&iacute;gito del RUC:</p>
+        <div class="tw"><table class="crono"><thead><tr><th>D&iacute;gito</th><th>Vence</th>
+          <th>D&iacute;gito</th><th>Vence</th></tr></thead><tbody>
+          <tr><td>0</td><td>27 may</td><td>5</td><td>3 jun</td></tr>
+          <tr><td>1</td><td>28 may</td><td>6</td><td>4 jun</td></tr>
+          <tr><td>2</td><td>29 may</td><td>7</td><td>5 jun</td></tr>
+          <tr><td>3</td><td>1 jun</td><td>8</td><td>8 jun</td></tr>
+          <tr><td>4</td><td>2 jun</td><td>9</td><td>9 jun</td></tr>
+          <tr><td colspan="2">Buenos contribuyentes</td><td colspan="2">10 jun</td></tr>
+        </tbody></table></div></div>
+    </div>
+  </section>
 
-  <form id="frm" autocomplete="off" class="f709">
+  <!-- ================= CASO 1 ================= -->
+  <section class="panel" id="caso1" role="tabpanel">
+    <div class="enun">
+      <h2>Caso 1 &mdash; Ana Torres</h2>
+      <p>Trabaja en planilla y tambi&eacute;n emite recibos por honorarios. Ejercicio 2025:</p>
+      <ul>
+        <li>Boletas de pago: sueldo de <b>S/ 3,500</b> &times; 12 meses + 2 gratificaciones de
+          <b>S/ 3,500</b> = <b>S/ 49,000.00</b></li>
+        <li>Retenci&oacute;n de quinta en sus boletas: <b>S/ 250.00</b></li>
+        <li>Recibos por honorarios emitidos: <b>S/ 18,000.00</b></li>
+        <li>Retenciones de cuarta que le hicieron: <b>S/ 300.00</b></li>
+        <li>Pagos a cuenta de cuarta que pag&oacute; ella: <b>S/ 150.00</b></li>
+      </ul>
+      <div class="preg">Llena el formulario: &iquest;cu&aacute;nto debe pagar o cu&aacute;nto le devuelven?</div>
+    </div>
+    <div class="form709" data-p="a"></div>
+  </section>
 
-    <div class="sec">Rentas de cuarta categor&iacute;a</div>
-    <div class="r"><span class="c">107</span><span class="n">Renta bruta por el ejercicio individual de
-      profesi&oacute;n, arte, ciencia u oficio</span>
-      <span class="v"><input type="text" inputmode="decimal" id="c107"></span></div>
-    <div class="r"><span class="c">507</span><span class="n">Deducci&oacute;n del 20 %
-      <small>tope de 24 UIT</small></span><span class="v"><output id="o507"></output></span></div>
-    <div class="r"><span class="c">508</span><span class="n">Renta neta del ejercicio individual</span>
-      <span class="v"><output id="o508"></output></span></div>
-    <div class="r st"><span class="c">509</span><span class="n">Total de rentas de cuarta categor&iacute;a</span>
-      <span class="v"><output id="o509"></output></span></div>
-
-    <div class="sec">Rentas de quinta categor&iacute;a</div>
-    <div class="r"><span class="c">111</span><span class="n">Total de rentas de quinta categor&iacute;a</span>
-      <span class="v"><input type="text" inputmode="decimal" id="c111"></span></div>
-    <div class="r st"><span class="c">510</span><span class="n">Total de rentas de cuarta y quinta categor&iacute;a</span>
-      <span class="v"><output id="o510"></output></span></div>
-
-    <div class="sec">Deducciones</div>
-    <div class="r"><span class="c">511</span><span class="n">Deducci&oacute;n de 7 UIT</span>
-      <span class="v"><output id="o511"></output></span></div>
-    <div class="r hit"><span class="c">517</span><span class="n">Renta neta imponible</span>
-      <span class="v"><output id="o517"></output></span></div>
-
-    <div class="sec">Impuesto y cr&eacute;ditos</div>
-    <div class="r hit"><span class="c">120</span><span class="n">Impuesto a la renta calculado
-      <small>escala 8 %, 14 %, 17 %, 20 % y 30 %</small></span>
-      <span class="v"><output id="o120"></output></span></div>
-    <div class="r"><span class="c">127</span><span class="n">Pagos directos (pagos a cuenta) de cuarta categor&iacute;a</span>
-      <span class="v"><input type="text" inputmode="decimal" id="c127"></span></div>
-    <div class="r"><span class="c">130</span><span class="n">Retenciones de cuarta categor&iacute;a</span>
-      <span class="v"><input type="text" inputmode="decimal" id="c130"></span></div>
-    <div class="r"><span class="c">131</span><span class="n">Retenciones de quinta categor&iacute;a</span>
-      <span class="v"><input type="text" inputmode="decimal" id="c131"></span></div>
-    <div class="r fis"><span class="c">142</span><span class="n">Saldo a favor del fisco</span>
-      <span class="v"><output id="o142"></output></span></div>
-    <div class="r fav"><span class="c"></span><span class="n">Saldo a favor del contribuyente</span>
-      <span class="v"><output id="oFav"></output></span></div>
-    <div class="r fis"><span class="c">168</span><span class="n">Importe a pagar
-      <small>redondeado a soles</small></span>
-      <span class="v"><output id="o168"></output></span></div>
-  </form>
-
-  <div class="acc">
-    <button type="button" class="b" id="bLim">Limpiar todo</button>
-    <button type="button" class="b" id="bImp">Imprimir</button>
-  </div>
+  <!-- ================= CASO 2 ================= -->
+  <section class="panel" id="caso2" role="tabpanel" hidden>
+    <div class="enun">
+      <h2>Caso 2 &mdash; Luis Quispe</h2>
+      <p>Trabaja en planilla y tambi&eacute;n emite recibos por honorarios. Ejercicio 2025:</p>
+      <ul>
+        <li>Boletas de pago: sueldo de <b>S/ 3,000</b> &times; 12 meses + 2 gratificaciones de
+          <b>S/ 3,000</b> = <b>S/ 42,000.00</b></li>
+        <li>Retenci&oacute;n de quinta en sus boletas: <b>S/ 200.00</b></li>
+        <li>Recibos por honorarios emitidos: <b>S/ 40,000.00</b></li>
+        <li>Retenciones de cuarta que le hicieron: <b>S/ 500.00</b></li>
+        <li>Pagos a cuenta de cuarta que pag&oacute; &eacute;l: <b>S/ 150.00</b></li>
+      </ul>
+      <div class="preg">Llena el formulario: &iquest;cu&aacute;nto debe pagar o cu&aacute;nto le devuelven?</div>
+    </div>
+    <div class="form709" data-p="b"></div>
+  </section>
 
   <p class="fuente">Basado en el
   <a href="https://renta.sunat.gob.pe/simuladores/cuarta_quinta" target="_blank" rel="noopener">simulador
@@ -258,14 +270,35 @@
 <script>
 (function(){
 'use strict';
-var $=function(id){ return document.getElementById(id); };
 
-var UIT={ 2023:4950, 2024:5150, 2025:5350, 2026:5500 };
+var UIT=5350;
 /* escala del artículo 53 de la Ley del Impuesto a la Renta, en UIT */
 var ESCALA=[ {h:5, t:0.08}, {h:20, t:0.14}, {h:35, t:0.17}, {h:45, t:0.20}, {h:Infinity, t:0.30} ];
 
-var CAMPOS=['c107','c111','c127','c130','c131'];
-var SALIDAS=['o507','o508','o509','o510','o511','o517','o120','o142','oFav','o168'];
+/* casillas del formulario: [casilla, concepto, detalle, tipo, clase]
+   tipo 'i' = la llena el alumno, 'o' = se calcula sola */
+var FILAS=[
+  ['sec','Rentas de cuarta categoría'],
+  ['107','Renta bruta por el ejercicio individual de profesión, arte, ciencia u oficio','','i'],
+  ['507','Deducción del 20 %','tope de 24 UIT','o'],
+  ['509','Total de rentas de cuarta categoría','','o','st'],
+  ['sec','Rentas de quinta categoría'],
+  ['111','Total de rentas de quinta categoría','','i'],
+  ['510','Total de rentas de cuarta y quinta categoría','','o','st'],
+  ['sec','Deducciones'],
+  ['511','Deducción de 7 UIT','','o'],
+  ['517','Renta neta imponible','','o','hit'],
+  ['sec','Impuesto y créditos'],
+  ['120','Impuesto a la renta calculado','escala 8 %, 14 %, 17 %, 20 % y 30 %','o','hit'],
+  ['127','Pagos a cuenta de cuarta categoría','','i'],
+  ['130','Retenciones de cuarta categoría','','i'],
+  ['131','Retenciones de quinta categoría','','i'],
+  ['142','Saldo a favor del fisco','','o','fis'],
+  ['fav','Saldo a favor del contribuyente','','o','fav'],
+  ['168','Importe a pagar','redondeado a soles','o','fis']
+];
+var ENTRADAS=['107','111','127','130','131'];
+var SALIDAS=['507','509','510','511','517','120','142','fav','168'];
 
 function num(t){
   var x=String(t==null?'':t).trim().replace(/\s/g,'').replace(/^S\/\.?/i,'');
@@ -275,70 +308,77 @@ function num(t){
   return (isNaN(n) || n<0) ? 0 : n;
 }
 function r2(n){ return Math.round(n*100)/100; }
-function sol(n){
-  return r2(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
-}
+function sol(n){ return r2(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
 
-function pinta(){
-  var uit=UIT[$('ejercicio').value] || 5350;
-  $('uitpil').textContent='UIT S/ '+uit.toLocaleString('es-PE');
-  $('rotulo').textContent='Formulario 709 · Ejercicio '+$('ejercicio').value;
-
-  var d={}, hay=false;
-  CAMPOS.forEach(function(k){ d[k]=num($(k).value); if($(k).value.trim()!=='') hay=true; });
-
-  /* sin datos: las casillas automáticas quedan en blanco */
-  if(!hay){
-    SALIDAS.forEach(function(k){ $(k).textContent=''; });
-    return;
-  }
-
-  /* cuarta categoría */
-  var c507 = r2(Math.min(d.c107*0.20, 24*uit));
-  var c508 = r2(d.c107 - c507);
-  var c509 = c508;
-  /* cuarta y quinta */
-  var c510 = r2(c509 + d.c111);
-  /* deducción de 7 UIT */
-  var c511 = Math.min(7*uit, c510);
-  var c517 = r2(Math.max(0, c510 - c511));
-
-  /* impuesto con la escala progresiva */
+function calcula(d){
+  var c507=r2(Math.min(d['107']*0.20, 24*UIT));
+  var c509=r2(d['107']-c507);
+  var c510=r2(c509+d['111']);
+  var c511=Math.min(7*UIT, c510);
+  var c517=r2(Math.max(0, c510-c511));
   var c120=0, piso=0;
   ESCALA.forEach(function(e){
-    var techo = (e.h===Infinity) ? Infinity : e.h*uit;
-    c120 += Math.max(0, Math.min(c517, techo) - piso)*e.t;
-    piso = techo;
+    var techo=(e.h===Infinity) ? Infinity : e.h*UIT;
+    c120+=Math.max(0, Math.min(c517, techo)-piso)*e.t;
+    piso=techo;
   });
-  c120 = r2(c120);
-
-  /* créditos y resultado */
-  var saldo = r2(c120 - d.c127 - d.c130 - d.c131);
-
-  var o={ o507:c507, o508:c508, o509:c509, o510:c510, o511:c511, o517:c517, o120:c120,
-          o142: saldo>0 ? saldo : 0,
-          oFav: saldo<0 ? -saldo : 0,
-          o168: saldo>0 ? Math.round(saldo) : 0 };
-  SALIDAS.forEach(function(k){ $(k).textContent=sol(o[k]); });
+  c120=r2(c120);
+  var saldo=r2(c120-d['127']-d['130']-d['131']);
+  return { '507':c507, '509':c509, '510':c510, '511':c511, '517':c517, '120':c120,
+           '142':saldo>0?saldo:0, 'fav':saldo<0?-saldo:0, '168':saldo>0?Math.round(saldo):0 };
 }
 
-CAMPOS.forEach(function(k){
-  var x=$(k);
-  x.addEventListener('input', pinta);
-  x.addEventListener('blur', function(){
-    if(x.value.trim()==='') return;
-    x.value = num(x.value).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
+function arma(caja){
+  var p=caja.getAttribute('data-p');
+  var h='<div class="leyenda"><span class="li">Tú llenas</span><span class="lo">Se calcula solo</span></div>'+
+        '<form class="f709" autocomplete="off">';
+  FILAS.forEach(function(f){
+    if(f[0]==='sec'){ h+='<div class="sec">'+f[1]+'</div>'; return; }
+    var id=p+f[0];
+    h+='<div class="r'+(f[4]?' '+f[4]:'')+'"><span class="c">'+(f[0]==='fav'?'':f[0])+'</span>'+
+       '<span class="n">'+f[1]+(f[2]?'<small>'+f[2]+'</small>':'')+'</span><span class="v">'+
+       (f[3]==='i' ? '<input type="text" inputmode="decimal" id="'+id+'" aria-label="Casilla '+f[0]+'">'
+                   : '<output id="'+id+'"></output>')+'</span></div>';
+  });
+  h+='</form><div class="acc"><button type="button" class="b">Limpiar</button></div>';
+  caja.innerHTML=h;
+
+  function pinta(){
+    var d={}, hay=false;
+    ENTRADAS.forEach(function(k){ var v=document.getElementById(p+k).value; d[k]=num(v); if(v.trim()!=='') hay=true; });
+    var o=hay ? calcula(d) : null;
+    SALIDAS.forEach(function(k){ document.getElementById(p+k).textContent = o ? sol(o[k]) : ''; });
+  }
+  ENTRADAS.forEach(function(k){
+    var x=document.getElementById(p+k);
+    x.addEventListener('input', pinta);
+    x.addEventListener('blur', function(){
+      if(x.value.trim()==='') return;
+      x.value=num(x.value).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
+    });
+  });
+  caja.querySelector('.acc .b').addEventListener('click', function(){
+    ENTRADAS.forEach(function(k){ document.getElementById(p+k).value=''; });
     pinta();
   });
-});
-$('ejercicio').addEventListener('change', pinta);
-$('bLim').addEventListener('click', function(){
-  CAMPOS.forEach(function(k){ $(k).value=''; });
-  pinta(); $('c107').focus();
-});
-$('bImp').addEventListener('click', function(){ window.print(); });
+  pinta();
+}
+Array.prototype.forEach.call(document.querySelectorAll('.form709'), arma);
 
-pinta();
+/* pestañas */
+var botones=document.querySelectorAll('.tabs button');
+function abre(id){
+  Array.prototype.forEach.call(botones, function(b){
+    var si=b.getAttribute('data-tab')===id;
+    b.setAttribute('aria-selected', si?'true':'false');
+    document.getElementById(b.getAttribute('data-tab')).hidden=!si;
+  });
+}
+Array.prototype.forEach.call(botones, function(b){
+  b.addEventListener('click', function(){ abre(b.getAttribute('data-tab')); history.replaceState(null,'','#'+b.getAttribute('data-tab')); });
+});
+var ini=location.hash.slice(1);
+if(ini && document.getElementById(ini) && /^(teoria|caso1|caso2)$/.test(ini)) abre(ini);
 })();
 </script>
 
