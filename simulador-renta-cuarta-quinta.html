@@ -69,6 +69,8 @@
                   padding:8px 10px; font-size:18px; font-weight:800; text-align:right;
                   font-variant-numeric:tabular-nums; background:#EEF1F6; color:var(--azul); }
   .sim .r.st{ background:#F7F9FC; }
+  .sim .r.gas > .n{ padding-left:22px; font-size:16px; }
+  .sim .r.gas{ background:#FBFCFE; }
   .sim .r.st > .n{ font-weight:800; color:var(--azul); }
   .sim .r.hit{ background:#E7F0FA; }
   .sim .r.hit > .n{ font-weight:900; color:var(--azul); }
@@ -101,6 +103,13 @@
   @media print{
     .o-navbar, .o-cp, .sim .acc, .o-acciones, .o-footer{ display:none !important; }
   }
+
+  .sim .enun .dtit{ padding:6px 16px 4px; font-weight:800; color:var(--azul); }
+  .sim .det{ margin:6px 16px 12px; border:2px dashed var(--linea); border-radius:10px; overflow:hidden; }
+  .sim .det .dt{ padding:8px 12px; font-size:16px; font-weight:900; color:var(--azul); background:var(--humo); }
+  .sim .det .dt span{ float:right; color:var(--verde); }
+  .sim .det table{ min-width:520px; }
+  .sim .det tr.tot td{ font-weight:900; background:#F7F9FC; }
 
   /* ---------- pestañas ---------- */
   .sim .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin:0 0 20px; }
@@ -182,6 +191,7 @@
     <button type="button" role="tab" data-tab="teoria" aria-selected="false">Teor&iacute;a b&aacute;sica</button>
     <button type="button" role="tab" data-tab="caso1" aria-selected="true">Caso 1</button>
     <button type="button" role="tab" data-tab="caso2" aria-selected="false">Caso 2</button>
+    <button type="button" role="tab" data-tab="caso3" aria-selected="false">Caso 3</button>
   </div>
 
   <!-- ================= TEORÍA ================= -->
@@ -288,7 +298,7 @@
     </div>
   </section>
 
-  <!-- ================= CASO 1 ================= -->
+  <!-- ================= CASOS ================= -->
   <section class="panel" id="caso1" role="tabpanel">
     <div class="enun">
       <h2>Caso 1 &mdash; Ana Torres</h2>
@@ -301,12 +311,14 @@
         <li>Retenciones de cuarta que le hicieron: <b>S/ 300.00</b></li>
         <li>Pagos a cuenta de cuarta que pag&oacute; ella: <b>S/ 150.00</b></li>
       </ul>
+      <p class="dtit">Comprobantes de gastos para la deducci&oacute;n de hasta 3 UIT:</p>
+      <div class="det"><div class="dt">Boletas de venta electr&oacute;nicas &mdash; restaurantes <span>se deduce 15 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>14/02/2025</td><td>EB01-1250</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">120.00</td></tr><tr><td>03/05/2025</td><td>EB02-0874</td><td>Poller&iacute;a La Brasa Dorada S.A.C.</td><td class="n">85.00</td></tr><tr><td>19/08/2025</td><td>EB01-3311</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">210.00</td></tr><tr><td>22/11/2025</td><td>B001-0456</td><td>Cevicher&iacute;a Mar Azul E.I.R.L.</td><td class="n">95.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">510.00</td></tr></tbody></table></div></div>
+      <div class="det"><div class="dt">Recibos por honorarios electr&oacute;nicos &mdash; m&eacute;dicos <span>se deduce 30 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>10/03/2025</td><td>E001-210</td><td>Dra. Valeria Flores (m&eacute;dico)</td><td class="n">350.00</td></tr><tr><td>25/09/2025</td><td>E001-389</td><td>Dr. Javier Ortega (odont&oacute;logo)</td><td class="n">450.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">800.00</td></tr></tbody></table></div></div>
       <div class="preg">Llena el formulario: &iquest;cu&aacute;nto debe pagar o cu&aacute;nto le devuelven?</div>
     </div>
     <div class="form709" data-p="a"></div>
   </section>
 
-  <!-- ================= CASO 2 ================= -->
   <section class="panel" id="caso2" role="tabpanel" hidden>
     <div class="enun">
       <h2>Caso 2 &mdash; Luis Quispe</h2>
@@ -319,9 +331,33 @@
         <li>Retenciones de cuarta que le hicieron: <b>S/ 500.00</b></li>
         <li>Pagos a cuenta de cuarta que pag&oacute; &eacute;l: <b>S/ 150.00</b></li>
       </ul>
+      <p class="dtit">Comprobantes de gastos para la deducci&oacute;n de hasta 3 UIT:</p>
+      <div class="det"><div class="dt">Alquiler de vivienda &mdash; Formulario N.&deg; 1683 (S/ 1,200 mensuales) <span>se deduce 30 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>Ene&ndash;Jun 2025</td><td>6 constancias 1683</td><td>Arrendadora: Carmen Rojas</td><td class="n">7,200.00</td></tr><tr><td>Jul&ndash;Dic 2025</td><td>6 constancias 1683</td><td>Arrendadora: Carmen Rojas</td><td class="n">7,200.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">14,400.00</td></tr></tbody></table></div></div>
+      <div class="det"><div class="dt">Boletas de venta electr&oacute;nicas &mdash; restaurantes <span>se deduce 15 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>08/04/2025</td><td>EB01-0912</td><td>Chifa Gran Dragón S.A.C.</td><td class="n">180.00</td></tr><tr><td>16/07/2025</td><td>EB03-0127</td><td>Restaurante Do&ntilde;a Mar&iacute;a E.I.R.L.</td><td class="n">140.00</td></tr><tr><td>28/12/2025</td><td>EB01-2045</td><td>Parrillas del Sur S.A.C.</td><td class="n">230.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">550.00</td></tr></tbody></table></div></div>
       <div class="preg">Llena el formulario: &iquest;cu&aacute;nto debe pagar o cu&aacute;nto le devuelven?</div>
     </div>
     <div class="form709" data-p="b"></div>
+  </section>
+
+  <section class="panel" id="caso3" role="tabpanel" hidden>
+    <div class="enun">
+      <h2>Caso 3 &mdash; Rosa Mamani</h2>
+      <p>Trabaja en planilla y tambi&eacute;n emite recibos por honorarios. Ejercicio 2025:</p>
+      <ul>
+        <li>Boletas de pago: sueldo de <b>S/ 2,800</b> &times; 12 meses + 2 gratificaciones de
+          <b>S/ 2,800</b> = <b>S/ 39,200.00</b></li>
+        <li>Retenci&oacute;n de quinta en sus boletas: <b>S/ 140.00</b></li>
+        <li>Recibos por honorarios emitidos: <b>S/ 12,000.00</b></li>
+        <li>Retenciones de cuarta que le hicieron: <b>S/ 960.00</b></li>
+        <li>Pagos a cuenta de cuarta que pag&oacute; ella: <b>S/ 0.00</b></li>
+      </ul>
+      <p class="dtit">Comprobantes de gastos para la deducci&oacute;n de hasta 3 UIT:</p>
+      <div class="det"><div class="dt">Formulario N.&deg; 1676 &mdash; EsSalud de trabajadora del hogar (S/ 110 mensuales) <span>se deduce 100 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>Ene&ndash;Jun 2025</td><td>6 pagos</td><td>Trabajadora: Juana Ccori</td><td class="n">660.00</td></tr><tr><td>Jul&ndash;Dic 2025</td><td>6 pagos</td><td>Trabajadora: Juana Ccori</td><td class="n">660.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">1,320.00</td></tr></tbody></table></div></div>
+      <div class="det"><div class="dt">Recibos por honorarios electr&oacute;nicos &mdash; m&eacute;dicos <span>se deduce 30 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>12/02/2025</td><td>E001-077</td><td>Dr. Iv&aacute;n C&aacute;rdenas (pediatra)</td><td class="n">300.00</td></tr><tr><td>05/06/2025</td><td>E001-145</td><td>Dr. Iv&aacute;n C&aacute;rdenas (pediatra)</td><td class="n">600.00</td></tr><tr><td>20/10/2025</td><td>E001-233</td><td>Dra. Lisbeth Mendoza (odont&oacute;loga)</td><td class="n">500.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">1,400.00</td></tr></tbody></table></div></div>
+      <div class="det"><div class="dt">Boletas de venta electr&oacute;nicas &mdash; restaurantes <span>se deduce 15 %</span></div><div class="tw"><table><thead><tr><th>Fecha</th><th>Comprobante</th><th>Emisor</th><th class="n">Importe S/</th></tr></thead><tbody><tr><td>01/05/2025</td><td>EB01-4410</td><td>Picanter&iacute;a La Lucila S.A.C.</td><td class="n">160.00</td></tr><tr><td>24/12/2025</td><td>EB02-0981</td><td>Restaurante El Sabor Criollo S.R.L.</td><td class="n">240.00</td></tr><tr class="tot"><td colspan="3">Total pagado</td><td class="n">400.00</td></tr></tbody></table></div></div>
+      <div class="preg">Llena el formulario: &iquest;cu&aacute;nto debe pagar o cu&aacute;nto le devuelven?</div>
+    </div>
+    <div class="form709" data-p="c"></div>
   </section>
 
   <p class="fuente">Basado en el
@@ -366,6 +402,11 @@ var FILAS=[
   ['510','Total de rentas de cuarta y quinta categoría','','o','st'],
   ['sec','Deducciones'],
   ['511','Deducción de 7 UIT','','o'],
+  ['gArr','Alquiler de vivienda','importe pagado · se deduce 30 %','i','gas'],
+  ['gHon','Honorarios de médicos y profesionales','importe pagado · se deduce 30 %','i','gas'],
+  ['gRes','Hoteles y restaurantes','importe pagado · se deduce 15 %','i','gas'],
+  ['gEss','EsSalud de trabajadores del hogar','importe pagado · se deduce 100 %','i','gas'],
+  ['514','Deducción adicional de hasta 3 UIT','tope de 3 UIT: S/ 16,050','o','st'],
   ['517','Renta neta imponible','','o','hit'],
   ['sec','Impuesto y créditos'],
   ['120','Impuesto a la renta calculado','escala 8 %, 14 %, 17 %, 20 % y 30 %','o','hit'],
@@ -376,8 +417,8 @@ var FILAS=[
   ['fav','Saldo a favor del contribuyente','','o','fav'],
   ['168','Importe a pagar','redondeado a soles','o','fis']
 ];
-var ENTRADAS=['107','111','127','130','131'];
-var SALIDAS=['507','509','510','511','517','120','142','fav','168'];
+var ENTRADAS=['107','111','gArr','gHon','gRes','gEss','127','130','131'];
+var SALIDAS=['507','509','510','511','514','517','120','142','fav','168'];
 
 function num(t){
   var x=String(t==null?'':t).trim().replace(/\s/g,'').replace(/^S\/\.?/i,'');
@@ -394,7 +435,9 @@ function calcula(d){
   var c509=r2(d['107']-c507);
   var c510=r2(c509+d['111']);
   var c511=Math.min(7*UIT, c510);
-  var c517=r2(Math.max(0, c510-c511));
+  var gastos=r2(d.gArr*0.30 + d.gHon*0.30 + d.gRes*0.15 + d.gEss);
+  var c514=r2(Math.min(gastos, 3*UIT, Math.max(0, c510-c511)));
+  var c517=r2(Math.max(0, c510-c511-c514));
   var c120=0, piso=0;
   ESCALA.forEach(function(e){
     var techo=(e.h===Infinity) ? Infinity : e.h*UIT;
@@ -403,7 +446,7 @@ function calcula(d){
   });
   c120=r2(c120);
   var saldo=r2(c120-d['127']-d['130']-d['131']);
-  return { '507':c507, '509':c509, '510':c510, '511':c511, '517':c517, '120':c120,
+  return { '507':c507, '509':c509, '510':c510, '511':c511, '514':c514, '517':c517, '120':c120,
            '142':saldo>0?saldo:0, 'fav':saldo<0?-saldo:0, '168':saldo>0?Math.round(saldo):0 };
 }
 
@@ -414,9 +457,9 @@ function arma(caja){
   FILAS.forEach(function(f){
     if(f[0]==='sec'){ h+='<div class="sec">'+f[1]+'</div>'; return; }
     var id=p+f[0];
-    h+='<div class="r'+(f[4]?' '+f[4]:'')+'"><span class="c">'+(f[0]==='fav'?'':f[0])+'</span>'+
+    h+='<div class="r'+(f[4]?' '+f[4]:'')+'"><span class="c">'+(/^\d+$/.test(f[0])?f[0]:'')+'</span>'+
        '<span class="n">'+f[1]+(f[2]?'<small>'+f[2]+'</small>':'')+'</span><span class="v">'+
-       (f[3]==='i' ? '<input type="text" inputmode="decimal" id="'+id+'" aria-label="Casilla '+f[0]+'">'
+       (f[3]==='i' ? '<input type="text" inputmode="decimal" id="'+id+'" aria-label="'+f[1]+'">'
                    : '<output id="'+id+'"></output>')+'</span></div>';
   });
   h+='</form><div class="acc"><button type="button" class="b">Limpiar</button></div>';
@@ -457,7 +500,7 @@ Array.prototype.forEach.call(botones, function(b){
   b.addEventListener('click', function(){ abre(b.getAttribute('data-tab')); history.replaceState(null,'','#'+b.getAttribute('data-tab')); });
 });
 var ini=location.hash.slice(1);
-if(ini && document.getElementById(ini) && /^(teoria|caso1|caso2)$/.test(ini)) abre(ini);
+if(ini && document.getElementById(ini) && /^(teoria|caso1|caso2|caso3)$/.test(ini)) abre(ini);
 })();
 </script>
 
