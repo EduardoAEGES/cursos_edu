@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-17b">
+<meta name="version" content="2026-10-17c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -543,6 +543,41 @@
   .reg td:first-child{ width:38%; color:var(--gris); font-weight:600; }
   @media (max-width:560px){ .reg td{ font-size:14px; padding:8px 11px; }
                             .reg td:first-child{ width:42%; } }
+  /* ---------- la sesión en PDF, una diapositiva por página ---------- */
+  #impreso{ display:none; }
+
+  @media print{
+    @page{ size:A4 landscape; margin:9mm 10mm; }
+    body.imprimiendo > *{ display:none !important; }
+    body.imprimiendo > #impreso{ display:block !important; }
+    #impreso{ background:#fff; font-family:'Nunito','Inter',system-ui,sans-serif;
+              color:var(--tinta); }
+    #impreso .pg{ page-break-after:always; break-after:page; }
+    #impreso .pg:last-child{ page-break-after:auto; break-after:auto; }
+    #impreso .pgcab{ display:flex; align-items:center; gap:12px; background:var(--marino);
+                     color:#fff; padding:7px 12px; border-radius:7px; margin-bottom:9px; }
+    #impreso .pgcab .et{ background:var(--rojo); color:#fff; border-radius:5px; padding:2px 8px;
+                         font-size:10px; font-weight:900; letter-spacing:.07em;
+                         text-transform:uppercase; white-space:nowrap; }
+    #impreso .pgcab .t{ flex:1; font-size:14px; font-weight:800; }
+    #impreso .pgcab .cu{ font-size:12px; font-weight:700; opacity:.85; }
+    #impreso .pgcab img{ height:17px; width:auto; background:#fff; border-radius:3px;
+                         padding:2px 4px; }
+    #impreso .pgcuerpo{ zoom:.72; }
+    #impreso .tarea, #impreso .perso, #impreso .tabenv, #impreso .datos,
+    #impreso .dos, #impreso .form, #impreso .cruz{ break-inside:avoid; }
+    #impreso .verr, #impreso .solu, #impreso .pist, #impreso .hbar,
+    #impreso .avisofx, #impreso .desliza{ display:none !important; }
+    #impreso .tapa{ margin-bottom:12px; }
+    #impreso .av{ display:none !important; }
+    #impreso .enc{ margin:0 0 6px; font-size:42px; font-weight:800; line-height:1.15; color:var(--tinta); }
+    #impreso .sub{ margin:0 0 22px; font-size:21px; color:#55607F; font-weight:600; }
+    #impreso select.cel{ -webkit-appearance:none; appearance:none; background:#F2FAF6;
+                         border-color:var(--verde); color:var(--tinta); }
+    #impreso .ficha{ cursor:default; }
+    /* el color sí se imprime */
+    #impreso, #impreso *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
 </style>
 </head>
 <body>
@@ -578,6 +613,9 @@
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
       <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+      <button class="o-btn" id="btnPDF" type="button"
+              title="Descarga la teor&iacute;a de las diapositivas en PDF, sin las actividades">
+        &#11015; Descargar diapositivas</button>
     </span>
   </div>
 
@@ -648,6 +686,8 @@
     <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
   <div class="nido" id="nidoPart"></div>
 </div>
+
+<div id="impreso" class="ai" aria-hidden="true"></div>
 
 <script src="aula.js"></script>
 <script src="reiniciar.js"></script>
@@ -2344,6 +2384,42 @@ function full(){
   }
 }
 $('btnFull').addEventListener('click', full);
+/* las diapositivas en PDF: solo la teoría, sin actividades */
+function armaPDF(){
+  var h='';
+  D.forEach(function(s,n){
+    h+='<section class="pg">'+
+         '<header class="pgcab">'+
+           '<span class="et">'+esc(s.et)+'</span>'+
+           '<span class="t">'+esc(s.t)+'</span>'+
+           '<span class="cu">'+(n+1)+' / '+D.length+'</span>'+
+           '<img src="marca/certus-azul.png" alt="Certus">'+
+         '</header>'+
+         '<div class="pgcuerpo">'+(s.h||'')+'</div>'+
+       '</section>';
+  });
+  $('impreso').innerHTML=h.replace(/ loading="lazy"/g,'');
+}
+$('btnPDF').addEventListener('click', function(){
+  sopla('Armando las diapositivas…');
+  armaPDF();
+  document.body.classList.add('imprimiendo');
+  /* espera a que carguen los personajes antes de abrir la impresión */
+  var imgs=qq('#impreso img').filter(function(x){ return !x.complete; });
+  var faltan=imgs.length, listo=false;
+  function sigue(){ if(listo) return; listo=true; setTimeout(imprime, 150); }
+  imgs.forEach(function(x){ x.addEventListener('load', function(){ if(--faltan<=0) sigue(); });
+                             x.addEventListener('error', function(){ if(--faltan<=0) sigue(); }); });
+  if(!faltan) sigue();
+  setTimeout(sigue, 3000);
+});
+function imprime(){
+  window.print();
+  setTimeout(function(){
+    document.body.classList.remove('imprimiendo');
+    $('impreso').innerHTML='';
+  }, 400);
+}
 $('btnFull2').addEventListener('click', full);
 document.addEventListener('fullscreenchange', function(){
   /* si el navegador sale de pantalla completa por su cuenta, el escenario vuelve a su sitio */
