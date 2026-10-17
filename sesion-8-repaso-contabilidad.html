@@ -217,10 +217,6 @@
            padding:8px 12px; line-height:1.3; }
   .via3 b:last-child{ background:var(--fucsia); }
   .via3 i{ font-style:normal; font-size:26px; font-weight:900; color:var(--fucsia); }
-  .candado{ margin-top:18px; display:flex; justify-content:flex-end; }
-  .candado .pide{ display:flex; gap:8px; flex-wrap:wrap; }
-  .candado input{ font:inherit; font-size:18px; padding:8px 12px; border:2px solid var(--linea);
-                  border-radius:10px; width:210px; max-width:100%; }
   .tapa .via{ position:relative; z-index:1; display:flex; gap:7px; flex-wrap:wrap; margin-top:15px; }
   .tapa .via b{ color:#fff; font-size:16px; font-weight:800; letter-spacing:.04em;
                 text-transform:uppercase; border:1px solid rgba(255,255,255,.42);
@@ -1017,43 +1013,7 @@ a5:{ tipo:'arr', titulo:'Actividad 6 - ¿En qué actividad del flujo de efectivo
            {id:'f2', t:'Pago de dividendos a los socios', g:'FIN'} ],
   cajas:[ {id:'OP', t:'Operación'}, {id:'INV', t:'Inversión'}, {id:'FIN', t:'Financiamiento'} ],
   fin:globo(P.idea,'Resuelto','Operación es el día a día del negocio. Inversión es comprar o vender lo '+
-      'que la empresa usa por varios años. Financiamiento es de dónde saca el dinero: bancos y socios.') },
-
-/* quiz final: oculto hasta que se abre con la clave */
-qz:{ tipo:'quiz', titulo:'Quiz final de repaso',
-  lista:[
-   { q:'El consumo de luz de diciembre se paga en enero. ¿En qué mes se registra el gasto?',
-     ops:['En enero, cuando se paga','En diciembre, cuando se consumió','En el mes que diga el gerente'], ok:1,
-     pq:'Principio de devengado: se registra cuando ocurre, no cuando se paga.' },
-   { q:'¿Cuál es la ecuación contable?',
-     ops:['Activo = Pasivo + Patrimonio','Activo = Ingresos − Gastos','Pasivo = Activo + Patrimonio'], ok:0,
-     pq:'Todo lo que la empresa tiene salió de lo que debe o de lo que pusieron los dueños.' },
-   { q:'Las ventas del mes son un...',
-     ops:['Activo','Pasivo','Ingreso'], ok:2,
-     pq:'Los ingresos aumentan el patrimonio y se muestran en el estado de resultados.' },
-   { q:'¿Qué régimen solo permite emitir boletas y tickets?',
-     ops:['NRUS','RMT','Régimen General'], ok:0,
-     pq:'El NRUS no emite facturas y paga una cuota mensual fija.' },
-   { q:'¿Qué libro registra las operaciones día a día mediante asientos de Debe y Haber?',
-     ops:['Libro Mayor','Libro Diario','Registro de Ventas'], ok:1,
-     pq:'El Diario es cronológico. El Mayor agrupa esos asientos por cuenta.' },
-   { q:'Una empresa le vende a otra empresa que quiere usar el crédito fiscal. ¿Qué emite?',
-     ops:['Boleta de venta','Factura','Guía de remisión'], ok:1,
-     pq:'Solo la factura da derecho al crédito fiscal del IGV.' },
-   { q:'Comparar el Libro Bancos con el estado de cuenta del banco se llama...',
-     ops:['Arqueo de caja','Conciliación bancaria','Fondo fijo'], ok:1,
-     pq:'El arqueo es el conteo sorpresa del efectivo. La conciliación cruza tus libros con el banco.' },
-   { q:'Un cliente en liquidación no te va a pagar. ¿Qué cuenta usas para estimarlo?',
-     ops:['12 Cuentas por cobrar comerciales','19 Estimación de cobranza dudosa','42 Cuentas por pagar comerciales'], ok:1,
-     pq:'La 19 recoge lo que probablemente no se va a cobrar.' },
-   { q:'¿Cuántos estados financieros hay según la NIC 1, sin contar las notas?',
-     ops:['Tres','Cuatro','Cinco'], ok:1,
-     pq:'Son cuatro estados. Con las notas forman los cinco documentos del juego completo.' },
-   { q:'La compra de una camioneta para la empresa, en el estado de flujos de efectivo, es una actividad de...',
-     ops:['Operación','Inversión','Financiamiento'], ok:1,
-     pq:'Comprar o vender bienes que se usan por varios años es inversión.' } ],
-  fin:globo2(P.pres, P.bien,'Quiz terminado','Si fallaste alguna, vuelve a la diapositiva de ese tema '+
-      'antes del examen. Diez preguntas, diez temas del curso: si las dominas, tienes la base.') }
+      'que la empresa usa por varios años. Financiamiento es de dónde saca el dinero: bancos y socios.') }
 
 };
 
@@ -1316,25 +1276,14 @@ var D=[
     globo(P.bien,'Un caso que confunde',
       'Una empresa puede tener utilidad y quedarse sin efectivo, si vendió mucho al crédito y todavía no '+
       'cobra. Por eso el estado de flujos se lee junto con el de resultados.')+
-    '<div class="av">Abajo hay seis movimientos de dinero. Llévalos a la actividad que les corresponde.</div>'+
-    '<div class="candado" id="candado"></div>' },
-
-/* 13 - oculta: solo aparece con la clave ------------------------- */
-{ et:'Quiz final', t:'Quiz final de repaso', clave:'qz', oculta:true,
-  h:'<p class="enc">Diez preguntas, diez temas del curso</p>'+
-    '<p class="sub">Respóndelas sin mirar las diapositivas. Si fallas una opción, se marca y puedes intentar otra</p>' }
+    '<div class="av">Abajo hay seis movimientos de dinero. Llévalos a la actividad que les corresponde.</div>' }
 ];
 
 /* ================= estado ================= */
 var LS='ctb_sem8_repaso_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','qz'];
-/* el quiz final queda oculto hasta que se abre con la clave */
-var CLAVE_QUIZ='46069339';
-function quizAbierto(){ return !!G.quiz; }
-function nD(){ return quizAbierto() ? D.length : D.length-1; }
-function claves(){ return CLAVES.filter(function(k){ return k!=='qz' || quizAbierto(); }); }
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{}, quiz:0 };
+var CLAVES=['a0','a1','a2','a3','a4','a5'];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 try{
@@ -1354,7 +1303,6 @@ function fusiona(d){
   CLAVES.forEach(function(k){
     if(d[k] && typeof d[k]==='object') for(var x in d[k]) G[k][x]=d[k][x];
   });
-  if(d.quiz) G.quiz=1;
   try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
   yaCruz={};
   pinta(true);
@@ -1376,8 +1324,8 @@ function cuantas(k){
 }
 function hechas(k){ return Object.keys(G[k]||{}).length; }
 function lista(k){ return hechas(k)>=cuantas(k); }
-function totalOk(){ var s=0; claves().forEach(function(k){ s+=hechas(k); }); return s; }
-function totalMax(){ var s=0; claves().forEach(function(k){ s+=cuantas(k); }); return s; }
+function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
 var i=0;
 
 /* ================= arrastre ================= */
@@ -1848,18 +1796,18 @@ function pinta(quieto){
   G.visto[i]=1; graba();
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
-  $('cu').textContent=(i+1)+' / '+nD();
+  $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
   if(s.clave) h+=vista(s.clave);
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
-  $('sig').disabled=(i===nD()-1);
+  $('sig').disabled=(i===D.length-1);
   var ok=totalOk(), mx=totalMax();
   $('riel').style.width=Math.round(ok/mx*100)+'%';
   $('marcador').textContent=ok+' de '+mx;
-  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+nD();
-  $('pts').innerHTML=D.slice(0, nD()).map(function(x,n){
+  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
+  $('pts').innerHTML=D.map(function(x,n){
     var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
@@ -1872,7 +1820,6 @@ function pinta(quieto){
   });
   cablea();
   if($('rutaVia')) pintaRuta();
-  if($('candado')) pintaCandado();
   pintaModo();
 }
 
@@ -2287,30 +2234,6 @@ function pintaRuta(){
   if(otra) otra.addEventListener('click', function(){ rutaResp=[]; pintaRuta(); });
 }
 
-/* ================= candado del quiz final ================= */
-function pintaCandado(){
-  var c=$('candado');
-  if(quizAbierto()){
-    c.innerHTML='<button type="button" class="o-btn o-btn-primary" id="irQuiz">Ir al quiz final &rsaquo;</button>';
-    $('irQuiz').addEventListener('click', function(){ va(D.length-1); });
-    return;
-  }
-  c.innerHTML='<button type="button" class="o-btn" id="abreCand">&#128274; Quiz final</button>'+
-    '<span class="pide" id="pideCand" hidden><input type="password" id="clCand" inputmode="numeric" '+
-    'autocomplete="off" placeholder="Clave del docente" aria-label="Clave del quiz">'+
-    '<button type="button" class="o-btn o-btn-primary" id="okCand">Abrir</button></span>';
-  $('abreCand').addEventListener('click', function(){
-    $('pideCand').hidden=false; $('abreCand').hidden=true; $('clCand').focus(); });
-  function prueba(){
-    var x=$('clCand');
-    if(x.value.trim()===CLAVE_QUIZ){
-      G.quiz=1; graba(); fanfarria(); va(D.length-1);
-    }else{ mal(); x.value=''; sacude($('pideCand')); sopla('Esa no es la clave'); }
-  }
-  $('okCand').addEventListener('click', prueba);
-  $('clCand').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); prueba(); } });
-}
-
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
@@ -2347,7 +2270,7 @@ function pintaModo(){
   $('pilModo').hidden=!preso;
   $('esc').classList.toggle('atado', preso);
   $('ant').disabled = preso || (i===0);
-  $('sig').disabled = preso || (i===nD()-1);
+  $('sig').disabled = preso || (i===D.length-1);
   qq('#pts button').forEach(function(x){ x.disabled=preso; });
 }
 
@@ -2372,11 +2295,10 @@ function recibeBatuta(d){
   modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
   if(modoClase==='guiado' && d && typeof d.lamina==='number'){
     var k=Math.max(0, Math.min(D.length-1, d.lamina));
-    if(k>=D.length-1 && !quizAbierto()){ G.quiz=1; graba(); }
     if(k!==i){
       i=k; elegida=null; pinta(); enfoca();
       nota(880,0,.1,.04,'triangle');
-      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+nD());
+      sopla('El docente pasó a la diapositiva '+(i+1)+' de '+D.length);
       return;
     }
   }
@@ -2398,7 +2320,7 @@ function enfoca(){
 }
 function va(n){
   if(atado()){ sopla('La clase va al ritmo del docente'); return; }
-  var k=Math.max(0, Math.min(nD()-1, n));
+  var k=Math.max(0, Math.min(D.length-1, n));
   if(k!==i){ i=k; elegida=null; pinta(); enfoca();
              if(modoClase==='guiado') difunde(); }
 }
@@ -2470,7 +2392,7 @@ document.addEventListener('keydown', function(e){
   if(e.key==='ArrowRight'||e.key==='PageDown'){ e.preventDefault(); va(i+1); }
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); va(i-1); }
   else if(e.key==='Home'){ e.preventDefault(); va(0); }
-  else if(e.key==='End'){ e.preventDefault(); va(nD()-1); }
+  else if(e.key==='End'){ e.preventDefault(); va(D.length-1); }
   else if(e.key==='Escape' && $('esc').classList.contains('full')){ full(); }
 });
 (function(){
@@ -2490,8 +2412,8 @@ document.addEventListener('keydown', function(e){
 
 /* ================= el aula ================= */
 function resumenAula(){
-  return { lamina:(i+1)+' / '+nD(), titulo:D[i].t, ok:totalOk(), total:totalMax(),
-           rejilla:claves().map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
@@ -2585,7 +2507,7 @@ if(window.Aula){
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
-  aviso:'Se borrarán tus respuestas de las seis actividades y del quiz.',
+  aviso:'Se borrarán tus respuestas de las seis actividades.',
   hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
