@@ -957,13 +957,23 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "cal", "titulo": "Actividad 1 - Los números de la moto", "intro": "Escribe solo el número, sin S/ y sin comas.", "lista": [{"q": "¿Cuánto se deprecia la moto en un año?", "f": "Costo ÷ años de vida útil", "d": "9,600 ÷ 5", "e": 1920, "tol": 0.5, "u": "soles", "ph": "1920", "pq": "Cada año la moto pierde 1,920 de su valor en libros."}, {"q": "¿Y en un mes?", "f": "Depreciación anual ÷ 12", "d": "1,920 ÷ 12", "e": 160, "tol": 0.5, "u": "soles", "pq": "Ese es el gasto que se registra cada mes."}, {"q": "¿Cuánta depreciación acumulada tenía al 31 de diciembre de 2025?", "f": "De agosto a diciembre son 5 meses", "d": "160 × 5", "e": 800, "tol": 0.5, "u": "soles", "pq": "Por eso el saldo inicial de la 391 es 800."}, {"q": "¿Cuál es el valor en libros de la moto al 31 de enero de 2026?", "f": "Costo − depreciación acumulada", "d": "9,600 − 960", "e": 8640, "tol": 0.5, "u": "soles", "pq": "Es lo que aparece neto en la situación financiera."}], "fin":globo(P.bien,"Resuelto","160 al mes, todos los meses, durante 60 meses. Al final la depreciación acumulada llegará a 9,600 y la moto quedará en cero en los libros, aunque todavía funcione.")},
+a0:{"tipo": "cal", "titulo": "Práctica 1 - Línea recta", "lista": [{"q": "Depreciación anual de la moto", "f": "(Costo − valor residual) ÷ años", "d": "9,600 ÷ 5", "e": 1920, "tol": 0.5, "u": "soles", "ph": "1920", "pq": "Cada año la moto pierde 1,920 de su valor en libros."}, {"q": "Depreciación mensual", "f": "Anual ÷ 12", "d": "1,920 ÷ 12", "e": 160, "tol": 0.5, "u": "soles", "pq": "Es el asiento de cada mes."}, {"q": "Depreciación del periodo 2025: de agosto a diciembre", "f": "Mensual × meses de uso", "d": "160 × 5", "e": 800, "tol": 0.5, "u": "soles", "pq": "Por eso la 391 empezó 2026 con 800."}]},
 
-a1:{"tipo": "tabla", "titulo": "Actividad 2 - El asiento de enero", "intro": "Elige la cuenta de cada línea y escribe el importe.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"ops": ["6814 Depreciación", "334 Vehículos - moto de reparto", "104 Cuenta corriente BCP", "635 Alquiler del local"], "ok": 0}, {"e": 160}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "334 Vehículos - moto de reparto", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 2}, {"t": ""}, {"e": 160}], [{"t": "Totales", "cl": "tot"}, {"t": "160", "cl": "tot"}, {"t": "160", "cl": "tot"}]], "fin":globo(P.idea,"Resuelto","Gasto en el Debe y depreciación acumulada en el Haber. Ninguna línea toca Caja ni la cuenta corriente: por eso no sale plata.")},
+a1:{"tipo": "cal", "titulo": "Práctica 2 - Lo que queda de la moto", "lista": [{"q": "Depreciación acumulada al 31 de enero de 2026", "f": "Agosto a enero son 6 meses", "d": "160 × 6", "e": 960, "tol": 0.5, "u": "soles", "pq": "Es el saldo de la 391 al cierre de enero."}, {"q": "Valor en libros al 31 de enero de 2026", "f": "Costo − depreciación acumulada", "d": "9,600 − 960", "e": 8640, "tol": 0.5, "u": "soles", "pq": "Es lo que aparece neto en la situación financiera."}]},
 
-a2:{"tipo": "sel", "titulo": "Actividad 3 - ¿Dónde se ve en los estados?", "lista": [{"q": "Al registrar la depreciación, ¿qué pasa con el efectivo?", "ops": ["Baja 160", "No se mueve", "Sube 160"], "ok": 1, "pq": "No hay pago: la moto ya se pagó en agosto."}, {"q": "El gasto de 160, ¿en qué estado aparece?", "ops": ["Estado de resultados", "Flujo de efectivo", "Ninguno"], "ok": 0, "pq": "Es un gasto del mes y baja la utilidad."}, {"q": "La depreciación acumulada de 960, ¿dónde aparece?", "ops": ["En el pasivo, como deuda", "En el activo, restando a la moto", "En el patrimonio"], "ok": 1, "pq": "Resta a la moto: 9,600 − 960 = 8,640."}], "fin":globo(P.expl,"Resuelto","La depreciación baja la utilidad pero no la caja. Por eso, en el flujo por el método indirecto, se vuelve a sumar a la utilidad: lo veremos en el encuentro 3.")},
+a2:{"tipo": "cal", "titulo": "Práctica 3 - Unidades producidas", "lista": [{"q": "Depreciación por kilómetro", "f": "Costo ÷ kilómetros de vida útil", "d": "9,600 ÷ 60,000", "e": 0.16, "tol": 0.005, "u": "soles", "ph": "0.16", "pq": "Cada kilómetro gasta 16 céntimos de la moto."}, {"q": "Febrero: la moto recorrió 1,500 km", "f": "Por kilómetro × kilómetros", "d": "0.16 × 1,500", "e": 240, "tol": 0.5, "u": "soles", "pq": "Más reparto, más depreciación."}, {"q": "Marzo: solo recorrió 800 km", "f": "Por kilómetro × kilómetros", "d": "0.16 × 800", "e": 128, "tol": 0.5, "u": "soles", "pq": "Con este método el gasto sigue al uso."}]},
 
-a3:{"tipo": "sel", "titulo": "Actividad 4 - Si fueras la dueña", "lista": [{"q": "En cuatro años y medio la moto quedará en cero en los libros. ¿Qué harías desde hoy?", "ops": ["Separar un poco cada mes para cambiarla cuando toque", "Dejar de registrar la depreciación para ganar más", "Venderla ya, antes de que pierda valor"], "ok": 0, "pq": "La depreciación avisa que un día habrá que reemplazarla. Dejar de registrarla solo maquilla la utilidad."}], "fin":globo2(P.pres,P.alum,"Para cerrar","La depreciación no es plata que sale: es el costo de la moto repartido en los meses en que trabaja para la tienda.")}
+a3:{"tipo": "tabla", "titulo": "Asiento 1 - La moto, enero de 2026", "intro": "Calcula el importe, elige las cuentas y escribe el asiento.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Depreciación del mes</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "334 Vehículos - moto de reparto", "6814 Depreciación"], "ok": 2}, {"e": 160}, {"t": ""}], [{"ops": ["334 Vehículos - moto de reparto", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 160}]], "fin":globo(P.idea,"Resuelto","Gasto en el Debe y depreciación acumulada en el Haber. Ninguna línea toca la caja.")},
+
+a4:{"tipo": "tabla", "titulo": "Asiento 2 - La laptop de la caja", "intro": "Calcula el importe, elige las cuentas y escribe el asiento.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Depreciación del mes</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["336 Equipos diversos - laptop", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 75}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "336 Equipos diversos - laptop", "391 Depreciación acumulada"], "ok": 2}, {"t": ""}, {"e": 75}]], "fin":globo(P.idea,"Resuelto","3,600 ÷ 4 = 900 al año; 900 ÷ 12 = 75 al mes. Equipos de cómputo: 25 % al año, el máximo de SUNAT.")},
+
+a5:{"tipo": "tabla", "titulo": "Asiento 3 - Los exhibidores de la tienda", "intro": "Calcula el importe, elige las cuentas y escribe el asiento.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Depreciación del mes</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["335 Muebles - exhibidores", "635 Alquiler del local", "6814 Depreciación"], "ok": 2}, {"e": 50}, {"t": ""}], [{"ops": ["201 Mercaderías", "335 Muebles - exhibidores", "391 Depreciación acumulada"], "ok": 2}, {"t": ""}, {"e": 50}]], "fin":globo(P.idea,"Resuelto","6,000 ÷ 10 = 600 al año; 600 ÷ 12 = 50 al mes.")},
+
+a6:{"tipo": "tabla", "titulo": "Asiento 4 - La estampadora de zapatillas", "intro": "Calcula el importe, elige las cuentas y escribe el asiento.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Depreciación del mes</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 600}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 600}]], "fin":globo(P.idea,"Resuelto","(18,000 − 2,000) ÷ 40,000 = 0.40 por par; 0.40 × 1,500 = 600. Unidades producidas.")},
+
+a7:{"tipo": "tabla", "titulo": "Asiento 5 - El local comercial", "intro": "Calcula el importe, elige las cuentas y escribe el asiento.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Depreciación del mes</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["332 Edificaciones - local comercial", "635 Alquiler del local", "6814 Depreciación"], "ok": 2}, {"e": 625}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "332 Edificaciones - local comercial", "391 Depreciación acumulada"], "ok": 2}, {"t": ""}, {"e": 625}]], "fin":globo(P.idea,"Resuelto","150,000 ÷ 20 = 7,500 al año; 7,500 ÷ 12 = 625 al mes. Edificaciones: 5 % al año.")},
+
+a8:{"tipo": "sel", "titulo": "Si fueras la dueña", "lista": [{"q": "Al registrar la depreciación, ¿qué pasa con el efectivo?", "ops": ["Baja", "No se mueve", "Sube"], "ok": 1, "pq": "No hay pago: el bien ya se pagó cuando se compró."}, {"q": "La depreciación acumulada, ¿dónde aparece?", "ops": ["En el pasivo", "En el activo, restando al bien", "En el patrimonio"], "ok": 1, "pq": "Moto: 9,600 − 960 = 8,640 al 31 de enero."}, {"q": "La moto quedará en cero en los libros en 2030. ¿Qué harías desde hoy?", "ops": ["Separar un poco cada mes para reemplazarla", "Dejar de registrar la depreciación para ganar más", "Venderla ya"], "ok": 0, "pq": "La depreciación avisa que un día habrá que reemplazarla."}], "fin":globo2(P.pres,P.alum,"Para cerrar","La depreciación no es plata que sale: es el costo del bien repartido en los meses en que trabaja para la tienda.")}
 
 };
 
@@ -971,33 +981,69 @@ a3:{"tipo": "sel", "titulo": "Actividad 4 - Si fueras la dueña", "lista": [{"q"
 var D=[
 
 { et:"El caso", t:"La moto de reparto que se desgasta",
-  h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>La moto de reparto que se desgasta</h2><p>Encuentro 1 - El Espresso - Depreciación</p><div class=\"via\"><b>Cálculo</b><b>Asiento</b><b>Efecto en los estados</b></div></div>"+
-    globo(P.alum,"Mateo, el vendedor","Rosa registró un gasto de 160 por la moto, pero en enero no le pagamos nada a nadie por ella. ¿Cómo puede ser un gasto si no salió plata?")+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Dato de la moto</th><th></th></tr></thead><tbody><tr><td>Fecha de compra</td><td>1 de agosto de 2025</td></tr><tr><td>Costo, sin IGV</td><td>S/ 9,600</td></tr><tr><td>Vida útil</td><td>5 años</td></tr><tr><td>Valor al final de su vida útil</td><td>Cero</td></tr><tr><td>Método</td><td>Línea recta: el mismo monto cada mes</td></tr></tbody></table></div>" },
+  h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>La moto de reparto que se desgasta</h2><p>Encuentro 1 - El Espresso - Depreciación según la NIC 16</p><div class=\"via\"><b>Teoría</b><b>Cálculo</b><b>Asientos</b></div></div>"+
+    globo(P.alum,"Mateo, el vendedor","Rosa registró un gasto de 160 por la moto, pero en enero no le pagamos nada a nadie por ella. ¿Cómo puede ser un gasto si no salió plata?") },
 
-{ et:"Teoría", t:"Qué es la depreciación",
-  h:"<p class=\"enc\">La moto se gasta un poco cada mes</p><p class=\"sub\">Su costo se reparte entre los meses en que se usa, aunque se haya pagado de una sola vez</p>"+
-    "<div class=\"form\">DEPRECIACIÓN MENSUAL = COSTO ÷ VIDA ÚTIL EN MESES<small>9,600 ÷ 60 meses</small></div>"+
-    "<div class=\"dos\"><div class=\"fc\"><h4>Debe</h4><div class=\"c\"><p><b>6814 Depreciación</b>: es un gasto del mes. Va al estado de resultados.</p></div></div><div class=\"fc rj\"><h4>Haber</h4><div class=\"c\"><p><b>391 Depreciación acumulada</b>: junta lo que ya se gastó de la moto. Resta a la moto en la situación financiera.</p></div></div></div>"+
-    globo(P.idea,"Rosa, la contadora","Nunca abono la cuenta de la moto. Su costo se queda igual y lo que cambia es la depreciación acumulada. Así se sabe cuánto costó y cuánto le queda de vida.") },
+{ et:"Los datos", t:"Los datos de la moto",
+  h:"<p class=\"enc\">La moto de reparto de Suela &amp; Co.</p><p class=\"sub\">Con estos datos vamos a calcular y registrar su depreciación</p>"+
+    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Dato</th><th></th></tr></thead><tbody><tr><td>Fecha de compra</td><td>1 de agosto de 2025</td></tr><tr><td>Costo, sin IGV</td><td>S/ 9,600</td></tr><tr><td>Valor residual</td><td>Cero: al final no se espera venderla</td></tr><tr><td>Vida útil</td><td>5 años, o 60,000 kilómetros</td></tr><tr><td>Método que usa Rosa</td><td>Línea recta</td></tr></tbody></table></div>" },
 
-{ et:"Cálculo", t:"Calcula la depreciación", clave:"a0",
-  h:"<p class=\"enc\">Antes del asiento, el cálculo</p><p class=\"sub\">Con el costo y la vida útil sale todo lo demás</p>" },
+{ et:"NIC 16", t:"Conceptos de la NIC 16",
+  h:"<p class=\"enc\">Lo que dice la NIC 16, en corto</p><p class=\"sub\">Propiedad, planta y equipo: los bienes que la empresa usa por más de un año</p>"+
+    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Concepto</th><th>Qué es</th></tr></thead><tbody><tr><td><b>Costo</b></td><td>Precio de compra más lo necesario para dejar el bien listo para usar. Sin el IGV que se recupera</td></tr><tr><td><b>Vida útil</b></td><td>El tiempo, o las unidades, que se espera usar el bien</td></tr><tr><td><b>Valor residual</b></td><td>Lo que se espera obtener por el bien al final de su vida útil</td></tr><tr><td><b>Importe depreciable</b></td><td>Costo − valor residual</td></tr><tr><td><b>Depreciación</b></td><td>El importe depreciable repartido, de forma sistemática, en su vida útil</td></tr><tr><td><b>Valor en libros</b></td><td>Costo − depreciación acumulada</td></tr></tbody></table></div>" },
 
-{ et:"Asiento", t:"Registra la depreciación de enero", clave:"a1",
-  h:"<p class=\"enc\">31 de enero: depreciación de la moto</p><p class=\"sub\">Glosa: por la depreciación de la moto de reparto del mes de enero</p>" },
+{ et:"Reglas", t:"Cuándo y qué se deprecia",
+  h:"<p class=\"enc\">Tres reglas que no se olvidan</p><p class=\"sub\">Según la NIC 16</p>"+
+    "<div class=\"dos\"><div class=\"fc\"><h4>Cuándo empieza</h4><div class=\"c\"><p>Cuando el bien está disponible para usarse, aunque todavía no se use. La moto se compró el 1 de agosto: se deprecia desde agosto.</p></div></div><div class=\"fc rj\"><h4>Qué no se deprecia</h4><div class=\"c\"><p>Los terrenos: no se gastan con el uso. Si se compra un local, se separa el terreno de la construcción.</p></div></div></div>"+
+    globo(P.idea,"Rosa, la contadora","Para SUNAT hay porcentajes máximos por año: vehículos 20 %, equipos de cómputo 25 %, edificaciones 5 %. La moto a 5 años es 20 % por año: está dentro del límite.") },
 
-{ et:"Efecto", t:"El efecto en los estados", clave:"a2",
-  h:"<p class=\"enc\">Un gasto que no sale de la caja</p><p class=\"sub\">Tres preguntas rápidas</p>" },
+{ et:"Línea recta", t:"Método de línea recta",
+  h:"<p class=\"enc\">El mismo monto en cada periodo</p><p class=\"sub\">Sirve cuando el bien se usa más o menos igual todos los meses</p>"+
+    "<div class=\"form\">DEPRECIACIÓN ANUAL = (COSTO − VALOR RESIDUAL) ÷ AÑOS DE VIDA ÚTIL<small>depreciación mensual = depreciación anual ÷ 12</small></div>"+
+    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Moto de reparto</th><th>Cálculo</th><th class=\"n\">Resultado</th></tr></thead><tbody><tr><td>Depreciación anual</td><td>(9,600 − 0) ÷ 5</td><td class=\"n\">1,920</td></tr><tr><td>Depreciación mensual</td><td>1,920 ÷ 12</td><td class=\"n\">160</td></tr></tbody></table></div>" },
 
-{ et:"Lectura", t:"Si fueras la dueña, ¿qué decidirías?", clave:"a3",
-  h:"<p class=\"enc\">El número que nadie paga pero todos usan</p><p class=\"sub\">Una decisión con lo que acabas de registrar</p>" }
+{ et:"Unidades", t:"Método de unidades producidas",
+  h:"<p class=\"enc\">Se deprecia según cuánto se usa</p><p class=\"sub\">Sirve cuando el uso cambia mucho de un mes a otro: kilómetros, horas, pares fabricados</p>"+
+    "<div class=\"form\">DEPRECIACIÓN POR UNIDAD = (COSTO − VALOR RESIDUAL) ÷ UNIDADES DE VIDA ÚTIL<small>depreciación del periodo = depreciación por unidad × unidades usadas en el periodo</small></div>"+
+    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Moto de reparto</th><th>Cálculo</th><th class=\"n\">Resultado</th></tr></thead><tbody><tr><td>Depreciación por kilómetro</td><td>9,600 ÷ 60,000 km</td><td class=\"n\">0.16</td></tr><tr><td>Enero: 1,200 km recorridos</td><td>0.16 × 1,200</td><td class=\"n\">192</td></tr></tbody></table></div>" },
+
+{ et:"Asiento", t:"Cómo se registra",
+  h:"<p class=\"enc\">Un gasto que no sale de la caja</p><p class=\"sub\">Cada fin de mes, el mismo asiento</p>"+
+    "<div class=\"dos\"><div class=\"fc\"><h4>Debe</h4><div class=\"c\"><p><b>6814 Depreciación</b>: gasto del mes. Va al estado de resultados.</p></div></div><div class=\"fc rj\"><h4>Haber</h4><div class=\"c\"><p><b>391 Depreciación acumulada</b>: junta lo que ya se gastó del bien. Resta al activo en la situación financiera.</p></div></div></div>"+
+    globo(P.idea,"Rosa, la contadora","Nunca abono la cuenta de la moto: su costo se queda igual. Lo que crece es la depreciación acumulada.") },
+
+{ et:"Práctica 1", t:"Depreciación anual, mensual y del periodo", clave:"a0",
+  h:"<p class=\"enc\">Método de línea recta</p>" },
+
+{ et:"Práctica 2", t:"Depreciación acumulada y valor en libros", clave:"a1",
+  h:"<p class=\"enc\">¿Cuánto vale hoy la moto en los libros?</p>" },
+
+{ et:"Práctica 3", t:"Si Rosa usara kilómetros", clave:"a2",
+  h:"<p class=\"enc\">Método de unidades producidas</p>" },
+
+{ et:"Asiento 1", t:"Asiento 1 - La moto, enero de 2026", clave:"a3",
+  h:"<p class=\"enc\">La moto de reparto</p><p class=\"sub\">Costo 9,600 - Vida útil 5 años - Línea recta</p>" },
+
+{ et:"Asiento 2", t:"Asiento 2 - La laptop de la caja", clave:"a4",
+  h:"<p class=\"enc\">La laptop de la caja</p><p class=\"sub\">Costo 3,600 - Vida útil 4 años - Sin valor residual - Línea recta - Depreciación de un mes</p>" },
+
+{ et:"Asiento 3", t:"Asiento 3 - Los exhibidores de la tienda", clave:"a5",
+  h:"<p class=\"enc\">Los exhibidores de la tienda</p><p class=\"sub\">Costo 6,000 - Vida útil 10 años - Sin valor residual - Línea recta - Depreciación de un mes</p>" },
+
+{ et:"Asiento 4", t:"Asiento 4 - La estampadora de zapatillas", clave:"a6",
+  h:"<p class=\"enc\">La estampadora de zapatillas</p><p class=\"sub\">Costo 18,000 - Valor residual 2,000 - Vida útil 40,000 pares - En marzo estampó 1,500 pares</p>" },
+
+{ et:"Asiento 5", t:"Asiento 5 - El local comercial", clave:"a7",
+  h:"<p class=\"enc\">El local comercial</p><p class=\"sub\">Construcción 150,000 (el terreno va aparte y no se deprecia) - Vida útil 20 años - Línea recta - Un mes</p>" },
+
+{ et:"Lectura", t:"Si fueras la dueña, ¿qué decidirías?", clave:"a8",
+  h:"<p class=\"enc\">El efecto en los estados</p><p class=\"sub\">Tres preguntas para cerrar</p>" }
 ];
 
 /* ================= estado ================= */
 var LS='cafe_e1_espresso_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3'];
+var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7','a8'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
