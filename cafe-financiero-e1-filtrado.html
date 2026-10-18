@@ -579,6 +579,27 @@
   .cua.fija .n small{ color:#55607F; }
   .ficha.fija{ display:none; }
   .nuevo{ background:#FFF4CC; }
+  /* animaciones de la teoría */
+  .vida{ margin:4px 0 8px; }
+  .vida .vb{ position:relative; height:48px; border-radius:12px; background:var(--aqua); overflow:hidden; }
+  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); animation:gasta 7s ease-in-out infinite; }
+  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; animation:anda 7s ease-in-out infinite; }
+  .vida .tx{ position:absolute; right:14px; top:12px; color:#fff; font-weight:800; font-size:19px; }
+  .vida .anos{ display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#55607F; margin-top:6px; }
+  .vida .ley{ display:flex; gap:18px; font-size:16px; font-weight:700; margin-top:4px; color:var(--tinta); }
+  .vida .ley i{ display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
+  @keyframes gasta{ 0%{ width:0 } 85%,100%{ width:100% } }
+  @keyframes anda{ 0%{ left:0 } 85%,100%{ left:calc(100% - 46px) } }
+  .barras{ display:flex; align-items:flex-end; gap:6px; height:120px; margin:4px 0 14px; padding:0 2px; border-bottom:3px solid var(--linea); }
+  .barras .b{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; transform:scaleY(0); animation:sube .5s ease-out forwards; }
+  .barras .b:nth-child(odd) i{ background:var(--aqua); }
+  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; opacity:0; animation:ve .3s ease-out forwards; }
+  .barras .b em{ font-style:normal; font-size:12px; font-weight:700; color:#55607F; margin-top:3px; }
+  @keyframes sube{ to{ transform:scaleY(1) } }
+  @keyframes ve{ to{ opacity:1 } }
+  .defi{ font-size:22px; line-height:1.55; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
+  @media print{ .vida .dep{ animation:none; width:60%; } .vida .moto{ animation:none; left:55%; } .barras .b i{ animation:none; transform:none; } .barras .b span{ animation:none; opacity:1; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
