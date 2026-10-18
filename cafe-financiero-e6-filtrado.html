@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-18a">
+<meta name="version" content="2026-10-18-234853">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -135,7 +135,21 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
-  @media (min-width:1100px){ .cuadro.compacto.lado.hojat{ grid-template-columns:auto 1fr !important; } }
+  .cuadro.hojat{ display:grid; grid-template-columns:1fr !important; gap:12px; }
+  .cuadro.hojat .ht{ max-height:var(--htalto, 36vh); overflow-y:auto; }
+  .cuadro.hojat .cua{ min-height:0 !important; padding:2px 12px !important; } .cuadro.hojat .cua .n{ font-size:15.5px !important; line-height:1.25 !important; } .cuadro.hojat .cua .v{ font-size:16px !important; } .cuadro.hojat h6{ padding:2px 12px !important; font-size:12.5px !important; } .cuadro.hojat .sub, .cuadro.hojat .gran{ padding:2px 12px !important; min-height:0 !important; } .cuadro.hojat .ctit{ padding:6px 12px !important; font-size:15px !important; } .cuadro.hojat .cuadra{ padding:6px 12px; font-size:16px; }
+  .cuadro.hojat .htcab{ position:sticky; top:0; z-index:3; }
+  .cuadro.hojat .cols{ display:grid !important; grid-template-columns:1fr 2fr !important; gap:12px; align-items:start; }
+  .cuadro.hojat .cols > .col{ max-height:var(--esalto, 29vh); overflow-y:auto; }
+  .cuadro.hojat .cols > .col > .ctit{ position:sticky; top:0; z-index:2; }
+  .cuadro.hojat .ht, .cuadro.hojat .cols > .col{ scrollbar-width:auto; scrollbar-color:#9AA8C7 #EEF2FA; }
+  .cuadro.hojat .ht::-webkit-scrollbar, .cuadro.hojat .cols > .col::-webkit-scrollbar{ width:12px; } .cuadro.hojat .ht::-webkit-scrollbar-thumb, .cuadro.hojat .cols > .col::-webkit-scrollbar-thumb{ background:#9AA8C7; border-radius:6px; } .cuadro.hojat .ht::-webkit-scrollbar-track, .cuadro.hojat .cols > .col::-webkit-scrollbar-track{ background:#EEF2FA; }
+  .cuadro .col.junto .partes{ display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .cuadro .col.parte{ border:0 !important; border-radius:0 !important; box-shadow:none !important; margin:0 !important; max-height:none !important; overflow:visible !important; }
+  .cuadro .col.parte + .col.parte{ border-left:2px solid var(--linea) !important; }
+  .cuadro .col.parte > .ctit{ background:#EDF2FF !important; color:var(--marino) !important; font-size:14px !important; padding:5px 12px !important; position:static !important; }
+  @media (max-width:1099px){ .cuadro.hojat .cols, .cuadro .col.junto .partes{ grid-template-columns:1fr !important; } }
+
   .cuadro .banco:has(.ht){ padding:0 !important; gap:0 !important; display:block !important; }
   .ht{ font-size:14px; }
   .ht .htr, .cuadro .ht .ficha.htf{ display:grid !important; grid-template-columns:var(--htcols); align-items:center; width:100%; gap:0; }
@@ -1619,7 +1633,7 @@ function cuaValor(A, g, id){
   return tot;
 }
 function hojaTrabajo(A, g){
-  var T=A.hojaT, h='<div class="ht" style="--htcols:'+T.cols+'">'+T.cab;
+  var T=A.hojaT, h='<div class="ht" style="--htcols:'+T.cols+'"><div class="htcab">'+T.cab+'</div>';
   A.fichas.forEach(function(f){
     if(f.fijo) return;
     if(f.id===T.antes) h+=T.mid;
@@ -1670,7 +1684,8 @@ function vCuadro(k){
     (A.hojaT ? hojaTrabajo(A, g) : libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
     '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+(A.cols.length===3?' c3':'')+'">';
   A.cols.forEach(function(c){
-    h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    if(c.juntoIni) h+='<div class="col junto"><h5 class="ctit">'+esc(c.juntoIni)+'</h5><div class="partes">';
+    h+='<div class="col'+(c.parte?' parte':'')+'"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     if(c.matriz){ h+=matrizHtml(k, A, g, c)+'</div>'; return; }
     c.bloques.forEach(function(b){
       if(b.t) h+='<h6>'+esc(b.t)+'</h6>';
@@ -1698,6 +1713,7 @@ function vCuadro(k){
     if(c.gran) h+='<div class="gran"><span>'+esc(c.gran.t)+'</span><b>'+
                   mil(cuaValor(A, g, c.gran.id))+'</b></div>';
     h+='</div>';
+    if(c.juntoFin) h+='</div></div>';
   });
   h+='</div>';
   if(A.cuadra && A.fichas.some(function(f){ return !f.fijo && g[f.id]; })){
