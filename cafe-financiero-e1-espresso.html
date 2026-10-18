@@ -582,24 +582,30 @@
   /* animaciones de la teoría */
   .vida{ margin:4px 0 8px; }
   .vida .vb{ position:relative; height:48px; border-radius:12px; background:var(--aqua); overflow:hidden; }
-  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); animation:gasta 7s ease-in-out infinite; }
-  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; animation:anda 7s ease-in-out infinite; }
+  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); }
+  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; }
   .vida .tx{ position:absolute; right:14px; top:12px; color:#fff; font-weight:800; font-size:19px; }
   .vida .anos{ display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#55607F; margin-top:6px; }
   .vida .ley{ display:flex; gap:18px; font-size:16px; font-weight:700; margin-top:4px; color:var(--tinta); }
   .vida .ley i{ display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
-  @keyframes gasta{ 0%{ width:0 } 85%,100%{ width:100% } }
-  @keyframes anda{ 0%{ left:0 } 85%,100%{ left:calc(100% - 46px) } }
-  .barras{ display:flex; align-items:flex-end; gap:6px; height:120px; margin:4px 0 14px; padding:0 2px; border-bottom:3px solid var(--linea); }
+  @keyframes gasta{ 0%{ width:0 } 100%{ width:100% } }
+  @keyframes anda{ 0%{ left:0 } 100%{ left:calc(100% - 46px) } }
+  .barras{ display:flex; align-items:flex-end; gap:6px; height:76px; margin:2px 0 8px; padding:0 2px; border-bottom:3px solid var(--linea); }
   .barras .b{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
-  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; transform:scaleY(0); animation:sube .5s ease-out forwards; }
+  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; }
   .barras .b:nth-child(odd) i{ background:var(--aqua); }
-  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; opacity:0; animation:ve .3s ease-out forwards; }
+  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; }
   .barras .b em{ font-style:normal; font-size:12px; font-weight:700; color:#55607F; margin-top:3px; }
   @keyframes sube{ to{ transform:scaleY(1) } }
   @keyframes ve{ to{ opacity:1 } }
-  .defi{ font-size:22px; line-height:1.55; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
-  @media print{ .vida .dep{ animation:none; width:60%; } .vida .moto{ animation:none; left:55%; } .barras .b i{ animation:none; transform:none; } .barras .b span{ animation:none; opacity:1; } }
+  .defi{ font-size:21px; line-height:1.45; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
+  .vida.go .dep{ animation:gasta 12s linear forwards; }
+  .vida.go .moto{ animation:anda 12s linear forwards; }
+  .barras.go .b i{ transform:scaleY(0); animation:sube .9s ease-out forwards; }
+  .barras.go .b span{ opacity:0; animation:ve .5s ease-out forwards; }
+  .anibtn{ margin:0 0 8px; background:var(--fucsia) !important; color:#fff !important; border:0 !important; font:inherit; font-size:18px !important; font-weight:800; padding:9px 18px !important; border-radius:10px !important; cursor:pointer; }
+  .anibtn:hover{ filter:brightness(1.08); }
+  @media print{ .anibtn{ display:none; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
@@ -978,7 +984,7 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "quiz", "titulo": "Miniquiz", "lista": [{"q": "Cuando Rosa registra la depreciación de la moto, ¿sale plata del banco?", "ops": ["Sí, se paga 160 cada mes", "No: la moto ya se pagó; solo se reparte su costo"], "ok": 1, "pq": "Es un gasto sin pago."}, {"q": "Al 31 de enero la moto lleva 6 meses de uso, a 160 por mes. ¿Cuánto vale en libros?", "ops": ["9,600", "8,640", "960"], "ok": 1, "pq": "9,600 − (160 × 6) = 9,600 − 960 = 8,640."}]},
+a0:{"tipo": "cal", "titulo": "Calcula: un exhibidor de 5,000 que dura 5 años", "lista": [{"q": "Depreciación anual", "f": "Costo ÷ años de vida útil", "d": "5,000 ÷ 5", "e": 1000, "tol": 0.5, "u": "soles", "ph": "1000", "pq": "Cada año el exhibidor pierde 1,000 de su valor en libros."}, {"q": "Valor en libros después de 2 años", "f": "Costo − depreciación de 2 años", "d": "5,000 − (1,000 × 2)", "e": 3000, "tol": 0.5, "u": "soles", "pq": "Lo que todavía le queda por gastar al exhibidor."}]},
 
 a1:{"tipo": "par", "titulo": "Arrastra cada definición a su concepto", "fichas": [{"id": "c1", "t": "Precio de compra + lo necesario para dejarlo listo para usar"}, {"id": "c2", "t": "El tiempo o las unidades que se espera usar el bien"}, {"id": "c3", "t": "Lo que se espera obtener por el bien al final"}, {"id": "c4", "t": "Costo − valor residual"}, {"id": "c5", "t": "Costo − depreciación acumulada"}], "huecos": [{"id": "c1", "q": "Costo"}, {"id": "c2", "q": "Vida útil"}, {"id": "c3", "q": "Valor residual"}, {"id": "c4", "q": "Importe depreciable"}, {"id": "c5", "q": "Valor en libros"}]},
 
@@ -1005,14 +1011,14 @@ var D=[
 
 { et:"Qué es", t:"¿Qué es la depreciación?", clave:"a0",
   h:"<div class=\"defi\"><b>Depreciación</b> es la pérdida de valor de un bien por el uso y el paso del tiempo. En contabilidad, según la NIC 16, es <b>repartir su costo</b> entre los meses en que se usa.</div>"+
-    "<div class=\"vida\"><div class=\"vb\"><i class=\"dep\"></i><span class=\"moto\">🛵</span><span class=\"tx\">9,600</span></div><div class=\"anos\"><span>Ago 2025</span><span>2026</span><span>2027</span><span>2028</span><span>2029</span><span>Jul 2030</span></div><div class=\"ley\"><span><i style=\"background:var(--aqua)\"></i>Valor en libros</span><span><i style=\"background:var(--fucsia)\"></i>Depreciación acumulada</span></div></div>" },
+    "<button type=\"button\" class=\"o-btn anibtn\" onclick=\"var z=this.nextElementSibling;z.classList.remove('go');void z.offsetWidth;z.classList.add('go')\">&#9654; Ver cómo se desgasta la moto</button><div class=\"vida\"><div class=\"vb\"><i class=\"dep\"></i><span class=\"moto\">🛵</span><span class=\"tx\">Costo 9,600</span></div><div class=\"anos\"><span>Ago 2025</span><span>2026</span><span>2027</span><span>2028</span><span>2029</span><span>Jul 2030</span></div><div class=\"ley\"><span><i style=\"background:var(--aqua)\"></i>Valor en libros</span><span><i style=\"background:var(--fucsia)\"></i>Depreciación acumulada</span></div></div>" },
 
 { et:"NIC 16", t:"Los conceptos de la NIC 16", clave:"a1",
   h:"<p class=\"enc\">Cinco palabras para calcular la depreciación</p><p class=\"sub\">Se deprecia desde que el bien está listo para usarse. Los terrenos no se deprecian</p>" },
 
 { et:"Caso 1", t:"Caso 1 - Línea recta: la moto de reparto", clave:"a2",
   h:"<div class=\"defi\"><b>Enunciado.</b> Suela &amp; Co. compró la moto de reparto el 1 de agosto de 2025 a <b>9,600</b> sin IGV. No tendrá valor residual y su vida útil es de <b>5 años</b>. Se deprecia en línea recta: el mismo monto cada mes.</div>"+
-    "<div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">160</span><i style=\"height:82%;animation-delay:0.00s\"></i><em>Ene</em></div><div class=\"b\"><span style=\"animation-delay:0.12s\">160</span><i style=\"height:82%;animation-delay:0.12s\"></i><em>Feb</em></div><div class=\"b\"><span style=\"animation-delay:0.24s\">160</span><i style=\"height:82%;animation-delay:0.24s\"></i><em>Mar</em></div><div class=\"b\"><span style=\"animation-delay:0.36s\">160</span><i style=\"height:82%;animation-delay:0.36s\"></i><em>Abr</em></div><div class=\"b\"><span style=\"animation-delay:0.48s\">160</span><i style=\"height:82%;animation-delay:0.48s\"></i><em>May</em></div><div class=\"b\"><span style=\"animation-delay:0.60s\">160</span><i style=\"height:82%;animation-delay:0.60s\"></i><em>Jun</em></div><div class=\"b\"><span style=\"animation-delay:0.72s\">160</span><i style=\"height:82%;animation-delay:0.72s\"></i><em>Jul</em></div><div class=\"b\"><span style=\"animation-delay:0.84s\">160</span><i style=\"height:82%;animation-delay:0.84s\"></i><em>Ago</em></div><div class=\"b\"><span style=\"animation-delay:0.96s\">160</span><i style=\"height:82%;animation-delay:0.96s\"></i><em>Sep</em></div><div class=\"b\"><span style=\"animation-delay:1.08s\">160</span><i style=\"height:82%;animation-delay:1.08s\"></i><em>Oct</em></div><div class=\"b\"><span style=\"animation-delay:1.20s\">160</span><i style=\"height:82%;animation-delay:1.20s\"></i><em>Nov</em></div><div class=\"b\"><span style=\"animation-delay:1.32s\">160</span><i style=\"height:82%;animation-delay:1.32s\"></i><em>Dic</em></div></div>" },
+    "<button type=\"button\" class=\"o-btn anibtn\" onclick=\"var z=this.nextElementSibling;z.classList.remove('go');void z.offsetWidth;z.classList.add('go')\">&#9654; Ver mes a mes</button><div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">160</span><i style=\"height:82%;animation-delay:0.00s\"></i><em>Ene</em></div><div class=\"b\"><span style=\"animation-delay:0.45s\">160</span><i style=\"height:82%;animation-delay:0.45s\"></i><em>Feb</em></div><div class=\"b\"><span style=\"animation-delay:0.90s\">160</span><i style=\"height:82%;animation-delay:0.90s\"></i><em>Mar</em></div><div class=\"b\"><span style=\"animation-delay:1.35s\">160</span><i style=\"height:82%;animation-delay:1.35s\"></i><em>Abr</em></div><div class=\"b\"><span style=\"animation-delay:1.80s\">160</span><i style=\"height:82%;animation-delay:1.80s\"></i><em>May</em></div><div class=\"b\"><span style=\"animation-delay:2.25s\">160</span><i style=\"height:82%;animation-delay:2.25s\"></i><em>Jun</em></div><div class=\"b\"><span style=\"animation-delay:2.70s\">160</span><i style=\"height:82%;animation-delay:2.70s\"></i><em>Jul</em></div><div class=\"b\"><span style=\"animation-delay:3.15s\">160</span><i style=\"height:82%;animation-delay:3.15s\"></i><em>Ago</em></div><div class=\"b\"><span style=\"animation-delay:3.60s\">160</span><i style=\"height:82%;animation-delay:3.60s\"></i><em>Sep</em></div><div class=\"b\"><span style=\"animation-delay:4.05s\">160</span><i style=\"height:82%;animation-delay:4.05s\"></i><em>Oct</em></div><div class=\"b\"><span style=\"animation-delay:4.50s\">160</span><i style=\"height:82%;animation-delay:4.50s\"></i><em>Nov</em></div><div class=\"b\"><span style=\"animation-delay:4.95s\">160</span><i style=\"height:82%;animation-delay:4.95s\"></i><em>Dic</em></div></div>" },
 
 { et:"Caso 1", t:"Caso 1 - Registra la depreciación de enero", clave:"a3",
   h:"<div class=\"defi\"><b>Enunciado.</b> Registra la depreciación de la moto del mes de enero de 2026.</div>"+
@@ -1020,7 +1026,7 @@ var D=[
 
 { et:"Caso 2", t:"Caso 2 - Unidades producidas: la estampadora", clave:"a4",
   h:"<div class=\"defi\"><b>Enunciado.</b> Suela &amp; Co. compró una estampadora para personalizar zapatillas a <b>18,000</b>. Al final se podrá vender en <b>2,000</b> y su vida útil es de <b>40,000 pares</b> estampados. Se deprecia por unidades producidas.</div>"+
-    "<div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">600</span><i style=\"height:56%;animation-delay:0.00s\"></i><em>Ene 1,500 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.12s\">880</span><i style=\"height:82%;animation-delay:0.12s\"></i><em>Feb 2,200 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.24s\">360</span><i style=\"height:34%;animation-delay:0.24s\"></i><em>Mar 900 pares</em></div></div>" },
+    "<button type=\"button\" class=\"o-btn anibtn\" onclick=\"var z=this.nextElementSibling;z.classList.remove('go');void z.offsetWidth;z.classList.add('go')\">&#9654; Ver mes a mes</button><div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">600</span><i style=\"height:56%;animation-delay:0.00s\"></i><em>Ene 1,500 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.45s\">880</span><i style=\"height:82%;animation-delay:0.45s\"></i><em>Feb 2,200 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.90s\">360</span><i style=\"height:34%;animation-delay:0.90s\"></i><em>Mar 900 pares</em></div></div>" },
 
 { et:"Caso 2", t:"Caso 2 - Registra la depreciación de febrero", clave:"a5",
   h:"<div class=\"defi\"><b>Enunciado.</b> En febrero la estampadora trabajó <b>2,200 pares</b>. Registra su depreciación.</div>" },
@@ -1033,7 +1039,7 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='cafe_e1_espresso_v1';
+var LS='cafe_e1_espresso_v2';
 /* en el mismo orden en que aparecen las diapositivas */
 var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
@@ -2093,7 +2099,7 @@ function pintaRuta(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('cafe_e1_espresso_v1_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('cafe_e1_espresso_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
@@ -2138,7 +2144,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('cafe_e1_espresso_v1_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('cafe_e1_espresso_v2_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
