@@ -135,6 +135,37 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  .gtit{ display:block; width:100%; font-size:12.5px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:var(--marino); margin:6px 0 0; }
+  .mtz{ width:100%; border-collapse:collapse; font-size:16px; }
+  .mtz th{ background:#EDF2FF; color:var(--marino); padding:5px 8px; text-align:right; font-size:13px; }
+  .mtz th:first-child{ text-align:left; }
+  .mtz td{ padding:5px 8px; border-bottom:1px dashed var(--linea); }
+  .mtz td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .cuadro td.cua{ display:table-cell; min-height:0; cursor:pointer; background:#FFF9E3; }
+  .cuadro td.cua.ok{ background:#F2FAF6; }
+  .mtz tr.tot td{ font-weight:800; background:#F4F6FB; color:var(--marino); }
+  .mtz td.tt{ font-weight:700; }
+  @media (min-width:1100px){
+    .cuadro.malla{ grid-template-columns:1fr !important; }
+    .cuadro.malla .cols{ display:grid; gap:10px; grid-template-columns:repeat(4,1fr); grid-template-areas:'er act pas efe' 'ecp ecp pas efe'; align-items:start; }
+  }
+  .cuadro.malla .ctit{ font-size:15px; padding:6px 10px; }
+  .cuadro.malla .cols .col{ border-width:1px; }
+  .cuadro.malla h6{ font-size:13px; padding:3px 10px; }
+  .cuadro.malla .cua{ min-height:27px; padding:1px 10px; }
+  .cuadro.malla .cua .n{ font-size:16px; line-height:1.2; }
+  .cuadro.malla .cua .n small{ display:none; }
+  .cuadro.malla .cua .v{ font-size:16.5px; }
+  .cuadro.malla .sub, .cuadro.malla .gran{ padding:3px 10px; font-size:15px; min-height:0; }
+  .cuadro.malla .sub b, .cuadro.malla .gran b{ font-size:15px; }
+  .cuadro.malla .banco{ flex-direction:row !important; flex-wrap:wrap; align-items:center; gap:4px; padding:6px; }
+  .cuadro.malla .banco .ficha{ width:auto !important; font-size:14.5px; padding:2px 9px; }
+  .cuadro.malla .banco .ficha .im{ margin-left:8px; }
+  .cuadro.malla .gtit{ width:auto; margin:0 4px 0 10px; padding:3px 8px; border-radius:6px; background:var(--marino); color:#fff; font-size:11.5px; }
+  .cuadro.malla .gtit:first-child{ margin-left:0; }
+  .cuadro.malla .pila .bt{ display:none; }
+  .cuadro.malla .cua .verr{ font-size:11px; padding:2px 6px; }
+
   @media (min-width:1100px){ .cuadro.lado{ grid-template-columns:minmax(280px,360px) 1fr; align-items:start; } }
   .cuadro.lado .pila{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
   .cuadro.lado .pila .bt{ background:#FFF4CC; color:var(--tinta); }
@@ -1508,19 +1539,49 @@ function cuaValor(A, g, id){
   });
   return tot;
 }
+function bancoHtml(libres){
+  var h='', gr=null;
+  libres.forEach(function(f){
+    if(f.gr && f.gr!==gr){ gr=f.gr; h+='<span class="gtit">'+esc(gr)+'</span>'; }
+    h+='<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'<span class="im">'+mil(f.v)+'</span></button>';
+  });
+  return h;
+}
+function matrizHtml(k, A, g, c){
+  var h='<table class="mtz"><thead><tr><th></th>'+c.matriz.map(function(x){ return '<th>'+esc(x.t)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
+  var col={};
+  c.filas.forEach(function(r){
+    if(r.tot){
+      var t=0; h+='<tr class="tot"><td>'+esc(r.t)+'</td>';
+      c.matriz.forEach(function(x){ var v=col[x.id]||0; t+=v; h+='<td class="n">'+mil(v)+'</td>'; });
+      h+='<td class="n">'+mil(t)+'</td></tr>'; return;
+    }
+    var tr=0; h+='<tr><td>'+esc(r.t)+'</td>';
+    c.matriz.forEach(function(x){
+      var id=r.id+'_'+x.id;
+      var puestas=A.fichas.filter(function(f){ return g[f.id]===id || (f.fijo && f.g===id); });
+      var v=0; puestas.forEach(function(f){ v+=f.v; });
+      var falta=A.fichas.some(function(f){ return f.g===id && !g[f.id] && !f.fijo; });
+      col[x.id]=(col[x.id]||0)+v; tr+=v;
+      var lleva=A.fichas.some(function(f){ return f.g===id; });
+      h+= lleva ? '<td class="cua n'+(puestas.length&&!falta?' ok':'')+'" data-z="'+id+'">'+(puestas.length?mil(v):'—')+(falta?btnR(k,id):'')+'</td>'
+                : '<td class="n" style="color:#B9C2D8">—</td>';
+    });
+    h+='<td class="n tt">'+mil(tr)+'</td></tr>';
+  });
+  return h+'</tbody></table>';
+}
 function vCuadro(k){
   var A=ACT[k], g=G[k]||{};
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro'+(A.lado?' lado':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
-    (libres.length ? libres.map(function(f){
-      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
-             '<span class="im">'+mil(f.v)+'</span></button>';
-    }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
+    (libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
     '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
   A.cols.forEach(function(c){
-    h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    if(c.matriz){ h+=matrizHtml(k, A, g, c)+'</div>'; return; }
     c.bloques.forEach(function(b){
       if(b.t) h+='<h6>'+esc(b.t)+'</h6>';
       b.lineas.forEach(function(l){

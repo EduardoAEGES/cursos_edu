@@ -135,6 +135,37 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  .gtit{ display:block; width:100%; font-size:12.5px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:var(--marino); margin:6px 0 0; }
+  .mtz{ width:100%; border-collapse:collapse; font-size:16px; }
+  .mtz th{ background:#EDF2FF; color:var(--marino); padding:5px 8px; text-align:right; font-size:13px; }
+  .mtz th:first-child{ text-align:left; }
+  .mtz td{ padding:5px 8px; border-bottom:1px dashed var(--linea); }
+  .mtz td.n{ text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .cuadro td.cua{ display:table-cell; min-height:0; cursor:pointer; background:#FFF9E3; }
+  .cuadro td.cua.ok{ background:#F2FAF6; }
+  .mtz tr.tot td{ font-weight:800; background:#F4F6FB; color:var(--marino); }
+  .mtz td.tt{ font-weight:700; }
+  @media (min-width:1100px){
+    .cuadro.malla{ grid-template-columns:1fr !important; }
+    .cuadro.malla .cols{ display:grid; gap:10px; grid-template-columns:repeat(4,1fr); grid-template-areas:'er act pas efe' 'ecp ecp pas efe'; align-items:start; }
+  }
+  .cuadro.malla .ctit{ font-size:15px; padding:6px 10px; }
+  .cuadro.malla .cols .col{ border-width:1px; }
+  .cuadro.malla h6{ font-size:13px; padding:3px 10px; }
+  .cuadro.malla .cua{ min-height:27px; padding:1px 10px; }
+  .cuadro.malla .cua .n{ font-size:16px; line-height:1.2; }
+  .cuadro.malla .cua .n small{ display:none; }
+  .cuadro.malla .cua .v{ font-size:16.5px; }
+  .cuadro.malla .sub, .cuadro.malla .gran{ padding:3px 10px; font-size:15px; min-height:0; }
+  .cuadro.malla .sub b, .cuadro.malla .gran b{ font-size:15px; }
+  .cuadro.malla .banco{ flex-direction:row !important; flex-wrap:wrap; align-items:center; gap:4px; padding:6px; }
+  .cuadro.malla .banco .ficha{ width:auto !important; font-size:14.5px; padding:2px 9px; }
+  .cuadro.malla .banco .ficha .im{ margin-left:8px; }
+  .cuadro.malla .gtit{ width:auto; margin:0 4px 0 10px; padding:3px 8px; border-radius:6px; background:var(--marino); color:#fff; font-size:11.5px; }
+  .cuadro.malla .gtit:first-child{ margin-left:0; }
+  .cuadro.malla .pila .bt{ display:none; }
+  .cuadro.malla .cua .verr{ font-size:11px; padding:2px 6px; }
+
   @media (min-width:1100px){ .cuadro.lado{ grid-template-columns:minmax(280px,360px) 1fr; align-items:start; } }
   .cuadro.lado .pila{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
   .cuadro.lado .pila .bt{ background:#FFF4CC; color:var(--tinta); }
@@ -995,50 +1026,35 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "cuadro", "titulo": "Estado de resultados por función", "intro": "Arrastra cada cuenta del balance a su línea. La comisión de Mateo es de ventas; los honorarios de Rosa, de administración.", "fichas": [{"id": "f7011", "t": "7011 Ventas", "v": 38000.0, "g": "r1"}, {"id": "f6911", "t": "6911 Costo de ventas", "v": 23600.0, "g": "r2"}, {"id": "f635", "t": "635 Alquiler del local", "v": 3500.0, "g": "r3"}, {"id": "f637", "t": "637 Publicidad", "v": 900.0, "g": "r3"}, {"id": "f6814", "t": "6814 Depreciación", "v": 160.0, "g": "r3"}, {"id": "f632v", "t": "632 Honorarios - comisión del vendedor", "v": 1800, "g": "r3"}, {"id": "f636", "t": "636 Luz, agua e internet", "v": 600.0, "g": "r4"}, {"id": "f632c", "t": "632 Honorarios - contadora", "v": 900.0, "g": "r4"}, {"id": "f881", "t": "881 Impuesto a la renta", "v": 1929.3, "g": "rir"}], "cols": [{"t": "Suela & Co. S.A.C. - Estado de resultados de enero 2026", "bloques": [{"lineas": [{"id": "r1", "t": "Ventas"}, {"id": "r2", "t": "Costo de ventas", "s": -1}], "tot": {"id": "tb", "t": "Utilidad bruta"}}, {"lineas": [{"id": "r3", "t": "Gastos de ventas", "s": -1}, {"id": "r4", "t": "Gastos de administración", "s": -1}], "tot": {"id": "tai", "t": "Resultado antes de impuestos", "de": ["tb", "r3", "r4"]}}, {"lineas": [{"id": "rir", "t": "Impuesto a la renta (29.5 %)", "s": -1}], "tot": {"id": "tun", "t": "Utilidad del mes", "de": ["tai", "rir"]}}]}], "lado": "Balance de comprobación - resultados", "fin":"<div class=\"av\"><b>Resuelto.</b> Enero ganó 4,610.70 después del impuesto a la renta. Esa utilidad pasa al patrimonio.</div>"},
+h1:{"tipo": "cuadro", "titulo": "Caso 1 - Suela & Co., enero de 2026", "malla": true, "fichas": [{"id": "b7011", "t": "7011 Ventas", "v": 38000.0, "g": "er_v", "gr": "Balance de comprobación"}, {"id": "b6911", "t": "6911 Costo de ventas", "v": 23600.0, "g": "er_c", "gr": "Balance de comprobación"}, {"id": "b94", "t": "94 Gastos administrativos", "v": 1500.0, "g": "er_ga", "gr": "Balance de comprobación"}, {"id": "b95", "t": "95 Gastos de ventas", "v": 6360.0, "g": "er_gv", "gr": "Balance de comprobación"}, {"id": "b881", "t": "881 Impuesto a la renta", "v": 1929.3, "g": "er_ir", "gr": "Balance de comprobación"}, {"id": "b101", "t": "101 Caja", "v": 1500.0, "g": "a_ef", "gr": "Balance de comprobación"}, {"id": "b104", "t": "104 Cuenta corriente BCP", "v": 10280.0, "g": "a_ef", "gr": "Balance de comprobación"}, {"id": "b121", "t": "121 Facturas por cobrar", "v": 9440.0, "g": "a_cx", "gr": "Balance de comprobación"}, {"id": "b201", "t": "201 Mercaderías", "v": 30400.0, "g": "a_me", "gr": "Balance de comprobación"}, {"id": "b334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "a_pp", "gr": "Balance de comprobación"}, {"id": "b391", "t": "391 Depreciación acumulada", "v": -960.0, "g": "a_pp", "gr": "Balance de comprobación"}, {"id": "b421", "t": "421 Facturas por pagar", "v": 25960.0, "g": "p_cp", "gr": "Balance de comprobación"}, {"id": "b4011", "t": "4011 IGV - cuenta propia", "v": 1980.0, "g": "p_tr", "gr": "Balance de comprobación"}, {"id": "b4017", "t": "4017 Impuesto a la renta por pagar", "v": 1929.3, "g": "p_tr", "gr": "Balance de comprobación"}, {"id": "b501", "t": "501 Capital social", "v": 24000.0, "g": "t_ca", "gr": "Balance de comprobación"}, {"id": "b591", "t": "591 Resultados acumulados", "v": 1780.0, "g": "t_ra", "gr": "Balance de comprobación"}, {"id": "util", "t": "Utilidad del mes", "v": 4610.7, "g": "t_ut", "gr": "Del estado de resultados"}, {"id": "p1", "t": "Apertura: 501 Capital social", "v": 24000.0, "g": "si_ca", "gr": "Asientos del patrimonio"}, {"id": "p2", "t": "Apertura: 591 Resultados acumulados", "v": 1780.0, "g": "si_ra", "gr": "Asientos del patrimonio"}, {"id": "p5", "t": "Cierre: utilidad del mes a 591", "v": 4610.7, "g": "ut_ra", "gr": "Asientos del patrimonio"}, {"id": "c0", "t": "Ventas del mes en tienda", "v": 35400.0, "g": "f_cob", "gr": "Asientos de cobro y pago"}, {"id": "c4", "t": "Pago a proveedores de mercadería", "v": 25960.0, "g": "f_pro", "gr": "Asientos de cobro y pago"}, {"id": "c5", "t": "Cobro de facturas a clientes", "v": 9440.0, "g": "f_cob", "gr": "Asientos de cobro y pago"}, {"id": "c6", "t": "Pago del IGV de diciembre a SUNAT", "v": 2000.0, "g": "f_tri", "gr": "Asientos de cobro y pago"}, {"id": "cg", "t": "Pagos de alquiler y servicios (5 asientos)", "v": 8600.0, "g": "f_gas", "gr": "Asientos de cobro y pago"}, {"id": "cini", "t": "Saldo de Caja y bancos al 1 de enero", "v": 3500.0, "g": "f_ini", "gr": "Asientos de cobro y pago", "fijo": true}], "cols": [{"t": "Estado de resultados", "area": "er", "bloques": [{"lineas": [{"id": "er_v", "t": "Ventas"}, {"id": "er_c", "t": "Costo de ventas", "s": -1}], "tot": {"id": "er_ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "er_gv", "t": "Gastos de ventas", "s": -1}, {"id": "er_ga", "t": "Gastos de administración", "s": -1}], "tot": {"id": "er_uo", "t": "Resultado antes de impuestos", "de": ["er_ub", "er_gv", "er_ga"]}}, {"lineas": [{"id": "er_ir", "t": "Impuesto a la renta", "s": -1}], "tot": {"id": "er_un", "t": "Utilidad del mes", "de": ["er_uo", "er_ir"]}}]}, {"t": "Situación financiera: activo", "area": "act", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "a_ef", "t": "Efectivo y equivalentes"}, {"id": "a_cx", "t": "Cuentas por cobrar comerciales"}, {"id": "a_me", "t": "Mercaderías"}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "a_pp", "t": "Propiedad, planta y equipo (neto)"}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "ga", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "area": "pas", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "p_cp", "t": "Cuentas por pagar comerciales"}, {"id": "p_tr", "t": "Tributos por pagar"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Pasivo no corriente", "lineas": [{"id": "p_nc", "t": "Obligaciones financieras"}], "tot": {"id": "tpn", "t": "Total pasivo no corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "t_ca", "t": "Capital"}, {"id": "t_ra", "t": "Resultados acumulados"}, {"id": "t_ut", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "gp", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpn", "tpt"]}}, {"t": "Cambios en el patrimonio", "area": "ecp", "bloques": [], "matriz": [{"id": "ca", "t": "Capital"}, {"id": "ra", "t": "Resultados acumulados"}], "filas": [{"id": "si", "t": "Saldo al 1 de enero"}, {"id": "ut", "t": "Utilidad del mes"}, {"id": "sf", "t": "Saldo al 31 de enero", "tot": true}]}, {"t": "Flujos de efectivo", "area": "efe", "bloques": [{"t": "Operación", "lineas": [{"id": "f_cob", "t": "Cobranzas a clientes"}, {"id": "f_pro", "t": "Pago a proveedores", "s": -1}, {"id": "f_gas", "t": "Pago de alquiler, servicios y honorarios", "s": -1}, {"id": "f_tri", "t": "Pagos de tributos", "s": -1}], "tot": {"id": "fo", "t": "Flujo de operación"}}, {"lineas": [{"id": "f_ini", "t": "Efectivo al 1 de enero"}]}], "gran": {"id": "gef", "t": "Efectivo al 31 de enero", "de": ["fo", "f_ini"]}}], "cuadra": ["ga", "gp"]},
 
-a1:{"tipo": "cuadro", "titulo": "Estado de situación financiera al 31 de enero", "intro": "Arrastra cada cuenta a su línea. El IGV y el impuesto a la renta van en tributos por pagar.", "fichas": [{"id": "f101", "t": "101 Caja", "v": 1500.0, "g": "ac1"}, {"id": "f104", "t": "104 Cuenta corriente BCP", "v": 10280.0, "g": "ac1"}, {"id": "f121", "t": "121 Facturas por cobrar", "v": 9440.0, "g": "ac2"}, {"id": "f201", "t": "201 Mercaderías", "v": 30400.0, "g": "ac5"}, {"id": "f334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "an1"}, {"id": "f391", "t": "391 Depreciación acumulada", "v": 960.0, "g": "an2"}, {"id": "f421", "t": "421 Facturas por pagar", "v": 25960.0, "g": "pc1"}, {"id": "f4011", "t": "4011 IGV - cuenta propia", "v": 1980.0, "g": "pc3"}, {"id": "f4017", "t": "4017 Impuesto a la renta por pagar", "v": 1929.3, "g": "pc3"}, {"id": "f501", "t": "501 Capital social", "v": 24000.0, "g": "pt1"}, {"id": "f591", "t": "591 Resultados acumulados", "v": 1780.0, "g": "pt2"}, {"id": "futil", "t": "Utilidad de enero (del estado de resultados)", "v": 4610.7, "g": "pt3"}], "cols": [{"t": "Activo", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "ac1", "t": "Efectivo y equivalentes de efectivo"}, {"id": "ac2", "t": "Cuentas por cobrar comerciales"}, {"id": "ac5", "t": "Mercaderías"}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "an1", "t": "Propiedad, planta y equipo"}, {"id": "an2", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "g1", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "pc1", "t": "Cuentas por pagar comerciales"}, {"id": "pc3", "t": "Tributos por pagar"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "pt1", "t": "Capital"}, {"id": "pt2", "t": "Resultados acumulados"}, {"id": "pt3", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "g2", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpt"]}}], "cuadra": ["g1", "g2"], "lado": "Balance de comprobación - balance"},
-
-a2:{"tipo": "cuadro", "titulo": "Estado de cambios en el patrimonio", "intro": "Arrastra cada asiento a la columna y a la fila que le toca.", "lado": "Asientos que tocan el patrimonio", "fichas": [{"id": "p1", "t": "Asiento de apertura - 501 Capital social", "v": 24000.0, "g": "ci"}, {"id": "p2", "t": "Asiento de apertura - 591 Resultados acumulados", "v": 1780.0, "g": "ri"}, {"id": "p3", "t": "31 de enero - Utilidad de enero (estado de resultados)", "v": 4610.7, "g": "ru"}], "cols": [{"t": "Capital", "bloques": [{"lineas": [{"id": "ci", "t": "Saldo al 1 de enero"}, {"id": "cu", "t": "Utilidad de enero"}], "tot": {"id": "cf", "t": "Saldo al 31 de enero"}}]}, {"t": "Resultados acumulados", "c": "na", "bloques": [{"lineas": [{"id": "ri", "t": "Saldo al 1 de enero"}, {"id": "ru", "t": "Utilidad de enero"}], "tot": {"id": "rf", "t": "Saldo al 31 de enero"}}]}], "fin":"<div class=\"av\"><b>Resuelto.</b> Total patrimonio al 31 de enero: 24,000 + 6,390.70 = 30,390.70. Es el mismo de la situación financiera.</div>"},
-
-a3:{"tipo": "cuadro", "titulo": "Estado de flujos de efectivo (método directo)", "intro": "Arrastra cada movimiento de dinero a su actividad.", "lado": "Movimientos de Caja y cuenta corriente", "fichas": [{"id": "m0", "t": "Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP", "v": 35400.0, "g": "cob"}, {"id": "m4", "t": "Pago a proveedores de mercadería", "v": 25960.0, "g": "pro"}, {"id": "m5", "t": "Cobro de facturas a clientes", "v": 9440.0, "g": "cob"}, {"id": "m6", "t": "Pago del IGV de diciembre a SUNAT", "v": 2000.0, "g": "tri"}, {"id": "m7", "t": "Alquiler del local de la tienda", "v": 4130.0, "g": "ser"}, {"id": "m8", "t": "Recibos de luz, agua e internet", "v": 708.0, "g": "ser"}, {"id": "m9", "t": "Publicidad en redes sociales", "v": 1062.0, "g": "ser"}, {"id": "m10", "t": "Comisión del vendedor (recibo por honorarios)", "v": 1800, "g": "ser"}, {"id": "m11", "t": "Honorarios de la contadora (recibo por honorarios)", "v": 900, "g": "ser"}, {"id": "mi", "t": "Saldo de Caja y cuenta corriente al 1 de enero", "v": 3500.0, "g": "ini", "fijo": true}], "cols": [{"t": "Suela & Co. S.A.C. - Flujos de efectivo de enero", "bloques": [{"t": "Actividades de operación", "lineas": [{"id": "cob", "t": "Cobros a clientes"}, {"id": "pro", "t": "Pagos a proveedores", "s": -1}, {"id": "ser", "t": "Pagos de alquiler, servicios y honorarios", "s": -1}, {"id": "tri", "t": "Pago de tributos", "s": -1}], "tot": {"id": "fo", "t": "Flujo de operación"}}, {"lineas": [{"id": "ini", "t": "Efectivo al 1 de enero"}], "tot": {"id": "ef", "t": "Efectivo al 31 de enero", "de": ["fo", "ini"]}}]}], "fin":"<div class=\"av\"><b>Resuelto.</b> Efectivo al 31 de enero: 11,780, igual que en la situación financiera. La utilidad fue 4,610.70: ganar no es lo mismo que tener plata.</div>"},
-
-op:{"tipo": "opi", "titulo": "Si fueras la dueña", "lista": [{"q": "Con estos cuatro estados, ¿pedirías la línea de crédito?", "ops": ["Sí: el negocio gana y el patrimonio crece", "Todavía no: primero esperaría unos meses más"], "com": ["El banco verá utilidad, patrimonio que crece y plata en la cuenta.", "Con más meses el banco ve una historia más larga."]}, {"q": "¿Qué estado le enseñarías primero al banco?", "ops": ["Resultados", "Situación financiera", "Flujo de efectivo"], "com": ["Dice si el negocio gana.", "Dice cuánto se debe y cuánto es de los socios.", "Dice si hay plata para pagar las cuotas."]}, {"q": "¿Qué te costó más armar?", "ops": ["Resultados", "Situación financiera", "Cambios en el patrimonio", "Flujo de efectivo"], "com": ["Fíjate en el área de cada gasto: ventas o administración.", "Las cuentas 1 a 5 y, al final, la utilidad.", "Saldo inicial más la utilidad del mes.", "Solo lo que movió plata: cobros y pagos."]}]}
+h2:{"tipo": "cuadro", "titulo": "Caso 2 - Juguería La Naranja, marzo de 2026", "malla": true, "fichas": [{"id": "b7011", "t": "7011 Ventas", "v": 22000.0, "g": "er_v", "gr": "Balance de comprobación"}, {"id": "b6911", "t": "6911 Costo de ventas", "v": 8000.0, "g": "er_c", "gr": "Balance de comprobación"}, {"id": "b94", "t": "94 Gastos administrativos", "v": 1500.0, "g": "er_ga", "gr": "Balance de comprobación"}, {"id": "b95", "t": "95 Gastos de ventas", "v": 2650.0, "g": "er_gv", "gr": "Balance de comprobación"}, {"id": "b881", "t": "881 Impuesto a la renta", "v": 2905.75, "g": "er_ir", "gr": "Balance de comprobación"}, {"id": "b101", "t": "101 Caja", "v": 1000.0, "g": "a_ef", "gr": "Balance de comprobación"}, {"id": "b104", "t": "104 Cuenta corriente BCP", "v": 25550.0, "g": "a_ef", "gr": "Balance de comprobación"}, {"id": "b121", "t": "121 Facturas por cobrar", "v": 2360.0, "g": "a_cx", "gr": "Balance de comprobación"}, {"id": "b201", "t": "201 Mercaderías", "v": 1500.0, "g": "a_me", "gr": "Balance de comprobación"}, {"id": "b336", "t": "336 Equipos diversos - laptop", "v": 12000.0, "g": "a_pp", "gr": "Balance de comprobación"}, {"id": "b391", "t": "391 Depreciación acumulada", "v": -1050.0, "g": "a_pp", "gr": "Balance de comprobación"}, {"id": "b421", "t": "421 Facturas por pagar", "v": 8260.0, "g": "p_cp", "gr": "Balance de comprobación"}, {"id": "b4011", "t": "4011 IGV - cuenta propia", "v": 2250.0, "g": "p_tr", "gr": "Balance de comprobación"}, {"id": "b4017", "t": "4017 Impuesto a la renta por pagar", "v": 2905.75, "g": "p_tr", "gr": "Balance de comprobación"}, {"id": "b501", "t": "501 Capital social", "v": 20000.0, "g": "t_ca", "gr": "Balance de comprobación"}, {"id": "b591", "t": "591 Resultados acumulados", "v": 1000.0, "g": "t_ra", "gr": "Balance de comprobación"}, {"id": "util", "t": "Utilidad del mes", "v": 6944.25, "g": "t_ut", "gr": "Del estado de resultados"}, {"id": "p1", "t": "Apertura: 501 Capital social", "v": 15000.0, "g": "si_ca", "gr": "Asientos del patrimonio"}, {"id": "p2", "t": "Apertura: 591 Resultados acumulados", "v": 1000.0, "g": "si_ra", "gr": "Asientos del patrimonio"}, {"id": "p3", "t": "Aporte de los socios a 501", "v": 5000.0, "g": "ap_ca", "gr": "Asientos del patrimonio"}, {"id": "p5", "t": "Cierre: utilidad del mes a 591", "v": 6944.25, "g": "ut_ra", "gr": "Asientos del patrimonio"}, {"id": "c0", "t": "Aporte de los socios", "v": 5000.0, "g": "f_apo", "gr": "Asientos de cobro y pago"}, {"id": "c1", "t": "Ventas de jugos del mes", "v": 23600.0, "g": "f_cob", "gr": "Asientos de cobro y pago"}, {"id": "c5", "t": "Cobro de las facturas de febrero", "v": 1200.0, "g": "f_cob", "gr": "Asientos de cobro y pago"}, {"id": "c6", "t": "Pago a proveedores de febrero", "v": 2100.0, "g": "f_pro", "gr": "Asientos de cobro y pago"}, {"id": "c7", "t": "Pago del IGV de febrero a SUNAT", "v": 700.0, "g": "f_tri", "gr": "Asientos de cobro y pago"}, {"id": "c10", "t": "Compra de una licuadora industrial", "v": 3000.0, "g": "f_inv", "gr": "Asientos de cobro y pago"}, {"id": "cg", "t": "Pagos de alquiler y servicios (2 asientos)", "v": 4450.0, "g": "f_gas", "gr": "Asientos de cobro y pago"}, {"id": "cini", "t": "Saldo de Caja y bancos al 1 de marzo", "v": 7000.0, "g": "f_ini", "gr": "Asientos de cobro y pago", "fijo": true}], "cols": [{"t": "Estado de resultados", "area": "er", "bloques": [{"lineas": [{"id": "er_v", "t": "Ventas"}, {"id": "er_c", "t": "Costo de ventas", "s": -1}], "tot": {"id": "er_ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "er_gv", "t": "Gastos de ventas", "s": -1}, {"id": "er_ga", "t": "Gastos de administración", "s": -1}], "tot": {"id": "er_uo", "t": "Resultado antes de impuestos", "de": ["er_ub", "er_gv", "er_ga"]}}, {"lineas": [{"id": "er_ir", "t": "Impuesto a la renta", "s": -1}], "tot": {"id": "er_un", "t": "Utilidad del mes", "de": ["er_uo", "er_ir"]}}]}, {"t": "Situación financiera: activo", "area": "act", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "a_ef", "t": "Efectivo y equivalentes"}, {"id": "a_cx", "t": "Cuentas por cobrar comerciales"}, {"id": "a_me", "t": "Mercaderías"}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "a_pp", "t": "Propiedad, planta y equipo (neto)"}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "ga", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "area": "pas", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "p_cp", "t": "Cuentas por pagar comerciales"}, {"id": "p_tr", "t": "Tributos por pagar"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Pasivo no corriente", "lineas": [{"id": "p_nc", "t": "Obligaciones financieras"}], "tot": {"id": "tpn", "t": "Total pasivo no corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "t_ca", "t": "Capital"}, {"id": "t_ra", "t": "Resultados acumulados"}, {"id": "t_ut", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "gp", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpn", "tpt"]}}, {"t": "Cambios en el patrimonio", "area": "ecp", "bloques": [], "matriz": [{"id": "ca", "t": "Capital"}, {"id": "ra", "t": "Resultados acumulados"}], "filas": [{"id": "si", "t": "Saldo al 1 de marzo"}, {"id": "ap", "t": "Aporte de los socios"}, {"id": "ut", "t": "Utilidad del mes"}, {"id": "sf", "t": "Saldo al 31 de marzo", "tot": true}]}, {"t": "Flujos de efectivo", "area": "efe", "bloques": [{"t": "Operación", "lineas": [{"id": "f_cob", "t": "Cobranzas a clientes"}, {"id": "f_pro", "t": "Pago a proveedores", "s": -1}, {"id": "f_gas", "t": "Pago de alquiler, servicios y honorarios", "s": -1}, {"id": "f_tri", "t": "Pagos de tributos", "s": -1}], "tot": {"id": "fo", "t": "Flujo de operación"}}, {"t": "Inversión", "lineas": [{"id": "f_inv", "t": "Compra de propiedad, planta y equipo", "s": -1}], "tot": {"id": "fv", "t": "Flujo de inversión"}}, {"t": "Financiamiento", "lineas": [{"id": "f_apo", "t": "Aporte de los socios"}], "tot": {"id": "ff", "t": "Flujo de financiamiento"}}, {"lineas": [{"id": "f_ini", "t": "Efectivo al 1 de marzo"}]}], "gran": {"id": "gef", "t": "Efectivo al 31 de marzo", "de": ["fo", "fv", "ff", "f_ini"]}}], "cuadra": ["ga", "gp"]}
 
 };
 
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:"El caso", t:"Los 4 estados financieros de enero",
-  h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>Los 4 en miniatura</h2><p>Encuentro 1 - El Filtrado - Estados financieros de enero</p><div class=\"via\"><b>Balance de comprobación</b><b>Cuatro estados</b><b>Cómo se conectan</b></div></div>"+
-    globo(P.pres,"Lucía, la dueña","El banco me pide los estados financieros de enero para darme una línea de crédito. Rosa me dejó el balance de comprobación, que ya tiene el impuesto a la renta, los asientos del patrimonio y los movimientos de la cuenta. ¿Me ayudan a armar los cuatro estados?") },
+{ et:"El caso", t:"Los 4 estados financieros",
+  h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>Los 4 en miniatura</h2><p>Encuentro 1 - El Filtrado - Dos casos, cuatro estados</p><div class=\"via\"><b>Balance de comprobación</b><b>Asientos</b><b>Cuatro estados</b></div></div>"+
+    globo(P.pres,"Lucía, la dueña","El banco me pide los estados financieros de enero. Rosa me dejó el balance de comprobación, que ya tiene el impuesto a la renta, y los asientos del mes. Hoy los armamos para Suela & Co. y, después, para una juguería pequeña.") },
 
 { et:"De dónde sale", t:"De dónde sale cada estado",
   h:"<p class=\"enc\">Cada estado se arma con una fuente</p><p class=\"sub\">Arrastra cada partida a su línea: los totales se calculan solos</p>"+
-    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Estado</th><th>Se arma con</th><th>Qué responde</th></tr></thead><tbody><tr><td><b>Estado de resultados por función</b></td><td>Balance de comprobación: cuentas 6, 7 y 8</td><td>¿Gané o perdí en enero?</td></tr><tr><td><b>Situación financiera</b></td><td>Balance de comprobación: cuentas 1 a 5, más la utilidad</td><td>¿Qué tengo, qué debo y qué es mío?</td></tr><tr><td><b>Cambios en el patrimonio</b></td><td>Los asientos que tocan el patrimonio</td><td>¿Cuánto creció lo de los socios?</td></tr><tr><td><b>Flujos de efectivo</b></td><td>Los movimientos de Caja y de la cuenta corriente</td><td>¿Por dónde entró y salió la plata?</td></tr></tbody></table></div>"+
-    "<div class=\"form\">UTILIDAD DEL MES &rarr; PATRIMONIO &rarr; SITUACIÓN FINANCIERA<small>y el efectivo final del flujo es el mismo de la situación financiera</small></div>" },
+    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Estado</th><th>Se arma con</th><th>Qué responde</th></tr></thead><tbody><tr><td><b>Estado de resultados</b></td><td>Balance de comprobación: ventas (70), costo (69), gastos por función (94 y 95) e impuesto a la renta (88)</td><td>¿Gané o perdí?</td></tr><tr><td><b>Situación financiera</b></td><td>Balance de comprobación: elementos 1 a 5, más la utilidad del mes</td><td>¿Qué tengo, qué debo y qué es mío?</td></tr><tr><td><b>Cambios en el patrimonio</b></td><td>Los asientos que tocan el patrimonio: apertura, aportes, dividendos y la utilidad</td><td>¿Cuánto creció lo de los socios?</td></tr><tr><td><b>Flujos de efectivo</b></td><td>Los asientos de cobro y de pago</td><td>¿Por dónde entró y salió la plata?</td></tr></tbody></table></div>"+
+    "<div class=\"form\">UTILIDAD DEL MES &rarr; PATRIMONIO &rarr; SITUACIÓN FINANCIERA<small>propiedad, planta y equipo va neto: su costo menos la depreciación acumulada</small></div>" },
 
-{ et:"Resultados", t:"Estado de resultados por función", clave:"a0",
+{ et:"Caso 1", t:"Caso 1 - Suela & Co.: los cuatro estados de enero", claves:["h1"],
   h:'' },
 
-{ et:"Situación", t:"Estado de situación financiera", clave:"a1",
-  h:'' },
-
-{ et:"Patrimonio", t:"Estado de cambios en el patrimonio", clave:"a2",
-  h:'' },
-
-{ et:"Flujo", t:"Estado de flujos de efectivo", clave:"a3",
-  h:'' },
-
-{ et:"Opinión", t:"¿Tú qué opinas? No hay respuestas malas", clave:"op",
+{ et:"Caso 2", t:"Caso 2 - Juguería La Naranja: los cuatro estados de marzo", claves:["h2"],
   h:'' }
 ];
 
 /* ================= estado ================= */
 var LS='cafe_e1_filtrado_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','op'];
+var CLAVES=['h1','h2'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1516,19 +1532,49 @@ function cuaValor(A, g, id){
   });
   return tot;
 }
+function bancoHtml(libres){
+  var h='', gr=null;
+  libres.forEach(function(f){
+    if(f.gr && f.gr!==gr){ gr=f.gr; h+='<span class="gtit">'+esc(gr)+'</span>'; }
+    h+='<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+'<span class="im">'+mil(f.v)+'</span></button>';
+  });
+  return h;
+}
+function matrizHtml(k, A, g, c){
+  var h='<table class="mtz"><thead><tr><th></th>'+c.matriz.map(function(x){ return '<th>'+esc(x.t)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
+  var col={};
+  c.filas.forEach(function(r){
+    if(r.tot){
+      var t=0; h+='<tr class="tot"><td>'+esc(r.t)+'</td>';
+      c.matriz.forEach(function(x){ var v=col[x.id]||0; t+=v; h+='<td class="n">'+mil(v)+'</td>'; });
+      h+='<td class="n">'+mil(t)+'</td></tr>'; return;
+    }
+    var tr=0; h+='<tr><td>'+esc(r.t)+'</td>';
+    c.matriz.forEach(function(x){
+      var id=r.id+'_'+x.id;
+      var puestas=A.fichas.filter(function(f){ return g[f.id]===id || (f.fijo && f.g===id); });
+      var v=0; puestas.forEach(function(f){ v+=f.v; });
+      var falta=A.fichas.some(function(f){ return f.g===id && !g[f.id] && !f.fijo; });
+      col[x.id]=(col[x.id]||0)+v; tr+=v;
+      var lleva=A.fichas.some(function(f){ return f.g===id; });
+      h+= lleva ? '<td class="cua n'+(puestas.length&&!falta?' ok':'')+'" data-z="'+id+'">'+(puestas.length?mil(v):'—')+(falta?btnR(k,id):'')+'</td>'
+                : '<td class="n" style="color:#B9C2D8">—</td>';
+    });
+    h+='<td class="n tt">'+mil(tr)+'</td></tr>';
+  });
+  return h+'</tbody></table>';
+}
 function vCuadro(k){
   var A=ACT[k], g=G[k]||{};
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro'+(A.lado?' lado':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
-    (libres.length ? libres.map(function(f){
-      return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
-             '<span class="im">'+mil(f.v)+'</span></button>';
-    }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
+    (libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
     '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
   A.cols.forEach(function(c){
-    h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
+    if(c.matriz){ h+=matrizHtml(k, A, g, c)+'</div>'; return; }
     c.bloques.forEach(function(b){
       if(b.t) h+='<h6>'+esc(b.t)+'</h6>';
       b.lineas.forEach(function(l){
