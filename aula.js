@@ -29,7 +29,8 @@
 
    El docente puede sacar de la sala a quien no sea de su clase: cada
    ventanita lleva una ✕ arriba a la derecha. Borra su fila de la sala, no su
-   registro ni su avance; si vuelve a entrar, aparece otra vez.
+   registro ni su avance, y el equipo del docente lo recuerda 12 horas: aunque
+   la base no deje borrar la fila, ya no vuelve a aparecer en el muro.
 
    Opcional: ficha: { clave:'mi_pagina_v1', lee:function(d){}, da:function(){} }
        Enciende el registro con DNI. El alumno entra con su DNI; la primera vez
@@ -379,7 +380,7 @@ function trae(){
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
-      fallos=0; gente=rows||[];
+      fallos=0; gente=quitaSacados(rows||[]);
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
       pintaMuro();
@@ -610,11 +611,26 @@ function pintaMuro(){
 }
 
 /* ---------------- sacar a alguien de la sala ---------------- */
+/* el equipo del docente recuerda a quién sacó (12 horas): aunque la base no
+   deje borrar la fila, esa persona ya no vuelve a aparecer en el muro */
+function claveSacados(){ return 'sacados_'+cfg.sala+'-'+sala; }
+function leeSacados(){
+  var m={}; try{ m=JSON.parse(leeLocal(claveSacados())||'{}')||{}; }catch(e){ m={}; }
+  var lim=Date.now()-12*3600*1000, k;
+  for(k in m){ if(m[k]<lim) delete m[k]; }
+  return m;
+}
+function quitaSacados(rows){
+  if(!docente) return rows;
+  var m=leeSacados();
+  return rows.filter(function(g){ return !m[g.alumno]; });
+}
 function sacaAlumno(nombre){
   if(!docente || !sala || !nombre) return;
   if(!window.confirm('¿Sacar a ' + nombre + ' de la sala ' + sala + '?\n\n' +
-     'Desaparece del muro. No se borra su registro ni su avance: si vuelve a entrar, aparece otra vez.')) return;
+     'Desaparece del muro y ya no vuelve a aparecer en este equipo. No se borra su registro ni su avance.')) return;
   if(mirando===nombre) cierraPantalla();
+  var m=leeSacados(); m[nombre]=Date.now(); guardaLocal(claveSacados(), JSON.stringify(m));
   gente=gente.filter(function(g){ return g.alumno!==nombre; });
   pintaMuro();
   estado('vivo','Sacando a '+nombre+'…');

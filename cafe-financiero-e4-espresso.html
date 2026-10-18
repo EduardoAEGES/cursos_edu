@@ -135,6 +135,25 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  @media (min-width:1100px){ .cuadro.compacto.lado.hojat{ grid-template-columns:auto 1fr !important; } }
+  .cuadro .banco:has(.ht){ padding:0 !important; gap:0 !important; display:block !important; }
+  .ht{ font-size:14px; }
+  .ht .htr, .cuadro .ht .ficha.htf{ display:grid !important; grid-template-columns:var(--htcols); align-items:center; width:100%; gap:0; }
+  .ht .htr > span, .ht .htf > span{ padding:2px 6px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; border-left:1px solid #E3E8F4; }
+  .ht .htr > span:nth-child(-n+2), .ht .htf > span:nth-child(-n+2){ text-align:left; }
+  .ht .htr > span:first-child, .ht .htf > span:first-child{ border-left:0; font-weight:800; color:var(--marino); }
+  .ht .hth{ background:#EDF2FF; color:var(--marino); font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; }
+  .ht .hth > span{ text-align:center !important; white-space:normal; line-height:1.15; padding:4px 4px; }
+  .ht .hth.g1 > span{ border-bottom:1px solid #D5DDF0; }
+  .cuadro .ht .ficha.htf{ border:0 !important; border-bottom:1px dashed #C9D3EA !important; border-radius:0 !important; padding:0 !important; margin:0 !important; font-size:14px !important; font-weight:500; background:#fff; box-shadow:none !important; text-align:left; }
+  .cuadro .ht button.ficha.htf:hover, .cuadro .ht .ficha.htf.sel{ background:#FFF4CC; outline:2px solid var(--fucsia); outline-offset:-2px; }
+  .cuadro .ht .ficha.htf.usada{ background:#F2FAF6; color:#6B7A90; }
+  .cuadro .ht .ficha.htf.usada > span:first-child::before{ content:'\2713 '; color:var(--verde); }
+  .ht .htf .va{ text-align:left !important; font-size:12px; color:var(--fucsia); font-weight:800; white-space:normal !important; line-height:1.1; }
+  .ht .htf .dr{ background:#FFFBEA; font-weight:700; }
+  .ht .htt{ font-weight:800; background:#F4F6FB; color:var(--marino); border-top:2px solid var(--marino); }
+  .ht .htt.fin{ border-top:1px solid var(--marino); border-bottom:3px double var(--marino); }
+
   .ficha .pis{ display:inline; margin-left:6px; font-size:12px; color:var(--fucsia); font-weight:800; white-space:nowrap; }
   .flecha{ color:var(--fucsia); font-weight:800; white-space:nowrap; }
   .lado2{ display:grid; gap:14px; grid-template-columns:1fr; align-items:start; }
@@ -145,6 +164,33 @@
   .cuadro.malla .sub{ margin:0 !important; }
   .cuadro.malla .mtz{ font-size:14px; }
   .cuadro.malla .mtz th, .cuadro.malla .mtz td{ padding:3px 6px; }
+  @media (min-width:1100px){ .cuadro.compacto.lado{ grid-template-columns:440px 1fr; } .cuadro.compacto.lado.flechas:not(.ancho){ grid-template-columns:600px 1fr; } .cuadro .cols.c3{ grid-template-columns:repeat(3,1fr); align-items:start; } }
+  .cuadro.compacto .ctit{ font-size:16px; padding:7px 12px; }
+  .cuadro.compacto h6{ font-size:13px; padding:3px 12px; }
+  .cuadro.compacto .cua{ min-height:30px; padding:1px 12px; }
+  .cuadro.compacto .cua .n{ font-size:16px; line-height:1.2; }
+  .cuadro.compacto .cua .n small{ display:none; }
+  .cuadro.compacto .cua .v{ font-size:16.5px; }
+  .cuadro.compacto .sub, .cuadro.compacto .gran{ padding:3px 12px; font-size:15px; min-height:0; margin:0 !important; }
+  .cuadro.compacto .banco{ gap:3px !important; padding:6px !important; }
+  .cuadro.compacto .pila .bt{ font-size:14px; padding:6px 10px; }
+  @media (min-width:1100px){ .cuadro.compacto.lado.ancho{ grid-template-columns:640px 1fr; } .cuadro.ancho .banco{ display:grid !important; grid-template-columns:1fr 1fr; align-items:start; } .cuadro.ancho .gtit{ grid-column:1/-1; } .cuadro.ancho .cols.c2{ grid-template-columns:1fr; } }
+  .cuadro.ancho.flechas .ficha:not(.fhtml){ flex-wrap:wrap; } .cuadro.ancho.flechas .ficha:not(.fhtml) .pis{ display:block; width:100%; margin:0; white-space:normal; }
+  .ficha.fhtml.asi .pis{ min-width:0; }
+  .cuadro.ancho .cua{ min-height:0 !important; padding:2px 12px !important; } .cuadro.ancho .cua .n{ font-size:15.5px !important; line-height:1.25 !important; } .cuadro.ancho .mtz td{ padding:4px 8px; }
+  .ficha.fhtml{ display:grid !important; grid-template-columns:34px 1fr auto; gap:0 8px; align-items:center; padding:4px 8px !important; font-size:15px !important; }
+  .ficha.fhtml .cod{ font-weight:800; color:var(--marino); }
+  .ficha.fhtml .nom{ text-align:left; }
+  .ficha.fhtml .im{ font-weight:800; }
+  .ficha.fhtml .pis{ grid-column:4; margin:0; font-size:12.5px; text-align:right; min-width:150px; }
+  .ficha.fhtml:has(.pis){ grid-template-columns:30px 1fr auto auto; }
+  .ficha.fhtml.asi{ grid-template-columns:1fr auto auto; }
+  .ficha.fhtml .atit{ grid-column:1 / 4; text-align:left; font-weight:800; color:var(--marino); font-size:14.5px; }
+  .ficha.fhtml .al{ text-align:left; font-size:14px; }
+  .ficha.fhtml .al.h{ padding-left:22px; }
+  .ficha.fhtml .dd, .ficha.fhtml .hh{ font-size:14px; text-align:right; min-width:58px; font-variant-numeric:tabular-nums; }
+  .ficha.fhtml.asi .pis{ grid-column:1 / 4; text-align:left; }
+  .ficha.fhtml .acab{ grid-column:1 / 4; display:grid; grid-template-columns:1fr auto auto; gap:0 8px; font-size:11.5px; color:#55607F; font-weight:800; text-transform:uppercase; }
   .gtit{ display:block; width:100%; font-size:12.5px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:var(--marino); margin:6px 0 0; }
   .mtz{ width:100%; border-collapse:collapse; font-size:16px; }
   .mtz th{ background:#EDF2FF; color:var(--marino); padding:5px 8px; text-align:right; font-size:13px; }
@@ -804,7 +850,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js"></script>
+<script src="aula.js?v=20261018"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1548,11 +1594,22 @@ function cuaValor(A, g, id){
   });
   return tot;
 }
+function hojaTrabajo(A, g){
+  var T=A.hojaT, h='<div class="ht" style="--htcols:'+T.cols+'">'+T.cab;
+  A.fichas.forEach(function(f){
+    if(f.fijo) return;
+    if(f.id===T.antes) h+=T.mid;
+    var va=f.pista?'<span class="va">&rarr; '+esc(f.pista)+'</span>':'';
+    h+= g[f.id] ? '<div class="ficha htf usada">'+f.html+va+'</div>'
+                : '<button type="button" class="ficha htf" data-f="'+f.id+'">'+f.html+va+'</button>';
+  });
+  return h+T.pie+'</div>';
+}
 function bancoHtml(libres){
   var h='', gr=null;
   libres.forEach(function(f){
     if(f.gr && f.gr!==gr){ gr=f.gr; h+='<span class="gtit">'+esc(gr)+'</span>'; }
-    h+='<button type="button" class="ficha'+(f.pista?' conpista':'')+'" data-f="'+f.id+'">'+esc(f.t)+'<span class="im">'+mil(f.v)+'</span>'+(f.pista?'<small class="pis">&rarr; '+esc(f.pista)+'</small>':'')+'</button>';
+    h+='<button type="button" class="ficha'+(f.html?' fhtml':'')+(f.cls?' '+f.cls:'')+'" data-f="'+f.id+'">'+(f.html ? f.html : esc(f.t)+'<span class="im">'+mil(f.v)+'</span>')+(f.pista?'<small class="pis">&rarr; '+esc(f.pista)+'</small>':'')+'</button>';
   });
   return h;
 }
@@ -1585,9 +1642,9 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
-    (libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
-    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
+  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+(A.compacto?' compacto':'')+(A.ancho?' ancho':'')+(A.flechas?' flechas':'')+(A.hojaT?' hojat':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
+    (A.hojaT ? hojaTrabajo(A, g) : libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
+    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+(A.cols.length===3?' c3':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     if(c.matriz){ h+=matrizHtml(k, A, g, c)+'</div>'; return; }

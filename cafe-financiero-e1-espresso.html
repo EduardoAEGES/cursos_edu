@@ -135,6 +135,25 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  @media (min-width:1100px){ .cuadro.compacto.lado.hojat{ grid-template-columns:auto 1fr !important; } }
+  .cuadro .banco:has(.ht){ padding:0 !important; gap:0 !important; display:block !important; }
+  .ht{ font-size:14px; }
+  .ht .htr, .cuadro .ht .ficha.htf{ display:grid !important; grid-template-columns:var(--htcols); align-items:center; width:100%; gap:0; }
+  .ht .htr > span, .ht .htf > span{ padding:2px 6px; text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; border-left:1px solid #E3E8F4; }
+  .ht .htr > span:nth-child(-n+2), .ht .htf > span:nth-child(-n+2){ text-align:left; }
+  .ht .htr > span:first-child, .ht .htf > span:first-child{ border-left:0; font-weight:800; color:var(--marino); }
+  .ht .hth{ background:#EDF2FF; color:var(--marino); font-weight:800; font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; }
+  .ht .hth > span{ text-align:center !important; white-space:normal; line-height:1.15; padding:4px 4px; }
+  .ht .hth.g1 > span{ border-bottom:1px solid #D5DDF0; }
+  .cuadro .ht .ficha.htf{ border:0 !important; border-bottom:1px dashed #C9D3EA !important; border-radius:0 !important; padding:0 !important; margin:0 !important; font-size:14px !important; font-weight:500; background:#fff; box-shadow:none !important; text-align:left; }
+  .cuadro .ht button.ficha.htf:hover, .cuadro .ht .ficha.htf.sel{ background:#FFF4CC; outline:2px solid var(--fucsia); outline-offset:-2px; }
+  .cuadro .ht .ficha.htf.usada{ background:#F2FAF6; color:#6B7A90; }
+  .cuadro .ht .ficha.htf.usada > span:first-child::before{ content:'\2713 '; color:var(--verde); }
+  .ht .htf .va{ text-align:left !important; font-size:12px; color:var(--fucsia); font-weight:800; white-space:normal !important; line-height:1.1; }
+  .ht .htf .dr{ background:#FFFBEA; font-weight:700; }
+  .ht .htt{ font-weight:800; background:#F4F6FB; color:var(--marino); border-top:2px solid var(--marino); }
+  .ht .htt.fin{ border-top:1px solid var(--marino); border-bottom:3px double var(--marino); }
+
   .ficha .pis{ display:inline; margin-left:6px; font-size:12px; color:var(--fucsia); font-weight:800; white-space:nowrap; }
   .flecha{ color:var(--fucsia); font-weight:800; white-space:nowrap; }
   .lado2{ display:grid; gap:14px; grid-template-columns:1fr; align-items:start; }
@@ -831,7 +850,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js"></script>
+<script src="aula.js?v=20261018"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1598,6 +1617,17 @@ function cuaValor(A, g, id){
   });
   return tot;
 }
+function hojaTrabajo(A, g){
+  var T=A.hojaT, h='<div class="ht" style="--htcols:'+T.cols+'">'+T.cab;
+  A.fichas.forEach(function(f){
+    if(f.fijo) return;
+    if(f.id===T.antes) h+=T.mid;
+    var va=f.pista?'<span class="va">&rarr; '+esc(f.pista)+'</span>':'';
+    h+= g[f.id] ? '<div class="ficha htf usada">'+f.html+va+'</div>'
+                : '<button type="button" class="ficha htf" data-f="'+f.id+'">'+f.html+va+'</button>';
+  });
+  return h+T.pie+'</div>';
+}
 function bancoHtml(libres){
   var h='', gr=null;
   libres.forEach(function(f){
@@ -1635,8 +1665,8 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+(A.compacto?' compacto':'')+(A.ancho?' ancho':'')+(A.flechas?' flechas':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
-    (libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+(A.compacto?' compacto':'')+(A.ancho?' ancho':'')+(A.flechas?' flechas':'')+(A.hojaT?' hojat':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
+    (A.hojaT ? hojaTrabajo(A, g) : libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
     '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+(A.cols.length===3?' c3':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
