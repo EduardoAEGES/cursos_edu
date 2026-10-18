@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Café Financiero</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .cafe-datos{ display:grid; gap:12px; grid-template-columns:1fr; }
+  @media (min-width:760px){ .cafe-datos{ grid-template-columns:1fr 1fr; } }
+  .cafe-datos .caja{ border:1px solid #D6D6D6; border-radius:8px; padding:14px 16px; background:#fff; }
+  .cafe-datos h3{ margin:0 0 6px; font-size:15px; color:#071767; }
+  .cafe-datos p, .cafe-datos li{ margin:0 0 4px; font-size:14px; line-height:1.55; }
+  .cafe-datos ul{ margin:0; padding-left:18px; }
+  .cafe-hora{ width:100%; border-collapse:collapse; font-size:14px; }
+  .cafe-hora td{ padding:7px 9px; border-bottom:1px solid #E6E6E6; vertical-align:top; }
+  .cafe-hora td:first-child{ font-weight:700; color:#071767; white-space:nowrap; }
+  .cafe-btns{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Cursos</span> / <b>Café Financiero</b></span>
+  <div class="o-cp-right"><span class="o-count">8 encuentros - 16 clases</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">☕</div>
+      <div class="txt">
+        <h1>Café Financiero</h1>
+        <p class="sub">Ocho encuentros prácticos de contabilidad - Equipo de Contabilidad CERTUS - Dirige Eduardo Mamani Roque</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-ok">En curso</span></div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Cómo es cada encuentro</h2>
+    <div class="cafe-datos">
+      <div class="caja">
+        <h3>Todos los domingos, de 7:00 a 8:00 p. m.</h3>
+        <table class="cafe-hora">
+          <tr><td>El Filtrado</td><td>Estados financieros: los armamos juntos a partir del balance de comprobación, el mayor y el diario.</td></tr>
+          <tr><td>Break</td><td>Un cafecito.</td></tr>
+          <tr><td>El Espresso</td><td>El asiento contable del día: un caso nuevo para registrar.</td></tr>
+        </table>
+        <div class="cafe-btns">
+          <a class="o-btn o-btn-primary" href="https://meet.google.com/skm-ucjz-vhu" target="_blank" rel="noopener">Entrar al Meet</a>
+          <a class="o-btn" href="https://forms.gle/6JZjf5RDB8ycqqoV7" target="_blank" rel="noopener">Inscribirme</a>
+        </div>
+      </div>
+      <div class="caja">
+        <h3>La empresa del caso: Suela &amp; Co. S.A.C.</h3>
+        <p>Una tienda de zapatillas en Lima que crece de un encuentro a otro. Cada encuentro es un mes de 2026, y los
+           datos continúan los del anterior.</p>
+        <ul>
+          <li><b>Lucía</b>, la dueña.</li>
+          <li><b>Mateo</b>, el vendedor.</li>
+          <li><b>Rosa</b>, la contadora que siempre pide comprobantes.</li>
+        </ul>
+        <p style="margin-top:8px">Para inscribirte necesitas un correo Gmail con la sesión iniciada: con ese correo se agenda
+           el evento en tu Calendar.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title" style="margin-top:0">Encuentro 1 - domingo 18 de octubre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e1-filtrado.html">
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — Los 4 en miniatura</span><span class="d">Los cuatro estados en versión pequeña y cómo se conectan, con el flujo de efectivo por el método directo. Estados financieros.</span></span>
+        <span class="o-chip o-chip-ok">Disponible</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e1-espresso.html">
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — La moto de reparto que se desgasta</span><span class="d">Depreciación de la moto comprada hace unos meses. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-ok">Disponible</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 2 - domingo 25 de octubre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e2-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — Ordenando la casa</span><span class="d">Situación financiera clasificada en corriente y no corriente. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e2-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Plata viajera</span><span class="d">Entrega a rendir cuenta y su rendición, cuando se gasta menos y cuando se gasta más de lo entregado. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 3 - domingo 1 de noviembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e3-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — Dos formas de contar la misma historia</span><span class="d">Resultados por función y por naturaleza, y flujo de efectivo por el método indirecto. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e3-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Zapatillas pasadas de moda</span><span class="d">Desvalorización de existencias. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 4 - domingo 8 de noviembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e4-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — Efectivo en rojo</span><span class="d">El sobregiro bancario: ¿es efectivo o es deuda? Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e4-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Compré barato... ¿y el flete?</span><span class="d">Compra de mercadería al crédito con flete e IGV. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 5 - domingo 15 de noviembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e5-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — El flujo visto desde dos lados</span><span class="d">Método directo e indirecto, lado a lado. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e5-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Rebaja de fin de temporada</span><span class="d">Venta al crédito con descuento y su costo de ventas. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 6 - domingo 22 de noviembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e6-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — Deudas con fecha</span><span class="d">Préstamo con parte corriente y parte no corriente. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e6-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Clientes que prometen y no pagan</span><span class="d">Estimación de cobranza dudosa. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 7 - domingo 29 de noviembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e7-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — La letra chica</span><span class="d">Las notas a los estados financieros. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e7-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — El IGV: lo que cobras no es tuyo</span><span class="d">Determinación del IGV y pago a SUNAT. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+    <h2 class="o-section-title" style="margin-top:22px">Encuentro 8 - domingo 6 de diciembre</h2>
+    <div class="o-list">
+      <a class="o-row" href="cafe-financiero-e8-filtrado.html" data-pendiente>
+        <span class="n">📊</span>
+        <span class="info"><span class="t">El Filtrado — El informe final</span><span class="d">Los cuatro estados con sus notas, desde el balance de comprobación. Estados financieros.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+      <a class="o-row" href="cafe-financiero-e8-espresso.html" data-pendiente>
+        <span class="n">☕</span>
+        <span class="info"><span class="t">El Espresso — Cierre de temporada</span><span class="d">Servicio devengado que todavía no se paga y cierre del resultado. Asiento contable del día.</span></span>
+        <span class="o-chip o-chip-wait">Pronto</span>
+        <span class="chev">›</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Café Financiero</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+<script src="pendiente.js" defer></script>
+
+</body>
+</html>
