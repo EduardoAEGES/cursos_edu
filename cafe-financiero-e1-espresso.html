@@ -608,6 +608,11 @@
   @media print{ .anibtn{ display:none; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  .duo{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:1100px){ .duo{ grid-template-columns:1.1fr 1fr; } }
+  .duo .tarea{ margin-top:0; }
+  .ops.fila{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .ops.fila button{ margin:0; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -988,17 +993,23 @@ a0:{"tipo": "cal", "titulo": "Calcula: un exhibidor de 5,000 que dura 5 años", 
 
 a1:{"tipo": "par", "titulo": "Arrastra cada definición a su concepto", "fichas": [{"id": "c1", "t": "Precio de compra + lo necesario para dejarlo listo para usar"}, {"id": "c2", "t": "El tiempo o las unidades que se espera usar el bien"}, {"id": "c3", "t": "Lo que se espera obtener por el bien al final"}, {"id": "c4", "t": "Costo − valor residual"}, {"id": "c5", "t": "Costo − depreciación acumulada"}], "huecos": [{"id": "c1", "q": "Costo"}, {"id": "c2", "q": "Vida útil"}, {"id": "c3", "q": "Valor residual"}, {"id": "c4", "q": "Importe depreciable"}, {"id": "c5", "q": "Valor en libros"}]},
 
-a2:{"tipo": "cal", "titulo": "Caso 1 - Calcula", "lista": [{"q": "Depreciación anual", "f": "(Costo − valor residual) ÷ años", "e": 1920, "tol": 0.5, "u": "soles", "ph": "1920", "pq": "9,600 ÷ 5 = 1,920."}, {"q": "Depreciación mensual", "f": "Anual ÷ 12", "e": 160, "tol": 0.5, "u": "soles", "pq": "1,920 ÷ 12 = 160."}, {"q": "Depreciación del periodo 2025, de agosto a diciembre", "f": "Mensual × meses de uso", "e": 800, "tol": 0.5, "u": "soles", "pq": "160 × 5 = 800."}, {"q": "Valor en libros al 31 de enero de 2026", "f": "Costo − depreciación acumulada de 6 meses", "e": 8640, "tol": 0.5, "u": "soles", "pq": "9,600 − 960 = 8,640."}]},
+c1a:{"tipo": "tabla", "titulo": "Calcula y registra", "cols": ["Concepto o cuenta", "Importe o Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Cálculo</b>"}, {"t": ""}, {"t": ""}], [{"t": "Importe depreciable: 9,600 − 0"}, {"e": 9600}, {"t": ""}], [{"t": "Depreciación anual"}, {"e": 1920}, {"t": ""}], [{"t": "Depreciación de enero"}, {"e": 160}, {"t": ""}], [{"t": "<b>Asiento: depreciación de enero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["334 Vehículos - moto de reparto", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 160}, {"t": ""}], [{"ops": ["334 Vehículos - moto de reparto", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 160}], [{"ops": ["6814 Depreciación", "94 Gastos administrativos", "95 Gastos de ventas"], "ok": 2}, {"e": 160}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "391 Depreciación acumulada", "791 Cargas imputables a cuentas de costos y gastos"], "ok": 2}, {"t": ""}, {"e": 160}]]},
 
-a3:{"tipo": "tabla", "titulo": "Caso 1 - El asiento de enero de 2026", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>31 de enero - Por la depreciación de la moto de reparto</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "334 Vehículos - moto de reparto", "6814 Depreciación"], "ok": 2}, {"e": 160}, {"t": ""}], [{"ops": ["334 Vehículos - moto de reparto", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 160}]], "fin":globo(P.idea,"Resuelto","Gasto al Debe, depreciación acumulada al Haber. La cuenta de la moto no se toca y no sale plata.")},
+c1b:{"tipo": "cuadro", "titulo": "Arrastra a los estados", "fichas": [{"id": "v", "t": "Ventas", "v": 38000, "g": "vt", "fijo": true}, {"id": "c", "t": "Costo de ventas", "v": 23600, "g": "cv", "fijo": true}, {"id": "oa", "t": "Otros gastos administrativos", "v": 1500, "g": "ga", "fijo": true}, {"id": "ov", "t": "Otros gastos de ventas", "v": 6200, "g": "gv", "fijo": true}, {"id": "d1", "t": "95 Gastos de ventas", "v": 160, "g": "gv"}, {"id": "b", "t": "Moto de reparto", "v": 9600, "g": "ac", "fijo": true}, {"id": "d2", "t": "391 Depreciación acumulada", "v": 960, "g": "da"}, {"id": "k1", "t": "Capital", "v": 30000, "g": "cp", "fijo": true}, {"id": "u", "t": "Utilidad del mes", "v": 6540, "g": "pu"}], "cols": [{"t": "Estado de resultados", "bloques": [{"lineas": [{"id": "vt", "t": "Ventas"}, {"id": "cv", "t": "Costo de ventas", "s": -1}], "tot": {"id": "ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "ga", "t": "Gastos administrativos", "s": -1}, {"id": "gv", "t": "Gastos de ventas", "s": -1}], "tot": {"id": "uo", "t": "Utilidad del mes", "de": ["ub", "ga", "gv"]}}]}, {"t": "Situación financiera", "c": "na", "bloques": [{"t": "Activo no corriente", "lineas": [{"id": "ac", "t": "Moto de reparto"}, {"id": "da", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "vl", "t": "Valor en libros"}}, {"t": "Patrimonio", "lineas": [{"id": "cp", "t": "Capital"}, {"id": "pu", "t": "Utilidad del mes"}], "tot": {"id": "tp", "t": "Total patrimonio"}}]}]},
 
-a4:{"tipo": "cal", "titulo": "Caso 2 - Calcula", "lista": [{"q": "Depreciación por par", "f": "(Costo − valor residual) ÷ pares de vida útil", "e": 0.4, "tol": 0.005, "u": "soles", "ph": "0.40", "pq": "(18,000 − 2,000) ÷ 40,000 = 0.40."}, {"q": "Depreciación de enero: 1,500 pares", "f": "Por par × pares", "e": 600, "tol": 0.5, "u": "soles", "pq": "0.40 × 1,500 = 600."}, {"q": "Depreciación de febrero: 2,200 pares", "f": "Por par × pares", "e": 880, "tol": 0.5, "u": "soles", "pq": "0.40 × 2,200 = 880."}, {"q": "Depreciación de marzo: 900 pares", "f": "Por par × pares", "e": 360, "tol": 0.5, "u": "soles", "pq": "0.40 × 900 = 360. El gasto sigue al uso."}]},
+c2a:{"tipo": "tabla", "titulo": "Calcula y registra", "cols": ["Concepto o cuenta", "Importe o Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Cálculo</b>"}, {"t": ""}, {"t": ""}], [{"t": "Importe depreciable: 18,000 − 2,000"}, {"e": 16000}, {"t": ""}], [{"t": "Depreciación por par"}, {"e": 0.4}, {"t": ""}], [{"t": "Depreciación de febrero: 2,200 pares"}, {"e": 880}, {"t": ""}], [{"t": "<b>Asiento: depreciación de febrero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 880}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 880}], [{"ops": ["6814 Depreciación", "94 Gastos administrativos", "95 Gastos de ventas"], "ok": 2}, {"e": 880}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "391 Depreciación acumulada", "791 Cargas imputables a cuentas de costos y gastos"], "ok": 2}, {"t": ""}, {"e": 880}]]},
 
-a5:{"tipo": "tabla", "titulo": "Caso 2 - El asiento de febrero", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>28 de febrero - Por la depreciación de la estampadora (2,200 pares)</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 880}, {"t": ""}], [{"ops": ["333 Maquinaria - estampadora", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 880}]], "fin":globo(P.idea,"Resuelto","El mismo asiento que la moto. Lo único que cambia es cómo se calcula el importe.")},
+c2b:{"tipo": "cuadro", "titulo": "Arrastra a los estados", "fichas": [{"id": "v", "t": "Ventas", "v": 38000, "g": "vt", "fijo": true}, {"id": "c", "t": "Costo de ventas", "v": 23600, "g": "cv", "fijo": true}, {"id": "oa", "t": "Otros gastos administrativos", "v": 1500, "g": "ga", "fijo": true}, {"id": "ov", "t": "Otros gastos de ventas", "v": 6200, "g": "gv", "fijo": true}, {"id": "d1", "t": "95 Gastos de ventas", "v": 880, "g": "gv"}, {"id": "b", "t": "Estampadora", "v": 18000, "g": "ac", "fijo": true}, {"id": "d2", "t": "391 Depreciación acumulada", "v": 1480, "g": "da"}, {"id": "k1", "t": "Capital", "v": 30000, "g": "cp", "fijo": true}, {"id": "u", "t": "Utilidad del mes", "v": 5820, "g": "pu"}], "cols": [{"t": "Estado de resultados", "bloques": [{"lineas": [{"id": "vt", "t": "Ventas"}, {"id": "cv", "t": "Costo de ventas", "s": -1}], "tot": {"id": "ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "ga", "t": "Gastos administrativos", "s": -1}, {"id": "gv", "t": "Gastos de ventas", "s": -1}], "tot": {"id": "uo", "t": "Utilidad del mes", "de": ["ub", "ga", "gv"]}}]}, {"t": "Situación financiera", "c": "na", "bloques": [{"t": "Activo no corriente", "lineas": [{"id": "ac", "t": "Estampadora"}, {"id": "da", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "vl", "t": "Valor en libros"}}, {"t": "Patrimonio", "lineas": [{"id": "cp", "t": "Capital"}, {"id": "pu", "t": "Utilidad del mes"}], "tot": {"id": "tp", "t": "Total patrimonio"}}]}]},
 
-a6:{"tipo": "tabla", "titulo": "Casos 3 y 4 - Calcula el importe y registra", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Caso 3 - Laptop de la caja, enero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["336 Equipos diversos - laptop", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 75}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "336 Equipos diversos - laptop", "391 Depreciación acumulada"], "ok": 2}, {"t": ""}, {"e": 75}], [{"t": "<b>Caso 4 - Local comercial, enero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["332 Edificaciones - local comercial", "635 Alquiler del local", "6814 Depreciación"], "ok": 2}, {"e": 625}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "332 Edificaciones - local comercial", "391 Depreciación acumulada"], "ok": 2}, {"t": ""}, {"e": 625}]], "fin":"<div class=\"av\"><b>Resuelto.</b> Laptop: 3,600 ÷ 4 = 900 al año, 75 al mes. Local: 150,000 ÷ 20 = 7,500 al año, 625 al mes. El terreno no se deprecia.</div>"},
+c3a:{"tipo": "tabla", "titulo": "Calcula y registra", "cols": ["Concepto o cuenta", "Importe o Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Cálculo</b>"}, {"t": ""}, {"t": ""}], [{"t": "Importe depreciable: 4,000 − 400"}, {"e": 3600}, {"t": ""}], [{"t": "Depreciación anual"}, {"e": 900}, {"t": ""}], [{"t": "Depreciación de enero"}, {"e": 75}, {"t": ""}], [{"t": "<b>Asiento: depreciación de enero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["336 Equipos diversos - laptop", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 75}, {"t": ""}], [{"ops": ["336 Equipos diversos - laptop", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 75}], [{"ops": ["6814 Depreciación", "94 Gastos administrativos", "95 Gastos de ventas"], "ok": 1}, {"e": 75}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "391 Depreciación acumulada", "791 Cargas imputables a cuentas de costos y gastos"], "ok": 2}, {"t": ""}, {"e": 75}]]},
 
-a7:{"tipo": "arr", "titulo": "¿Dónde se ve cada número?", "fichas": [{"id": "e1", "t": "Gasto por depreciación de la moto: 160", "g": "ER"}, {"id": "e2", "t": "Gasto por depreciación de la estampadora: 880", "g": "ER"}, {"id": "e3", "t": "La utilidad del mes baja", "g": "ER"}, {"id": "e4", "t": "Moto 9,600 menos depreciación acumulada 960", "g": "SF"}, {"id": "e5", "t": "Valor en libros de la laptop: 3,525", "g": "SF"}, {"id": "e6", "t": "El terreno del local sigue en 50,000", "g": "SF"}, {"id": "e7", "t": "Plata que sale por la depreciación: ninguna", "g": "FE"}, {"id": "e8", "t": "La compra de la estampadora, el día que se pagó", "g": "FE"}], "cajas": [{"id": "ER", "t": "Estado de resultados"}, {"id": "SF", "t": "Situación financiera"}, {"id": "FE", "t": "Flujo de efectivo"}], "fin":"<div class=\"av\"><b>Resuelto.</b> La depreciación baja la utilidad y el valor del activo, pero no saca plata. En el flujo de efectivo solo se ve la compra del bien, el día que se pagó.</div>"}
+c3b:{"tipo": "cuadro", "titulo": "Arrastra a los estados", "fichas": [{"id": "v", "t": "Ventas", "v": 38000, "g": "vt", "fijo": true}, {"id": "c", "t": "Costo de ventas", "v": 23600, "g": "cv", "fijo": true}, {"id": "oa", "t": "Otros gastos administrativos", "v": 1500, "g": "ga", "fijo": true}, {"id": "ov", "t": "Otros gastos de ventas", "v": 6200, "g": "gv", "fijo": true}, {"id": "d1", "t": "94 Gastos administrativos", "v": 75, "g": "ga"}, {"id": "b", "t": "Laptop", "v": 4000, "g": "ac", "fijo": true}, {"id": "d2", "t": "391 Depreciación acumulada", "v": 75, "g": "da"}, {"id": "k1", "t": "Capital", "v": 30000, "g": "cp", "fijo": true}, {"id": "u", "t": "Utilidad del mes", "v": 6625, "g": "pu"}], "cols": [{"t": "Estado de resultados", "bloques": [{"lineas": [{"id": "vt", "t": "Ventas"}, {"id": "cv", "t": "Costo de ventas", "s": -1}], "tot": {"id": "ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "ga", "t": "Gastos administrativos", "s": -1}, {"id": "gv", "t": "Gastos de ventas", "s": -1}], "tot": {"id": "uo", "t": "Utilidad del mes", "de": ["ub", "ga", "gv"]}}]}, {"t": "Situación financiera", "c": "na", "bloques": [{"t": "Activo no corriente", "lineas": [{"id": "ac", "t": "Laptop"}, {"id": "da", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "vl", "t": "Valor en libros"}}, {"t": "Patrimonio", "lineas": [{"id": "cp", "t": "Capital"}, {"id": "pu", "t": "Utilidad del mes"}], "tot": {"id": "tp", "t": "Total patrimonio"}}]}]},
+
+c4a:{"tipo": "tabla", "titulo": "Calcula y registra", "cols": ["Concepto o cuenta", "Importe o Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>Cálculo</b>"}, {"t": ""}, {"t": ""}], [{"t": "Importe depreciable: 150,000 − 30,000"}, {"e": 120000}, {"t": ""}], [{"t": "Depreciación anual"}, {"e": 6000}, {"t": ""}], [{"t": "Depreciación de enero"}, {"e": 500}, {"t": ""}], [{"t": "<b>Asiento: depreciación de enero</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["332 Edificaciones - local comercial", "6814 Depreciación", "6911 Costo de ventas"], "ok": 1}, {"e": 500}, {"t": ""}], [{"ops": ["332 Edificaciones - local comercial", "391 Depreciación acumulada", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 500}], [{"ops": ["6814 Depreciación", "94 Gastos administrativos", "95 Gastos de ventas"], "ok": 1}, {"e": 500}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "391 Depreciación acumulada", "791 Cargas imputables a cuentas de costos y gastos"], "ok": 2}, {"t": ""}, {"e": 500}]]},
+
+c4b:{"tipo": "cuadro", "titulo": "Arrastra a los estados", "fichas": [{"id": "v", "t": "Ventas", "v": 38000, "g": "vt", "fijo": true}, {"id": "c", "t": "Costo de ventas", "v": 23600, "g": "cv", "fijo": true}, {"id": "oa", "t": "Otros gastos administrativos", "v": 1500, "g": "ga", "fijo": true}, {"id": "ov", "t": "Otros gastos de ventas", "v": 6200, "g": "gv", "fijo": true}, {"id": "d1", "t": "94 Gastos administrativos", "v": 500, "g": "ga"}, {"id": "b", "t": "Construcción del local", "v": 150000, "g": "ac", "fijo": true}, {"id": "d2", "t": "391 Depreciación acumulada", "v": 500, "g": "da"}, {"id": "k1", "t": "Capital", "v": 30000, "g": "cp", "fijo": true}, {"id": "u", "t": "Utilidad del mes", "v": 6200, "g": "pu"}], "cols": [{"t": "Estado de resultados", "bloques": [{"lineas": [{"id": "vt", "t": "Ventas"}, {"id": "cv", "t": "Costo de ventas", "s": -1}], "tot": {"id": "ub", "t": "Utilidad bruta"}}, {"lineas": [{"id": "ga", "t": "Gastos administrativos", "s": -1}, {"id": "gv", "t": "Gastos de ventas", "s": -1}], "tot": {"id": "uo", "t": "Utilidad del mes", "de": ["ub", "ga", "gv"]}}]}, {"t": "Situación financiera", "c": "na", "bloques": [{"t": "Activo no corriente", "lineas": [{"id": "ac", "t": "Construcción del local"}, {"id": "da", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "vl", "t": "Valor en libros"}}, {"t": "Patrimonio", "lineas": [{"id": "cp", "t": "Capital"}, {"id": "pu", "t": "Utilidad del mes"}], "tot": {"id": "tp", "t": "Total patrimonio"}}]}]},
+
+op:{"tipo": "opi", "titulo": "¿Tú qué opinas?", "lista": [{"q": "¿Qué método usarías para la moto de reparto de Suela & Co.?", "ops": ["Línea recta: el mismo monto cada mes", "Unidades producidas: según los kilómetros"], "com": ["Es el más usado y el más simple de controlar.", "Refleja mejor el desgaste si hay meses de mucho reparto y meses de poco."]}, {"q": "La moto quedará en cero en los libros en 2030. ¿Qué harías desde hoy?", "ops": ["Separar un poco cada mes para reemplazarla", "Pedir un préstamo cuando toque cambiarla", "Usarla hasta que no dé más"], "com": ["Así el cambio no golpea la caja.", "Es válido, pero habrá que pagar intereses.", "En los libros vale cero, pero si funciona sigue sirviendo."]}, {"q": "¿Qué te costó más hoy?", "ops": ["Calcular la depreciación", "Hacer el asiento", "Saber en qué estado va cada número"], "com": ["Recuerda: (costo − valor residual) ÷ vida útil.", "Siempre 68 al Debe y 39 al Haber, y el destino 94 o 95 contra la 79.", "El gasto va a resultados y la depreciación acumulada resta al activo."]}]}
 
 };
 
@@ -1016,32 +1027,26 @@ var D=[
 { et:"NIC 16", t:"Los conceptos de la NIC 16", clave:"a1",
   h:"<p class=\"enc\">Cinco palabras para calcular la depreciación</p><p class=\"sub\">Se deprecia desde que el bien está listo para usarse. Los terrenos no se deprecian</p>" },
 
-{ et:"Caso 1", t:"Caso 1 - Línea recta: la moto de reparto", clave:"a2",
-  h:"<div class=\"defi\"><b>Enunciado.</b> Suela &amp; Co. compró la moto de reparto el 1 de agosto de 2025 a <b>9,600</b> sin IGV. No tendrá valor residual y su vida útil es de <b>5 años</b>. Se deprecia en línea recta: el mismo monto cada mes.</div>"+
-    "<button type=\"button\" class=\"o-btn anibtn\" onclick=\"var z=this.nextElementSibling;z.classList.remove('go');void z.offsetWidth;z.classList.add('go')\">&#9654; Ver mes a mes</button><div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">160</span><i style=\"height:82%;animation-delay:0.00s\"></i><em>Ene</em></div><div class=\"b\"><span style=\"animation-delay:0.45s\">160</span><i style=\"height:82%;animation-delay:0.45s\"></i><em>Feb</em></div><div class=\"b\"><span style=\"animation-delay:0.90s\">160</span><i style=\"height:82%;animation-delay:0.90s\"></i><em>Mar</em></div><div class=\"b\"><span style=\"animation-delay:1.35s\">160</span><i style=\"height:82%;animation-delay:1.35s\"></i><em>Abr</em></div><div class=\"b\"><span style=\"animation-delay:1.80s\">160</span><i style=\"height:82%;animation-delay:1.80s\"></i><em>May</em></div><div class=\"b\"><span style=\"animation-delay:2.25s\">160</span><i style=\"height:82%;animation-delay:2.25s\"></i><em>Jun</em></div><div class=\"b\"><span style=\"animation-delay:2.70s\">160</span><i style=\"height:82%;animation-delay:2.70s\"></i><em>Jul</em></div><div class=\"b\"><span style=\"animation-delay:3.15s\">160</span><i style=\"height:82%;animation-delay:3.15s\"></i><em>Ago</em></div><div class=\"b\"><span style=\"animation-delay:3.60s\">160</span><i style=\"height:82%;animation-delay:3.60s\"></i><em>Sep</em></div><div class=\"b\"><span style=\"animation-delay:4.05s\">160</span><i style=\"height:82%;animation-delay:4.05s\"></i><em>Oct</em></div><div class=\"b\"><span style=\"animation-delay:4.50s\">160</span><i style=\"height:82%;animation-delay:4.50s\"></i><em>Nov</em></div><div class=\"b\"><span style=\"animation-delay:4.95s\">160</span><i style=\"height:82%;animation-delay:4.95s\"></i><em>Dic</em></div></div>" },
+{ et:"Caso 1", t:"Caso 1 - Línea recta: la moto de reparto", claves:["c1a", "c1b"],
+  h:"<div class=\"defi\"><b>Enunciado.</b> Moto de reparto comprada el 1 de agosto de 2025 a <b>9,600</b>. Sin valor residual. Vida útil <b>5 años</b>. Registra enero de 2026. Es gasto de ventas.</div>" },
 
-{ et:"Caso 1", t:"Caso 1 - Registra la depreciación de enero", clave:"a3",
-  h:"<div class=\"defi\"><b>Enunciado.</b> Registra la depreciación de la moto del mes de enero de 2026.</div>"+
-    "<div class=\"dos\"><div class=\"fc\"><h4>Debe: 6814 Depreciación</h4><div class=\"c\"><p>Gasto del mes.</p></div></div><div class=\"fc rj\"><h4>Haber: 391 Depreciación acumulada</h4><div class=\"c\"><p>Resta a la moto.</p></div></div></div>" },
+{ et:"Caso 2", t:"Caso 2 - Unidades producidas: la estampadora", claves:["c2a", "c2b"],
+  h:"<div class=\"defi\"><b>Enunciado.</b> Estampadora comprada el 2 de enero a <b>18,000</b>. Valor residual <b>2,000</b>. Vida útil <b>40,000 pares</b>. Enero: 1,500 pares; febrero: <b>2,200</b>. Registra febrero. Gasto de ventas.</div>" },
 
-{ et:"Caso 2", t:"Caso 2 - Unidades producidas: la estampadora", clave:"a4",
-  h:"<div class=\"defi\"><b>Enunciado.</b> Suela &amp; Co. compró una estampadora para personalizar zapatillas a <b>18,000</b>. Al final se podrá vender en <b>2,000</b> y su vida útil es de <b>40,000 pares</b> estampados. Se deprecia por unidades producidas.</div>"+
-    "<button type=\"button\" class=\"o-btn anibtn\" onclick=\"var z=this.nextElementSibling;z.classList.remove('go');void z.offsetWidth;z.classList.add('go')\">&#9654; Ver mes a mes</button><div class=\"barras\"><div class=\"b\"><span style=\"animation-delay:0.00s\">600</span><i style=\"height:56%;animation-delay:0.00s\"></i><em>Ene 1,500 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.45s\">880</span><i style=\"height:82%;animation-delay:0.45s\"></i><em>Feb 2,200 pares</em></div><div class=\"b\"><span style=\"animation-delay:0.90s\">360</span><i style=\"height:34%;animation-delay:0.90s\"></i><em>Mar 900 pares</em></div></div>" },
+{ et:"Caso 3", t:"Caso 3 - Línea recta con valor residual: la laptop", claves:["c3a", "c3b"],
+  h:"<div class=\"defi\"><b>Enunciado.</b> Laptop de la contadora comprada el 1 de enero a <b>4,000</b>. Valor residual <b>400</b>. Vida útil <b>4 años</b>. Registra la depreciación de enero. Es un gasto administrativo.</div>" },
 
-{ et:"Caso 2", t:"Caso 2 - Registra la depreciación de febrero", clave:"a5",
-  h:"<div class=\"defi\"><b>Enunciado.</b> En febrero la estampadora trabajó <b>2,200 pares</b>. Registra su depreciación.</div>" },
+{ et:"Caso 4", t:"Caso 4 - Línea recta con valor residual: el local", claves:["c4a", "c4b"],
+  h:"<div class=\"defi\"><b>Enunciado.</b> Local para la oficina: terreno <b>50,000</b> (no se deprecia) y construcción <b>150,000</b>. Valor residual <b>30,000</b>. Vida útil <b>20 años</b>. Registra enero. Gasto administrativo.</div>" },
 
-{ et:"Casos 3 y 4", t:"Casos 3 y 4 - Línea recta", clave:"a6",
-  h:"<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>Caso</th><th>Enunciado</th></tr></thead><tbody><tr><td><b>3. Laptop</b></td><td>Comprada el 1 de enero de 2026 a 3,600. Vida útil 4 años, sin valor residual. Depreciación de enero</td></tr><tr><td><b>4. Local</b></td><td>Comprado a 200,000: 50,000 es el terreno y 150,000 la construcción. Vida útil de la construcción 20 años. Depreciación de enero</td></tr></tbody></table></div>" },
-
-{ et:"Efecto", t:"El efecto en los estados financieros", clave:"a7",
-  h:"<p class=\"enc\">Arrastra cada número al estado donde aparece</p>" }
+{ et:"Opinión", t:"¿Tú qué opinas? No hay respuestas malas", clave:"op",
+  h:'' }
 ];
 
 /* ================= estado ================= */
-var LS='cafe_e1_espresso_v2';
+var LS='cafe_e1_espresso_v3';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3','a4','a5','a6','a7'];
+var CLAVES=['a0','a1','c1a','c1b','c2a','c2b','c3a','c3b','c4a','c4b','op'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1156,7 +1161,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = !soyDocente() ? '' :
+  var sol = (!soyDocente() || A.tipo==='opi') ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1194,6 +1199,7 @@ function resuelve(k){
   }
   else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
   else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
 }
@@ -1234,6 +1240,20 @@ function vPar(k){
        '</span></div>';
   });
   h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vOpi(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops fila">';
+    p.ops.forEach(function(o,j){
+      h+='<button type="button" data-o="'+k+'" data-k="'+n+'" data-j="'+j+'" class="'+(g[n]===j?'buena':'')+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(g[n]!==undefined && p.com) h+='<p class="pq">'+esc(p.com[g[n]])+'</p>';
+  });
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1614,7 +1634,7 @@ function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
-       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : vQuiz(k);
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1627,7 +1647,9 @@ function pinta(quieto){
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
-  if(s.clave) h+=vista(s.clave);
+  var ks=clavesDe(s);
+  if(ks.length===1) h+='<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1637,7 +1659,7 @@ function pinta(quieto){
   $('marcador').textContent=ok+' de '+mx;
   $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
   $('pts').innerHTML=D.map(function(x,n){
-    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
@@ -1653,10 +1675,15 @@ function pinta(quieto){
 }
 
 var yaCruz={};
+function clavesDe(s){ return s.claves || (s.clave ? [s.clave] : []); }
 function cablea(){
-  var lam=$('lam'), s=D[i];
-  if(!s.clave) return;
-  var k=s.clave, A=ACT[k];
+  clavesDe(D[i]).forEach(function(k){
+    var c=$('lam').querySelector('[data-act="'+k+'"]');
+    if(c) cableaUna(k, c);
+  });
+}
+function cableaUna(k, lam){
+  var A=ACT[k];
 
   if(A.tipo==='arr'){
     montaArrastre(lam, function(fid, zona, el){
@@ -1692,6 +1719,12 @@ function cablea(){
     });
   });
 
+  qq('#lam button[data-o]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      G[b.dataset.o][+b.dataset.k]=+b.dataset.j; graba();
+      if(lista(b.dataset.o)) fanfarria(); else bien(); pinta(true);
+    });
+  });
   qq('#lam select[data-s]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
@@ -2099,7 +2132,7 @@ function pintaRuta(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('cafe_e1_espresso_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('cafe_e1_espresso_v3_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
@@ -2144,7 +2177,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('cafe_e1_espresso_v2_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('cafe_e1_espresso_v3_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
@@ -2316,7 +2349,7 @@ function resumenAula(){
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
 function tituloActividad(n){
@@ -2325,7 +2358,7 @@ function tituloActividad(n){
 }
 function diapoDe(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j+1;
   return 0;
 }
 
