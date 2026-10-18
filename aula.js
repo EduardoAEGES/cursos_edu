@@ -49,6 +49,10 @@
        modo guiado (todos en la diapositiva del docente) y otro libre (cada
        uno avanza solo). Al salir el docente, la sala vuelve sola al modo libre.
 
+   Opcional: simple: true
+       El alumno entra solo con su nombre, y hasta sin él (queda como
+       «Participante 123»). No se pide código de sala: se usa el de la clase.
+
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
        equipo, una pista al azar de la carpeta sonidos/ del repositorio
@@ -103,10 +107,10 @@ function pintaControles(){
           '<input id="aulaDni" type="text" inputmode="numeric" maxlength="8" '+
           'placeholder="8 dígitos" autocomplete="off"></label>' : '')+
         '<label class="aula-campo" id="aulaCnom"'+(conFicha()?' hidden':'')+'>'+
-          (conFicha()?'Apellidos y nombres':'Tu nombre')+
+          (conFicha()?'Apellidos y nombres':(simple()?'Tu nombre (opcional)':'Tu nombre'))+
           '<input id="aulaNombre" type="text" maxlength="60" placeholder="'+
           (conFicha()?'Apellidos y nombres':'Nombre y apellido')+'" autocomplete="off"></label>'+
-        '<label class="aula-campo">Código de sala'+
+        '<label class="aula-campo"'+(simple()?' hidden':'')+'>Código de sala'+
           '<input id="aulaSala" type="text" maxlength="20" placeholder="'+esc(codigoClase())+'" autocomplete="off"></label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">'+
           (conFicha()?'Ingresar':'Entrar a la sala')+'</button>'+
@@ -146,7 +150,7 @@ function pintaControles(){
     '</div>';
 
   if(!conFicha()) $('aulaNombre').value=leeLocal('nombre');
-  $('aulaSala').value=leeLocal(claveSala())||codigoClase();
+  $('aulaSala').value=simple() ? codigoClase() : (leeLocal(claveSala())||codigoClase());
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
   $('aulaSalir').addEventListener('click', sale);
@@ -229,6 +233,10 @@ function entraAlumno(){
 
   if(!conFicha()){
     var n0=$('aulaNombre').value.trim();
+    if(simple() && n0.length<2){
+      n0=leeLocal('anonimo') || ('Participante '+(100+Math.floor(Math.random()*900)));
+      guardaLocal('anonimo', n0);
+    }
     $('aulaCnom').classList.toggle('falta', n0.length<2);
     if(n0.length<2){ $('aulaNombre').focus(); estado('malo','Escribe tu nombre para entrar'); return; }
     adentro(n0, s, ''); return;
@@ -391,6 +399,8 @@ function falla(e){
 }
 
 /* ---------------- la ficha del alumno (DNI) ---------------- */
+/* simple: sin código de sala (se usa el de la clase) y el nombre es opcional */
+function simple(){ return !!(cfg && cfg.simple); }
 function conFicha(){ return !!(cfg && cfg.ficha && cfg.ficha.clave); }
 function claveFicha(){ return String(cfg.ficha.clave); }
 function dniBueno(v){ return /^[0-9]{8}$/.test(String(v||'').trim()); }
