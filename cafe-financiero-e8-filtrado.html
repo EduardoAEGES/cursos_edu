@@ -699,8 +699,8 @@
   </div>
 
   <div class="puerta" id="puerta">
-    <h2>Ingresa con tu nombre</h2>
-    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente, y pulsa <b>Entrar a la sala</b>. No se pide DNI: tus respuestas se guardan solo en este equipo.</p>
+    <h2>Entra a la sala</h2>
+    <p>Escribe tu nombre, si quieres, y pulsa <b>Entrar a la sala</b>. No se pide DNI ni c&oacute;digo: tus respuestas se guardan solo en este equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -2426,7 +2426,7 @@ function pantalla(e, alumno, cont){
   });
 }
 if(window.Aula){
-  Aula.iniciar({ sala:'CAFE8F', codigo:'CAFE', resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'CAFE8F', codigo:'CAFE', simple:true, resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
