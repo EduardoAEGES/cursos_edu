@@ -135,6 +135,15 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  @media (min-width:1100px){ .cuadro.lado{ grid-template-columns:minmax(280px,360px) 1fr; align-items:start; } }
+  .cuadro.lado .pila{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .cuadro.lado .pila .bt{ background:#FFF4CC; color:var(--tinta); }
+  .cuadro.lado .banco{ display:flex; flex-direction:column; gap:6px; padding:10px; border:0; border-radius:0; margin:0; }
+  .cuadro.lado .banco .ficha{ width:100%; display:flex; justify-content:space-between; gap:10px; text-align:left; font-size:16px; padding:5px 10px; }
+  .cuadro.lado .cuadra{ grid-column:1/-1; }
+  .cuadro.lado .cua{ min-height:40px; padding:6px 12px; }
+  .cuadro.lado .cua .n{ font-size:17px; }
+
   .cuadro{ display:grid; gap:14px; }
   .cuadro .cols{ display:grid; gap:14px; }
   @media (min-width:900px){ .cuadro .cols.c2{ grid-template-columns:1fr 1fr; align-items:start; } }
@@ -579,8 +588,40 @@
   .cua.fija .n small{ color:#55607F; }
   .ficha.fija{ display:none; }
   .nuevo{ background:#FFF4CC; }
+  /* animaciones de la teoría */
+  .vida{ margin:4px 0 8px; }
+  .vida .vb{ position:relative; height:48px; border-radius:12px; background:var(--aqua); overflow:hidden; }
+  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); }
+  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; }
+  .vida .tx{ position:absolute; right:14px; top:12px; color:#fff; font-weight:800; font-size:19px; }
+  .vida .anos{ display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#55607F; margin-top:6px; }
+  .vida .ley{ display:flex; gap:18px; font-size:16px; font-weight:700; margin-top:4px; color:var(--tinta); }
+  .vida .ley i{ display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
+  @keyframes gasta{ 0%{ width:0 } 100%{ width:100% } }
+  @keyframes anda{ 0%{ left:0 } 100%{ left:calc(100% - 46px) } }
+  .barras{ display:flex; align-items:flex-end; gap:6px; height:76px; margin:2px 0 8px; padding:0 2px; border-bottom:3px solid var(--linea); }
+  .barras .b{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; }
+  .barras .b:nth-child(odd) i{ background:var(--aqua); }
+  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; }
+  .barras .b em{ font-style:normal; font-size:12px; font-weight:700; color:#55607F; margin-top:3px; }
+  @keyframes sube{ to{ transform:scaleY(1) } }
+  @keyframes ve{ to{ opacity:1 } }
+  .defi{ font-size:21px; line-height:1.45; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
+  .vida.go .dep{ animation:gasta 12s linear forwards; }
+  .vida.go .moto{ animation:anda 12s linear forwards; }
+  .barras.go .b i{ transform:scaleY(0); animation:sube .9s ease-out forwards; }
+  .barras.go .b span{ opacity:0; animation:ve .5s ease-out forwards; }
+  .anibtn{ margin:0 0 8px; background:var(--fucsia) !important; color:#fff !important; border:0 !important; font:inherit; font-size:18px !important; font-weight:800; padding:9px 18px !important; border-radius:10px !important; cursor:pointer; }
+  .anibtn:hover{ filter:brightness(1.08); }
+  @media print{ .anibtn{ display:none; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  .duo{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:1100px){ .duo{ grid-template-columns:1.1fr 1fr; } }
+  .duo .tarea{ margin-top:0; }
+  .ops.fila{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .ops.fila button{ margin:0; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -658,11 +699,8 @@
   </div>
 
   <div class="puerta" id="puerta">
-    <h2>Ingresa con tu DNI</h2>
-    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
-       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
-       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
-       p&aacute;gina o entres desde otro equipo.</p>
+    <h2>Ingresa con tu nombre</h2>
+    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente, y pulsa <b>Entrar a la sala</b>. No se pide DNI: tus respuestas se guardan solo en este equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -957,15 +995,15 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "sel", "titulo": "Actividad 1 - ¿Efectivo o deuda?", "lista": [{"q": "En la situación financiera, el saldo acreedor de la 104 va...", "ops": ["Restando en el efectivo", "Como pasivo corriente: sobregiro bancario", "En el patrimonio"], "ok": 1, "pq": "Es una deuda con el banco, de corto plazo."}, {"q": "Entonces, ¿cuánto efectivo se muestra en el activo al 30 de abril?", "ops": ["1,550", "-891.20", "0"], "ok": 0, "pq": "Solo la caja: la cuenta corriente está en contra."}, {"q": "En el flujo de efectivo, ¿con qué saldo termina abril?", "ops": ["1,550", "-891.20", "2,441.20"], "ok": 1, "pq": "Caja menos sobregiro: -891.20. El flujo muestra el efectivo neto."}], "fin":globo(P.expl,"Resuelto","Mismo hecho, dos estados: en la situación financiera se ve la deuda completa; en el flujo se ve que la plata del mes terminó en negativo.")},
+a0:{"tipo": "sel", "titulo": "Actividad 1 - ¿Efectivo o deuda?", "lista": [{"q": "En la situación financiera, el saldo acreedor de la 104 va...", "ops": ["Restando en el efectivo", "Como pasivo corriente: sobregiro bancario", "En el patrimonio"], "ok": 1, "pq": "Es una deuda con el banco, de corto plazo."}, {"q": "Entonces, ¿cuánto efectivo se muestra en el activo al 30 de abril?", "ops": ["1,550", "-1,891.20", "0"], "ok": 0, "pq": "Solo la caja: la cuenta corriente está en contra."}, {"q": "En el flujo de efectivo, ¿con qué saldo termina abril?", "ops": ["1,550", "-1,891.20", "3,441.20"], "ok": 1, "pq": "Caja menos sobregiro: -1,891.20. El flujo muestra el efectivo neto."}], "fin":globo(P.expl,"Resuelto","Mismo hecho, dos estados: en la situación financiera se ve la deuda completa; en el flujo se ve que la plata del mes terminó en negativo.")},
 
-a1:{"tipo": "cuadro", "titulo": "Actividad 2 - Estado de resultados de abril", "intro": "Arrastra las cuentas que faltan. Los resultados se calculan solos.", "fichas": [{"id": "f7011", "t": "7011 Ventas", "v": 31000.0, "g": "r1"}, {"id": "f6911", "t": "6911 Costo de ventas", "v": 19200.0, "g": "r2"}, {"id": "f632", "t": "632 Honorarios", "v": 2400.0, "g": "r3", "fijo": true}, {"id": "f635", "t": "635 Alquiler del local", "v": 3500.0, "g": "r3", "fijo": true}, {"id": "f636", "t": "636 Luz, agua e internet", "v": 640.0, "g": "r3", "fijo": true}, {"id": "f637", "t": "637 Publicidad", "v": 1200.0, "g": "r3", "fijo": true}, {"id": "f6814", "t": "6814 Depreciación", "v": 210.0, "g": "r4", "fijo": true}], "cols": [{"t": "Suela & Co. S.A.C. - Estado de resultados de abril 2026", "bloques": [{"lineas": [{"id": "r1", "t": "Ventas"}, {"id": "r2", "t": "Costo de ventas", "s": -1}], "tot": {"id": "tb", "t": "Utilidad bruta"}}, {"lineas": [{"id": "r3", "t": "Gastos de servicios", "s": -1}, {"id": "r4", "t": "Depreciación", "s": -1}], "tot": {"id": "to", "t": "Utilidad del mes", "de": ["tb", "r3", "r4"]}}]}], "fin":globo(P.alum,"Resuelto","Abril ganó 3,850. La empresa gana: el sobregiro no viene de pérdidas, viene de cómo se usó la plata.")},
+a1:{"tipo": "cuadro", "titulo": "Actividad 2 - Estado de resultados de abril", "intro": "Arrastra las cuentas que faltan. Los resultados se calculan solos.", "fichas": [{"id": "f7011", "t": "7011 Ventas", "v": 31000.0, "g": "r1"}, {"id": "f6911", "t": "6911 Costo de ventas", "v": 19200.0, "g": "r2"}, {"id": "f632", "t": "632 Honorarios", "v": 2400.0, "g": "r3", "fijo": true}, {"id": "f635", "t": "635 Alquiler del local", "v": 3500.0, "g": "r3", "fijo": true}, {"id": "f636", "t": "636 Luz, agua e internet", "v": 640.0, "g": "r3", "fijo": true}, {"id": "f637", "t": "637 Publicidad", "v": 1200.0, "g": "r3", "fijo": true}, {"id": "f6814", "t": "6814 Depreciación", "v": 210.0, "g": "r4", "fijo": true}, {"id": "f881", "t": "881 Impuesto a la renta", "v": 1135.75, "g": "rir", "fijo": true}], "cols": [{"t": "Suela & Co. S.A.C. - Estado de resultados de abril 2026", "bloques": [{"lineas": [{"id": "r1", "t": "Ventas"}, {"id": "r2", "t": "Costo de ventas", "s": -1}], "tot": {"id": "tb", "t": "Utilidad bruta"}}, {"lineas": [{"id": "r3", "t": "Gastos de servicios", "s": -1}, {"id": "r4", "t": "Depreciación", "s": -1}], "tot": {"id": "tai", "t": "Resultado antes de impuestos", "de": ["tb", "r3", "r4"]}}, {"lineas": [{"id": "rir", "t": "Impuesto a la renta (29.5 %)", "s": -1}], "tot": {"id": "tun", "t": "Utilidad del mes", "de": ["tai", "rir"]}}]}], "fin":globo(P.alum,"Resuelto","Abril ganó 2,714.25. La empresa gana: el sobregiro no viene de pérdidas, viene de cómo se usó la plata.")},
 
-a2:{"tipo": "tabla", "titulo": "Actividad 3 - Cambios en el patrimonio con dividendos", "intro": "Completa las celdas amarillas. Escribe solo números; lo que resta, con signo menos.", "cols": ["Concepto", "Capital", "Resultados acumulados", "Total"], "tipos": ["t", "n", "n", "n"], "filas": [[{"t": "Saldo al 1 de abril"}, {"t": "30,000"}, {"t": "17,690"}, {"t": "47,690"}], [{"t": "Dividendos repartidos"}, {"t": ""}, {"e": -15000}, {"t": "-15,000"}], [{"t": "Utilidad de abril"}, {"t": ""}, {"t": "3,850"}, {"t": "3,850"}], [{"t": "Saldo al 30 de abril", "cl": "tot"}, {"t": "30,000"}, {"e": 6540.0}, {"e": 36540.0}]], "fin":globo(P.idea,"Resuelto","Los socios se llevaron 15,000 y el mes ganó 3,850. El patrimonio bajó, aunque la empresa ganó.")},
+a2:{"tipo": "tabla", "titulo": "Actividad 3 - Cambios en el patrimonio con dividendos", "intro": "Completa las celdas amarillas. Escribe solo números; lo que resta, con signo menos.", "cols": ["Concepto", "Capital", "Resultados acumulados", "Total"], "tipos": ["t", "n", "n", "n"], "filas": [[{"t": "Saldo al 1 de abril"}, {"t": "24,000"}, {"t": "12,996.55"}, {"t": "36,996.55"}], [{"t": "Dividendos repartidos"}, {"t": ""}, {"e": -10000}, {"t": "-10,000"}], [{"t": "Utilidad de abril"}, {"t": ""}, {"t": "2,714.25"}, {"t": "2,714.25"}], [{"t": "Saldo al 30 de abril", "cl": "tot"}, {"t": "24,000"}, {"e": 5710.8}, {"e": 29710.8}]], "fin":globo(P.idea,"Resuelto","Los socios se llevaron 10,000 y el mes ganó 2,714.25. El patrimonio bajó, aunque la empresa ganó.")},
 
-a3:{"tipo": "cuadro", "titulo": "Actividad 4 - Situación financiera al 30 de abril", "intro": "Ojo con la 104: tiene saldo acreedor. Arrastra las partidas que faltan.", "fichas": [{"id": "f101", "t": "101 Caja", "v": 1550.0, "g": "ac1"}, {"id": "f121", "t": "121 Facturas por cobrar", "v": 5900.0, "g": "ac2", "fijo": true}, {"id": "f201", "t": "201 Mercaderías", "v": 37700.0, "g": "ac5", "fijo": true}, {"id": "f291", "t": "291 Desvalorización de mercaderías", "v": 1500.0, "g": "ac6", "fijo": true}, {"id": "f334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "an1", "fijo": true}, {"id": "f335", "t": "335 Muebles - exhibidores", "v": 6000.0, "g": "an1", "fijo": true}, {"id": "f391", "t": "391 Depreciación acumulada", "v": 1490.0, "g": "an2", "fijo": true}, {"id": "f104_pc0", "t": "104 Cuenta corriente BCP (saldo acreedor)", "v": 2441.2, "g": "pc0"}, {"id": "f421", "t": "421 Facturas por pagar", "v": 18408.0, "g": "pc1"}, {"id": "f4011", "t": "4011 IGV - cuenta propia", "v": 370.8, "g": "pc3", "fijo": true}, {"id": "f501", "t": "501 Capital social", "v": 30000.0, "g": "pt1", "fijo": true}, {"id": "f591", "t": "591 Resultados acumulados", "v": 2690.0, "g": "pt2", "fijo": true}, {"id": "futil", "t": "Utilidad de abril (del estado de resultados)", "v": 3850.0, "g": "pt3"}], "cols": [{"t": "Activo", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "ac1", "t": "Efectivo y equivalentes de efectivo"}, {"id": "ac2", "t": "Cuentas por cobrar comerciales"}, {"id": "ac5", "t": "Mercaderías"}, {"id": "ac6", "t": "Desvalorización de mercaderías", "s": -1}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "an1", "t": "Propiedad, planta y equipo"}, {"id": "an2", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "g1", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "pc0", "t": "Sobregiro bancario"}, {"id": "pc1", "t": "Cuentas por pagar comerciales"}, {"id": "pc3", "t": "Tributos por pagar"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "pt1", "t": "Capital"}, {"id": "pt2", "t": "Resultados acumulados"}, {"id": "pt3", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "g2", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpt"]}}], "cuadra": ["g1", "g2"], "fin":globo2(P.pres,P.bien,"Resuelto","Cuadra en 57,760. El sobregiro de 2,441.20 aparece como la primera deuda del pasivo corriente.")},
+a3:{"tipo": "cuadro", "titulo": "Actividad 4 - Situación financiera al 30 de abril", "intro": "Ojo con la 104: tiene saldo acreedor. Arrastra las partidas que faltan.", "fichas": [{"id": "f101", "t": "101 Caja", "v": 1550.0, "g": "ac1"}, {"id": "f121", "t": "121 Facturas por cobrar", "v": 5900.0, "g": "ac2", "fijo": true}, {"id": "f201", "t": "201 Mercaderías", "v": 37700.0, "g": "ac5", "fijo": true}, {"id": "f291", "t": "291 Desvalorización de mercaderías", "v": 1500.0, "g": "ac6", "fijo": true}, {"id": "f334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "an1", "fijo": true}, {"id": "f335", "t": "335 Muebles - exhibidores", "v": 6000.0, "g": "an1", "fijo": true}, {"id": "f391", "t": "391 Depreciación acumulada", "v": 1490.0, "g": "an2", "fijo": true}, {"id": "f104_pc0", "t": "104 Cuenta corriente BCP (saldo acreedor)", "v": 3441.2, "g": "pc0"}, {"id": "f421", "t": "421 Facturas por pagar", "v": 18408.0, "g": "pc1"}, {"id": "f4011", "t": "4011 IGV - cuenta propia", "v": 370.8, "g": "pc3", "fijo": true}, {"id": "f4017", "t": "4017 Impuesto a la renta por pagar", "v": 5829.2, "g": "pc3", "fijo": true}, {"id": "f501", "t": "501 Capital social", "v": 24000.0, "g": "pt1", "fijo": true}, {"id": "f591", "t": "591 Resultados acumulados", "v": 2996.55, "g": "pt2", "fijo": true}, {"id": "futil", "t": "Utilidad de abril (del estado de resultados)", "v": 2714.25, "g": "pt3"}], "cols": [{"t": "Activo", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "ac1", "t": "Efectivo y equivalentes de efectivo"}, {"id": "ac2", "t": "Cuentas por cobrar comerciales"}, {"id": "ac5", "t": "Mercaderías"}, {"id": "ac6", "t": "Desvalorización de mercaderías", "s": -1}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "an1", "t": "Propiedad, planta y equipo"}, {"id": "an2", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "g1", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "pc0", "t": "Sobregiro bancario"}, {"id": "pc1", "t": "Cuentas por pagar comerciales"}, {"id": "pc3", "t": "Tributos por pagar"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "pt1", "t": "Capital"}, {"id": "pt2", "t": "Resultados acumulados"}, {"id": "pt3", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "g2", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpt"]}}], "cuadra": ["g1", "g2"], "fin":globo2(P.pres,P.bien,"Resuelto","Cuadra en 57,760. El sobregiro de 3,441.20 aparece como la primera deuda del pasivo corriente.")},
 
-a4:{"tipo": "tabla", "titulo": "Actividad 5 - Flujo de efectivo de abril", "intro": "Usa el mayor. Los pagos a proveedores incluyen la compra al contado. El efectivo final es neto del sobregiro.", "cols": ["Concepto", "Importe"], "tipos": ["t", "n"], "filas": [[{"t": "<b>Actividades de operación</b>"}, {"t": ""}], [{"t": "Cobros a clientes", "cl": ""}, {"t": "41,300"}], [{"t": "Pagos a proveedores de mercadería", "cl": ""}, {"e": -44840.0}], [{"t": "Pagos de alquiler, servicios y honorarios", "cl": ""}, {"t": "-8,701.20"}], [{"t": "Pago de tributos a SUNAT", "cl": ""}, {"t": "-1,216.80"}], [{"t": "Flujo de operación", "cl": "tot"}, {"t": "-13,458"}], [{"t": "<b>Actividades de inversión</b>"}, {"t": ""}], [{"t": "Flujo de inversión", "cl": "tot"}, {"t": "0"}], [{"t": "<b>Actividades de financiamiento</b>"}, {"t": ""}], [{"t": "Dividendos pagados"}, {"e": -15000}], [{"t": "Flujo de financiamiento", "cl": "tot"}, {"e": -15000}], [{"t": "Aumento (o disminución) del efectivo"}, {"t": "-28,458"}], [{"t": "Efectivo al 1 de abril"}, {"t": "27,566.80"}], [{"t": "Efectivo al 30 de abril", "cl": "tot"}, {"e": -891.2}]], "fin":globo(P.expl,"Resuelto","La operación dejó un flujo negativo por pagar tanto a proveedores, y encima salieron 15,000 de dividendos. Así se llega a -891.20.")},
+a4:{"tipo": "tabla", "titulo": "Actividad 5 - Flujo de efectivo de abril", "intro": "Usa el mayor. Los pagos a proveedores incluyen la compra al contado. El efectivo final es neto del sobregiro.", "cols": ["Concepto", "Importe"], "tipos": ["t", "n"], "filas": [[{"t": "<b>Actividades de operación</b>"}, {"t": ""}], [{"t": "Cobros a clientes", "cl": ""}, {"t": "41,300"}], [{"t": "Pagos a proveedores de mercadería", "cl": ""}, {"e": -44840.0}], [{"t": "Pagos de alquiler, servicios y honorarios", "cl": ""}, {"t": "-8,701.20"}], [{"t": "Pago de tributos a SUNAT", "cl": ""}, {"t": "-1,216.80"}], [{"t": "Flujo de operación", "cl": "tot"}, {"t": "-13,458"}], [{"t": "<b>Actividades de inversión</b>"}, {"t": ""}], [{"t": "Flujo de inversión", "cl": "tot"}, {"t": "0"}], [{"t": "<b>Actividades de financiamiento</b>"}, {"t": ""}], [{"t": "Dividendos pagados"}, {"e": -10000}], [{"t": "Flujo de financiamiento", "cl": "tot"}, {"e": -10000}], [{"t": "Aumento (o disminución) del efectivo"}, {"t": "-23,458"}], [{"t": "Efectivo al 1 de abril"}, {"t": "21,566.80"}], [{"t": "Efectivo al 30 de abril", "cl": "tot"}, {"e": -1891.2}]], "fin":globo(P.expl,"Resuelto","La operación dejó un flujo negativo por pagar tanto a proveedores, y encima salieron 10,000 de dividendos. Así se llega a -1,891.20.")},
 
 a5:{"tipo": "sel", "titulo": "Si fueras la dueña", "lista": [{"q": "¿Cuál fue la causa principal del sobregiro?", "ops": ["Las ventas cayeron a cero", "Se pagó mucho junto: proveedores, compra al contado y dividendos", "La depreciación de la moto"], "ok": 1, "pq": "La empresa ganó. El problema fue de caja: muchas salidas en el mismo mes."}, {"q": "¿Qué decidirías para mayo?", "ops": ["Repartir más dividendos", "Que los socios aporten capital y ordenar los pagos grandes", "No hacer nada: el banco ya pagó"], "ok": 1, "pq": "Es lo que hicieron: en mayo los socios aportan 10,000. Lo vemos en el encuentro 5."}], "fin":globo2(P.pres,P.idea,"Para cerrar","Ganar no es lo mismo que tener plata. Abril tuvo utilidad, pero la caja terminó en rojo por la forma en que se usó el efectivo.")}
 
@@ -976,26 +1014,26 @@ var D=[
 
 { et:"El caso", t:"El sobregiro bancario",
   h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>Efectivo en rojo</h2><p>Encuentro 4 - El Filtrado - Estados financieros de abril</p><div class=\"via\"><b>Sobregiro</b><b>Dividendos</b><b>Efectivo neto</b></div></div>"+
-    globo(P.pres,"Lucía, la dueña","En abril pagamos al contado un pedido de invierno, le pagamos a los proveedores la compra grande de marzo y los socios nos repartimos 15,000 de utilidades. El BCP igual pagó todo, pero ahora la cuenta dice que estamos en menos 2,441.20. ¿Eso es efectivo o es una deuda?")+
+    globo(P.pres,"Lucía, la dueña","En abril pagamos al contado un pedido de invierno, le pagamos a los proveedores la compra grande de marzo y los socios nos repartimos 10,000 de utilidades. El BCP igual pagó todo, pero ahora la cuenta dice que estamos en menos 3,441.20. ¿Eso es efectivo o es una deuda?")+
     "<div class=\"av\">Este mes la cuenta corriente del BCP cierra con saldo acreedor: el banco pagó más de lo que había.</div>" },
 
 { et:"Balance", t:"Balance de comprobación al 30 de abril de 2026",
   h:"<p class=\"enc\">Todo abril en una sola tabla</p><p class=\"sub\">El resultado de los meses anteriores ya está en Resultados acumulados</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Denominación</th><th class=\"n\">Saldo deudor</th><th class=\"n\">Saldo acreedor</th></tr></thead><tbody><tr><td>101</td><td>Caja</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr><td>104</td><td>Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">2,441.20</td></tr><tr><td>121</td><td>Facturas por cobrar</td><td class=\"n\">5,900</td><td class=\"n\"></td></tr><tr><td>201</td><td>Mercaderías</td><td class=\"n\">37,700</td><td class=\"n\"></td></tr><tr><td>291</td><td>Desvalorización de mercaderías</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>334</td><td>Vehículos - moto de reparto</td><td class=\"n\">9,600</td><td class=\"n\"></td></tr><tr><td>335</td><td>Muebles - exhibidores</td><td class=\"n\">6,000</td><td class=\"n\"></td></tr><tr><td>391</td><td>Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">1,490</td></tr><tr><td>4011</td><td>IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">370.80</td></tr><tr><td>421</td><td>Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">18,408</td></tr><tr><td>501</td><td>Capital social</td><td class=\"n\"></td><td class=\"n\">30,000</td></tr><tr><td>591</td><td>Resultados acumulados</td><td class=\"n\"></td><td class=\"n\">2,690</td></tr><tr><td>632</td><td>Honorarios</td><td class=\"n\">2,400</td><td class=\"n\"></td></tr><tr><td>635</td><td>Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td>636</td><td>Luz, agua e internet</td><td class=\"n\">640</td><td class=\"n\"></td></tr><tr><td>637</td><td>Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td>6814</td><td>Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td>6911</td><td>Costo de ventas</td><td class=\"n\">19,200</td><td class=\"n\"></td></tr><tr><td>7011</td><td>Ventas</td><td class=\"n\"></td><td class=\"n\">31,000</td></tr><tr class=\"res\"><td> </td><td><b>Totales</b></td><td class=\"n\"><b>87,900</b></td><td class=\"n\"><b>87,900</b></td></tr></tbody></table></div>"+
-    globo(P.idea,"Rosa, la contadora","Mira la 104: este mes tiene saldo acreedor de 2,441.20. Y la 591 bajó: los socios se repartieron 15,000 en dividendos.") },
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Denominación</th><th class=\"n\">Saldo deudor</th><th class=\"n\">Saldo acreedor</th></tr></thead><tbody><tr><td>101</td><td>Caja</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr><td>104</td><td>Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">3,441.20</td></tr><tr><td>121</td><td>Facturas por cobrar</td><td class=\"n\">5,900</td><td class=\"n\"></td></tr><tr><td>201</td><td>Mercaderías</td><td class=\"n\">37,700</td><td class=\"n\"></td></tr><tr><td>291</td><td>Desvalorización de mercaderías</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>334</td><td>Vehículos - moto de reparto</td><td class=\"n\">9,600</td><td class=\"n\"></td></tr><tr><td>335</td><td>Muebles - exhibidores</td><td class=\"n\">6,000</td><td class=\"n\"></td></tr><tr><td>391</td><td>Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">1,490</td></tr><tr><td>4011</td><td>IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">370.80</td></tr><tr><td>4017</td><td>Impuesto a la renta por pagar</td><td class=\"n\"></td><td class=\"n\">5,829.20</td></tr><tr><td>421</td><td>Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">18,408</td></tr><tr><td>501</td><td>Capital social</td><td class=\"n\"></td><td class=\"n\">24,000</td></tr><tr><td>591</td><td>Resultados acumulados</td><td class=\"n\"></td><td class=\"n\">2,996.55</td></tr><tr><td>632</td><td>Honorarios</td><td class=\"n\">2,400</td><td class=\"n\"></td></tr><tr><td>635</td><td>Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td>636</td><td>Luz, agua e internet</td><td class=\"n\">640</td><td class=\"n\"></td></tr><tr><td>637</td><td>Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td>6814</td><td>Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td>6911</td><td>Costo de ventas</td><td class=\"n\">19,200</td><td class=\"n\"></td></tr><tr><td>881</td><td>Impuesto a la renta</td><td class=\"n\">1,135.75</td><td class=\"n\"></td></tr><tr><td>7011</td><td>Ventas</td><td class=\"n\"></td><td class=\"n\">31,000</td></tr><tr class=\"res\"><td> </td><td><b>Totales</b></td><td class=\"n\"><b>89,035.75</b></td><td class=\"n\"><b>89,035.75</b></td></tr></tbody></table></div>"+
+    globo(P.idea,"Rosa, la contadora","Mira la 104: este mes tiene saldo acreedor de 3,441.20. Y la 591 bajó: los socios se repartieron 10,000 en dividendos.") },
 
 { et:"Diario", t:"Libro diario de abril",
   h:"<p class=\"enc\">Lo que pasó en abril, en orden</p><p class=\"sub\">La fila resaltada es la operación que registramos en El Espresso.</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>N.°</th><th>Glosa</th><th>Cuenta</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr><td>1</td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td>104 Cuenta corriente BCP</td><td class=\"n\">30,680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">26,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">4,680</td></tr><tr><td>2</td><td>Venta al crédito a Colegio San Martín (factura a 30 días)</td><td>121 Facturas por cobrar</td><td class=\"n\">5,900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">5,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>3</td><td>Costo de las zapatillas vendidas en el mes</td><td>6911 Costo de ventas</td><td class=\"n\">19,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>201 Mercaderías</td><td class=\"n\"></td><td class=\"n\">19,200</td></tr><tr class=\"nuevo\"><td>4</td><td>Compra de zapatillas de temporada al crédito a Calzados del Norte</td><td>201 Mercaderías</td><td class=\"n\">15,000</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">2,700</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">17,700</td></tr><tr class=\"nuevo\"><td>5</td><td>Flete de Trujillo a Lima de esa compra, al crédito a Transportes Rápido</td><td>201 Mercaderías</td><td class=\"n\">600</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">108</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">708</td></tr><tr><td>6</td><td>Compra al contado de zapatillas de invierno a Importadora Andina, pagada con transferencia</td><td>201 Mercaderías</td><td class=\"n\">8,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,440</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">9,440</td></tr><tr><td>7</td><td>Los socios se reparten utilidades de meses anteriores (dividendos)</td><td>591 Resultados acumulados</td><td class=\"n\">15,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">15,000</td></tr><tr><td>8</td><td>Pago a proveedores de mercadería</td><td>421 Facturas por pagar</td><td class=\"n\">35,400</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">35,400</td></tr><tr><td>9</td><td>Cobro de facturas a clientes</td><td>104 Cuenta corriente BCP</td><td class=\"n\">10,620</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>121 Facturas por cobrar</td><td class=\"n\"></td><td class=\"n\">10,620</td></tr><tr><td>10</td><td>Pago del IGV de marzo a SUNAT</td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,216.80</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,216.80</td></tr><tr><td>11</td><td>Alquiler del local de la tienda</td><td>635 Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">630</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td>12</td><td>Recibos de luz, agua e internet</td><td>636 Luz, agua e internet</td><td class=\"n\">640</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">115.20</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">755.20</td></tr><tr><td>13</td><td>Publicidad en redes sociales</td><td>637 Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">216</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td>14</td><td>Comisión del vendedor (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">1,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>15</td><td>Honorarios de la contadora (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>16</td><td>Depreciación de la moto y de los exhibidores</td><td>6814 Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>391 Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">210</td></tr></tbody></table></div>" },
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>N.°</th><th>Glosa</th><th>Cuenta</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr><td>1</td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td>104 Cuenta corriente BCP</td><td class=\"n\">30,680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">26,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">4,680</td></tr><tr><td>2</td><td>Venta al crédito a Colegio San Martín (factura a 30 días)</td><td>121 Facturas por cobrar</td><td class=\"n\">5,900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">5,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>3</td><td>Costo de las zapatillas vendidas en el mes</td><td>6911 Costo de ventas</td><td class=\"n\">19,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>201 Mercaderías</td><td class=\"n\"></td><td class=\"n\">19,200</td></tr><tr class=\"nuevo\"><td>4</td><td>Compra de zapatillas de temporada al crédito a Calzados del Norte</td><td>201 Mercaderías</td><td class=\"n\">15,000</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">2,700</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">17,700</td></tr><tr class=\"nuevo\"><td>5</td><td>Flete de Trujillo a Lima de esa compra, al crédito a Transportes Rápido</td><td>201 Mercaderías</td><td class=\"n\">600</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">108</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">708</td></tr><tr><td>6</td><td>Compra al contado de zapatillas de invierno a Importadora Andina, pagada con transferencia</td><td>201 Mercaderías</td><td class=\"n\">8,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,440</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">9,440</td></tr><tr><td>7</td><td>Los socios se reparten utilidades de meses anteriores (dividendos)</td><td>591 Resultados acumulados</td><td class=\"n\">10,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">10,000</td></tr><tr><td>8</td><td>Pago a proveedores de mercadería</td><td>421 Facturas por pagar</td><td class=\"n\">35,400</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">35,400</td></tr><tr><td>9</td><td>Cobro de facturas a clientes</td><td>104 Cuenta corriente BCP</td><td class=\"n\">10,620</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>121 Facturas por cobrar</td><td class=\"n\"></td><td class=\"n\">10,620</td></tr><tr><td>10</td><td>Pago del IGV de marzo a SUNAT</td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,216.80</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,216.80</td></tr><tr><td>11</td><td>Alquiler del local de la tienda</td><td>635 Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">630</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td>12</td><td>Recibos de luz, agua e internet</td><td>636 Luz, agua e internet</td><td class=\"n\">640</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">115.20</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">755.20</td></tr><tr><td>13</td><td>Publicidad en redes sociales</td><td>637 Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">216</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td>14</td><td>Comisión del vendedor (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">1,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>15</td><td>Honorarios de la contadora (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>16</td><td>Depreciación de la moto y de los exhibidores</td><td>6814 Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>391 Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">210</td></tr><tr><td>17</td><td>Impuesto a la renta del mes: 29.5 % del resultado antes de impuestos</td><td>881 Impuesto a la renta</td><td class=\"n\">1,135.75</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4017 Impuesto a la renta por pagar</td><td class=\"n\"></td><td class=\"n\">1,135.75</td></tr></tbody></table></div>" },
 
 { et:"Mayor", t:"Libro mayor de Caja y de la cuenta corriente",
   h:"<p class=\"enc\">Por dónde entró y salió la plata</p><p class=\"sub\">De aquí sale el estado de flujos de efectivo por el método directo</p>"+
-    "<p class=\"sub\" style=\"margin:14px 0 0\">101 Caja</p><div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Movimiento</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr class=\"sec\"><td></td><td>Saldo al inicio del mes</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr class=\"res\"><td></td><td><b>Saldo al cierre del mes</b></td><td class=\"n\"><b>1,550</b></td><td class=\"n\"></td></tr></tbody></table></div><p class=\"sub\" style=\"margin:14px 0 0\">104 Cuenta corriente BCP</p><div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Movimiento</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr class=\"sec\"><td></td><td>Saldo al inicio del mes</td><td class=\"n\">26,016.80</td><td class=\"n\"></td></tr><tr><td></td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td class=\"n\">30,680</td><td class=\"n\"></td></tr><tr><td></td><td>Compra al contado de zapatillas de invierno a Importadora Andina, pagada con transferencia</td><td class=\"n\"></td><td class=\"n\">9,440</td></tr><tr><td></td><td>Los socios se reparten utilidades de meses anteriores (dividendos)</td><td class=\"n\"></td><td class=\"n\">15,000</td></tr><tr><td></td><td>Pago a proveedores de mercadería</td><td class=\"n\"></td><td class=\"n\">35,400</td></tr><tr><td></td><td>Cobro de facturas a clientes</td><td class=\"n\">10,620</td><td class=\"n\"></td></tr><tr><td></td><td>Pago del IGV de marzo a SUNAT</td><td class=\"n\"></td><td class=\"n\">1,216.80</td></tr><tr><td></td><td>Alquiler del local de la tienda</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td></td><td>Recibos de luz, agua e internet</td><td class=\"n\"></td><td class=\"n\">755.20</td></tr><tr><td></td><td>Publicidad en redes sociales</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td></td><td>Comisión del vendedor (recibo por honorarios)</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td></td><td>Honorarios de la contadora (recibo por honorarios)</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr class=\"res\"><td></td><td><b>Saldo al cierre del mes</b></td><td class=\"n\"></td><td class=\"n\"><b>2,441.20</b></td></tr></tbody></table></div>" },
+    "<p class=\"sub\" style=\"margin:14px 0 0\">101 Caja</p><div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Movimiento</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr class=\"sec\"><td></td><td>Saldo al inicio del mes</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr class=\"res\"><td></td><td><b>Saldo al cierre del mes</b></td><td class=\"n\"><b>1,550</b></td><td class=\"n\"></td></tr></tbody></table></div><p class=\"sub\" style=\"margin:14px 0 0\">104 Cuenta corriente BCP</p><div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Movimiento</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr class=\"sec\"><td></td><td>Saldo al inicio del mes</td><td class=\"n\">20,016.80</td><td class=\"n\"></td></tr><tr><td></td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td class=\"n\">30,680</td><td class=\"n\"></td></tr><tr><td></td><td>Compra al contado de zapatillas de invierno a Importadora Andina, pagada con transferencia</td><td class=\"n\"></td><td class=\"n\">9,440</td></tr><tr><td></td><td>Los socios se reparten utilidades de meses anteriores (dividendos)</td><td class=\"n\"></td><td class=\"n\">10,000</td></tr><tr><td></td><td>Pago a proveedores de mercadería</td><td class=\"n\"></td><td class=\"n\">35,400</td></tr><tr><td></td><td>Cobro de facturas a clientes</td><td class=\"n\">10,620</td><td class=\"n\"></td></tr><tr><td></td><td>Pago del IGV de marzo a SUNAT</td><td class=\"n\"></td><td class=\"n\">1,216.80</td></tr><tr><td></td><td>Alquiler del local de la tienda</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td></td><td>Recibos de luz, agua e internet</td><td class=\"n\"></td><td class=\"n\">755.20</td></tr><tr><td></td><td>Publicidad en redes sociales</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td></td><td>Comisión del vendedor (recibo por honorarios)</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td></td><td>Honorarios de la contadora (recibo por honorarios)</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr class=\"res\"><td></td><td><b>Saldo al cierre del mes</b></td><td class=\"n\"></td><td class=\"n\"><b>3,441.20</b></td></tr></tbody></table></div>" },
 
 { et:"Teoría", t:"¿Efectivo o deuda?",
   h:"<p class=\"enc\">El sobregiro es plata que el banco nos prestó sin pedirla</p><p class=\"sub\">Se presenta distinto en la situación financiera y en el flujo de efectivo</p>"+
     "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Dónde</th><th>Cómo se presenta</th></tr></thead><tbody><tr><td><b>Situación financiera</b></td><td>Como pasivo corriente: Sobregiro bancario. No se resta de la caja</td></tr><tr><td><b>Flujo de efectivo</b></td><td>Puede restarse del efectivo, si el sobregiro es parte del manejo diario de la caja (NIC 7)</td></tr></tbody></table></div>"+
-    "<div class=\"form\">EFECTIVO NETO = CAJA − SOBREGIRO<small>1,550 − 2,441.20 = -891.20</small></div>"+
+    "<div class=\"form\">EFECTIVO NETO = CAJA − SOBREGIRO<small>1,550 − 3,441.20 = -1,891.20</small></div>"+
     globo(P.idea,"Rosa, la contadora","En la situación financiera no mezclo la caja con lo que le debo al banco: muestro los 1,550 de la caja como activo y el sobregiro como deuda. Además, el sobregiro suele cobrar intereses altos: hay que salir de él pronto.") },
 
 { et:"Sobregiro", t:"Efectivo o deuda", clave:"a0",
@@ -1135,7 +1173,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = !soyDocente() ? '' :
+  var sol = (!soyDocente() || A.tipo==='opi') ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1173,6 +1211,7 @@ function resuelve(k){
   }
   else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
   else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
 }
@@ -1213,6 +1252,20 @@ function vPar(k){
        '</span></div>';
   });
   h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vOpi(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops fila">';
+    p.ops.forEach(function(o,j){
+      h+='<button type="button" data-o="'+k+'" data-k="'+n+'" data-j="'+j+'" class="'+(g[n]===j?'buena':'')+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(g[n]!==undefined && p.com) h+='<p class="pq">'+esc(p.com[g[n]])+'</p>';
+  });
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1488,12 +1541,12 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro"><div class="banco">'+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
     (libres.length ? libres.map(function(f){
       return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
              '<span class="im">'+mil(f.v)+'</span></button>';
     }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
-    '</div><div class="cols'+(A.cols.length===2?' c2':'')+'">';
+    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     c.bloques.forEach(function(b){
@@ -1524,7 +1577,7 @@ function vCuadro(k){
     h+='</div>';
   });
   h+='</div>';
-  if(A.cuadra){
+  if(A.cuadra && A.fichas.some(function(f){ return !f.fijo && g[f.id]; })){
     var a=cuaValor(A, g, A.cuadra[0]), b2=cuaValor(A, g, A.cuadra[1]);
     var ok=lista(k) && Math.abs(a-b2)<0.005;
     h+='<div class="cuadra '+(ok?'si':'no')+'">'+
@@ -1593,7 +1646,7 @@ function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
-       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : vQuiz(k);
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1606,7 +1659,9 @@ function pinta(quieto){
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
-  if(s.clave) h+=vista(s.clave);
+  var ks=clavesDe(s);
+  if(ks.length===1) h+='<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1616,7 +1671,7 @@ function pinta(quieto){
   $('marcador').textContent=ok+' de '+mx;
   $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
   $('pts').innerHTML=D.map(function(x,n){
-    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
@@ -1632,10 +1687,15 @@ function pinta(quieto){
 }
 
 var yaCruz={};
+function clavesDe(s){ return s.claves || (s.clave ? [s.clave] : []); }
 function cablea(){
-  var lam=$('lam'), s=D[i];
-  if(!s.clave) return;
-  var k=s.clave, A=ACT[k];
+  clavesDe(D[i]).forEach(function(k){
+    var c=$('lam').querySelector('[data-act="'+k+'"]');
+    if(c) cableaUna(k, c);
+  });
+}
+function cableaUna(k, lam){
+  var A=ACT[k];
 
   if(A.tipo==='arr'){
     montaArrastre(lam, function(fid, zona, el){
@@ -1671,6 +1731,12 @@ function cablea(){
     });
   });
 
+  qq('#lam button[data-o]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      G[b.dataset.o][+b.dataset.k]=+b.dataset.j; graba();
+      if(lista(b.dataset.o)) fanfarria(); else bien(); pinta(true);
+    });
+  });
   qq('#lam select[data-s]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
@@ -2295,7 +2361,7 @@ function resumenAula(){
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
 function tituloActividad(n){
@@ -2304,7 +2370,7 @@ function tituloActividad(n){
 }
 function diapoDe(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j+1;
   return 0;
 }
 
@@ -2363,10 +2429,6 @@ function pantalla(e, alumno, cont){
 if(window.Aula){
   Aula.iniciar({ sala:'CAFE4F', codigo:'CAFE', resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
-    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
-            limpia:function(){ G=vacio(); yaCruz={}; i=0;
-              try{ localStorage.removeItem(LS); }catch(e){}
-              pinta(); } },
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
