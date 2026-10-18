@@ -135,6 +135,15 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  @media (min-width:1100px){ .cuadro.lado{ grid-template-columns:minmax(280px,360px) 1fr; align-items:start; } }
+  .cuadro.lado .pila{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .cuadro.lado .pila .bt{ background:#FFF4CC; color:var(--tinta); }
+  .cuadro.lado .banco{ display:flex; flex-direction:column; gap:6px; padding:10px; border:0; border-radius:0; margin:0; }
+  .cuadro.lado .banco .ficha{ width:100%; display:flex; justify-content:space-between; gap:10px; text-align:left; font-size:16px; padding:5px 10px; }
+  .cuadro.lado .cuadra{ grid-column:1/-1; }
+  .cuadro.lado .cua{ min-height:40px; padding:6px 12px; }
+  .cuadro.lado .cua .n{ font-size:17px; }
+
   .cuadro{ display:grid; gap:14px; }
   .cuadro .cols{ display:grid; gap:14px; }
   @media (min-width:900px){ .cuadro .cols.c2{ grid-template-columns:1fr 1fr; align-items:start; } }
@@ -579,8 +588,40 @@
   .cua.fija .n small{ color:#55607F; }
   .ficha.fija{ display:none; }
   .nuevo{ background:#FFF4CC; }
+  /* animaciones de la teoría */
+  .vida{ margin:4px 0 8px; }
+  .vida .vb{ position:relative; height:48px; border-radius:12px; background:var(--aqua); overflow:hidden; }
+  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); }
+  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; }
+  .vida .tx{ position:absolute; right:14px; top:12px; color:#fff; font-weight:800; font-size:19px; }
+  .vida .anos{ display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#55607F; margin-top:6px; }
+  .vida .ley{ display:flex; gap:18px; font-size:16px; font-weight:700; margin-top:4px; color:var(--tinta); }
+  .vida .ley i{ display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
+  @keyframes gasta{ 0%{ width:0 } 100%{ width:100% } }
+  @keyframes anda{ 0%{ left:0 } 100%{ left:calc(100% - 46px) } }
+  .barras{ display:flex; align-items:flex-end; gap:6px; height:76px; margin:2px 0 8px; padding:0 2px; border-bottom:3px solid var(--linea); }
+  .barras .b{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; }
+  .barras .b:nth-child(odd) i{ background:var(--aqua); }
+  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; }
+  .barras .b em{ font-style:normal; font-size:12px; font-weight:700; color:#55607F; margin-top:3px; }
+  @keyframes sube{ to{ transform:scaleY(1) } }
+  @keyframes ve{ to{ opacity:1 } }
+  .defi{ font-size:21px; line-height:1.45; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
+  .vida.go .dep{ animation:gasta 12s linear forwards; }
+  .vida.go .moto{ animation:anda 12s linear forwards; }
+  .barras.go .b i{ transform:scaleY(0); animation:sube .9s ease-out forwards; }
+  .barras.go .b span{ opacity:0; animation:ve .5s ease-out forwards; }
+  .anibtn{ margin:0 0 8px; background:var(--fucsia) !important; color:#fff !important; border:0 !important; font:inherit; font-size:18px !important; font-weight:800; padding:9px 18px !important; border-radius:10px !important; cursor:pointer; }
+  .anibtn:hover{ filter:brightness(1.08); }
+  @media print{ .anibtn{ display:none; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  .duo{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:1100px){ .duo{ grid-template-columns:1.1fr 1fr; } }
+  .duo .tarea{ margin-top:0; }
+  .ops.fila{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .ops.fila button{ margin:0; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -658,11 +699,8 @@
   </div>
 
   <div class="puerta" id="puerta">
-    <h2>Ingresa con tu DNI</h2>
-    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
-       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
-       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
-       p&aacute;gina o entres desde otro equipo.</p>
+    <h2>Ingresa con tu nombre</h2>
+    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente, y pulsa <b>Entrar a la sala</b>. No se pide DNI: tus respuestas se guardan solo en este equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -957,11 +995,11 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "cal", "titulo": "Actividad 1 - Los números del cierre", "intro": "Escribe solo el número.", "lista": [{"q": "¿Cuánto gasto de honorarios de Rosa va en agosto?", "f": "Lo devengado en agosto", "d": "Aunque se pague en septiembre", "e": 900, "tol": 0.5, "u": "soles", "ph": "900", "pq": "Principio de devengado."}, {"q": "Total de gastos de agosto", "f": "Ventas − utilidad", "d": "50,000 − 9,760", "e": 40240.0, "tol": 0.5, "u": "soles", "pq": "Es lo que se abona al cerrar las cuentas de gasto."}, {"q": "Resultados acumulados después del cierre", "f": "Saldo de la 591 + utilidad de agosto", "d": "24,125 + 9,760", "e": 33885.0, "tol": 0.5, "u": "soles", "pq": "Así empieza septiembre."}], "fin":globo(P.bien,"Resuelto","Gasto en el mes que corresponde y utilidad sumada al patrimonio: así se cierra la temporada.")},
+a0:{"tipo": "cal", "titulo": "Actividad 1 - Los números del cierre", "intro": "Escribe solo el número.", "lista": [{"q": "¿Cuánto gasto de honorarios de Rosa va en agosto?", "f": "Lo devengado en agosto", "d": "Aunque se pague en septiembre", "e": 900, "tol": 0.5, "u": "soles", "ph": "900", "pq": "Principio de devengado."}, {"q": "Total de gastos de agosto", "f": "Ventas − utilidad", "d": "50,000 − 6,880.80", "e": 43119.2, "tol": 0.5, "u": "soles", "pq": "Es lo que se abona al cerrar las cuentas de gasto."}, {"q": "Resultados acumulados después del cierre", "f": "Saldo de la 591 + utilidad de agosto", "d": "18,108.23 + 6,880.80", "e": 24989.03, "tol": 0.5, "u": "soles", "pq": "Así empieza septiembre."}], "fin":globo(P.bien,"Resuelto","Gasto en el mes que corresponde y utilidad sumada al patrimonio: así se cierra la temporada.")},
 
 a1:{"tipo": "tabla", "titulo": "Actividad 2 - Honorarios devengados", "intro": "Elige la cuenta y escribe el importe.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>31 de agosto - Honorarios de Rosa por pagar</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["424 Honorarios por pagar", "632 Honorarios", "635 Alquiler del local"], "ok": 1}, {"e": 900}, {"t": ""}], [{"ops": ["104 Cuenta corriente BCP", "421 Facturas por pagar", "424 Honorarios por pagar"], "ok": 2}, {"t": ""}, {"e": 900}]], "fin":globo(P.idea,"Resuelto","El gasto queda en agosto y la deuda con Rosa en la 424. En septiembre, al pagar, se cancela la 424 contra el banco.")},
 
-a2:{"tipo": "tabla", "titulo": "Actividad 3 - El cierre del resultado de agosto", "intro": "Las cuentas de gasto ya están. Completa las celdas amarillas.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>1. Cierre de las cuentas de resultado</b>"}, {"t": ""}, {"t": ""}], [{"t": "7011 Ventas"}, {"e": 50000.0}, {"t": ""}], [{"t": "6911 Costo de ventas"}, {"t": ""}, {"e": 31000.0}], [{"t": "632 Honorarios"}, {"t": ""}, {"t": "3,200"}], [{"t": "635 Alquiler del local"}, {"t": ""}, {"t": "3,500"}], [{"t": "636 Luz, agua e internet"}, {"t": ""}, {"t": "700"}], [{"t": "637 Publicidad"}, {"t": ""}, {"t": "1,300"}], [{"t": "673 Intereses del préstamo"}, {"t": ""}, {"t": "330"}], [{"t": "6814 Depreciación"}, {"t": ""}, {"t": "210"}], [{"t": "891 Utilidad del ejercicio"}, {"t": ""}, {"e": 9760.0}], [{"t": "<b>2. La utilidad a resultados acumulados</b>"}, {"t": ""}, {"t": ""}], [{"t": "891 Utilidad del ejercicio"}, {"e": 9760.0}, {"t": ""}], [{"t": "591 Resultados acumulados"}, {"t": ""}, {"e": 9760.0}]], "fin":globo2(P.pres,P.idea,"Resuelto","Ventas y gastos quedan en cero. La 891 recoge la diferencia, 9,760, y la pasa a la 591. Septiembre empieza limpio.")},
+a2:{"tipo": "tabla", "titulo": "Actividad 3 - El cierre del resultado de agosto", "intro": "Las cuentas de gasto ya están. Completa las celdas amarillas.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>1. Cierre de las cuentas de resultado</b>"}, {"t": ""}, {"t": ""}], [{"t": "7011 Ventas"}, {"e": 50000.0}, {"t": ""}], [{"t": "6911 Costo de ventas"}, {"t": ""}, {"e": 31000.0}], [{"t": "632 Honorarios"}, {"t": ""}, {"t": "3,200"}], [{"t": "635 Alquiler del local"}, {"t": ""}, {"t": "3,500"}], [{"t": "636 Luz, agua e internet"}, {"t": ""}, {"t": "700"}], [{"t": "637 Publicidad"}, {"t": ""}, {"t": "1,300"}], [{"t": "673 Intereses del préstamo"}, {"t": ""}, {"t": "330"}], [{"t": "6814 Depreciación"}, {"t": ""}, {"t": "210"}], [{"t": "881 Impuesto a la renta"}, {"t": ""}, {"t": "2,879.20"}], [{"t": "891 Utilidad del ejercicio"}, {"t": ""}, {"e": 6880.8}], [{"t": "<b>2. La utilidad a resultados acumulados</b>"}, {"t": ""}, {"t": ""}], [{"t": "891 Utilidad del ejercicio"}, {"e": 6880.8}, {"t": ""}], [{"t": "591 Resultados acumulados"}, {"t": ""}, {"e": 6880.8}]], "fin":globo2(P.pres,P.idea,"Resuelto","Ventas y gastos quedan en cero. La 891 recoge la diferencia, 6,880.80, y la pasa a la 591. Septiembre empieza limpio.")},
 
 a3:{"tipo": "sel", "titulo": "Actividad 4 - Si fueras la dueña", "lista": [{"q": "Si los honorarios de Rosa se registraran recién en septiembre, ¿qué pasaría?", "ops": ["La utilidad de agosto saldría 900 más alta de lo que fue", "Nada", "Se pagaría menos IGV"], "ok": 0, "pq": "Agosto parecería mejor y septiembre peor. El devengado pone cada gasto en su mes."}, {"q": "Después del cierre, ¿dónde está la utilidad de agosto?", "ops": ["En la 7011", "En la 591 Resultados acumulados, dentro del patrimonio", "En la cuenta del BCP"], "ok": 1, "pq": "La utilidad no es plata en el banco: es patrimonio de los socios."}, {"q": "Con la temporada cerrada, ¿qué harías con los resultados acumulados?", "ops": ["Repartirlos todos", "Repartir una parte y dejar otra para la campaña de fin de año y las cuotas del préstamo", "No mirarlos"], "ok": 1, "pq": "Repartir todo fue lo que llevó al sobregiro de abril."}], "fin":globo2(P.pres,P.alum,"Para cerrar","Cada gasto en su mes y cada mes con su cierre. Así termina la temporada de Suela & Co. y así empieza la siguiente.")}
 
@@ -973,7 +1011,7 @@ var D=[
 { et:"El caso", t:"Servicio devengado no pagado y cierre del resultado",
   h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>Cierre de temporada</h2><p>Encuentro 8 - El Espresso - Devengado y cierre</p><div class=\"via\"><b>Gasto sin pago</b><b>Cierre</b><b>Resultados acumulados</b></div></div>"+
     globo(P.idea,"Rosa, la contadora","Mis honorarios de agosto se pagan en septiembre, pero el trabajo lo hice en agosto. ¿En qué mes va el gasto? Y al terminar el mes, las cuentas de ingresos y gastos se cierran y la utilidad pasa a los resultados acumulados.")+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Dato</th><th></th></tr></thead><tbody><tr><td>Honorarios de Rosa de agosto (recibo por honorarios)</td><td>S/ 900, se pagan en septiembre</td></tr><tr><td>Ventas de agosto</td><td>50,000</td></tr><tr><td>Utilidad de agosto</td><td>9,760</td></tr></tbody></table></div>" },
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Dato</th><th></th></tr></thead><tbody><tr><td>Honorarios de Rosa de agosto (recibo por honorarios)</td><td>S/ 900, se pagan en septiembre</td></tr><tr><td>Ventas de agosto</td><td>50,000</td></tr><tr><td>Utilidad de agosto</td><td>6,880.80</td></tr></tbody></table></div>" },
 
 { et:"Teoría", t:"Devengado y cierre",
   h:"<p class=\"enc\">El gasto va en el mes en que se usa el servicio, no en el que se paga</p><p class=\"sub\">Y al cierre, la utilidad del periodo pasa al patrimonio</p>"+
@@ -1111,7 +1149,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = !soyDocente() ? '' :
+  var sol = (!soyDocente() || A.tipo==='opi') ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1149,6 +1187,7 @@ function resuelve(k){
   }
   else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
   else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
 }
@@ -1189,6 +1228,20 @@ function vPar(k){
        '</span></div>';
   });
   h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vOpi(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops fila">';
+    p.ops.forEach(function(o,j){
+      h+='<button type="button" data-o="'+k+'" data-k="'+n+'" data-j="'+j+'" class="'+(g[n]===j?'buena':'')+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(g[n]!==undefined && p.com) h+='<p class="pq">'+esc(p.com[g[n]])+'</p>';
+  });
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1464,12 +1517,12 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro"><div class="banco">'+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
     (libres.length ? libres.map(function(f){
       return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
              '<span class="im">'+mil(f.v)+'</span></button>';
     }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
-    '</div><div class="cols'+(A.cols.length===2?' c2':'')+'">';
+    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     c.bloques.forEach(function(b){
@@ -1500,7 +1553,7 @@ function vCuadro(k){
     h+='</div>';
   });
   h+='</div>';
-  if(A.cuadra){
+  if(A.cuadra && A.fichas.some(function(f){ return !f.fijo && g[f.id]; })){
     var a=cuaValor(A, g, A.cuadra[0]), b2=cuaValor(A, g, A.cuadra[1]);
     var ok=lista(k) && Math.abs(a-b2)<0.005;
     h+='<div class="cuadra '+(ok?'si':'no')+'">'+
@@ -1569,7 +1622,7 @@ function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
-       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : vQuiz(k);
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1582,7 +1635,9 @@ function pinta(quieto){
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
-  if(s.clave) h+=vista(s.clave);
+  var ks=clavesDe(s);
+  if(ks.length===1) h+='<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1592,7 +1647,7 @@ function pinta(quieto){
   $('marcador').textContent=ok+' de '+mx;
   $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
   $('pts').innerHTML=D.map(function(x,n){
-    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
@@ -1608,10 +1663,15 @@ function pinta(quieto){
 }
 
 var yaCruz={};
+function clavesDe(s){ return s.claves || (s.clave ? [s.clave] : []); }
 function cablea(){
-  var lam=$('lam'), s=D[i];
-  if(!s.clave) return;
-  var k=s.clave, A=ACT[k];
+  clavesDe(D[i]).forEach(function(k){
+    var c=$('lam').querySelector('[data-act="'+k+'"]');
+    if(c) cableaUna(k, c);
+  });
+}
+function cableaUna(k, lam){
+  var A=ACT[k];
 
   if(A.tipo==='arr'){
     montaArrastre(lam, function(fid, zona, el){
@@ -1647,6 +1707,12 @@ function cablea(){
     });
   });
 
+  qq('#lam button[data-o]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      G[b.dataset.o][+b.dataset.k]=+b.dataset.j; graba();
+      if(lista(b.dataset.o)) fanfarria(); else bien(); pinta(true);
+    });
+  });
   qq('#lam select[data-s]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
@@ -2271,7 +2337,7 @@ function resumenAula(){
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
 function tituloActividad(n){
@@ -2280,7 +2346,7 @@ function tituloActividad(n){
 }
 function diapoDe(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j+1;
   return 0;
 }
 
@@ -2339,10 +2405,6 @@ function pantalla(e, alumno, cont){
 if(window.Aula){
   Aula.iniciar({ sala:'CAFE8E', codigo:'CAFE', resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
-    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
-            limpia:function(){ G=vacio(); yaCruz={}; i=0;
-              try{ localStorage.removeItem(LS); }catch(e){}
-              pinta(); } },
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }

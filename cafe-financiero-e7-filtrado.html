@@ -135,6 +135,15 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  @media (min-width:1100px){ .cuadro.lado{ grid-template-columns:minmax(280px,360px) 1fr; align-items:start; } }
+  .cuadro.lado .pila{ border:2px solid var(--linea); border-radius:12px; overflow:hidden; background:#fff; }
+  .cuadro.lado .pila .bt{ background:#FFF4CC; color:var(--tinta); }
+  .cuadro.lado .banco{ display:flex; flex-direction:column; gap:6px; padding:10px; border:0; border-radius:0; margin:0; }
+  .cuadro.lado .banco .ficha{ width:100%; display:flex; justify-content:space-between; gap:10px; text-align:left; font-size:16px; padding:5px 10px; }
+  .cuadro.lado .cuadra{ grid-column:1/-1; }
+  .cuadro.lado .cua{ min-height:40px; padding:6px 12px; }
+  .cuadro.lado .cua .n{ font-size:17px; }
+
   .cuadro{ display:grid; gap:14px; }
   .cuadro .cols{ display:grid; gap:14px; }
   @media (min-width:900px){ .cuadro .cols.c2{ grid-template-columns:1fr 1fr; align-items:start; } }
@@ -579,8 +588,40 @@
   .cua.fija .n small{ color:#55607F; }
   .ficha.fija{ display:none; }
   .nuevo{ background:#FFF4CC; }
+  /* animaciones de la teoría */
+  .vida{ margin:4px 0 8px; }
+  .vida .vb{ position:relative; height:48px; border-radius:12px; background:var(--aqua); overflow:hidden; }
+  .vida .dep{ position:absolute; left:0; top:0; bottom:0; width:0; background:var(--fucsia); }
+  .vida .moto{ position:absolute; top:4px; left:0; font-size:34px; line-height:1; }
+  .vida .tx{ position:absolute; right:14px; top:12px; color:#fff; font-weight:800; font-size:19px; }
+  .vida .anos{ display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:#55607F; margin-top:6px; }
+  .vida .ley{ display:flex; gap:18px; font-size:16px; font-weight:700; margin-top:4px; color:var(--tinta); }
+  .vida .ley i{ display:inline-block; width:14px; height:14px; border-radius:4px; vertical-align:-2px; margin-right:6px; }
+  @keyframes gasta{ 0%{ width:0 } 100%{ width:100% } }
+  @keyframes anda{ 0%{ left:0 } 100%{ left:calc(100% - 46px) } }
+  .barras{ display:flex; align-items:flex-end; gap:6px; height:76px; margin:2px 0 8px; padding:0 2px; border-bottom:3px solid var(--linea); }
+  .barras .b{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .barras .b i{ display:block; width:100%; border-radius:6px 6px 0 0; background:var(--marino); transform-origin:bottom; }
+  .barras .b:nth-child(odd) i{ background:var(--aqua); }
+  .barras .b span{ font-size:13px; font-weight:800; color:var(--tinta); margin-bottom:3px; }
+  .barras .b em{ font-style:normal; font-size:12px; font-weight:700; color:#55607F; margin-top:3px; }
+  @keyframes sube{ to{ transform:scaleY(1) } }
+  @keyframes ve{ to{ opacity:1 } }
+  .defi{ font-size:21px; line-height:1.45; background:#fff; border-left:6px solid var(--fucsia); border-radius:10px; padding:12px 18px; margin:0 0 12px; box-shadow:0 2px 10px rgba(7,23,103,.06); }
+  .vida.go .dep{ animation:gasta 12s linear forwards; }
+  .vida.go .moto{ animation:anda 12s linear forwards; }
+  .barras.go .b i{ transform:scaleY(0); animation:sube .9s ease-out forwards; }
+  .barras.go .b span{ opacity:0; animation:ve .5s ease-out forwards; }
+  .anibtn{ margin:0 0 8px; background:var(--fucsia) !important; color:#fff !important; border:0 !important; font:inherit; font-size:18px !important; font-weight:800; padding:9px 18px !important; border-radius:10px !important; cursor:pointer; }
+  .anibtn:hover{ filter:brightness(1.08); }
+  @media print{ .anibtn{ display:none; } }
   .chip-n{ display:inline-block; background:var(--fucsia); color:#fff; border-radius:6px;
            font-size:13px; font-weight:800; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  .duo{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
+  @media (min-width:1100px){ .duo{ grid-template-columns:1.1fr 1fr; } }
+  .duo .tarea{ margin-top:0; }
+  .ops.fila{ display:grid; gap:10px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); }
+  .ops.fila button{ margin:0; }
   /* ---------- la sesión en PDF, una diapositiva por página ---------- */
   #impreso{ display:none; }
 
@@ -658,11 +699,8 @@
   </div>
 
   <div class="puerta" id="puerta">
-    <h2>Ingresa con tu DNI</h2>
-    <p>Escribe tu DNI y el c&oacute;digo de sala que indique el docente, y pulsa <b>Ingresar</b>. Si es tu
-       primera vez, pulsa <b>Es mi primera vez</b> y te registras con tus apellidos y nombres: solo se hace
-       una vez. Tu avance queda guardado con tu DNI, as&iacute; que lo recuperas aunque cierres la
-       p&aacute;gina o entres desde otro equipo.</p>
+    <h2>Ingresa con tu nombre</h2>
+    <p>Escribe tu nombre y el c&oacute;digo de sala que indique el docente, y pulsa <b>Entrar a la sala</b>. No se pide DNI: tus respuestas se guardan solo en este equipo.</p>
     <div id="aula"></div>
   </div>
 
@@ -959,13 +997,13 @@ var ACT={
 
 a0:{"tipo": "par", "titulo": "Actividad 1 - ¿En qué nota va?", "fichas": [{"id": "n1", "t": "Tienda de zapatillas en Lima, constituida en 2025"}, {"id": "n2", "t": "La depreciación se calcula en línea recta"}, {"id": "n3", "t": "Colegio San Martín debe 5,900 y se estimó como dudosa"}, {"id": "n4", "t": "Las Runner 2024 se desvalorizaron en 1,500"}, {"id": "n5", "t": "Préstamo del BCP al 1.5 % mensual, 12,000 vencen este año"}, {"id": "n6", "t": "En agosto se compró una segunda moto"}], "huecos": [{"id": "n1", "q": "Actividad de la empresa"}, {"id": "n2", "q": "Políticas contables"}, {"id": "n3", "q": "Cuentas por cobrar"}, {"id": "n4", "q": "Mercaderías"}, {"id": "n5", "q": "Obligaciones financieras"}, {"id": "n6", "q": "Hechos posteriores"}], "fin":globo(P.bien,"Resuelto","Cada nota responde una duda que el lector tendría al ver el cuadro.")},
 
-a1:{"tipo": "cuadro", "titulo": "Actividad 2 - Resultados de julio por función", "intro": "Arrastra las cuentas que faltan. Los resultados se calculan solos.", "fichas": [{"id": "f7011", "t": "7011 Ventas", "v": 44000.0, "g": "r1"}, {"id": "f6911", "t": "6911 Costo de ventas", "v": 27300.0, "g": "r2"}, {"id": "f635", "t": "635 Alquiler del local", "v": 3500.0, "g": "r3", "fijo": true}, {"id": "f637", "t": "637 Publicidad", "v": 1200.0, "g": "r3", "fijo": true}, {"id": "f6814", "t": "6814 Depreciación", "v": 210.0, "g": "r3", "fijo": true}, {"id": "f632v", "t": "632 Honorarios - comisión del vendedor", "v": 2100, "g": "r3", "fijo": true}, {"id": "f636", "t": "636 Luz, agua e internet", "v": 680.0, "g": "r4", "fijo": true}, {"id": "f632c", "t": "632 Honorarios - contadora", "v": 900.0, "g": "r4", "fijo": true}, {"id": "f673", "t": "673 Intereses del préstamo", "v": 345.0, "g": "r6"}], "cols": [{"t": "Suela & Co. S.A.C. - Estado de resultados de julio 2026", "bloques": [{"lineas": [{"id": "r1", "t": "Ventas"}, {"id": "r2", "t": "Costo de ventas", "s": -1}], "tot": {"id": "tb", "t": "Utilidad bruta"}}, {"lineas": [{"id": "r3", "t": "Gastos de ventas", "s": -1}, {"id": "r4", "t": "Gastos de administración", "s": -1}], "tot": {"id": "to", "t": "Utilidad operativa", "de": ["tb", "r3", "r4"]}}, {"lineas": [{"id": "r6", "t": "Gastos financieros", "s": -1}], "tot": {"id": "tn", "t": "Utilidad del mes", "de": ["to", "r6"]}}]}], "fin":globo(P.alum,"Resuelto","Julio ganó 7,765. Los intereses del préstamo van debajo de la utilidad operativa: no son del negocio, son del financiamiento.")},
+a1:{"tipo": "cuadro", "titulo": "Actividad 2 - Resultados de julio por función", "intro": "Arrastra las cuentas que faltan. Los resultados se calculan solos.", "fichas": [{"id": "f7011", "t": "7011 Ventas", "v": 44000.0, "g": "r1"}, {"id": "f6911", "t": "6911 Costo de ventas", "v": 27300.0, "g": "r2"}, {"id": "f635", "t": "635 Alquiler del local", "v": 3500.0, "g": "r3", "fijo": true}, {"id": "f637", "t": "637 Publicidad", "v": 1200.0, "g": "r3", "fijo": true}, {"id": "f6814", "t": "6814 Depreciación", "v": 210.0, "g": "r3", "fijo": true}, {"id": "f632v", "t": "632 Honorarios - comisión del vendedor", "v": 2100, "g": "r3", "fijo": true}, {"id": "f636", "t": "636 Luz, agua e internet", "v": 680.0, "g": "r4", "fijo": true}, {"id": "f632c", "t": "632 Honorarios - contadora", "v": 900.0, "g": "r4", "fijo": true}, {"id": "f673", "t": "673 Intereses del préstamo", "v": 345.0, "g": "r6"}, {"id": "f881", "t": "881 Impuesto a la renta", "v": 2290.67, "g": "rir", "fijo": true}], "cols": [{"t": "Suela & Co. S.A.C. - Estado de resultados de julio 2026", "bloques": [{"lineas": [{"id": "r1", "t": "Ventas"}, {"id": "r2", "t": "Costo de ventas", "s": -1}], "tot": {"id": "tb", "t": "Utilidad bruta"}}, {"lineas": [{"id": "r3", "t": "Gastos de ventas", "s": -1}, {"id": "r4", "t": "Gastos de administración", "s": -1}], "tot": {"id": "to", "t": "Utilidad operativa", "de": ["tb", "r3", "r4"]}}, {"lineas": [{"id": "r6", "t": "Gastos financieros", "s": -1}], "tot": {"id": "tai", "t": "Resultado antes de impuestos", "de": ["to", "r6"]}}, {"lineas": [{"id": "rir", "t": "Impuesto a la renta (29.5 %)", "s": -1}], "tot": {"id": "tun", "t": "Utilidad del mes", "de": ["tai", "rir"]}}]}], "fin":globo(P.alum,"Resuelto","Julio ganó 5,474.33. Los intereses del préstamo van debajo de la utilidad operativa: no son del negocio, son del financiamiento.")},
 
-a2:{"tipo": "cuadro", "titulo": "Actividad 3 - Situación financiera al 31 de julio", "intro": "Arrastra las partidas que faltan. Los totales se calculan solos.", "fichas": [{"id": "f101", "t": "101 Caja", "v": 1550.0, "g": "ac1", "fijo": true}, {"id": "f104", "t": "104 Cuenta corriente BCP", "v": 63206.6, "g": "ac1", "fijo": true}, {"id": "f121", "t": "121 Facturas por cobrar", "v": 15340.0, "g": "ac2", "fijo": true}, {"id": "f191", "t": "191 Estimación de cobranza dudosa", "v": 5900.0, "g": "ac3"}, {"id": "f201", "t": "201 Mercaderías", "v": 32900.0, "g": "ac5", "fijo": true}, {"id": "f291", "t": "291 Desvalorización de mercaderías", "v": 1500.0, "g": "ac6"}, {"id": "f334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "an1", "fijo": true}, {"id": "f335", "t": "335 Muebles - exhibidores", "v": 6000.0, "g": "an1", "fijo": true}, {"id": "f391", "t": "391 Depreciación acumulada", "v": 2120.0, "g": "an2", "fijo": true}, {"id": "f421", "t": "421 Facturas por pagar", "v": 30680.0, "g": "pc1", "fijo": true}, {"id": "f4011", "t": "4011 IGV - cuenta propia", "v": 2271.6, "g": "pc3", "fijo": true}, {"id": "f451_pc4", "t": "451 Préstamo bancario - cuotas de los próximos 12 meses", "v": 12000, "g": "pc4"}, {"id": "f451_pn1", "t": "451 Préstamo bancario - cuotas que vencen después", "v": 10000.0, "g": "pn1", "fijo": true}, {"id": "f501", "t": "501 Capital social", "v": 40000.0, "g": "pt1", "fijo": true}, {"id": "f591", "t": "591 Resultados acumulados", "v": 16360.0, "g": "pt2", "fijo": true}, {"id": "futil", "t": "Utilidad de julio (del estado de resultados)", "v": 7765.0, "g": "pt3"}], "cols": [{"t": "Activo", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "ac1", "t": "Efectivo y equivalentes de efectivo"}, {"id": "ac2", "t": "Cuentas por cobrar comerciales"}, {"id": "ac3", "t": "Estimación de cobranza dudosa", "s": -1}, {"id": "ac5", "t": "Mercaderías"}, {"id": "ac6", "t": "Desvalorización de mercaderías", "s": -1}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "an1", "t": "Propiedad, planta y equipo"}, {"id": "an2", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "g1", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "pc1", "t": "Cuentas por pagar comerciales"}, {"id": "pc3", "t": "Tributos por pagar"}, {"id": "pc4", "t": "Obligaciones financieras - parte corriente"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Pasivo no corriente", "lineas": [{"id": "pn1", "t": "Obligaciones financieras - parte no corriente"}], "tot": {"id": "tpn", "t": "Total pasivo no corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "pt1", "t": "Capital"}, {"id": "pt2", "t": "Resultados acumulados"}, {"id": "pt3", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "g2", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpn", "tpt"]}}], "cuadra": ["g1", "g2"], "fin":globo2(P.pres,P.bien,"Resuelto","Cuadra en 119,076.60. Ahora fíjate en las líneas que restan: sin notas nadie sabría qué son.")},
+a2:{"tipo": "cuadro", "titulo": "Actividad 3 - Situación financiera al 31 de julio", "intro": "Arrastra las partidas que faltan. Los totales se calculan solos.", "fichas": [{"id": "f101", "t": "101 Caja", "v": 1550.0, "g": "ac1", "fijo": true}, {"id": "f104", "t": "104 Cuenta corriente BCP", "v": 62206.6, "g": "ac1", "fijo": true}, {"id": "f121", "t": "121 Facturas por cobrar", "v": 15340.0, "g": "ac2", "fijo": true}, {"id": "f191", "t": "191 Estimación de cobranza dudosa", "v": 5900.0, "g": "ac3"}, {"id": "f201", "t": "201 Mercaderías", "v": 32900.0, "g": "ac5", "fijo": true}, {"id": "f291", "t": "291 Desvalorización de mercaderías", "v": 1500.0, "g": "ac6"}, {"id": "f334", "t": "334 Vehículos - moto de reparto", "v": 9600.0, "g": "an1", "fijo": true}, {"id": "f335", "t": "335 Muebles - exhibidores", "v": 6000.0, "g": "an1", "fijo": true}, {"id": "f391", "t": "391 Depreciación acumulada", "v": 2120.0, "g": "an2", "fijo": true}, {"id": "f421", "t": "421 Facturas por pagar", "v": 30680.0, "g": "pc1", "fijo": true}, {"id": "f4011", "t": "4011 IGV - cuenta propia", "v": 2271.6, "g": "pc3", "fijo": true}, {"id": "f4017", "t": "4017 Impuesto a la renta por pagar", "v": 11016.77, "g": "pc3", "fijo": true}, {"id": "f451_pc4", "t": "451 Préstamo bancario - cuotas de los próximos 12 meses", "v": 12000, "g": "pc4"}, {"id": "f451_pn1", "t": "451 Préstamo bancario - cuotas que vencen después", "v": 10000.0, "g": "pn1", "fijo": true}, {"id": "f501", "t": "501 Capital social", "v": 34000.0, "g": "pt1", "fijo": true}, {"id": "f591", "t": "591 Resultados acumulados", "v": 12633.9, "g": "pt2", "fijo": true}, {"id": "futil", "t": "Utilidad de julio (del estado de resultados)", "v": 5474.33, "g": "pt3"}], "cols": [{"t": "Activo", "bloques": [{"t": "Activo corriente", "lineas": [{"id": "ac1", "t": "Efectivo y equivalentes de efectivo"}, {"id": "ac2", "t": "Cuentas por cobrar comerciales"}, {"id": "ac3", "t": "Estimación de cobranza dudosa", "s": -1}, {"id": "ac5", "t": "Mercaderías"}, {"id": "ac6", "t": "Desvalorización de mercaderías", "s": -1}], "tot": {"id": "tac", "t": "Total activo corriente"}}, {"t": "Activo no corriente", "lineas": [{"id": "an1", "t": "Propiedad, planta y equipo"}, {"id": "an2", "t": "Depreciación acumulada", "s": -1}], "tot": {"id": "tan", "t": "Total activo no corriente"}}], "gran": {"id": "g1", "t": "Total activo", "de": ["tac", "tan"]}}, {"t": "Pasivo y patrimonio", "c": "na", "bloques": [{"t": "Pasivo corriente", "lineas": [{"id": "pc1", "t": "Cuentas por pagar comerciales"}, {"id": "pc3", "t": "Tributos por pagar"}, {"id": "pc4", "t": "Obligaciones financieras - parte corriente"}], "tot": {"id": "tpc", "t": "Total pasivo corriente"}}, {"t": "Pasivo no corriente", "lineas": [{"id": "pn1", "t": "Obligaciones financieras - parte no corriente"}], "tot": {"id": "tpn", "t": "Total pasivo no corriente"}}, {"t": "Patrimonio", "lineas": [{"id": "pt1", "t": "Capital"}, {"id": "pt2", "t": "Resultados acumulados"}, {"id": "pt3", "t": "Utilidad del mes"}], "tot": {"id": "tpt", "t": "Total patrimonio"}}], "gran": {"id": "g2", "t": "Total pasivo y patrimonio", "de": ["tpc", "tpn", "tpt"]}}], "cuadra": ["g1", "g2"], "fin":globo2(P.pres,P.bien,"Resuelto","Cuadra en 118,076.60. Ahora fíjate en las líneas que restan: sin notas nadie sabría qué son.")},
 
 a3:{"tipo": "tabla", "titulo": "Actividad 4 - Escribe las notas", "intro": "Completa el total de cada nota con el balance de comprobación. Lo que resta va con signo menos.", "cols": ["Nota", "Importe"], "tipos": ["t", "n"], "filas": [[{"t": "<b>Nota 4 - Cuentas por cobrar</b>"}, {"t": ""}], [{"t": "Facturas por cobrar"}, {"t": "15,340"}], [{"t": "Estimación de cobranza dudosa"}, {"t": "-5,900"}], [{"t": "Cuentas por cobrar netas", "cl": "tot"}, {"e": 9440.0}], [{"t": "<b>Nota 5 - Mercaderías</b>"}, {"t": ""}], [{"t": "Mercaderías al costo"}, {"t": "32,900"}], [{"t": "Desvalorización"}, {"t": "-1,500"}], [{"t": "Mercaderías netas", "cl": "tot"}, {"e": 31400.0}], [{"t": "<b>Nota 6 - Propiedad, planta y equipo</b>"}, {"t": ""}], [{"t": "Moto de reparto"}, {"t": "9,600"}], [{"t": "Exhibidores"}, {"t": "6,000"}], [{"t": "Depreciación acumulada"}, {"t": "-2,120"}], [{"t": "Valor neto", "cl": "tot"}, {"e": 13480.0}], [{"t": "<b>Nota 7 - Obligaciones financieras</b>"}, {"t": ""}], [{"t": "Saldo del préstamo del BCP"}, {"t": "22,000"}], [{"t": "Parte corriente: próximos 12 meses"}, {"e": 12000}], [{"t": "Parte no corriente", "cl": "tot"}, {"e": 10000.0}]], "fin":globo(P.idea,"Resuelto","Cada total de nota es una línea de la situación financiera. La nota muestra cómo se llegó a ella.")},
 
-a4:{"tipo": "tabla", "titulo": "Actividad 5 - Flujo de efectivo de julio", "intro": "Usa el mayor de Caja y de la cuenta corriente. Las salidas van con signo menos.", "cols": ["Concepto", "Importe"], "tipos": ["t", "n"], "filas": [[{"t": "<b>Actividades de operación</b>"}, {"t": ""}], [{"t": "Cobros a clientes", "cl": ""}, {"t": "50,740"}], [{"t": "Pagos a proveedores de mercadería", "cl": ""}, {"t": "-16,520"}], [{"t": "Pagos de alquiler, servicios y honorarios", "cl": ""}, {"t": "-9,348.40"}], [{"t": "Pago de tributos a SUNAT", "cl": ""}, {"t": "-1,033.20"}], [{"t": "Intereses pagados", "cl": ""}, {"t": "-345"}], [{"t": "Flujo de operación", "cl": "tot"}, {"e": 23493.4}], [{"t": "<b>Actividades de inversión</b>"}, {"t": ""}], [{"t": "Flujo de inversión", "cl": "tot"}, {"t": "0"}], [{"t": "<b>Actividades de financiamiento</b>"}, {"t": ""}], [{"t": "Pago de cuotas del préstamo"}, {"t": "-1,000"}], [{"t": "Flujo de financiamiento", "cl": "tot"}, {"t": "-1,000"}], [{"t": "Aumento (o disminución) del efectivo"}, {"t": "22,493.40"}], [{"t": "Efectivo al 1 de julio"}, {"t": "42,263.20"}], [{"t": "Efectivo al 31 de julio", "cl": "tot"}, {"e": 64756.6}]]},
+a4:{"tipo": "tabla", "titulo": "Actividad 5 - Flujo de efectivo de julio", "intro": "Usa el mayor de Caja y de la cuenta corriente. Las salidas van con signo menos.", "cols": ["Concepto", "Importe"], "tipos": ["t", "n"], "filas": [[{"t": "<b>Actividades de operación</b>"}, {"t": ""}], [{"t": "Cobros a clientes", "cl": ""}, {"t": "50,740"}], [{"t": "Pagos a proveedores de mercadería", "cl": ""}, {"t": "-16,520"}], [{"t": "Pagos de alquiler, servicios y honorarios", "cl": ""}, {"t": "-9,348.40"}], [{"t": "Pago de tributos a SUNAT", "cl": ""}, {"t": "-1,033.20"}], [{"t": "Intereses pagados", "cl": ""}, {"t": "-345"}], [{"t": "Flujo de operación", "cl": "tot"}, {"e": 23493.4}], [{"t": "<b>Actividades de inversión</b>"}, {"t": ""}], [{"t": "Flujo de inversión", "cl": "tot"}, {"t": "0"}], [{"t": "<b>Actividades de financiamiento</b>"}, {"t": ""}], [{"t": "Pago de cuotas del préstamo"}, {"t": "-1,000"}], [{"t": "Flujo de financiamiento", "cl": "tot"}, {"t": "-1,000"}], [{"t": "Aumento (o disminución) del efectivo"}, {"t": "22,493.40"}], [{"t": "Efectivo al 1 de julio"}, {"t": "41,263.20"}], [{"t": "Efectivo al 31 de julio", "cl": "tot"}, {"e": 63756.6}]]},
 
 a5:{"tipo": "sel", "titulo": "Si fueras la dueña", "lista": [{"q": "El banco ve \"Cuentas por cobrar 9,440\". ¿Qué nota lo deja tranquilo, o no?", "ops": ["La nota de cuentas por cobrar, que muestra la deuda del Colegio San Martín", "La nota de mercaderías", "Ninguna"], "ok": 0, "pq": "La nota explica que ya se estimó lo dudoso: el neto es lo que se espera cobrar."}, {"q": "¿Qué pondrías en hechos posteriores si en agosto se compra una segunda moto?", "ops": ["Nada: pasó después del cierre", "Que se compró, por cuánto y cómo se pagó", "Que la utilidad de julio subió"], "ok": 1, "pq": "Un hecho importante después del cierre se informa, aunque no cambie los cuadros de julio."}], "fin":globo2(P.pres,P.idea,"Para cerrar","Los cuadros dicen cuánto. Las notas dicen por qué y con qué criterio. Juntos forman el juego completo.")}
 
@@ -981,12 +1019,12 @@ var D=[
 
 { et:"Balance", t:"Balance de comprobación al 31 de julio de 2026",
   h:"<p class=\"enc\">Todo julio en una sola tabla</p><p class=\"sub\">El resultado de los meses anteriores ya está en Resultados acumulados</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Denominación</th><th class=\"n\">Saldo deudor</th><th class=\"n\">Saldo acreedor</th></tr></thead><tbody><tr><td>101</td><td>Caja</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr><td>104</td><td>Cuenta corriente BCP</td><td class=\"n\">63,206.60</td><td class=\"n\"></td></tr><tr><td>121</td><td>Facturas por cobrar</td><td class=\"n\">15,340</td><td class=\"n\"></td></tr><tr><td>191</td><td>Estimación de cobranza dudosa</td><td class=\"n\"></td><td class=\"n\">5,900</td></tr><tr><td>201</td><td>Mercaderías</td><td class=\"n\">32,900</td><td class=\"n\"></td></tr><tr><td>291</td><td>Desvalorización de mercaderías</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>334</td><td>Vehículos - moto de reparto</td><td class=\"n\">9,600</td><td class=\"n\"></td></tr><tr><td>335</td><td>Muebles - exhibidores</td><td class=\"n\">6,000</td><td class=\"n\"></td></tr><tr><td>391</td><td>Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">2,120</td></tr><tr><td>4011</td><td>IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">2,271.60</td></tr><tr><td>421</td><td>Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">30,680</td></tr><tr><td>451</td><td>Préstamo bancario</td><td class=\"n\"></td><td class=\"n\">22,000</td></tr><tr><td>501</td><td>Capital social</td><td class=\"n\"></td><td class=\"n\">40,000</td></tr><tr><td>591</td><td>Resultados acumulados</td><td class=\"n\"></td><td class=\"n\">16,360</td></tr><tr><td>632</td><td>Honorarios</td><td class=\"n\">3,000</td><td class=\"n\"></td></tr><tr><td>635</td><td>Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td>636</td><td>Luz, agua e internet</td><td class=\"n\">680</td><td class=\"n\"></td></tr><tr><td>637</td><td>Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td>673</td><td>Intereses del préstamo</td><td class=\"n\">345</td><td class=\"n\"></td></tr><tr><td>6814</td><td>Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td>6911</td><td>Costo de ventas</td><td class=\"n\">27,300</td><td class=\"n\"></td></tr><tr><td>7011</td><td>Ventas</td><td class=\"n\"></td><td class=\"n\">44,000</td></tr><tr class=\"res\"><td> </td><td><b>Totales</b></td><td class=\"n\"><b>164,831.60</b></td><td class=\"n\"><b>164,831.60</b></td></tr></tbody></table></div>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Denominación</th><th class=\"n\">Saldo deudor</th><th class=\"n\">Saldo acreedor</th></tr></thead><tbody><tr><td>101</td><td>Caja</td><td class=\"n\">1,550</td><td class=\"n\"></td></tr><tr><td>104</td><td>Cuenta corriente BCP</td><td class=\"n\">62,206.60</td><td class=\"n\"></td></tr><tr><td>121</td><td>Facturas por cobrar</td><td class=\"n\">15,340</td><td class=\"n\"></td></tr><tr><td>191</td><td>Estimación de cobranza dudosa</td><td class=\"n\"></td><td class=\"n\">5,900</td></tr><tr><td>201</td><td>Mercaderías</td><td class=\"n\">32,900</td><td class=\"n\"></td></tr><tr><td>291</td><td>Desvalorización de mercaderías</td><td class=\"n\"></td><td class=\"n\">1,500</td></tr><tr><td>334</td><td>Vehículos - moto de reparto</td><td class=\"n\">9,600</td><td class=\"n\"></td></tr><tr><td>335</td><td>Muebles - exhibidores</td><td class=\"n\">6,000</td><td class=\"n\"></td></tr><tr><td>391</td><td>Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">2,120</td></tr><tr><td>4011</td><td>IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">2,271.60</td></tr><tr><td>4017</td><td>Impuesto a la renta por pagar</td><td class=\"n\"></td><td class=\"n\">11,016.77</td></tr><tr><td>421</td><td>Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">30,680</td></tr><tr><td>451</td><td>Préstamo bancario</td><td class=\"n\"></td><td class=\"n\">22,000</td></tr><tr><td>501</td><td>Capital social</td><td class=\"n\"></td><td class=\"n\">34,000</td></tr><tr><td>591</td><td>Resultados acumulados</td><td class=\"n\"></td><td class=\"n\">12,633.90</td></tr><tr><td>632</td><td>Honorarios</td><td class=\"n\">3,000</td><td class=\"n\"></td></tr><tr><td>635</td><td>Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td>636</td><td>Luz, agua e internet</td><td class=\"n\">680</td><td class=\"n\"></td></tr><tr><td>637</td><td>Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td>673</td><td>Intereses del préstamo</td><td class=\"n\">345</td><td class=\"n\"></td></tr><tr><td>6814</td><td>Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td>6911</td><td>Costo de ventas</td><td class=\"n\">27,300</td><td class=\"n\"></td></tr><tr><td>881</td><td>Impuesto a la renta</td><td class=\"n\">2,290.67</td><td class=\"n\"></td></tr><tr><td>7011</td><td>Ventas</td><td class=\"n\"></td><td class=\"n\">44,000</td></tr><tr class=\"res\"><td> </td><td><b>Totales</b></td><td class=\"n\"><b>166,122.27</b></td><td class=\"n\"><b>166,122.27</b></td></tr></tbody></table></div>"+
     globo(P.idea,"Rosa, la contadora","Julio es un mes tranquilo: ventas, compras, la segunda cuota del préstamo y el pago del IGV de junio, que es la fila resaltada del diario.") },
 
 { et:"Diario", t:"Libro diario de julio",
   h:"<p class=\"enc\">Lo que pasó en julio, en orden</p><p class=\"sub\">La fila resaltada es la operación que registramos en El Espresso.</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>N.°</th><th>Glosa</th><th>Cuenta</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr><td>1</td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td>104 Cuenta corriente BCP</td><td class=\"n\">42,480</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">36,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">6,480</td></tr><tr><td>2</td><td>Venta al crédito a Club Deportivo Los Andes (factura a 30 días)</td><td>121 Facturas por cobrar</td><td class=\"n\">9,440</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">8,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">1,440</td></tr><tr><td>3</td><td>Costo de las zapatillas vendidas en el mes</td><td>6911 Costo de ventas</td><td class=\"n\">27,300</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>201 Mercaderías</td><td class=\"n\"></td><td class=\"n\">27,300</td></tr><tr><td>4</td><td>Compra de zapatillas al crédito a Calzados del Norte</td><td>201 Mercaderías</td><td class=\"n\">26,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">4,680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">30,680</td></tr><tr><td>5</td><td>Pago a proveedores de mercadería</td><td>421 Facturas por pagar</td><td class=\"n\">16,520</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">16,520</td></tr><tr><td>6</td><td>Cobro de facturas a clientes</td><td>104 Cuenta corriente BCP</td><td class=\"n\">8,260</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>121 Facturas por cobrar</td><td class=\"n\"></td><td class=\"n\">8,260</td></tr><tr><td>7</td><td>Pago de la segunda cuota del préstamo: capital</td><td>451 Préstamo bancario</td><td class=\"n\">1,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,000</td></tr><tr><td>8</td><td>Pago de la segunda cuota del préstamo: intereses</td><td>673 Intereses del préstamo</td><td class=\"n\">345</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">345</td></tr><tr><td>9</td><td>Alquiler del local de la tienda</td><td>635 Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">630</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td>10</td><td>Recibos de luz, agua e internet</td><td>636 Luz, agua e internet</td><td class=\"n\">680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">122.40</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">802.40</td></tr><tr><td>11</td><td>Publicidad en redes sociales</td><td>637 Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">216</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td>12</td><td>Comisión del vendedor (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">2,100</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">2,100</td></tr><tr><td>13</td><td>Honorarios de la contadora (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>14</td><td>Depreciación de la moto y de los exhibidores</td><td>6814 Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>391 Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">210</td></tr><tr class=\"nuevo\"><td>15</td><td>Pago del IGV de junio a SUNAT</td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,033.20</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,033.20</td></tr></tbody></table></div>" },
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>N.°</th><th>Glosa</th><th>Cuenta</th><th class=\"n\">Debe</th><th class=\"n\">Haber</th></tr></thead><tbody><tr><td>1</td><td>Ventas del mes en tienda, cobradas con tarjeta y depositadas en el BCP</td><td>104 Cuenta corriente BCP</td><td class=\"n\">42,480</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">36,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">6,480</td></tr><tr><td>2</td><td>Venta al crédito a Club Deportivo Los Andes (factura a 30 días)</td><td>121 Facturas por cobrar</td><td class=\"n\">9,440</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>7011 Ventas</td><td class=\"n\"></td><td class=\"n\">8,000</td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\"></td><td class=\"n\">1,440</td></tr><tr><td>3</td><td>Costo de las zapatillas vendidas en el mes</td><td>6911 Costo de ventas</td><td class=\"n\">27,300</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>201 Mercaderías</td><td class=\"n\"></td><td class=\"n\">27,300</td></tr><tr><td>4</td><td>Compra de zapatillas al crédito a Calzados del Norte</td><td>201 Mercaderías</td><td class=\"n\">26,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">4,680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>421 Facturas por pagar</td><td class=\"n\"></td><td class=\"n\">30,680</td></tr><tr><td>5</td><td>Pago a proveedores de mercadería</td><td>421 Facturas por pagar</td><td class=\"n\">16,520</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">16,520</td></tr><tr><td>6</td><td>Cobro de facturas a clientes</td><td>104 Cuenta corriente BCP</td><td class=\"n\">8,260</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>121 Facturas por cobrar</td><td class=\"n\"></td><td class=\"n\">8,260</td></tr><tr><td>7</td><td>Pago de la segunda cuota del préstamo: capital</td><td>451 Préstamo bancario</td><td class=\"n\">1,000</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,000</td></tr><tr><td>8</td><td>Pago de la segunda cuota del préstamo: intereses</td><td>673 Intereses del préstamo</td><td class=\"n\">345</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">345</td></tr><tr><td>9</td><td>Alquiler del local de la tienda</td><td>635 Alquiler del local</td><td class=\"n\">3,500</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">630</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">4,130</td></tr><tr><td>10</td><td>Recibos de luz, agua e internet</td><td>636 Luz, agua e internet</td><td class=\"n\">680</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">122.40</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">802.40</td></tr><tr><td>11</td><td>Publicidad en redes sociales</td><td>637 Publicidad</td><td class=\"n\">1,200</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4011 IGV - cuenta propia</td><td class=\"n\">216</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,416</td></tr><tr><td>12</td><td>Comisión del vendedor (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">2,100</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">2,100</td></tr><tr><td>13</td><td>Honorarios de la contadora (recibo por honorarios)</td><td>632 Honorarios</td><td class=\"n\">900</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">900</td></tr><tr><td>14</td><td>Depreciación de la moto y de los exhibidores</td><td>6814 Depreciación</td><td class=\"n\">210</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>391 Depreciación acumulada</td><td class=\"n\"></td><td class=\"n\">210</td></tr><tr class=\"nuevo\"><td>15</td><td>Pago del IGV de junio a SUNAT</td><td>4011 IGV - cuenta propia</td><td class=\"n\">1,033.20</td><td class=\"n\"></td></tr><tr class=\"nuevo\"><td></td><td></td><td>104 Cuenta corriente BCP</td><td class=\"n\"></td><td class=\"n\">1,033.20</td></tr><tr><td>16</td><td>Impuesto a la renta del mes: 29.5 % del resultado antes de impuestos</td><td>881 Impuesto a la renta</td><td class=\"n\">2,290.67</td><td class=\"n\"></td></tr><tr><td></td><td></td><td>4017 Impuesto a la renta por pagar</td><td class=\"n\"></td><td class=\"n\">2,290.67</td></tr></tbody></table></div>" },
 
 { et:"Teoría", t:"Qué dicen las notas",
   h:"<p class=\"enc\">Las notas completan el juego de estados financieros</p><p class=\"sub\">Explican los criterios y el detalle que los cuadros no alcanzan a mostrar</p>"+
@@ -1130,7 +1168,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = !soyDocente() ? '' :
+  var sol = (!soyDocente() || A.tipo==='opi') ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1168,6 +1206,7 @@ function resuelve(k){
   }
   else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
   else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
 }
@@ -1208,6 +1247,20 @@ function vPar(k){
        '</span></div>';
   });
   h+='</div>';
+  if(lista(k) && A.fin) h+=A.fin;
+  return h+'</div></div>';
+}
+function vOpi(k){
+  var A=ACT[k], g=G[k]||{};
+  var h=cabTarea(k);
+  A.lista.forEach(function(p,n){
+    h+='<p class="preg">'+(n+1)+'. '+esc(p.q)+'</p><div class="ops fila">';
+    p.ops.forEach(function(o,j){
+      h+='<button type="button" data-o="'+k+'" data-k="'+n+'" data-j="'+j+'" class="'+(g[n]===j?'buena':'')+'">'+esc(o)+'</button>';
+    });
+    h+='</div>';
+    if(g[n]!==undefined && p.com) h+='<p class="pq">'+esc(p.com[g[n]])+'</p>';
+  });
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
 }
@@ -1483,12 +1536,12 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro"><div class="banco">'+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
     (libres.length ? libres.map(function(f){
       return '<button type="button" class="ficha" data-f="'+f.id+'">'+esc(f.t)+
              '<span class="im">'+mil(f.v)+'</span></button>';
     }).join('') : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
-    '</div><div class="cols'+(A.cols.length===2?' c2':'')+'">';
+    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     c.bloques.forEach(function(b){
@@ -1519,7 +1572,7 @@ function vCuadro(k){
     h+='</div>';
   });
   h+='</div>';
-  if(A.cuadra){
+  if(A.cuadra && A.fichas.some(function(f){ return !f.fijo && g[f.id]; })){
     var a=cuaValor(A, g, A.cuadra[0]), b2=cuaValor(A, g, A.cuadra[1]);
     var ok=lista(k) && Math.abs(a-b2)<0.005;
     h+='<div class="cuadra '+(ok?'si':'no')+'">'+
@@ -1588,7 +1641,7 @@ function vista(k){
   var t=ACT[k].tipo;
   return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
-       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : vQuiz(k);
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1601,7 +1654,9 @@ function pinta(quieto){
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
-  if(s.clave) h+=vista(s.clave);
+  var ks=clavesDe(s);
+  if(ks.length===1) h+='<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -1611,7 +1666,7 @@ function pinta(quieto){
   $('marcador').textContent=ok+' de '+mx;
   $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
   $('pts').innerHTML=D.map(function(x,n){
-    var cl = n===i ? 'on' : (x.clave && lista(x.clave) ? 'hecho' : (G.visto[n]?'visto':''));
+    var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
   qq('#pts button').forEach(function(b){
@@ -1627,10 +1682,15 @@ function pinta(quieto){
 }
 
 var yaCruz={};
+function clavesDe(s){ return s.claves || (s.clave ? [s.clave] : []); }
 function cablea(){
-  var lam=$('lam'), s=D[i];
-  if(!s.clave) return;
-  var k=s.clave, A=ACT[k];
+  clavesDe(D[i]).forEach(function(k){
+    var c=$('lam').querySelector('[data-act="'+k+'"]');
+    if(c) cableaUna(k, c);
+  });
+}
+function cableaUna(k, lam){
+  var A=ACT[k];
 
   if(A.tipo==='arr'){
     montaArrastre(lam, function(fid, zona, el){
@@ -1666,6 +1726,12 @@ function cablea(){
     });
   });
 
+  qq('#lam button[data-o]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      G[b.dataset.o][+b.dataset.k]=+b.dataset.j; graba();
+      if(lista(b.dataset.o)) fanfarria(); else bien(); pinta(true);
+    });
+  });
   qq('#lam select[data-s]', lam).forEach(function(sl){
     sl.addEventListener('change', function(){
       if(sl.value==='') return;
@@ -2290,7 +2356,7 @@ function resumenAula(){
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return D[j].et;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
 function tituloActividad(n){
@@ -2299,7 +2365,7 @@ function tituloActividad(n){
 }
 function diapoDe(n){
   var k=CLAVES[n];
-  for(var j=0;j<D.length;j++) if(D[j].clave===k) return j+1;
+  for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j+1;
   return 0;
 }
 
@@ -2358,10 +2424,6 @@ function pantalla(e, alumno, cont){
 if(window.Aula){
   Aula.iniciar({ sala:'CAFE7F', codigo:'CAFE', resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
-    ficha:{ clave:LS, lee:fusiona, da:function(){ return G; },
-            limpia:function(){ G=vacio(); yaCruz={}; i=0;
-              try{ localStorage.removeItem(LS); }catch(e){}
-              pinta(); } },
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
