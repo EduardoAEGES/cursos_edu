@@ -145,6 +145,33 @@
   .cuadro.malla .sub{ margin:0 !important; }
   .cuadro.malla .mtz{ font-size:14px; }
   .cuadro.malla .mtz th, .cuadro.malla .mtz td{ padding:3px 6px; }
+  @media (min-width:1100px){ .cuadro.compacto.lado{ grid-template-columns:440px 1fr; } .cuadro.compacto.lado.flechas:not(.ancho){ grid-template-columns:600px 1fr; } .cuadro .cols.c3{ grid-template-columns:repeat(3,1fr); align-items:start; } }
+  .cuadro.compacto .ctit{ font-size:16px; padding:7px 12px; }
+  .cuadro.compacto h6{ font-size:13px; padding:3px 12px; }
+  .cuadro.compacto .cua{ min-height:30px; padding:1px 12px; }
+  .cuadro.compacto .cua .n{ font-size:16px; line-height:1.2; }
+  .cuadro.compacto .cua .n small{ display:none; }
+  .cuadro.compacto .cua .v{ font-size:16.5px; }
+  .cuadro.compacto .sub, .cuadro.compacto .gran{ padding:3px 12px; font-size:15px; min-height:0; margin:0 !important; }
+  .cuadro.compacto .banco{ gap:3px !important; padding:6px !important; }
+  .cuadro.compacto .pila .bt{ font-size:14px; padding:6px 10px; }
+  @media (min-width:1100px){ .cuadro.compacto.lado.ancho{ grid-template-columns:640px 1fr; } .cuadro.ancho .banco{ display:grid !important; grid-template-columns:1fr 1fr; align-items:start; } .cuadro.ancho .gtit{ grid-column:1/-1; } .cuadro.ancho .cols.c2{ grid-template-columns:1fr; } }
+  .cuadro.ancho.flechas .ficha:not(.fhtml){ flex-wrap:wrap; } .cuadro.ancho.flechas .ficha:not(.fhtml) .pis{ display:block; width:100%; margin:0; white-space:normal; }
+  .ficha.fhtml.asi .pis{ min-width:0; }
+  .cuadro.ancho .cua{ min-height:0 !important; padding:2px 12px !important; } .cuadro.ancho .cua .n{ font-size:15.5px !important; line-height:1.25 !important; } .cuadro.ancho .mtz td{ padding:4px 8px; }
+  .ficha.fhtml{ display:grid !important; grid-template-columns:34px 1fr auto; gap:0 8px; align-items:center; padding:4px 8px !important; font-size:15px !important; }
+  .ficha.fhtml .cod{ font-weight:800; color:var(--marino); }
+  .ficha.fhtml .nom{ text-align:left; }
+  .ficha.fhtml .im{ font-weight:800; }
+  .ficha.fhtml .pis{ grid-column:4; margin:0; font-size:12.5px; text-align:right; min-width:150px; }
+  .ficha.fhtml:has(.pis){ grid-template-columns:30px 1fr auto auto; }
+  .ficha.fhtml.asi{ grid-template-columns:1fr auto auto; }
+  .ficha.fhtml .atit{ grid-column:1 / 4; text-align:left; font-weight:800; color:var(--marino); font-size:14.5px; }
+  .ficha.fhtml .al{ text-align:left; font-size:14px; }
+  .ficha.fhtml .al.h{ padding-left:22px; }
+  .ficha.fhtml .dd, .ficha.fhtml .hh{ font-size:14px; text-align:right; min-width:58px; font-variant-numeric:tabular-nums; }
+  .ficha.fhtml.asi .pis{ grid-column:1 / 4; text-align:left; }
+  .ficha.fhtml .acab{ grid-column:1 / 4; display:grid; grid-template-columns:1fr auto auto; gap:0 8px; font-size:11.5px; color:#55607F; font-weight:800; text-transform:uppercase; }
   .gtit{ display:block; width:100%; font-size:12.5px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:var(--marino); margin:6px 0 0; }
   .mtz{ width:100%; border-collapse:collapse; font-size:16px; }
   .mtz th{ background:#EDF2FF; color:var(--marino); padding:5px 8px; text-align:right; font-size:13px; }
@@ -1575,7 +1602,7 @@ function bancoHtml(libres){
   var h='', gr=null;
   libres.forEach(function(f){
     if(f.gr && f.gr!==gr){ gr=f.gr; h+='<span class="gtit">'+esc(gr)+'</span>'; }
-    h+='<button type="button" class="ficha'+(f.pista?' conpista':'')+'" data-f="'+f.id+'">'+esc(f.t)+'<span class="im">'+mil(f.v)+'</span>'+(f.pista?'<small class="pis">&rarr; '+esc(f.pista)+'</small>':'')+'</button>';
+    h+='<button type="button" class="ficha'+(f.html?' fhtml':'')+(f.cls?' '+f.cls:'')+'" data-f="'+f.id+'">'+(f.html ? f.html : esc(f.t)+'<span class="im">'+mil(f.v)+'</span>')+(f.pista?'<small class="pis">&rarr; '+esc(f.pista)+'</small>':'')+'</button>';
   });
   return h;
 }
@@ -1608,9 +1635,9 @@ function vCuadro(k){
   var libres=A.fichas.filter(function(f){ return !g[f.id] && !f.fijo; });
   var h=cabTarea(k);
   if(A.intro) h+='<p class="hint">'+A.intro+'</p>';
-  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
+  h+='<div class="cuadro'+(A.lado?' lado':'')+(A.malla?' malla':'')+(A.compacto?' compacto':'')+(A.ancho?' ancho':'')+(A.flechas?' flechas':'')+'">'+(A.lado?'<div class="pila"><h6 class="bt">'+esc(A.lado)+'</h6>':'')+'<div class="banco">'+
     (libres.length ? bancoHtml(libres) : '<span style="color:#8A8A92;font-size:17px">No queda ninguna partida.</span>')+
-    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+'">';
+    '</div>'+(A.lado?'</div>':'')+'<div class="cols'+(A.cols.length===2?' c2':'')+(A.cols.length===3?' c3':'')+'">';
   A.cols.forEach(function(c){
     h+='<div class="col"'+(c.area?' style="grid-area:'+c.area+'"':'')+'><h5 class="ctit'+(c.c==='na'?' na':'')+'">'+esc(c.t)+'</h5>';
     if(c.matriz){ h+=matrizHtml(k, A, g, c)+'</div>'; return; }
