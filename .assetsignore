@@ -1,0 +1,9 @@
+# Lo que Cloudflare no debe publicar
+.git
+.github
+.wrangler
+node_modules
+wrangler.jsonc
+.assetsignore
+.gitignore
+*.sql
