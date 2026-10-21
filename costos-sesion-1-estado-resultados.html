@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estado de Resultados - Costos y Presupuestos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  /* colores de la plantilla institucional Certus 2026 */
+  .er{
+    --marino:#071767; --fucsia:#FC0045; --aqua:#13A8AF; --morado:#C600A3; --celeste:#20D3FF;
+    --tinta:#0B1B3F; --humo:#F1F5FD; --linea:#D5DDEF; --muted:#5A6782;
+    --ama:#FFF8E1; --amaBd:#E8CE8A;
+    max-width:1240px; margin:0 auto; color:var(--tinta);
+    font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  }
+  .er button, .er input{ font-family:inherit; }
+
+  /* ---------- cabecera ---------- */
+  .cab{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+        border-bottom:4px solid var(--fucsia); padding-bottom:14px; }
+  .cab .tt h1{ margin:0; font-size:clamp(24px,3.2vw,32px); font-weight:900; color:var(--marino);
+               letter-spacing:-.01em; }
+  .cab .tt p{ margin:3px 0 0; font-size:15px; font-weight:700; color:var(--muted); }
+  .cab .pil{ display:inline-block; background:var(--marino); color:#fff; border-radius:12px; padding:5px 13px;
+             font-size:13px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; }
+  .cab .der{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+
+  .caso{ margin-top:14px; border:2px dashed var(--linea); border-radius:14px; padding:14px 16px; }
+  .caso h2{ margin:0 0 4px; font-size:19px; font-weight:900; color:var(--marino); }
+  .caso p{ margin:6px 0 0; font-size:16px; line-height:1.6; }
+  .caso .meta{ display:inline-block; margin-top:8px; padding:6px 12px; border-radius:9px;
+               background:#FFE6EE; color:#9B0030; font-weight:900; font-size:15px; }
+  .ayuda{ margin:10px 0 0; font-size:14px; color:var(--muted); font-weight:700; }
+
+  /* ---------- botones ---------- */
+  .b{ border:2px solid var(--marino); background:#fff; color:var(--marino); border-radius:10px;
+      padding:9px 15px; font-size:15px; font-weight:800; cursor:pointer; }
+  .b:hover{ background:var(--humo); }
+  .b.pri{ background:var(--marino); color:#fff; }
+  .b.pri:hover{ filter:brightness(1.15); }
+  .b.fu{ border-color:var(--fucsia); color:var(--fucsia); }
+  .mandos{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; align-items:center; }
+  .avance{ display:flex; align-items:center; gap:10px; flex:1 1 220px; min-width:200px; }
+  .avance .riel{ flex:1; height:11px; border-radius:99px; background:var(--linea); overflow:hidden; }
+  .avance .lleno{ height:100%; width:0; background:var(--aqua); border-radius:99px; transition:width .3s; }
+  .avance .cuenta{ font-size:14px; font-weight:800; color:var(--muted); white-space:nowrap; }
+
+  /* ---------- tablero ---------- */
+  .tablero{ display:grid; grid-template-columns:1fr; gap:16px; }
+  @media (min-width:960px){
+    .tablero{ grid-template-columns:320px 1fr; align-items:start; }
+    .bandeja{ position:sticky; top:96px; }
+  }
+  .tablero h3{ margin:0 0 9px; font-size:13px; font-weight:900; letter-spacing:.07em;
+               text-transform:uppercase; color:var(--muted); }
+  .fichas{ display:flex; flex-direction:column; gap:7px; }
+  .ficha{ border:2px solid var(--morado); border-left-width:6px; border-radius:10px; background:#fff;
+          padding:8px 11px; cursor:grab; touch-action:none; user-select:none; display:grid; gap:1px;
+          transition:box-shadow .15s, transform .12s; }
+  .ficha:hover{ box-shadow:0 5px 14px rgba(7,23,103,.15); }
+  .ficha.sel{ box-shadow:0 0 0 3px rgba(252,0,69,.35); transform:translateY(-1px); }
+  .ficha.viaja{ opacity:.3; }
+  .ficha .fn{ font-size:15px; font-weight:800; line-height:1.25; color:var(--marino); }
+  .ficha .fm{ font-size:16px; font-weight:900; color:var(--morado); font-variant-numeric:tabular-nums; }
+  .fantasma{ position:fixed; z-index:90; pointer-events:none; width:280px; max-width:78vw;
+             box-shadow:0 14px 32px rgba(0,0,0,.3); transform:rotate(-1.5deg); opacity:.96; }
+  .vacia{ border:2px dashed var(--linea); border-radius:10px; padding:16px 12px; text-align:center;
+          font-size:14px; color:var(--muted); font-weight:700; }
+
+  /* ---------- estado de resultados ---------- */
+  .eerr{ border:2px solid var(--marino); border-radius:12px; overflow:hidden; background:#fff; }
+  .eerr .encab{ background:var(--marino); color:#fff; padding:11px 14px; text-align:center; }
+  .eerr .encab b{ display:block; font-size:16px; font-weight:900; letter-spacing:.03em; }
+  .eerr .encab span{ display:block; font-size:13px; opacity:.85; font-weight:700; }
+  .fila{ display:grid; grid-template-columns:minmax(0,1fr) 140px 70px; align-items:center; gap:8px;
+         padding:5px 14px; border-top:1px solid #EEF1F5; }
+  .fila .et{ font-size:15px; line-height:1.35; }
+  .fila .pc{ font-size:13px; text-align:right; color:var(--muted); font-variant-numeric:tabular-nums; }
+  .fila .val{ text-align:right; font-size:15px; font-weight:800; font-variant-numeric:tabular-nums; padding-right:4px; }
+  .rotulo{ padding:9px 14px 3px; font-size:12.5px; font-weight:900; letter-spacing:.06em;
+           text-transform:uppercase; color:var(--morado); border-top:1px solid #EEF1F5; }
+  .fila.zona{ cursor:pointer; }
+  .fila.zona .et{ padding-left:14px; }
+  .fila.zona.sobre{ background:#FFF3CD; box-shadow:inset 0 0 0 2px var(--fucsia); border-radius:6px; }
+  .fila.sub{ background:#F7F9FC; font-weight:800; }
+  .fila.sub .et{ color:var(--marino); }
+  .fila.res{ background:#E9F7F8; font-weight:900; }
+  .fila.res .et{ color:var(--marino); }
+  .fila.may{ background:var(--marino); color:#fff; font-weight:900; }
+  .fila.may .val, .fila.may .pc{ color:#fff; }
+
+  .caja{ position:relative; display:flex; }
+  .caja input{ width:100%; font-size:15px; font-weight:800; text-align:right; font-variant-numeric:tabular-nums;
+               padding:6px 24px 6px 8px; border-radius:7px; border:1.5px dashed var(--amaBd);
+               background:var(--ama); color:var(--tinta); min-width:0; }
+  .caja input:focus{ outline:2px solid var(--marino); outline-offset:1px; }
+  .caja input::placeholder{ color:#C2B88F; }
+  .caja .qx{ position:absolute; right:2px; top:50%; transform:translateY(-50%); border:0; background:transparent;
+             cursor:pointer; font-size:17px; line-height:1; color:var(--muted); padding:2px 5px; display:none; }
+  .caja.con .qx{ display:block; }
+  .caja.con input{ border-style:solid; }
+  .caja.bien input{ background:#E6F4EA; border-color:#2E8B57; color:#14532D; }
+  .caja.mal input{ background:#FDECEA; border-color:#C0392B; color:#8B1A10; }
+  .caja.falta input{ background:#FFF3CD; border-color:var(--fucsia); }
+
+  /* ---------- objetivo ---------- */
+  .objetivo{ margin-top:14px; display:grid; gap:10px; }
+  @media (min-width:660px){ .objetivo{ grid-template-columns:1fr 1fr; } }
+  .ind{ border:2px dashed var(--linea); border-radius:12px; padding:12px 14px; display:flex;
+        justify-content:space-between; align-items:center; gap:10px; }
+  .ind .n{ font-size:15px; font-weight:800; }
+  .ind .n small{ display:block; font-size:13px; color:var(--muted); font-weight:700; }
+  .ind .v{ font-size:22px; font-weight:900; color:var(--marino); font-variant-numeric:tabular-nums; }
+  .veredicto{ grid-column:1/-1; border-radius:12px; padding:12px 14px; font-size:16px; font-weight:800; }
+  .veredicto.si{ background:#E6F4EA; color:#14532D; border:2px solid #9BD3AE; }
+  .veredicto.no{ background:#FFE6EE; color:#9B0030; border:2px solid #F7A9BE; }
+  .veredicto.na{ background:var(--humo); color:var(--muted); border:2px dashed var(--linea); }
+
+  .marcador{ margin-top:12px; border-radius:11px; padding:12px 15px; display:flex; gap:12px;
+             align-items:center; flex-wrap:wrap; font-size:15px; font-weight:800; }
+  .marcador.todo{ background:#E6F4EA; color:#14532D; border:1px solid #9BD3AE; }
+  .marcador.algo{ background:#FFF3CD; color:#6B5310; border:1px solid var(--amaBd); }
+  .marcador .big{ font-size:23px; font-weight:900; }
+  .nota{ font-size:13.5px; color:var(--muted); margin:10px 0 0; font-weight:600; line-height:1.5; }
+
+  #confeti{ position:fixed; inset:0; z-index:80; pointer-events:none; display:none; }
+  @media (max-width:560px){
+    .fila{ grid-template-columns:minmax(0,1fr) 112px 54px; padding:5px 8px; }
+    .fila .et{ font-size:14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="analisis-costos-presupuestos.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> /
+    <a href="analisis-costos-presupuestos.html">Costos y Presupuestos</a></span> / <b>Estado de Resultados</b></span>
+  <div class="o-cp-right"><span class="o-count">Sesi&oacute;n 1</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap er">
+
+  <div class="o-sheet">
+    <div class="cab">
+      <div class="tt">
+        <span class="pil">Sesi&oacute;n 1 &middot; Caso: buscando resultados</span>
+        <h1>Estado de Resultados</h1>
+        <p>Arrastra cada dato a su partida: los totales se calculan solos</p>
+      </div>
+      <div class="der">
+        <button class="b pri" id="btnNuevo" type="button">&#127922; Nuevo caso</button>
+        <button class="b" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      </div>
+    </div>
+
+    <div class="caso" id="caso"></div>
+    <p class="ayuda">Arrastra la ficha hasta la partida, o t&oacute;cala y luego toca la partida.
+    Tambi&eacute;n puedes escribir el monto. Los CIF se calculan solos con el porcentaje de la MPD.</p>
+
+    <div class="mandos">
+      <button class="b pri" id="btnRev" type="button">Revisar</button>
+      <button class="b fu" id="btnSol" type="button">Ver soluci&oacute;n</button>
+      <button class="b" id="btnReset" type="button">Reiniciar</button>
+      <span class="avance"><span class="riel"><span class="lleno" id="lleno"></span></span>
+        <span class="cuenta" id="cuenta">0 de 0</span></span>
+    </div>
+    <div id="marcador"></div>
+  </div>
+
+  <div class="o-sheet">
+    <div class="tablero">
+      <div class="bandeja">
+        <h3>Datos del caso</h3>
+        <div class="fichas" id="fichas"></div>
+      </div>
+      <div>
+        <h3>Completa el estado de resultados</h3>
+        <div class="eerr" id="eerr"></div>
+        <div class="objetivo" id="objetivo"></div>
+        <p class="nota">Impuesto a la renta: 29.5 % (R&eacute;gimen General) sobre la utilidad antes de
+        impuestos. Se asume que todo lo producido en el periodo se vendi&oacute;, por eso el costo de
+        producci&oacute;n es el costo de ventas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-primary" href="analisis-costos-presupuestos.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Costos y Presupuestos</span>
+    <span>Sesi&oacute;n 1 &middot; Estado de Resultados</span>
+  </div>
+
+</div>
+</div>
+
+<canvas id="confeti"></canvas>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+var IR=0.295;
+
+/* =================== estructura del estado =================== */
+var PLANO=[
+  {t:'in',  k:'ven', et:'Ventas'},
+  {t:'rot', et:'Costo de ventas (costo de producción)'},
+  {t:'in',  k:'mpd', et:'Materia prima directa (MPD)'},
+  {t:'in',  k:'mod', et:'Mano de obra directa (MOD)'},
+  {t:'in',  k:'cif', et:'Costos indirectos de fabricación (CIF)'},
+  {t:'sub', k:'cv',  et:'(–) Total costo de ventas'},
+  {t:'res', k:'ub',  et:'UTILIDAD BRUTA'},
+  {t:'rot', et:'Gastos de ventas'},
+  {t:'in',  k:'gvs', et:'Sueldos del área de ventas'},
+  {t:'sub', k:'gv',  et:'(–) Total gastos de ventas'},
+  {t:'rot', et:'Gastos de administración'},
+  {t:'in',  k:'gas', et:'Sueldos del área de administración'},
+  {t:'in',  k:'dep', et:'Depreciación del periodo'},
+  {t:'in',  k:'sum', et:'Suministros diversos (útiles de oficina)'},
+  {t:'sub', k:'ga',  et:'(–) Total gastos de administración'},
+  {t:'res', k:'uo',  et:'UTILIDAD OPERATIVA'},
+  {t:'rot', et:'Otros ingresos y gastos'},
+  {t:'in',  k:'ingf',et:'(+) Ingresos financieros'},
+  {t:'in',  k:'gf',  et:'(–) Gastos financieros'},
+  {t:'in',  k:'oi',  et:'(+) Otros ingresos'},
+  {t:'res', k:'uai', et:'UTILIDAD ANTES DE IMPUESTOS'},
+  {t:'sub', k:'ir',  et:'(–) Impuesto a la renta 29.5 %'},
+  {t:'may', k:'un',  et:'UTILIDAD NETA'}
+];
+var CLAVES=PLANO.filter(function(f){ return f.t==='in'; }).map(function(f){ return f.k; });
+
+/* =================== generador de casos =================== */
+var EMPRESAS=['DIALE S.A.C.','INDUSTRIAS MISTI S.A.C.','CONFECCIONES SACHACA S.A.C.','CALZADO YANAHUARA S.A.C.',
+  'MUEBLES CHACHANI S.A.C.','PANIFICADORA CAYMA S.A.C.','TEXTIL SABANDÍA S.A.C.','HELADOS CHILINA S.A.C.',
+  'CERÁMICA TIABAYA S.A.C.','ENVASES CHARACATO S.A.C.'];
+function ent(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+function red(n,m){ return Math.round(n/m)*m; }
+function elige(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function nuevoCaso(){
+  var ven=red(ent(70000,160000),5);
+  var c={
+    empresa:elige(EMPRESAS), trab:ent(12,48), meta:elige([15,20,25,30,35]), pcif:elige([20,25,30,35,40]),
+    d:{
+      ven:ven,
+      mpd:red(ven*ent(22,30)/100,100),
+      mod:red(ven*ent(12,18)/100,100),
+      gvs:red(ven*ent(5,9)/100,10),
+      gas:red(ven*ent(5,8)/100,2),
+      dep:ent(800,2500),
+      sum:red(ent(500,1500),10),
+      gf:red(ent(1000,3000),10),
+      oi:red(ent(2000,7000),100),
+      ingf:red(ent(500,2500),100)
+    }
+  };
+  c.d.cif=Math.round(c.d.mpd*c.pcif)/100;
+  c.orden=['ven','gvs','gas','mpd','mod','gf','oi','dep','cif','sum','ingf'];
+  return c;
+}
+/* el caso original de la hoja de CERTUS, con los nombres de sus datos */
+function fichasDe(c){
+  var T={
+    ven:'Ha tenido ventas por', gvs:'Sueldos del área de ventas', gas:'Sueldo del área de administración',
+    mpd:'Materia prima directa', mod:'Mano de obra directa', gf:'Han pagado al banco por intereses de préstamos',
+    oi:'Han vendido sus escritorios por renovación', dep:'Los gastos de depreciación del periodo son',
+    cif:'Los CIF son el '+c.pcif+' % de la MPD', sum:'Compra de suministros diversos (útiles de oficina)',
+    ingf:'Han tenido ingresos financieros por intereses ganados'
+  };
+  return c.orden.map(function(k){ return { id:k, nombre:T[k], monto:k==='cif'?null:c.d[k] }; });
+}
+
+/* =================== estado y guardado =================== */
+var CASO, S, LS='costos_s1_eerr_v1';
+function vacio(){ var s={vals:{},fich:{}}; CLAVES.forEach(function(k){ s.vals[k]=null; s.fich[k]=null; }); return s; }
+function guarda(){ try{ localStorage.setItem(LS, JSON.stringify({caso:CASO, s:S})); }catch(e){} }
+(function(){
+  try{
+    var g=JSON.parse(localStorage.getItem(LS)||'null');
+    if(g && g.caso && g.caso.d && g.s){ CASO=g.caso; S=g.s; return; }
+  }catch(e){}
+  CASO=nuevoCaso(); S=vacio();
+})();
+
+/* =================== sonido =================== */
+var son=true, ctx=null;
+try{ if(localStorage.getItem('costos_son')==='0') son=false; }catch(e){}
+function nota(f, ini, dur, vol, tipo){
+  if(!son) return;
+  try{
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    if(!ctx) ctx=new AC(); if(ctx.state==='suspended') ctx.resume();
+    var t=ctx.currentTime+ini, o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=tipo||'sine'; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur+0.03);
+  }catch(e){}
+}
+function sPop(){ nota(520,0,0.07,0.09,'square'); nota(780,0.04,0.07,0.05); }
+function sQuita(){ nota(360,0,0.07,0.06); }
+function sMal(){ nota(150,0,0.24,0.07,'sawtooth'); }
+function sFanfarria(){ [523.25,659.25,783.99,1046.5,1318.5].forEach(function(f,i){ nota(f,i*0.1,0.26,0.08,'triangle'); }); }
+function pintaSon(){ var b=$('btnSon'); b.textContent=son?'🔊 Sonido':'🔇 Silencio'; b.setAttribute('aria-pressed',son); }
+$('btnSon').addEventListener('click', function(){ son=!son; try{ localStorage.setItem('costos_son',son?'1':'0'); }catch(e){} pintaSon(); sPop(); });
+pintaSon();
+
+/* =================== formato =================== */
+function miles(n){
+  var neg=n<0, x=Math.abs(n), s=(Math.round(x*100)/100).toFixed(2), p=s.split('.');
+  p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return (neg?'-':'')+p[0]+(p[1]!=='00'?'.'+p[1]:'');
+}
+function soles(n){ return 'S/ '+miles(n); }
+function aNumero(t){ var s=String(t||'').replace(/[\s,]/g,'').replace(/S\/?/gi,''); if(s==='') return null; var n=parseFloat(s); return isNaN(n)?null:n; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* =================== cálculos =================== */
+function calcula(){
+  var v={}; CLAVES.forEach(function(k){ v[k]=(typeof S.vals[k]==='number')?S.vals[k]:0; });
+  v.cv=v.mpd+v.mod+v.cif; v.ub=v.ven-v.cv;
+  v.gv=v.gvs; v.ga=v.gas+v.dep+v.sum; v.uo=v.ub-v.gv-v.ga;
+  v.uai=v.uo+v.ingf-v.gf+v.oi;
+  v.ir=v.uai>0?Math.round(v.uai*IR*100)/100:0;
+  v.un=v.uai-v.ir;
+  return v;
+}
+
+/* =================== pintado =================== */
+function pintaCaso(){
+  var c=CASO;
+  $('caso').innerHTML='<h2>Caso: '+esc(c.empresa)+'</h2>'+
+    '<p>'+esc(c.empresa)+' es una empresa que se encuentra en el REMYPE y cuenta con '+c.trab+
+    ' trabajadores. Desea saber si en el &uacute;ltimo periodo obtuvo utilidad o p&eacute;rdida y, para ello, '+
+    'pide a su &aacute;rea contable que prepare el <b>Estado de Resultados</b>.</p>'+
+    '<span class="meta">Objetivo de la empresa: obtener un '+c.meta+' % de utilidad neta sobre las ventas</span>';
+}
+function pintaEstructura(){
+  var h='<div class="encab"><b>'+esc(CASO.empresa)+'</b><b>ESTADO DE RESULTADOS</b>'+
+        '<span>Del 01 de enero al 31 de diciembre &middot; Expresado en soles</span></div>'+
+        '<div class="fila sub" style="background:#fff"><span class="et"></span><span class="pc" style="text-align:right">S/</span><span class="pc">%</span></div>';
+  PLANO.forEach(function(f){
+    if(f.t==='rot'){ h+='<div class="rotulo">'+esc(f.et)+'</div>'; return; }
+    if(f.t==='in'){
+      h+='<div class="fila zona" data-k="'+f.k+'"><span class="et">'+esc(f.et)+'</span>'+
+         '<span class="caja" id="c_'+f.k+'"><input type="text" inputmode="decimal" autocomplete="off" id="i_'+f.k+'" aria-label="'+esc(f.et)+'" placeholder="arrastra aqu&iacute;">'+
+         '<button class="qx" type="button" data-q="'+f.k+'" aria-label="Quitar">&times;</button></span>'+
+         '<span class="pc" id="p_'+f.k+'"></span></div>';
+    } else {
+      h+='<div class="fila '+f.t+'"><span class="et">'+esc(f.et)+'</span>'+
+         '<span class="val" id="v_'+f.k+'">0</span><span class="pc" id="p_'+f.k+'"></span></div>';
+    }
+  });
+  $('eerr').innerHTML=h;
+  conecta();
+}
+function libres(){ return fichasDe(CASO).filter(function(f){ return dondeEsta(f.id)===null; }); }
+function dondeEsta(id){ var r=null; CLAVES.forEach(function(k){ if(S.fich[k]===id) r=k; }); return r; }
+function pintaFichas(){
+  var L=libres();
+  if(!L.length){ $('fichas').innerHTML='<div class="vacia">Ya colocaste todos los datos.<br>Presiona <b>Revisar</b>.</div>'; return; }
+  $('fichas').innerHTML=L.map(function(f){
+    return '<div class="ficha'+(sel===f.id?' sel':'')+'" data-f="'+f.id+'" role="button" tabindex="0">'+
+      '<span class="fn">'+esc(f.nombre)+'</span>'+
+      '<span class="fm">'+(f.monto===null?'se calcula al soltarla':soles(f.monto))+'</span></div>';
+  }).join('');
+}
+function pintaValores(){
+  var v=calcula(), k, el;
+  for(k in v){
+    el=$('v_'+k); if(el) el.textContent=miles(v[k]);
+    el=$('p_'+k); if(el) el.textContent=v.ven?(Math.round(v[k]/v.ven*10000)/100).toFixed(2)+'%':'';
+  }
+  CLAVES.forEach(function(k){
+    var inp=$('i_'+k), vv=S.vals[k];
+    if(document.activeElement!==inp) inp.value=(typeof vv==='number')?miles(vv):'';
+    $('c_'+k).classList.toggle('con', S.fich[k]!==null);
+  });
+  var puestas=CLAVES.filter(function(k){ return typeof S.vals[k]==='number'; }).length;
+  $('cuenta').textContent=puestas+' de '+CLAVES.length;
+  $('lleno').style.width=(puestas/CLAVES.length*100)+'%';
+
+  var margen=v.ven?v.un/v.ven*100:0, ok=margen>=CASO.meta;
+  $('objetivo').innerHTML=
+    '<div class="ind"><span class="n">Utilidad neta<small>resultado del periodo</small></span><span class="v">'+soles(v.un)+'</span></div>'+
+    '<div class="ind"><span class="n">Margen neto<small>utilidad neta &divide; ventas &times; 100</small></span><span class="v">'+(v.ven?margen.toFixed(2)+' %':'&mdash;')+'</span></div>'+
+    (puestas<CLAVES.length
+      ? '<div class="veredicto na">Completa todas las partidas para saber si la empresa logr&oacute; su objetivo del '+CASO.meta+' %.</div>'
+      : '<div class="veredicto '+(ok?'si':'no')+'">'+(ok
+          ? '&#10004; S&iacute; logr&oacute; su objetivo: obtuvo '+margen.toFixed(2)+' % de utilidad neta y la meta era '+CASO.meta+' %.'
+          : '&#10008; No logr&oacute; su objetivo: obtuvo '+margen.toFixed(2)+' % de utilidad neta y la meta era '+CASO.meta+' %. Le faltaron '+(CASO.meta-margen).toFixed(2)+' puntos.')+'</div>');
+}
+function pinta(){ pintaValores(); pintaFichas(); }
+
+/* =================== colocar =================== */
+var revisado=false;
+function limpiaMarcas(){
+  if(!revisado) return; revisado=false;
+  CLAVES.forEach(function(k){ $('c_'+k).classList.remove('bien','mal','falta'); });
+  $('marcador').innerHTML='';
+}
+function montoDe(fid){
+  if(fid==='cif'){ var m=(typeof S.vals.mpd==='number')?S.vals.mpd:0; return Math.round(m*CASO.pcif)/100; }
+  return CASO.d[fid];
+}
+function coloca(k, fid){
+  var otra=dondeEsta(fid);
+  if(otra!==null && otra!==k){ S.vals[otra]=null; S.fich[otra]=null; }
+  S.vals[k]=montoDe(fid); S.fich[k]=fid;
+  recalculaCif();
+  limpiaMarcas(); pinta(); guarda();
+}
+/* si la MPD cambia, los CIF colocados se recalculan */
+function recalculaCif(){ var k=dondeEsta('cif'); if(k!==null) S.vals[k]=montoDe('cif'); }
+function quita(k){ S.vals[k]=null; S.fich[k]=null; recalculaCif(); limpiaMarcas(); pinta(); guarda(); sQuita(); }
+
+/* =================== arrastre =================== */
+var sel=null, arr=null;
+function zonaEn(x,y){ var el=document.elementFromPoint(x,y); return el?el.closest('.fila.zona'):null; }
+function resaltar(z){ var ya=document.querySelector('.fila.zona.sobre'); if(ya&&ya!==z) ya.classList.remove('sobre'); if(z) z.classList.add('sobre'); }
+function sueltaEn(z,fid){ resaltar(null); if(!z) return; coloca(z.getAttribute('data-k'),fid); sPop(); }
+function seleccionar(fid){ sel=(sel===fid)?null:fid; pintaFichas(); if(sel) nota(700,0,0.06,0.05); }
+
+document.addEventListener('pointerdown', function(ev){
+  var fic=ev.target.closest?ev.target.closest('.ficha'):null;
+  if(!fic||ev.button>0) return;
+  ev.preventDefault();
+  arr={id:fic.getAttribute('data-f'), x0:ev.clientX, y0:ev.clientY, mov:false, el:fic, gh:null, pid:ev.pointerId};
+  try{ fic.setPointerCapture(ev.pointerId); }catch(e){}
+});
+document.addEventListener('pointermove', function(ev){
+  if(!arr||ev.pointerId!==arr.pid) return;
+  if(!arr.mov && Math.abs(ev.clientX-arr.x0)+Math.abs(ev.clientY-arr.y0)<7) return;
+  if(!arr.mov){
+    arr.mov=true; var g=arr.el.cloneNode(true); g.classList.add('fantasma'); g.classList.remove('sel');
+    document.body.appendChild(g); arr.gh=g; arr.el.classList.add('viaja');
+  }
+  arr.gh.style.left=(ev.clientX-140)+'px'; arr.gh.style.top=(ev.clientY-26)+'px';
+  resaltar(zonaEn(ev.clientX,ev.clientY));
+  if(ev.clientY<110) window.scrollBy(0,-16); else if(ev.clientY>window.innerHeight-90) window.scrollBy(0,16);
+});
+document.addEventListener('pointerup', function(ev){
+  if(!arr||ev.pointerId!==arr.pid) return;
+  var a=arr; arr=null;
+  if(a.gh) a.gh.remove(); a.el.classList.remove('viaja');
+  if(a.mov){ sueltaEn(zonaEn(ev.clientX,ev.clientY),a.id); sel=null; pintaFichas(); }
+  else seleccionar(a.id);
+});
+document.addEventListener('pointercancel', function(ev){
+  if(!arr||ev.pointerId!==arr.pid) return;
+  if(arr.gh) arr.gh.remove(); arr.el.classList.remove('viaja'); resaltar(null); arr=null;
+});
+document.addEventListener('keydown', function(ev){
+  var fic=ev.target.closest?ev.target.closest('.ficha'):null;
+  if(fic&&(ev.key==='Enter'||ev.key===' ')){ ev.preventDefault(); seleccionar(fic.getAttribute('data-f')); }
+  if(ev.key==='Escape'&&sel){ sel=null; pintaFichas(); }
+});
+function conecta(){
+  Array.prototype.forEach.call($('eerr').querySelectorAll('.fila.zona'), function(z){
+    z.addEventListener('click', function(ev){
+      if(ev.target.closest('input')||ev.target.closest('.qx')||!sel) return;
+      var fid=sel; sel=null; sueltaEn(z,fid);
+    });
+  });
+  Array.prototype.forEach.call($('eerr').querySelectorAll('.caja input'), function(inp){
+    var k=inp.id.slice(2);
+    inp.addEventListener('focus', function(){ if(sel){ var fid=sel; sel=null; sueltaEn(inp.closest('.fila.zona'),fid); inp.blur(); } });
+    inp.addEventListener('input', function(){
+      S.fich[k]=null; S.vals[k]=aNumero(inp.value); recalculaCif();
+      limpiaMarcas(); pintaValores(); pintaFichas(); guarda();
+    });
+    inp.addEventListener('blur', function(){ var v=S.vals[k]; inp.value=(typeof v==='number')?miles(v):''; });
+  });
+  Array.prototype.forEach.call($('eerr').querySelectorAll('.qx'), function(b){
+    b.addEventListener('click', function(ev){ ev.stopPropagation(); quita(b.getAttribute('data-q')); });
+  });
+}
+
+/* =================== revisar y solución =================== */
+function solucion(){ var s={}; CLAVES.forEach(function(k){ s[k]=CASO.d[k]; }); return s; }
+function revisa(){
+  var sol=solucion(), bien=0, faltan=0;
+  revisado=true;
+  CLAVES.forEach(function(k){
+    var caja=$('c_'+k), v=S.vals[k];
+    caja.classList.remove('bien','mal','falta');
+    if(typeof v!=='number'){ caja.classList.add('falta'); faltan++; return; }
+    if(Math.abs(v-sol[k])<0.005){ caja.classList.add('bien'); bien++; } else caja.classList.add('mal');
+  });
+  var n=CLAVES.length, todo=bien===n;
+  $('marcador').innerHTML='<div class="marcador '+(todo?'todo':'algo')+'"><span class="big">'+bien+' de '+n+'</span><span>'+
+    (todo?'partidas correctas. &iexcl;Estado de resultados completo!'
+         :'partidas correctas'+(faltan?' &middot; '+faltan+' sin completar':'')+'. Revisa las marcadas en rojo.')+'</span></div>';
+  if(todo){ sFanfarria(); confeti(); } else sMal();
+}
+function verSolucion(){
+  CLAVES.forEach(function(k){ S.vals[k]=CASO.d[k]; S.fich[k]=k; });
+  pinta(); guarda(); revisado=true;
+  CLAVES.forEach(function(k){ var c=$('c_'+k); c.classList.remove('mal','falta'); c.classList.add('bien'); });
+  var v=calcula();
+  $('marcador').innerHTML='<div class="marcador algo"><span class="big">Soluci&oacute;n</span><span>Utilidad neta '+soles(v.un)+
+    ' &middot; margen neto '+(v.un/v.ven*100).toFixed(2)+' %.</span></div>';
+}
+function reinicia(){ S=vacio(); sel=null; revisado=false; $('marcador').innerHTML=''; pintaEstructura(); pinta(); guarda(); sQuita(); }
+function otroCaso(){ CASO=nuevoCaso(); S=vacio(); sel=null; revisado=false; $('marcador').innerHTML=''; pintaCaso(); pintaEstructura(); pinta(); guarda(); sPop(); }
+
+/* =================== confeti =================== */
+function confeti(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cv=$('confeti'), g=cv.getContext('2d'); cv.width=innerWidth; cv.height=innerHeight; cv.style.display='block';
+  var tonos=['#071767','#FC0045','#13A8AF','#C600A3','#20D3FF','#E8B84B'], ps=[], i;
+  for(i=0;i<110;i++) ps.push({x:Math.random()*cv.width, y:-20-Math.random()*cv.height*0.45, vx:(Math.random()-0.5)*2.4,
+    vy:2.4+Math.random()*3.2, a:Math.random()*3, va:(Math.random()-0.5)*0.24, w:5+Math.random()*7, h:8+Math.random()*8, c:tonos[i%6]});
+  var t0=performance.now();
+  (function paso(t){
+    var dt=t-t0; g.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(function(p){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.045; p.a+=p.va;
+      g.save(); g.translate(p.x,p.y); g.rotate(p.a); g.fillStyle=p.c; g.globalAlpha=Math.max(0,1-dt/2600);
+      g.fillRect(-p.w/2,-p.h/2,p.w,p.h); g.restore(); });
+    if(dt<2600) requestAnimationFrame(paso); else { g.clearRect(0,0,cv.width,cv.height); cv.style.display='none'; }
+  })(t0);
+}
+
+$('btnRev').addEventListener('click', revisa);
+$('btnSol').addEventListener('click', verSolucion);
+$('btnReset').addEventListener('click', reinicia);
+$('btnNuevo').addEventListener('click', otroCaso);
+
+pintaCaso(); pintaEstructura(); pinta();
+})();
+</script>
+
+</body>
+</html>
