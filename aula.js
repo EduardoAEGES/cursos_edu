@@ -27,6 +27,9 @@
        lo da, una hoja «Detalle» (una fila por respuesta). Sin esta función
        se arma un resumen con los datos sueltos que envía cada alumno.
 
+   El docente entra una vez con su clave y su equipo lo recuerda: al recargar
+   la página entra solo como docente, sin DNI ni clave. Con «Salir» se olvida.
+
    El docente puede sacar de la sala a quien no sea de su clase: cada
    ventanita lleva una ✕ arriba a la derecha. Borra su fila de la sala, no su
    registro ni su avance, y el equipo del docente lo recuerda 12 horas: aunque
@@ -320,6 +323,7 @@ function entraDocente(){
     return;
   }
   abreClave(false);
+  guardaLocal('docente_equipo','1');   /* este equipo queda como del docente */
   yo=null; sala=s; docente=true;
   guardaLocal(claveSala(),s);
   dentro('Docente');
@@ -337,6 +341,7 @@ function sale(){
   callaMusica();
   /* al irse el docente, la clase vuelve sola al modo libre */
   if(docente && batuta) dirige({ modo:'libre' });
+  if(docente) guardaLocal('docente_equipo','');   /* al salir, el equipo deja de entrar solo */
   var eraAlumno = !docente && !!dni;
   if(dni) guardaAvance(true);
   sala=null; yo=null; docente=false; gente=[]; dni='';
@@ -874,6 +879,11 @@ window.Aula={
   iniciar:function(opciones){
     cfg=opciones;
     pintaControles(); pintaMuro();
+    /* en el equipo del docente se entra solo, sin DNI ni clave, aunque recargue */
+    if(leeLocal('docente_equipo')==='1') setTimeout(function(){
+      if(sala) return;
+      $('aulaClave').value=CLAVE; entraDocente();
+    }, 0);
   },
   empuja:function(){ empuja(); },
   dirige:function(d){ dirige(d); },
