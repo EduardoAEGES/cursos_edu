@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-21-023315">
+<meta name="version" content="2026-10-21-031209">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -764,6 +764,10 @@
   .teo2 .teo table.t{ font-size:19px; }
   .teo2 .tarea{ margin:0; }
   .lam .preg{ margin:10px 0 6px; }
+  .lam b.cp, .cp{ color:#0B5FFF !important; } .lam b.cq, .cq{ color:#C2185B !important; }
+  .clave{ border-left:6px solid var(--fucsia); background:#FFF4F7; border-radius:10px; padding:12px 16px; font-size:21px; line-height:1.55; margin:12px 0; }
+  .pasos{ font-size:21px; line-height:1.55; margin:8px 0 8px 4px; padding-left:28px; } .pasos li{ margin:4px 0; }
+  .teo2 table.hoja2 select{ font-size:18px; }
   [data-act=r1] .ops{ display:grid; grid-template-columns:1fr 1fr; gap:8px; } [data-act=r1] .ops button{ padding-top:10px; padding-bottom:10px; }
   [data-act=q1] .ops{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
 </style>
@@ -1104,63 +1108,81 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-r1:{"tipo": "quiz", "titulo": "Encuesta de repaso", "lista": [{"q": "¿Cuándo es falso p → q?", "ops": ["Cuando p es F y q es V", "Cuando p y q son F", "Cuando p es V y q es F", "Nunca es falso"], "ok": 2, "pq": "El condicional solo es falso cuando el antecedente es verdadero y el consecuente es falso: V → F = F."}, {"q": "El cliente pagó con tarjeta de crédito y el sistema NO generó la factura. ¿La regla del programa se cumplió?", "ops": ["Sí: V", "No: F"], "ok": 1, "pq": "p es V y q es F: V → F = F. El programa falló."}, {"q": "El cliente pagó en efectivo y el sistema no generó factura. ¿La regla se cumplió?", "ops": ["Sí: V", "No: F"], "ok": 0, "pq": "p es F y q es F: F → F = V. La regla solo habla de pagos con tarjeta, así que no se incumplió."}]},
+s0:{"tipo": "par", "titulo": "Arrastra el significado a cada símbolo", "fichas": [{"id": "no", "t": "no"}, {"id": "y", "t": "y"}, {"id": "o", "t": "o"}, {"id": "si", "t": "si … entonces …"}, {"id": "pt", "t": "por lo tanto"}], "huecos": [{"id": "si", "q": "→"}, {"id": "no", "q": "~"}, {"id": "pt", "q": "∴"}, {"id": "y", "q": "∧"}, {"id": "o", "q": "∨"}]},
 
-c1:{"tipo": "par", "titulo": "Arrastra la equivalente por contraposición", "fichas": [{"id": "b1", "t": "Si cobra bono, entonces no faltó"}, {"id": "x1", "t": "Si no cobra bono, entonces faltó"}, {"id": "x2", "t": "Si no faltó, entonces cobra bono"}, {"id": "b2", "t": "Si manejas, entonces no tomaste"}, {"id": "b3", "t": "Si no apruebo Pensamiento Lógico, entonces no saqué 19 en la actividad 3"}, {"id": "b4", "t": "Si el proveedor no paga una multa, entonces el sistema no se cayó"}], "huecos": [{"id": "b1", "q": "Si el trabajador falta, entonces no cobra bono"}, {"id": "b2", "q": "Si tomas, no manejes"}, {"id": "b3", "q": "Si saco 19 en la actividad 3, entonces apruebo Pensamiento Lógico"}, {"id": "b4", "q": "Si el sistema se cae, entonces el proveedor pagará una multa"}], "fin":'<p class="pq">Dos fichas sobran: <b>Si no cobra bono, entonces faltó</b> es el recíproco (q → p) y <b>Si no faltó, entonces cobra bono</b> es el inverso (~p → ~q). Ninguno equivale al original.</p>'},
+r1:{"tipo": "tabla", "titulo": "Completa: ¿le dan el préstamo?", "cols": ["Situación", "p: tiene DNI", "q: tiene boleta", "p ∧ q"], "tipos": ["t", "t", "t", "t"], "filas": [[{"t": "Trae DNI y boleta"}, {"t": "<b>V</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "Trae DNI, pero no boleta"}, {"t": "<b>V</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 1}], [{"t": "Trae boleta, pero no DNI"}, {"t": "<b>F</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 1}], [{"t": "No trae nada"}, {"t": "<b>F</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 1}]]},
 
-i1:{"tipo": "par", "titulo": "Arrastra cada pieza a su lugar", "fichas": [{"id": "c", "t": "Recibe el bono"}, {"id": "p1", "t": "Si cumple la meta, recibe el bono"}, {"id": "p2", "t": "Cumplió la meta"}], "huecos": [{"id": "p1", "q": "P1 (premisa)"}, {"id": "p2", "q": "P2 (premisa)"}, {"id": "c", "q": "C (conclusión)"}]},
+r2:{"tipo": "tabla", "titulo": "Completa: ¿puede pagar?", "cols": ["Situación", "p: tiene Yape", "q: tiene tarjeta", "p ∨ q"], "tipos": ["t", "t", "t", "t"], "filas": [[{"t": "Tiene Yape y tarjeta"}, {"t": "<b>V</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "Solo tiene Yape"}, {"t": "<b>V</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "Solo tiene tarjeta"}, {"t": "<b>F</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "No tiene ninguno"}, {"t": "<b>F</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 1}]]},
 
-m1:{"tipo": "quiz", "titulo": "Haz clic en la conclusión correcta", "lista": [{"q": "P1: Si llueve, me mojo. P2: Llovió. ¿Qué concluyo?", "ops": ["No me mojo", "Me mojo", "No llovió", "No se puede concluir nada"], "ok": 1, "pq": "Modus ponens: se afirma el antecedente (llovió), así que se afirma el consecuente (me mojo)."}]},
+r3:{"tipo": "tabla", "titulo": "Completa: ¿el sistema cumplió la regla?", "cols": ["Situación", "p: paga con tarjeta", "q: sale factura", "p → q"], "tipos": ["t", "t", "t", "t"], "filas": [[{"t": "Pagó con tarjeta y salió la factura"}, {"t": "<b>V</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "Pagó con tarjeta y NO salió la factura"}, {"t": "<b>V</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 1}], [{"t": "Pagó en efectivo y salió la factura"}, {"t": "<b>F</b>"}, {"t": "<b>V</b>"}, {"ops": ["V", "F"], "ok": 0}], [{"t": "Pagó en efectivo y no salió factura"}, {"t": "<b>F</b>"}, {"t": "<b>F</b>"}, {"ops": ["V", "F"], "ok": 0}]]},
 
-t1:{"tipo": "quiz", "titulo": "Haz clic en la conclusión correcta", "lista": [{"q": "P1: Si tomo alcohol, entonces no manejo. P2: Manejé. ¿Qué concluyo?", "ops": ["Tomé alcohol", "No manejé", "No tomé alcohol", "No se puede concluir nada"], "ok": 2, "pq": "Modus tollens: «manejé» niega el consecuente («no manejo»), así que se niega el antecedente: no tomé alcohol."}]},
+c1:{"tipo": "par", "titulo": "Arrastra la frase que dice lo mismo", "fichas": [{"id": "x1", "t": "Si no cobra bono, entonces faltó"}, {"id": "b1", "t": "Si cobra bono, entonces no faltó"}, {"id": "x2", "t": "Si no faltó, entonces cobra bono"}, {"id": "b2", "t": "Si manejas, entonces no tomaste"}, {"id": "b4", "t": "Si el proveedor no paga multa, entonces el sistema no se cayó"}], "huecos": [{"id": "b1", "q": "Si el trabajador falta, entonces no cobra bono"}, {"id": "b2", "q": "Si tomas, no manejes"}, {"id": "b4", "q": "Si el sistema se cae, entonces el proveedor paga una multa"}], "fin":'<p class="pq">Sobran dos frases: <b>Si no cobra bono, entonces faltó</b> solo cambia el orden (recíproco) y <b>Si no faltó, entonces cobra bono</b> solo niega (inverso). Ninguna dice lo mismo que la original.</p>'},
 
-f1:{"tipo": "arr", "titulo": "Clasifica cada razonamiento", "cajas": [{"id": "v", "t": "Válida"}, {"id": "f", "t": "Falacia"}], "fichas": [{"id": "a", "t": "Si llueve, me mojo. Me mojé. Entonces llovió.", "g": "f"}, {"id": "b", "t": "Si llueve, me mojo. Llovió. Entonces me mojo.", "g": "v"}, {"id": "c", "t": "Si apruebo matemáticas, voy a Máncora. No aprobé. Entonces no voy a Máncora.", "g": "f"}, {"id": "d", "t": "Si cumple la meta, recibe bono. No recibió bono. Entonces no cumplió la meta.", "g": "v"}, {"id": "e", "t": "No creas lo que dice Juan sobre ahorro porque siempre compra ropa cara.", "g": "f"}, {"id": "g", "t": "Ayer no me robaron el celular, entonces nunca me lo robarán.", "g": "f"}]},
+i1:{"tipo": "par", "titulo": "Arma la inferencia", "fichas": [{"id": "c", "t": "Recibe el bono"}, {"id": "p1", "t": "Si cumple la meta, recibe el bono"}, {"id": "p2", "t": "Cumplió la meta"}], "huecos": [{"id": "p1", "q": "P1 - la regla"}, {"id": "p2", "q": "P2 - lo que pasó"}, {"id": "c", "q": "C - lo que deduzco"}]},
 
-q1:{"tipo": "quiz", "titulo": "Quiz final", "lista": [{"q": "Si el pago del tributo es a fin de mes, la compra de la máquina se posterga. La compra NO se posterga. Por lo tanto…", "ops": ["El pago del tributo es a fin de mes", "El pago del tributo no es a fin de mes", "La compra se posterga"], "ok": 1, "pq": "Modus tollens: se niega el consecuente, entonces se niega el antecedente."}, {"q": "Si el sistema de seguridad ataca una amenaza, el flujo de información está asegurado. El sistema ataca una amenaza. Por lo tanto…", "ops": ["El flujo no está asegurado", "No hubo amenaza", "El flujo de información está asegurado"], "ok": 2, "pq": "Modus ponens: se afirma el antecedente, entonces se afirma el consecuente."}, {"q": "«Si cumples con el tratamiento, podré operarte. Puedo operarte, entonces cumpliste el tratamiento.» Esto es…", "ops": ["Modus ponens", "Una falacia: afirma el consecuente", "Modus tollens"], "ok": 1, "pq": "De p → q y q no se puede concluir p: es la falacia de afirmar el consecuente."}]},
+m1:{"tipo": "quiz", "titulo": "Elige la conclusión", "lista": [{"q": "Si llueve, me mojo. Llovió. ¿Qué concluyo?", "ops": ["No me mojo", "Me mojo", "No llovió"], "ok": 1, "pq": "Pasó la condición (llovió), entonces pasa el resultado (me mojo)."}, {"q": "Si apruebo el curso, me dan el certificado. Aprobé. ¿Qué concluyo?", "ops": ["Me dan el certificado", "No me dan el certificado", "No aprobé"], "ok": 0, "pq": "Pasó la condición (aprobé), entonces pasa el resultado."}]},
 
-o1:{"tipo": "opi", "titulo": "Para pensar", "lista": [{"q": "¿Qué pasa si el bono se condiciona a dos metas? «Si cumple la meta A y la meta B, entonces recibe el bono.» No recibió el bono. ¿Qué podemos concluir?", "ops": ["No cumplió ninguna de las dos metas", "No cumplió al menos una de las dos metas", "Cumplió las dos metas"], "com": ["Cuidado: basta con que falle una. Por modus tollens solo sabemos que ~(A ∧ B), es decir, ~A ∨ ~B.", "Correcto: por modus tollens se niega «A y B», y eso significa que falló A, falló B o fallaron las dos.", "No: si hubiera cumplido las dos, habría recibido el bono."]}]}
+t1:{"tipo": "quiz", "titulo": "Elige la conclusión", "lista": [{"q": "Si cumple la meta, recibe el bono. NO recibió el bono. ¿Qué concluyo?", "ops": ["Cumplió la meta", "No cumplió la meta", "No se puede saber"], "ok": 1, "pq": "No llegó el resultado (bono), entonces no pasó la condición (meta)."}, {"q": "Si tomo alcohol, entonces no manejo. Manejé. ¿Qué concluyo?", "ops": ["Tomé alcohol", "No manejé", "No tomé alcohol"], "ok": 2, "pq": "«Manejé» es lo contrario del resultado «no manejo», entonces no pasó la condición: no tomé alcohol."}]},
+
+f1:{"tipo": "arr", "titulo": "Clasifica cada razonamiento", "cajas": [{"id": "v", "t": "Válida"}, {"id": "f", "t": "Falacia"}], "fichas": [{"id": "a", "t": "Si llueve, me mojo. Me mojé. Entonces llovió.", "g": "f"}, {"id": "b", "t": "Si llueve, me mojo. Llovió. Entonces me mojo.", "g": "v"}, {"id": "c", "t": "Si apruebo, voy a Máncora. No aprobé. Entonces no voy.", "g": "f"}, {"id": "d", "t": "Si cumple la meta, recibe bono. No recibió bono. Entonces no cumplió.", "g": "v"}, {"id": "e", "t": "No le creas a Juan sobre ahorro: siempre compra ropa cara.", "g": "f"}]},
+
+q1:{"tipo": "quiz", "titulo": "Quiz final", "lista": [{"q": "Si el pago del tributo es a fin de mes, la compra de la máquina se posterga. La compra NO se posterga. Por lo tanto…", "ops": ["El pago del tributo es a fin de mes", "El pago del tributo no es a fin de mes", "La compra se posterga"], "ok": 1, "pq": "Modus tollens: no llegó el resultado, entonces no pasó la condición."}, {"q": "Si el sistema de seguridad ataca una amenaza, la información está asegurada. El sistema atacó una amenaza. Por lo tanto…", "ops": ["La información no está asegurada", "No hubo amenaza", "La información está asegurada"], "ok": 2, "pq": "Modus ponens: pasó la condición, entonces pasa el resultado."}, {"q": "«Si cumples el tratamiento, podré operarte. Puedo operarte, entonces cumpliste el tratamiento.» Esto es…", "ops": ["Modus ponens", "Una falacia", "Modus tollens"], "ok": 1, "pq": "Va del resultado a la causa: es una falacia."}]},
+
+o1:{"tipo": "opi", "titulo": "Para pensar", "lista": [{"q": "«Si cumple la meta A y la meta B, entonces recibe el bono.» No recibió el bono. ¿Qué podemos concluir?", "ops": ["No cumplió ninguna de las dos metas", "No cumplió al menos una de las dos metas", "Cumplió las dos metas"], "com": ["Cuidado: basta con que falle una. Pudo cumplir la A y fallar la B.", "Correcto: por modus tollens, no pasó «A y B»; o sea, falló A, falló B o fallaron las dos.", "No: si hubiera cumplido las dos, habría recibido el bono."]}]}
 
 };
 
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:"Repaso", t:"Repaso rápido: el condicional p → q", claves:["r1"], lado:1,
-  h:"<p class=\"sub\">Regla del programa de un e-commerce: <b>si el cliente paga con tarjeta de crédito, entonces el sistema genera una factura electrónica</b>.</p>"+
-    "<div class=\"tabenv\"><table class=\"t\"><thead><tr><th>p: paga con tarjeta</th><th>q: genera factura</th><th>p → q</th></tr></thead><tbody><tr><td>V</td><td>V</td><td><b>V</b></td></tr><tr><td>V</td><td>F</td><td><b style=\"color:var(--rojo)\">F</b></td></tr><tr><td>F</td><td>V</td><td><b>V</b></td></tr><tr><td>F</td><td>F</td><td><b>V</b></td></tr></tbody></table></div>" },
+{ et:"Símbolos", t:"Antes de empezar: cómo se leen los símbolos", claves:["s0"], lado:1,
+  h:"<p class=\"sub\">Una <b>proposición</b> es una frase que puede ser <b>verdadera (V)</b> o <b>falsa (F)</b>. Las nombramos con letras: <b class=\"cp\">p</b>, <b class=\"cq\">q</b>.</p>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Símbolo</th><th>Se lee</th><th>Ejemplo</th></tr></thead><tbody><tr><td><b>~p</b></td><td>no p</td><td>No pagó con tarjeta</td></tr><tr><td><b>p ∧ q</b></td><td>p y q</td><td>Tiene DNI y tiene boleta</td></tr><tr><td><b>p ∨ q</b></td><td>p o q</td><td>Paga con Yape o con tarjeta</td></tr><tr><td><b>p → q</b></td><td>si p, entonces q</td><td>Si paga, entonces recibe factura</td></tr><tr><td><b>∴</b></td><td>por lo tanto</td><td>∴ recibe factura</td></tr></tbody></table></div>" },
 
-{ et:"Contraposición", t:"Ley de contraposición: p → q ≡ ~q → ~p", claves:["c1"], lado:1,
-  h:"<p class=\"sub\">Se niegan las dos partes y se cambian de lugar. El resultado dice lo mismo que el original.</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Forma</th><th>Se escribe</th><th>¿Equivale a p → q?</th></tr></thead><tbody><tr><td>Contrarrecíproco</td><td>~q → ~p</td><td><b style=\"color:var(--verde)\">Sí</b></td></tr><tr><td>Recíproco</td><td>q → p</td><td><b style=\"color:var(--rojo)\">No</b></td></tr><tr><td>Inverso</td><td>~p → ~q</td><td><b style=\"color:var(--rojo)\">No</b></td></tr></tbody></table></div>" },
+{ et:"Repaso 1", t:"Repaso con casos - la conjunción «y» (∧)", claves:["r1"], lado:1,
+  h:"<p class=\"sub\"><b>Caso:</b> el banco dice «te damos el préstamo si traes <b class=\"cp\">DNI</b> <b>y</b> <b class=\"cq\">boleta de pago</b>».</p>"+
+    "<div class=\"clave\"><b>Regla:</b> p ∧ q es <b>V solo si las dos son V</b>. Basta que falte una para que sea F.</div>" },
 
-{ et:"Inferencia", t:"Inferencia: de las premisas a la conclusión", claves:["i1"], lado:1,
-  h:"<p class=\"sub\">Una <b>inferencia</b> es un razonamiento: a partir de una o más proposiciones llamadas <b>premisas</b> se deduce otra llamada <b>conclusión</b>.</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Ejemplo</th></tr></thead><tbody><tr><td><b>P1</b></td><td>Si me pagan el 25 de julio, entonces los invito a comer.</td></tr><tr><td><b>P2</b></td><td>Me pagaron el 25 de julio.</td></tr><tr><td><b>C</b></td><td>∴ Los invito a comer.</td></tr></tbody></table></div>" },
+{ et:"Repaso 2", t:"Repaso con casos - la disyunción «o» (∨)", claves:["r2"], lado:1,
+  h:"<p class=\"sub\"><b>Caso:</b> la tienda dice «puedes pagar con <b class=\"cp\">Yape</b> <b>o</b> con <b class=\"cq\">tarjeta</b>».</p>"+
+    "<div class=\"clave\"><b>Regla:</b> p ∨ q es <b>F solo si las dos son F</b>. Basta una V para que sea V.</div>" },
 
-{ et:"Modus ponens", t:"Modus ponens: se afirma el antecedente", claves:["m1"], lado:1,
-  h:"<div class=\"form\">p → q &nbsp;&nbsp;|&nbsp;&nbsp; p &nbsp;&nbsp;∴ q<small>si se cumple la condición, se cumple el resultado</small></div>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Ejemplo</th></tr></thead><tbody><tr><td><b>P1</b></td><td>Si tengo internet, entonces juego en línea.</td></tr><tr><td><b>P2</b></td><td>Tengo internet.</td></tr><tr><td><b>C</b></td><td>∴ Juego en línea.</td></tr></tbody></table></div>" },
+{ et:"Repaso 3", t:"Repaso con casos - el condicional «si…entonces» (→)", claves:["r3"], lado:1,
+  h:"<p class=\"sub\"><b>Caso:</b> regla de un e-commerce: «si el cliente <b class=\"cp\">paga con tarjeta</b>, entonces el sistema <b class=\"cq\">genera la factura</b>».</p>"+
+    "<div class=\"clave\"><b>Regla:</b> p → q es <b>F solo si p es V y q es F</b>: se cumplió la condición y no llegó el resultado. Si p es F, la regla no se rompe: no habla de ese caso.</div>" },
 
-{ et:"Modus tollens", t:"Modus tollens: se niega el consecuente", claves:["t1"], lado:1,
-  h:"<div class=\"form\">p → q &nbsp;&nbsp;|&nbsp;&nbsp; ~q &nbsp;&nbsp;∴ ~p<small>si no se dio el resultado, no se cumplió la condición</small></div>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Ejemplo</th></tr></thead><tbody><tr><td><b>P1</b></td><td>Si cumple la meta, entonces recibe el bono.</td></tr><tr><td><b>P2</b></td><td>No recibió el bono.</td></tr><tr><td><b>C</b></td><td>∴ No cumplió la meta.</td></tr></tbody></table></div>"+
-    "<p class=\"sub\" style=\"margin-top:8px\">Es el mismo patrón del <b>caso 1</b>: si el bono no llegó, la meta no se cumplió.</p>" },
+{ et:"Contraposición", t:"Ley de contraposición: niega las dos y cámbialas de lugar", claves:["c1"], lado:1,
+  h:"<p class=\"sub\">«Si <b class=\"cp\">falta</b>, entonces <b class=\"cq\">no cobra bono</b>» dice lo mismo que:</p>"+
+    "<ol class=\"pasos\"><li>Identifica <b class=\"cp\">p: falta</b> y <b class=\"cq\">q: no cobra bono</b>.</li><li>Niega las dos: <b class=\"cp\">no falta</b> y <b class=\"cq\">cobra bono</b>.</li><li>Cámbialas de lugar: «Si <b class=\"cq\">cobra bono</b>, entonces <b class=\"cp\">no faltó</b>».</li></ol>"+
+    "<div class=\"clave\"><b>p → q ≡ ~q → ~p</b><br>Ojo: solo cambiar el orden o solo negar <b>no</b> sirve.</div>" },
 
-{ et:"Falacias", t:"Falacias: parecen correctas, pero no lo son", claves:["f1"], lado:1,
-  h:"<p class=\"sub\">Una <b>falacia</b> es un razonamiento no válido que aparenta ser correcto para convencer.</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Falacia</th><th>Qué hace</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Afirmar el consecuente</td><td>De p → q y q, concluye p</td><td>Si llueve, me mojo. Me mojé. ∴ Llovió.</td></tr><tr><td>Negar el antecedente</td><td>De p → q y ~p, concluye ~q</td><td>Si apruebo, viajo. No aprobé. ∴ No viajo.</td></tr><tr><td>Ad hominem</td><td>Ataca a la persona, no al argumento</td><td>No le creas a Juan: compra ropa cara.</td></tr><tr><td>Generalización apresurada</td><td>Saca una regla de un solo caso</td><td>Ayer no me robaron. ∴ Nunca me robarán.</td></tr></tbody></table></div>" },
+{ et:"Inferencia", t:"Inferencia: de lo que sé a lo que deduzco", claves:["i1"], lado:1,
+  h:"<p class=\"sub\">Inferir es <b>sacar una conclusión</b> a partir de datos que damos por ciertos, llamados <b>premisas</b>.</p>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Parte</th><th>Qué es</th><th>Ejemplo</th></tr></thead><tbody><tr><td><b>P1</b></td><td>La regla</td><td>Si me pagan el 25, los invito a comer.</td></tr><tr><td><b>P2</b></td><td>Lo que pasó</td><td>Me pagaron el 25.</td></tr><tr><td><b>C</b></td><td>Lo que deduzco (∴)</td><td>∴ Los invito a comer.</td></tr></tbody></table></div>" },
 
-{ et:"Quiz", t:"Quiz final: modus ponens, modus tollens y falacias", claves:["q1"],
+{ et:"Modus ponens", t:"Modus ponens: si pasó la condición, pasa el resultado", claves:["m1"], lado:1,
+  h:"<div class=\"clave\"><b>Regla:</b> si <b class=\"cp\">p</b>, entonces <b class=\"cq\">q</b><br><b>Pasó:</b> <b class=\"cp\">p</b><br><b>∴ Concluyo:</b> <b class=\"cq\">q</b></div>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Ejemplo</th></tr></thead><tbody><tr><td>Regla</td><td>Si <b class=\"cp\">tengo internet</b>, entonces <b class=\"cq\">juego en línea</b>.</td></tr><tr><td>Pasó</td><td><b class=\"cp\">Tengo internet</b>.</td></tr><tr><td>∴</td><td><b class=\"cq\">Juego en línea</b>.</td></tr></tbody></table></div>" },
+
+{ et:"Modus tollens", t:"Modus tollens: si no llegó el resultado, no pasó la condición", claves:["t1"], lado:1,
+  h:"<div class=\"clave\"><b>Regla:</b> si <b class=\"cp\">p</b>, entonces <b class=\"cq\">q</b><br><b>No pasó:</b> <b class=\"cq\">q</b><br><b>∴ Concluyo:</b> no <b class=\"cp\">p</b></div>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Ejemplo</th></tr></thead><tbody><tr><td>Regla</td><td>Si <b class=\"cp\">cumple la meta</b>, entonces <b class=\"cq\">recibe el bono</b>.</td></tr><tr><td>No pasó</td><td>No <b class=\"cq\">recibió el bono</b>.</td></tr><tr><td>∴</td><td>No <b class=\"cp\">cumplió la meta</b>.</td></tr></tbody></table></div>"+
+    "<p class=\"sub\" style=\"margin-top:8px\">Es el razonamiento del <b>caso 1</b>.</p>" },
+
+{ et:"Falacias", t:"Falacias: razonamientos que parecen correctos, pero no lo son", claves:["f1"], lado:1,
+  h:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Trampa</th><th>Por qué falla</th><th>Ejemplo</th></tr></thead><tbody><tr><td>Ir del resultado a la causa</td><td>Me pude mojar por otra razón</td><td>Si llueve, me mojo. Me mojé. ∴ Llovió.</td></tr><tr><td>Negar la condición</td><td>Podría ir a Máncora por otra razón</td><td>Si apruebo, viajo. No aprobé. ∴ No viajo.</td></tr><tr><td>Atacar a la persona</td><td>No discute la idea, ataca a quien la dice</td><td>No le creas a Juan: compra ropa cara.</td></tr></tbody></table></div>" },
+
+{ et:"Quiz", t:"Quiz final", claves:["q1"],
   h:'' },
 
-{ et:"Cierre", t:"Cierre: el caso 1 y la pregunta 1", claves:["o1"], lado:1,
-  h:globo(P.pres,"Para el caso 1","Hoy viste que un bono condicionado se razona con modus ponens y modus tollens. Con eso responde la <b>pregunta 1 del caso 1</b>: simboliza la regla del bono, identifica las premisas y escribe la conclusión. Después sigue la práctica completa y el trabajo en equipo del avance de la AA1.") }
+{ et:"Cierre", t:"Cierre: ¿y si el bono depende de dos metas?", claves:["o1"], lado:1,
+  h:globo(P.pres,"Para el caso 1","Un bono con una condición se razona con modus ponens y modus tollens. Con eso responde la <b>pregunta 1 del caso 1</b>: escribe la regla del bono, identifica las premisas y redacta la conclusión. Luego sigue la práctica completa y el trabajo en equipo.") }
 ];
 
 /* ================= estado ================= */
-var LS='pl_sem2_v1';
+var LS='pl_sem2_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['r1','c1','i1','m1','t1','f1','q1','o1'];
+var CLAVES=['s0','r1','r2','r3','c1','i1','m1','t1','f1','q1','o1'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
