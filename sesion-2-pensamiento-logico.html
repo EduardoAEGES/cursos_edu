@@ -930,7 +930,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261021"></script>
+<script src="aula.js?v=20261024"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -2692,7 +2692,7 @@ function pantalla(e, alumno, cont){
   });
 }
 if(window.Aula){
-  Aula.iniciar({ sala:'PL2', codigo:'PL', simple:true, resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'PL2', codigo:'PL', clave:'LOGICO', simple:true, resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
