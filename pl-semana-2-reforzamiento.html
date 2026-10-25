@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-25-043520">
+<meta name="version" content="2026-10-25-110841">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -805,6 +805,11 @@
   .dos-d{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; }
   /* en una lámina partida en dos, las derivaciones se apilan para no montarse */
   .teo2 .teo .dos-d{ grid-template-columns:minmax(0,1fr); gap:12px; }
+  /* ---------- pantalla de un alumno dentro de la ventana del docente ---------- */
+  .apvivo{ display:flex; flex-direction:column; max-width:none; margin:0; border:2px solid var(--linea);
+           border-radius:14px; overflow:hidden; background:#fff; max-height:min(64vh,620px); }
+  .apvivo .lam{ flex:0 1 auto; min-height:0; pointer-events:none; user-select:none; }
+  .apvivo .lam button, .apvivo .lam select, .apvivo .lam input{ cursor:default; }
   /* ---------- constructor de la contrapositiva ---------- */
   .cns{ display:flex; flex-direction:column; gap:11px; min-width:0; }
   .cns .regla{ border:2px solid var(--linea); border-left:5px solid var(--marino); border-radius:0 11px 11px 0;
@@ -905,7 +910,7 @@
   <div class="puerta" id="puerta">
     <h2>Entra a la sala</h2>
     <p><b>Docente:</b> activa <b>Entrar como docente</b>, escribe tu clave y <b>crea el c&oacute;digo de 4 d&iacute;gitos</b> de esta sesi&oacute;n; dicta ese c&oacute;digo a tu clase.<br>
-       <b>Alumno:</b> escribe tu nombre y el <b>c&oacute;digo de la sesi&oacute;n</b> que te dio tu docente. Si nadie abri&oacute; ese c&oacute;digo, la sala no te deja entrar.</p>
+       <b>Alumno:</b> escribe tu nombre y el <b>c&oacute;digo de la sesi&oacute;n</b> para que se guarde tu avance y lo vea tu docente. Sin c&oacute;digo, pulsa <b>Practicar sin c&oacute;digo</b>: puedes navegar y probar todo, pero tus respuestas son temporales.</p>
     <div id="aula"></div>
   </div>
 
@@ -968,7 +973,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261025b"></script>
+<script src="aula.js?v=20261025d"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1334,11 +1339,17 @@ var CLAVES=['cs1','cs2','cp1','cp2','cp3','g1','b1','b2','b3','b4','m1','m2','m3
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
-try{
-  var d=JSON.parse(localStorage.getItem(LS)||'null');
-  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
-}catch(e){}
+function cargaG(){
+  G=vacio();
+  try{
+    var d=JSON.parse(localStorage.getItem(LS)||'null');
+    if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+  }catch(e){}
+}
+cargaG();
 function graba(){
+  /* en práctica libre las respuestas viven solo en pantalla */
+  if(window.Aula && Aula.enPractica) return;
   try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
   if(window.Aula && Aula.enSala) Aula.empuja();
 }
@@ -2032,6 +2043,14 @@ function vista(k){
 }
 
 /* ================= dibujo ================= */
+function htmlLamina(s){
+  var h=s.h||'';
+  var ks=clavesDe(s);
+  if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
+                              : h+'<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
+  return h;
+}
 function pinta(quieto){
   var s=D[i];
   /* al responder dentro de la misma diapositiva no se pierde el sitio */
@@ -2040,11 +2059,7 @@ function pinta(quieto){
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
   $('cu').textContent=(i+1)+' / '+D.length;
-  var h=s.h||'';
-  var ks=clavesDe(s);
-  if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
-                              : h+'<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
-  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
+  var h=htmlLamina(s);
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(i===0);
@@ -2557,7 +2572,8 @@ function pintaRuta(){
 var modoClase='libre';
 try{ if(localStorage.getItem('pl_sem2_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
-function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
+function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
 function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
 
@@ -2766,8 +2782,11 @@ document.addEventListener('keydown', function(e){
 
 /* ================= el aula ================= */
 function resumenAula(){
-  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
-           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+  var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+          idx:i, G:{ mal:G.mal },
+          rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+  return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
@@ -2801,6 +2820,24 @@ function ventanaAula(e){
   return h+'</div></div>';
 }
 
+/* la lámina tal como la ve el alumno, con sus respuestas, sin poder tocarla */
+function replicaAlumno(e){
+  var n=(typeof e.idx==='number') ? e.idx : -1;
+  if(n<0 || n>=D.length || !e.G) return '';
+  var gDoc=G, actualesARMA=ARMA;
+  var h='';
+  try{
+    G=vacio();
+    for(var k in e.G) if(G[k]!==undefined && e.G[k] && typeof e.G[k]==='object') G[k]=e.G[k];
+    ARMA={}; replica=true;
+    h=htmlLamina(D[n]);
+  }catch(x){ h=''; }
+  finally{ G=gDoc; ARMA=actualesARMA; replica=false; }
+  if(!h) return '';
+  return '<div class="ai apvivo"><div class="cab"><span class="et">'+esc(D[n].et)+'</span>'+
+         '<span class="t">'+esc(D[n].t)+'</span><span class="cu">'+(n+1)+' / '+D.length+'</span></div>'+
+         '<div class="lam">'+h+'</div></div>';
+}
 function pantalla(e, alumno, cont){
   var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
@@ -2812,6 +2849,7 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
+    replicaAlumno(e)+
     '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
       '<th>Avance</th><th class="n">Estado</th></tr></thead><tbody>';
   (e.rejilla||[]).forEach(function(r){
@@ -2837,17 +2875,27 @@ function pantalla(e, alumno, cont){
     if(window.Aula && Aula.saca) Aula.saca(alumno);
   });
 }
+var textoPuerta=null;
 if(window.Aula){
   Aula.iniciar({ sala:'PLR2', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
-      var dentro=Aula.enSala;
+      var prac=Aula.enPractica, dentro=Aula.enSala || prac;
       $('mazo').hidden=!dentro;
-      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
-      $('puerta').querySelector('p').hidden=dentro;
+      var pp=$('puerta').querySelector('p');
+      if(textoPuerta===null) textoPuerta=pp.innerHTML;
+      $('puerta').querySelector('h2').textContent = prac ? 'Modo práctica' : (dentro ? 'Estás dentro' : 'Entra a la sala');
+      if(prac){
+        pp.innerHTML='Estás practicando: <b>tus respuestas son temporales</b> y no se guardan ni las ve el docente. '+
+                     'Para guardar tu avance, pulsa <b>Salir</b> y entra con el código de tu docente.';
+        pp.hidden=false;
+      }else{ pp.innerHTML=textoPuerta; pp.hidden=dentro; }
+      $('reinicio').hidden=prac;   /* ese botón borraría el avance guardado de verdad */
       if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
+      if(prac){ G=vacio(); yaCruz={}; i=0; }
+      else if(dentro){ cargaG(); yaCruz={}; }
       if(dentro){ pinta(); setTimeout(enfoca, 120); }
       pintaModo();
       if(doc) difunde();

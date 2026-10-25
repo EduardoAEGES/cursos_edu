@@ -74,7 +74,7 @@ var CLAVE='46069339';
 function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
 function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
 
-var cfg=null, sala=null, yo=null, docente=false, tAbierta=null;
+var cfg=null, sala=null, yo=null, docente=false, tAbierta=null, practica=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
@@ -158,6 +158,8 @@ function pintaControles(){
                    esc(codigoClase())+'" autocomplete="off">')+'</label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">'+
           (conFicha()?'Ingresar':'Entrar a la sala')+'</button>'+
+        (pin() ? '<button class="o-btn o-btn-secondary" id="aulaPractica" type="button" '+
+                 'title="Navega y practica sin código: no se guarda nada">Practicar sin código</button>' : '')+
         (conFicha() ? '<button class="o-btn o-btn-secondary" id="aulaNuevo" type="button">Es mi primera vez</button>'+
           '<button class="o-btn o-btn-secondary" id="aulaVuelve" type="button" hidden>Ya estoy registrado</button>'+
           '<span class="aula-ficha" id="aulaFicha"></span>' : '')+
@@ -204,6 +206,7 @@ function pintaControles(){
                               : (simple() ? codigoClase() : (leeLocal(claveSala())||codigoClase()));
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
+  if(pin()) $('aulaPractica').addEventListener('click', entraPractica);
   $('aulaSalir').addEventListener('click', sale);
   $('aulaRefresca').addEventListener('click', trae);
   $('aulaGrande').addEventListener('click', function(){
@@ -309,6 +312,13 @@ function entraAlumno(){
     return;
   }
   sigueAlumno(s);
+}
+/* práctica libre: se navega por toda la sesión, pero no hay sala ni se guarda nada */
+function entraPractica(){
+  practica=true; sala=null; yo=null; docente=false; dni='';
+  dentro('Modo práctica · tus respuestas no se guardan');
+  estado('solo','Práctica libre: nada se guarda ni se comparte con el docente');
+  if(cfg.alModo) cfg.alModo(false);
 }
 function sigueAlumno(s){
   if(!conFicha()){
@@ -430,6 +440,7 @@ function dentroDocente(s){
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
+  practica=false;
   if(tAbierta){ clearInterval(tAbierta); tAbierta=null; }
   if(conFicha() && !docente && dni &&
      !window.confirm('¿Cerrar tu sesión?\n\nTu avance ya quedó guardado con tu DNI '+dni+
@@ -997,6 +1008,7 @@ window.Aula={
   cambiaMusica:function(){ otraPista(); },
   get esDocente(){ return docente; },
   get enSala(){ return !!sala; },
+  get enPractica(){ return practica; },
   /* el enlace del caso práctico que publica el docente */
   guardaRecurso:function(r){ return publicaRecurso(r); },
   get recurso(){ return recurso; },
