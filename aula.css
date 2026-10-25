@@ -136,6 +136,17 @@
 .aula-modal .am-h{ font-size:17px; font-weight:800; }
 .aula-modal .am-p{ font-size:13px; color:var(--o-muted); margin:5px 0 13px; line-height:1.5; }
 .aula-modal .aula-campo input{ width:100%; font-size:17px; text-align:center; letter-spacing:.1em; }
+.aula-modal #aulaCdoc input{ font-size:15px; letter-spacing:0; }
+.aula-modal .aula-campo + .aula-campo{ margin-top:9px; }
+/* el ojito para ver la clave */
+.aula-ojo{ position:relative; display:block; }
+.aula-modal .aula-ojo input{ padding-left:42px; padding-right:42px; }
+.am-ojo{ position:absolute; right:5px; top:50%; transform:translateY(-50%); width:34px; height:34px;
+         border:0; border-radius:7px; background:transparent; cursor:pointer; font-size:18px;
+         line-height:1; color:var(--o-muted); opacity:.6; }
+.am-ojo:hover, .am-ojo:focus-visible{ background:var(--o-border); opacity:1; }
+.am-ojo.ver{ opacity:1; color:var(--o-purple); }
+.am-ojo:focus-visible{ outline:2px solid var(--o-purple); outline-offset:1px; }
 .aula-modal .am-err{ color:#C0392B; font-size:12.5px; font-weight:700; min-height:17px; margin:7px 0 0; }
 .aula-modal .am-b{ display:flex; gap:8px; justify-content:flex-end; margin-top:11px; }
 @media (prefers-reduced-motion: reduce){
