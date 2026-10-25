@@ -1274,7 +1274,7 @@ var D=[
   t:"Los estados financieros",
   claves:["c0"],
   h:TAPA('¿Ganó o perdió? ¿Quién la financia?','Semana 7 · Evidencia AA4',['Estado de Resultados','Situación Financiera','Interpretación'])+
-GLOBO('pres','El reto de hoy','La gerencia de Costeño Alimentos quiere saber si ganó o perdió en 2025 y cómo está financiada. Hoy aprendes a armar los dos estados en Excel y terminas el caso, que es individual.') },
+GLOBO('pres','El reto de hoy','La gerencia de Costeño Alimentos quiere saber si ganó o perdió en 2025 y cómo está financiada. Hoy aprendes a armar los dos estados y a interpretarlos.') },
 
 { et:"Estados",
   t:"Los cuatro estados financieros",
@@ -1316,34 +1316,16 @@ GLOBO('pres','El reto de hoy','La gerencia de Costeño Alimentos quiere saber si
   lado:1,
   h:'<div class="form">Margen neto = utilidad neta ÷ ventas<small>Endeudamiento = pasivo ÷ activo</small></div>' },
 
-{ et:"Excel",
-  t:"Repaso de Excel para la AA4",
-  claves:["xl"],
-  h:SINTAXIS('Fórmulas para la hoja ENUNCIADO',[
- ['=B5*3.75','Dólares a soles con el tipo de cambio'],
- ['=B12-B13','Activo fijo neto: costo menos depreciación acumulada'],
- ['=SUMA(B2:B9)','Total de un bloque del estado'],
- ['=B20*29.5%','Impuesto a la renta'],
- ['=B22/B2','Margen neto']]) },
-
-{ et:"Evidencia AA4",
-  t:"Caso Costeño Alimentos S.A.C.: se termina hoy",
-  h:CASO('balanza','Evidencia AA4 · individual','Costeño Alimentos S.A.C.: Estado de Resultados y Estado de Situación Financiera 2025',
- 'Clasificas cada partida, conviertes el saldo en dólares, armas los dos estados con fórmulas en las celdas amarillas, compruebas que el activo sea igual al pasivo más el patrimonio y respondes cómo le fue a la empresa y qué le recomiendas.',
- ['Tipo de cambio S/ 3.75','Impuesto a la renta 29.5 %','Hoja ENUNCIADO con celdas amarillas'])+
-EVID(['Archivo Excel con la hoja ENUNCIADO resuelta','Nombre del archivo: Apellido_Nombre','Solo fórmulas: no se aceptan números escritos a mano','Sin informe en Word ni presentación'],
-     ['Clasificación de las partidas','Estado de Resultados','Impuesto a la renta y utilidad neta','Estado de Situación Financiera','Interpretación de resultados','Cada criterio vale 4 puntos']) },
-
 { et:"Cierre",
   t:"Para terminar la AA4",
   claves:["sal"],
-  h:GLOBO('ok','Antes de salir','Termina y guarda tu archivo hoy. La próxima semana el docente revisa tu Excel y te hace una o dos preguntas sobre tus resultados.') }
+  h:GLOBO('ok','Antes de salir','La próxima semana el docente te hará una o dos preguntas sobre tus resultados.') }
 ];
 
 /* ================= estado ================= */
 var LS='cont_s7_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "ee", "es", "er", "ci", "fl", "pd", "it", "xl", "sal"];
+var CLAVES=["c0", "ee", "es", "er", "ci", "fl", "pd", "it", "sal"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();

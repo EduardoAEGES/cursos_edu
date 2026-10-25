@@ -1277,7 +1277,7 @@ var D=[
   t:"Regímenes tributarios y libros contables",
   claves:["c0"],
   h:TAPA('¿Cuánto debe pagar Fancy Shoes?','Semana 2 · Evidencia AA1',['PCGA','PCGE','Regímenes','Libros','Ciclo contable'])+
-GLOBO('pres','El reto de hoy','Amparo vende calzado, abrirá dos tiendas y sus amigos le aconsejan esconder ventas. Hoy aprendes lo necesario para decirle qué régimen le toca, qué libros debe llevar y cuánto pagará cada mes.') },
+GLOBO('pres','El reto de hoy','Amparo vende calzado, abrirá dos tiendas y sus amigos le aconsejan esconder ventas. Hoy aprendes qué régimen le toca, qué libros debe llevar y cuánto pagará cada mes.') },
 
 { et:"PCGA",
   t:"Principios de contabilidad",
@@ -1318,28 +1318,10 @@ GLOBO('pres','El reto de hoy','Amparo vende calzado, abrirá dos tiendas y sus a
   h:'<div class="form">Valor de venta = precio de venta ÷ 1.18<small>IGV a pagar = IGV de ventas − IGV de compras · Renta RER = valor de venta × 1.5 %</small></div>'+
 '<div class="clave">Ojo con el caso: unos meses dicen <b>valor de venta</b> y otros <b>precio de venta</b>. Antes de calcular, todo se pasa a valor.</div>' },
 
-{ et:"Excel",
-  t:"Repaso de Excel para el anexo",
-  claves:["xl"],
-  h:SINTAXIS('Fórmulas para el anexo del caso',[
- ['=B2/1.18','Pasa un precio de venta a valor de venta'],
- ['=D2*18%','IGV del mes'],
- ['=D2*1.5%','Renta mensual del RER'],
- ['=SI(C2="PRECIO DE VENTA";B2/1.18;B2)','Elige sola si hay que quitar el IGV'],
- ['=SUMA(E2:E13)','Total del año']]) },
-
 { et:"Ciclo contable",
   t:"Del hecho al estado financiero",
   claves:["ci"],
   h:'' },
-
-{ et:"Evidencia AA1",
-  t:"Caso Fancy Shoes S.A.C.",
-  h:CASO('regimen','Evidencia AA1 · grupos de 4','Fancy Shoes S.A.C.: régimen, libros e impuestos de 2021',
- 'Con los datos de 2021 y las proyecciones a 2025, identifican el régimen, los libros, el año en que debe cambiar de régimen, el principio para las ventas en dólares y los elementos del PCGE; calculan los impuestos de enero a diciembre y responden si Amparo puede pagar menos impuestos.',
- ['Ingresos 2021: S/ 350,000','Ventas y compras mes a mes','Proyección 2022–2025'])+
-EVID(['Informe en Word: carátula, índice, resolución, análisis, conclusiones y recomendaciones','Arial 12, interlineado 1, máximo 4 caras','Anexos en Excel; archivos con el nombre del grupo','Exposición de 3 a 5 minutos en PowerPoint o Canva'],
-     ['PCGA','Elementos del PCGE','Régimen tributario y obligaciones','Ciclo contable','Libros y registros','Cada criterio vale 4 puntos']) },
 
 { et:"Cierre",
   t:"Antes de exponer",
@@ -1350,7 +1332,7 @@ EVID(['Informe en Word: carátula, índice, resolución, análisis, conclusiones
 /* ================= estado ================= */
 var LS='cont_s2_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "pg", "el", "rg", "lb", "im", "xl", "ci", "sal"];
+var CLAVES=["c0", "pg", "el", "rg", "lb", "im", "ci", "sal"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
