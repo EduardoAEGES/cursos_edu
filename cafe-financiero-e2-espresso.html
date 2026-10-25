@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-18-234853">
+<meta name="version" content="2026-10-25-030323">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -135,6 +135,16 @@
   .pist:hover{ background:#CBDCFF; }
 
   /* ---------- cuadro de estados financieros para armar ---------- */
+  .teo2{ display:grid; gap:20px; }
+  @media (min-width:1100px){ .teo2{ grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); align-items:start; } }
+  .teo2 .tarea{ margin:0; } .teo2 .tapa{ margin-bottom:12px; }
+  .teo2 .ops{ display:grid !important; grid-template-columns:1fr; gap:6px; }
+  .teo2 .ops button{ padding:8px 12px !important; font-size:17px !important; }
+  .teo2 .preg{ font-size:19px !important; margin:8px 0 4px !important; }
+  .teo2 .pq{ margin:2px 0 4px !important; font-size:15px !important; }
+  .teo2 .cajas{ display:grid !important; grid-template-columns:1fr 1fr !important; gap:8px; } .teo2 .caja .z{ min-height:54px; }
+  .teo2 .banco .ficha{ font-size:17px; padding:6px 10px; }
+
   .cuadro.hojat{ display:grid; grid-template-columns:1fr !important; gap:12px; }
   .cuadro.hojat .ht{ max-height:var(--htalto, 36vh); overflow-y:auto; }
   .cuadro.hojat .cua{ min-height:0 !important; padding:2px 12px !important; } .cuadro.hojat .cua .n{ font-size:15.5px !important; line-height:1.25 !important; } .cuadro.hojat .cua .v{ font-size:16px !important; } .cuadro.hojat h6{ padding:2px 12px !important; font-size:12.5px !important; } .cuadro.hojat .sub, .cuadro.hojat .gran{ padding:2px 12px !important; min-height:0 !important; } .cuadro.hojat .ctit{ padding:6px 12px !important; font-size:15px !important; } .cuadro.hojat .cuadra{ padding:6px 12px; font-size:16px; }
@@ -1096,46 +1106,40 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-a0:{"tipo": "cal", "titulo": "Actividad 1 - Las cuentas de Mateo", "intro": "Escribe solo el número.", "lista": [{"q": "Feria de Gamarra: ¿cuánto tiene que devolver Mateo?", "f": "Entregado − gastado", "d": "1,200 − 1,000", "e": 200, "tol": 0.5, "u": "soles", "ph": "200", "pq": "Lo devuelve en efectivo y entra a Caja."}, {"q": "Feria de Miraflores: ¿cuánto se le reembolsa a Mateo?", "f": "Gastado − entregado", "d": "950 − 800", "e": 150, "tol": 0.5, "u": "soles", "pq": "Sale de Caja y vuelve a dejar la 141 en cero."}, {"q": "¿Cuánto gasto de ferias se registra en febrero?", "f": "Lo que se sustentó con boletas", "d": "1,000 + 950", "e": 1950, "tol": 0.5, "u": "soles", "pq": "El gasto es lo sustentado, no lo entregado."}], "fin":globo(P.bien,"Resuelto","El gasto es lo que se sustenta con comprobantes. Lo entregado es solo un adelanto.")},
+a0:{"tipo": "quiz", "titulo": "Caso 1 - Feria de Gamarra: sobró plata", "lista": [{"q": "Se le entregan 1,200 a Mateo:", "ops": ["Debe 638 / Haber 104 - S/ 1,200", "Debe 141 / Haber 104 - S/ 1,200", "Debe 104 / Haber 141 - S/ 1,200"], "ok": 1, "pq": "Todavía no es gasto: es un derecho de la empresa hasta que rinda."}, {"q": "Rinde boletas por 1,000:", "ops": ["Debe 638 / Haber 141 - S/ 1,000", "Debe 141 / Haber 638 - S/ 1,000", "Debe 638 / Haber 104 - S/ 1,200"], "ok": 0, "pq": "El gasto es lo sustentado con boletas: 1,000."}, {"q": "Devuelve lo que sobró:", "ops": ["Debe 141 / Haber 101 - S/ 200", "Debe 101 / Haber 141 - S/ 200", "Debe 101 / Haber 638 - S/ 200"], "ok": 1, "pq": "Entra a Caja y la 141 queda en cero: 1,200 − 1,000 − 200 = 0."}]},
 
-a1:{"tipo": "tabla", "titulo": "Actividad 2 - Feria de Gamarra: sobró plata", "intro": "Elige la cuenta y escribe el importe en cada línea.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>1. Entrega a Mateo</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["121 Facturas por cobrar", "141 Entregas a rendir cuenta", "638 Movilidad y viáticos"], "ok": 1}, {"e": 1200}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 1200}], [{"t": "<b>2. Rendición con boletas</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["141 Entregas a rendir cuenta", "635 Alquiler del local", "638 Movilidad y viáticos"], "ok": 2}, {"e": 1000}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "141 Entregas a rendir cuenta"], "ok": 2}, {"t": ""}, {"e": 1000}], [{"t": "<b>3. Devolución de lo que sobró</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "638 Movilidad y viáticos"], "ok": 0}, {"e": 200}, {"t": ""}], [{"ops": ["121 Facturas por cobrar", "141 Entregas a rendir cuenta", "638 Movilidad y viáticos"], "ok": 1}, {"t": ""}, {"e": 200}]], "fin":globo(P.idea,"Resuelto","141: entra 1,200 y salen 1,000 + 200. Queda en cero.")},
+a1:{"tipo": "quiz", "titulo": "Caso 2 - Feria de Miraflores: faltó plata", "lista": [{"q": "Se le entregan 800 a Mateo:", "ops": ["Debe 141 / Haber 104 - S/ 800", "Debe 638 / Haber 104 - S/ 800", "Debe 141 / Haber 101 - S/ 950"], "ok": 0, "pq": "Igual que en Gamarra: primero es un derecho."}, {"q": "Rinde boletas por 950:", "ops": ["Debe 638 / Haber 141 - S/ 800", "Debe 638 / Haber 141 - S/ 950", "Debe 141 / Haber 638 - S/ 950"], "ok": 1, "pq": "Se registra todo lo sustentado: 950."}, {"q": "Se le reembolsan los 150 que puso:", "ops": ["Debe 101 / Haber 141 - S/ 150", "Debe 141 / Haber 101 - S/ 150", "Debe 638 / Haber 101 - S/ 150"], "ok": 1, "pq": "Sale de Caja y la 141 vuelve a cero: 800 − 950 + 150 = 0."}]},
 
-a2:{"tipo": "tabla", "titulo": "Actividad 3 - Feria de Miraflores: faltó plata", "intro": "Ahora Mateo gastó más de lo que se le dio.", "cols": ["Cuenta", "Debe", "Haber"], "tipos": ["t", "n", "n"], "filas": [[{"t": "<b>1. Entrega a Mateo</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["121 Facturas por cobrar", "141 Entregas a rendir cuenta", "638 Movilidad y viáticos"], "ok": 1}, {"e": 800}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "421 Facturas por pagar"], "ok": 1}, {"t": ""}, {"e": 800}], [{"t": "<b>2. Rendición con boletas</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["141 Entregas a rendir cuenta", "635 Alquiler del local", "638 Movilidad y viáticos"], "ok": 2}, {"e": 950}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "141 Entregas a rendir cuenta"], "ok": 2}, {"t": ""}, {"e": 950}], [{"t": "<b>3. Reembolso a Mateo</b>"}, {"t": ""}, {"t": ""}], [{"ops": ["141 Entregas a rendir cuenta", "421 Facturas por pagar", "638 Movilidad y viáticos"], "ok": 0}, {"e": 150}, {"t": ""}], [{"ops": ["101 Caja", "104 Cuenta corriente BCP", "141 Entregas a rendir cuenta"], "ok": 0}, {"t": ""}, {"e": 150}]], "fin":globo(P.expl,"Resuelto","Al rendir 950, la 141 quedó con 150 en contra. El reembolso la devuelve a cero.")},
-
-a3:{"tipo": "sel", "titulo": "Actividad 4 - Si fueras la dueña", "lista": [{"q": "Si Mateo no hubiera presentado las boletas de Gamarra, ¿qué pasaría con los 1,200?", "ops": ["Igual se registran como gasto", "Seguirían en la 141: Mateo todavía los debe", "Se pierden"], "ok": 1, "pq": "Sin boletas no hay gasto sustentado. La plata sigue siendo un derecho de la empresa."}, {"q": "¿Qué regla pondrías para las próximas ferias?", "ops": ["Entregar sin pedir nada", "Rendir con boletas dentro de los 3 días siguientes a la feria", "Que Mateo pague todo de su bolsillo"], "ok": 1, "pq": "Un plazo corto para rendir mantiene la 141 en orden y los gastos en el mes que corresponde."}], "fin":globo2(P.pres,P.alum,"Para cerrar","Plata que viaja, siempre vuelve: como gasto con boletas, como devolución a Caja o con un reembolso. La 141 es la cuenta que lo controla.")}
+a2:{"tipo": "quiz", "titulo": "Caso 3 - Practica solo", "lista": [{"q": "A Rosa le entregan 500 para un curso. Rinde 420 y devuelve el resto. ¿Cuánto devuelve?", "ops": ["S/ 80", "S/ 420", "S/ 500"], "ok": 0, "pq": "500 − 420 = 80."}, {"q": "¿Cuánto gasto se registra?", "ops": ["S/ 500", "S/ 420", "S/ 80"], "ok": 1, "pq": "El gasto es lo sustentado: 420."}, {"q": "Si Rosa no presenta boletas, los 500…", "ops": ["Se registran igual como gasto", "Siguen en la 141: Rosa todavía los debe"], "ok": 1, "pq": "Sin boletas no hay gasto. La 141 controla la plata que salió."}]}
 
 };
 
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:"El caso", t:"Plata viajera",
+{ et:"El caso", t:"Plata viajera: entregas a rendir cuenta",
   h:"<div class=\"tapa\"><div class=\"fil\"><img src=\"marca/certus-blanco.png\" alt=\"Certus\"><span>| Café Financiero</span></div><h2>Plata viajera</h2><p>Encuentro 2 - El Espresso - Entregas a rendir cuenta</p><div class=\"via\"><b>Entrega</b><b>Rendición</b><b>Devolución o reembolso</b></div></div>"+
-    globo(P.alum,"Mateo, el vendedor","En febrero fui a dos ferias. Para la de Gamarra me dieron 1,200 y gasté 1,000. Para la de Miraflores me dieron 800, pero gasté 950 y puse 150 de mi bolsillo. Rosa me pidió todas las boletas.")+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Feria</th><th>Entregado</th><th>Gastado con boletas</th><th>Diferencia</th></tr></thead><tbody><tr><td>Gamarra</td><td>1,200</td><td>1,000</td><td>Mateo devuelve 200</td></tr><tr><td>Miraflores</td><td>800</td><td>950</td><td>La empresa le reembolsa 150</td></tr></tbody></table></div>" },
+    globo(P.alum,"Mateo, el vendedor","Para la feria de Gamarra me dieron 1,200 y gasté 1,000. Para la de Miraflores me dieron 800, pero gasté 950 y puse 150 de mi bolsillo.")+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Momento</th><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>1. Se entrega la plata</td><td>141 Entregas a rendir cuenta</td><td>104 Cuenta corriente</td></tr><tr><td>2. Rinde con boletas</td><td>638 Movilidad y viáticos (gasto)</td><td>141 Entregas a rendir cuenta</td></tr><tr><td>3a. Sobró: devuelve</td><td>101 Caja</td><td>141 Entregas a rendir cuenta</td></tr><tr><td>3b. Faltó: se le reembolsa</td><td>141 Entregas a rendir cuenta</td><td>101 Caja</td></tr></tbody></table></div>" },
 
-{ et:"Teoría", t:"Qué es una entrega a rendir cuenta",
-  h:"<p class=\"enc\">Plata que sale, pero todavía no es gasto</p><p class=\"sub\">Hasta que Mateo presenta las boletas, esa plata es un derecho de la empresa: Mateo tiene que rendirla</p>"+
-    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Momento</th><th>Debe</th><th>Haber</th></tr></thead><tbody><tr><td>1. Se le entrega la plata</td><td>141 Entregas a rendir cuenta</td><td>104 Cuenta corriente</td></tr><tr><td>2. Rinde con boletas</td><td>638 Movilidad y viáticos (el gasto)</td><td>141 Entregas a rendir cuenta</td></tr><tr><td>3a. Si sobró: devuelve</td><td>101 Caja</td><td>141 Entregas a rendir cuenta</td></tr><tr><td>3b. Si faltó: se le reembolsa</td><td>141 Entregas a rendir cuenta</td><td>101 Caja</td></tr></tbody></table></div>"+
-    globo(P.idea,"Rosa, la contadora","Al final la 141 siempre tiene que quedar en cero. Si queda saldo, alguien todavía no rindió o no devolvió.") },
+{ et:"Caso 1", t:"Caso 1 - Feria de Gamarra: elige cada asiento", clave:"a0", lado:1,
+  h:"<div class=\"av\">Entregado 1,200 · gastado con boletas 1,000 · sobraron <b>200</b>.</div>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Nombre</th></tr></thead><tbody><tr><td>101</td><td>Caja</td></tr><tr><td>104</td><td>Cuenta corriente (banco)</td></tr><tr><td>141</td><td>Entregas a rendir cuenta</td></tr><tr><td>638</td><td>Movilidad y viáticos (gasto)</td></tr></tbody></table></div>"+
+    globo(P.idea,"Rosa, la contadora","Pregúntate en cada paso: ¿la plata ya es gasto o todavía es un derecho de la empresa?") },
 
-{ et:"Cálculo", t:"Las diferencias", clave:"a0",
-  h:"<p class=\"enc\">¿Sobró o faltó?</p><p class=\"sub\">Antes del asiento, la cuenta</p>" },
+{ et:"Caso 2", t:"Caso 2 - Feria de Miraflores: elige cada asiento", clave:"a1", lado:1,
+  h:"<div class=\"av\">Entregado 800 · gastado con boletas 950 · faltaron <b>150</b>: el último asiento cambia de lado.</div>"+
+    "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Cuenta</th><th>Nombre</th></tr></thead><tbody><tr><td>101</td><td>Caja</td></tr><tr><td>104</td><td>Cuenta corriente (banco)</td></tr><tr><td>141</td><td>Entregas a rendir cuenta</td></tr><tr><td>638</td><td>Movilidad y viáticos (gasto)</td></tr></tbody></table></div>"+
+    globo(P.alum,"Mateo, el vendedor","Puse 150 de mi bolsillo: la empresa me los devuelve de Caja.") },
 
-{ et:"Gamarra", t:"Asientos de la feria de Gamarra", clave:"a1",
-  h:"<p class=\"enc\">Tres asientos para una feria</p><p class=\"sub\">Entrega, rendición y devolución</p>" },
-
-{ et:"Miraflores", t:"Asientos de la feria de Miraflores", clave:"a2",
-  h:"<p class=\"enc\">Cuando se gasta más de lo entregado</p><p class=\"sub\">El último asiento cambia de lado</p>" },
-
-{ et:"Lectura", t:"Si fueras la dueña, ¿qué decidirías?", clave:"a3",
-  h:"<p class=\"enc\">Control de la plata que sale</p><p class=\"sub\">Dos decisiones con lo que acabas de registrar</p>" }
+{ et:"Práctica", t:"Caso 3 - Practica solo", clave:"a2", lado:1,
+  h:globo2(P.pres,P.alum,"Para cerrar","Plata que viaja siempre vuelve: como gasto con boletas, como devolución a Caja o con un reembolso. La 141 tiene que quedar en cero.") }
 ];
 
 /* ================= estado ================= */
-var LS='cafe_e2_espresso_v1';
+var LS='cafe_e2_espresso_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['a0','a1','a2','a3'];
+var CLAVES=['a0','a1','a2'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1780,7 +1784,8 @@ function pinta(quieto){
   $('cu').textContent=(i+1)+' / '+D.length;
   var h=s.h||'';
   var ks=clavesDe(s);
-  if(ks.length===1) h+='<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
+                              : h+'<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
   else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
@@ -2264,7 +2269,7 @@ function pintaRuta(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('cafe_e2_espresso_v1_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('cafe_e2_espresso_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
@@ -2309,7 +2314,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('cafe_e2_espresso_v1_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('cafe_e2_espresso_v2_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
