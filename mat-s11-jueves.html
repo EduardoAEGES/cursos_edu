@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 11 jueves - Del Excel al Word: estados financieros y plan de medios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 11 &middot; jueves</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 11 &middot; jueves</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Del Excel al Word: estados financieros y plan de medios</h1>
+      <p><span class="sem">Semana 11 &middot; jueves</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Hora de proyecto. Las cifras de referencia son las del caso Capriccio, que es el modelo resuelto del componente de Matem&aacute;tica Aplicada. Todos los montos est&aacute;n sin IGV.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s11j_v1',
+  sala:'MATS11J',
+  ACT:{
+
+a0:{ tipo:'tabla', titulo:'Actividad 1 - Las cifras que tienen que cuadrar',
+  intro:'Antes de copiar nada al Word, comprueba que el Excel esté bien. Estas son las cifras del '+
+        'modelo Capriccio: si tu hoja da otra cosa, el error está en tu hoja. Escribe el valor con '+
+        'dos decimales y sin comas.',
+  cols:['Cifra del modelo Capriccio','De dónde sale','Valor'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Ventas netas 2025'},{t:'Ventas brutas 965,967 − descuentos 18,000'},
+    {e:947967, tol:1, ph:'947967', pq:'965,967 − 18,000 = 947,967'}],
+   [{t:'Costo de ventas'},{t:'Inv. inicial 26,000 + compras 400,000 − inv. final 28,000'},
+    {e:398000, tol:1, ph:'398000', pq:'26,000 + 400,000 − 28,000 = 398,000'}],
+   [{t:'Utilidad neta del ejercicio'},{t:'Utilidad antes de impuesto 142,467 − IR 29.5 %'},
+    {e:100439.23, tol:0.5, ph:'100439.23', pq:'142,467 − 42,027.77 = 100,439.23'}],
+   [{t:'TOTAL ACTIVO = TOTAL PASIVO Y PATRIMONIO'},{t:'179,439.23 + 225,000'},
+    {e:404439.23, tol:0.5, ph:'404439.23',
+     pq:'404,439.23 por los dos lados. Si no cuadra, el ESF está mal y no se copia al Word.'}],
+   [{t:'Capital de trabajo (S/)'},{t:'179,439.23 − 90,000'},
+    {e:89439.23, tol:0.5, ph:'89439.23', pq:'179,439.23 − 90,000 = 89,439.23'}],
+   [{t:'Razón corriente'},{t:'179,439.23 / 90,000'},
+    {e:1.99, tol:0.01, ph:'1.99', pq:'1.9938 → 1.99'}],
+   [{t:'Prueba ácida'},{t:'(179,439.23 − 28,000) / 90,000'},
+    {e:1.68, tol:0.01, ph:'1.68', pq:'151,439.23 / 90,000 = 1.6827 → 1.68'}],
+   [{t:'Nivel de endeudamiento en %', cl:'tot'},{t:'158,000 / 404,439.23 × 100'},
+    {e:39.07, tol:0.02, ph:'39.07', cl:'tot', pq:'39.07 %'}]
+  ],
+  fin:globo(P.expl,'Resuelto','Si el total del activo no es igual al total del pasivo más '+
+      'patrimonio, no sigas: hay una partida en el lado equivocado o un dato de corriente que es no '+
+      'corriente. Es el primer control de calidad del Anexo A.2.') },
+
+a1:{ tipo:'arr', titulo:'Actividad 2 - Qué va al cuerpo y qué va al anexo',
+  fichas:[ {id:'f1', t:'Tabla 11 - Estado de Resultados con % de ventas', g:'CU'},
+           {id:'f2', t:'Tabla 16 - Plan de medios de la campaña', g:'CU'},
+           {id:'f3', t:'El párrafo que explica cada partida', g:'CU'},
+           {id:'f4', t:'Tabla A2 - Estado de Resultados completo', g:'AN'},
+           {id:'f5', t:'Tabla A3 - Estado de Situación Financiera', g:'AN'},
+           {id:'f6', t:'Tabla A4 - Los cuatro indicadores', g:'AN'} ],
+  cajas:[ {id:'CU', t:'Cuerpo del informe - puntos 2.5.2 y 3.1.3'},
+          {id:'AN', t:'Anexo A.2 - respaldo de los cálculos'} ],
+  fin:globo(P.idea,'Resuelto','En el cuerpo va lo que se analiza; en el anexo, lo que respalda. El '+
+      'jurado lee el cuerpo y solo va al anexo si duda de una cifra. Por eso el anexo tiene que estar '+
+      'completo, pero el análisis tiene que estar en el cuerpo.') },
+
+a2:{ tipo:'sel', titulo:'Actividad 3 - Cómo se presenta una tabla en el informe',
+  lista:[
+   { q:'¿Dónde va el número y el título de una tabla?',
+     ops:['Debajo de la tabla, junto a la nota','Arriba de la tabla, en dos líneas: Tabla 11 y luego el título',
+          'En el índice solamente'], ok:1,
+     pq:'Arriba van dos líneas: el rótulo <b>Tabla 11</b> y, debajo, el título en '+
+        'cursiva. La nota va al pie de la tabla y empieza con <b>Nota.</b>' },
+   { q:'Tu marca no tiene el dato de inventario inicial. ¿Qué haces?',
+     ops:['Dejas la fila en blanco','Pones 0 y no dices nada',
+          'Lo estimas, escribes el monto y declaras el supuesto en la nota'], ok:2,
+     pq:'Un informe con un supuesto declarado es válido; uno con un vacío o con un dato sin '+
+        'origen, no. La nota dice de dónde sale cada estimación.' },
+   { q:'¿Los montos del informe van con IGV o sin IGV?',
+     ops:['Sin IGV, y se dice en la nota','Con IGV, porque es el precio real al público',
+          'Da igual, mientras sea el mismo criterio'], ok:0,
+     pq:'Todo el componente trabaja sin IGV: los precios se dividen entre 1.18 y los costos se toman sin '+
+        'IGV porque son crédito fiscal. Mezclar los dos criterios descuadra los márgenes.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Del Excel al Word: estados financieros y plan de medios', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>Las cifras ya están: ahora tienen que entrar al informe</h2>'+
+      '<p>Semana 11 · jueves · 1 hora académica</p>'+
+      '<div class="via"><b>Comprobar</b><b>Copiar</b><b>Explicar</b></div>'+
+    '</div>'+
+    globo(P.pres,'La hora de hoy es del proyecto',
+      'No hay tema nuevo. La hora completa es para que las tablas pasen del Excel al Word bien '+
+      'presentadas y con su explicación. Lo primero es comprobar que el Excel cuadre, porque '+
+      'copiar una cifra mal al Word se arrastra hasta la semana 14.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">30</td><td><b>Proyecto</b></td><td>Pasar las Tablas 11, A2, A3 y A4 del Excel al Word, con título y nota</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Revisión de la numeración de tablas y dudas</td></tr></tbody></table></div>'+
+    drive('Los dos archivos de hoy',
+      'Abre el <b>Excel de avance</b> (hojas Sem 10 y Sem 11) y el <b>Word del informe</b>. Trabaja con '+
+      'los dos a la vista.') },
+
+{ et:'Control', t:'Comprobar antes de copiar', clave:'a0',
+  h:'<p class="enc">Primero el Excel cuadra, después se copia</p>'+
+    '<p class="sub">Las cifras del modelo Capriccio, para que compares con tu hoja</p>'+
+    globo(P.idea,'El control que nunca falla',
+      'En el Estado de Situación Financiera, el total del activo tiene que ser exactamente igual '+
+      'al total del pasivo más patrimonio. Si no cuadra, hay una partida en el lado equivocado o '+
+      'un plazo mal clasificado. No se copia nada al Word hasta que esos dos totales sean iguales.') },
+
+{ et:'Proyecto', t:'Instrucciones puntuales del avance', clave:null,
+  h:'<p class="enc">AVANCE 1 · puntos 2.5.2, 3.1.3 y Anexo A.2</p>'+
+    '<p class="sub">Seis pasos, en este orden</p>'+
+    proy('Lo que hace cada equipo en esta hora',
+     ['Abre el Excel de avance y revisa que las Tablas <b>A2</b>, <b>A3</b> y <b>A4</b> de tu marca estén '+
+      'completas, y que en el ESF el total del activo sea igual al total del pasivo más patrimonio.',
+      'Copia la <b>Tabla 11</b> al Word, en el punto <b>2.5.2</b>. Pega como tabla, no como imagen: el '+
+      'jurado tiene que poder seleccionar las cifras.',
+      'Debajo de la Tabla 11 escribe un párrafo por partida: ventas netas, costo de ventas, '+
+      'utilidad bruta, gastos, utilidad operativa y utilidad neta. Cada uno dice el monto, de dónde '+
+      'sale y qué porcentaje de las ventas representa.',
+      'Copia la <b>Tabla 16</b> al punto <b>3.1.3</b>, y debajo escribe las dos cifras que usarás '+
+      'en el flujo: <b>inversión inicial del Mes 0</b> y <b>gasto de la campaña por mes</b>.',
+      'Copia las Tablas <b>A2</b>, <b>A3</b> y <b>A4</b> al <b>Anexo A.2</b>, en ese orden, cada una con '+
+      'su rótulo arriba y su nota al pie.',
+      'Revisa la numeración: las tablas del cuerpo van 11 y 16; las del anexo, A2, A3 y A4. Si '+
+      'repites un número o te salta uno, corrígelo ahora y no la semana 16.'],
+     'Al terminar la hora, el Word tiene que tener cinco tablas nuevas y el texto del punto 2.5.2 '+
+     'escrito. Lo que quede sin explicación cuenta como no entregado.') },
+
+{ et:'Formato', t:'Cómo se presenta cada tabla', clave:'a1',
+  h:'<p class="enc">Lo mismo que calculaste, pero donde corresponde</p>'+
+    '<p class="sub">Arrastra cada pieza al lugar del informe donde va</p>'+
+    globo(P.expl,'La diferencia entre cuerpo y anexo',
+      'El cuerpo lleva la tabla que se analiza y el análisis. El anexo lleva el detalle completo: '+
+      'el Estado de Resultados con todas sus líneas, el ESF entero y los indicadores. Así el '+
+      'lector no se pierde en el detalle, pero puede comprobarlo si quiere.') },
+
+{ et:'Cierre', t:'Reglas de presentación y qué sigue', clave:'a2',
+  h:'<p class="enc">Tres reglas que se califican en todo el informe</p>'+
+    '<p class="sub">Y lo que viene el lunes</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Las tres reglas</h4><div class="c">'+
+      '<p>Rótulo y título <b>arriba</b> de la tabla. Nota al <b>pie</b>, empezando con '+
+      '«Nota.». Todos los montos <b>sin IGV</b>.</p></div></div>'+
+    '<div class="fc rj"><h4>El lunes</h4><div class="c">'+
+      '<p>El <b>costo unitario</b> de tu producto: cuánto cuestan los insumos de una unidad, y '+
+      'por qué el sueldo de la cajera no entra ahí.</p></div></div>'+
+    '</div>'+
+    drive('Antes de salir',
+      'Guarda el Excel y el Word en la carpeta de Drive con el nombre de tu marca. Lo que no está '+
+      'en la carpeta, no se revisa.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Con esto el diagnóstico de la marca queda cerrado y documentado. De aquí en adelante '+
+      'todo es campaña: cuánto cuesta producir, cuánto se espera vender y si conviene o no '+
+      'invertir en ella.') }
+]
+});
+</script>
+
+</body>
+</html>

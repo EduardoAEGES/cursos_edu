@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 13 lunes - Proyección de ventas y Flujo de Caja Neto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 13 · lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 13 · lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Proyección de ventas y Flujo de Caja Neto</h1>
+      <p><span class="sem">Semana 13 · lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 13. Panificadora Characato, Chocolatería Sabandía y Juguería Selva Alegre son casos de clase, no empresas reales. Todos los montos están sin IGV y no se considera el impuesto a la renta sobre la campaña.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s13l_v1',
+  sala:'MATS13L',
+  ACT:{
+
+a0:{ tipo:'hoja', titulo:'Actividad 1 - Proyección de ventas en Excel',
+  intro:'Panificadora Characato vendió 2,400 bolsas en 2025 y lanza una campaña de tres meses. '+
+        'Sin campaña vende el promedio ajustado por el índice; con campaña, ese número aumentado.',
+  cols:[{w:200},{w:110},{w:160},{w:160},{w:160}],
+  filas:[
+   [{x:'Mes'},{x:'Índice'},{x:'Sin campaña'},{x:'Con campaña'},{x:'Adicionales'}],
+   [{x:'Promedio por mes (2,400 / 12)'},{x:''},{e:200, f:true, ph:'=2400/12'},{x:''},{x:''}],
+   [{x:'Mes 1 - aumento 25 %'},{n:1.00},{e:200, f:true, ph:'=$C$2*B3'},
+    {e:250, f:true, ph:'=C3*1.25'},{e:50, f:true, ph:'=D3-C3'}],
+   [{x:'Mes 2 - aumento 25 %'},{n:1.20},{e:240, f:true, ph:'=$C$2*B4'},
+    {e:300, f:true, ph:'=C4*1.25'},{e:60, f:true, ph:'=D4-C4'}],
+   [{x:'Mes 3 - aumento 20 %'},{n:1.50},{e:300, f:true, ph:'=$C$2*B5'},
+    {e:360, f:true, ph:'=C5*1.2'},{e:60, f:true, ph:'=D5-C5'}],
+   [{x:'TOTAL'},{x:''},{e:740, f:true, ph:'=SUMA(C3:C5)'},
+    {e:910, f:true, ph:'=SUMA(D3:D5)'},{e:170, f:true, ph:'=SUMA(E3:E5)'}]
+  ],
+  ayuda:'El promedio mensual se usa en las tres filas, así que va fijo con $C$2. El índice estacional '+
+        'dice cuánto más o menos se vende ese mes: 1.50 en el mes 3 significa 50 % por encima del '+
+        'promedio, y no tiene nada que ver con la campaña.',
+  fin:globo(P.expl,'Resuelto','170 bolsas adicionales en los tres meses. Fíjate en la diferencia entre '+
+      'las dos cosas que suben las ventas: el índice estacional es lo que pasaría igual sin hacer nada, '+
+      'y el aumento por campaña es lo único que la campaña puede reclamar como suyo. Por eso el flujo '+
+      'solo lleva las unidades adicionales.') },
+
+a1:{ tipo:'tabla', titulo:'Actividad 2 - El Flujo de Caja Neto, a mano',
+  intro:'Con las ventas adicionales de la actividad anterior. Precio sin IGV S/ 12.00, costo unitario '+
+        'S/ 5.00, inversión inicial S/ 500 en el Mes 0 y gastos de campaña S/ 200 cada mes. Los montos '+
+        'negativos se escriben con el signo menos.',
+  cols:['Concepto','Mes 0','Mes 1','Mes 2','Mes 3'],
+  tipos:['','n','n','n','n'],
+  filas:[
+   [{t:'Bolsas adicionales'},{t:'0'},{t:'50'},{t:'60'},{t:'60'}],
+   [{t:'Ingresos adicionales (S/)'},{t:'0.00'},
+    {e:600, tol:0.5, ph:'600', pq:'50 × 12.00 = 600'},
+    {e:720, tol:0.5, ph:'720', pq:'60 × 12.00 = 720'},
+    {e:720, tol:0.5, ph:'720', pq:'60 × 12.00 = 720'}],
+   [{t:'(−) Costo de ventas adicional'},{t:'0.00'},
+    {e:250, tol:0.5, ph:'250', pq:'50 × 5.00 = 250'},
+    {e:300, tol:0.5, ph:'300', pq:'60 × 5.00 = 300'},
+    {e:300, tol:0.5, ph:'300', pq:'60 × 5.00 = 300'}],
+   [{t:'(−) Gastos de la campaña'},{t:'0.00'},{t:'200.00'},{t:'200.00'},{t:'200.00'}],
+   [{t:'(−) Inversión inicial'},{t:'500.00'},{t:'0.00'},{t:'0.00'},{t:'0.00'}],
+   [{t:'FLUJO DE CAJA NETO', cl:'tot'},
+    {e:-500, tol:0.5, ph:'-500', cl:'tot', pq:'En el Mes 0 solo sale dinero: −500'},
+    {e:150, tol:0.5, ph:'150', cl:'tot', pq:'600 − 250 − 200 = 150'},
+    {e:220, tol:0.5, ph:'220', cl:'tot', pq:'720 − 300 − 200 = 220'},
+    {e:220, tol:0.5, ph:'220', cl:'tot', pq:'720 − 300 − 200 = 220'}],
+   [{t:'Flujo acumulado', cl:'tot'},{t:'-500.00'},
+    {e:-350, tol:0.5, ph:'-350', cl:'tot', pq:'−500 + 150 = −350'},
+    {e:-130, tol:0.5, ph:'-130', cl:'tot', pq:'−350 + 220 = −130'},
+    {e:90, tol:0.5, ph:'90', cl:'tot', pq:'−130 + 220 = 90. Recién aquí la campaña devolvió lo invertido.'}]
+  ],
+  fin:globo2(P.pres, P.bien,'Resuelto','El flujo acumulado pasa a positivo en el Mes 3, con S/ 90. La '+
+      'campaña se paga sola, pero justo al final: si el tercer mes vendiera 10 bolsas menos, la '+
+      'campaña cerraría en rojo. Eso es lo que el informe tiene que decir, no solo que el resultado es '+
+      'positivo.') },
+
+a2:{ tipo:'hoja', titulo:'Actividad 3 - Margen sobre el precio o recargo sobre el costo',
+  intro:'Chocolatería Sabandía vende una caja de bombones: cuesta S/ 12.00 y se vende en S/ 30.00 sin '+
+        'IGV. Son dos formas de mirar la misma ganancia, y no dan el mismo número.',
+  cols:[{w:330},{w:220},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Fórmula'},{x:'Resultado'}],
+   [{x:'Costo de insumos y caja (S/)'},{x:'dato'},{n:12}],
+   [{x:'Precio de venta sin IGV (S/)'},{x:'dato'},{n:30}],
+   [{x:'Ganancia por caja (S/)'},{x:'precio − costo'},{e:18, f:true, ph:'=C3-C2'}],
+   [{x:'Recargo sobre el costo (%)'},{x:'ganancia / costo × 100'},{e:150, f:true, ph:'=C4/C2*100'}],
+   [{x:'Margen sobre el precio (%)'},{x:'ganancia / precio × 100'},{e:60, f:true, ph:'=C4/C3*100'}],
+   [{x:'Precio para un margen de 65 % (S/)'},{x:'costo / (1 − 0.65)'},{e:34.29, f:true, ph:'=C2/(1-0.65)'}],
+   [{x:'Precio con un recargo de 120 % (S/)'},{x:'costo × (1 + 1.20)'},{e:26.40, f:true, ph:'=C2*(1+1.2)'}]
+  ],
+  ayuda:'El recargo se calcula sobre el costo y el margen sobre el precio. Por eso el mismo producto '+
+        'tiene 150 % de recargo y 60 % de margen: no es contradicción, son dos denominadores distintos.',
+  fin:globo(P.idea,'Resuelto','El vendedor que dice «gano 150 %» no miente: está hablando de recargo '+
+      'sobre el costo. El contador que dice «el margen es 60 %» tampoco: habla sobre el precio. En el '+
+      'informe se usa siempre el margen sobre el precio, que es lo que se compara con el Estado de '+
+      'Resultados.') },
+
+a3:{ tipo:'sel', titulo:'Actividad 4 - Leer el flujo de caja',
+  lista:[
+   { q:'¿Por qué el flujo solo lleva las ventas adicionales y no todas las ventas del mes?',
+     ops:['Para que el cálculo sea más corto',
+          'Porque las ventas que habría igual sin campaña no las genera la campaña',
+          'Porque las ventas normales ya pagan impuestos'], ok:1,
+     pq:'Se evalúa la campaña, no el negocio. Si metieras todas las ventas, el VAN diría que la campaña '+
+        'es un éxito enorme aunque no hubiera vendido ni una unidad de más.' },
+   { q:'¿Qué significa que el flujo acumulado del Mes 2 sea −130?',
+     ops:['Que ese mes se perdió dinero',
+          'Que a esa fecha todavía faltan S/ 130 para recuperar lo invertido',
+          'Que la campaña no sirve'], ok:1,
+     pq:'El Mes 2 por sí solo dejó +220. El acumulado negativo dice que, sumando desde el inicio, '+
+        'todavía no se recupera la inversión de S/ 500.' },
+   { q:'La inversión inicial va completa en el Mes 0. ¿Por qué no se reparte entre los tres meses?',
+     ops:['Porque se paga antes de lanzar, y el flujo registra cuándo sale el dinero',
+          'Porque así el VAN sale mejor','Porque es una regla contable del Estado de Resultados'], ok:0,
+     pq:'El flujo de caja no reparte: anota el movimiento en el mes en que ocurre. Repartirlo sería '+
+        'depreciación, que es otra cosa y no va aquí.' },
+   { q:'Tu marca no tiene ventas del año pasado porque es nueva. ¿Cómo proyectas?',
+     ops:['No se puede hacer el proyecto',
+          'Estimas las ventas con tu encuesta o con un negocio parecido, y declaras el supuesto',
+          'Pones cero ventas sin campaña'], ok:1,
+     pq:'El informe acepta estimaciones sustentadas. Lo que no acepta es un número sin origen: la nota '+
+        'de la tabla tiene que decir de dónde sale.' } ] },
+
+a4:{ tipo:'tabla', titulo:'Actividad 5 - Tarea: el flujo de la juguería',
+  intro:'Juguería Selva Alegre ya tiene su plan de medios: inversión inicial S/ 1,000 y gasto de S/ 500 '+
+        'por mes. Vendió 7,200 vasos en 2025, el precio sin IGV es S/ 8.00 y el costo unitario S/ 3.00.',
+  cols:['Concepto','Mes 1','Mes 2','Mes 3'],
+  tipos:['','n','n','n'],
+  filas:[
+   [{t:'Índice estacional'},{t:'0.90'},{t:'1.00'},{t:'1.20'}],
+   [{t:'Ventas sin campaña (vasos)'},
+    {e:540, tol:1, ph:'540', pq:'600 × 0.90 = 540'},
+    {e:600, tol:1, ph:'600', pq:'600 × 1.00 = 600'},
+    {e:720, tol:1, ph:'720', pq:'600 × 1.20 = 720'}],
+   [{t:'Aumento por la campaña'},{t:'20 %'},{t:'25 %'},{t:'30 %'}],
+   [{t:'Vasos adicionales'},
+    {e:108, tol:1, ph:'108', pq:'540 × 0.20 = 108'},
+    {e:150, tol:1, ph:'150', pq:'600 × 0.25 = 150'},
+    {e:216, tol:1, ph:'216', pq:'720 × 0.30 = 216'}],
+   [{t:'Ingresos adicionales (S/)'},
+    {e:864, tol:0.5, ph:'864', pq:'108 × 8.00 = 864'},
+    {e:1200, tol:0.5, ph:'1200', pq:'150 × 8.00 = 1,200'},
+    {e:1728, tol:0.5, ph:'1728', pq:'216 × 8.00 = 1,728'}],
+   [{t:'(−) Costo de ventas adicional'},
+    {e:324, tol:0.5, ph:'324', pq:'108 × 3.00 = 324'},
+    {e:450, tol:0.5, ph:'450', pq:'150 × 3.00 = 450'},
+    {e:648, tol:0.5, ph:'648', pq:'216 × 3.00 = 648'}],
+   [{t:'FLUJO DE CAJA NETO', cl:'tot'},
+    {e:40, tol:0.5, ph:'40', cl:'tot', pq:'864 − 324 − 500 = 40'},
+    {e:250, tol:0.5, ph:'250', cl:'tot', pq:'1,200 − 450 − 500 = 250'},
+    {e:580, tol:0.5, ph:'580', cl:'tot', pq:'1,728 − 648 − 500 = 580'}],
+   [{t:'Flujo acumulado (el Mes 0 es −1,000)', cl:'tot'},
+    {e:-960, tol:0.5, ph:'-960', cl:'tot', pq:'−1,000 + 40 = −960'},
+    {e:-710, tol:0.5, ph:'-710', cl:'tot', pq:'−960 + 250 = −710'},
+    {e:-130, tol:0.5, ph:'-130', cl:'tot', pq:'−710 + 580 = −130. En tres meses no se recupera.'}]
+  ],
+  fin:globo(P.full,'Resuelto','Aquí el acumulado termina en −130: la juguería no recupera su inversión '+
+      'en los tres meses de campaña. No está mal hecho el ejercicio, está mal armada la campaña: gasta '+
+      'S/ 500 al mes para un producto que deja S/ 5.00 por vaso. En la semana 14 vas a ver qué dicen el '+
+      'VAN y la TIR de un caso así.') }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Proyección de ventas y Flujo de Caja Neto', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>Cuánto se vende de más, y cuánto dinero queda</h2>'+
+      '<p>Semana 13 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>Índice estacional</b><b>Ventas adicionales</b><b>Flujo de caja</b></div>'+
+    '</div>'+
+    globo(P.pres,'El corazón del proyecto',
+      'Todo lo anterior fue preparar las piezas: precio, costo, margen y presupuesto de campaña. Hoy '+
+      'esas piezas se juntan en una sola tabla, el Flujo de Caja Neto, que es la que responde si la '+
+      'campaña deja dinero o no. Es el AVANCE 2.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">60</td><td><b>Práctica</b></td><td>Proyección de ventas con índice estacional, en Excel</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Flujo de Caja Neto a mano, y margen sobre precio frente a recargo sobre costo</td></tr><tr><td class="mi">15</td><td><b>Proyecto</b></td><td>Supuestos de la proyección de cada marca</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Dudas y cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'Excel de avance, hoja <b>Sem 13</b>. Ten a la mano el margen unitario de la semana 12 y las dos '+
+      'cifras del plan de medios: inversión inicial y gasto mensual.') },
+
+{ et:'En Excel', t:'Proyectar las ventas con índice estacional', clave:'a0',
+  h:'<p class="enc">Panificadora Characato E.I.R.L.</p>'+
+    '<p class="sub">2,400 bolsas al año, una campaña de tres meses y dos cosas que suben las ventas</p>'+
+    '<div class="form">Sin campaña = promedio mensual × índice estacional'+
+      '<small>Con campaña = sin campaña × (1 + aumento esperado)</small></div>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Índice estacional</h4><div class="c">'+
+      '<p>Lo que pasa igual todos los años: en mayo se venden más tortas por el Día de la Madre. '+
+      'La campaña no se puede atribuir eso.</p></div></div>'+
+    '<div class="fc rj"><h4>Aumento por campaña</h4><div class="c">'+
+      '<p>Lo que esperas conseguir <b>además</b>, y que tienes que sustentar con tu encuesta. Esto sí '+
+      'es mérito de la campaña.</p></div></div>'+
+    '</div>' },
+
+{ et:'A mano', t:'El Flujo de Caja Neto de la campaña', clave:'a1',
+  h:'<p class="enc">La tabla que decide el proyecto</p>'+
+    '<p class="sub">Cuatro conceptos, cuatro meses, y un acumulado que hay que saber leer</p>'+
+    '<div class="form">FCN = ingresos adicionales − costo de ventas adicional − gastos − inversión'+
+      '<small>Flujo acumulado = acumulado del mes anterior + FCN del mes</small></div>'+
+    globo(P.idea,'Las dos reglas del flujo',
+      'Primera: solo entra lo adicional, lo que no habría pasado sin campaña. Segunda: cada monto se '+
+      'anota en el mes en que el dinero se mueve, no cuando se promete. Con esas dos reglas, la tabla '+
+      'sale sola.') },
+
+{ et:'Precio', t:'Margen sobre el precio o recargo sobre el costo', clave:'a2',
+  h:'<p class="enc">Chocolatería Sabandía S.A.C.</p>'+
+    '<p class="sub">El mismo producto, dos porcentajes muy distintos, y los dos correctos</p>'+
+    '<div class="form">Recargo = ganancia ÷ costo &nbsp;·&nbsp; Margen = ganancia ÷ precio</div>'+
+    globo(P.expl,'Para qué sirve esto en tu proyecto',
+      'Cuando tengas que fijar el precio de un producto nuevo de la campaña, vas a necesitar la '+
+      'fórmula al revés: si quieres un margen de 65 %, el precio es costo ÷ (1 − 0.65). Es la misma '+
+      'cuenta despejada, y es la que usan las marcas para poner precios.') },
+
+{ et:'Interpretar', t:'Qué dice y qué no dice el flujo', clave:'a3',
+  h:'<p class="enc">Cuatro preguntas sobre la tabla que acabas de armar</p>'+
+    '<p class="sub">Las mismas que puede hacerte el jurado</p>'+
+    globo(P.pres,'El error que más se repite',
+      'Poner en el flujo todas las ventas del mes en lugar de solo las adicionales. Con eso cualquier '+
+      'campaña parece rentable, porque le estás acreditando ventas que la marca iba a hacer de todos '+
+      'modos. El flujo de una campaña es siempre diferencial.') },
+
+{ et:'Tarea', t:'El flujo de la juguería', clave:'a4',
+  h:'<p class="enc">Juguería Selva Alegre E.I.R.L.</p>'+
+    '<p class="sub">El mismo procedimiento, y un resultado incómodo</p>'+
+    globo(P.alum,'Ojo con este caso',
+      'Guárdalo tal como te salga, aunque el resultado sea malo. En la semana 14 vas a evaluarlo con '+
+      'VAN y TIR, y vas a ver cómo se escribe la conclusión de una campaña que no conviene. Eso también '+
+      'se califica, y a veces es lo más honesto que puede decir un informe.') },
+
+{ et:'Proyecto', t:'Avance 2 de hoy y del jueves', clave:null,
+  h:'<p class="enc">AVANCE 2 · puntos 3.2.1 y 3.2.2</p>'+
+    '<p class="sub">Tablas 17, 18, A6 y la Figura 10</p>'+
+    proy('Qué hace cada equipo ahora',
+     ['En la hoja <b>Sem 13</b> escribe tus <b>supuestos</b>: unidades vendidas el año pasado, índice '+
+      'estacional de cada mes de la campaña y aumento esperado por la campaña. Cada supuesto con su '+
+      'fuente.',
+      'Arma la <b>Tabla A6</b>: por cada mes y presentación, ventas sin campaña, con campaña y '+
+      'adicionales, y el ingreso adicional en soles.',
+      'Resume en la <b>Tabla 17</b>: ventas sin campaña, con campaña, adicionales y el ingreso adicional '+
+      'total de los tres meses.',
+      'Arma la <b>Tabla 18</b>, el Flujo de Caja Neto, del Mes 0 al Mes 3, con la fila de '+
+      '<b>flujo acumulado</b> abajo. El costo de ventas adicional es unidades adicionales × tu costo '+
+      'unitario de la semana 12.',
+      'Dibuja la <b>Figura 10</b>: una línea de tiempo del Mes 0 al Mes 3, con flechas hacia arriba '+
+      'para lo que entra y hacia abajo para lo que sale, y el monto sobre cada flecha.'],
+     'El aumento esperado por la campaña es el supuesto que más se discute en la sustentación. '+
+     'Sustentarlo con tu encuesta no es opcional: un 70 % sin respaldo es el punto por donde se cae el '+
+     'informe.')+
+    globo2(P.pres, P.alum,'Para cerrar',
+      'Con la Tabla 18 ya sabes cuánto dinero deja la campaña mes a mes. Falta la última pregunta, que '+
+      'es la del lunes que viene: ese dinero, ¿vale la pena comparado con lo que cuesta el dinero de la '+
+      'empresa? Ahí entran el VAN y la TIR.') }
+]
+});
+</script>
+
+</body>
+</html>

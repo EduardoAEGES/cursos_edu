@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 13 jueves - Del Excel al Word: proyección, flujo y diagrama</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 13 · jueves</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 13 · jueves</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Del Excel al Word: proyección, flujo y diagrama</h1>
+      <p><span class="sem">Semana 13 · jueves</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Hora de proyecto. Las cifras de referencia son las del caso Capriccio, el modelo resuelto del componente de Matemática Aplicada. Montos sin IGV, sin impuesto a la renta sobre la campaña.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s13j_v1',
+  sala:'MATS13J',
+  ACT:{
+
+a0:{ tipo:'tabla', titulo:'Actividad 1 - El flujo de Capriccio, para comparar',
+  intro:'El modelo resuelto. Comprueba cada fila antes de copiar la tuya al Word: si entiendes de dónde '+
+        'sale cada número aquí, puedes revisar el tuyo solo.',
+  cols:['Concepto','Mes 1 (abril)','Mes 2 (mayo)','Mes 3 (junio)'],
+  tipos:['','n','n','n'],
+  filas:[
+   [{t:'Tortas grandes adicionales'},{t:'13'},{t:'25'},{t:'16'}],
+   [{t:'Tortas medianas adicionales'},{t:'18'},{t:'35'},{t:'22'}],
+   [{t:'Ingreso adicional (S/)'},
+    {e:1850.04, tol:0.05, ph:'1850.04', pq:'13 × 75.42 + 18 × 48.31 = 980.46 + 869.58 = 1,850.04'},
+    {e:3576.35, tol:0.05, ph:'3576.35', pq:'25 × 75.42 + 35 × 48.31 = 1,885.50 + 1,690.85 = 3,576.35'},
+    {e:2269.54, tol:0.05, ph:'2269.54', pq:'16 × 75.42 + 22 × 48.31 = 1,206.72 + 1,062.82 = 2,269.54'}],
+   [{t:'(−) Costo de ventas adicional (S/)'},
+    {e:824.46, tol:0.05, ph:'824.46', pq:'13 × 33.72 + 18 × 21.45 = 438.36 + 386.10 = 824.46'},
+    {e:1593.75, tol:0.05, ph:'1593.75', pq:'25 × 33.72 + 35 × 21.45 = 843.00 + 750.75 = 1,593.75'},
+    {e:1011.42, tol:0.05, ph:'1011.42', pq:'16 × 33.72 + 22 × 21.45 = 539.52 + 471.90 = 1,011.42'}],
+   [{t:'(−) Gastos de la campaña'},{t:'650.00'},{t:'650.00'},{t:'650.00'}],
+   [{t:'FLUJO DE CAJA NETO', cl:'tot'},
+    {e:375.58, tol:0.05, ph:'375.58', cl:'tot', pq:'1,850.04 − 824.46 − 650 = 375.58'},
+    {e:1332.60, tol:0.05, ph:'1332.60', cl:'tot', pq:'3,576.35 − 1,593.75 − 650 = 1,332.60'},
+    {e:608.12, tol:0.05, ph:'608.12', cl:'tot', pq:'2,269.54 − 1,011.42 − 650 = 608.12'}],
+   [{t:'Flujo acumulado (Mes 0 = −1,500)', cl:'tot'},
+    {e:-1124.42, tol:0.05, ph:'-1124.42', cl:'tot', pq:'−1,500 + 375.58 = −1,124.42'},
+    {e:208.18, tol:0.05, ph:'208.18', cl:'tot', pq:'−1,124.42 + 1,332.60 = 208.18. Aquí pasa a positivo.'},
+    {e:816.30, tol:0.05, ph:'816.30', cl:'tot', pq:'208.18 + 608.12 = 816.30'}]
+  ],
+  fin:globo(P.expl,'Resuelto','La campaña de Capriccio deja S/ 816.30 en tres meses y recupera la '+
+      'inversión durante mayo. Todo el resultado depende del Día de la Madre: el Mes 2 aporta más que '+
+      'los otros dos juntos. Esa dependencia tiene que estar escrita en el informe.') },
+
+a1:{ tipo:'sel', titulo:'Actividad 2 - Cómo se dibuja la Figura 10',
+  lista:[
+   { q:'¿Hacia dónde apunta la flecha de un ingreso y hacia dónde la de un egreso?',
+     ops:['Ingreso hacia arriba, egreso hacia abajo','Al revés','Todas hacia arriba, con signo'], ok:0,
+     pq:'Es la convención del diagrama de flujo de caja. Permite ver de un vistazo en qué meses entra '+
+        'dinero y en cuáles sale.' },
+   { q:'En el Mes 0 de la campaña, ¿qué se dibuja?',
+     ops:['Una flecha hacia arriba con los ingresos del primer mes',
+          'Una sola flecha hacia abajo con la inversión inicial',
+          'Nada, porque la campaña empieza en el Mes 1'], ok:1,
+     pq:'El Mes 0 es el mes de preparación: solo sale dinero. En Capriccio es la flecha de S/ 1,500 '+
+        'hacia abajo, en marzo.' },
+   { q:'¿La Figura 10 lleva el flujo neto de cada mes o los ingresos y egresos por separado?',
+     ops:['El flujo neto de cada mes, una flecha por mes',
+          'Da igual, mientras se vea bonito','Solo los ingresos'], ok:0,
+     pq:'Una flecha por mes con el flujo neto: así se lee de inmediato si el mes aportó o restó. El '+
+        'detalle de ingresos y costos ya está en la Tabla 18.' },
+   { q:'¿Dónde va la Figura 10 en el informe?',
+     ops:['En el Anexo A.2','En el punto 3.2.2, debajo de la Tabla 18','En la portada'], ok:1,
+     pq:'Va en el cuerpo, junto al flujo que ilustra, con su rótulo Figura 10 arriba y su nota abajo.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Del Excel al Word: proyección, flujo y diagrama', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>El AVANCE 2 tiene que quedar cerrado hoy</h2>'+
+      '<p>Semana 13 · jueves · 1 hora académica</p>'+
+      '<div class="via"><b>Tabla 17</b><b>Tabla 18</b><b>Figura 10</b></div>'+
+    '</div>'+
+    globo(P.pres,'La hora de hoy es del proyecto',
+      'Las Tablas 17 y 18 y la Figura 10 son la parte del informe que más se mira en la sustentación, '+
+      'porque de ahí sale todo lo de la semana 14. Si el flujo queda mal, el VAN, la TIR y la '+
+      'conclusión quedan mal.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">30</td><td><b>Proyecto</b></td><td>Tablas 17 y 18 al Word y la Figura 10 dibujada</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Revisión de cifras y dudas</td></tr></tbody></table></div>'+
+    drive('Los dos archivos de hoy',
+      'Excel de avance, hoja <b>Sem 13</b>, y Word del informe en los puntos <b>3.2.1</b> y <b>3.2.2</b>.') },
+
+{ et:'Control', t:'Comprobar antes de copiar', clave:'a0',
+  h:'<p class="enc">El flujo de Capriccio, fila por fila</p>'+
+    '<p class="sub">El modelo contra el que puedes contrastar el tuyo</p>'+
+    globo(P.idea,'Tres controles rápidos',
+      'Uno: el ingreso adicional dividido entre las unidades adicionales tiene que darte tu precio sin '+
+      'IGV. Dos: el costo adicional dividido entre las mismas unidades, tu costo unitario. Tres: el '+
+      'último flujo acumulado tiene que ser igual a la suma de los cuatro flujos netos.') },
+
+{ et:'Proyecto', t:'Instrucciones puntuales del avance', clave:null,
+  h:'<p class="enc">AVANCE 2 · puntos 3.2.1 y 3.2.2</p>'+
+    '<p class="sub">Seis pasos, en este orden</p>'+
+    proy('Lo que hace cada equipo en esta hora',
+     ['Revisa en el Excel que las unidades adicionales de la <b>Tabla A6</b> coincidan con las de la '+
+      '<b>Tabla 17</b>, y que el ingreso adicional use el precio <b>sin IGV</b>.',
+      'Copia la <b>Tabla 17</b> al punto <b>3.2.1</b> del Word. Debajo escribe el párrafo que sustenta '+
+      'el aumento esperado: cuántas personas encuestaste, qué porcentaje dijo que compraría y cómo '+
+      'llegaste de ahí a tu porcentaje.',
+      'Copia la <b>Tabla 18</b> al punto <b>3.2.2</b>, con la fila de flujo acumulado incluida.',
+      'Dibuja la <b>Figura 10</b> debajo de la Tabla 18: línea de tiempo del Mes 0 al Mes 3, una flecha '+
+      'por mes con el flujo neto, hacia arriba si es positivo y hacia abajo si es negativo, y el monto '+
+      'escrito sobre cada flecha.',
+      'Escribe debajo de la figura dos o tres líneas que expliquen el acumulado: en qué mes pasa a '+
+      'positivo y de qué mes depende el resultado.',
+      'Copia la <b>Tabla A6</b> al <b>Anexo A.2</b>.'],
+     'Si tu flujo acumulado termina en negativo, no lo maquilles. Déjalo y anota la razón: esa es la '+
+     'discusión de la semana 14 y se puede concluir perfectamente que la campaña debe rediseñarse.') },
+
+{ et:'Dibujar', t:'Las reglas de la Figura 10', clave:'a1',
+  h:'<p class="enc">Cuatro preguntas sobre el diagrama</p>'+
+    '<p class="sub">Un dibujo simple, pero con convenciones que se respetan</p>'+
+    globo(P.expl,'Por qué se dibuja',
+      'Porque una tabla de cuatro columnas no deja ver el ritmo del dinero, y un diagrama sí: el hueco '+
+      'del inicio, el mes fuerte y la recuperación. En la sustentación, la figura explica en tres '+
+      'segundos lo que la tabla tarda un minuto.') },
+
+{ et:'Cierre', t:'Qué queda listo y qué viene', clave:null,
+  h:'<p class="enc">Estado del informe al terminar la semana 13</p>'+
+    '<p class="sub">Y lo que se hace el lunes</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Ya está en el Word</h4><div class="c">'+
+      '<p>Todo el punto 2.5, el plan de medios, la proyección de ventas, el Flujo de Caja Neto y la '+
+      'Figura 10. Falta solo el punto 3.2.3.</p></div></div>'+
+    '<div class="fc rj"><h4>El lunes</h4><div class="c">'+
+      '<p><b>VAN, TIR, periodo de recuperación, ratio costo-beneficio y ROI</b>, con la tasa de '+
+      'descuento que calculaste en la semana 9.</p></div></div>'+
+    '</div>'+
+    drive('Antes de salir',
+      'Guarda los dos archivos en la carpeta del curso. El lunes vas a necesitar la <b>TEM</b> de la '+
+      'semana 9: tenla a la mano.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Ya sabes cuánto dinero deja tu campaña. Lo que falta es compararlo con lo que cuesta el dinero '+
+      'de tu empresa, y para eso sirve la tasa de descuento que calculaste hace un mes y que hasta '+
+      'ahora no habías usado.') }
+]
+});
+</script>
+
+</body>
+</html>

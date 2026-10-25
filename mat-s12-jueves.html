@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 12 jueves - Del Excel al Word: márgenes y costo unitario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 12 · jueves</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 12 · jueves</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Del Excel al Word: márgenes y costo unitario</h1>
+      <p><span class="sem">Semana 12 · jueves</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Hora de proyecto. Las cifras de referencia son las del caso Capriccio, el modelo resuelto del componente de Matemática Aplicada. Todos los montos están sin IGV.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s12j_v1',
+  sala:'MATS12J',
+  ACT:{
+
+a0:{ tipo:'tabla', titulo:'Actividad 1 - Las cifras del modelo, para comparar con tu hoja',
+  intro:'Capriccio vende la Delicia de chirimoya en dos presentaciones. Comprueba que entiendes de '+
+        'dónde sale cada número antes de armar el tuyo.',
+  cols:['Concepto','De dónde sale','Grande','Mediana'],
+  tipos:['','','n','n'],
+  filas:[
+   [{t:'Costo unitario (S/)'},{t:'suma de los 12 insumos de la Tabla A5'},
+    {e:33.72, tol:0.03, ph:'33.72', pq:'La suma de la columna de costos de la torta grande: 33.72'},
+    {e:21.45, tol:0.03, ph:'21.45', pq:'La mediana usa cerca del 62 % de los insumos: 21.45'}],
+   [{t:'Precio de venta sin IGV (S/)'},{t:'89.00 / 1.18 y 57.00 / 1.18'},
+    {e:75.42, tol:0.03, ph:'75.42', pq:'89.00 / 1.18 = 75.4237 → 75.42'},
+    {e:48.31, tol:0.03, ph:'48.31', pq:'57.00 / 1.18 = 48.3051 → 48.31'}],
+   [{t:'Margen unitario (S/)', cl:'tot'},{t:'precio − costo'},
+    {e:41.70, tol:0.03, ph:'41.70', cl:'tot', pq:'75.42 − 33.72 = 41.70'},
+    {e:26.86, tol:0.03, ph:'26.86', cl:'tot', pq:'48.31 − 21.45 = 26.86'}],
+   [{t:'Costo como % del precio'},{t:'costo / precio × 100'},
+    {e:44.71, tol:0.1, ph:'44.71', pq:'33.72 / 75.42 × 100 = 44.71 %'},
+    {e:44.40, tol:0.1, ph:'44.40', pq:'21.45 / 48.31 × 100 = 44.40 %'}]
+  ],
+  fin:globo(P.expl,'Resuelto','Las dos presentaciones tienen casi el mismo porcentaje de costo, cerca '+
+      'del 45 % del precio. Eso es señal de que la receta y el precio están bien calibrados: la torta '+
+      'mediana no es un mal negocio comparada con la grande, simplemente deja menos soles por unidad.') },
+
+a1:{ tipo:'sel', titulo:'Actividad 2 - Decisiones del avance',
+  lista:[
+   { q:'¿Dónde va la Tabla 12 (márgenes) y dónde la Tabla A5 (costo unitario)?',
+     ops:['Las dos en el cuerpo del informe','Tabla 12 en el punto 2.5.3 y Tabla A5 en el Anexo A.2',
+          'Las dos en el anexo'], ok:1,
+     pq:'Los márgenes se analizan en el cuerpo porque hablan de la marca. El detalle insumo por insumo '+
+        'va al anexo: respalda el costo unitario que después usa el flujo de caja.' },
+   { q:'Tu marca vende varios productos. ¿De cuál calculas el costo unitario?',
+     ops:['Del promedio de todos','Del producto de la campaña, que es el que vas a evaluar',
+          'Del más caro'], ok:1,
+     pq:'La campaña promociona un producto. El flujo de caja mide las ventas adicionales de ese '+
+        'producto, así que el costo unitario tiene que ser el suyo.' },
+   { q:'En la interpretación del margen neto escribes «la empresa gana 10.60 %». ¿Está completo?',
+     ops:['Sí, es el dato','No: falta decir sobre qué. Es 10.60 % de las ventas netas',
+          'No: hay que ponerlo en soles'], ok:1,
+     pq:'Un porcentaje sin su base no dice nada. La frase completa es «de cada S/ 100 vendidos, la '+
+        'ganancia final para los dueños es S/ 10.60».' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Del Excel al Word: márgenes y costo unitario', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>El costo de tu producto, documentado</h2>'+
+      '<p>Semana 12 · jueves · 1 hora académica</p>'+
+      '<div class="via"><b>Tabla 12</b><b>Tabla A5</b><b>Interpretación</b></div>'+
+    '</div>'+
+    globo(P.pres,'La hora de hoy es del proyecto',
+      'Sin tema nuevo. Hoy quedan en el Word los márgenes de tu marca y el costo unitario de tu '+
+      'producto, cada uno con su explicación. Es lo último que falta antes de proyectar las ventas.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">30</td><td><b>Proyecto</b></td><td>Tabla 12 y Tabla A5 al Word, con la interpretación de cada margen</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Revisión y dudas</td></tr></tbody></table></div>'+
+    drive('Los dos archivos de hoy',
+      'Excel de avance en la hoja <b>Sem 12</b> y Word del informe, en los puntos <b>2.5.3</b> y '+
+      '<b>Anexo A.2</b>.') },
+
+{ et:'Control', t:'Comprobar antes de copiar', clave:'a0',
+  h:'<p class="enc">Capriccio, el modelo resuelto</p>'+
+    '<p class="sub">Si entiendes de dónde sale cada cifra, la tuya te va a salir sola</p>'+
+    globo(P.idea,'Un control rápido',
+      'Divide tu costo unitario entre tu precio sin IGV. Si te da menos de 20 % o más de 70 %, revisa: '+
+      'o te faltaron insumos, o pusiste una cantidad en la unidad equivocada. En alimentos ese '+
+      'porcentaje suele estar entre 30 % y 50 %.') },
+
+{ et:'Proyecto', t:'Instrucciones puntuales del avance', clave:null,
+  h:'<p class="enc">Puntos 2.5.3 y Anexo A.2</p>'+
+    '<p class="sub">Cinco pasos, en este orden</p>'+
+    proy('Lo que hace cada equipo en esta hora',
+     ['Revisa en el Excel que el <b>costo unitario</b> de tu producto esté completo y que el '+
+      '<b>margen unitario</b> (precio sin IGV − costo) sea positivo. Si sale negativo, el precio o el '+
+      'costo están mal.',
+      'Copia la <b>Tabla 12</b> al punto <b>2.5.3</b> del Word, con sus cuatro columnas: margen, '+
+      'fórmula, cálculo y resultado.',
+      'Agrega la columna de <b>interpretación</b> a la Tabla 12, una frase por margen, empezando con '+
+      '«De cada S/ 100 vendidos…».',
+      'Debajo de la tabla escribe dos párrafos: uno que explique por qué tu margen bruto es alto o bajo '+
+      'comparado con el de la competencia, y otro que diga qué haría la marca para mejorar el margen '+
+      'operativo.',
+      'Copia la <b>Tabla A5</b> al <b>Anexo A.2</b>, con la nota que diga de dónde salen los precios de '+
+      'los insumos y, si estimaste, cuál fue el supuesto.'],
+     'El margen unitario que dejes hoy es el que multiplica cada venta adicional en el flujo de la '+
+     'semana 13. Si lo cambias después, el VAN cambia: déjalo cerrado hoy.') },
+
+{ et:'Decidir', t:'Tres dudas frecuentes del avance', clave:'a1',
+  h:'<p class="enc">Lo que más se pregunta en esta parte</p>'+
+    '<p class="sub">Y la respuesta corta de cada una</p>'+
+    globo(P.expl,'Una advertencia',
+      'El costo unitario no lleva sueldos ni alquiler. Si los metes, el margen unitario se achica, el '+
+      'flujo de caja de la campaña sale peor de lo que es y vas a concluir que una campaña rentable no '+
+      'conviene. Esos gastos ya están contados en el Estado de Resultados.') },
+
+{ et:'Cierre', t:'Qué queda listo y qué viene', clave:null,
+  h:'<p class="enc">Estado del informe al terminar la semana 12</p>'+
+    '<p class="sub">Y lo que se hace el lunes</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Ya está en el Word</h4><div class="c">'+
+      '<p>Tabla 10 (precios), Tabla 11 (Estado de Resultados), Tabla 12 (márgenes), Tabla 16 (plan de '+
+      'medios) y el Anexo A.2 con A1 a A5.</p></div></div>'+
+    '<div class="fc rj"><h4>El lunes</h4><div class="c">'+
+      '<p><b>Proyección de ventas</b> con índices estacionales, y el <b>Flujo de Caja Neto</b> de la '+
+      'campaña del Mes 0 al Mes 3.</p></div></div>'+
+    '</div>'+
+    drive('Antes de salir',
+      'Guarda el Excel y el Word en la carpeta del curso con el nombre de tu marca.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Hasta aquí todo era mirar hacia atrás: lo que la marca vendió y gastó el año pasado. Desde el '+
+      'lunes se mira hacia adelante, que es lo que de verdad evalúa el proyecto.') }
+]
+});
+</script>
+
+</body>
+</html>
