@@ -802,7 +802,39 @@
   .c4 .oo{ font-size:15px; color:var(--tinta); } .c4 .ln.con .oo{ font-weight:800; }
   [data-act=s4] .preg{ font-size:19px !important; margin:6px 0 4px !important; } [data-act=s4] .ops{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } [data-act=s4] .ops button{ padding:8px 10px !important; font-size:16px !important; } [data-act=s4] .pq{ margin:2px 0 4px; font-size:15px; }
   [data-act=s4] .cajas{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px; } [data-act=s4] .caja .z{ min-height:60px; } [data-act=s4] .banco .ficha{ font-size:16px; padding:6px 10px; }
-  .dos-d{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } .dos-d h4{ margin:0 0 4px; font-size:20px; color:var(--marino); }
+  .dos-d{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; }
+  /* en una lámina partida en dos, las derivaciones se apilan para no montarse */
+  .teo2 .teo .dos-d{ grid-template-columns:minmax(0,1fr); gap:12px; }
+  /* ---------- constructor de la contrapositiva ---------- */
+  .cns{ display:flex; flex-direction:column; gap:11px; min-width:0; }
+  .cns .regla{ border:2px solid var(--linea); border-left:5px solid var(--marino); border-radius:0 11px 11px 0;
+               background:#F7F9FE; padding:9px 13px; font-size:18px; line-height:1.45; color:var(--tinta); }
+  .cns .regla .ff{ font-size:21px; font-weight:800; color:var(--marino); white-space:nowrap; }
+  .cns .fila{ display:flex; align-items:stretch; gap:9px; min-width:0; }
+  .cns .ranura{ flex:1 1 0; min-width:0; border:2px dashed var(--linea); border-radius:12px; background:#fff;
+                padding:8px 11px; display:flex; flex-direction:column; gap:7px; }
+  .cns .ranura.encima{ border-color:var(--celeste); background:#F1F9FF; }
+  .cns .ranura.ok{ border-style:solid; border-color:var(--verde); background:#EAF7F7; }
+  .cns .ranura .rot{ font-size:12px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; color:#8A93AC; }
+  .cns .ranura .pz{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:34px; }
+  .cns .ranura .vv{ font-size:25px; font-weight:800; color:var(--tinta); line-height:1.1; }
+  .cns.frases .ranura .vv{ font-size:17px; font-weight:700; line-height:1.35; }
+  .cns .ranura .tt{ font-size:16px; color:#55607F; line-height:1.35; }
+  .cns .ranura .tt b{ color:var(--marino); }
+  .cns .ranura .vacio{ font-size:16px; color:#8A8A92; }
+  .cns .neg{ font:inherit; font-size:15px; font-weight:900; line-height:1; cursor:pointer; flex:none;
+             border:2px solid var(--fucsia); color:var(--fucsia); background:#fff; border-radius:99px; padding:5px 12px; }
+  .cns .neg.on{ background:var(--fucsia); color:#fff; }
+  .cns .quita{ font:inherit; font-size:14px; line-height:1; cursor:pointer; flex:none; border:1px solid var(--linea);
+               background:#fff; color:#8A8A92; border-radius:99px; padding:5px 9px; }
+  .cns .fle{ align-self:center; flex:none; font-size:26px; font-weight:800; color:#B9C2D8; }
+  .cns .eco{ border-left:5px solid var(--celeste); background:#F1F9FF; border-radius:0 11px 11px 0;
+             padding:10px 14px; font-size:19px; line-height:1.5; color:var(--tinta); }
+  .cns .eco .ff{ font-size:23px; font-weight:800; color:var(--marino); }
+  .cns .eco.ok{ border-left-color:var(--verde); background:#EAF7F7; }
+  .cns .pista{ font-size:16px; line-height:1.4; color:#8A6A00; background:#FFFBEA;
+               border:1px solid #F0DFA0; border-radius:9px; padding:7px 11px; }
+  @media (max-width:700px){ .cns .fila{ flex-direction:column; } .cns .fle{ transform:rotate(90deg); } } .dos-d h4{ margin:0 0 4px; font-size:20px; color:var(--marino); }
   .leyenda{ font-size:16px; margin:0 0 4px; color:#55607F; }
   .duo table.hoja2{ font-size:15px; } .duo table.hoja2 select.cel{ width:100% !important; font-size:15px; }
   .props{ display:grid; gap:4px; margin:10px 0; padding:10px 14px; background:#fff; border:2px solid var(--linea); border-radius:10px; font-size:20px; }
@@ -1162,7 +1194,27 @@ pintaSon();
 /* ================= las actividades ================= */
 var ACT={
 
-d1:{"tipo": "par", "titulo": "Juego: arrastra la frase que dice lo mismo", "fichas": [{"id": "x1", "t": "Si el trabajador no firma su contrato, entonces no ingresa a planilla."}, {"id": "b1", "t": "Si el trabajador no ingresa a planilla, entonces no firmó su contrato."}, {"id": "x2", "t": "Si el colaborador recibe una amonestación, entonces acumuló tres tardanzas."}, {"id": "b2", "t": "Si el colaborador no recibe una amonestación, entonces no acumuló tres tardanzas."}, {"id": "b3", "t": "Si la postulante no recibe su fotocheck, entonces no completó la inducción."}], "huecos": [{"id": "b1", "q": "Si el trabajador firma su contrato, entonces ingresa a planilla."}, {"id": "b2", "q": "Si el colaborador acumula tres tardanzas, entonces recibe una amonestación."}, {"id": "b3", "q": "Si la postulante completa la inducción, entonces recibe su fotocheck."}], "fin":'<p class="pq">Sobran dos frases: <b>«Si no firma su contrato, entonces no ingresa a planilla»</b> solo niega, sin cambiar de lugar, y <b>«Si recibe una amonestación, entonces acumuló tres tardanzas»</b> solo cambia de lugar, sin negar. Ninguna de las dos dice lo mismo que la original.</p>'},
+cs1:{"tipo": "arma", "modo": "simbolos", "titulo": "Juego 1: arrastra p y q, y agrega el negador",
+ "vars": {"p": {"si": "el trabajador firma su contrato", "no": "el trabajador no firma su contrato"},
+          "q": {"si": "el trabajador ingresa a planilla", "no": "el trabajador no ingresa a planilla"}},
+ "regla": {"f": "p → q", "t": "Si el trabajador firma su contrato, entonces ingresa a planilla."},
+ "fichas": [{"id": "p", "t": "p"}, {"id": "q", "t": "q"}],
+ "huecos": [{"id": "a", "rot": "Después del «si»"}, {"id": "b", "rot": "Después del «entonces»"}],
+ "ok": ["~q", "~p"],
+ "guia": "Arrastra una letra a cada casilla. Luego pulsa ~ para negarla y mira cómo cambia la frase de abajo.",
+ "pista": "Todavía no dice lo mismo que la regla. En la contrapositiva las dos partes van negadas: ~q → ~p.",
+ "fin": '<p class="pq">Quedó <b>~q → ~p</b>: «Si el trabajador no ingresa a planilla, entonces no firmó su contrato». Dice exactamente lo mismo que la regla.</p>'},
+
+cs2:{"tipo": "arma", "modo": "frases", "titulo": "Juego 2: arrastra las frases y agrega el «no»",
+ "vars": {"i": {"si": "la postulante completa la inducción", "no": "la postulante no completa la inducción"},
+          "f": {"si": "la postulante recibe su fotocheck", "no": "la postulante no recibe su fotocheck"}},
+ "regla": {"f": "i → f", "t": "Si la postulante completa la inducción, entonces recibe su fotocheck."},
+ "fichas": [{"id": "i", "t": "la postulante completa la inducción"}, {"id": "f", "t": "la postulante recibe su fotocheck"}],
+ "huecos": [{"id": "a", "rot": "Después del «si»"}, {"id": "b", "rot": "Después del «entonces»"}],
+ "ok": ["~f", "~i"],
+ "guia": "Arrastra cada frase a su casilla. Luego pulsa «no» para negarla y mira cómo cambia la fórmula.",
+ "pista": "Todavía no dice lo mismo que la regla. Las dos frases van con «no» y en el orden cambiado: ~f → ~i.",
+ "fin": '<p class="pq">Quedó <b>~f → ~i</b>: «Si la postulante no recibe su fotocheck, entonces no completó la inducción».</p>'},
 
 cp1:{"tipo": "tabla", "titulo": "Caso 1: el bono por meta", "intro": "<b>m</b>: El colaborador cumple la meta mensual. &nbsp; <b>b</b>: El colaborador recibe el bono.", "cols": ["Paso", "Fórmula", "En palabras"], "tipos": ["t", "t", "t"], "filas": [[{"t": "Regla de RR. HH."}, {"t": "<b>m → b</b>"}, {"t": "Si el colaborador cumple la meta mensual, entonces recibe el bono."}], [{"t": "<b>Contrapositiva</b>"}, {"ops": ["~b → ~m", "~m → ~b", "b → m", "m ∧ b"], "ok": 0, "pq": "Niega las dos y cámbialas de lugar."}, {"ops": ["Si el colaborador no recibe el bono, entonces no cumplió la meta mensual.", "Si el colaborador no cumple la meta mensual, entonces no recibe el bono.", "Si el colaborador recibe el bono, entonces cumplió la meta mensual.", "Si el colaborador cumple la meta mensual, entonces no recibe el bono."], "ok": 0}]]},
 
@@ -1195,12 +1247,19 @@ q1:{"tipo": "quiz", "titulo": "Quiz final: seis preguntas de RR. HH.", "lista": 
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:"Contraposición", t:"Ley de contraposición: p → q dice lo mismo que ~q → ~p", claves:["d1"], lado:1,
-  pdf:'<div class="resuelto"><h5>Juego resuelto</h5><div class="tabenv"><table class="t chica"><thead><tr><th>Frase original (p → q)</th><th>Dice lo mismo (~q → ~p)</th></tr></thead><tbody><tr><td>Si el trabajador firma su contrato, entonces ingresa a planilla.</td><td>Si el trabajador no ingresa a planilla, entonces no firmó su contrato.</td></tr><tr><td>Si el colaborador acumula tres tardanzas, entonces recibe una amonestación.</td><td>Si el colaborador no recibe una amonestación, entonces no acumuló tres tardanzas.</td></tr><tr><td>Si la postulante completa la inducción, entonces recibe su fotocheck.</td><td>Si la postulante no recibe su fotocheck, entonces no completó la inducción.</td></tr></tbody></table></div></div>',
+{ et:"Contraposición", t:"Ley de contraposición: p → q dice lo mismo que ~q → ~p", claves:["cs1"], lado:1,
+  pdf:'<div class="resuelto"><h5>Juego 1 resuelto</h5><div class="tabenv"><table class="t chica"><thead><tr><th>Regla (p → q)</th><th>Contrapositiva (~q → ~p)</th></tr></thead><tbody><tr><td>Si el trabajador firma su contrato, entonces ingresa a planilla.</td><td>Si el trabajador no ingresa a planilla, entonces no firmó su contrato.</td></tr></tbody></table></div></div>',
   h:'<p class="teo-def">Para escribir lo mismo con otras palabras: <b>niega las dos proposiciones y cámbialas de lugar</b>.</p>'+
     '<div class="props"><div><b class="cp">p</b>: El postulante aprueba la evaluación técnica.</div><div><b class="cq">q</b>: El postulante pasa a la entrevista final.</div></div>'+
     '<div class="tabenv"><table class="t chica"><thead><tr><th></th><th>Frase</th></tr></thead><tbody><tr><td><b>p → q</b></td><td>Si <b class="cp">el postulante aprueba la evaluación técnica</b>, entonces <b class="cq">pasa a la entrevista final</b>.</td></tr><tr><td><b>~q → ~p</b></td><td>Si <b class="cq">el postulante no pasa a la entrevista final</b>, entonces <b class="cp">no aprobó la evaluación técnica</b>.</td></tr></tbody></table></div>'+
-    '<div class="clave">Cuidado: <b>~p → ~q</b> (solo negar) y <b>q → p</b> (solo cambiar de lugar) <b>no</b> dicen lo mismo que la original.</div>' },
+    '<div class="clave">Cuidado: <b>~p → ~q</b> (solo negar) y <b>q → p</b> (solo cambiar de lugar) <b>no</b> dicen lo mismo. Pruébalo en el juego: arrastra las letras y pulsa <b>~</b>.</div>' },
+
+{ et:"Al revés", t:"Ahora al revés: arrastra las frases y mira la fórmula", claves:["cs2"], lado:1,
+  pdf:'<div class="resuelto"><h5>Juego 2 resuelto</h5><div class="tabenv"><table class="t chica"><thead><tr><th>Regla (i → f)</th><th>Contrapositiva (~f → ~i)</th></tr></thead><tbody><tr><td>Si la postulante completa la inducción, entonces recibe su fotocheck.</td><td>Si la postulante no recibe su fotocheck, entonces no completó la inducción.</td></tr></tbody></table></div></div>',
+  h:'<p class="teo-def">Es la misma ley, vista desde las palabras: <b>pon primero el resultado negado</b> y después la condición negada.</p>'+
+    '<div class="props"><div><b class="cp">i</b>: La postulante completa la inducción.</div><div><b class="cq">f</b>: La postulante recibe su fotocheck.</div></div>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr><th>Fórmula</th><th>Frase</th></tr></thead><tbody><tr><td><b>i → f</b></td><td>Si <b class="cp">la postulante completa la inducción</b>, entonces <b class="cq">recibe su fotocheck</b>.</td></tr><tr><td><b>~f → ~i</b></td><td>Si <b class="cq">la postulante no recibe su fotocheck</b>, entonces <b class="cp">no completó la inducción</b>.</td></tr></tbody></table></div>'+
+    '<div class="clave">Cada vez que agregues un «no», mira cómo la fórmula de la casilla cambia de <b>f</b> a <b>~f</b>.</div>' },
 
 { et:"Caso 1", t:"Contraposición: caso 1, el bono por meta", claves:["cp1"], lado:1,
   pdf:'<div class="resuelto"><h5>Caso 1 resuelto</h5><div class="tabenv"><table class="t chica"><thead><tr><th>Paso</th><th>Fórmula</th><th>En palabras</th></tr></thead><tbody><tr><td>Regla</td><td>m → b</td><td>Si el colaborador cumple la meta mensual, entonces recibe el bono.</td></tr><tr><td>Contrapositiva</td><td><b>~b → ~m</b></td><td><b>Si el colaborador no recibe el bono, entonces no cumplió la meta mensual.</b></td></tr></tbody></table></div></div>',
@@ -1246,7 +1305,7 @@ var D=[
 /* ================= estado ================= */
 var LS='pl_r2_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=['d1','cp1','cp2','cp3','g1','b1','b2','b3','b4','m1','m2','m3','m4','q1'];
+var CLAVES=['cs1','cs2','cp1','cp2','cp3','g1','b1','b2','b3','b4','m1','m2','m3','m4','q1'];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1276,6 +1335,7 @@ function fusiona(d){
 function cuantas(k){
   var A=ACT[k];
   if(A.tipo==='par')  return A.huecos.length;
+  if(A.tipo==='arma') return A.huecos.length;
   if(A.tipo==='arr')  return A.fichas.length;
   if(A.tipo==='cruz') return A.palabras.length;
   if(A.tipo==='cuadro') return A.fichas.filter(function(f){ return !f.fijo; }).length;
@@ -1383,7 +1443,7 @@ function resuelveUno(k, n){
     var p=String(n).split('-'), c=A.filas[+p[0]][+p[1]];
     G[k][n] = c.ops ? c.ok : 1;
   }
-  else if(A.tipo==='par' || A.tipo==='cruz'){ G[k][n]=1; }
+  else if(A.tipo==='par' || A.tipo==='cruz' || A.tipo==='arma'){ G[k][n]=1; }
   else if(A.tipo==='quiz'){ G[k][+n]=A.lista[+n].ok; }
   else{ G[k][+n]=1; }
 }
@@ -1397,7 +1457,7 @@ function resuelve(k){
       else if(c.ops) G[k][r+'-'+j]=c.ok;
     }); });
   }
-  else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
+  else if(A.tipo==='par' || A.tipo==='arma') A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
   else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
@@ -1873,9 +1933,75 @@ function vTabla(k){
   return h+'</div></div>';
 }
 
+/* ---- constructor: arrastra las piezas y agrega la negación ---- */
+/* mientras no esté resuelta, la pieza puesta vive aquí; al acertar pasa a G */
+var ARMA={};
+function armaEstado(k, n){
+  var A=ACT[k], x=A.huecos[n], g=G[k]||{};
+  if(g[x.id]!==undefined){
+    var ok=A.ok[n];
+    return { v:ok.replace('~',''), n:(ok.charAt(0)==='~'?1:0), listo:true };
+  }
+  var e=ARMA[k+'|'+x.id];
+  return { v:(e?e.v:null), n:(e&&e.n?1:0), listo:false };
+}
+function armaOcupa(k, letra){
+  return ACT[k].huecos.some(function(x,n){ return armaEstado(k,n).v===letra; });
+}
+function armaTexto(k, v, neg){ var w=ACT[k].vars[v]; return neg ? w.no : w.si; }
+function armaRevisa(k, zona, n){
+  var A=ACT[k], e=ARMA[k+'|'+zona]||{v:null,n:0};
+  if(e.v && ((e.n?'~':'')+e.v)===A.ok[n]){
+    G[k][zona]=1; delete ARMA[k+'|'+zona]; graba();
+    if(lista(k)) fanfarria(); else bien();
+  }
+  pinta(true);
+}
+function vArma(k){
+  var A=ACT[k];
+  var h=cabTarea(k)+'<div class="cns'+(A.modo==='frases'?' frases':'')+'">'+
+        '<div class="regla"><b>Regla:</b> '+A.regla.t+' <span class="ff">'+esc(A.regla.f)+'</span></div>';
+  var libres=A.fichas.filter(function(x){ return !armaOcupa(k, x.id); });
+  h+='<div class="banco">'+(libres.length ? libres.map(function(x){
+       return '<button type="button" class="ficha" data-f="'+x.id+'">'+esc(x.t)+'</button>'; }).join('')
+     : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+'</div><div class="fila">';
+  A.huecos.forEach(function(x,n){
+    if(n) h+='<span class="fle">&rarr;</span>';
+    var e=armaEstado(k,n), pr='', sec='';
+    if(e.v){
+      var sim=(e.n?'~':'')+e.v, txt=armaTexto(k, e.v, e.n);
+      pr  = esc(A.modo==='frases' ? txt : sim);
+      sec = A.modo==='frases' ? '<b>'+esc(sim)+'</b>' : esc(txt);
+    }
+    h+='<div class="caja ranura'+(e.listo?' ok':'')+'" data-z="'+x.id+'">'+
+       '<span class="rot">'+esc(x.rot)+(e.listo?' &#10003;':'')+'</span><span class="pz">'+
+       (e.v ? '<span class="vv">'+pr+'</span>'+
+              (e.listo ? '' :
+               '<button type="button" class="neg'+(e.n?' on':'')+'" data-neg="'+k+'" data-nz="'+x.id+
+               '" title="Niega esta parte">'+(A.modo==='frases'?'no':'~')+'</button>'+
+               '<button type="button" class="quita" data-qu="'+k+'" data-nz="'+x.id+
+               '" aria-label="Quitar la pieza">&#10005;</button>')
+           : '<span class="vacio">suelta aquí</span> '+btnR(k, x.id))+
+       '</span>'+(e.v ? '<span class="tt">'+sec+'</span>' : '')+'</div>';
+  });
+  h+='</div>';
+  var a=armaEstado(k,0), b=armaEstado(k,1), todo=lista(k);
+  if(a.v && b.v){
+    h+='<div class="eco'+(todo?' ok':'')+'"><span class="ff">'+
+       esc((a.n?'~':'')+a.v+' → '+(b.n?'~':'')+b.v)+'</span><br>Si '+
+       esc(armaTexto(k,a.v,a.n))+', entonces '+esc(armaTexto(k,b.v,b.n))+'.</div>';
+    if(!todo) h+='<p class="pista">'+esc(A.pista)+'</p>';
+  }else{
+    h+='<p class="pista">'+esc(A.guia)+'</p>';
+  }
+  if(todo && A.fin) h+=A.fin;
+  return h+'</div></div></div>';
+}
+
 function vista(k){
   var t=ACT[k].tipo;
-  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+  return t==='arma' ? vArma(k)
+       : t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
        : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
 }
@@ -1943,6 +2069,34 @@ function cableaUna(k, lam){
       if(!f || !zona) return;
       if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
       else{ mal(); sacude(el); }
+    });
+  }
+  if(A.tipo==='arma'){
+    montaArrastre(lam, function(fid, zona, el){
+      if(!zona) return;
+      var n=-1; A.huecos.forEach(function(x,j){ if(x.id===zona) n=j; });
+      if(n<0 || (G[k]||{})[zona]!==undefined) return;
+      if(A.ok[n].replace('~','')!==fid){ mal(); sacude(el); return; }
+      var prev=ARMA[k+'|'+zona]||{v:null,n:0};
+      /* si la ficha estaba en la otra ranura, se muda */
+      A.huecos.forEach(function(x){
+        var o=ARMA[k+'|'+x.id];
+        if(o && o.v===fid && x.id!==zona) delete ARMA[k+'|'+x.id];
+      });
+      ARMA[k+'|'+zona]={ v:fid, n:prev.n };
+      armaRevisa(k, zona, n);
+    });
+    qq('#lam button[data-neg]', lam).forEach(function(b){
+      b.addEventListener('click', function(){
+        var z=b.dataset.nz, e=ARMA[k+'|'+z];
+        if(!e) return;
+        e.n = e.n ? 0 : 1;
+        var n=-1; A.huecos.forEach(function(x,j){ if(x.id===z) n=j; });
+        armaRevisa(k, z, n);
+      });
+    });
+    qq('#lam button[data-qu]', lam).forEach(function(b){
+      b.addEventListener('click', function(){ delete ARMA[k+'|'+b.dataset.nz]; pinta(true); });
     });
   }
   if(A.tipo==='par'){
