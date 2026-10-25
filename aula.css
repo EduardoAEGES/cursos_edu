@@ -248,3 +248,10 @@
 .aula-elige .ae-t small{ display:block; font-size:11.5px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
   color:#8A93AC; }
 .aula-elige .ae-pie{ display:flex; justify-content:flex-end; gap:10px; margin-top:12px; }
+
+/* ===== vigencia de los avisos y comentarios activables ===== */
+.aula-avisos .av-hb{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.aula-avisos .av-h button.on{ background:#E3F6F4; border-color:#0E8F95; color:#075E62; }
+.aula-avisos .ai-v{ color:#071767; border-color:#BCC8E6; white-space:nowrap; font-size:13px; padding:5px 10px; }
+.aula-av .av-sin{ margin:12px 0 0; font-size:15px; line-height:1.45; color:#0B1B3F; font-weight:700;
+  background:#F1F5FD; border-radius:10px; padding:9px 11px; }

@@ -974,7 +974,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261025e"></script>
+<script src="aula.js?v=20261025f"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -2938,7 +2938,7 @@ function pantalla(e, alumno, cont){
 }
 var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'PLR2', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, ventana:ventanaAula,
+  Aula.iniciar({ sala:'PLR2', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
