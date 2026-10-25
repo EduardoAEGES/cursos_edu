@@ -70,11 +70,27 @@ var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
 var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
 var TABLA=SUPA+'/rest/v1/sala_asientos';
 var CLAVE='46069339';
+/* nombres de docentes que se sugieren al escribir (opcional: se puede escribir otro).
+   Una página puede dar su propia lista: Aula.iniciar({ docentes:['...'] }) */
+var DOCENTES=['ANCAJIMA OLIVARES PEDRO','ARANA KAIK EDMUNDO JAVIER','BUSTILLOS HUAYHUA REYNALDO JUNIOR',
+  'CARDENAS MARTINEZ JULIO CESAR','CASTILLA ALBARRAN YSAIAS','CASUSOL CUMPA JORGE LUIS',
+  'CERDA MEDINA JOEL EDSON','CONCHA BEDOYA KATIUSKA YOLANDA','CONDOR SURICHAQUI LUIS ENRIQUE',
+  'CUNO SOSA WILLIAM BERMAN','FLORES ESPINOZA LEONCIO','FLORES MUÑOZ RONY NAZARENO',
+  'FRANCO CASAS HUMBERTO GUILLERMO','GARRIAZO PINEDA ALEXANDER WENCESLAO','GUANILO ARANDA CLARA ELVADINA',
+  'LEON ALVARADO MELISSA RUTH','LEON CAPCHA JOSE ROMULO','LOAYZA MARTINEZ MARITZA IVONNE',
+  'MAGUIÑA PRUDENCIO EGEL GODOFREDO','MAMANI ROQUE EDUARDO LUIS','MAMANI TIPULA ERNESTO ELIAS',
+  'MARTINEZ ALEGRE LUIS ARTURO','MOORE DELGADO JAVIER'];
+function listaDocentes(){ return (cfg && cfg.docentes) || DOCENTES; }
+
 /* una página puede pedir su propia clave de docente: Aula.iniciar({ clave:'LOGICO' }) */
 function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
 function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
 
-var cfg=null, sala=null, yo=null, docente=false, tAbierta=null;
+var cfg=null, sala=null, yo=null, docente=false, tAbierta=null, practica=false;
+var mano='', manoT=0, msgs=[], ultimoMsg=0, conocidos={}, primeraCarga=true, descartes={};
+var comentOn=true, bajadas={}, tMano=null;
+/* cuánto dura cada aviso a la vista: lo bueno y los mensajes 1 minuto, la duda 2 minutos */
+var TTL={ ok:60000, msg:60000, duda:120000 };
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
@@ -158,6 +174,8 @@ function pintaControles(){
                    esc(codigoClase())+'" autocomplete="off">')+'</label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">'+
           (conFicha()?'Ingresar':'Entrar a la sala')+'</button>'+
+        (pin() ? '<button class="o-btn o-btn-secondary" id="aulaPractica" type="button" '+
+                 'title="Navega y practica sin código: no se guarda nada">Practicar sin código</button>' : '')+
         (conFicha() ? '<button class="o-btn o-btn-secondary" id="aulaNuevo" type="button">Es mi primera vez</button>'+
           '<button class="o-btn o-btn-secondary" id="aulaVuelve" type="button" hidden>Ya estoy registrado</button>'+
           '<span class="aula-ficha" id="aulaFicha"></span>' : '')+
@@ -171,6 +189,7 @@ function pintaControles(){
 
         '<button class="o-btn" id="aulaGrande" type="button" hidden>🔍 Ventanas grandes</button>'+
         '<button class="o-btn" id="aulaRefresca" type="button" hidden>↻ Actualizar</button>'+
+        '<button class="o-btn" id="aulaComent" type="button" hidden title="Activar o desactivar los mensajes de los alumnos">💬 Comentarios: sí</button>'+
         '<span class="aula-mus" id="aulaMus" hidden>'+
           '<button class="o-btn" id="aulaMusOn" type="button" aria-pressed="false">🎵 Música</button>'+
           '<button class="o-btn" id="aulaMusSig" type="button" title="Otra pista al azar">⏭</button>'+
@@ -185,8 +204,12 @@ function pintaControles(){
         '<p class="am-p">'+(pin()
           ? 'Escribe tu clave y crea el código de 4 dígitos de esta sesión. Tus alumnos entran con ese código.'
           : 'Escribe la clave para ver el avance del aula y la solución.')+'</p>'+
+        '<label class="aula-campo" id="aulaCdoc">Apellidos y nombres (opcional)'+
+          '<input id="aulaDocNom" type="text" maxlength="60" placeholder="Apellidos y nombres" list="aulaDocLista" autocomplete="off"></label>'+
+        '<datalist id="aulaDocLista">'+listaDocentes().map(function(n){ return '<option value="'+esc(n)+'">'; }).join('')+'</datalist>'+
         '<label class="aula-campo" id="aulaCclave">Clave'+
-          '<input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off"></label>'+
+          '<span class="aula-ojo"><input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off">'+
+          '<button type="button" id="aulaVer" class="am-ojo" aria-label="Mostrar la clave" aria-pressed="false" title="Mostrar la clave">&#128065;</button></span></label>'+
         (pin() ? '<label class="aula-campo" id="aulaCpin">Código de la sesión (4 dígitos)'+
                    '<input id="aulaPin" type="text" inputmode="numeric" maxlength="4" '+
                    'placeholder="4 dígitos" autocomplete="off"></label>'+
@@ -204,6 +227,7 @@ function pintaControles(){
                               : (simple() ? codigoClase() : (leeLocal(claveSala())||codigoClase()));
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
+  if(pin()) $('aulaPractica').addEventListener('click', entraPractica);
   $('aulaSalir').addEventListener('click', sale);
   $('aulaRefresca').addEventListener('click', trae);
   $('aulaGrande').addEventListener('click', function(){
@@ -211,6 +235,7 @@ function pintaControles(){
     $('muro').classList.toggle('grande', grande);
     $('aulaGrande').textContent = grande ? '🔎 Ventanas pequeñas' : '🔍 Ventanas grandes';
   });
+  $('aulaComent').addEventListener('click', alternaComent);
   $('aulaMusVol').value=volMusica()*100;
   $('aulaMusOn').addEventListener('click', function(){ musica(!suena); });
   $('aulaMusSig').addEventListener('click', function(){ if(!suena) musica(true); else otraPista(); });
@@ -248,6 +273,9 @@ function pintaControles(){
   $('aulaCancela').addEventListener('click', function(){ $('aulaSw').checked=false; abreClave(false); });
   $('aulaEntrarD').addEventListener('click', entraDocente);
   $('aulaClave').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+  $('aulaDocNom').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+  /* el ojito muestra u oculta lo que se escribe en la clave */
+  $('aulaVer').addEventListener('click', function(e){ e.preventDefault(); verClave($('aulaClave').type==='password'); });
   $('aulaVelo').addEventListener('click', function(e){
     if(e.target===$('aulaVelo')){ $('aulaSw').checked=false; abreClave(false); }
   });
@@ -263,7 +291,18 @@ function abreClave(v){
     $('aulaCpin').classList.remove('falta');
     if(!pinBueno($('aulaPin').value)) $('aulaPin').value = pinMio() || pinNuevo();
   }
-  if(v){ $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30); }
+  verClave(false);
+  if(v){
+    $('aulaDocNom').value=leeLocal('docente_nombre');
+    $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30);
+  }
+}
+function verClave(ver){
+  $('aulaClave').type = ver ? 'text' : 'password';
+  $('aulaVer').setAttribute('aria-pressed', ver ? 'true' : 'false');
+  $('aulaVer').setAttribute('aria-label', ver ? 'Ocultar la clave' : 'Mostrar la clave');
+  $('aulaVer').title = ver ? 'Ocultar la clave' : 'Mostrar la clave';
+  $('aulaVer').classList.toggle('ver', ver);
 }
 function estado(clase, txt){
   var e=$('aulaEstado');
@@ -278,6 +317,7 @@ function dentro(txt){
   $('aulaGrande').hidden=!docente;
   $('aulaRefresca').hidden=!docente;
   $('aulaMus').hidden=!(docente && cfg.musica);
+  pintaComent();
 }
 function fuera(){
   $('aulaEntrada').hidden=false;
@@ -309,6 +349,13 @@ function entraAlumno(){
     return;
   }
   sigueAlumno(s);
+}
+/* práctica libre: se navega por toda la sesión, pero no hay sala ni se guarda nada */
+function entraPractica(){
+  practica=true; sala=null; yo=null; docente=false; dni='';
+  dentro('Modo práctica · tus respuestas no se guardan');
+  estado('solo','Práctica libre: nada se guarda ni se comparte con el docente');
+  if(cfg.alModo) cfg.alModo(false);
 }
 function sigueAlumno(s){
   if(!conFicha()){
@@ -385,9 +432,9 @@ function adentro(n, s, d){
   if(dni) guardaLocal('dni', dni);
   dentro((dni ? (n+' · DNI '+dni) : n) + (pin() ? ' · sesión '+s : ''));
   estado('vivo','Conectando…');
-  fallos=0; empuja(true);
+  fallos=0; reiniciaAvisos(); empuja(true);
   if(cfg.alModo) cfg.alModo(false);
-  escucha(); escuchaRecurso();
+  escucha(); escuchaRecurso(); pintaAvisos();
 }
 function entraDocente(){
   var c=$('aulaClave').value.trim();
@@ -397,6 +444,8 @@ function entraDocente(){
     $('aulaClave').value=''; $('aulaClave').focus();
     return;
   }
+  /* el nombre del docente es opcional: si lo escribe, el equipo lo recuerda */
+  if(!$('aulaVelo').hidden) guardaLocal('docente_nombre', $('aulaDocNom').value.trim().replace(/\s+/g,' '));
   if(pin()){
     var p=$('aulaPin').value.replace(/\D/g,'');
     $('aulaCpin').classList.toggle('falta', !pinBueno(p));
@@ -422,14 +471,16 @@ function dentroDocente(s){
   guardaLocal(marcaDoc(),'1');   /* este equipo queda como del docente */
   yo=null; sala=s; docente=true;
   guardaLocal(claveSala(),s);
-  dentro(pin() ? 'Docente · código '+s : 'Docente');
+  var nd=leeLocal('docente_nombre');
+  dentro('Docente' + (nd ? ' · '+nd : '') + (pin() ? ' · código '+s : ''));
   estado('vivo','Conectando…');
-  fallos=0; arranca(); escuchaRecurso();
+  fallos=0; reiniciaAvisos(); leeComent(); pintaComent(); arranca(); escuchaRecurso(); pintaAvisos();
   if(pin()) latidoSala();
   if(cfg.musica) musica(leeLocal('musica')!=='0');
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
+  practica=false; reiniciaAvisos();
   if(tAbierta){ clearInterval(tAbierta); tAbierta=null; }
   if(conFicha() && !docente && dni &&
      !window.confirm('¿Cerrar tu sesión?\n\nTu avance ya quedó guardado con tu DNI '+dni+
@@ -450,7 +501,7 @@ function sale(){
   if(tRecurso){ clearInterval(tRecurso); tRecurso=null; }
   recurso=null; selloRecurso='';
   if(cfg.recurso) cfg.recurso(null);
-  fuera(); estado('solo','Modo individual'); pintaMuro();
+  fuera(); estado('solo','Modo individual'); pintaMuro(); pintaAvisos();
   if(cfg.alModo) cfg.alModo(false);
 }
 function arranca(){
@@ -468,7 +519,7 @@ function empuja(ya){
     fetch(TABLA+'?on_conflict=sala,alumno', {
       method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
       body:JSON.stringify([{ sala:cfg.sala+'-'+sala, alumno:yo, caso:dni,
-                             estado:cfg.resumen(), actualizado:new Date().toISOString() }])
+                             estado:conAvisos(cfg.resumen()), actualizado:new Date().toISOString() }])
     }).then(function(r){
       if(!r.ok) return Promise.reject(r.status);
       fallos=0;
@@ -484,6 +535,7 @@ function trae(){
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
       fallos=0; gente=quitaSacados(rows||[]);
+      if(docente) detectaAvisos(gente);
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
       pintaMuro();
@@ -625,13 +677,20 @@ function oyeRecurso(){
     })
     .catch(function(){});
 }
+function conBatuta(d){
+  var o={}, k, src=d||{ modo:'libre' };
+  for(k in src) o[k]=src[k];
+  o.coment=comentOn?1:0;
+  o.bajadas=bajadas;
+  return o;
+}
 function dirige(d){
   if(!sala || !docente) return;
   batuta=d||null;
   fetch(TABLA+'?on_conflict=sala,alumno', {
     method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
     body:JSON.stringify([{ sala:salaBatuta(), alumno:'docente', caso:'',
-                           estado:d||{modo:'libre'}, actualizado:new Date().toISOString() }])
+                           estado:conBatuta(d), actualizado:new Date().toISOString() }])
   }).catch(function(){});
   /* un latido cada minuto y medio: así la orden no se queda vieja */
   if(!tBatuta) tBatuta=setInterval(function(){
@@ -658,10 +717,11 @@ function oye(){
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
       var fila=rows && rows[0];
-      if(!fila){ if(selloBatuta!==''){ selloBatuta=''; batuta=null; cfg.batuta({modo:'libre'}); } return; }
+      if(!fila){ if(selloBatuta!==''){ selloBatuta=''; batuta=null; recibeFlags({}); cfg.batuta({modo:'libre'}); } return; }
       var sello=String(fila.actualizado)+'|'+JSON.stringify(fila.estado||{});
       if(sello===selloBatuta) return;
       selloBatuta=sello; batuta=fila.estado||{};
+      recibeFlags(batuta);
       cfg.batuta(batuta);
     })
     .catch(function(){});
@@ -679,14 +739,14 @@ function pintaMuro(){
     $('muro').innerHTML='<div class="aula-vacio">Todavía no hay nadie en la sala <b>'+esc(sala)+'</b>.</div>';
     return;
   }
-  var ahora=Date.now(), h='';
+  var ahora=Date.now(), h=avisosHtml();
   gente.forEach(function(g){
     var e=g.estado||{};
     var seg=Math.max(0, Math.round((ahora-new Date(g.actualizado).getTime())/1000));
     var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
     h+='<div class="aula-vtna'+(g.alumno===yo?' yo':'')+(e.listo?' listo':'')+
          (cfg.pantalla?' clic" role="button" tabindex="0" title="Ver su pantalla" data-al="'+esc(g.alumno):'')+'">'+
-         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
+         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+insignia(g)+
          '<span class="vs">'+esc(hace)+'</span>'+
          '<button class="aula-saca" type="button" title="Sacar de la sala" '+
            'aria-label="Sacar a '+esc(g.alumno)+' de la sala" data-saca="'+esc(g.alumno)+'">&#10005;</button>'+
@@ -702,6 +762,7 @@ function pintaMuro(){
     });
     b.addEventListener('keydown', function(ev){ ev.stopPropagation(); });
   });
+  cableaAvisos();
   if(cfg.pantalla){
     Array.prototype.forEach.call($('muro').querySelectorAll('.aula-vtna.clic'), function(v){
       v.addEventListener('click', function(){ abrePantalla(v.getAttribute('data-al')); });
@@ -763,10 +824,12 @@ function pintaReporte(){
   if(!b){
     b=document.createElement('div');
     b.className='aula-repo'; b.id='aulaRepo';
-    b.innerHTML='<button class="o-btn o-btn-primary" id="aulaRepoBtn" type="button">⬇ Descargar reportes</button>'+
-                '<span class="aula-repo-tx" id="aulaRepoTx">Excel con el avance y las respuestas de cada alumno de la sala.</span>';
+    b.innerHTML='<button class="o-btn o-btn-primary" id="aulaRepoBtn" type="button">⬇ Descargar Excel</button>'+
+                '<button class="o-btn" id="aulaRepoVer" type="button">📊 Ver reporte para imprimir</button>'+
+                '<span class="aula-repo-tx" id="aulaRepoTx">Avance de cada alumno con porcentajes y colores, en Excel o en PDF.</span>';
     m.parentNode.insertBefore(b, m);
     $('aulaRepoBtn').addEventListener('click', descargaReporte);
+    $('aulaRepoVer').addEventListener('click', verReporte);
   }
   b.hidden=!(docente && sala);
 }
@@ -831,21 +894,208 @@ function bajaArchivo(blob, nombre){
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
+/* ===== reporte profesional: Excel con formato y versión para imprimir ===== */
+var EXCELJS_URLS=['https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js',
+                  'https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js'], excelCarga=null;
+function cargaExcelJS(){
+  if(window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if(excelCarga) return excelCarga;
+  excelCarga=new Promise(function(ok, no){
+    var n=0;
+    (function prueba(){
+      if(n>=EXCELJS_URLS.length){ excelCarga=null; no('exceljs'); return; }
+      var sc=document.createElement('script');
+      sc.src=EXCELJS_URLS[n++]; sc.async=true;
+      sc.onload=function(){ window.ExcelJS ? ok(window.ExcelJS) : prueba(); };
+      sc.onerror=prueba;
+      document.head.appendChild(sc);
+    })();
+  });
+  return excelCarga;
+}
+/* los alumnos de la sala, con su avance ya calculado */
+function traeFilasReporte(){
+  var desde=new Date(Date.now()-24*3600*1000).toISOString();   /* todo el día, no solo el muro */
+  return fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
+        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){ return quitaSacados(rows||[]); });
+}
+function nivel(p){
+  if(p>=1)   return { t:'Completó',    f:'D8F3E6', c:'0F6B45' };
+  if(p>=0.8) return { t:'Avanzado',    f:'E2F5EC', c:'1C7C54' };
+  if(p>=0.5) return { t:'En proceso',  f:'FFF1CC', c:'8A5A00' };
+  if(p>0)    return { t:'Inicio',      f:'FDE2E4', c:'A4161A' };
+  return            { t:'Sin empezar', f:'F1F3F7', c:'6B7591' };
+}
+function datosReporte(rows){
+  var acts=null;
+  try{ acts=cfg.actividades ? cfg.actividades() : null; }catch(e){ acts=null; }
+  var alumnos=rows.map(function(g){
+    var e=g.estado||{}, ok=+e.ok||0, tot=+e.total||0;
+    return { nombre:g.alumno, dni:g.caso||'', lamina:e.lamina||'', titulo:e.titulo||'',
+             ok:ok, total:tot, pct:(tot ? ok/tot : 0), cambio:fechaLocal(g.actualizado), rej:e.rejilla||[] };
+  });
+  var nAct=acts ? acts.length : 0;
+  alumnos.forEach(function(a){ nAct=Math.max(nAct, a.rej.length); });
+  var columnas=[];
+  for(var j=0;j<nAct;j++) columnas.push(acts && acts[j] ? acts[j] : { et:'A'+(j+1), t:'Actividad '+(j+1), max:0 });
+  var celda=function(a,j){
+    var r=null; a.rej.forEach(function(x){ if(x.b===j) r=x; });
+    return r ? { n:r.n||0, t:r.t||0, p:(r.t ? (r.n||0)/r.t : 0) } : null;
+  };
+  var prom=alumnos.length ? alumnos.reduce(function(s,a){ return s+a.pct; },0)/alumnos.length : 0;
+  var porAct=columnas.map(function(c,j){
+    var vals=alumnos.map(function(a){ return celda(a,j); }).filter(Boolean);
+    var p=vals.length ? vals.reduce(function(s,v){ return s+v.p; },0)/vals.length : 0;
+    return { p:p, completos:vals.filter(function(v){ return v.t && v.n>=v.t; }).length };
+  });
+  return {
+    titulo: document.title || 'Reporte del aula',
+    sala: sala, docente: leeLocal('docente_nombre') || '',
+    fecha: fechaLocal(new Date().toISOString()),
+    conAvance: alumnos.some(function(a){ return a.total>0; }),
+    alumnos: alumnos, columnas: columnas, celda: celda, porAct: porAct, promedio: prom,
+    completaron: alumnos.filter(function(a){ return a.total && a.ok>=a.total; }).length,
+    enProceso: alumnos.filter(function(a){ return a.ok>0 && a.ok<a.total; }).length,
+    sinEmpezar: alumnos.filter(function(a){ return !a.ok; }).length,
+    hayDni: alumnos.some(function(a){ return a.dni; })
+  };
+}
+/* --- el Excel con colores, porcentajes y tres hojas --- */
+function excelPro(X, d, rowsCrudas){
+  var wb=new X.Workbook();
+  wb.creator='Repositorio de Eduardo'; wb.created=new Date();
+  var MAR='FF071767', FUC='FFFC0045', BORDE={ style:'thin', color:{ argb:'FFD5DDEF' } };
+  var caja={ top:BORDE, left:BORDE, bottom:BORDE, right:BORDE };
+  function titulo(ws, ncol, sub){
+    ws.mergeCells(1,1,1,ncol); ws.mergeCells(2,1,2,ncol);
+    var t=ws.getCell(1,1);
+    t.value=d.titulo; t.font={ bold:true, size:16, color:{ argb:'FFFFFFFF' } };
+    t.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:MAR } };
+    t.alignment={ vertical:'middle', indent:1 }; ws.getRow(1).height=30;
+    var s=ws.getCell(2,1);
+    s.value=sub; s.font={ italic:true, size:10, color:{ argb:'FF55607F' } };
+    s.alignment={ indent:1 };
+    for(var c=1;c<=ncol;c++) ws.getCell(1,c).border={ bottom:{ style:'medium', color:{ argb:FUC } } };
+  }
+  function cabecera(row){
+    row.eachCell(function(c){
+      c.font={ bold:true, color:{ argb:'FFFFFFFF' } };
+      c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:MAR } };
+      c.alignment={ vertical:'middle', horizontal:'center', wrapText:true }; c.border=caja;
+    });
+    row.height=34;
+  }
+  function pinta(c, p, conTexto){
+    var nv=nivel(p);
+    c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF'+nv.f } };
+    c.font={ bold:true, color:{ argb:'FF'+nv.c } };
+    if(!conTexto){ c.numFmt='0%'; c.alignment={ horizontal:'center' }; }
+  }
+  var sub='Sala '+d.sala+(d.docente ? '  ·  Docente: '+d.docente : '')+'  ·  Generado: '+d.fecha;
+
+  if(!d.conAvance){
+    /* páginas sin avance medido: la tabla de siempre, con formato */
+    var filas=armaReporte(rowsCrudas).resumen, cols=[];
+    filas.forEach(function(f){ for(var k in f) if(cols.indexOf(k)<0) cols.push(k); });
+    var wg=wb.addWorksheet('Resumen', { views:[{ state:'frozen', ySplit:4 }] });
+    titulo(wg, cols.length, sub);
+    cabecera(wg.getRow(4)); wg.getRow(4).values=cols; cabecera(wg.getRow(4));
+    filas.forEach(function(f,i){
+      var r=wg.addRow(cols.map(function(k){ return f[k]===undefined ? '' : f[k]; }));
+      r.eachCell({ includeEmpty:true }, function(c){ c.border=caja;
+        if(i%2) c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FFF6F8FD' } }; });
+    });
+    cols.forEach(function(k,j){ wg.getColumn(j+1).width=Math.max(12, Math.min(40, k.length+4)); });
+    return wb;
+  }
+
+  /* hoja 1: resumen */
+  var cabs=['N°','Alumno'].concat(d.hayDni?['DNI']:[]).concat(['Diapositiva actual','Correctas','Total','% Avance','Nivel','Último cambio']);
+  var ws=wb.addWorksheet('Resumen', { views:[{ state:'frozen', ySplit:10 }] });
+  titulo(ws, cabs.length, sub);
+  /* indicadores del aula, uno por fila, encima de la tabla */
+  [['Alumnos', d.alumnos.length, MAR, ''],
+   ['Avance promedio', d.promedio, 'FF'+nivel(d.promedio).c, '0%'],
+   ['Completaron (100 %)', d.completaron, 'FF0F6B45', ''],
+   ['En proceso', d.enProceso, 'FF8A5A00', ''],
+   ['Sin empezar', d.sinEmpezar, 'FF6B7591', '']].forEach(function(k,j){
+    var l=ws.getCell(4+j,2), v=ws.getCell(4+j,3);
+    l.value=k[0]; l.font={ bold:true, color:{ argb:'FF55607F' } };
+    l.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FFF1F5FD' } }; l.border=caja;
+    v.value=k[1]; v.font={ bold:true, size:13, color:{ argb:k[2] } }; v.border=caja;
+    v.alignment={ horizontal:'center' }; if(k[3]) v.numFmt=k[3];
+  });
+  ws.getRow(10).values=cabs; cabecera(ws.getRow(10));
+  d.alumnos.forEach(function(a,i){
+    var vals=[i+1, a.nombre].concat(d.hayDni?[a.dni]:[]).concat([a.lamina+(a.titulo ? ' — '+a.titulo : ''), a.ok, a.total, a.pct, nivel(a.pct).t, a.cambio]);
+    var r=ws.addRow(vals);
+    r.eachCell({ includeEmpty:true }, function(c){
+      c.border=caja; c.alignment={ vertical:'middle', wrapText:true };
+      if(i%2) c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FFF6F8FD' } };
+    });
+    var cp=r.getCell(cabs.indexOf('% Avance')+1), cn=r.getCell(cabs.indexOf('Nivel')+1);
+    pinta(cp, a.pct); pinta(cn, a.pct, true); cn.alignment={ horizontal:'center' };
+    r.getCell(1).alignment={ horizontal:'center' };
+  });
+  var pie=ws.addRow(['', 'Promedio del aula'].concat(d.hayDni?['']:[]).concat(['', '', '', d.promedio, nivel(d.promedio).t, '']));
+  pie.eachCell({ includeEmpty:true }, function(c){ c.font={ bold:true }; c.border={ top:{ style:'medium', color:{ argb:MAR } } }; });
+  pinta(pie.getCell(cabs.indexOf('% Avance')+1), d.promedio);
+  ws.autoFilter={ from:{ row:10, column:1 }, to:{ row:10, column:cabs.length } };
+  var anchos={ 'N°':5, 'Alumno':30, 'DNI':11, 'Diapositiva actual':42, 'Correctas':11, 'Total':9, '% Avance':11, 'Nivel':13, 'Último cambio':17 };
+  cabs.forEach(function(k,j){ ws.getColumn(j+1).width=anchos[k]||14; });
+
+  /* hoja 2: avance por actividad */
+  var wa=wb.addWorksheet('Por actividad', { views:[{ state:'frozen', xSplit:1, ySplit:4 }] });
+  titulo(wa, d.columnas.length+2, sub);
+  wa.getRow(4).values=['Alumno'].concat(d.columnas.map(function(c,j){ return (j+1)+'. '+c.et; })).concat(['% Total']);
+  cabecera(wa.getRow(4)); wa.getRow(4).height=48;
+  d.columnas.forEach(function(c,j){ wa.getCell(4,j+2).note=c.t; wa.getColumn(j+2).width=13; });
+  wa.getColumn(1).width=30; wa.getColumn(d.columnas.length+2).width=11;
+  d.alumnos.forEach(function(a){
+    var r=wa.addRow([a.nombre].concat(d.columnas.map(function(c,j){ var v=d.celda(a,j); return v ? v.p : ''; })).concat([a.pct]));
+    r.eachCell({ includeEmpty:true }, function(c,k){
+      c.border=caja;
+      if(k===1) return;
+      if(c.value!=='') pinta(c, c.value);
+    });
+  });
+  var pa=wa.addRow(['Promedio del aula'].concat(d.porAct.map(function(x){ return x.p; })).concat([d.promedio]));
+  pa.eachCell({ includeEmpty:true }, function(c,k){
+    c.border={ top:{ style:'medium', color:{ argb:MAR } } };
+    if(k===1){ c.font={ bold:true }; return; }
+    pinta(c, c.value);
+  });
+
+  /* hoja 3: qué es cada actividad */
+  var wd=wb.addWorksheet('Actividades', { views:[{ state:'frozen', ySplit:4 }] });
+  titulo(wd, 6, sub);
+  wd.getRow(4).values=['N°','Diapositiva','Actividad','Puntos','Promedio del aula','Completaron'];
+  cabecera(wd.getRow(4));
+  d.columnas.forEach(function(c,j){
+    var r=wd.addRow([j+1, c.et, c.t, c.max||'', d.porAct[j].p, d.porAct[j].completos+' de '+d.alumnos.length]);
+    r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'middle', wrapText:true }; });
+    pinta(r.getCell(5), d.porAct[j].p);
+  });
+  [5,22,50,9,17,14].forEach(function(w,j){ wd.getColumn(j+1).width=w; });
+  return wb;
+}
 function descargaReporte(){
   if(!docente || !sala) return;
   var btn=$('aulaRepoBtn'), tx=$('aulaRepoTx');
   btn.disabled=true; tx.textContent='Preparando el reporte…';
-  /* para el reporte se mira todo el día, no solo las últimas horas del muro */
-  var desde=new Date(Date.now()-24*3600*1000).toISOString();
   var nombre='reporte-'+String(cfg.sala).toLowerCase()+'-'+sala.toLowerCase()+'-'+fechaLocal(new Date().toISOString()).slice(0,10);
-  fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
-        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
-    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+  traeFilasReporte()
     .then(function(rows){
-      rows=rows||[];
       if(!rows.length){ tx.textContent='Todavía no hay alumnos en la sala '+sala+' para el reporte.'; return; }
       var rep=armaReporte(rows);
-      return cargaXlsx().then(function(X){
+      return cargaExcelJS().then(function(X){
+        return excelPro(X, datosReporte(rows), rows).xlsx.writeBuffer().then(function(buf){
+          bajaArchivo(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), nombre+'.xlsx');
+          tx.textContent='Listo: '+rows.length+(rows.length===1?' alumno':' alumnos')+' en '+nombre+'.xlsx';
+        });
+      }).catch(function(){ return cargaXlsx().then(function(X){
         var wb=X.utils.book_new();
         var h1=X.utils.json_to_sheet(rep.resumen);
         h1['!cols']=Object.keys(rep.resumen[0]).map(function(k){ return { wch:Math.max(12, Math.min(40, k.length+2)) }; });
@@ -859,11 +1109,413 @@ function descargaReporte(){
         if(rep.detalle.length)
           bajaArchivo(new Blob(['\ufeff'+csv(rep.detalle)], {type:'text/csv;charset=utf-8'}), nombre+'-detalle.csv');
         tx.textContent='Listo en CSV: '+rows.length+(rows.length===1?' alumno':' alumnos')+'.';
-      });
+      }); });
     })
     .catch(function(e){ tx.textContent='No se pudo descargar el reporte ('+e+'). Vuelve a intentarlo.'; })
     .then(function(){ btn.disabled=false; });
 }
+
+/* --- el mismo reporte en una página lista para imprimir o guardar en PDF --- */
+function verReporte(){
+  if(!docente || !sala) return;
+  var w=window.open('', '_blank');   /* se abre ya, con el clic: así no lo bloquea el navegador */
+  if(!w){ $('aulaRepoTx').textContent='El navegador bloqueó la ventana. Permite ventanas emergentes y vuelve a intentarlo.'; return; }
+  w.document.write('<!doctype html><meta charset="utf-8"><title>Reporte</title><p style="font:16px system-ui;padding:24px">Preparando el reporte…</p>');
+  traeFilasReporte().then(function(rows){
+    w.document.open(); w.document.write(htmlReporte(datosReporte(rows), rows)); w.document.close();
+  }).catch(function(e){
+    w.document.body.innerHTML='<p style="font:16px system-ui;padding:24px">No se pudo armar el reporte ('+esc(String(e))+').</p>';
+  });
+}
+function htmlReporte(d, rows){
+  function hx(n){ return '#'+n; }
+  function chip(p){ var nv=nivel(p); return '<span class="chip" style="background:'+hx(nv.f)+';color:'+hx(nv.c)+'">'+nv.t+'</span>'; }
+  function barra(p){ var nv=nivel(p);
+    return '<div class="bar"><i style="width:'+Math.round(p*100)+'%;background:'+hx(nv.c)+'"></i></div><b style="color:'+hx(nv.c)+'">'+Math.round(p*100)+'%</b>'; }
+  var h='<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>'+esc(d.titulo)+' — Reporte</title><style>'+
+    '*{box-sizing:border-box}body{margin:0;font-family:Inter,"Segoe UI",system-ui,sans-serif;color:#0B1B3F;background:#EEF1F7}'+
+    '.hoja{max-width:1100px;margin:24px auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(7,23,103,.12)}'+
+    'header{background:#071767;color:#fff;padding:22px 28px;border-bottom:5px solid #FC0045}'+
+    'header h1{margin:0;font-size:24px}header p{margin:6px 0 0;opacity:.85;font-size:14px}'+
+    '.cuerpo{padding:22px 28px}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}'+
+    '.kpi{border:1px solid #D5DDEF;border-radius:12px;padding:12px 14px}.kpi small{display:block;font-size:11px;font-weight:800;'+
+    'letter-spacing:.06em;text-transform:uppercase;color:#6B7591}.kpi b{font-size:26px}'+
+    'h2{font-size:17px;margin:26px 0 10px;color:#071767}table{width:100%;border-collapse:collapse;font-size:13.5px}'+
+    'th{background:#071767;color:#fff;text-align:left;padding:9px 10px;font-size:12px;letter-spacing:.03em}'+
+    'td{border-bottom:1px solid #E3E8F3;padding:8px 10px;vertical-align:middle}tr:nth-child(even) td{background:#F8FAFE}'+
+    '.bar{display:inline-block;width:110px;height:9px;border-radius:99px;background:#E8ECF4;overflow:hidden;vertical-align:middle;margin-right:8px}'+
+    '.bar i{display:block;height:100%;border-radius:99px}.chip{display:inline-block;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:800}'+
+    '.scroll{overflow-x:auto}.mat{font-size:12px}.mat td.p{text-align:center;font-weight:800;font-size:11.5px;padding:7px 3px}'+
+    '.mat th{text-align:center;font-size:10px;padding:7px 3px;line-height:1.25}.mat th:first-child,.mat td:first-child{text-align:left;min-width:120px}'+
+    'tfoot td{font-weight:800;border-top:2px solid #071767;background:#fff!important}'+
+    '.ley{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:#55607F}'+
+    '.acc{text-align:right;padding:14px 28px 0}.acc button{font:inherit;font-weight:800;background:#FC0045;color:#fff;border:0;border-radius:10px;padding:10px 18px;cursor:pointer}'+
+    'footer{padding:14px 28px 22px;color:#8A93AC;font-size:12px}'+
+    '@page{size:A4 landscape;margin:10mm}@media print{body{background:#fff}.scroll{overflow:visible}.hoja{margin:0;box-shadow:none;border-radius:0}.acc{display:none}'+
+    '*{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}}'+
+    '@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}'+
+    '</style></head><body><div class="hoja"><div class="acc"><button onclick="window.print()">🖨 Imprimir o guardar en PDF</button></div>'+
+    '<header><h1>'+esc(d.titulo)+'</h1><p>Sala '+esc(d.sala)+(d.docente?' · Docente: '+esc(d.docente):'')+' · Generado: '+esc(d.fecha)+'</p></header><div class="cuerpo">';
+  if(!rows.length) return h+'<p>Todavía no hay alumnos en la sala '+esc(d.sala)+'.</p></div></div></body></html>';
+  if(!d.conAvance){
+    var filas=armaReporte(rows).resumen, cols=[];
+    filas.forEach(function(f){ for(var k in f) if(cols.indexOf(k)<0) cols.push(k); });
+    h+='<table><thead><tr>'+cols.map(function(k){ return '<th>'+esc(k)+'</th>'; }).join('')+'</tr></thead><tbody>'+
+       filas.map(function(f){ return '<tr>'+cols.map(function(k){ return '<td>'+esc(f[k]===undefined?'':String(f[k]))+'</td>'; }).join('')+'</tr>'; }).join('')+
+       '</tbody></table>';
+    return h+'</div><footer>Repositorio de Eduardo</footer></div></body></html>';
+  }
+  var nv=nivel(d.promedio);
+  h+='<div class="kpis">'+
+     '<div class="kpi"><small>Alumnos</small><b>'+d.alumnos.length+'</b></div>'+
+     '<div class="kpi"><small>Avance promedio</small><b style="color:'+hx(nv.c)+'">'+Math.round(d.promedio*100)+'%</b></div>'+
+     '<div class="kpi"><small>Completaron</small><b style="color:#0F6B45">'+d.completaron+'</b></div>'+
+     '<div class="kpi"><small>En proceso</small><b style="color:#8A5A00">'+d.enProceso+'</b></div>'+
+     '<div class="kpi"><small>Sin empezar</small><b style="color:#6B7591">'+d.sinEmpezar+'</b></div></div>';
+  h+='<h2>Avance por alumno</h2><table><thead><tr><th>N°</th><th>Alumno</th>'+(d.hayDni?'<th>DNI</th>':'')+
+     '<th>Va en</th><th>Correctas</th><th>% Avance</th><th>Nivel</th><th>Último cambio</th></tr></thead><tbody>';
+  d.alumnos.forEach(function(a,i){
+    h+='<tr><td>'+(i+1)+'</td><td><b>'+esc(a.nombre)+'</b></td>'+(d.hayDni?'<td>'+esc(a.dni)+'</td>':'')+
+       '<td>'+esc(a.lamina)+(a.titulo?'<br><small style="color:#6B7591">'+esc(a.titulo)+'</small>':'')+'</td>'+
+       '<td>'+a.ok+' de '+a.total+'</td><td style="white-space:nowrap">'+barra(a.pct)+'</td><td>'+chip(a.pct)+'</td>'+
+       '<td>'+esc(a.cambio)+'</td></tr>';
+  });
+  h+='</tbody><tfoot><tr><td></td><td>Promedio del aula</td>'+(d.hayDni?'<td></td>':'')+'<td></td><td></td><td style="white-space:nowrap">'+
+     barra(d.promedio)+'</td><td>'+chip(d.promedio)+'</td><td></td></tr></tfoot></table>';
+  if(d.columnas.length){
+    h+='<h2>Avance por actividad</h2><div class="scroll"><table class="mat"><thead><tr><th>Alumno</th>'+
+       d.columnas.map(function(c,j){ return '<th title="'+esc(c.t)+'">'+(j+1)+'<br>'+esc(c.et)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
+    d.alumnos.forEach(function(a){
+      h+='<tr><td><b>'+esc(a.nombre)+'</b></td>';
+      d.columnas.forEach(function(c,j){
+        var v=d.celda(a,j);
+        if(!v){ h+='<td class="p">—</td>'; return; }
+        var n2=nivel(v.p);
+        h+='<td class="p" style="background:'+hx(n2.f)+';color:'+hx(n2.c)+'">'+v.n+'/'+v.t+'</td>';
+      });
+      var nt=nivel(a.pct);
+      h+='<td class="p" style="background:'+hx(nt.f)+';color:'+hx(nt.c)+'">'+Math.round(a.pct*100)+'%</td></tr>';
+    });
+    h+='</tbody><tfoot><tr><td>Promedio del aula</td>'+d.porAct.map(function(x){
+         var n3=nivel(x.p); return '<td class="p" style="color:'+hx(n3.c)+'">'+Math.round(x.p*100)+'%</td>'; }).join('')+
+       '<td class="p" style="color:'+hx(nv.c)+'">'+Math.round(d.promedio*100)+'%</td></tr></tfoot></table></div>';
+    h+='<div class="ley">'+['Completó','Avanzado','En proceso','Inicio','Sin empezar'].map(function(t,k){
+         var p=[1,0.85,0.6,0.2,0][k], n4=nivel(p);
+         return '<span class="chip" style="background:'+hx(n4.f)+';color:'+hx(n4.c)+'">'+t+(k===1?' (80–99%)':k===2?' (50–79%)':k===3?' (1–49%)':'')+'</span>'; }).join('')+'</div>';
+    h+='<h2>Actividades</h2><table><thead><tr><th>N°</th><th>Diapositiva</th><th>Actividad</th><th>Promedio del aula</th><th>Completaron</th></tr></thead><tbody>'+
+       d.columnas.map(function(c,j){ return '<tr><td>'+(j+1)+'</td><td>'+esc(c.et)+'</td><td>'+esc(c.t)+'</td><td style="white-space:nowrap">'+
+         barra(d.porAct[j].p)+'</td><td>'+d.porAct[j].completos+' de '+d.alumnos.length+'</td></tr>'; }).join('')+'</tbody></table>';
+  }
+  return h+'</div><footer>Repositorio de Eduardo · El porcentaje se calcula sobre las actividades de las diapositivas presentadas.</footer></div></body></html>';
+}
+
+/* ================= manito, mensajes y avisos al docente ================= */
+function reiniciaAvisos(){
+  clearTimeout(tMano); tMano=null;
+  mano=''; manoT=0; msgs=[]; ultimoMsg=0; conocidos={}; primeraCarga=true; descartes={};
+  comentOn=true; bajadas={};
+}
+/* el alumno publica su manito y sus últimos mensajes junto con su avance */
+function conAvisos(est){
+  var o={}, k, ahora=Date.now();
+  for(k in est) o[k]=est[k];
+  if(mano && ahora-manoT>TTL[mano]) quitaMano(true);          /* se bajó sola */
+  msgs=msgs.filter(function(m){ return ahora-m.h<90000; });   /* los mensajes viejos ya no viajan */
+  if(mano){ o.mano=mano; o.manoT=manoT; }
+  if(msgs.length) o.msgs=msgs;
+  return o;
+}
+/* el aviso se retira solo cuando se acaba su tiempo, o cuando el docente lo baja */
+function quitaMano(sinEnviar){
+  clearTimeout(tMano); tMano=null; mano='';
+  if($('aulaAv')) pintaAvisos();
+  if(!sinEnviar) empuja(true);
+}
+function tiempoCorto(ms){
+  var seg=Math.max(0, Math.round((Date.now()-ms)/1000));
+  return seg<60 ? 'hace '+seg+' s' : 'hace '+Math.round(seg/60)+' min';
+}
+
+/* ---- el alumno: botón flotante y panel ---- */
+function montaAvisos(){
+  if($('aulaAv')) return;
+  var d=document.createElement('div');
+  d.className='aula-av'; d.id='aulaAv'; d.hidden=true;
+  d.innerHTML=
+    '<button class="av-fab" id="avFab" type="button" aria-expanded="false" aria-controls="avPan">'+
+      '<span id="avFabT">🙋 Avisar al docente</span></button>'+
+    '<div class="av-pan" id="avPan" hidden role="dialog" aria-label="Avisar al docente">'+
+      '<div class="av-t">Avisar al docente</div>'+
+      '<div class="av-b">'+
+        '<button type="button" id="avOk">👌 Listo, voy bien</button>'+
+        '<button type="button" id="avDuda">✋ Tengo una duda</button>'+
+      '</div>'+
+      '<div id="avCom">'+
+        '<label class="av-l">¿Quieres decir algo al docente?'+
+          '<input id="avTxt" type="text" maxlength="140" placeholder="Escribe aquí tu mensaje" autocomplete="off"></label>'+
+        '<div class="av-e"><button type="button" class="o-btn o-btn-primary" id="avEnv">Enviar</button></div>'+
+      '</div>'+
+      '<p class="av-sin" id="avSin" hidden>¿Quieres decir algo al docente? Levanta la mano: él verá tu aviso.</p>'+
+      '<div class="av-eco" id="avEco" aria-live="polite"></div>'+
+    '</div>';
+  document.body.appendChild(d);
+  $('avFab').addEventListener('click', function(){
+    var abre=$('avPan').hidden;
+    $('avPan').hidden=!abre;
+    $('avFab').setAttribute('aria-expanded', abre?'true':'false');
+    if(abre) setTimeout(function(){ $('avTxt').focus(); }, 30);
+  });
+  $('avOk').addEventListener('click', function(){ poneMano('ok'); });
+  $('avDuda').addEventListener('click', function(){ poneMano('duda'); });
+  $('avEnv').addEventListener('click', enviaMensaje);
+  $('avTxt').addEventListener('keydown', function(e){
+    e.stopPropagation();   /* que las flechas y letras no muevan las diapositivas */
+    if(e.key==='Enter'){ e.preventDefault(); enviaMensaje(); }
+  });
+}
+function pintaAvisos(){
+  montaAvisos();
+  var ve = !!sala && !docente;
+  $('aulaAv').hidden=!ve;
+  if(!ve){ $('avPan').hidden=true; }
+  $('avCom').hidden=!comentOn;           /* el docente puede apagar los mensajes */
+  $('avSin').hidden=comentOn;
+  $('avOk').classList.toggle('on', mano==='ok');
+  $('avDuda').classList.toggle('on', mano==='duda');
+  $('avFabT').textContent = mano==='ok' ? '👌 Listo' : (mano==='duda' ? '✋ Duda enviada' : '🙋 Avisar al docente');
+  $('avFab').classList.toggle('ok', mano==='ok');
+  $('avFab').classList.toggle('duda', mano==='duda');
+}
+function poneMano(t){
+  clearTimeout(tMano); tMano=null;
+  mano = (mano===t) ? '' : t;      /* tocar otra vez la baja */
+  manoT = Date.now();
+  if(mano) tMano=setTimeout(function(){
+    $('avEco').textContent = 'Tu aviso se retiró solo.';
+    quitaMano();
+  }, TTL[mano]);
+  $('avEco').textContent = mano==='ok' ? 'El docente ve que estás bien durante 1 minuto.'
+                         : mano==='duda' ? 'El docente ve tu mano. Se baja sola en 2 minutos.' : 'Bajaste la mano.';
+  pintaAvisos(); empuja(true);
+}
+function enviaMensaje(){
+  var t=$('avTxt').value.trim();
+  if(!t || !comentOn) return;
+  if(Date.now()-ultimoMsg<3000){ $('avEco').textContent='Espera unos segundos para enviar otro mensaje.'; return; }
+  ultimoMsg=Date.now();
+  msgs.push({ t:t.slice(0,140), h:ultimoMsg });
+  msgs=msgs.slice(-5);
+  $('avTxt').value='';
+  $('avEco').textContent='Mensaje enviado. El docente lo ve durante 1 minuto.';
+  empuja(true);
+}
+
+/* ---- el docente: insignias, lista de avisos y aviso emergente ---- */
+function claveAviso(it){ return it.al+'|'+it.tipo+'|'+it.h; }
+/* los avisos vigentes de un alumno: ni quitados por el docente ni pasados de su tiempo.
+   El tiempo corre desde que este equipo los vio por primera vez, así no importa el reloj del alumno. */
+function avisosDe(g){
+  var e=g.estado||{}, items=[], ahora=Date.now();
+  if(e.mano) items.push({ al:g.alumno, tipo:e.mano, t:'', h:e.manoT||0 });
+  (e.msgs||[]).forEach(function(m){ items.push({ al:g.alumno, tipo:'msg', t:m.t, h:m.h||0 }); });
+  return items.filter(function(it){
+    var k=claveAviso(it);
+    if(descartes[k]) return false;
+    var visto=conocidos[k] || ahora;
+    return ahora-visto <= (TTL[it.tipo] || 60000);
+  });
+}
+function insignia(g){
+  var h='', hay=avisosDe(g), nMsg=0;
+  hay.forEach(function(it){
+    if(it.tipo==='duda') h+='<span class="av-bd duda" title="Levantó la mano">✋</span>';
+    else if(it.tipo==='ok') h+='<span class="av-bd ok" title="Dice que va bien">👌</span>';
+    else nMsg++;
+  });
+  if(nMsg) h+='<span class="av-bd msg" title="Escribió un mensaje">💬 '+nMsg+'</span>';
+  return h;
+}
+function listaAvisos(){
+  var items=[];
+  gente.forEach(function(g){ items=items.concat(avisosDe(g)); });
+  var rango={ duda:0, msg:1, ok:2 };
+  items.sort(function(a,b){ return (rango[a.tipo]-rango[b.tipo]) || (b.h-a.h); });
+  return items;
+}
+function avisosHtml(){
+  var items=listaAvisos();
+  var h='<div class="aula-avisos"><div class="av-h"><b>Avisos de la clase</b><span class="av-hb">'+
+        '<button type="button" id="avComent" class="'+(comentOn?'on':'')+'" title="Activar o desactivar los mensajes de los alumnos">'+
+          '💬 Comentarios: '+(comentOn?'sí':'no')+'</button>'+
+        (items.length ? '<button type="button" id="avLimpia">Marcar todo como visto</button>' : '')+
+        '</span></div>';
+  if(!items.length) h+='<div class="av-mas">Sin avisos por ahora. Las manos y los mensajes aparecen aquí.</div>';
+  items.slice(0,12).forEach(function(it){
+    var ico = it.tipo==='duda' ? '✋' : (it.tipo==='ok' ? '👌' : '💬');
+    var txt = it.tipo==='duda' ? 'levantó la mano' : (it.tipo==='ok' ? 'dice que va bien' : esc(it.t));
+    h+='<div class="av-it '+it.tipo+'" data-al="'+esc(it.al)+'" role="button" tabindex="0">'+
+       '<span class="ai-i">'+ico+'</span>'+
+       '<span class="ai-x"><b>'+esc(it.al)+'</b> '+txt+'</span>'+
+       '<time>'+esc(tiempoCorto(conocidos[claveAviso(it)] || Date.now()))+'</time>'+   /* reloj de este equipo */
+       '<button type="button" class="ai-v" data-vi="'+esc(claveAviso(it))+'" data-al="'+esc(it.al)+'" data-h="'+it.h+
+         '" data-t="'+it.tipo+'">'+(it.tipo==='msg' ? 'Quitar' : 'Bajar mano')+'</button>'+
+       '</div>';
+  });
+  if(items.length>12) h+='<div class="av-mas">y '+(items.length-12)+' más</div>';
+  return h+'</div>';
+}
+function cableaAvisos(){
+  var m=$('muro');
+  Array.prototype.forEach.call(m.querySelectorAll('.ai-v'), function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      quitaAviso({ al:b.getAttribute('data-al'), tipo:b.getAttribute('data-t'), h:+b.getAttribute('data-h') });
+      publicaBatuta(); pintaMuro();
+    });
+  });
+  var l=m.querySelector('#avLimpia');
+  if(l) l.addEventListener('click', function(){
+    listaAvisos().forEach(quitaAviso); publicaBatuta(); pintaMuro();
+  });
+  var c=m.querySelector('#avComent');
+  if(c) c.addEventListener('click', alternaComent);
+  if(cfg.pantalla) Array.prototype.forEach.call(m.querySelectorAll('.av-it'), function(v){
+    function abre(){ abrePantalla(v.getAttribute('data-al')); }
+    v.addEventListener('click', abre);
+    v.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); abre(); } });
+  });
+}
+/* quitar un aviso de la lista; si era una mano, el alumno la ve bajar */
+function quitaAviso(it){
+  descartes[claveAviso(it)]=1;
+  if(it.tipo!=='msg'){
+    bajadas[it.al]=it.h;
+    var ks=Object.keys(bajadas);
+    if(ks.length>20) delete bajadas[ks[0]];
+  }
+}
+function claveComent(){ return 'coment_'+cfg.sala+'-'+sala; }
+function leeComent(){ comentOn = leeLocal(claveComent())!=='0'; }
+function alternaComent(){
+  if(!docente) return;
+  comentOn=!comentOn;
+  guardaLocal(claveComent(), comentOn?'1':'0');
+  pintaComent(); publicaBatuta(); pintaMuro();
+  toastDocente(comentOn ? '💬 Los alumnos pueden escribir mensajes' : '🔇 Mensajes desactivados: solo podrán levantar la mano');
+}
+function pintaComent(){
+  var b=$('aulaComent');
+  if(!b) return;
+  b.hidden=!docente;
+  b.textContent='💬 Comentarios: '+(comentOn?'sí':'no');
+  b.setAttribute('aria-pressed', comentOn?'true':'false');
+}
+/* vuelve a enviar la orden de la clase con los cambios de avisos */
+function publicaBatuta(){ if(docente && sala) dirige(batuta || { modo:'libre' }); }
+/* el alumno recibe del docente: si hay comentarios y qué manos bajó */
+function recibeFlags(est){
+  est=est||{};
+  comentOn = est.coment!==0;
+  var b=(est.bajadas||{})[yo];
+  if(mano && b && b===manoT){
+    quitaMano(); $('avEco').textContent='El docente bajó tu mano.';
+  }
+  pintaAvisos();
+}
+
+var tToast=null, acToast=null;
+function pitido(){
+  try{
+    if(!acToast) acToast=new (window.AudioContext||window.webkitAudioContext)();
+    var o=acToast.createOscillator(), g=acToast.createGain(), t=acToast.currentTime;
+    o.type='sine'; o.frequency.value=740;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.04,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.25);
+    o.connect(g); g.connect(acToast.destination); o.start(t); o.stop(t+0.3);
+  }catch(e){}
+}
+function toastDocente(txt){
+  var e=$('aulaToast');
+  if(!e){
+    e=document.createElement('div'); e.className='aula-toast'; e.id='aulaToast'; e.hidden=true;
+    e.setAttribute('role','status'); document.body.appendChild(e);
+  }
+  e.textContent=txt; e.hidden=false;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tToast);
+  tToast=setTimeout(function(){ e.classList.remove('ve'); setTimeout(function(){ e.hidden=true; }, 300); }, 4200);
+  pitido();
+}
+/* la primera lectura de la sala no avisa: solo lo que llega después */
+function detectaAvisos(rows){
+  var nuevos=[];
+  rows.forEach(function(g){
+    var e=g.estado||{}, k;
+    if(e.mano){
+      k=g.alumno+'|'+e.mano+'|'+e.manoT;
+      if(!conocidos[k]){ conocidos[k]=Date.now(); nuevos.push({ al:g.alumno, tipo:e.mano, t:'' }); }
+    }
+    (e.msgs||[]).forEach(function(m){
+      k=g.alumno+'|msg|'+m.h;
+      if(!conocidos[k]){ conocidos[k]=Date.now(); nuevos.push({ al:g.alumno, tipo:'msg', t:m.t }); }
+    });
+  });
+  if(primeraCarga){ primeraCarga=false; return; }
+  if(!nuevos.length) return;
+  var u=nuevos[nuevos.length-1];
+  toastDocente(u.tipo==='duda' ? '✋ '+u.al+' levantó la mano'
+             : u.tipo==='ok'   ? '👌 '+u.al+' dice que va bien'
+             : '💬 '+u.al+': '+u.t+(nuevos.length>1 ? '  (+'+(nuevos.length-1)+' más)' : ''));
+}
+
+/* ================= elegir qué diapositivas se presentan hoy ================= */
+/* la página pasa: diapos() -> [{n, et, t}], seleccion() -> lista de índices o null, alElegir(lista) */
+function eligeDiapos(){
+  if(!docente || !cfg.diapos) return;
+  var lista=cfg.diapos(), actual=cfg.seleccion ? cfg.seleccion() : null;
+  var v=$('aulaElige');
+  if(!v){
+    v=document.createElement('div'); v.className='aula-elige'; v.id='aulaElige';
+    document.body.appendChild(v);
+    v.addEventListener('click', function(e){ if(e.target===v) cierraElige(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && !$('aulaElige').hidden) cierraElige(); });
+  }
+  var h='<div class="ae-caja" role="dialog" aria-modal="true" aria-label="Elegir diapositivas">'+
+    '<div class="ae-h"><b>Diapositivas de hoy</b><span id="aeCuenta"></span></div>'+
+    '<p class="ae-p">Marca las que presentarás. Tú y tus alumnos solo verán esas; el resto se oculta.</p>'+
+    '<div class="ae-acc"><button type="button" id="aeTodas">Marcar todas</button>'+
+      '<button type="button" id="aeNinguna">Quitar todas</button></div>'+
+    '<div class="ae-lista">';
+  lista.forEach(function(d){
+    var on = !actual || actual.indexOf(d.n)>=0;
+    h+='<label class="ae-it"><input type="checkbox" data-n="'+d.n+'"'+(on?' checked':'')+'>'+
+       '<span class="ae-n">'+(d.n+1)+'</span>'+
+       '<span class="ae-t"><small>'+esc(d.et)+'</small>'+esc(d.t)+'</span></label>';
+  });
+  h+='</div><div class="ae-pie"><button type="button" class="o-btn" id="aeCancela">Cancelar</button>'+
+     '<button type="button" class="o-btn o-btn-primary" id="aeAplica">Aplicar</button></div></div>';
+  v.innerHTML=h; v.hidden=false;
+  function marcadas(){
+    return Array.prototype.filter.call(v.querySelectorAll('input[data-n]'), function(c){ return c.checked; })
+      .map(function(c){ return +c.getAttribute('data-n'); });
+  }
+  function cuenta(){ $('aeCuenta').textContent=marcadas().length+' de '+lista.length; }
+  v.addEventListener('change', cuenta); cuenta();
+  $('aeTodas').addEventListener('click', function(){
+    Array.prototype.forEach.call(v.querySelectorAll('input[data-n]'), function(c){ c.checked=true; }); cuenta(); });
+  $('aeNinguna').addEventListener('click', function(){
+    Array.prototype.forEach.call(v.querySelectorAll('input[data-n]'), function(c){ c.checked=false; }); cuenta(); });
+  $('aeCancela').addEventListener('click', cierraElige);
+  $('aeAplica').addEventListener('click', function(){
+    var m=marcadas();
+    if(!m.length){ $('aeCuenta').textContent='Marca al menos una'; return; }
+    cierraElige();
+    if(cfg.alElegir) cfg.alElegir(m);
+  });
+}
+function cierraElige(){ var v=$('aulaElige'); if(v){ v.hidden=true; v.innerHTML=''; } }
 
 /* ---------------- pantalla de un alumno (solo docente) ---------------- */
 function abrePantalla(nombre){
@@ -997,6 +1649,9 @@ window.Aula={
   cambiaMusica:function(){ otraPista(); },
   get esDocente(){ return docente; },
   get enSala(){ return !!sala; },
+  get enPractica(){ return practica; },
+  get sala(){ return sala; },
+  eligeDiapositivas:function(){ eligeDiapos(); },
   /* el enlace del caso práctico que publica el docente */
   guardaRecurso:function(r){ return publicaRecurso(r); },
   get recurso(){ return recurso; },
