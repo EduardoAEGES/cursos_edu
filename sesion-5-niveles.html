@@ -74,6 +74,10 @@ tbody tr:nth-child(even){background:color-mix(in srgb,var(--surface-2) 55%, tran
 .savechip{display:inline-block; font-size:11.5px; font-weight:700; letter-spacing:.02em; padding:2px 9px; border-radius:999px; border:1px solid var(--border); color:var(--muted); background:var(--surface-2); vertical-align:middle}
 .savechip.ok{color:var(--ord); border-color:var(--ord); background:var(--ord-bg)}
 .namefield{display:flex; flex-direction:column; gap:4px; font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin:6px 0 14px; max-width:440px}
+.ojo{position:relative; display:block}
+.ojo input{width:100%; box-sizing:border-box; padding-right:42px !important}
+.ojo button{position:absolute; right:4px; top:50%; transform:translateY(-50%); width:34px; height:30px; padding:0; border:0; background:transparent; cursor:pointer; font-size:17px; line-height:1; opacity:.6; color:inherit}
+.ojo button:hover,.ojo button[aria-pressed="true"]{opacity:1}
 .namefield input{font:inherit; font-weight:400; text-transform:none; letter-spacing:0; color:var(--ink); padding:9px 10px; border:1px solid var(--border); background:var(--surface); border-radius:3px}
 table.tarea td{vertical-align:middle}
 table.tarea select, table.tarea input.just{font:inherit; font-size:13px; color:var(--ink); background:var(--surface); border:1px solid var(--border); border-radius:3px; padding:6px 7px; width:100%; min-width:112px}
@@ -220,7 +224,7 @@ body{ font-family:Inter,'Source Sans 3','Segoe UI',system-ui,sans-serif; }
   <h2>Acceso docente</h2>
   <form id="gate-form" autocomplete="off">
     <label class="namefield" for="clave-input">Clave
-      <input id="clave-input" type="password" autocomplete="off" placeholder="Ingresa la clave">
+      <span class="ojo"><input id="clave-input" type="password" autocomplete="off" placeholder="Ingresa la clave"><button type="button" id="clave-ver" aria-label="Mostrar la clave" aria-pressed="false" title="Mostrar la clave">&#128065;</button></span>
     </label>
     <div class="actions" style="margin-top:0">
       <button type="submit">Entrar</button>
@@ -396,6 +400,13 @@ body{ font-family:Inter,'Source Sans 3','Segoe UI',system-ui,sans-serif; }
   var gateForm=document.getElementById('gate-form');
   var gateInput=document.getElementById('clave-input');
   var gateMsg=document.getElementById('gate-msg');
+  document.getElementById('clave-ver').addEventListener('click', function(){
+    var ver=gateInput.type==='password';
+    gateInput.type=ver?'text':'password';
+    this.setAttribute('aria-pressed', ver?'true':'false');
+    this.setAttribute('aria-label', ver?'Ocultar la clave':'Mostrar la clave');
+    this.title=ver?'Ocultar la clave':'Mostrar la clave';
+  });
   var panel=document.getElementById('owner-panel');
   var body=document.getElementById('owner-body');
   var countEl=document.getElementById('owner-count');

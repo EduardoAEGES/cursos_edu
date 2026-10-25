@@ -185,8 +185,11 @@ function pintaControles(){
         '<p class="am-p">'+(pin()
           ? 'Escribe tu clave y crea el código de 4 dígitos de esta sesión. Tus alumnos entran con ese código.'
           : 'Escribe la clave para ver el avance del aula y la solución.')+'</p>'+
+        '<label class="aula-campo" id="aulaCdoc">Nombres y apellidos (opcional)'+
+          '<input id="aulaDocNom" type="text" maxlength="60" placeholder="Nombres y apellidos" autocomplete="off"></label>'+
         '<label class="aula-campo" id="aulaCclave">Clave'+
-          '<input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off"></label>'+
+          '<span class="aula-ojo"><input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off">'+
+          '<button type="button" id="aulaVer" class="am-ojo" aria-label="Mostrar la clave" aria-pressed="false" title="Mostrar la clave">&#128065;</button></span></label>'+
         (pin() ? '<label class="aula-campo" id="aulaCpin">Código de la sesión (4 dígitos)'+
                    '<input id="aulaPin" type="text" inputmode="numeric" maxlength="4" '+
                    'placeholder="4 dígitos" autocomplete="off"></label>'+
@@ -248,6 +251,9 @@ function pintaControles(){
   $('aulaCancela').addEventListener('click', function(){ $('aulaSw').checked=false; abreClave(false); });
   $('aulaEntrarD').addEventListener('click', entraDocente);
   $('aulaClave').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+  $('aulaDocNom').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
+  /* el ojito muestra u oculta lo que se escribe en la clave */
+  $('aulaVer').addEventListener('click', function(e){ e.preventDefault(); verClave($('aulaClave').type==='password'); });
   $('aulaVelo').addEventListener('click', function(e){
     if(e.target===$('aulaVelo')){ $('aulaSw').checked=false; abreClave(false); }
   });
@@ -263,7 +269,18 @@ function abreClave(v){
     $('aulaCpin').classList.remove('falta');
     if(!pinBueno($('aulaPin').value)) $('aulaPin').value = pinMio() || pinNuevo();
   }
-  if(v){ $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30); }
+  verClave(false);
+  if(v){
+    $('aulaDocNom').value=leeLocal('docente_nombre');
+    $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30);
+  }
+}
+function verClave(ver){
+  $('aulaClave').type = ver ? 'text' : 'password';
+  $('aulaVer').setAttribute('aria-pressed', ver ? 'true' : 'false');
+  $('aulaVer').setAttribute('aria-label', ver ? 'Ocultar la clave' : 'Mostrar la clave');
+  $('aulaVer').title = ver ? 'Ocultar la clave' : 'Mostrar la clave';
+  $('aulaVer').classList.toggle('ver', ver);
 }
 function estado(clase, txt){
   var e=$('aulaEstado');
@@ -397,6 +414,8 @@ function entraDocente(){
     $('aulaClave').value=''; $('aulaClave').focus();
     return;
   }
+  /* el nombre del docente es opcional: si lo escribe, el equipo lo recuerda */
+  if(!$('aulaVelo').hidden) guardaLocal('docente_nombre', $('aulaDocNom').value.trim().replace(/\s+/g,' '));
   if(pin()){
     var p=$('aulaPin').value.replace(/\D/g,'');
     $('aulaCpin').classList.toggle('falta', !pinBueno(p));
@@ -422,7 +441,8 @@ function dentroDocente(s){
   guardaLocal(marcaDoc(),'1');   /* este equipo queda como del docente */
   yo=null; sala=s; docente=true;
   guardaLocal(claveSala(),s);
-  dentro(pin() ? 'Docente · código '+s : 'Docente');
+  var nd=leeLocal('docente_nombre');
+  dentro('Docente' + (nd ? ' · '+nd : '') + (pin() ? ' · código '+s : ''));
   estado('vivo','Conectando…');
   fallos=0; arranca(); escuchaRecurso();
   if(pin()) latidoSala();
