@@ -70,6 +70,9 @@ var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
 var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
 var TABLA=SUPA+'/rest/v1/sala_asientos';
 var CLAVE='46069339';
+/* una página puede pedir su propia clave de docente: Aula.iniciar({ clave:'LOGICO' }) */
+function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
+function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
 
 var cfg=null, sala=null, yo=null, docente=false;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
@@ -144,7 +147,7 @@ function pintaControles(){
         '<div class="am-h">Entrar como docente</div>'+
         '<p class="am-p">Escribe la clave para ver el avance del aula y la solución.</p>'+
         '<label class="aula-campo" id="aulaCclave">Clave'+
-          '<input id="aulaClave" type="password" inputmode="numeric" placeholder="Clave" autocomplete="off"></label>'+
+          '<input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off"></label>'+
         '<p class="am-err" id="aulaErr"></p>'+
         '<div class="am-b">'+
           '<button class="o-btn" id="aulaCancela" type="button">Cancelar</button>'+
@@ -316,14 +319,14 @@ function adentro(n, s, d){
 function entraDocente(){
   var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
   var c=$('aulaClave').value.trim();
-  if(c!==CLAVE){
+  if(c!==claveDoc()){
     $('aulaCclave').classList.add('falta');
     $('aulaErr').textContent='Clave incorrecta. Vuelve a intentarlo.';
     $('aulaClave').value=''; $('aulaClave').focus();
     return;
   }
   abreClave(false);
-  guardaLocal('docente_equipo','1');   /* este equipo queda como del docente */
+  guardaLocal(marcaDoc(),'1');   /* este equipo queda como del docente */
   yo=null; sala=s; docente=true;
   guardaLocal(claveSala(),s);
   dentro('Docente');
@@ -341,7 +344,7 @@ function sale(){
   callaMusica();
   /* al irse el docente, la clase vuelve sola al modo libre */
   if(docente && batuta) dirige({ modo:'libre' });
-  if(docente) guardaLocal('docente_equipo','');   /* al salir, el equipo deja de entrar solo */
+  if(docente) guardaLocal(marcaDoc(),'');   /* al salir, el equipo deja de entrar solo */
   var eraAlumno = !docente && !!dni;
   if(dni) guardaAvance(true);
   sala=null; yo=null; docente=false; gente=[]; dni='';
@@ -880,9 +883,9 @@ window.Aula={
     cfg=opciones;
     pintaControles(); pintaMuro();
     /* en el equipo del docente se entra solo, sin DNI ni clave, aunque recargue */
-    if(leeLocal('docente_equipo')==='1') setTimeout(function(){
+    if(leeLocal(marcaDoc())==='1') setTimeout(function(){
       if(sala) return;
-      $('aulaClave').value=CLAVE; entraDocente();
+      $('aulaClave').value=claveDoc(); entraDocente();
     }, 0);
   },
   empuja:function(){ empuja(); },
