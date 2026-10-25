@@ -70,6 +70,18 @@ var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
 var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
 var TABLA=SUPA+'/rest/v1/sala_asientos';
 var CLAVE='46069339';
+/* nombres de docentes que se sugieren al escribir (opcional: se puede escribir otro).
+   Una página puede dar su propia lista: Aula.iniciar({ docentes:['...'] }) */
+var DOCENTES=['ANCAJIMA OLIVARES PEDRO','ARANA KAIK EDMUNDO JAVIER','BUSTILLOS HUAYHUA REYNALDO JUNIOR',
+  'CARDENAS MARTINEZ JULIO CESAR','CASTILLA ALBARRAN YSAIAS','CASUSOL CUMPA JORGE LUIS',
+  'CERDA MEDINA JOEL EDSON','CONCHA BEDOYA KATIUSKA YOLANDA','CONDOR SURICHAQUI LUIS ENRIQUE',
+  'CUNO SOSA WILLIAM BERMAN','FLORES ESPINOZA LEONCIO','FLORES MUÑOZ RONY NAZARENO',
+  'FRANCO CASAS HUMBERTO GUILLERMO','GARRIAZO PINEDA ALEXANDER WENCESLAO','GUANILO ARANDA CLARA ELVADINA',
+  'LEON ALVARADO MELISSA RUTH','LEON CAPCHA JOSE ROMULO','LOAYZA MARTINEZ MARITZA IVONNE',
+  'MAGUIÑA PRUDENCIO EGEL GODOFREDO','MAMANI ROQUE EDUARDO LUIS','MAMANI TIPULA ERNESTO ELIAS',
+  'MARTINEZ ALEGRE LUIS ARTURO','MOORE DELGADO JAVIER'];
+function listaDocentes(){ return (cfg && cfg.docentes) || DOCENTES; }
+
 /* una página puede pedir su propia clave de docente: Aula.iniciar({ clave:'LOGICO' }) */
 function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
 function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
@@ -185,8 +197,9 @@ function pintaControles(){
         '<p class="am-p">'+(pin()
           ? 'Escribe tu clave y crea el código de 4 dígitos de esta sesión. Tus alumnos entran con ese código.'
           : 'Escribe la clave para ver el avance del aula y la solución.')+'</p>'+
-        '<label class="aula-campo" id="aulaCdoc">Nombres y apellidos (opcional)'+
-          '<input id="aulaDocNom" type="text" maxlength="60" placeholder="Nombres y apellidos" autocomplete="off"></label>'+
+        '<label class="aula-campo" id="aulaCdoc">Apellidos y nombres (opcional)'+
+          '<input id="aulaDocNom" type="text" maxlength="60" placeholder="Apellidos y nombres" list="aulaDocLista" autocomplete="off"></label>'+
+        '<datalist id="aulaDocLista">'+listaDocentes().map(function(n){ return '<option value="'+esc(n)+'">'; }).join('')+'</datalist>'+
         '<label class="aula-campo" id="aulaCclave">Clave'+
           '<span class="aula-ojo"><input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off">'+
           '<button type="button" id="aulaVer" class="am-ojo" aria-label="Mostrar la clave" aria-pressed="false" title="Mostrar la clave">&#128065;</button></span></label>'+
