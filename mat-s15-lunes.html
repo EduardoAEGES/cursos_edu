@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 15 lunes - Margen de contribución y punto de equilibrio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 15 · lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 15 · lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Margen de contribución y punto de equilibrio</h1>
+      <p><span class="sem">Semana 15 · lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 15. Heladería Yanahuara, Librería Cayma y Pollería El Fogón Characato son casos de clase, no empresas reales. Todos los montos están sin IGV.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s15l_v1',
+  sala:'MATS15L',
+  ACT:{
+
+a0:{ tipo:'hoja', titulo:'Actividad 1 - El punto de equilibrio en Excel',
+  intro:'Heladería Yanahuara vende la copa de queso helado que costeaste en la semana 12. Ahora la '+
+        'pregunta es otra: ¿cuántas copas tiene que vender al mes solo para no perder?',
+  cols:[{w:340},{w:160},{w:180}],
+  filas:[
+   [{x:'Concepto'},{x:'Dato (S/)'},{x:'Resultado'}],
+   [{x:'Precio de venta sin IGV, por copa'},{n:8.05},{x:''}],
+   [{x:'Costo variable, insumos por copa'},{n:3.20},{x:''}],
+   [{x:'Alquiler del local, por mes'},{n:2500},{x:''}],
+   [{x:'Sueldos, por mes'},{n:2900},{x:''}],
+   [{x:'Luz, agua e internet, por mes'},{n:420},{x:''}],
+   [{x:'Margen de contribución unitario (S/)'},{x:''},{e:4.85, f:true, ph:'=B2-B3'}],
+   [{x:'Razón de contribución (%)'},{x:''},{e:60.25, f:true, ph:'=C7/B2*100'}],
+   [{x:'Costos fijos del mes (S/)'},{x:''},{e:5820, f:true, ph:'=SUMA(B4:B6)'}],
+   [{x:'PUNTO DE EQUILIBRIO (copas)'},{x:''},{e:1200, f:true, ph:'=C9/C7'}],
+   [{x:'PUNTO DE EQUILIBRIO (S/)'},{x:''},{e:9660, f:true, ph:'=C10*B2'}]
+  ],
+  ayuda:'El margen de contribución es lo que deja cada copa para ayudar a pagar los costos fijos. Por '+
+        'eso el punto de equilibrio es, literalmente, cuántas copas hacen falta para cubrirlos: costos '+
+        'fijos divididos entre lo que aporta cada una.',
+  fin:globo(P.expl,'Resuelto','1,200 copas al mes, o S/ 9,660 de venta. Con esa cantidad la heladería '+
+      'no gana ni pierde. Desde la copa 1,201, cada una deja S/ 4.85 limpios, porque los costos fijos '+
+      'ya están pagados. Esa es la razón por la que el último tramo del mes es el más rentable de '+
+      'cualquier negocio.') },
+
+a1:{ tipo:'tabla', titulo:'Actividad 2 - El punto de equilibrio de una empresa entera',
+  intro:'Cuando no hay un solo producto sino muchos, el punto de equilibrio se calcula en soles, no en '+
+        'unidades. Librería Cayma E.I.R.L., datos de 2025.',
+  cols:['Concepto','Fórmula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Ventas netas (S/)'},{t:'dato'},{t:'400,000.00'}],
+   [{t:'Costos variables (S/)'},{t:'dato: libros y útiles vendidos'},{t:'240,000.00'}],
+   [{t:'Costos fijos (S/)'},{t:'dato: alquiler, sueldos y servicios'},{t:'120,000.00'}],
+   [{t:'Margen de contribución total (S/)'},{t:'Ventas − Costos variables'},
+    {e:160000, tol:1, ph:'160000', pq:'400,000 − 240,000 = 160,000'}],
+   [{t:'Razón de contribución (%)'},{t:'Margen de contribución / Ventas × 100'},
+    {e:40, tol:0.1, ph:'40', pq:'160,000 / 400,000 × 100 = 40 %'}],
+   [{t:'PUNTO DE EQUILIBRIO (S/)', cl:'tot'},{t:'Costos fijos / Razón de contribución'},
+    {e:300000, tol:5, ph:'300000', cl:'tot',
+     pq:'120,000 / 0.40 = 300,000. Vendiendo S/ 300,000 la librería no gana ni pierde.'}],
+   [{t:'Utilidad operativa (S/)', cl:'tot'},{t:'Margen de contribución − Costos fijos'},
+    {e:40000, tol:1, ph:'40000', cl:'tot', pq:'160,000 − 120,000 = 40,000'}]
+  ],
+  fin:globo(P.idea,'Resuelto','La librería vendió S/ 400,000 y su equilibrio está en S/ 300,000: le '+
+      'sobran S/ 100,000 de venta por encima del punto donde empieza a ganar. Esa holgura es lo que en '+
+      'la semana 16 se llama margen de seguridad.') },
+
+a2:{ tipo:'tabla', titulo:'Actividad 3 - Tarea: el equilibrio de la pollería',
+  intro:'Pollería El Fogón Characato, con el costo unitario que calculaste en la semana 12 y sus costos '+
+        'fijos del mes.',
+  cols:['Concepto','Fórmula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Precio de venta sin IGV, por plato'},{t:'dato'},{t:'21.10'}],
+   [{t:'Costo variable, insumos por plato'},{t:'dato'},{t:'8.80'}],
+   [{t:'Costos fijos del mes (S/)'},{t:'dato: alquiler, sueldos y servicios'},{t:'14,760.00'}],
+   [{t:'Margen de contribución unitario (S/)'},{t:'precio − costo variable'},
+    {e:12.30, tol:0.03, ph:'12.30', pq:'21.10 − 8.80 = 12.30'}],
+   [{t:'Razón de contribución (%)'},{t:'margen / precio × 100'},
+    {e:58.29, tol:0.05, ph:'58.29', pq:'12.30 / 21.10 × 100 = 58.29 %'}],
+   [{t:'PUNTO DE EQUILIBRIO (platos)', cl:'tot'},{t:'costos fijos / margen de contribución'},
+    {e:1200, tol:2, ph:'1200', cl:'tot', pq:'14,760 / 12.30 = 1,200 platos al mes'}],
+   [{t:'PUNTO DE EQUILIBRIO (S/)', cl:'tot'},{t:'platos de equilibrio × precio'},
+    {e:25320, tol:5, ph:'25320', cl:'tot', pq:'1,200 × 21.10 = 25,320'}],
+   [{t:'Platos por día, si abre 30 días'},{t:'1,200 / 30'},
+    {e:40, tol:0.5, ph:'40', pq:'40 platos diarios solo para cubrir costos. Así se vuelve una meta real.'}]
+  ],
+  fin:globo2(P.pres, P.bien,'Resuelto','1,200 platos al mes, 40 por día. Convertir el punto de '+
+      'equilibrio a una meta diaria es lo que lo hace útil: nadie puede controlar «1,200 al mes», pero '+
+      'cualquier encargado sabe si hoy vendió 40.') },
+
+a3:{ tipo:'sel', titulo:'Actividad 4 - Para qué sirve el punto de equilibrio en tu campaña',
+  lista:[
+   { q:'¿Qué es el margen de contribución?',
+     ops:['La utilidad neta por unidad','Lo que deja cada unidad para pagar los costos fijos',
+          'El precio menos todos los gastos de la empresa'], ok:1,
+     pq:'Precio menos costo variable. Se llama así porque cada unidad contribuye con ese monto a cubrir '+
+        'los costos fijos; recién cuando están cubiertos, empieza la ganancia.' },
+   { q:'En tu campaña, ¿cuáles son los costos fijos para calcular el equilibrio?',
+     ops:['Todos los gastos de la empresa','La inversión inicial más los gastos de la campaña',
+          'Solo el alquiler'], ok:1,
+     pq:'Para el equilibrio de la campaña se usan sus propios costos fijos: lo que se paga por hacerla, '+
+        'venda lo que venda. Los gastos generales de la empresa ya estaban antes.' },
+   { q:'Tu campaña necesita 100 unidades adicionales para llegar al equilibrio y proyectaste 129. ¿Qué dice eso?',
+     ops:['Que la proyección está mal','Que hay holgura: puedes vender 29 menos y aún no perder',
+          'Que hay que subir el precio'], ok:1,
+     pq:'Es exactamente el argumento que defiende una campaña en la sustentación: no solo que conviene, '+
+        'sino cuánto puede fallar la proyección antes de que deje de convenir.' },
+   { q:'El punto de equilibrio de la campaña, ¿va en el informe?',
+     ops:['Sí, es la Tabla 20','No va al informe, pero sirve para defender la campaña',
+          'Reemplaza a la Tabla 19'], ok:1,
+     pq:'No está entre las tablas pedidas. Es refuerzo: cuando el jurado pregunte qué pasa si vendes '+
+        'menos de lo proyectado, esta es la respuesta con números.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Margen de contribución y punto de equilibrio', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>¿Cuánto tienes que vender solo para no perder?</h2>'+
+      '<p>Semana 15 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>Margen de contribución</b><b>Costos fijos</b><b>Equilibrio</b></div>'+
+    '</div>'+
+    globo(P.pres,'Por qué esto al final',
+      'El VAN ya te dijo que la campaña conviene. Falta la pregunta que viene siempre después: ¿y si '+
+      'vendes menos de lo que proyectaste? El punto de equilibrio responde con un número exacto, y es '+
+      'la mejor defensa que puedes llevar a la sustentación.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">60</td><td><b>Práctica</b></td><td>Margen de contribución y punto de equilibrio en Excel</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Punto de equilibrio de una empresa y de un producto, a mano</td></tr><tr><td class="mi">15</td><td><b>Proyecto</b></td><td>Punto de equilibrio de la campaña de cada marca</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Dudas y cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'Excel de avance. Necesitas tu <b>costo unitario</b> y tu <b>precio sin IGV</b> de la semana 12, '+
+      'y los costos fijos de tu campaña de la Tabla 16.') },
+
+{ et:'En Excel', t:'El equilibrio de la heladería', clave:'a0',
+  h:'<p class="enc">Heladería Yanahuara S.A.C.</p>'+
+    '<p class="sub">La misma copa de la semana 12, con otra pregunta encima</p>'+
+    '<div class="form">Margen de contribución = precio − costo variable'+
+      '<small>Punto de equilibrio en unidades = costos fijos ÷ margen de contribución</small></div>'+
+    globo(P.idea,'La idea en una frase',
+      'Cada copa deja S/ 4.85 para ayudar a pagar el alquiler y los sueldos. Si los costos fijos son '+
+      'S/ 5,820, hacen falta 1,200 copas para terminar de pagarlos. Recién desde ahí la heladería gana.') },
+
+{ et:'A mano', t:'El equilibrio de una empresa entera', clave:'a1',
+  h:'<p class="enc">Librería Cayma E.I.R.L.</p>'+
+    '<p class="sub">Cuando hay cientos de productos distintos, el equilibrio se calcula en soles</p>'+
+    '<div class="form">Punto de equilibrio en soles = costos fijos ÷ razón de contribución'+
+      '<small>Razón de contribución = margen de contribución ÷ ventas</small></div>'+
+    globo(P.expl,'Por qué cambia la fórmula',
+      'No se pueden sumar libros con lapiceros en unidades. Pero sí se puede decir que, de cada sol '+
+      'que vende la librería, 40 céntimos quedan para cubrir los costos fijos. Con eso basta para '+
+      'saber cuántos soles hay que vender.') },
+
+{ et:'Tarea', t:'El equilibrio de la pollería', clave:'a2',
+  h:'<p class="enc">Pollería El Fogón Characato S.A.C.</p>'+
+    '<p class="sub">Y un paso más: convertir el resultado en una meta diaria</p>'+
+    globo(P.alum,'El número que sí se usa',
+      'Un punto de equilibrio mensual es información; una meta diaria es gestión. Si el encargado sabe '+
+      'que necesita 40 platos al día, puede corregir el jueves y no enterarse a fin de mes.') },
+
+{ et:'Defender', t:'Para qué sirve esto en tu sustentación', clave:'a3',
+  h:'<p class="enc">Cuatro preguntas sobre el equilibrio de tu campaña</p>'+
+    '<p class="sub">La que más se repite es la tercera</p>'+
+    globo(P.pres,'La respuesta que impresiona',
+      'Cuando te pregunten «¿y si no vendes lo que proyectaste?», la respuesta no es «esperamos que '+
+      'sí». Es: «necesitamos 100 unidades adicionales para cubrir la campaña y proyectamos 129, así '+
+      'que podemos vender 29 menos y aún así no perder».') },
+
+{ et:'Proyecto', t:'Refuerzo de hoy y revisión del jueves', clave:null,
+  h:'<p class="enc">Refuerzo · no va al informe</p>'+
+    '<p class="sub">Pero sí va a la sustentación</p>'+
+    proy('Qué hace cada equipo ahora',
+     ['Calcula el <b>margen de contribución</b> de tu producto: precio sin IGV menos costo unitario. Es '+
+      'el mismo margen unitario de la semana 12.',
+      'Suma los <b>costos fijos de tu campaña</b>: la inversión inicial más los gastos mensuales de los '+
+      'tres meses. En Capriccio son 1,500 + 650 × 3 = 3,450.',
+      'Calcula cuántas <b>unidades adicionales</b> necesitas para cubrir esa inversión: costos fijos de '+
+      'la campaña ÷ margen de contribución.',
+      'Compara ese número con las unidades adicionales que proyectaste en la Tabla 17. La diferencia es '+
+      'tu colchón, y es el argumento con el que defiendes la campaña.',
+      'Anota las tres cifras en una hoja aparte del Excel, titulada <b>Refuerzo</b>. No se copian al '+
+      'Word, pero las llevas a la sustentación.'],
+     'El jueves la hora completa es para la revisión final del informe: numeración de tablas, notas al '+
+     'pie y que cada cifra del Word sea idéntica a la del Excel.')+
+    globo2(P.pres, P.alum,'Para cerrar',
+      'Con esto tienes las dos caras del análisis: el VAN dice cuánto gana la campaña si todo sale '+
+      'como se proyectó, y el punto de equilibrio dice cuánto puede salir mal antes de que deje de '+
+      'convenir. Un buen informe lleva las dos.') }
+]
+});
+</script>
+
+</body>
+</html>

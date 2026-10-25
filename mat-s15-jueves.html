@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 15 jueves - Revisión final del informe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 15 · jueves</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 15 · jueves</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Revisión final del informe</h1>
+      <p><span class="sem">Semana 15 · jueves</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Hora de proyecto. La estructura de tablas corresponde al componente de Matemática Aplicada del Proyecto Integrador, según el modelo resuelto del caso Capriccio.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s15j_v1',
+  sala:'MATS15J',
+  ACT:{
+
+a0:{ tipo:'arr', titulo:'Actividad 1 - Cada tabla en su punto del informe',
+  fichas:[ {id:'f1', t:'Tabla 10 - Precios por presentación y canal', g:'P1'},
+           {id:'f2', t:'Tabla 11 - Estado de Resultados con % de ventas', g:'P2'},
+           {id:'f3', t:'Tabla 12 - Márgenes de utilidad', g:'P3'},
+           {id:'f4', t:'Tabla 16 - Plan de medios', g:'P4'},
+           {id:'f5', t:'Tabla 17 - Proyección de ventas adicionales', g:'P5'},
+           {id:'f6', t:'Tabla 18 y Figura 10 - Flujo de Caja Neto', g:'P6'},
+           {id:'f7', t:'Tabla 19 - Indicadores de rentabilidad', g:'P7'},
+           {id:'f8', t:'Tablas A1 a A8 - Cálculos de respaldo', g:'P8'} ],
+  cajas:[ {id:'P1', t:'2.5.1 Análisis de precios'},
+          {id:'P2', t:'2.5.2 Estado de Resultados'},
+          {id:'P3', t:'2.5.3 Márgenes'},
+          {id:'P4', t:'3.1.3 Mensaje y canales'},
+          {id:'P5', t:'3.2.1 Proyección de ventas'},
+          {id:'P6', t:'3.2.2 Flujo de Caja Neto'},
+          {id:'P7', t:'3.2.3 Indicadores'},
+          {id:'P8', t:'Anexo A.2'} ],
+  fin:globo(P.expl,'Resuelto','Ocho piezas y ocho lugares. Si una tabla está en el punto equivocado, '+
+      'el lector pierde el hilo justo donde más importa: entre lo que cuesta la campaña y lo que '+
+      'genera.') },
+
+a1:{ tipo:'sel', titulo:'Actividad 2 - La lista de control final',
+  lista:[
+   { q:'Tu Tabla 18 dice que el flujo del Mes 2 es 1,332.60 y tu Tabla 19 usó 1,332.00. ¿Qué haces?',
+     ops:['Lo dejas, la diferencia es mínima','Corriges para que las dos digan exactamente lo mismo',
+          'Cambias la Tabla 18'], ok:1,
+     pq:'Una diferencia entre dos tablas del mismo informe es lo primero que salta. No importa que sea '+
+        'pequeña: lo que se pone en duda es todo el cálculo.' },
+   { q:'¿Qué lleva la nota al pie de cada tabla?',
+     ops:['Solo «Elaboración propia»','La fuente, los supuestos usados y la aclaración de si es con o sin IGV',
+          'El nombre del software'], ok:1,
+     pq:'La nota es lo que permite auditar la tabla. Mínimo: de dónde salen los datos, qué supuestos '+
+        'se tomaron y que los montos están sin IGV.' },
+   { q:'Numeraste las tablas 10, 11, 12, 16, 17, 18 y 19. ¿Está bien que falten de la 13 a la 15?',
+     ops:['No, hay que renumerar todo de corrido',
+          'Sí, si esas tablas son de otros componentes del informe integrador',
+          'Hay que agregar tablas vacías'], ok:1,
+     pq:'El informe es de todo el proyecto, no solo de Matemática. Las tablas 13 a 15 son de los otros '+
+        'componentes. Lo que no puede pasar es que un número se repita.' },
+   { q:'¿Qué hace cada integrante en la sustentación?',
+     ops:['Habla solo quien hizo los cálculos','Todos tienen que poder explicar cualquier parte',
+          'Se lee el informe en voz alta'], ok:1,
+     pq:'La pregunta se le hace a quien el jurado quiera. Si solo uno entiende el flujo de caja, el '+
+        'equipo entero queda expuesto.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Revisión final del informe', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>Que el informe diga lo mismo en todas sus páginas</h2>'+
+      '<p>Semana 15 · jueves · 1 hora académica</p>'+
+      '<div class="via"><b>Numeración</b><b>Notas</b><b>Coherencia</b></div>'+
+    '</div>'+
+    globo(P.pres,'La hora de hoy es del proyecto',
+      'El contenido ya está completo. Lo que se revisa hoy es lo que hace que un informe completo '+
+      'parezca serio: que las tablas estén numeradas, que cada una tenga su nota y que ninguna cifra '+
+      'se contradiga con otra.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">30</td><td><b>Proyecto</b></td><td>Revisión final del informe: numeración, notas y coherencia con el Excel</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Correcciones de último momento</td></tr></tbody></table></div>'+
+    drive('Los dos archivos de hoy',
+      'Excel de avance y Word del informe, abiertos al mismo tiempo para ir comparando cifra por cifra.') },
+
+{ et:'Proyecto', t:'La revisión, paso a paso', clave:null,
+  h:'<p class="enc">Siete controles sobre el informe completo</p>'+
+    '<p class="sub">En este orden, marcando cada uno al terminar</p>'+
+    proy('Lo que revisa cada equipo en esta hora',
+     ['<b>Numeración.</b> Que no se repita ningún número de tabla ni de figura, y que el orden en que '+
+      'aparecen sea creciente.',
+      '<b>Rótulos.</b> Que cada tabla tenga su número y su título arriba, y cada figura su rótulo '+
+      'abajo del todo.',
+      '<b>Notas.</b> Que toda tabla tenga nota al pie con la fuente, los supuestos y la aclaración de '+
+      'que los montos son sin IGV.',
+      '<b>Coherencia.</b> Que cada cifra del Word sea idéntica a la del Excel. Revisa en especial el '+
+      'flujo del Mes 2, el VAN y el costo unitario, que son los que se repiten en varias tablas.',
+      '<b>Supuestos.</b> Que el aumento esperado por la campaña esté sustentado con tu encuesta, y que '+
+      'la tasa de descuento diga de dónde sale.',
+      '<b>Textos.</b> Que debajo de cada tabla haya al menos un párrafo de análisis. Una tabla sin '+
+      'texto no suma.',
+      '<b>Archivo.</b> Guarda la versión final en la carpeta de Drive con el nombre de tu marca y la '+
+      'fecha.'],
+     'Lo que quede sin corregir hoy llega así a la sustentación. La semana 16 ya no es para escribir, '+
+     'es para practicar y ensayar.') },
+
+{ et:'Ubicar', t:'Cada tabla en su punto', clave:'a0',
+  h:'<p class="enc">El mapa completo del componente</p>'+
+    '<p class="sub">Arrastra cada tabla al punto del informe donde va</p>'+
+    globo(P.idea,'Una forma de revisar',
+      'Recorre el informe de arriba abajo y ve tachando esta lista. Si llegas al final y te sobra una '+
+      'tabla, está en el lugar equivocado; si te falta, no la copiaste.') },
+
+{ et:'Control', t:'Los cuatro errores que más cuestan', clave:'a1',
+  h:'<p class="enc">Lo que el jurado detecta primero</p>'+
+    '<p class="sub">Y que se arregla en diez minutos si se revisa a tiempo</p>'+
+    globo(P.expl,'El más grave',
+      'Dos cifras distintas para lo mismo en dos tablas. No es un error de tipeo a ojos del jurado: es '+
+      'la señal de que las tablas se armaron por separado y nadie revisó el conjunto.') },
+
+{ et:'Cierre', t:'Lo que viene la última semana', clave:null,
+  h:'<p class="enc">Semana 16</p>'+
+    '<p class="sub">Sin proyecto: práctica y ensayo</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>El lunes</h4><div class="c">'+
+      '<p><b>Margen de seguridad</b> y un caso integrador que junta flujo, VAN, equilibrio y '+
+      'seguridad. Después, ensayo cronometrado.</p></div></div>'+
+    '<div class="fc rj"><h4>El jueves</h4><div class="c">'+
+      '<p>Caso integrador final y la última sustentación de práctica, con preguntas del jurado.</p></div></div>'+
+    '</div>'+
+    drive('Antes de salir',
+      'Sube la versión final del informe y del Excel a la carpeta del curso. Lo que esté en la carpeta '+
+      'el lunes es lo que se usa para ensayar.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'El informe está terminado. Lo que decide la nota ahora es poder explicarlo: cómo llegaste del '+
+      'precio de tu producto al VAN de tu campaña, sin leer y en tres minutos.') }
+]
+});
+</script>
+
+</body>
+</html>
