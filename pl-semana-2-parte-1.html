@@ -866,6 +866,11 @@
           letter-spacing:.06em; text-transform:uppercase; vertical-align:middle; }
   .chk li::before{ content:'\2713'; position:absolute; left:14px; top:7px; color:#fff; background:var(--aqua);
                    width:22px; height:22px; border-radius:6px; font-size:15px; text-align:center; line-height:22px; }
+  /* ---------- pantalla de un alumno dentro de la ventana del docente ---------- */
+  .apvivo{ display:flex; flex-direction:column; max-width:none; margin:0; border:2px solid var(--linea);
+           border-radius:14px; overflow:hidden; background:#fff; max-height:min(64vh,620px); }
+  .apvivo .lam{ flex:0 1 auto; min-height:0; pointer-events:none; user-select:none; }
+  .apvivo .lam button, .apvivo .lam select, .apvivo .lam input{ cursor:default; }
 </style>
 <link rel="stylesheet" href="pl-certus.css?v=20261025">
 </head>
@@ -1911,6 +1916,14 @@ function vista(k){
 }
 
 /* ================= dibujo ================= */
+function htmlLamina(s){
+  var h=s.h||'';
+  var ks=clavesDe(s);
+  if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
+                              : h+'<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
+  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
+  return h;
+}
 function pinta(quieto){
   if(posVis(i)<0) i=cercana(i);
   var s=D[i];
@@ -1920,11 +1933,7 @@ function pinta(quieto){
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
   $('cu').textContent=(posVis(i)+1)+' / '+vis().length;
-  var h=s.h||'';
-  var ks=clavesDe(s);
-  if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
-                              : h+'<div data-act="'+ks[0]+'">'+vista(ks[0])+'</div>';
-  else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
+  var h=htmlLamina(s);
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
   $('ant').disabled=(posVis(i)<=0);
@@ -2459,7 +2468,8 @@ $('btnElige').addEventListener('click', function(){
 var modoClase='libre';
 try{ if(localStorage.getItem('pl_s3_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
-function soyDocente(){ return !!(window.Aula && Aula.esDocente); }
+var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
+function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
 function enSala(){ return !!(window.Aula && Aula.enSala); }
 function atado(){ return modoClase==='guiado' && enSala() && !soyDocente(); }
 
@@ -2677,8 +2687,11 @@ document.addEventListener('keydown', function(e){
 
 /* ================= el aula ================= */
 function resumenAula(){
-  return { lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
-           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+  var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
+          idx:i, G:{ mal:G.mal },
+          rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
+  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+  return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
@@ -2712,6 +2725,23 @@ function ventanaAula(e){
   return h+'</div></div>';
 }
 
+/* la lámina tal como la ve el alumno, con sus respuestas, sin poder tocarla */
+function replicaAlumno(e){
+  var n=(typeof e.idx==='number') ? e.idx : -1;
+  if(n<0 || n>=D.length || !e.G) return '';
+  var gDoc=G, h='';
+  try{
+    G=vacio();
+    for(var k in e.G) if(G[k]!==undefined && e.G[k] && typeof e.G[k]==='object') G[k]=e.G[k];
+    replica=true;
+    h=htmlLamina(D[n]);
+  }catch(x){ h=''; }
+  finally{ G=gDoc; replica=false; }
+  if(!h) return '';
+  return '<div class="ai apvivo"><div class="cab"><span class="et">'+esc(D[n].et)+'</span>'+
+         '<span class="t">'+esc(D[n].t)+'</span><span class="cu">'+(n+1)+' / '+D.length+'</span></div>'+
+         '<div class="lam">'+h+'</div></div>';
+}
 function pantalla(e, alumno, cont){
   var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
@@ -2723,6 +2753,7 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
+    replicaAlumno(e)+
     '<table><thead><tr><th>#</th><th>Actividad</th><th class="n">Respuestas</th>'+
       '<th>Avance</th><th class="n">Estado</th></tr></thead><tbody>';
   (e.rejilla||[]).forEach(function(r){
