@@ -87,6 +87,7 @@ function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
 function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
 
 var cfg=null, sala=null, yo=null, docente=false, tAbierta=null, practica=false;
+var mano='', manoT=0, msgs=[], ultimoMsg=0, conocidos={}, primeraCarga=true, descartes={};
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
@@ -425,9 +426,9 @@ function adentro(n, s, d){
   if(dni) guardaLocal('dni', dni);
   dentro((dni ? (n+' · DNI '+dni) : n) + (pin() ? ' · sesión '+s : ''));
   estado('vivo','Conectando…');
-  fallos=0; empuja(true);
+  fallos=0; reiniciaAvisos(); empuja(true);
   if(cfg.alModo) cfg.alModo(false);
-  escucha(); escuchaRecurso();
+  escucha(); escuchaRecurso(); pintaAvisos();
 }
 function entraDocente(){
   var c=$('aulaClave').value.trim();
@@ -467,13 +468,13 @@ function dentroDocente(s){
   var nd=leeLocal('docente_nombre');
   dentro('Docente' + (nd ? ' · '+nd : '') + (pin() ? ' · código '+s : ''));
   estado('vivo','Conectando…');
-  fallos=0; arranca(); escuchaRecurso();
+  fallos=0; reiniciaAvisos(); arranca(); escuchaRecurso(); pintaAvisos();
   if(pin()) latidoSala();
   if(cfg.musica) musica(leeLocal('musica')!=='0');
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
-  practica=false;
+  practica=false; reiniciaAvisos();
   if(tAbierta){ clearInterval(tAbierta); tAbierta=null; }
   if(conFicha() && !docente && dni &&
      !window.confirm('¿Cerrar tu sesión?\n\nTu avance ya quedó guardado con tu DNI '+dni+
@@ -494,7 +495,7 @@ function sale(){
   if(tRecurso){ clearInterval(tRecurso); tRecurso=null; }
   recurso=null; selloRecurso='';
   if(cfg.recurso) cfg.recurso(null);
-  fuera(); estado('solo','Modo individual'); pintaMuro();
+  fuera(); estado('solo','Modo individual'); pintaMuro(); pintaAvisos();
   if(cfg.alModo) cfg.alModo(false);
 }
 function arranca(){
@@ -512,7 +513,7 @@ function empuja(ya){
     fetch(TABLA+'?on_conflict=sala,alumno', {
       method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
       body:JSON.stringify([{ sala:cfg.sala+'-'+sala, alumno:yo, caso:dni,
-                             estado:cfg.resumen(), actualizado:new Date().toISOString() }])
+                             estado:conAvisos(cfg.resumen()), actualizado:new Date().toISOString() }])
     }).then(function(r){
       if(!r.ok) return Promise.reject(r.status);
       fallos=0;
@@ -528,6 +529,7 @@ function trae(){
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
       fallos=0; gente=quitaSacados(rows||[]);
+      if(docente) detectaAvisos(gente);
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
       pintaMuro();
@@ -723,14 +725,14 @@ function pintaMuro(){
     $('muro').innerHTML='<div class="aula-vacio">Todavía no hay nadie en la sala <b>'+esc(sala)+'</b>.</div>';
     return;
   }
-  var ahora=Date.now(), h='';
+  var ahora=Date.now(), h=avisosHtml();
   gente.forEach(function(g){
     var e=g.estado||{};
     var seg=Math.max(0, Math.round((ahora-new Date(g.actualizado).getTime())/1000));
     var hace = seg<60 ? ('hace '+seg+' s') : ('hace '+Math.round(seg/60)+' min');
     h+='<div class="aula-vtna'+(g.alumno===yo?' yo':'')+(e.listo?' listo':'')+
          (cfg.pantalla?' clic" role="button" tabindex="0" title="Ver su pantalla" data-al="'+esc(g.alumno):'')+'">'+
-         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+
+         '<div class="vh"><span class="vn">'+esc(g.alumno)+(g.alumno===yo?' (tú)':'')+'</span>'+insignia(e)+
          '<span class="vs">'+esc(hace)+'</span>'+
          '<button class="aula-saca" type="button" title="Sacar de la sala" '+
            'aria-label="Sacar a '+esc(g.alumno)+' de la sala" data-saca="'+esc(g.alumno)+'">&#10005;</button>'+
@@ -746,6 +748,7 @@ function pintaMuro(){
     });
     b.addEventListener('keydown', function(ev){ ev.stopPropagation(); });
   });
+  cableaAvisos();
   if(cfg.pantalla){
     Array.prototype.forEach.call($('muro').querySelectorAll('.aula-vtna.clic'), function(v){
       v.addEventListener('click', function(){ abrePantalla(v.getAttribute('data-al')); });
@@ -909,6 +912,237 @@ function descargaReporte(){
     .then(function(){ btn.disabled=false; });
 }
 
+
+/* ================= manito, mensajes y avisos al docente ================= */
+function reiniciaAvisos(){
+  mano=''; manoT=0; msgs=[]; ultimoMsg=0; conocidos={}; primeraCarga=true; descartes={};
+}
+/* el alumno publica su manito y sus últimos mensajes junto con su avance */
+function conAvisos(est){
+  var o={}, k;
+  for(k in est) o[k]=est[k];
+  if(mano){ o.mano=mano; o.manoT=manoT; }
+  if(msgs.length) o.msgs=msgs;
+  return o;
+}
+function tiempoCorto(ms){
+  var seg=Math.max(0, Math.round((Date.now()-ms)/1000));
+  return seg<60 ? 'hace '+seg+' s' : 'hace '+Math.round(seg/60)+' min';
+}
+
+/* ---- el alumno: botón flotante y panel ---- */
+function montaAvisos(){
+  if($('aulaAv')) return;
+  var d=document.createElement('div');
+  d.className='aula-av'; d.id='aulaAv'; d.hidden=true;
+  d.innerHTML=
+    '<button class="av-fab" id="avFab" type="button" aria-expanded="false" aria-controls="avPan">'+
+      '<span id="avFabT">🙋 Avisar al docente</span></button>'+
+    '<div class="av-pan" id="avPan" hidden role="dialog" aria-label="Avisar al docente">'+
+      '<div class="av-t">Avisar al docente</div>'+
+      '<div class="av-b">'+
+        '<button type="button" id="avOk">👌 Listo, voy bien</button>'+
+        '<button type="button" id="avDuda">✋ Tengo una duda</button>'+
+      '</div>'+
+      '<label class="av-l">Escribe un mensaje'+
+        '<input id="avTxt" type="text" maxlength="140" placeholder="Ej.: no entiendo el caso 2" autocomplete="off"></label>'+
+      '<div class="av-e"><button type="button" class="o-btn o-btn-primary" id="avEnv">Enviar</button></div>'+
+      '<div class="av-eco" id="avEco" aria-live="polite"></div>'+
+    '</div>';
+  document.body.appendChild(d);
+  $('avFab').addEventListener('click', function(){
+    var abre=$('avPan').hidden;
+    $('avPan').hidden=!abre;
+    $('avFab').setAttribute('aria-expanded', abre?'true':'false');
+    if(abre) setTimeout(function(){ $('avTxt').focus(); }, 30);
+  });
+  $('avOk').addEventListener('click', function(){ poneMano('ok'); });
+  $('avDuda').addEventListener('click', function(){ poneMano('duda'); });
+  $('avEnv').addEventListener('click', enviaMensaje);
+  $('avTxt').addEventListener('keydown', function(e){
+    e.stopPropagation();   /* que las flechas y letras no muevan las diapositivas */
+    if(e.key==='Enter'){ e.preventDefault(); enviaMensaje(); }
+  });
+}
+function pintaAvisos(){
+  montaAvisos();
+  var ve = !!sala && !docente;
+  $('aulaAv').hidden=!ve;
+  if(!ve){ $('avPan').hidden=true; }
+  $('avOk').classList.toggle('on', mano==='ok');
+  $('avDuda').classList.toggle('on', mano==='duda');
+  $('avFabT').textContent = mano==='ok' ? '👌 Listo' : (mano==='duda' ? '✋ Duda enviada' : '🙋 Avisar al docente');
+  $('avFab').classList.toggle('ok', mano==='ok');
+  $('avFab').classList.toggle('duda', mano==='duda');
+}
+function poneMano(t){
+  mano = (mano===t) ? '' : t;      /* tocar otra vez la baja */
+  manoT = Date.now();
+  $('avEco').textContent = mano==='ok' ? 'El docente ve que estás bien.'
+                         : mano==='duda' ? 'El docente ve que levantaste la mano.' : 'Bajaste la mano.';
+  pintaAvisos(); empuja(true);
+}
+function enviaMensaje(){
+  var t=$('avTxt').value.trim();
+  if(!t) return;
+  if(Date.now()-ultimoMsg<3000){ $('avEco').textContent='Espera unos segundos para enviar otro mensaje.'; return; }
+  ultimoMsg=Date.now();
+  msgs.push({ t:t.slice(0,140), h:ultimoMsg });
+  msgs=msgs.slice(-5);
+  $('avTxt').value='';
+  $('avEco').textContent='Mensaje enviado al docente.';
+  empuja(true);
+}
+
+/* ---- el docente: insignias, lista de avisos y aviso emergente ---- */
+function insignia(e){
+  var h='';
+  if(e.mano==='duda') h+='<span class="av-bd duda" title="Levantó la mano">✋</span>';
+  else if(e.mano==='ok') h+='<span class="av-bd ok" title="Dice que va bien">👌</span>';
+  if(e.msgs && e.msgs.length) h+='<span class="av-bd msg" title="Escribió un mensaje">💬 '+e.msgs.length+'</span>';
+  return h;
+}
+function claveAviso(it){ return it.al+'|'+it.tipo+'|'+it.h; }
+function listaAvisos(){
+  var items=[];
+  gente.forEach(function(g){
+    var e=g.estado||{};
+    if(e.mano) items.push({ al:g.alumno, tipo:e.mano, t:'', h:e.manoT||0 });
+    (e.msgs||[]).forEach(function(m){ items.push({ al:g.alumno, tipo:'msg', t:m.t, h:m.h||0 }); });
+  });
+  items=items.filter(function(it){ return !descartes[claveAviso(it)]; });
+  var rango={ duda:0, msg:1, ok:2 };
+  items.sort(function(a,b){ return (rango[a.tipo]-rango[b.tipo]) || (b.h-a.h); });
+  return items;
+}
+function avisosHtml(){
+  var items=listaAvisos();
+  if(!items.length) return '';
+  var h='<div class="aula-avisos"><div class="av-h"><b>Avisos de la clase</b>'+
+        '<button type="button" id="avLimpia">Marcar todo como visto</button></div>';
+  items.slice(0,12).forEach(function(it){
+    var ico = it.tipo==='duda' ? '✋' : (it.tipo==='ok' ? '👌' : '💬');
+    var txt = it.tipo==='duda' ? 'levantó la mano' : (it.tipo==='ok' ? 'dice que va bien' : esc(it.t));
+    h+='<div class="av-it '+it.tipo+'" data-al="'+esc(it.al)+'" role="button" tabindex="0">'+
+       '<span class="ai-i">'+ico+'</span>'+
+       '<span class="ai-x"><b>'+esc(it.al)+'</b> '+txt+'</span>'+
+       '<time>'+esc(it.h ? tiempoCorto(it.h) : '')+'</time>'+
+       '<button type="button" class="ai-v" data-vi="'+esc(claveAviso(it))+'" title="Marcar como visto" aria-label="Marcar como visto">✓</button>'+
+       '</div>';
+  });
+  if(items.length>12) h+='<div class="av-mas">y '+(items.length-12)+' más</div>';
+  return h+'</div>';
+}
+function cableaAvisos(){
+  var m=$('muro');
+  Array.prototype.forEach.call(m.querySelectorAll('.ai-v'), function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation(); descartes[b.getAttribute('data-vi')]=1; pintaMuro();
+    });
+  });
+  var l=m.querySelector('#avLimpia');
+  if(l) l.addEventListener('click', function(){
+    listaAvisos().forEach(function(it){ descartes[claveAviso(it)]=1; }); pintaMuro();
+  });
+  if(cfg.pantalla) Array.prototype.forEach.call(m.querySelectorAll('.av-it'), function(v){
+    function abre(){ abrePantalla(v.getAttribute('data-al')); }
+    v.addEventListener('click', abre);
+    v.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); abre(); } });
+  });
+}
+var tToast=null, acToast=null;
+function pitido(){
+  try{
+    if(!acToast) acToast=new (window.AudioContext||window.webkitAudioContext)();
+    var o=acToast.createOscillator(), g=acToast.createGain(), t=acToast.currentTime;
+    o.type='sine'; o.frequency.value=740;
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.04,t+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+0.25);
+    o.connect(g); g.connect(acToast.destination); o.start(t); o.stop(t+0.3);
+  }catch(e){}
+}
+function toastDocente(txt){
+  var e=$('aulaToast');
+  if(!e){
+    e=document.createElement('div'); e.className='aula-toast'; e.id='aulaToast'; e.hidden=true;
+    e.setAttribute('role','status'); document.body.appendChild(e);
+  }
+  e.textContent=txt; e.hidden=false;
+  requestAnimationFrame(function(){ e.classList.add('ve'); });
+  clearTimeout(tToast);
+  tToast=setTimeout(function(){ e.classList.remove('ve'); setTimeout(function(){ e.hidden=true; }, 300); }, 4200);
+  pitido();
+}
+/* la primera lectura de la sala no avisa: solo lo que llega después */
+function detectaAvisos(rows){
+  var nuevos=[];
+  rows.forEach(function(g){
+    var e=g.estado||{}, k;
+    if(e.mano){
+      k=g.alumno+'|'+e.mano+'|'+e.manoT;
+      if(!conocidos[k]){ conocidos[k]=1; nuevos.push({ al:g.alumno, tipo:e.mano, t:'' }); }
+    }
+    (e.msgs||[]).forEach(function(m){
+      k=g.alumno+'|msg|'+m.h;
+      if(!conocidos[k]){ conocidos[k]=1; nuevos.push({ al:g.alumno, tipo:'msg', t:m.t }); }
+    });
+  });
+  if(primeraCarga){ primeraCarga=false; return; }
+  if(!nuevos.length) return;
+  var u=nuevos[nuevos.length-1];
+  toastDocente(u.tipo==='duda' ? '✋ '+u.al+' levantó la mano'
+             : u.tipo==='ok'   ? '👌 '+u.al+' dice que va bien'
+             : '💬 '+u.al+': '+u.t+(nuevos.length>1 ? '  (+'+(nuevos.length-1)+' más)' : ''));
+}
+
+/* ================= elegir qué diapositivas se presentan hoy ================= */
+/* la página pasa: diapos() -> [{n, et, t}], seleccion() -> lista de índices o null, alElegir(lista) */
+function eligeDiapos(){
+  if(!docente || !cfg.diapos) return;
+  var lista=cfg.diapos(), actual=cfg.seleccion ? cfg.seleccion() : null;
+  var v=$('aulaElige');
+  if(!v){
+    v=document.createElement('div'); v.className='aula-elige'; v.id='aulaElige';
+    document.body.appendChild(v);
+    v.addEventListener('click', function(e){ if(e.target===v) cierraElige(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && !$('aulaElige').hidden) cierraElige(); });
+  }
+  var h='<div class="ae-caja" role="dialog" aria-modal="true" aria-label="Elegir diapositivas">'+
+    '<div class="ae-h"><b>Diapositivas de hoy</b><span id="aeCuenta"></span></div>'+
+    '<p class="ae-p">Marca las que presentarás. Tú y tus alumnos solo verán esas; el resto se oculta.</p>'+
+    '<div class="ae-acc"><button type="button" id="aeTodas">Marcar todas</button>'+
+      '<button type="button" id="aeNinguna">Quitar todas</button></div>'+
+    '<div class="ae-lista">';
+  lista.forEach(function(d){
+    var on = !actual || actual.indexOf(d.n)>=0;
+    h+='<label class="ae-it"><input type="checkbox" data-n="'+d.n+'"'+(on?' checked':'')+'>'+
+       '<span class="ae-n">'+(d.n+1)+'</span>'+
+       '<span class="ae-t"><small>'+esc(d.et)+'</small>'+esc(d.t)+'</span></label>';
+  });
+  h+='</div><div class="ae-pie"><button type="button" class="o-btn" id="aeCancela">Cancelar</button>'+
+     '<button type="button" class="o-btn o-btn-primary" id="aeAplica">Aplicar</button></div></div>';
+  v.innerHTML=h; v.hidden=false;
+  function marcadas(){
+    return Array.prototype.filter.call(v.querySelectorAll('input[data-n]'), function(c){ return c.checked; })
+      .map(function(c){ return +c.getAttribute('data-n'); });
+  }
+  function cuenta(){ $('aeCuenta').textContent=marcadas().length+' de '+lista.length; }
+  v.addEventListener('change', cuenta); cuenta();
+  $('aeTodas').addEventListener('click', function(){
+    Array.prototype.forEach.call(v.querySelectorAll('input[data-n]'), function(c){ c.checked=true; }); cuenta(); });
+  $('aeNinguna').addEventListener('click', function(){
+    Array.prototype.forEach.call(v.querySelectorAll('input[data-n]'), function(c){ c.checked=false; }); cuenta(); });
+  $('aeCancela').addEventListener('click', cierraElige);
+  $('aeAplica').addEventListener('click', function(){
+    var m=marcadas();
+    if(!m.length){ $('aeCuenta').textContent='Marca al menos una'; return; }
+    cierraElige();
+    if(cfg.alElegir) cfg.alElegir(m);
+  });
+}
+function cierraElige(){ var v=$('aulaElige'); if(v){ v.hidden=true; v.innerHTML=''; } }
+
 /* ---------------- pantalla de un alumno (solo docente) ---------------- */
 function abrePantalla(nombre){
   if(!cfg.pantalla || !docente) return;
@@ -1042,6 +1276,8 @@ window.Aula={
   get esDocente(){ return docente; },
   get enSala(){ return !!sala; },
   get enPractica(){ return practica; },
+  get sala(){ return sala; },
+  eligeDiapositivas:function(){ eligeDiapos(); },
   /* el enlace del caso práctico que publica el docente */
   guardaRecurso:function(r){ return publicaRecurso(r); },
   get recurso(){ return recurso; },

@@ -909,7 +909,8 @@
 
   <div class="puerta" id="puerta">
     <h2>Entra a la sala</h2>
-    <p>Escribe tu nombre, si quieres, y pulsa <b>Entrar a la sala</b>. No se pide DNI ni c&oacute;digo: tus respuestas se guardan solo en este equipo.</p>
+    <p><b>Docente:</b> activa <b>Entrar como docente</b>, escribe tu clave y <b>crea el c&oacute;digo de 4 d&iacute;gitos</b> de esta sesi&oacute;n; dicta ese c&oacute;digo a tu clase.<br>
+       <b>Alumno:</b> escribe tu nombre y el <b>c&oacute;digo de la sesi&oacute;n</b> para que se guarde tu avance y lo vea tu docente. Sin c&oacute;digo, pulsa <b>Practicar sin c&oacute;digo</b>: puedes navegar y probar todo, pero tus respuestas son temporales.</p>
     <div id="aula"></div>
   </div>
 
@@ -919,6 +920,7 @@
         <span class="et" id="eti">Portada</span>
         <span class="t" id="tit">&mdash;</span>
         <span class="cu" id="cu">1 / 1</span>
+        <button class="bts" id="btnElige" type="button" hidden title="Elegir qué diapositivas se presentan hoy">&#9776; <span class="tx" id="txElige">Diapositivas</span></button>
         <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
           <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
         <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
@@ -972,7 +974,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261024"></script>
+<script src="aula.js?v=20261025e"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1283,11 +1285,17 @@ var CLAVES=["d1", "d2", "d3", "d4", "d5", "x1", "x2", "x3", "y2", "y3", "y4", "d
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
-try{
-  var d=JSON.parse(localStorage.getItem(LS)||'null');
-  if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
-}catch(e){}
+function cargaG(){
+  G=vacio();
+  try{
+    var d=JSON.parse(localStorage.getItem(LS)||'null');
+    if(d && typeof d==='object') for(var k in G) if(d[k]!==undefined) G[k]=d[k];
+  }catch(e){}
+}
+cargaG();
 function graba(){
+  /* en práctica libre las respuestas viven solo en pantalla */
+  if(window.Aula && Aula.enPractica) return;
   try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){}
   if(window.Aula && Aula.enSala) Aula.empuja();
 }
@@ -1326,8 +1334,8 @@ function cuantas(k){
 }
 function hechas(k){ return Object.keys(G[k]||{}).length; }
 function lista(k){ return hechas(k)>=cuantas(k); }
-function totalOk(){ var s=0; CLAVES.forEach(function(k){ s+=hechas(k); }); return s; }
-function totalMax(){ var s=0; CLAVES.forEach(function(k){ s+=cuantas(k); }); return s; }
+function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=hechas(k); }); return s; }
+function totalMax(){ var s=0; clavesVis().forEach(function(k){ s+=cuantas(k); }); return s; }
 var i=0;
 
 /* ================= arrastre ================= */
@@ -1915,13 +1923,14 @@ function vista(k){
 
 /* ================= dibujo ================= */
 function pinta(quieto){
+  if(posVis(i)<0) i=cercana(i);
   var s=D[i];
   /* al responder dentro de la misma diapositiva no se pierde el sitio */
   var alto = quieto ? $('lam').scrollTop : 0;
   G.visto[i]=1; graba();
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
-  $('cu').textContent=(i+1)+' / '+D.length;
+  $('cu').textContent=(posVis(i)+1)+' / '+vis().length;
   var h=s.h||'';
   var ks=clavesDe(s);
   if(ks.length===1) h = s.lado ? '<div class="teo2"><div class="teo">'+h+'</div><div data-act="'+ks[0]+'">'+vista(ks[0])+'</div></div>'
@@ -1929,13 +1938,13 @@ function pinta(quieto){
   else if(ks.length) h+='<div class="duo">'+ks.map(function(k){ return '<div data-act="'+k+'">'+vista(k)+'</div>'; }).join('')+'</div>';
   $('lam').innerHTML=h;
   $('lam').scrollTop=alto;
-  $('ant').disabled=(i===0);
-  $('sig').disabled=(i===D.length-1);
+  $('ant').disabled=(posVis(i)<=0);
+  $('sig').disabled=(posVis(i)>=vis().length-1);
   var ok=totalOk(), mx=totalMax();
   $('riel').style.width=Math.round(ok/mx*100)+'%';
   $('marcador').textContent=ok+' de '+mx;
-  $('rotulo').textContent='Diapositiva '+(i+1)+' de '+D.length;
-  $('pts').innerHTML=D.map(function(x,n){
+  $('rotulo').textContent='Diapositiva '+(posVis(i)+1)+' de '+vis().length;
+  $('pts').innerHTML=vis().map(function(n){ var x=D[n];
     var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
     return '<button type="button" data-p="'+n+'" class="'+cl+'" aria-label="'+esc(x.t)+'" title="'+esc(x.t)+'"></button>';
   }).join('');
@@ -2406,6 +2415,56 @@ function pintaRuta(){
   if(otra) otra.addEventListener('click', function(){ rutaResp=[]; pintaRuta(); });
 }
 
+/* ================= diapositivas elegidas para la clase ================= */
+/* el docente marca cuáles presenta hoy; sin selección van todas. Los alumnos la reciben con la batuta. */
+var SEL=null;
+function limpiaSel(a){
+  var v=(a||[]).map(Number).filter(function(n,j,r){ return n>=0 && n<D.length && r.indexOf(n)===j; })
+                .sort(function(x,y){ return x-y; });
+  return (v.length && v.length<D.length) ? v : null;
+}
+function vis(){ return SEL ? SEL : D.map(function(x,n){ return n; }); }
+function posVis(n){ return vis().indexOf(n); }
+function cercana(n){
+  var v=vis(), mejor=v[0], d=1e9;
+  v.forEach(function(k){ var x=Math.abs(k-n); if(x<d){ d=x; mejor=k; } });
+  return mejor;
+}
+/* la diapositiva visible a la que se llega desde n en el sentido dir; si no hay, se queda donde está */
+function haciaVis(n, dir){
+  var v=vis(), k;
+  n=Math.max(0, Math.min(D.length-1, n));
+  if(v.indexOf(n)>=0) return n;
+  if(dir>0){ for(k=n;k<D.length;k++) if(v.indexOf(k)>=0) return k; return i; }
+  for(k=n;k>=0;k--) if(v.indexOf(k)>=0) return k;
+  return i;
+}
+/* el avance se mide solo sobre las actividades de las diapositivas de hoy */
+function clavesVis(){
+  if(!SEL) return CLAVES;
+  var q={};
+  SEL.forEach(function(n){ clavesDe(D[n]).forEach(function(k){ q[k]=1; }); });
+  return CLAVES.filter(function(k){ return q[k]; });
+}
+function guardaSel(){
+  try{ var c=window.Aula && Aula.sala; if(c) localStorage.setItem(LS+'_sel_'+c, JSON.stringify(SEL)); }catch(e){}
+}
+function leeSel(){
+  try{
+    var c=Aula.sala, a=JSON.parse(localStorage.getItem(LS+'_sel_'+c)||'null');
+    SEL=Array.isArray(a) ? limpiaSel(a) : null;
+  }catch(e){ SEL=null; }
+}
+function aplicaSel(a){
+  SEL=limpiaSel(a); guardaSel();
+  if(posVis(i)<0) i=cercana(i);
+  elegida=null; pinta(); difunde();
+  sopla(SEL ? 'Se presentan '+SEL.length+' de '+D.length+' diapositivas' : 'Se presentan todas las diapositivas');
+}
+$('btnElige').addEventListener('click', function(){
+  if(window.Aula && Aula.eligeDiapositivas) Aula.eligeDiapositivas();
+});
+
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
@@ -2441,15 +2500,17 @@ function pintaModo(){
   }
   $('pilModo').hidden=!preso;
   $('esc').classList.toggle('atado', preso);
-  $('ant').disabled = preso || (i===0);
-  $('sig').disabled = preso || (i===D.length-1);
+  $('ant').disabled = preso || (posVis(i)<=0);
+  $('sig').disabled = preso || (posVis(i)>=vis().length-1);
+  $('btnElige').hidden=!doc;
+  $('txElige').textContent = SEL ? SEL.length+' de '+D.length : 'Diapositivas';
   qq('#pts button').forEach(function(x){ x.disabled=preso; });
 }
 
 /* el docente publica dónde está la clase */
 function difunde(){
   if(!soyDocente() || !window.Aula || !Aula.dirige) return;
-  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i } : { modo:'libre' });
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i, sel:SEL } : { modo:'libre', sel:SEL });
 }
 function cambiaModo(){
   if(!soyDocente()) return;
@@ -2463,10 +2524,17 @@ function cambiaModo(){
 $('btnBatuta').addEventListener('click', cambiaModo);
 /* el alumno recibe la orden del docente */
 function recibeBatuta(d){
-  var antes=modoClase;
+  var antes=modoClase, selAntes=JSON.stringify(SEL);
+  if(!soyDocente()) SEL=limpiaSel(d && d.sel);
+  var cambioSel=(selAntes!==JSON.stringify(SEL));
   modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
+  if(cambioSel){
+    sopla(SEL ? 'Hoy se presentan '+SEL.length+' de '+D.length+' diapositivas' : 'Se presentan todas las diapositivas');
+    if(posVis(i)<0){ i=cercana(i); elegida=null; }
+    pinta();
+  }
   if(modoClase==='guiado' && d && typeof d.lamina==='number'){
-    var k=Math.max(0, Math.min(D.length-1, d.lamina));
+    var k=cercana(Math.max(0, Math.min(D.length-1, d.lamina)));
     if(k!==i){
       i=k; elegida=null; pinta(); enfoca();
       nota(880,0,.1,.04,'triangle');
@@ -2492,7 +2560,7 @@ function enfoca(){
 }
 function va(n){
   if(atado()){ sopla('La clase va al ritmo del docente'); return; }
-  var k=Math.max(0, Math.min(D.length-1, n));
+  var k=haciaVis(n, n>=i?1:-1);
   if(k!==i){ i=k; elegida=null; pinta(); enfoca();
              if(modoClase==='guiado') difunde(); }
 }
@@ -2691,17 +2759,28 @@ function pantalla(e, alumno, cont){
     if(window.Aula && Aula.saca) Aula.saca(alumno);
   });
 }
+var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'PLS4', codigo:'PL', clave:'LOGICO', simple:true, resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'PLS4', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
+      if(doc){ if(SEL===null) leeSel(); } else if(!Aula.enSala){ SEL=null; }   /* alumno sin sala: se ven todas */
       if($('esc').classList.contains('full')){ if(doc) participaDentro(); else participaFuera(); }
-      var dentro=Aula.enSala;
+      var prac=Aula.enPractica, dentro=Aula.enSala || prac;
       $('mazo').hidden=!dentro;
-      $('puerta').querySelector('h2').textContent = dentro ? 'Estás dentro' : 'Antes de empezar, regístrate';
-      $('puerta').querySelector('p').hidden=dentro;
+      var pp=$('puerta').querySelector('p');
+      if(textoPuerta===null) textoPuerta=pp.innerHTML;
+      $('puerta').querySelector('h2').textContent = prac ? 'Modo práctica' : (dentro ? 'Estás dentro' : 'Entra a la sala');
+      if(prac){
+        pp.innerHTML='Estás practicando: <b>tus respuestas son temporales</b> y no se guardan ni las ve el docente. '+
+                     'Para guardar tu avance, pulsa <b>Salir</b> y entra con el código de tu docente.';
+        pp.hidden=false;
+      }else{ pp.innerHTML=textoPuerta; pp.hidden=dentro; }
+      $('reinicio').hidden=prac;   /* ese botón borraría el avance guardado de verdad */
       if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
+      if(prac){ G=vacio(); yaCruz={}; i=0; }
+      else if(dentro){ cargaG(); yaCruz={}; }
       if(dentro){ pinta(); setTimeout(enfoca, 120); }
       pintaModo();
       if(doc) difunde();
