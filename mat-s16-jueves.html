@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 16 jueves - Caso integrador final y ensayo de cierre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 16 · jueves</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 16 · jueves</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Caso integrador final y ensayo de cierre</h1>
+      <p><span class="sem">Semana 16 · jueves</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Caso tomado de la ficha de trabajo de la semana 16. Pastelería Tiabaya es un caso de clase, no una empresa real. Esta semana no hay avance de proyecto: el informe ya está entregado.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s16j_v1',
+  sala:'MATS16J',
+  ACT:{
+
+a0:{ tipo:'tabla', titulo:'Actividad 1 - Caso integrador final',
+  intro:'Pastelería Tiabaya evalúa una campaña para su torta de lúcuma. Precio sin IGV S/ 40.00, costo '+
+        'unitario S/ 16.00, inversión inicial S/ 1,200 y gastos de S/ 400 cada mes. Tortas adicionales: '+
+        '40, 70 y 50. Tasa de descuento: 1.5 % mensual. Resuélvelo completo, sin ayuda.',
+  cols:['Concepto','Cómo se calcula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Margen de contribución por torta (S/)'},{t:'precio − costo'},
+    {e:24, tol:0.03, ph:'24', pq:'40.00 − 16.00 = 24.00'}],
+   [{t:'Flujo de Caja Neto del Mes 1 (S/)'},{t:'40 × 24 − 400'},
+    {e:560, tol:0.5, ph:'560', pq:'960 − 400 = 560'}],
+   [{t:'Flujo de Caja Neto del Mes 2 (S/)'},{t:'70 × 24 − 400'},
+    {e:1280, tol:0.5, ph:'1280', pq:'1,680 − 400 = 1,280'}],
+   [{t:'Flujo de Caja Neto del Mes 3 (S/)'},{t:'50 × 24 − 400'},
+    {e:800, tol:0.5, ph:'800', pq:'1,200 − 400 = 800'}],
+   [{t:'VAN (S/)', cl:'tot'},{t:'−1,200 + los tres flujos descontados al 1.5 %'},
+    {e:1359.22, tol:0.1, ph:'1359.22', cl:'tot',
+     pq:'−1,200 + 551.72 + 1,242.45 + 765.05 = 1,359.22'}],
+   [{t:'Periodo de recuperación (meses)'},{t:'1 + (1,200 − 560) / 1,280'},
+    {e:1.50, tol:0.02, ph:'1.50', pq:'1 + 640/1,280 = 1.50 meses'}],
+   [{t:'ROI en %'},{t:'(ganancia 3,840 − inversión 2,400) / 2,400 × 100'},
+    {e:60, tol:0.5, ph:'60', pq:'160 tortas × 24 = 3,840 de ganancia; inversión total 1,200 + 1,200 = '+
+     '2,400. (3,840 − 2,400) / 2,400 = 60 %'}],
+   [{t:'Punto de equilibrio de la campaña (tortas)'},{t:'(1,200 + 400 × 3) / 24'},
+    {e:100, tol:1, ph:'100', pq:'2,400 / 24 = 100 tortas'}],
+   [{t:'Margen de seguridad (%)', cl:'tot'},{t:'(160 proyectadas − 100) / 160 × 100'},
+    {e:37.50, tol:0.5, ph:'37.50', cl:'tot', pq:'60 / 160 × 100 = 37.50 %'}],
+   [{t:'¿Recomiendas la campaña?', cl:'tot'},{t:'con al menos dos indicadores'},
+    {ops:['Sí','No'], ok:0,
+     pq:'Sí: VAN positivo de S/ 1,359.22, recuperación en mes y medio y un colchón de 37.50 % sobre '+
+        'las ventas proyectadas.'}]
+  ],
+  fin:globo2(P.pres, P.bien,'Resuelto','Este caso junta todo el curso: margen de contribución, flujo '+
+      'de caja, VAN, periodo de recuperación, ROI, punto de equilibrio y margen de seguridad. Si lo '+
+      'resolviste solo, puedes sustentar tu proyecto sin problema.') },
+
+a1:{ tipo:'sel', titulo:'Actividad 2 - Autoevaluación antes de sustentar',
+  lista:[
+   { q:'¿Puedes decir, sin mirar, cuál es el costo unitario de tu producto y cómo lo calculaste?',
+     ops:['Sí, insumo por insumo o con el supuesto declarado','Tendría que revisar el Excel'], ok:0,
+     pq:'Es la primera cifra que se pregunta, porque de ella dependen el margen y todo el flujo. Si '+
+        'dudas, repásala ahora.' },
+   { q:'¿Sabes en qué mes tu campaña recupera la inversión y por qué?',
+     ops:['Sí, y puedo mostrarlo en la fila de flujo acumulado','Sé el número pero no de dónde sale'], ok:0,
+     pq:'El flujo acumulado es la fila que lo muestra. Señálala en la Tabla 18 mientras respondes.' },
+   { q:'Si el jurado te pide recalcular el VAN con una tasa distinta, ¿podrías?',
+     ops:['Sí: cambio la tasa en el Excel y los factores se recalculan solos',
+          'No, tendría que rehacerlo todo'], ok:0,
+     pq:'Por eso la tasa va en una celda aparte y fijada con $. Si la escribiste dentro de cada '+
+        'fórmula, cambiarla es rehacer la tabla. Revisa eso antes de la sustentación.' },
+   { q:'¿Tu conclusión dice de qué supuesto depende el resultado?',
+     ops:['Sí, nombra el supuesto más frágil','Solo dice si es viable o no'], ok:0,
+     pq:'Es lo que separa una conclusión de un veredicto. En Capriccio, todo depende de mayo; en tu '+
+        'campaña, averigua de qué depende y dilo tú antes de que te lo pregunten.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Caso integrador final y ensayo de cierre', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>La última práctica antes de sustentar</h2>'+
+      '<p>Semana 16 · jueves · 1 hora académica</p>'+
+      '<div class="via"><b>Caso integrador</b><b>Sustentación</b></div>'+
+    '</div>'+
+    globo(P.pres,'Cómo funciona la hora',
+      'Primero resuelves solo un caso que junta todo el curso. Después cada equipo sustenta tres '+
+      'minutos cronometrados y responde dos preguntas. No hay avance de proyecto: el informe ya está '+
+      'entregado.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">30</td><td><b>Ensayo</b></td><td>Caso integrador final y sustentación cronometrada de cierre</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Retroalimentación final</td></tr></tbody></table></div>'+
+    drive('Lo que necesitas hoy',
+      'Tu informe final y tu Excel. El caso de abajo se resuelve con calculadora o en el Excel, como '+
+      'prefieras.') },
+
+{ et:'Integrador', t:'Resuélvelo solo, de principio a fin', clave:'a0',
+  h:'<p class="enc">Pastelería Tiabaya S.A.C. · torta de lúcuma</p>'+
+    '<p class="sub">Nueve resultados que recorren todo lo que viste desde la semana 11</p>'+
+    globo(P.idea,'El orden que no falla',
+      'Margen de contribución primero. Con él salen los flujos. Con los flujos, el VAN y la '+
+      'recuperación. Con la inversión total, el ROI. Y con los costos fijos de la campaña, el '+
+      'equilibrio y el margen de seguridad. Siempre en ese orden.') },
+
+{ et:'Ensayo', t:'Sustentación cronometrada', clave:null,
+  h:'<p class="enc">Tres minutos por equipo</p>'+
+    '<p class="sub">Con el guion de la sesión anterior y las cifras de tu propia marca</p>'+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se evalúa</th></tr></thead><tbody>'+
+    '<tr><td class="mi">3</td><td><b>Exposición</b></td><td>Que el recorrido vaya del precio al VAN '+
+      'sin saltos y sin leer</td></tr>'+
+    '<tr><td class="mi">2</td><td><b>Preguntas</b></td><td>Dos preguntas, a integrantes distintos, '+
+      'sobre cualquier cifra del informe</td></tr>'+
+    '<tr class="hol"><td class="mi">1</td><td><b>Retroalimentación</b></td><td>Qué corregir antes de '+
+      'la sustentación real</td></tr>'+
+    '</tbody></table></div>'+
+    globo(P.expl,'Lo que más se penaliza',
+      'Dar una cifra sin saber de dónde sale. Es preferible decir «ese dato es una estimación y el '+
+      'supuesto está en la nota de la tabla» que inventar una fuente. La honestidad con los supuestos '+
+      'es parte de la nota.') },
+
+{ et:'Revisar', t:'Autoevaluación antes de sustentar', clave:'a1',
+  h:'<p class="enc">Cuatro preguntas para hacerte a ti mismo</p>'+
+    '<p class="sub">Si fallas una, sabes qué repasar esta noche</p>'+
+    globo(P.alum,'Un consejo final',
+      'Antes de sustentar, recorre tu informe de atrás hacia adelante: empieza por el VAN y ve '+
+      'preguntándote de dónde sale cada número hasta llegar al precio de tu producto. Si el camino se '+
+      'corta en algún punto, ahí es donde te van a preguntar.') },
+
+{ et:'Cierre', t:'Fin del componente de Matemática Aplicada', clave:null,
+  h:'<p class="enc">Lo que hiciste en ocho semanas</p>'+
+    '<p class="sub">Semana 9 a semana 16</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Semana</th><th>Lo que aprendiste</th><th>Lo que quedó en el informe</th></tr></thead><tbody>'+
+    '<tr><td>9 y 10</td><td>Valor del dinero en el tiempo y estados financieros</td>'+
+      '<td>Tablas 10, A1, A2 y A3</td></tr>'+
+    '<tr><td>11</td><td>Indicadores de liquidez y análisis vertical</td><td>Tablas 11, A4 y 16</td></tr>'+
+    '<tr><td>12</td><td>Costo unitario y márgenes</td><td>Tablas 12 y A5</td></tr>'+
+    '<tr><td>13</td><td>Proyección de ventas y flujo de caja</td><td>Tablas 17, 18, A6 y Figura 10</td></tr>'+
+    '<tr><td>14</td><td>VAN, TIR, payback, B/C y ROI</td><td>Tablas 19, A7 y A8</td></tr>'+
+    '<tr class="res"><td>15 y 16</td><td>Punto de equilibrio y margen de seguridad</td>'+
+      '<td>Refuerzo para la sustentación</td></tr>'+
+    '</tbody></table></div>'+
+    drive('La carpeta queda abierta',
+      'Todos los archivos del curso, los casos resueltos y el modelo Capriccio quedan en la carpeta de '+
+      'Drive para que puedas consultarlos cuando los necesites.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Un profesional de marketing que sabe sustentar una campaña con un flujo de caja y un VAN tiene '+
+      'una ventaja real: puede defender su presupuesto ante quien decide. Eso es exactamente lo que '+
+      'acabas de aprender a hacer.') }
+]
+});
+</script>
+
+</body>
+</html>

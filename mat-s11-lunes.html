@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 11 lunes - Indicadores de estados financieros y presupuesto de campaña</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 11 &middot; lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 11 &middot; lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Indicadores del Estado de Situaci&oacute;n Financiera y presupuesto de campaña</h1>
+      <p><span class="sem">Semana 11 &middot; lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 11. Cafeter&iacute;a Misti Express, Librer&iacute;a Cayma, Pasteler&iacute;a Tiabaya y Juguer&iacute;a Selva Alegre son casos de clase, no empresas reales. Todos los montos est&aacute;n sin IGV.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s11l_v1',
+  sala:'MATS11L',
+  ACT:{
+
+a0:{ tipo:'hoja', titulo:'Actividad 1 - Los cuatro indicadores en Excel',
+  intro:'Esta es la parte que faltaba de la semana 10. Escribe la <b>fórmula</b> en las celdas '+
+        'amarillas, empezando con <code>=</code>. Toca una celda del cuadro para meterla en la fórmula.',
+  cols:[{w:330},{w:160},{w:200}],
+  filas:[
+   [{x:'Cafetería Misti Express S.A.C.'},{x:'Dato (S/)'},{x:'Resultado'}],
+   [{x:'Total activo corriente'},{n:55000},{x:''}],
+   [{x:'Inventarios'},{n:12500},{x:''}],
+   [{x:'Total pasivo corriente'},{n:33000},{x:''}],
+   [{x:'Total pasivo'},{n:65000},{x:''}],
+   [{x:'Total activo'},{n:136000},{x:''}],
+   [{x:'Capital de trabajo (S/)'},{x:''},{e:22000, f:true, ph:'=B2-B4'}],
+   [{x:'Razón corriente'},{x:''},{e:1.67, f:true, ph:'=B2/B4'}],
+   [{x:'Prueba ácida'},{x:''},{e:1.29, f:true, ph:'=(B2-B3)/B4'}],
+   [{x:'Nivel de endeudamiento en %'},{x:''},{e:47.79, f:true, ph:'=B5/B6*100'}]
+  ],
+  ayuda:'El capital de trabajo es una resta; la razón corriente, una división. La prueba '+
+        'ácida le quita el inventario al activo corriente, así que necesita paréntesis. '+
+        'Para el porcentaje, multiplica la división por 100.',
+  fin:globo(P.expl,'Resuelto','Capital de trabajo S/ 22,000, razón corriente 1.67, prueba '+
+      'ácida 1.29 y endeudamiento 47.79 %. La cafetería tiene 1.67 soles de activo corriente '+
+      'por cada sol que debe en el corto plazo, y sigue sobre 1 incluso sin contar el inventario. '+
+      'Casi la mitad de lo que tiene está financiado con deuda.') },
+
+a1:{ tipo:'tabla', titulo:'Actividad 2 - Los mismos indicadores a mano',
+  intro:'Ahora sin Excel. Usa la calculadora del botón flotante y escribe el resultado con dos '+
+        'decimales, sin comas: <code>33800</code>, <code>1.64</code>.',
+  cols:['Librería Cayma E.I.R.L.','Fórmula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Total activo corriente'},{t:'dato'},{t:'86,800.00'}],
+   [{t:'Inventarios'},{t:'dato'},{t:'48,600.00'}],
+   [{t:'Total pasivo corriente'},{t:'dato'},{t:'53,000.00'}],
+   [{t:'Total pasivo / Total activo'},{t:'dato'},{t:'82,000 / 143,800'}],
+   [{t:'Capital de trabajo (S/)'},{t:'Activo corriente − Pasivo corriente'},
+    {e:33800, tol:0.5, ph:'33800', pq:'86,800 − 53,000 = 33,800'}],
+   [{t:'Razón corriente'},{t:'Activo corriente / Pasivo corriente'},
+    {e:1.64, tol:0.01, ph:'1.64', pq:'86,800 / 53,000 = 1.6377 → 1.64'}],
+   [{t:'Prueba ácida'},{t:'(Activo corriente − Inventarios) / Pasivo corriente'},
+    {e:0.72, tol:0.01, ph:'0.72', pq:'(86,800 − 48,600) / 53,000 = 38,200 / 53,000 = 0.7208 → 0.72'}],
+   [{t:'Nivel de endeudamiento en %', cl:'tot'},{t:'Pasivo total / Activo total × 100'},
+    {e:57.02, tol:0.02, ph:'57.02', cl:'tot', pq:'82,000 / 143,800 × 100 = 57.02 %'}]
+  ],
+  fin:globo(P.idea,'Resuelto','Fíjate en el salto: la razón corriente es 1.64, parecida a la de '+
+      'la cafetería, pero la prueba ácida se cae a 0.72. Toda la liquidez de la '+
+      'librería está metida en libros y útiles de almacén.') },
+
+a2:{ tipo:'sel', titulo:'Actividad 3 - Qué dicen los indicadores',
+  lista:[
+   { q:'La librería tiene razón corriente 1.64 y prueba ácida 0.72. ¿Podría pagar sus deudas de corto plazo sin vender sus libros?',
+     ops:['Sí, porque la razón corriente pasa de 1',
+          'No: sin vender inventario solo cubre S/ 0.72 por cada S/ 1 que debe',
+          'No se puede saber con estos datos'], ok:1,
+     pq:'La prueba ácida saca el inventario justamente porque es lo más difícil de convertir '+
+        'en efectivo rápido. Con 0.72 la librería depende de vender para pagar.' },
+   { q:'Capriccio tiene un endeudamiento de 39.07 % y la librería de 57.02 %. ¿Qué significa?',
+     ops:['Que la librería financia más de la mitad de sus activos con deuda',
+          'Que la librería tiene más activos que Capriccio',
+          'Que la librería paga más intereses en soles'], ok:0,
+     pq:'El indicador compara deuda contra activo total, no contra la otra empresa. 57.02 % quiere decir '+
+        'que de cada S/ 100 de activos, S/ 57.02 los pusieron terceros y S/ 42.98 los dueños.' },
+   { q:'¿Para qué sirven estos cuatro indicadores en el informe de su marca?',
+     ops:['Van en el cuerpo del informe, en el punto 3.2.3',
+          'Van en el Anexo A.2, como base del análisis del punto 2.5.2',
+          'No se usan, son solo práctica'], ok:1,
+     pq:'En Capriccio son la Tabla A4 del Anexo A.2. Sustentan que la empresa puede sostener la campaña: '+
+        'si la liquidez fuera menor que 1, invertir en publicidad sería más riesgoso.' } ] },
+
+a3:{ tipo:'hoja', titulo:'Actividad 4 - Análisis vertical en Excel',
+  intro:'El análisis vertical divide cada partida entre las ventas netas. La celda de las ventas '+
+        'netas es siempre la misma, así que conviene fijarla con <b>$</b>: <code>=B3/$B$3*100</code>. '+
+        'Escribe el porcentaje, no el decimal.',
+  cols:[{w:340},{w:160},{w:190}],
+  filas:[
+   [{x:'Pastelería Tiabaya S.A.C. - 2025'},{x:'Monto (S/)'},{x:'% de ventas'}],
+   [{x:'Ventas brutas'},{n:650000},{x:''}],
+   [{x:'Ventas netas'},{n:635000},{n:100}],
+   [{x:'(-) Costo de ventas'},{n:285000},{e:44.88, f:true, ph:'=B4/$B$3*100'}],
+   [{x:'Utilidad bruta'},{n:350000},{e:55.12, f:true, ph:'=B5/$B$3*100'}],
+   [{x:'(-) Gastos de ventas'},{n:95000},{e:14.96, f:true, ph:'=B6/$B$3*100'}],
+   [{x:'(-) Gastos de administración'},{n:120000},{e:18.90, f:true, ph:'=B7/$B$3*100'}],
+   [{x:'Utilidad operativa'},{n:135000},{e:21.26, f:true, ph:'=B8/$B$3*100'}],
+   [{x:'Utilidad neta del ejercicio'},{n:88830},{e:13.99, f:true, ph:'=B9/$B$3*100'}]
+  ],
+  ayuda:'Si escribes la primera fórmula con <b>$B$3</b> y la copias hacia abajo, el numerador '+
+        'avanza solo y el denominador se queda quieto. Eso es exactamente lo que hace el símbolo $.',
+  fin:globo2(P.pres, P.bien,'Resuelto','De cada S/ 100 que vende la pastelería, S/ 44.88 se van en '+
+      'insumos y le quedan S/ 13.99 de utilidad neta. El gasto que más pesa es administración '+
+      'con 18.90 %, por encima de ventas con 14.96 %: antes de recortar publicidad hay que mirar el '+
+      'alquiler y los servicios.') },
+
+a4:{ tipo:'tabla', titulo:'Actividad 5 - El presupuesto de la campaña',
+  intro:'La Juguería Selva Alegre cotizó su campaña de tres meses. Separa lo que se paga '+
+        'una sola vez de lo que se paga cada mes: el flujo de caja los necesita en filas distintas.',
+  cols:['Medio','Tipo de gasto','Costo (S/)','Meses','Costo total (S/)'],
+  tipos:['','','n','n','n'],
+  filas:[
+   [{t:'Fotos y video del producto'},{t:'Inversión inicial'},{t:'350.00'},{t:'1'},{t:'350.00'}],
+   [{t:'Diseño de piezas gráficas'},{t:'Inversión inicial'},{t:'250.00'},{t:'1'},{t:'250.00'}],
+   [{t:'Banner y volantes'},{t:'Inversión inicial'},{t:'400.00'},{t:'1'},{t:'400.00'}],
+   [{t:'Facebook e Instagram'},{t:'Gasto mensual'},{t:'280.00'},{t:'3'},
+    {e:840, tol:0.5, ph:'840', pq:'280 × 3 meses = 840'}],
+   [{t:'TikTok'},{t:'Gasto mensual'},{t:'120.00'},{t:'3'},
+    {e:360, tol:0.5, ph:'360', pq:'120 × 3 = 360'}],
+   [{t:'Muestras gratis en el local'},{t:'Gasto mensual'},{t:'100.00'},{t:'3'},
+    {e:300, tol:0.5, ph:'300', pq:'100 × 3 = 300'}],
+   [{t:'Inversión inicial (Mes 0)', cl:'tot'},{t:'se paga una sola vez'},{t:''},{t:''},
+    {e:1000, tol:0.5, ph:'1000', cl:'tot', pq:'350 + 250 + 400 = 1,000. Va completa en el Mes 0.'}],
+   [{t:'Gasto de la campaña por mes', cl:'tot'},{t:'se repite cada mes'},{t:''},{t:''},
+    {e:500, tol:0.5, ph:'500', cl:'tot', pq:'280 + 120 + 100 = 500 cada mes, del Mes 1 al Mes 3.'}],
+   [{t:'TOTAL de la campaña', cl:'tot'},{t:'inicial + 3 meses'},{t:''},{t:''},
+    {e:2500, tol:0.5, ph:'2500', cl:'tot', pq:'1,000 + (500 × 3) = 2,500'}],
+   [{t:'% del total en redes pagadas', cl:'tot'},{t:'(840 + 360) / total × 100'},{t:''},{t:''},
+    {e:48, tol:0.1, ph:'48', cl:'tot', pq:'1,200 / 2,500 × 100 = 48 %'}]
+  ],
+  fin:globo(P.full,'Resuelto','Inversión inicial S/ 1,000 y gasto mensual S/ 500. Esta '+
+      'separación es la que decide dónde va cada cifra en el flujo de caja: la '+
+      'inversión inicial se paga antes de lanzar y entra en el Mes 0; la publicidad en redes se '+
+      'paga mientras la campaña corre, así que entra en los meses 1, 2 y 3.') }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Indicadores del Estado de Situación Financiera y presupuesto de campaña', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>Lo que los estados financieros todavía no te han dicho</h2>'+
+      '<p>Semana 11 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>Liquidez</b><b>Endeudamiento</b><b>Análisis vertical</b><b>Campaña</b></div>'+
+    '</div>'+
+    globo(P.pres,'Dónde estamos',
+      'Los estados financieros ya están armados: el Estado de Resultados y el Estado de '+
+      'Situación Financiera. Falta la parte que los hace hablar, que son los indicadores. Hoy los '+
+      'calculas en Excel y a mano, y de ahí pasas directo al presupuesto de tu campaña.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">15</td><td><b>Repaso de Excel</b></td><td>Escribir fórmulas con <b>=</b>, usar paréntesis y fijar una celda con <b>$</b></td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Los cuatro indicadores del ESF en Excel y a mano, y su interpretación</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Análisis vertical del Estado de Resultados y presupuesto del plan de medios</td></tr><tr><td class="mi">15</td><td><b>Proyecto</b></td><td>Tabla 16 de la campaña en el Excel de avance</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Dudas, revisión de lo que quedó pendiente y cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'En la carpeta están el Excel de avance (hojas <b>Sem 10</b> y <b>Sem 11</b>), el Word del '+
+      'informe y la ficha de casos de la semana 11. Abre el Excel antes de empezar.') },
+
+{ et:'En Excel', t:'Los cuatro indicadores, con fórmulas', clave:'a0',
+  h:'<p class="enc">Cafetería Misti Express S.A.C.</p>'+
+    '<p class="sub">Al 31 de diciembre de 2025, con el Estado de Situación Financiera ya ordenado</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Liquidez</h4><div class="c">'+
+      '<p>Responde si la empresa puede pagar lo que debe este año.</p>'+
+      '<p class="fx">Capital de trabajo = AC − PC<br>Razón corriente = AC / PC<br>'+
+      'Prueba ácida = (AC − Inventarios) / PC</p></div></div>'+
+    '<div class="fc rj"><h4>Endeudamiento</h4><div class="c">'+
+      '<p>Responde quién financia lo que la empresa tiene.</p>'+
+      '<p class="fx">Nivel de endeudamiento = Pasivo total / Activo total × 100</p></div></div>'+
+    '</div>'+
+    '<div class="av">La hoja de abajo funciona como Excel: escribe <b>=</b> y la fórmula. Si tocas '+
+    'una celda del cuadro, su referencia entra sola.</div>' },
+
+{ et:'A mano', t:'Los mismos indicadores sin Excel', clave:'a1',
+  h:'<p class="enc">Librería Cayma E.I.R.L.</p>'+
+    '<p class="sub">Mismo cálculo, otra empresa, y esta vez con lápiz y calculadora</p>'+
+    globo(P.idea,'Por qué a mano también',
+      'En la sustentación te van a preguntar un indicador y no vas a tener el Excel abierto. Si '+
+      'sabes de memoria qué se divide entre qué, lo resuelves en la calculadora del celular '+
+      'en diez segundos.')+
+    '<div class="av">Usa el botón de la calculadora, abajo a la derecha. Escribe los resultados '+
+    'con dos decimales.</div>' },
+
+{ et:'Interpretar', t:'Un número solo no dice nada', clave:'a2',
+  h:'<p class="enc">Lo que el informe pide no es el cálculo: es la lectura</p>'+
+    '<p class="sub">Tres preguntas que el jurado sí puede hacerte</p>'+
+    globo(P.expl,'La regla de oro',
+      'Cada indicador se lee en una frase que empieza con «por cada». Por cada sol que debo '+
+      'en el corto plazo tengo 1.64 de activo corriente. Por cada S/ 100 de activos, S/ 57.02 son deuda. '+
+      'Si no puedes armar esa frase, el número no te sirve.') },
+
+{ et:'En Excel', t:'Análisis vertical del Estado de Resultados', clave:'a3',
+  h:'<p class="enc">Pastelería Tiabaya S.A.C.</p>'+
+    '<p class="sub">La columna que convierte soles en porcentajes comparables</p>'+
+    '<div class="form">% de ventas = partida ÷ ventas netas × 100'+
+      '<small>En Excel: <b>=B4/$B$3*100</b> y se copia hacia abajo</small></div>'+
+    globo(P.pres,'Para qué sirve esta columna',
+      'En soles no puedes comparar tu marca con otra más grande. En porcentaje sí: el costo '+
+      'de ventas de Capriccio es 41.98 % y el de esta pastelería 44.88 %, y ahí ya sabes '+
+      'cuál controla mejor sus insumos. Esta es la Tabla 11 de tu informe.') },
+
+{ et:'Campaña', t:'El presupuesto del plan de medios', clave:'a4',
+  h:'<p class="enc">Juguería Selva Alegre E.I.R.L.</p>'+
+    '<p class="sub">Tres meses de campaña, y una pregunta que decide todo el flujo de caja</p>'+
+    '<div class="datos c2"><h4>Lo que cotizó la juguería, sin IGV</h4>'+
+    '<div class="fl"><span>Fotos y video, diseño, banner y volantes</span><b>pago único</b></div>'+
+    '<div class="fl"><span>Facebook, Instagram y TikTok</span><b>cada mes</b></div>'+
+    '<div class="fl"><span>Muestras gratis en el local</span><b>cada mes</b></div>'+
+    '<div class="fl"><span>Duración de la campaña</span><b>3 meses</b></div>'+
+    '</div>'+
+    globo(P.idea,'La pregunta que decide',
+      '¿Esto se paga una sola vez antes de lanzar, o se paga cada mes mientras la campaña corre? '+
+      'Lo primero es inversión inicial y va en el Mes 0. Lo segundo es gasto de la campaña y se '+
+      'repite en los meses 1, 2 y 3. Equivocarse aquí descuadra el VAN de la semana 14.') },
+
+{ et:'Proyecto', t:'Avance de hoy y del jueves', clave:null,
+  h:'<p class="enc">AVANCE 1 del componente de Matemática</p>'+
+    '<p class="sub">Lo que tiene que quedar en el Word al terminar la semana</p>'+
+    proy('Qué hace cada equipo ahora',
+     ['Abre el Excel de avance en Drive, hoja <b>Sem 10</b>, y completa las celdas amarillas de las '+
+      'Tablas <b>A2</b> (Estado de Resultados), <b>A3</b> (Estado de Situación Financiera) y '+
+      '<b>A4</b> (los cuatro indicadores que calculaste hoy).',
+      'Pasa a la hoja <b>Sem 11</b> y arma la <b>Tabla 11</b>: el Estado de Resultados de tu marca con '+
+      'la columna de % de ventas netas, igual que la pastelería de la actividad 4.',
+      'En la misma hoja, arma la <b>Tabla 16</b> con tu plan de medios. Una fila por canal, con '+
+      'frecuencia, duración y costo sin IGV, y debajo las dos cifras que importan: '+
+      '<b>inversión inicial del Mes 0</b> y <b>gasto por mes</b>.',
+      'Copia las tablas al Word: la <b>Tabla 11</b> va en el punto <b>2.5.2</b>, la <b>Tabla 16</b> en el '+
+      '<b>3.1.3</b>, y las Tablas <b>A2</b>, <b>A3</b> y <b>A4</b> en el <b>Anexo A.2</b>. Cada tabla con '+
+      'su título arriba y su nota de «Elaboración propia» abajo.',
+      'Debajo de la Tabla 11 escribe un párrafo por partida explicando de dónde sale el '+
+      'monto y si el dato es real o estimado. Ese texto es lo que se califica, no la tabla.'],
+     'El jueves la hora completa es para esto. Si una cifra de tu marca no existe, se estima y se '+
+     'declara el supuesto: lo que no se puede dejar en blanco es la explicación.')+
+    globo2(P.pres, P.alum,'Para cerrar',
+      'Ya tienes el diagnóstico de tu marca: cuánto vende, cuánto le queda, si puede '+
+      'pagar sus deudas y qué va a costar la campaña. La semana 12 entra al costo de tu producto, '+
+      'que es la pieza que todavía falta para armar el flujo de caja.') }
+]
+});
+</script>
+
+</body>
+</html>

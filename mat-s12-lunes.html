@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 12 lunes - Costo unitario, clasificación de costos y márgenes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 12 · lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 12 · lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Costo unitario, clasificación de costos y márgenes</h1>
+      <p><span class="sem">Semana 12 · lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 12. Heladería Yanahuara, Ferretería Socabaya y Pollería El Fogón Characato son casos de clase, no empresas reales. Todos los montos están sin IGV.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s12l_v1',
+  sala:'MATS12L',
+  ACT:{
+
+a0:{ tipo:'hoja', titulo:'Actividad 1 - El costo de una copa, en Excel',
+  intro:'Cada insumo cuesta <b>precio × cantidad</b>. Escribe la fórmula en la columna E, y al final '+
+        'suma la columna con <code>=SUMA(E2:E8)</code>.',
+  cols:[{w:280},{w:100},{w:120},{w:120},{w:150}],
+  filas:[
+   [{x:'Insumo'},{x:'Unidad'},{x:'Precio (S/)'},{x:'Cantidad'},{x:'Costo (S/)'}],
+   [{x:'Leche fresca'},{x:'litro'},{n:4.50},{n:0.2},{e:0.90, f:true, ph:'=C2*D2'}],
+   [{x:'Leche evaporada'},{x:'litro'},{n:9.00},{n:0.1},{e:0.90, f:true, ph:'=C3*D3'}],
+   [{x:'Azúcar'},{x:'kg'},{n:3.80},{n:0.05},{e:0.19, f:true, ph:'=C4*D4'}],
+   [{x:'Coco rallado'},{x:'kg'},{n:24.00},{n:0.01},{e:0.24, f:true, ph:'=C5*D5'}],
+   [{x:'Canela y clavo de olor'},{x:'kg'},{n:60.00},{n:0.002},{e:0.12, f:true, ph:'=C6*D6'}],
+   [{x:'Yema de huevo'},{x:'unidad'},{n:0.50},{n:1},{e:0.50, f:true, ph:'=C7*D7'}],
+   [{x:'Vaso con cuchara descartable'},{x:'unidad'},{n:0.35},{n:1},{e:0.35, f:true, ph:'=C8*D8'}],
+   [{x:'COSTO UNITARIO de la copa'},{x:''},{x:''},{x:''},{e:3.20, f:true, ph:'=SUMA(E2:E8)'}],
+   [{x:'Precio de venta sin IGV (9.50 / 1.18)'},{x:''},{x:''},{x:''},{e:8.05, f:true, ph:'=9.5/1.18'}],
+   [{x:'MARGEN UNITARIO (precio − costo)'},{x:''},{x:''},{x:''},{e:4.85, f:true, ph:'=E10-E9'}]
+  ],
+  ayuda:'El precio de carta ya trae IGV. Para trabajar sin IGV se divide entre 1.18, nunca se le resta '+
+        'el 18 %: no es lo mismo.',
+  fin:globo(P.expl,'Resuelto','La copa cuesta S/ 3.20 de insumos y se vende en S/ 8.05 sin IGV, así que '+
+      'deja S/ 4.85. Ese margen es el que después paga el alquiler, los sueldos y la publicidad. Ojo '+
+      'con el vaso: el envase es parte del costo del producto, porque sin él no se puede vender.') },
+
+a1:{ tipo:'arr', titulo:'Actividad 2 - Costo variable, costo fijo de la campaña o gasto operativo',
+  fichas:[ {id:'f1', t:'Leche fresca de la copa', g:'CV'},
+           {id:'f2', t:'Vaso descartable con cuchara', g:'CV'},
+           {id:'f3', t:'Coco rallado y canela', g:'CV'},
+           {id:'f4', t:'Publicidad en Facebook durante la campaña', g:'CF'},
+           {id:'f5', t:'Sesión de fotos del producto para la campaña', g:'CF'},
+           {id:'f6', t:'Alquiler del local', g:'GO'},
+           {id:'f7', t:'Sueldo de la cajera', g:'GO'},
+           {id:'f8', t:'Limpieza del local', g:'GO'} ],
+  cajas:[ {id:'CV', t:'Costo variable: sube si vendo una unidad más'},
+          {id:'CF', t:'Costo fijo de la campaña: se paga por la campaña, venda lo que venda'},
+          {id:'GO', t:'Gasto operativo: ya existía antes de la campaña'} ],
+  fin:globo(P.idea,'Resuelto','La pregunta que separa las tres cajas es sencilla. ¿Sube si vendo una '+
+      'copa más? Es variable. ¿Lo pago por la campaña aunque no venda nada? Es costo fijo de la '+
+      'campaña. ¿Lo pagaba igual el año pasado? Es gasto operativo, y por eso no entra en el costo '+
+      'unitario ni en el flujo de la campaña.') },
+
+a2:{ tipo:'tabla', titulo:'Actividad 3 - Márgenes a mano',
+  intro:'Ferretería Socabaya S.A.C. resumió su Estado de Resultados 2025. Calcula los márgenes con la '+
+        'calculadora y escribe el porcentaje con dos decimales, sin el signo.',
+  cols:['Margen','Fórmula','Datos','Resultado en %'],
+  tipos:['','','','n'],
+  filas:[
+   [{t:'Ventas netas'},{t:'dato'},{t:'1,250,000'},{t:'100.00'}],
+   [{t:'Margen bruto'},{t:'Utilidad bruta / Ventas netas × 100'},{t:'375,000'},
+    {e:30, tol:0.05, ph:'30.00', pq:'375,000 / 1,250,000 × 100 = 30.00 %'}],
+   [{t:'Margen operativo'},{t:'Utilidad operativa / Ventas netas × 100'},{t:'112,500'},
+    {e:9, tol:0.05, ph:'9.00', pq:'112,500 / 1,250,000 × 100 = 9.00 %'}],
+   [{t:'Margen neto'},{t:'Utilidad neta / Ventas netas × 100'},{t:'71,250'},
+    {e:5.70, tol:0.05, ph:'5.70', pq:'71,250 / 1,250,000 × 100 = 5.70 %'}],
+   [{t:'Participación de gastos operativos', cl:'tot'},
+    {t:'(Utilidad bruta − Utilidad operativa) / Ventas netas × 100'},{t:'375,000 − 112,500'},
+    {e:21, tol:0.05, ph:'21.00', cl:'tot',
+     pq:'262,500 / 1,250,000 × 100 = 21.00 %. Es lo que se llevan el alquiler, los sueldos y la publicidad.'}]
+  ],
+  fin:globo(P.full,'Resuelto','La ferretería tiene un margen bruto de 30 % y la pastelería de la semana '+
+      'pasada, 55.12 %. No es que una sea mejor empresa: la ferretería revende productos que compra '+
+      'casi hechos, y la pastelería transforma insumos baratos en tortas y cobra por su marca.') },
+
+a3:{ tipo:'hoja', titulo:'Actividad 4 - Los márgenes de Capriccio en Excel',
+  intro:'Los tres márgenes salen del mismo denominador: las ventas netas. Fíjalo con <b>$</b> y copia '+
+        'la fórmula hacia abajo. Escribe el porcentaje.',
+  cols:[{w:330},{w:170},{w:180}],
+  filas:[
+   [{x:'Capriccio - 2025'},{x:'Monto (S/)'},{x:'Margen en %'}],
+   [{x:'Ventas netas'},{n:947967},{x:''}],
+   [{x:'Utilidad bruta'},{n:549967},{e:58.02, f:true, ph:'=B3/$B$2*100'}],
+   [{x:'Utilidad operativa'},{n:157967},{e:16.66, f:true, ph:'=B4/$B$2*100'}],
+   [{x:'Utilidad neta del ejercicio'},{n:100439.23},{e:10.60, f:true, ph:'=B5/$B$2*100'}]
+  ],
+  ayuda:'Si en lugar de $B$2 escribes B2 y copias hacia abajo, el denominador se corre a B3 y B4 y los '+
+        'tres márgenes salen mal. Ese es el error más común del avance.',
+  fin:globo2(P.pres, P.bien,'Resuelto','58.02 %, 16.66 % y 10.60 %. La lectura va siempre así: de cada '+
+      'S/ 100 vendidos quedan S/ 58.02 después de pagar los insumos, S/ 16.66 después de pagar también '+
+      'el local y el personal, y S/ 10.60 al final, ya pagados los intereses y el impuesto. Esta es la '+
+      'Tabla 12 de tu informe.') },
+
+a4:{ tipo:'tabla', titulo:'Actividad 5 - Tarea: el costo del pollo a la brasa',
+  intro:'Pollería El Fogón Characato vende el 1/4 de pollo a S/ 24.90 con IGV. Calcula el costo de los '+
+        'insumos por plato y el margen. Escribe los importes con dos decimales.',
+  cols:['Insumo','Precio (S/)','Cantidad','Costo (S/)'],
+  tipos:['','n','n','n'],
+  filas:[
+   [{t:'Pollo (1/4), por kg'},{t:'10.00'},{t:'0.55'},
+    {e:5.50, tol:0.02, ph:'5.50', pq:'10.00 × 0.55 = 5.50'}],
+   [{t:'Papas, por kg'},{t:'2.50'},{t:'0.3'},
+    {e:0.75, tol:0.02, ph:'0.75', pq:'2.50 × 0.3 = 0.75'}],
+   [{t:'Aceite, por litro'},{t:'9.00'},{t:'0.05'},
+    {e:0.45, tol:0.02, ph:'0.45', pq:'9.00 × 0.05 = 0.45'}],
+   [{t:'Ensalada y cremas, por porción'},{t:'0.60 y 0.40'},{t:'1 y 1'},
+    {e:1.00, tol:0.02, ph:'1.00', pq:'0.60 + 0.40 = 1.00'}],
+   [{t:'Carbón, por kg'},{t:'3.00'},{t:'0.2'},
+    {e:0.60, tol:0.02, ph:'0.60', pq:'3.00 × 0.2 = 0.60'}],
+   [{t:'Envase para llevar'},{t:'0.50'},{t:'1'},
+    {e:0.50, tol:0.02, ph:'0.50', pq:'0.50 × 1 = 0.50'}],
+   [{t:'COSTO UNITARIO del plato', cl:'tot'},{t:''},{t:''},
+    {e:8.80, tol:0.03, ph:'8.80', cl:'tot', pq:'5.50 + 0.75 + 0.45 + 1.00 + 0.60 + 0.50 = 8.80'}],
+   [{t:'Precio de venta sin IGV', cl:'tot'},{t:'24.90 / 1.18'},{t:''},
+    {e:21.10, tol:0.03, ph:'21.10', cl:'tot', pq:'24.90 / 1.18 = 21.1017 → 21.10'}],
+   [{t:'MARGEN UNITARIO', cl:'tot'},{t:'precio − costo'},{t:''},
+    {e:12.30, tol:0.03, ph:'12.30', cl:'tot', pq:'21.10 − 8.80 = 12.30'}],
+   [{t:'Costo como % del precio', cl:'tot'},{t:'costo / precio × 100'},{t:''},
+    {e:41.71, tol:0.05, ph:'41.71', cl:'tot', pq:'8.80 / 21.10 × 100 = 41.71 %'}]
+  ],
+  fin:globo(P.idea,'Resuelto','El plato cuesta S/ 8.80 y deja S/ 12.30. Guarda el margen unitario de '+
+      '12.30 y el costo fijo del mes, porque en la semana 15 con esos dos números sale el punto de '+
+      'equilibrio de la pollería.') },
+
+a5:{ tipo:'sel', titulo:'Actividad 6 - Qué entra y qué no entra al costo del producto',
+  lista:[
+   { q:'¿Por qué el sueldo de la cajera no se suma al costo unitario de la copa?',
+     ops:['Porque es un gasto operativo: se paga igual se vendan 10 copas o 500',
+          'Porque los sueldos nunca son costo en contabilidad',
+          'Porque ya está incluido en el precio de los insumos'], ok:0,
+     pq:'Si lo sumaras al costo de cada copa tendrías que dividir el sueldo entre las copas vendidas, y '+
+        'ese número cambiaría cada mes. El costo unitario solo lleva lo que se consume por unidad.' },
+   { q:'El precio de carta de la copa es S/ 9.50 con IGV. ¿Cuál es el precio sin IGV?',
+     ops:['9.50 − 18 % = 7.79','9.50 / 1.18 = 8.05','9.50 × 0.82 = 7.79'], ok:1,
+     pq:'El IGV se le agregó al precio sin IGV, así que para sacarlo se divide. Restarle el 18 % da '+
+        'S/ 7.79 y son 26 céntimos de diferencia en cada copa: en mil copas, S/ 260.' },
+   { q:'Tu marca no tiene una receta con cantidades exactas. ¿Qué haces para el avance?',
+     ops:['Dejas el costo unitario en blanco',
+          'Usas el % de costo de ventas del Estado de Resultados y declaras el supuesto',
+          'Inventas un costo redondo'], ok:1,
+     pq:'Si el costo de ventas es el 42 % de las ventas, el costo unitario estimado es el 42 % del '+
+        'precio sin IGV. Es una estimación válida siempre que esté declarada en la nota de la tabla.' },
+   { q:'La sesión de fotos de la campaña, ¿entra en el costo unitario del producto?',
+     ops:['Sí, porque es parte de vender el producto',
+          'No: es inversión inicial de la campaña y va en el Mes 0 del flujo',
+          'No, porque las fotos no cuestan'], ok:1,
+     pq:'El costo unitario es lo que se consume al producir una unidad. La campaña se evalúa aparte, '+
+        'con su propio flujo de caja: por eso la inversión inicial va en el Mes 0 y no repartida entre '+
+        'las tortas.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Costo unitario, clasificación de costos y márgenes', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>¿Cuánto cuesta de verdad lo que vendes?</h2>'+
+      '<p>Semana 12 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>Costo unitario</b><b>Variable y fijo</b><b>Márgenes</b></div>'+
+    '</div>'+
+    globo(P.pres,'Por qué esto antes del flujo',
+      'En la semana 13 vas a calcular cuánto deja cada venta adicional de tu campaña. Para eso '+
+      'necesitas dos números: el precio sin IGV, que ya tienes, y el costo unitario, que es lo de hoy. '+
+      'Sin costo unitario no hay flujo de caja, y sin flujo no hay VAN.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">60</td><td><b>Práctica</b></td><td>Costo unitario en Excel y clasificación de cada desembolso</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Márgenes de utilidad a mano y en Excel, con referencia absoluta</td></tr><tr><td class="mi">15</td><td><b>Proyecto</b></td><td>Costo unitario del producto de cada marca en el Excel de avance</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Dudas y cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'Abre el Excel de avance en la hoja <b>Sem 12</b> y ten a la mano la lista de insumos o la receta '+
+      'de tu producto. Si no la tienes, trae el porcentaje de costo de ventas de tu Estado de Resultados.') },
+
+{ et:'En Excel', t:'El costo de una copa de queso helado', clave:'a0',
+  h:'<p class="enc">Heladería Yanahuara S.A.C.</p>'+
+    '<p class="sub">Siete insumos, una multiplicación por fila y una suma al final</p>'+
+    '<div class="form">Costo de un insumo = precio × cantidad'+
+      '<small>Precio sin IGV = precio de carta ÷ 1.18</small></div>'+
+    globo(P.idea,'Antes de empezar',
+      'Las cantidades están en la misma unidad que el precio: si el precio es por kilo, la cantidad va '+
+      'en kilos, aunque sean 0.002. Es el error más común de esta tabla, y hace que el costo salga mil '+
+      'veces más grande.') },
+
+{ et:'Clasificar', t:'Costo variable, costo de campaña o gasto operativo', clave:'a1',
+  h:'<p class="enc">No todo lo que se paga es costo del producto</p>'+
+    '<p class="sub">Y cada caja va a un lugar distinto del informe</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Tipo</th><th>Pregunta que lo identifica</th><th>Dónde aparece</th></tr></thead><tbody>'+
+    '<tr><td>Costo variable</td><td>¿Sube si vendo una unidad más?</td>'+
+      '<td>Costo unitario, Tabla A5</td></tr>'+
+    '<tr><td>Costo fijo de la campaña</td><td>¿Lo pago por la campaña, venda o no venda?</td>'+
+      '<td>Plan de medios, Tabla 16</td></tr>'+
+    '<tr class="res"><td>Gasto operativo</td><td>¿Ya lo pagaba antes de la campaña?</td>'+
+      '<td>Estado de Resultados, Tabla 11</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="av">Arrastra cada desembolso a su caja. Si dudas, hazte las tres preguntas en ese orden.</div>' },
+
+{ et:'A mano', t:'Los tres márgenes de utilidad', clave:'a2',
+  h:'<p class="enc">Ferretería Socabaya S.A.C.</p>'+
+    '<p class="sub">Tres divisiones que resumen todo un Estado de Resultados</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Qué mide cada uno</h4><div class="c">'+
+      '<p><b>Bruto:</b> lo que queda después de los insumos.<br>'+
+      '<b>Operativo:</b> después del local y el personal.<br>'+
+      '<b>Neto:</b> después de intereses e impuesto.</p></div></div>'+
+    '<div class="fc rj"><h4>Cómo se lee</h4><div class="c">'+
+      '<p>Siempre en la misma frase: «de cada S/ 100 vendidos quedan S/ …». Si no puedes decirlo así, '+
+      'todavía no lo entendiste.</p></div></div>'+
+    '</div>' },
+
+{ et:'En Excel', t:'Los márgenes de Capriccio y el símbolo $', clave:'a3',
+  h:'<p class="enc">El mismo cálculo, con el denominador fijo</p>'+
+    '<p class="sub">Capriccio 2025, el modelo resuelto del componente</p>'+
+    '<div class="form">Margen = utilidad ÷ ventas netas × 100'+
+      '<small>En Excel: <b>=B3/$B$2*100</b> y se copia hacia abajo</small></div>'+
+    globo(P.expl,'Qué hace el signo $',
+      'Cuando copias una fórmula hacia abajo, Excel corre todas las referencias una fila. El $ clava la '+
+      'que no debe moverse. Aquí el numerador tiene que avanzar y el denominador tiene que quedarse en '+
+      'las ventas netas: por eso va $B$2.') },
+
+{ et:'Tarea', t:'El costo del pollo a la brasa', clave:'a4',
+  h:'<p class="enc">Pollería El Fogón Characato S.A.C.</p>'+
+    '<p class="sub">Ahora sin Excel: la misma lógica con lápiz y calculadora</p>'+
+    globo(P.alum,'Un dato para guardar',
+      'Anota el margen unitario que te salga. En la semana 15 vas a usar ese número con los costos '+
+      'fijos del mes para calcular cuántos platos tiene que vender la pollería solo para no perder.') },
+
+{ et:'Interpretar', t:'Las preguntas del jurado sobre costos', clave:'a5',
+  h:'<p class="enc">Cuatro preguntas que siempre aparecen</p>'+
+    '<p class="sub">Y que se responden con lo de hoy</p>'+
+    globo(P.pres,'La frontera',
+      'Todo lo que se consume al producir una unidad es costo del producto. Todo lo que existe aunque '+
+      'no produzcas nada es gasto operativo. Y lo que se paga solo por la campaña es inversión de la '+
+      'campaña. Tres bolsas distintas, y cada peso va en una sola.') },
+
+{ et:'Proyecto', t:'Avance de hoy y del jueves', clave:null,
+  h:'<p class="enc">Puntos 2.5.3 y Anexo A.2</p>'+
+    '<p class="sub">Tabla 12 y Tabla A5 de tu marca</p>'+
+    proy('Qué hace cada equipo ahora',
+     ['En la hoja <b>Sem 12</b> del Excel, arma la <b>Tabla A5</b>: la lista de insumos de tu producto '+
+      'con unidad, precio sin IGV, cantidad por unidad y costo. Al final, el <b>costo unitario</b>.',
+      'Si no tienes receta, estima el costo unitario con el porcentaje de costo de ventas de tu Estado '+
+      'de Resultados: <b>costo unitario = precio sin IGV × % de costo de ventas</b>. Escribe el supuesto '+
+      'en la nota de la tabla.',
+      'Debajo, calcula el <b>precio sin IGV</b> (precio de carta ÷ 1.18) y el <b>margen unitario</b> '+
+      '(precio − costo). Ese margen se usa en el flujo de la semana 13.',
+      'Arma la <b>Tabla 12</b> con los tres márgenes de tu marca, calculados con <b>$</b> sobre las '+
+      'ventas netas, y escribe la interpretación de cada uno con la frase «de cada S/ 100 vendidos…».',
+      'El jueves: Tabla 12 al punto <b>2.5.3</b> del Word y Tabla A5 al <b>Anexo A.2</b>, cada una con '+
+      'su nota.'],
+     'Si tu producto tiene dos presentaciones, calcula las dos: en Capriccio la torta mediana usa el '+
+     '62 % de los insumos de la grande, porque su área es (20 / 25.5)² = 0.6151.')+
+    globo2(P.pres, P.alum,'Para cerrar',
+      'Con el costo unitario y el margen ya tienes la pieza que faltaba. El lunes que viene proyectas '+
+      'cuántas unidades vas a vender de más por la campaña, y con ese margen sale el dinero que entra '+
+      'cada mes.') }
+]
+});
+</script>
+
+</body>
+</html>

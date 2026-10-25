@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 14 lunes - VAN, TIR, payback, ratio costo-beneficio y ROI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 14 · lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 14 · lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>VAN, TIR, payback, ratio costo-beneficio y ROI</h1>
+      <p><span class="sem">Semana 14 · lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 14. Panificadora Characato, Cafetería Misti Express y Juguería Selva Alegre son casos de clase, no empresas reales. Montos sin IGV y sin impuesto a la renta sobre la campaña.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s14l_v1',
+  sala:'MATS14L',
+  ACT:{
+
+a0:{ tipo:'tabla', titulo:'Actividad 1 - Los factores de descuento y el VAN, a mano',
+  intro:'Panificadora Characato, con el flujo de la semana pasada y una tasa de 2 % mensual. El factor '+
+        'se escribe con seis decimales: <code>0.980392</code>. Los valores actuales, con dos.',
+  cols:['Concepto','Mes 0','Mes 1','Mes 2','Mes 3'],
+  tipos:['','n','n','n','n'],
+  filas:[
+   [{t:'Flujo de Caja Neto (S/)'},{t:'-500.00'},{t:'150.00'},{t:'220.00'},{t:'220.00'}],
+   [{t:'Factor 1 / (1 + i)ᵗ'},{t:'1.000000'},
+    {e:0.980392, tol:0.000002, ph:'0.980392', pq:'1 / 1.02 = 0.980392'},
+    {e:0.961169, tol:0.000002, ph:'0.961169', pq:'1 / 1.02² = 1 / 1.0404 = 0.961169'},
+    {e:0.942322, tol:0.000002, ph:'0.942322', pq:'1 / 1.02³ = 1 / 1.061208 = 0.942322'}],
+   [{t:'Valor actual (FCN × factor)'},{t:'-500.00'},
+    {e:147.06, tol:0.03, ph:'147.06', pq:'150 × 0.980392 = 147.06'},
+    {e:211.46, tol:0.03, ph:'211.46', pq:'220 × 0.961169 = 211.46'},
+    {e:207.31, tol:0.03, ph:'207.31', pq:'220 × 0.942322 = 207.31'}],
+   [{t:'VAN (suma de los valores actuales)', cl:'tot'},{t:''},{t:''},{t:''},
+    {e:65.83, tol:0.05, ph:'65.83', cl:'tot',
+     pq:'−500 + 147.06 + 211.46 + 207.31 = 65.83. Positivo, así que la campaña rinde más que el 2 % mensual.'}],
+   [{t:'Periodo de recuperación (meses)', cl:'tot'},{t:''},{t:''},{t:''},
+    {e:2.59, tol:0.02, ph:'2.59', cl:'tot',
+     pq:'Al terminar el Mes 2 faltan 130. El Mes 3 trae 220: 2 + 130/220 = 2.59 meses.'}]
+  ],
+  fin:globo(P.expl,'Resuelto','VAN de S/ 65.83. Fíjate en lo que acaba de pasar: el flujo sumaba '+
+      'S/ 90 sin descontar, y descontado quedó en S/ 65.83. Esa diferencia de S/ 24.17 es lo que cuesta '+
+      'esperar tres meses por ese dinero. Mientras el VAN siga siendo positivo, la campaña conviene.') },
+
+a1:{ tipo:'hoja', titulo:'Actividad 2 - Los cinco indicadores en Excel',
+  intro:'La misma campaña, ahora con fórmulas. Para la potencia se usa <b>^</b>: <code>=1/(1+$B$1)^2</code>. '+
+        'La tasa está en B1, así que conviene fijarla con $.',
+  cols:[{w:300},{w:150},{w:150},{w:150},{w:150}],
+  filas:[
+   [{x:'Tasa mensual'},{n:0.02},{x:''},{x:''},{x:''}],
+   [{x:'Mes'},{x:'Mes 0'},{x:'Mes 1'},{x:'Mes 2'},{x:'Mes 3'}],
+   [{x:'Flujo de Caja Neto'},{n:-500},{n:150},{n:220},{n:220}],
+   [{x:'Valor actual'},{n:-500},{e:147.06, f:true, ph:'=C3/(1+$B$1)^1'},
+    {e:211.46, f:true, ph:'=D3/(1+$B$1)^2'},{e:207.31, f:true, ph:'=E3/(1+$B$1)^3'}],
+   [{x:'VAN (S/)'},{e:65.83, f:true, ph:'=SUMA(B4:E4)'},{x:''},{x:''},{x:''}],
+   [{x:'Ingresos adicionales'},{n:0},{n:600},{n:720},{n:720}],
+   [{x:'Costos del mes (ventas + gastos + inversión)'},{n:500},{n:450},{n:500},{n:500}],
+   [{x:'Valor actual de los ingresos'},{n:0},{e:588.24, f:true, ph:'=C6/(1+$B$1)^1'},
+    {e:692.04, f:true, ph:'=D6/(1+$B$1)^2'},{e:678.47, f:true, ph:'=E6/(1+$B$1)^3'}],
+   [{x:'Valor actual de los costos'},{n:500},{e:441.18, f:true, ph:'=C7/(1+$B$1)^1'},
+    {e:480.58, f:true, ph:'=D7/(1+$B$1)^2'},{e:471.16, f:true, ph:'=E7/(1+$B$1)^3'}],
+   [{x:'Ratio costo-beneficio'},{e:1.03, f:true, ph:'=SUMA(B8:E8)/SUMA(B9:E9)'},{x:''},{x:''},{x:''}],
+   [{x:'ROI en % (ganancia 1,190 − inversión 1,100) / 1,100'},{e:8.18, f:true, ph:'=(1190-1100)/1100*100'},
+    {x:''},{x:''},{x:''}]
+  ],
+  ayuda:'La TIR no se puede calcular con una fórmula escrita a mano: en el Excel de verdad se usa '+
+        '=TIR(rango de flujos) y el programa la busca por tanteo. Ábrelo en Drive y compruébalo: para '+
+        'esta campaña da 8.22 % mensual.',
+  fin:globo2(P.pres, P.bien,'Resuelto','VAN S/ 65.83, B/C 1.03 y ROI 8.18 %. Los tres dicen lo mismo '+
+      'con distinta unidad: la campaña conviene, pero por poco. Un B/C de 1.03 significa que por cada '+
+      'sol de costo entra S/ 1.03, así que hay tres céntimos de colchón por sol. Es ajustado.') },
+
+a2:{ tipo:'tabla', titulo:'Actividad 3 - ¿Qué campaña elegir?',
+  intro:'Cafetería Misti Express tiene dinero para una sola campaña y una tasa de 1.5 % mensual. '+
+        'Campaña A: −2,000 · 1,000 · 1,000 · 1,000. Campaña B: −500 · 300 · 300 · 200.',
+  cols:['Indicador','Campaña A','Campaña B'],
+  tipos:['','n','n'],
+  filas:[
+   [{t:'VAN (S/)'},
+    {e:912.20, tol:0.1, ph:'912.20', pq:'1,000 × (0.985222 + 0.970662 + 0.956317) − 2,000 = 912.20'},
+    {e:278.03, tol:0.1, ph:'278.03', pq:'295.57 + 291.20 + 191.26 − 500 = 278.03'}],
+   [{t:'TIR mensual en % (con =TIR en Excel)'},
+    {e:23.38, tol:0.05, ph:'23.38', pq:'La tasa que haría el VAN igual a cero: 23.38 % mensual'},
+    {e:29.90, tol:0.05, ph:'29.90', pq:'29.90 % mensual: rinde más por cada sol invertido'}],
+   [{t:'Periodo de recuperación (meses)'},
+    {e:2.00, tol:0.02, ph:'2.00', pq:'1,000 + 1,000 = 2,000 justo al terminar el Mes 2'},
+    {e:1.67, tol:0.02, ph:'1.67', pq:'Al terminar el Mes 1 faltan 200; 1 + 200/300 = 1.67'}],
+   [{t:'¿Cuál deja más dinero en soles de hoy?', cl:'tot'},
+    {ops:['La campaña A','La campaña B'], ok:0,
+     pq:'A deja S/ 912.20 contra S/ 278.03. Para elegir entre campañas manda el VAN, porque mide soles, '+
+        'no porcentajes.'},
+    {ops:['La campaña A','La campaña B'], ok:0,
+     pq:'La misma respuesta: la A. La B tiene mejor TIR y se recupera antes, pero sobre una inversión '+
+        'mucho menor.'}]
+  ],
+  fin:globo(P.idea,'Resuelto','Este es el caso clásico. La campaña B rinde más por sol (TIR 29.90 % '+
+      'contra 23.38 %) y se recupera antes, pero deja mucho menos dinero. Si la empresa puede financiar '+
+      'la A y el VAN es positivo, se elige la A. La TIR sirve para saber si una campaña pasa el mínimo; '+
+      'el VAN, para elegir entre varias.') },
+
+a3:{ tipo:'sel', titulo:'Actividad 4 - Los criterios de decisión',
+  lista:[
+   { q:'¿Cuándo es viable una campaña según el VAN?',
+     ops:['Cuando el VAN es mayor que cero','Cuando el VAN es mayor que la inversión',
+          'Cuando el VAN es mayor que la TIR'], ok:0,
+     pq:'VAN mayor que cero significa que, después de recuperar la inversión y de pagar el costo del '+
+        'dinero, todavía sobra. El VAN ya tiene la inversión restada dentro.' },
+   { q:'La TIR de tu campaña es 23.53 % mensual y tu TEM es 1.57 %. ¿Qué significa?',
+     ops:['Que la campaña rinde mucho más que lo que cuesta el dinero de la empresa',
+          'Que la campaña cuesta 23.53 % al mes','Que hay un error de cálculo'], ok:0,
+     pq:'La TIR es la rentabilidad de la campaña. Se compara contra la tasa de descuento: si la supera, '+
+        'conviene. Aquí la supera por mucho, porque la inversión es pequeña frente a lo que genera.' },
+   { q:'El ratio costo-beneficio de una campaña es 0.95. ¿Qué dice?',
+     ops:['Que por cada S/ 1.00 de costo entran S/ 0.95: no conviene',
+          'Que falta el 5 % de la inversión','Que conviene, porque está cerca de 1'], ok:0,
+     pq:'Menor que 1 significa que los beneficios traídos a hoy no alcanzan a cubrir los costos traídos '+
+        'a hoy. Es el mismo mensaje de un VAN negativo, dicho como proporción.' },
+   { q:'Tu VAN sale negativo. ¿Qué escribes en el informe?',
+     ops:['Cambias los supuestos hasta que salga positivo',
+          'Que la campaña no es viable con esos supuestos, y qué habría que cambiar',
+          'Omites el punto 3.2.3'], ok:1,
+     pq:'Un VAN negativo bien sustentado vale más que uno positivo inventado. El informe dice qué '+
+        'supuesto lo hace inviable: el gasto mensual es muy alto, el aumento esperado muy bajo o la '+
+        'campaña muy corta.' },
+   { q:'¿Por qué el periodo de recuperación no basta por sí solo para decidir?',
+     ops:['Porque no considera lo que pasa después de recuperar la inversión',
+          'Porque siempre da un número raro','Porque no se puede calcular en Excel'], ok:0,
+     pq:'Dos campañas pueden recuperar en dos meses y una seguir generando seis meses más. El payback '+
+        'mide riesgo y velocidad, no rentabilidad total. Por eso se reporta junto al VAN.' } ] },
+
+a4:{ tipo:'tabla', titulo:'Actividad 5 - Tarea: evaluar la campaña de la juguería',
+  intro:'El flujo que te salió la semana pasada: −1,000 · 40 · 250 · 580, con una tasa de 2 % mensual. '+
+        'Evalúalo con los mismos cinco indicadores.',
+  cols:['Indicador','Cómo se calcula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Valor actual del Mes 1'},{t:'40 × 0.980392'},
+    {e:39.22, tol:0.03, ph:'39.22', pq:'40 × 0.980392 = 39.22'}],
+   [{t:'Valor actual del Mes 2'},{t:'250 × 0.961169'},
+    {e:240.29, tol:0.03, ph:'240.29', pq:'250 × 0.961169 = 240.29'}],
+   [{t:'Valor actual del Mes 3'},{t:'580 × 0.942322'},
+    {e:546.55, tol:0.03, ph:'546.55', pq:'580 × 0.942322 = 546.55'}],
+   [{t:'VAN (S/)', cl:'tot'},{t:'−1,000 + los tres valores actuales'},
+    {e:-173.94, tol:0.05, ph:'-173.94', cl:'tot',
+     pq:'−1,000 + 39.22 + 240.29 + 546.55 = −173.94. Negativo: no conviene.'}],
+   [{t:'Ratio costo-beneficio'},{t:'VA de ingresos / VA de costos'},
+    {e:0.95, tol:0.01, ph:'0.95', pq:'0.95: por cada S/ 1.00 de costo entran S/ 0.95'}],
+   [{t:'ROI en %'},{t:'(ganancia 2,370 − inversión 2,500) / 2,500 × 100'},
+    {e:-5.20, tol:0.05, ph:'-5.20', pq:'(2,370 − 2,500) / 2,500 × 100 = −5.20 %'}],
+   [{t:'¿Es viable?', cl:'tot'},{t:'VAN > 0, TIR > i y B/C > 1'},
+    {ops:['Sí','No'], ok:1,
+     pq:'No cumple ninguno de los tres criterios, y en tres meses ni siquiera recupera la inversión.'}]
+  ],
+  fin:globo(P.full,'Resuelto','La campaña de la juguería no conviene, y la recomendación no es '+
+      'abandonarla: es rediseñarla. Gasta S/ 500 al mes para un producto que deja S/ 5.00 por vaso, así '+
+      'que necesita vender 100 vasos adicionales al mes solo para cubrir la publicidad. O baja el gasto '+
+      'mensual, o alarga la campaña, o sube el margen.') }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'VAN, TIR, payback, ratio costo-beneficio y ROI', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>¿Conviene o no conviene?</h2>'+
+      '<p>Semana 14 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>VAN</b><b>TIR</b><b>Payback</b><b>B/C</b><b>ROI</b></div>'+
+    '</div>'+
+    globo(P.pres,'La pregunta final del proyecto',
+      'Ya sabes cuánto dinero deja tu campaña mes a mes. Hoy respondes si ese dinero vale la pena, '+
+      'usando la tasa de descuento que calculaste en la semana 9 y que hasta ahora no habías tocado. '+
+      'Al terminar el jueves, el componente de Matemática queda cerrado.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">15</td><td><b>Repaso de Excel</b></td><td>Potencias con ^, la función TIR y el uso de VNA para comprobar el VAN</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Factores de descuento, VAN y periodo de recuperación a mano</td></tr><tr><td class="mi">45</td><td><b>Práctica</b></td><td>Ratio costo-beneficio, ROI y la decisión entre dos campañas</td></tr><tr><td class="mi">15</td><td><b>Proyecto</b></td><td>Tabla 19 de cada marca en el Excel de avance</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Dudas y cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'Excel de avance, hoja <b>Sem 14</b>. Necesitas dos cosas de semanas anteriores: la <b>TEM</b> '+
+      'de la semana 9 y el <b>Flujo de Caja Neto</b> de la semana 13.') },
+
+{ et:'A mano', t:'Traer cada flujo a hoy', clave:'a0',
+  h:'<p class="enc">Panificadora Characato E.I.R.L.</p>'+
+    '<p class="sub">El mismo flujo de la semana pasada, ahora con el costo del dinero encima</p>'+
+    '<div class="form">Factor = 1 ÷ (1 + i)<sup>t</sup> &nbsp;·&nbsp; Valor actual = FCN × factor'+
+      '<small>VAN = suma de todos los valores actuales, con el Mes 0 incluido y en negativo</small></div>'+
+    globo(P.idea,'Por qué se descuenta',
+      'S/ 220 que llegan en el mes 3 no valen S/ 220 hoy: si la empresa tuviera ese dinero hoy, lo '+
+      'usaría para no pedir prestado al 2 % mensual. Descontar es justamente eso, preguntarse cuánto '+
+      'vale hoy una plata que todavía no tienes.') },
+
+{ et:'En Excel', t:'Los cinco indicadores, con fórmulas', clave:'a1',
+  h:'<p class="enc">La potencia, el signo $ y la función TIR</p>'+
+    '<p class="sub">Lo que sí se escribe a mano y lo que el programa calcula solo</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Lo que escribes tú</h4><div class="c">'+
+      '<p>Los factores con <b>^</b>, los valores actuales, el VAN con <b>=SUMA</b>, el B/C y el ROI. '+
+      'Todo con la tasa fijada con <b>$</b>.</p></div></div>'+
+    '<div class="fc rj"><h4>Lo que hace Excel</h4><div class="c">'+
+      '<p>La <b>TIR</b>, con <b>=TIR(flujos)</b>, y la comprobación del VAN con '+
+      '<b>=VNA(tasa; Mes 1:Mes 3) + Mes 0</b>.</p></div></div>'+
+    '</div>'+
+    '<div class="av">Ojo con VNA: no se le incluye el Mes 0 dentro del rango, porque esa función '+
+    'descuenta el primer valor un periodo. El Mes 0 se suma aparte.</div>' },
+
+{ et:'Decidir', t:'Dos campañas y un solo presupuesto', clave:'a2',
+  h:'<p class="enc">Cafetería Misti Express S.A.C.</p>'+
+    '<p class="sub">Cuando los indicadores no apuntan al mismo lado</p>'+
+    '<div class="datos c2"><h4>Las dos propuestas, con una tasa de 1.5 % mensual</h4>'+
+    '<div class="fl"><span>Campaña A, con influencer</span><b>−2,000 · 1,000 · 1,000 · 1,000</b></div>'+
+    '<div class="fl"><span>Campaña B, volantes y redes</span><b>−500 · 300 · 300 · 200</b></div>'+
+    '</div>'+
+    globo(P.expl,'La regla cuando se contradicen',
+      'La TIR es un porcentaje y no sabe de tamaños: 30 % de S/ 500 son S/ 150 y 23 % de S/ 2,000 son '+
+      'S/ 460. Para elegir entre proyectos que compiten por el mismo presupuesto, manda el VAN, porque '+
+      'está en soles.') },
+
+{ et:'Interpretar', t:'Qué significa cada indicador', clave:'a3',
+  h:'<p class="enc">Los cinco criterios de la Tabla 19</p>'+
+    '<p class="sub">Y qué se escribe cuando el resultado es malo</p>'+
+    '<div class="tabenv"><table class="t chica"><thead><tr>'+
+    '<th>Indicador</th><th>Criterio</th><th>Qué dice</th></tr></thead><tbody>'+
+    '<tr><td>VAN</td><td>mayor que 0</td><td>Cuántos soles de hoy deja la campaña</td></tr>'+
+    '<tr><td>TIR</td><td>mayor que la tasa</td><td>Cuánto rinde por cada sol invertido</td></tr>'+
+    '<tr><td>Payback</td><td>dentro de la campaña</td><td>En cuánto tiempo se recupera</td></tr>'+
+    '<tr><td>Ratio B/C</td><td>mayor que 1</td><td>Cuánto entra por cada sol de costo</td></tr>'+
+    '<tr class="res"><td>ROI</td><td>mayor que 0</td><td>Qué porcentaje se gana sobre lo invertido</td></tr>'+
+    '</tbody></table></div>' },
+
+{ et:'Tarea', t:'Evaluar una campaña que no conviene', clave:'a4',
+  h:'<p class="enc">Juguería Selva Alegre E.I.R.L.</p>'+
+    '<p class="sub">El flujo que terminó en rojo la semana pasada</p>'+
+    globo(P.alum,'Esto también se califica',
+      'Un informe que concluye «no conviene» y explica por qué vale más que uno que fuerza los '+
+      'supuestos hasta que el VAN salga positivo. Si tu campaña sale negativa, la recomendación es '+
+      'rediseñarla: menos gasto mensual, más meses o mejor margen.') },
+
+{ et:'Proyecto', t:'Avance de hoy y del jueves', clave:null,
+  h:'<p class="enc">Cierre del componente · punto 3.2.3</p>'+
+    '<p class="sub">Tabla 19 y las Tablas A7 y A8 del anexo</p>'+
+    proy('Qué hace cada equipo ahora',
+     ['En la hoja <b>Sem 14</b>, arma la <b>Tabla A7</b>: tu Flujo de Caja Neto, el factor de cada mes '+
+      'con tu <b>TEM</b> de la semana 9, el valor actual de cada flujo y el <b>VAN</b> como suma.',
+      'Comprueba el VAN con <b>=VNA(TEM; Mes 1:Mes 3) + Mes 0</b>. Si los dos caminos no dan lo mismo, '+
+      'el error está en los factores.',
+      'Calcula la <b>TIR</b> con <b>=TIR(Mes 0:Mes 3)</b> y compárala con tu TEM. Anota las dos en la '+
+      'misma línea, porque la conclusión las compara.',
+      'Arma la <b>Tabla A8</b>: periodo de recuperación, valor actual de ingresos y de costos, ratio '+
+      'B/C, ganancia, inversión total y ROI.',
+      'Llena la <b>Tabla 19</b> con los cinco indicadores, cada uno con su fórmula o criterio, su '+
+      'resultado y su interpretación en una frase.'],
+     'La nota de la Tabla 19 tiene que decir qué tasa de descuento usaste y de dónde sale: «TEM de '+
+     '1.57 %, equivalente a una TEA de 20.56 %, costo del préstamo bancario de la empresa».')+
+    globo2(P.pres, P.alum,'Para cerrar',
+      'Con la Tabla 19 el componente de Matemática queda completo: de los precios de la semana 9 hasta '+
+      'la decisión de hoy. El jueves se redacta la conclusión y la semana 15 se cierra el informe.') }
+]
+});
+</script>
+
+</body>
+</html>

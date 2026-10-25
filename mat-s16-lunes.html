@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semana 16 lunes - Margen de seguridad, caso integrador y ensayo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<link rel="stylesheet" href="aula.css">
+<link rel="stylesheet" href="mat.css">
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 16 · lunes</b></span>
+  <div class="o-cp-right"><span class="o-count" id="rotulo">Semana 16 · lunes</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="ai">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Margen de seguridad, caso integrador y ensayo</h1>
+      <p><span class="sem">Semana 16 · lunes</span> - Matem&aacute;ticas Aplicadas - Thomas Jefferson, Instituto de Dise&ntilde;o y Comunicaci&oacute;n</p>
+    </span>
+    <span class="bts">
+      <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Carpeta de Drive</a>
+      <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="puerta" id="puerta" hidden>
+    <h2>Antes de empezar</h2>
+    <p>Esta sesi&oacute;n se trabaja directo, sin registro.</p>
+    <div id="aula"></div>
+  </div>
+
+  <div id="mazo">
+    <div class="esc" id="esc">
+      <div class="cab">
+        <span class="et" id="eti">Portada</span>
+        <span class="t" id="tit">&mdash;</span>
+        <span class="cu" id="cu">1 / 1</span>
+        <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
+          <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
+        <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
+        <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+        <button class="btf" id="btnFull2" type="button" title="Pantalla completa"
+                aria-label="Pantalla completa">&#9974;</button>
+      </div>
+      <div class="lam" id="lam"></div>
+      <div class="avance">
+        <span class="riel"><i id="riel"></i></span>
+        <b id="marcador">0 de 0</b>
+      </div>
+      <div class="nav">
+        <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+        <span class="pts" id="pts"></span>
+        <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+      </div>
+    </div>
+    <div id="reinicio" style="margin-top:14px"></div>
+  </div>
+
+  <div class="elenco" aria-hidden="true">
+    <img src="personajes/tj-docente-presenta.webp" alt="" loading="lazy">
+    <img src="personajes/tj-docente-puntero.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumna-sorpresa.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-senala.webp" alt="" loading="lazy">
+    <img src="personajes/tj-alumno-sentado.webp" alt="" loading="lazy">
+  </div>
+
+  <div id="anclaMuro">
+    <div class="o-sheet" id="hojaMuro" hidden style="margin:18px 0 0;padding:14px 16px">
+      <h3 class="titsec">El aula</h3>
+      <p class="aviso" style="margin:0 0 4px">Solo el docente ve esta secci&oacute;n.</p>
+      <div id="muro"></div>
+    </div>
+  </div>
+
+  <p class="aviso" style="margin-top:16px">Casos tomados de la ficha de trabajo de la semana 16. Heladería Yanahuara, Pollería El Fogón Characato y Chocolatería Sabandía son casos de clase, no empresas reales. Esta semana no hay avance de proyecto: el informe ya está entregado.</p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://drive.google.com/drive/folders/1jc1pA2ajtidFlx3K0FVnEq6uiPLIKry2?usp=drive_link" target="_blank" rel="noopener">&#128193; Abrir la carpeta de Drive</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<button class="flopart" id="flotaPart" type="button" hidden
+        aria-expanded="false" aria-controls="panelPart">
+  &#128101; Participantes <span class="bo" id="nPart">0</span>
+</button>
+<div class="soplo" id="soplo" hidden></div>
+<div class="panpart" id="panelPart" hidden>
+  <div class="hd"><span id="salaPart">El aula</span>
+    <button type="button" id="cierraPart" aria-label="Cerrar">&#10005;</button></div>
+  <div class="nido" id="nidoPart"></div>
+</div>
+
+<script src="reiniciar.js"></script>
+<script src="calculadora.js"></script>
+<script src="mat.js?v=20261025"></script>
+<script>
+MatSesion.monta({
+  LS:'mat_s16l_v1',
+  sala:'MATS16L',
+  ACT:{
+
+a0:{ tipo:'hoja', titulo:'Actividad 1 - El margen de seguridad en Excel',
+  intro:'Con los puntos de equilibrio de la semana pasada. El margen de seguridad dice cuánto pueden '+
+        'caer las ventas antes de que el negocio empiece a perder.',
+  cols:[{w:330},{w:170},{w:170}],
+  filas:[
+   [{x:'Concepto'},{x:'Heladería'},{x:'Pollería'}],
+   [{x:'Ventas esperadas del mes (unidades)'},{n:1500},{n:1600}],
+   [{x:'Punto de equilibrio (unidades)'},{n:1200},{n:1200}],
+   [{x:'Unidades por encima del equilibrio'},{e:300, f:true, ph:'=B2-B3'},{e:400, f:true, ph:'=C2-C3'}],
+   [{x:'MARGEN DE SEGURIDAD (%)'},{e:20, f:true, ph:'=B4/B2*100'},{e:25, f:true, ph:'=C4/C2*100'}]
+  ],
+  ayuda:'El margen de seguridad se calcula sobre las ventas esperadas, no sobre el punto de equilibrio. '+
+        'Es la proporción de las ventas previstas que puedes perder y todavía cubrir tus costos.',
+  fin:globo(P.expl,'Resuelto','La heladería tiene 20 % y la pollería 25 %. La pollería está más '+
+      'tranquila: sus ventas pueden caer una cuarta parte y seguiría sin perder. Un margen de '+
+      'seguridad bajo, de 5 % o menos, significa que cualquier mes flojo manda el negocio a pérdida.') },
+
+a1:{ tipo:'tabla', titulo:'Actividad 2 - Caso integrador: la campaña del Día de la Madre',
+  intro:'Chocolatería Sabandía evalúa una campaña de tres meses para su caja de bombones. Precio sin '+
+        'IGV S/ 30.00, costo unitario S/ 12.00, inversión inicial S/ 900 en el Mes 0 y gastos de '+
+        'S/ 300 cada mes. Cajas adicionales: 60, 90 y 50. Tasa: 2 % mensual.',
+  cols:['Concepto','Cómo se calcula','Resultado'],
+  tipos:['','','n'],
+  filas:[
+   [{t:'Margen de contribución por caja (S/)'},{t:'precio − costo'},
+    {e:18, tol:0.03, ph:'18', pq:'30.00 − 12.00 = 18.00'}],
+   [{t:'Flujo de Caja Neto del Mes 1 (S/)'},{t:'60 × 18 − 300'},
+    {e:780, tol:0.5, ph:'780', pq:'1,080 − 300 = 780'}],
+   [{t:'Flujo de Caja Neto del Mes 2 (S/)'},{t:'90 × 18 − 300'},
+    {e:1320, tol:0.5, ph:'1320', pq:'1,620 − 300 = 1,320'}],
+   [{t:'Flujo de Caja Neto del Mes 3 (S/)'},{t:'50 × 18 − 300'},
+    {e:600, tol:0.5, ph:'600', pq:'900 − 300 = 600'}],
+   [{t:'VAN (S/)', cl:'tot'},{t:'−900 + los tres flujos descontados al 2 %'},
+    {e:1698.84, tol:0.1, ph:'1698.84', cl:'tot',
+     pq:'−900 + 764.71 + 1,268.74 + 565.39 = 1,698.84'}],
+   [{t:'Periodo de recuperación (meses)'},{t:'1 + (900 − 780) / 1,320'},
+    {e:1.09, tol:0.02, ph:'1.09', pq:'1 + 120/1,320 = 1.09 meses'}],
+   [{t:'Punto de equilibrio de la campaña (cajas)'},{t:'(900 + 300 × 3) / 18'},
+    {e:100, tol:1, ph:'100', pq:'1,800 / 18 = 100 cajas en los tres meses'}],
+   [{t:'Margen de seguridad (%)', cl:'tot'},{t:'(200 cajas proyectadas − 100) / 200 × 100'},
+    {e:50, tol:0.5, ph:'50', cl:'tot',
+     pq:'50 %: las ventas podrían caer a la mitad y la campaña todavía no perdería.'}]
+  ],
+  fin:globo2(P.pres, P.bien,'Resuelto','Esta campaña sí es cómoda: VAN de S/ 1,698.84, recuperación en '+
+      'poco más de un mes y un colchón del 50 %. Compárala con la de Capriccio, que tiene VAN positivo '+
+      'pero depende por completo de mayo. Las dos son viables, pero no con el mismo riesgo, y eso es '+
+      'lo que hay que saber decir.') },
+
+a2:{ tipo:'sel', titulo:'Actividad 3 - Las preguntas del jurado',
+  lista:[
+   { q:'«¿Por qué usaron esa tasa de descuento y no otra?»',
+     ops:['Porque es la que nos pareció razonable',
+          'Porque es el costo del préstamo de la empresa: la campaña debe rendir al menos lo que cuesta el dinero',
+          'Porque es la tasa del banco más grande'], ok:1,
+     pq:'La tasa de descuento es el costo de oportunidad. Si la empresa paga 20.56 % anual por su '+
+        'deuda, cualquier uso de su dinero tiene que rendir por lo menos eso.' },
+   { q:'«Su campaña proyecta 70 % más de ventas en abril. ¿De dónde sale ese número?»',
+     ops:['Es lo que esperamos','De la encuesta: tantas personas dijeron que comprarían, y de ahí el porcentaje',
+          'Es el promedio del sector'], ok:1,
+     pq:'Es la pregunta que más se repite y la que más informes hunde. El porcentaje tiene que venir '+
+        'de tu propio trabajo de campo, y tienes que poder decir de cuántas personas.' },
+   { q:'«¿Qué pasa si venden la mitad de lo proyectado?»',
+     ops:['La campaña seguiría conviniendo si eso está por encima del punto de equilibrio',
+          'No lo hemos calculado','La campaña fracasaría'], ok:0,
+     pq:'Para esto sirve el punto de equilibrio de la campaña y el margen de seguridad. La respuesta '+
+        'es un número, no una opinión.' },
+   { q:'«Su TIR es 23 % mensual. ¿No es demasiado alta?»',
+     ops:['Puede ser un error','Es alta porque la inversión es pequeña y genera mucho en pocos meses',
+          'Hay que dividirla entre 12'], ok:1,
+     pq:'Una campaña de S/ 3,450 que genera S/ 4,266 de ganancia en tres meses tiene necesariamente una '+
+        'TIR alta. Lo importante es que se compara con la TEM, no con una tasa anual.' },
+   { q:'«Si tuvieran S/ 2,000 más, ¿en qué los invertirían?»',
+     ops:['En más publicidad en redes, sin más',
+          'En lo que suba las ventas adicionales por encima del punto de equilibrio, y lo justificamos con el flujo',
+          'No lo sabemos'], ok:1,
+     pq:'El jurado busca si sabes usar tus propias herramientas. Cualquier gasto adicional se evalúa '+
+        'igual: cuánto aumenta las ventas adicionales y si el VAN sigue siendo positivo.' } ] }
+},
+  D:[
+
+{ et:'Plan de hoy', t:'Margen de seguridad, caso integrador y ensayo', clave:null,
+  h:'<div class="tapa">'+
+      '<div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson">'+
+        '<span>Instituto de Diseño y Comunicación</span></div>'+
+      '<h2>Cuánto puede salir mal antes de perder</h2>'+
+      '<p>Semana 16 · lunes · 3 horas académicas</p>'+
+      '<div class="via"><b>Margen de seguridad</b><b>Caso integrador</b><b>Ensayo</b></div>'+
+    '</div>'+
+    globo(P.pres,'Esta semana no hay avance de proyecto',
+      'El informe ya está entregado. Las dos sesiones de esta semana son para practicar y para '+
+      'ensayar la sustentación, que es lo único que queda por delante.')+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Bloque</th><th>Qué se hace</th></tr></thead><tbody><tr><td class="mi">60</td><td><b>Práctica</b></td><td>Margen de seguridad y caso integrador, en Excel y a mano</td></tr><tr><td class="mi">45</td><td><b>Ensayo</b></td><td>Sustentación cronometrada por equipo, con preguntas</td></tr><tr><td class="mi">15</td><td><b>Retroalimentación</b></td><td>Qué corregir antes de la sustentación real</td></tr><tr class="hol"><td class="mi">15</td><td><b>Holgura</b></td><td>Cierre</td></tr></tbody></table></div>'+
+    drive('Los archivos de hoy',
+      'Ten abierto tu <b>informe final</b> y tu <b>Excel</b>: el ensayo se hace con tus propias cifras, '+
+      'no con las del modelo.') },
+
+{ et:'En Excel', t:'El margen de seguridad', clave:'a0',
+  h:'<p class="enc">Heladería Yanahuara y Pollería El Fogón</p>'+
+    '<p class="sub">El último indicador del curso, y el más fácil de explicar</p>'+
+    '<div class="form">Margen de seguridad = (ventas esperadas − punto de equilibrio) ÷ ventas esperadas × 100</div>'+
+    globo(P.idea,'Qué mide',
+      'Cuánto pueden caer las ventas antes de llegar al punto donde no se gana ni se pierde. Un 25 % '+
+      'quiere decir que el negocio aguanta perder una cuarta parte de sus ventas previstas. Mientras '+
+      'más alto, más tranquilo se duerme.') },
+
+{ et:'Integrador', t:'Todo junto en un solo caso', clave:'a1',
+  h:'<p class="enc">Chocolatería Sabandía S.A.C.</p>'+
+    '<p class="sub">Flujo, VAN, recuperación, equilibrio y seguridad, en una sola tabla</p>'+
+    '<div class="datos c2"><h4>Los datos de la campaña</h4>'+
+    '<div class="fl"><span>Precio sin IGV y costo por caja</span><b>30.00 y 12.00</b></div>'+
+    '<div class="fl"><span>Inversión inicial, Mes 0</span><b>900</b></div>'+
+    '<div class="fl"><span>Gastos de la campaña, cada mes</span><b>300</b></div>'+
+    '<div class="fl"><span>Cajas adicionales, Mes 1 · 2 · 3</span><b>60 · 90 · 50</b></div>'+
+    '<div class="fl"><span>Tasa de descuento</span><b>2 % mensual</b></div>'+
+    '</div>'+
+    globo(P.expl,'Un atajo que conviene conocer',
+      'Cuando el único costo variable es el costo unitario, el flujo de cada mes se puede calcular '+
+      'directo: unidades adicionales × margen de contribución − gastos del mes. Llega al mismo '+
+      'resultado que restar ingresos y costos por separado, y es menos trabajo.') },
+
+{ et:'Ensayo', t:'Cómo se sustenta el componente', clave:null,
+  h:'<p class="enc">Tres minutos por equipo, cronometrados</p>'+
+    '<p class="sub">El guion que cubre todo el componente de Matemática</p>'+
+    '<div class="plan"><table><thead><tr><th>Min</th><th>Qué se dice</th><th>Con qué tabla</th></tr></thead><tbody>'+
+    '<tr><td class="mi">0:00</td><td><b>El precio y el costo.</b> Cuánto cuesta producir una unidad y '+
+      'a cuánto se vende sin IGV</td><td>Tablas 10, 12 y A5</td></tr>'+
+    '<tr><td class="mi">0:40</td><td><b>Lo que cuesta la campaña.</b> Inversión inicial y gasto '+
+      'mensual, y por qué van separados</td><td>Tabla 16</td></tr>'+
+    '<tr><td class="mi">1:20</td><td><b>Lo que se espera vender de más.</b> El aumento proyectado y de '+
+      'dónde sale</td><td>Tabla 17</td></tr>'+
+    '<tr><td class="mi">2:00</td><td><b>El dinero mes a mes.</b> El flujo neto y en qué mes se recupera '+
+      'la inversión</td><td>Tabla 18 y Figura 10</td></tr>'+
+    '<tr class="hol"><td class="mi">2:30</td><td><b>La decisión.</b> VAN, TIR y el margen de seguridad '+
+      'como respaldo</td><td>Tabla 19</td></tr>'+
+    '</tbody></table></div>'+
+    globo2(P.pres, P.alum,'Dos reglas del ensayo',
+      'Primera: nadie lee. Si necesitas leer una cifra, es que no la entiendes. Segunda: cualquier '+
+      'integrante tiene que poder responder cualquier pregunta, porque el jurado elige a quién le '+
+      'pregunta.') },
+
+{ et:'Preguntas', t:'Lo que te van a preguntar', clave:'a2',
+  h:'<p class="enc">Cinco preguntas reales de sustentación</p>'+
+    '<p class="sub">Con la respuesta que las resuelve</p>'+
+    globo(P.full,'La regla para responder',
+      'Toda respuesta lleva un número y su origen. «Esperamos vender más» no es respuesta; «proyectamos '+
+      '129 unidades adicionales, de las cuales necesitamos 100 para cubrir la campaña, según la '+
+      'encuesta a 80 clientes» sí lo es.') },
+
+{ et:'Cierre', t:'Lo que te llevas del curso', clave:null,
+  h:'<p class="enc">De los precios al VAN, en ocho semanas</p>'+
+    '<p class="sub">Y lo que queda para el jueves</p>'+
+    '<div class="dos">'+
+    '<div class="fc"><h4>Lo que sabes hacer</h4><div class="c">'+
+      '<p>Leer un estado financiero, calcular el costo de un producto, proyectar ventas, armar un '+
+      'flujo de caja y decidir si una inversión conviene.</p></div></div>'+
+    '<div class="fc rj"><h4>El jueves</h4><div class="c">'+
+      '<p>Un último caso integrador y la sustentación final de práctica, con el cronómetro y las '+
+      'preguntas.</p></div></div>'+
+    '</div>'+
+    drive('Para el jueves',
+      'Trae tu informe final impreso o en pantalla, y el Excel abierto en la hoja de indicadores.')+
+    globo2(P.pres, P.bien,'Para cerrar',
+      'Al principio del curso una ecuación de valor parecía complicada. Hoy evalúas una campaña '+
+      'completa con cinco indicadores y sabes explicar de qué depende el resultado. Eso es lo que se '+
+      'lleva un profesional de marketing que entiende números.') }
+]
+});
+</script>
+
+</body>
+</html>
