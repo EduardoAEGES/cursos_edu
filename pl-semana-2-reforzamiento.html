@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-25-034240">
+<meta name="version" content="2026-10-25-043520">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -904,7 +904,8 @@
 
   <div class="puerta" id="puerta">
     <h2>Entra a la sala</h2>
-    <p>Escribe tu nombre, si quieres, y pulsa <b>Entrar a la sala</b>. No se pide DNI ni c&oacute;digo: tus respuestas se guardan solo en este equipo.</p>
+    <p><b>Docente:</b> activa <b>Entrar como docente</b>, escribe tu clave y <b>crea el c&oacute;digo de 4 d&iacute;gitos</b> de esta sesi&oacute;n; dicta ese c&oacute;digo a tu clase.<br>
+       <b>Alumno:</b> escribe tu nombre y el <b>c&oacute;digo de la sesi&oacute;n</b> que te dio tu docente. Si nadie abri&oacute; ese c&oacute;digo, la sala no te deja entrar.</p>
     <div id="aula"></div>
   </div>
 
@@ -967,7 +968,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261024"></script>
+<script src="aula.js?v=20261025b"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -2837,7 +2838,7 @@ function pantalla(e, alumno, cont){
   });
 }
 if(window.Aula){
-  Aula.iniciar({ sala:'PLR2', codigo:'PL', clave:'LOGICO', simple:true, resumen:resumenAula, ventana:ventanaAula,
+  Aula.iniciar({ sala:'PLR2', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;

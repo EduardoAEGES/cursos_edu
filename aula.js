@@ -74,7 +74,7 @@ var CLAVE='46069339';
 function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
 function marcaDoc(){ return (cfg && cfg.clave) ? 'docente_equipo_'+cfg.clave : 'docente_equipo'; }
 
-var cfg=null, sala=null, yo=null, docente=false;
+var cfg=null, sala=null, yo=null, docente=false, tAbierta=null;
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
@@ -105,6 +105,39 @@ function codigoClase(){
 /* cada clase recuerda su propia sala: no se mezcla con la de otro curso */
 function claveSala(){ return 'sala_' + ((cfg && cfg.sala) || 'x'); }
 
+/* ---------------- código de sesión de 4 dígitos ----------------
+   Aula.iniciar({ pin:true }): el docente abre la sesión y crea el código;
+   los alumnos solo entran con un código que algún docente tenga abierto.
+   Así varios docentes usan la misma página a la vez, cada uno con su sala. */
+function pin(){ return !!(cfg && cfg.pin); }
+function pinBueno(v){ return /^[0-9]{4}$/.test(String(v||'').trim()); }
+function pinNuevo(){ return String(1000 + Math.floor(Math.random()*9000)); }
+function salaAbierta(c){ return cfg.sala+'-'+c+'-ABIERTA'; }
+/* ¿hay un docente con la sesión abierta en ese código? */
+function miraSala(c){
+  var desde=new Date(Date.now()-6*3600*1000).toISOString();
+  return fetch(TABLA+'?select=alumno,actualizado&sala=eq.'+encodeURIComponent(salaAbierta(c))+
+               '&actualizado=gte.'+desde+'&limit=1', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+    .then(function(rows){ return !!(rows && rows.length); });
+}
+/* el docente publica que su sesión está abierta, y lo repite cada dos minutos */
+function abreSala(c){
+  return fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:salaAbierta(c), alumno:'docente', caso:'',
+                           estado:{ abierta:1 }, actualizado:new Date().toISOString() }])
+  }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
+}
+function latidoSala(){
+  if(tAbierta) return;
+  tAbierta=setInterval(function(){
+    if(docente && sala && pin()) abreSala(sala).catch(function(){});
+  }, 120000);
+}
+/* el código que creó este equipo: al recargar puede volver a abrirlo */
+function pinMio(){ return leeLocal('pin_'+((cfg && cfg.sala)||'x')); }
+
 /* ---------------- controles ---------------- */
 function pintaControles(){
   $('aula').innerHTML=
@@ -117,8 +150,12 @@ function pintaControles(){
           (conFicha()?'Apellidos y nombres':(simple()?'Tu nombre (opcional)':'Tu nombre'))+
           '<input id="aulaNombre" type="text" maxlength="60" placeholder="'+
           (conFicha()?'Apellidos y nombres':'Nombre y apellido')+'" autocomplete="off"></label>'+
-        '<label class="aula-campo"'+(simple()?' hidden':'')+'>Código de sala'+
-          '<input id="aulaSala" type="text" maxlength="20" placeholder="'+esc(codigoClase())+'" autocomplete="off"></label>'+
+        '<label class="aula-campo" id="aulaCsala"'+((simple() && !pin())?' hidden':'')+'>'+
+          (pin()?'Código de la sesión':'Código de sala')+
+          (pin() ? '<input id="aulaSala" type="text" inputmode="numeric" maxlength="4" '+
+                   'placeholder="4 dígitos" autocomplete="off">'
+                 : '<input id="aulaSala" type="text" maxlength="20" placeholder="'+
+                   esc(codigoClase())+'" autocomplete="off">')+'</label>'+
         '<button class="o-btn o-btn-primary" id="aulaEntrar" type="button">'+
           (conFicha()?'Ingresar':'Entrar a la sala')+'</button>'+
         (conFicha() ? '<button class="o-btn o-btn-secondary" id="aulaNuevo" type="button">Es mi primera vez</button>'+
@@ -145,9 +182,15 @@ function pintaControles(){
     '<div class="aula-velo" id="aulaVelo" hidden>'+
       '<div class="aula-modal" role="dialog" aria-modal="true" aria-label="Entrar como docente">'+
         '<div class="am-h">Entrar como docente</div>'+
-        '<p class="am-p">Escribe la clave para ver el avance del aula y la solución.</p>'+
+        '<p class="am-p">'+(pin()
+          ? 'Escribe tu clave y crea el código de 4 dígitos de esta sesión. Tus alumnos entran con ese código.'
+          : 'Escribe la clave para ver el avance del aula y la solución.')+'</p>'+
         '<label class="aula-campo" id="aulaCclave">Clave'+
           '<input id="aulaClave" type="password" inputmode="'+((cfg && cfg.clave) ? 'text' : 'numeric')+'" placeholder="Clave" autocomplete="off"></label>'+
+        (pin() ? '<label class="aula-campo" id="aulaCpin">Código de la sesión (4 dígitos)'+
+                   '<input id="aulaPin" type="text" inputmode="numeric" maxlength="4" '+
+                   'placeholder="4 dígitos" autocomplete="off"></label>'+
+                 '<button class="o-btn" id="aulaOtroPin" type="button">&#8635; Otro código</button>' : '')+
         '<p class="am-err" id="aulaErr"></p>'+
         '<div class="am-b">'+
           '<button class="o-btn" id="aulaCancela" type="button">Cancelar</button>'+
@@ -157,7 +200,8 @@ function pintaControles(){
     '</div>';
 
   if(!conFicha()) $('aulaNombre').value=leeLocal('nombre');
-  $('aulaSala').value=simple() ? codigoClase() : (leeLocal(claveSala())||codigoClase());
+  $('aulaSala').value = pin() ? (pinBueno(leeLocal(claveSala())) ? leeLocal(claveSala()) : '')
+                              : (simple() ? codigoClase() : (leeLocal(claveSala())||codigoClase()));
 
   $('aulaEntrar').addEventListener('click', entraAlumno);
   $('aulaSalir').addEventListener('click', sale);
@@ -198,6 +242,9 @@ function pintaControles(){
   $('aulaSw').addEventListener('change', function(){
     if($('aulaSw').checked) abreClave(true); else abreClave(false);
   });
+  if(pin() && $('aulaOtroPin')) $('aulaOtroPin').addEventListener('click', function(){
+    $('aulaPin').value=pinNuevo(); $('aulaCpin').classList.remove('falta'); $('aulaErr').textContent='';
+  });
   $('aulaCancela').addEventListener('click', function(){ $('aulaSw').checked=false; abreClave(false); });
   $('aulaEntrarD').addEventListener('click', entraDocente);
   $('aulaClave').addEventListener('keydown', function(e){ if(e.key==='Enter') entraDocente(); });
@@ -212,6 +259,10 @@ function abreClave(v){
   $('aulaVelo').hidden=!v;
   $('aulaErr').textContent='';
   $('aulaCclave').classList.remove('falta');
+  if(v && pin() && $('aulaPin')){
+    $('aulaCpin').classList.remove('falta');
+    if(!pinBueno($('aulaPin').value)) $('aulaPin').value = pinMio() || pinNuevo();
+  }
   if(v){ $('aulaClave').value=''; setTimeout(function(){ $('aulaClave').focus(); }, 30); }
 }
 function estado(clase, txt){
@@ -237,7 +288,29 @@ function fuera(){
 /* ---------------- entrar y salir ---------------- */
 function entraAlumno(){
   var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
-
+  if(pin()){
+    s=$('aulaSala').value.replace(/\D/g,'');
+    $('aulaCsala').classList.toggle('falta', !pinBueno(s));
+    if(!pinBueno(s)){
+      $('aulaSala').focus();
+      estado('malo','El código de la sesión son 4 números. Pídeselo al docente.');
+      return;
+    }
+    estado('','Buscando la sesión '+s+'…');
+    miraSala(s).then(function(abierta){
+      if(!abierta){
+        $('aulaCsala').classList.add('falta'); $('aulaSala').focus();
+        estado('malo','Nadie abrió la sesión '+s+'. El docente entra primero y te da el código.');
+        return;
+      }
+      $('aulaCsala').classList.remove('falta');
+      sigueAlumno(s);
+    }).catch(function(){ sigueAlumno(s); });   /* si la base no responde, nadie se queda fuera */
+    return;
+  }
+  sigueAlumno(s);
+}
+function sigueAlumno(s){
   if(!conFicha()){
     var n0=$('aulaNombre').value.trim();
     if(simple() && n0.length<2){
@@ -310,14 +383,13 @@ function adentro(n, s, d){
   yo=n; sala=s; docente=false; dni=d||'';
   guardaLocal('nombre',n); guardaLocal(claveSala(),s);
   if(dni) guardaLocal('dni', dni);
-  dentro(dni ? (n+' · DNI '+dni) : n);
+  dentro((dni ? (n+' · DNI '+dni) : n) + (pin() ? ' · sesión '+s : ''));
   estado('vivo','Conectando…');
   fallos=0; empuja(true);
   if(cfg.alModo) cfg.alModo(false);
   escucha(); escuchaRecurso();
 }
 function entraDocente(){
-  var s=($('aulaSala').value.trim()||codigoClase()).toUpperCase();
   var c=$('aulaClave').value.trim();
   if(c!==claveDoc()){
     $('aulaCclave').classList.add('falta');
@@ -325,17 +397,40 @@ function entraDocente(){
     $('aulaClave').value=''; $('aulaClave').focus();
     return;
   }
+  if(pin()){
+    var p=$('aulaPin').value.replace(/\D/g,'');
+    $('aulaCpin').classList.toggle('falta', !pinBueno(p));
+    if(!pinBueno(p)){
+      $('aulaErr').textContent='El código de la sesión son 4 números.';
+      $('aulaPin').focus(); return;
+    }
+    $('aulaErr').textContent='Abriendo la sesión '+p+'…';
+    miraSala(p).then(function(ocupada){
+      if(ocupada && p!==pinMio()){
+        $('aulaCpin').classList.add('falta');
+        $('aulaErr').textContent='Otro docente ya tiene abierto el código '+p+'. Pulsa «Otro código».';
+        return;
+      }
+      return abreSala(p).then(function(){ guardaLocal('pin_'+cfg.sala, p); dentroDocente(p); });
+    }).catch(function(){ dentroDocente(p); });   /* sin base, el docente igual trabaja */
+    return;
+  }
+  dentroDocente(($('aulaSala').value.trim()||codigoClase()).toUpperCase());
+}
+function dentroDocente(s){
   abreClave(false);
   guardaLocal(marcaDoc(),'1');   /* este equipo queda como del docente */
   yo=null; sala=s; docente=true;
   guardaLocal(claveSala(),s);
-  dentro('Docente');
+  dentro(pin() ? 'Docente · código '+s : 'Docente');
   estado('vivo','Conectando…');
   fallos=0; arranca(); escuchaRecurso();
+  if(pin()) latidoSala();
   if(cfg.musica) musica(leeLocal('musica')!=='0');
   if(cfg.alModo) cfg.alModo(true);
 }
 function sale(){
+  if(tAbierta){ clearInterval(tAbierta); tAbierta=null; }
   if(conFicha() && !docente && dni &&
      !window.confirm('¿Cerrar tu sesión?\n\nTu avance ya quedó guardado con tu DNI '+dni+
                      '. Lo recuperas al volver a ingresar, aquí o en otro equipo.\n\n'+
@@ -820,7 +915,8 @@ var pistas=null, pista=null, suena=false, ultima=-1;
 
 function volMusica(){
   var v=parseFloat(leeLocal('musica_vol'));
-  return isNaN(v) ? 0.15 : Math.max(0, Math.min(1, v/100));
+  /* por defecto suena muy bajito: es fondo, no debe tapar al docente */
+  return isNaN(v) ? 0.04 : Math.max(0, Math.min(1, v/100));
 }
 /* lista los audios de sonidos/ directamente del repositorio: basta subir un mp3 */
 function buscaPistas(){
@@ -883,9 +979,11 @@ window.Aula={
     cfg=opciones;
     pintaControles(); pintaMuro();
     /* en el equipo del docente se entra solo, sin DNI ni clave, aunque recargue */
-    if(leeLocal(marcaDoc())==='1') setTimeout(function(){
+    if(leeLocal(marcaDoc())==='1' && (!pin() || pinBueno(pinMio()))) setTimeout(function(){
       if(sala) return;
-      $('aulaClave').value=claveDoc(); entraDocente();
+      $('aulaClave').value=claveDoc();
+      if(pin() && $('aulaPin')) $('aulaPin').value=pinMio();
+      entraDocente();
     }, 0);
   },
   empuja:function(){ empuja(); },
