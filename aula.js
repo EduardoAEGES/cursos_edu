@@ -80,7 +80,13 @@ var DOCENTES=['ANCAJIMA OLIVARES PEDRO','ARANA KAIK EDMUNDO JAVIER','BUSTILLOS H
   'LEON ALVARADO MELISSA RUTH','LEON CAPCHA JOSE ROMULO','LOAYZA MARTINEZ MARITZA IVONNE',
   'MAGUIÑA PRUDENCIO EGEL GODOFREDO','MAMANI ROQUE EDUARDO LUIS','MAMANI TIPULA ERNESTO ELIAS',
   'MARTINEZ ALEGRE LUIS ARTURO','MOORE DELGADO JAVIER'];
-function listaDocentes(){ return (cfg && cfg.docentes) || DOCENTES; }
+/* docentes que solo aparecen al entrar desde Pensamiento Lógico (piloto): la URL trae ?piloto=1 */
+var DOCENTES_PILOTO=['SANCHEZ CESPEDES MIRKO NAPOLEÓN'];
+function esPiloto(){ return /[?&]piloto=1(&|$)/.test(location.search); }
+function listaDocentes(){
+  var l=(cfg && cfg.docentes) || DOCENTES;
+  return esPiloto() ? l.concat(DOCENTES_PILOTO.filter(function(n){ return l.indexOf(n)<0; })) : l;
+}
 
 /* una página puede pedir su propia clave de docente: Aula.iniciar({ clave:'LOGICO' }) */
 function claveDoc(){ return (cfg && cfg.clave) || CLAVE; }
