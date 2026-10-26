@@ -83,6 +83,26 @@ var DOCENTES=['ANCAJIMA OLIVARES PEDRO','ARANA KAIK EDMUNDO JAVIER','BUSTILLOS H
 /* docentes que solo aparecen al entrar desde Pensamiento Lógico (piloto): la URL trae ?piloto=1 */
 var DOCENTES_PILOTO=['SANCHEZ CESPEDES MIRKO NAPOLEÓN'];
 function esPiloto(){ return /[?&]piloto=1(&|$)/.test(location.search); }
+/* desde el piloto la sesión no lleva al repositorio ni al curso original:
+   se quitan esos enlaces y "Volver al curso" regresa a las semanas del piloto */
+function encierraPiloto(){
+  var PILOTO='pensamiento-logico-piloto.html';
+  document.querySelectorAll('.o-navbar .apps, .o-navbar .menu, .o-navbar .right').forEach(function(el){ el.remove(); });
+  document.querySelectorAll('.o-navbar a.brand').forEach(function(a){
+    var sp=document.createElement('span'); sp.className='brand'; sp.textContent='Pensamiento Lógico'; a.replaceWith(sp);
+  });
+  document.querySelectorAll('.o-crumb').forEach(function(c){
+    var b=c.querySelector('b'); c.textContent=''; if(b) c.appendChild(b);
+  });
+  document.querySelectorAll('a[href]').forEach(function(a){
+    var h=a.getAttribute('href').split('#')[0].split('?')[0];
+    if(h==='pensamiento-logico.html'){ a.setAttribute('href',PILOTO); if(/Volver al curso/.test(a.textContent)) a.textContent='Volver a las semanas'; }
+    else if(h==='index.html') a.remove();
+  });
+}
+if(esPiloto()){
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',encierraPiloto); else encierraPiloto();
+}
 function listaDocentes(){
   var l=(cfg && cfg.docentes) || DOCENTES;
   return esPiloto() ? l.concat(DOCENTES_PILOTO.filter(function(n){ return l.indexOf(n)<0; })) : l;
