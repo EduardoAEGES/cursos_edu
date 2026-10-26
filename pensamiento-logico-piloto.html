@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pensamiento Lógico (piloto)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  /* ---------- tarjetas por semana (piloto) ---------- */
+  .pl-semanas{
+    display:grid; gap:18px;
+    grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
+  }
+  @media (max-width:420px){ .pl-semanas{ grid-template-columns:1fr; } }
+
+  .pl-sem{
+    display:flex; flex-direction:column; min-width:0;
+    background:#fff; border:1px solid var(--o-border); border-radius:10px; overflow:hidden;
+    box-shadow:0 2px 6px rgba(10,31,92,.08);
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .pl-sem:hover{ box-shadow:0 10px 24px rgba(10,31,92,.18); transform:translateY(-3px); }
+
+  .pl-sem .portada{ position:relative; border-top:6px solid #0A1F5C; line-height:0; }
+  .pl-sem .portada svg{ display:block; width:100%; height:auto; }
+  .pl-sem .etiqueta{
+    position:absolute; left:10px; top:12px; line-height:1;
+    background:#0A1F5C; color:#fff; font-weight:600; font-size:19px;
+    padding:7px 10px 8px; letter-spacing:.2px;
+  }
+
+  .pl-sem .cuerpo{ display:flex; flex-direction:column; gap:10px; padding:14px; flex:1; }
+  .pl-sem .tema{ margin:0; font-size:13px; font-weight:600; color:#0A1F5C; }
+
+  .pl-ses{
+    display:flex; align-items:center; gap:10px; min-width:0;
+    padding:10px 12px; border-radius:8px; text-decoration:none; color:inherit;
+    background:#F3F6FC; border:1px solid #DCE3F2;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;
+  }
+  .pl-ses:hover{ background:#0A1F5C; border-color:#0A1F5C; color:#fff; }
+  .pl-ses .num{
+    flex:none; width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+    background:#0A1F5C; color:#fff; font-weight:700; font-size:13px;
+    transition:background .12s ease, color .12s ease;
+  }
+  .pl-ses:hover .num{ background:#FFC94D; color:#0A1F5C; }
+  .pl-ses .txt{ flex:1; min-width:0; }
+  .pl-ses .s{ display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:#0B6E8C; }
+  .pl-ses:hover .s{ color:#FFC94D; }
+  .pl-ses .t{ display:block; font-size:13px; font-weight:500; line-height:1.3; overflow-wrap:anywhere; }
+  .pl-ses .flecha{ flex:none; font-size:18px; opacity:.6; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Cursos</span> / <b>Pensamiento Lógico (piloto)</b></span>
+  <div class="o-cp-right"><span class="o-count">8 semanas · 15 sesiones</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="o-hero">
+      <div class="ico">🧠</div>
+      <div class="txt">
+        <h1>Pensamiento Lógico (piloto)</h1>
+        <p class="sub">Las sesiones del curso organizadas por semana</p>
+      </div>
+      <div class="acc"><span class="o-chip o-chip-teal">Piloto</span></div>
+    </div>
+  </div>
+
+  <div class="o-sheet">
+    <h2 class="o-section-title">Semanas</h2>
+    <div class="pl-semanas">
+
+      <!-- Semana 1 · Lógica proposicional -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Símbolos de lógica: p implica q y una lista de verificación">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#123A8C"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g1)"/>
+            <g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g>
+            <text x="38" y="128" font-family="Inter,sans-serif" font-weight="800" font-size="46" fill="#fff">p<tspan fill="#FFC94D" dx="8">→</tspan><tspan dx="8">q</tspan></text>
+            <rect x="200" y="34" width="92" height="116" rx="10" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".35"/>
+            <g stroke-linecap="round" stroke-linejoin="round" stroke-width="5" fill="none">
+              <path d="M214 58l7 7 12-14" stroke="#5EE0C1"/>
+              <path d="M214 88l7 7 12-14" stroke="#5EE0C1"/>
+              <path d="M215 112l14 14M229 112l-14 14" stroke="#FF8A7A"/>
+            </g>
+            <g stroke="#fff" stroke-opacity=".6" stroke-width="4" stroke-linecap="round"><path d="M244 60h34M244 90h26M244 120h30"/></g>
+          </svg>
+          <span class="etiqueta">Semana 1</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Lógica proposicional e inferencias</p>
+          <a class="pl-ses" href="sesion-2-pensamiento-logico.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Inferencias, modus ponens, modus tollens y falacias</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 2 · Números y ecuaciones -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Una fracción y una balanza con una ecuación">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B6E8C"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g2)"/>
+            <circle cx="70" cy="128" r="30" fill="#fff" fill-opacity=".12"/>
+            <path d="M70 128V98A30 30 0 1 1 40 128Z" fill="#FFC94D"/>
+            <text x="118" y="140" font-family="Inter,sans-serif" font-weight="700" font-size="22" fill="#fff" fill-opacity=".8">¾</text>
+            <g stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none">
+              <path d="M232 40v104M196 154h72M178 66h108"/>
+            </g>
+            <circle cx="232" cy="40" r="6" fill="#FFC94D"/>
+            <g stroke="#fff" stroke-opacity=".7" stroke-width="2"><path d="M178 66l-14 34M178 66l14 34M286 66l-14 34M286 66l14 34"/></g>
+            <path d="M160 100h36a18 10 0 0 1-36 0Z" fill="#5EE0C1"/>
+            <path d="M268 100h36a18 10 0 0 1-36 0Z" fill="#5EE0C1"/>
+            <text x="166" y="92" font-family="Inter,sans-serif" font-weight="800" font-size="20" fill="#fff">2x</text>
+            <text x="274" y="92" font-family="Inter,sans-serif" font-weight="800" font-size="20" fill="#fff">10</text>
+          </svg>
+          <span class="etiqueta">Semana 2</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Conjuntos numéricos y ecuaciones lineales</p>
+          <a class="pl-ses" href="pl-semana-2-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">Conjuntos numéricos: enteros, fracciones y decimales</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-2-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Ecuaciones lineales y el método de Pólya</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 3 · Costo, ingreso, utilidad -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Rectas de costo e ingreso que se cruzan y monedas">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B4FA8"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g3)"/>
+            <g stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round"><path d="M150 156H302M150 156V40"/></g>
+            <path d="M226 106L300 56L300 82Z" fill="#5EE0C1" fill-opacity=".3"/>
+            <path d="M150 128L300 82" stroke="#FF8A7A" stroke-width="5" stroke-linecap="round"/>
+            <path d="M150 156L300 56" stroke="#5EE0C1" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="226" cy="106" r="7" fill="#FFC94D" stroke="#0A1F5C" stroke-width="2"/>
+            <g>
+              <ellipse cx="72" cy="150" rx="34" ry="9" fill="#C9961F"/>
+              <rect x="38" y="128" width="68" height="22" fill="#FFC94D"/>
+              <ellipse cx="72" cy="128" rx="34" ry="9" fill="#FFD976"/>
+              <rect x="38" y="106" width="68" height="22" fill="#FFC94D"/>
+              <ellipse cx="72" cy="106" rx="34" ry="9" fill="#FFE29A"/>
+              <text x="64" y="112" font-family="Inter,sans-serif" font-weight="800" font-size="14" fill="#9A6F00">S/</text>
+            </g>
+          </svg>
+          <span class="etiqueta">Semana 3</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Costo, ingreso, utilidad y sistemas de ecuaciones</p>
+          <a class="pl-ses" href="pl-semana-3-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">Costo, ingreso y utilidad</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-3-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Sistemas de ecuaciones y nociones de oferta y demanda</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 4 · Plano cartesiano y pendiente -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Plano cartesiano con una recta y su pendiente">
+            <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0E7C86"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g4)"/>
+            <g stroke="#fff" stroke-opacity=".1"><path d="M140 30V170M170 30V170M200 30V170M230 30V170M260 30V170M290 30V170M120 50H310M120 80H310M120 110H310M120 140H310"/></g>
+            <g stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M120 140H310M140 170V30"/></g>
+            <path d="M126 158L306 38" stroke="#FFC94D" stroke-width="5" stroke-linecap="round"/>
+            <path d="M170 128H230V88" fill="none" stroke="#5EE0C1" stroke-width="3" stroke-dasharray="6 5"/>
+            <circle cx="170" cy="128" r="6" fill="#fff"/>
+            <circle cx="230" cy="88" r="6" fill="#fff"/>
+            <text x="190" y="148" font-family="Inter,sans-serif" font-weight="700" font-size="13" fill="#5EE0C1">Δx</text>
+            <text x="238" y="114" font-family="Inter,sans-serif" font-weight="700" font-size="13" fill="#5EE0C1">Δy</text>
+            <text x="34" y="138" font-family="Inter,sans-serif" font-weight="800" font-size="40" fill="#fff">m</text>
+            <text x="72" y="138" font-family="Inter,sans-serif" font-weight="800" font-size="24" fill="#FFC94D">=?</text>
+          </svg>
+          <span class="etiqueta">Semana 4</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">El plano cartesiano, la recta y la pendiente</p>
+          <a class="pl-ses" href="pl-semana-4-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">El plano cartesiano y la recta</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-4-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">La pendiente y la función lineal</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 5 · Ecuación de la recta, oferta y demanda, porcentajes -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Curvas de oferta y demanda con su punto de equilibrio y un signo de porcentaje">
+            <defs><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2D3E9E"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g5)"/>
+            <g stroke="#fff" stroke-opacity=".55" stroke-width="2.5" stroke-linecap="round"><path d="M150 158H304M150 158V36"/></g>
+            <path d="M160 52Q220 112 296 146" stroke="#FF8A7A" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M160 148Q220 104 296 46" stroke="#5EE0C1" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <g stroke="#FFC94D" stroke-width="2" stroke-dasharray="4 4"><path d="M222 100H150M222 100V158"/></g>
+            <circle cx="222" cy="100" r="8" fill="#FFC94D" stroke="#0A1F5C" stroke-width="2"/>
+            <text x="288" y="40" font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="#5EE0C1">O</text>
+            <text x="288" y="140" font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="#FF8A7A">D</text>
+            <circle cx="72" cy="112" r="40" fill="#fff" fill-opacity=".12"/>
+            <text x="72" y="130" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="50" fill="#FFC94D">%</text>
+          </svg>
+          <span class="etiqueta">Semana 5</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">La ecuación de la recta, oferta, demanda y porcentajes</p>
+          <a class="pl-ses" href="pl-semana-5-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">La ecuación de la recta</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-5-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Oferta, demanda y porcentajes</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 6 · Variación porcentual y facturas -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Una factura con IGV y una flecha de variación porcentual">
+            <defs><linearGradient id="g6" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00838F"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g6)"/>
+            <path d="M186 30h96v126l-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8Z" fill="#fff"/>
+            <rect x="198" y="44" width="50" height="8" rx="4" fill="#0A1F5C"/>
+            <g fill="#C9D3E8"><rect x="198" y="64" width="72" height="5" rx="2.5"/><rect x="198" y="76" width="60" height="5" rx="2.5"/><rect x="198" y="88" width="66" height="5" rx="2.5"/></g>
+            <rect x="198" y="104" width="72" height="22" rx="4" fill="#E6F2F3"/>
+            <text x="204" y="120" font-family="Inter,sans-serif" font-weight="800" font-size="12" fill="#00838F">IGV 18%</text>
+            <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+              <path d="M36 146L76 112L102 128L150 80" stroke="#5EE0C1" stroke-width="6"/>
+              <path d="M128 78h24v24" stroke="#5EE0C1" stroke-width="6"/>
+            </g>
+            <text x="38" y="88" font-family="Inter,sans-serif" font-weight="800" font-size="24" fill="#FFC94D">+25%</text>
+          </svg>
+          <span class="etiqueta">Semana 6</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Variación porcentual, valor de venta y facturas</p>
+          <a class="pl-ses" href="pl-semana-6-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">Variación porcentual</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-6-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Valor de venta, precio de venta y facturas</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 7 · Interés compuesto -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Barras que crecen cada vez más rápido por el interés compuesto">
+            <defs><linearGradient id="g7" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1F5FAE"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient></defs>
+            <rect width="320" height="180" fill="url(#g7)"/>
+            <g fill="#fff" fill-opacity=".85">
+              <rect x="150" y="128" width="22" height="30" rx="3"/>
+              <rect x="180" y="120" width="22" height="38" rx="3"/>
+              <rect x="210" y="108" width="22" height="50" rx="3"/>
+              <rect x="240" y="90" width="22" height="68" rx="3"/>
+              <rect x="270" y="62" width="22" height="96" rx="3"/>
+            </g>
+            <path d="M150 122Q236 116 290 44" stroke="#FFC94D" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <circle cx="290" cy="40" r="11" fill="#FFC94D" stroke="#C9961F" stroke-width="2"/>
+            <text x="290" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="11" fill="#9A6F00">S/</text>
+            <text x="28" y="104" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="#fff">S = C</text>
+            <text x="28" y="136" font-family="Inter,sans-serif" font-weight="800" font-size="22" fill="#FFC94D">(1+i)<tspan font-size="14" dy="-10">n</tspan></text>
+          </svg>
+          <span class="etiqueta">Semana 7</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Interés compuesto</p>
+          <a class="pl-ses" href="pl-semana-7-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">¿Qué es el interés compuesto?</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-7-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Fórmulas del interés compuesto y línea de tiempo</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Semana 8 · Ecuación de valor -->
+      <section class="pl-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Línea de tiempo con pagos y una fecha focal">
+            <defs>
+              <linearGradient id="g8" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3A2F8F"/><stop offset="1" stop-color="#0A1F5C"/></linearGradient>
+              <marker id="p8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#5EE0C1"/></marker>
+            </defs>
+            <rect width="320" height="180" fill="url(#g8)"/>
+            <path d="M30 130H296" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+            <g stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M50 122v16M110 122v16M170 122v16M230 122v16M290 122v16"/></g>
+            <g font-family="Inter,sans-serif" font-weight="700" font-size="12" fill="#fff" fill-opacity=".8" text-anchor="middle">
+              <text x="50" y="156">0</text><text x="110" y="156">1</text><text x="170" y="156">2</text><text x="230" y="156">3</text><text x="290" y="156">4</text>
+            </g>
+            <path d="M170 64V122" stroke="#FFC94D" stroke-width="3" stroke-dasharray="6 5"/>
+            <path d="M150 44l20-14 20 14v18h-40Z" fill="#FFC94D"/>
+            <text x="170" y="58" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="10" fill="#0A1F5C">FF</text>
+            <g stroke="#5EE0C1" stroke-width="3" fill="none" marker-end="url(#p8)">
+              <path d="M56 112Q110 74 160 108"/>
+              <path d="M284 112Q232 74 180 108"/>
+            </g>
+            <rect x="28" y="88" width="44" height="18" rx="9" fill="#fff" fill-opacity=".9"/>
+            <text x="50" y="101" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="11" fill="#0A1F5C">S/ 500</text>
+            <rect x="262" y="88" width="56" height="18" rx="9" fill="#fff" fill-opacity=".9"/>
+            <text x="290" y="101" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="11" fill="#0A1F5C">S/ 800</text>
+          </svg>
+          <span class="etiqueta">Semana 8</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Ecuaciones de valor y repaso final</p>
+          <a class="pl-ses" href="pl-semana-8-parte-1.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Sesión 1</span><span class="t">La ecuación de valor</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="pl-ses" href="pl-semana-8-parte-2.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Sesión 2</span><span class="t">Ecuaciones de valor: problemas y repaso final</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="o-acciones centrado o-mb">
+    <a class="o-btn o-btn-secondary" href="pensamiento-logico.html">Ver la versión en lista</a>
+    <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Pensamiento Lógico (piloto)</span>
+    <span>Repositorio de recursos de Eduardo</span>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
