@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-25-135914">
+<meta name="version" content="2026-10-27-144342">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1394,6 +1394,7 @@ function lista(k){ return hechas(k)>=cuantas(k); }
 function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=hechas(k); }); return s; }
 function totalMax(){ var s=0; clavesVis().forEach(function(k){ s+=cuantas(k); }); return s; }
 var i=0;
+try{ var i0=parseInt(sessionStorage.getItem(LS+'_i'),10); if(i0>0 && i0<D.length) i=i0; }catch(e){}
 
 /* ================= arrastre ================= */
 var elegida=null;
@@ -2059,6 +2060,7 @@ function pinta(quieto){
   /* al responder dentro de la misma diapositiva no se pierde el sitio */
   var alto = quieto ? $('lam').scrollTop : 0;
   G.visto[i]=1; graba();
+  try{ sessionStorage.setItem(LS+'_i', String(i)); }catch(e){}
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
   $('cu').textContent=(posVis(i)+1)+' / '+vis().length;
@@ -2978,13 +2980,27 @@ pinta();
 /* si se publica una versión nueva, la pestaña abierta se recarga sola */
 (function(){
   var mia=(document.querySelector('meta[name="version"]')||{}).content;
+  function avisaVersion(){
+    if(document.getElementById('nuevaVersion')) return;
+    var d=document.createElement('div'); d.id='nuevaVersion'; d.setAttribute('role','status');
+    d.style.cssText='position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:10005;background:#071767;color:#fff;'+
+      'font:700 15px Nunito,Inter,system-ui,sans-serif;padding:9px 12px 9px 16px;border-radius:12px;display:flex;gap:10px;'+
+      'align-items:center;box-shadow:0 8px 24px rgba(7,23,103,.35);max-width:calc(100vw - 24px)';
+    d.innerHTML='Hay una versión nueva de esta sesión.<button type="button" style="font:inherit;font-weight:800;border:0;'+
+      'border-radius:8px;padding:6px 12px;background:#FC0045;color:#fff;cursor:pointer">Actualizar</button>';
+    d.querySelector('button').addEventListener('click', function(){ location.reload(); });
+    document.body.appendChild(d);
+  }
   function revisa(){
     if(!window.fetch) return;
     fetch(location.pathname+'?nc='+Date.now(), { cache:'no-store' })
       .then(function(r){ return r.ok ? r.text() : ''; })
       .then(function(t){
         var m=/<meta name="version" content="([^"]+)"/.exec(t);
-        if(m && mia && m[1]!==mia) location.reload();
+        if(m && mia && m[1]!==mia){
+          /* con la clase en curso no se recarga sola: se avisa y cada uno actualiza cuando quiera */
+          if(window.Aula && (Aula.enSala || Aula.enPractica)) avisaVersion(); else location.reload();
+        }
       }).catch(function(){});
   }
   setInterval(revisa, 60000);
