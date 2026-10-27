@@ -1,0 +1,92 @@
+/* ============================================================
+   Modo celular de las sesiones de Pensamiento Lógico.
+   pl-movil.js pone la clase «movil» en <html> solo en teléfonos
+   (o tabletas en vertical). En computadora nada de esto se aplica.
+   ============================================================ */
+
+/* ---------- la cabecera del sitio ya no se queda pegada arriba ---------- */
+html.movil .o-navbar{ display:none; }
+html.movil .o-cp{ position:static; padding:6px 12px; gap:8px; }
+html.movil .o-cp .o-crumb, html.movil .o-cp .o-cp-right{ display:none; }
+html.movil .o-cp .o-btn{ padding:6px 12px; font-size:14px; }
+html.movil .o-content{ padding:8px 0 40px; }
+html.movil .o-sheet{ padding:12px; border-radius:0; border-left:0; border-right:0; }
+
+/* ---------- portada y entrada a la sala, cómodas con el dedo ---------- */
+html.movil .marca{ gap:10px; padding-bottom:10px; }
+html.movil .marca .tx h1{ font-size:21px; }
+html.movil .marca .tx p{ font-size:14px; }
+html.movil .marca .bts{ width:100%; gap:6px; }
+html.movil .marca .bts .o-btn{ flex:1 1 auto; font-size:13px; padding:8px 10px; }
+html.movil .puerta{ padding:12px 14px; margin-top:12px; }
+html.movil .puerta h2{ font-size:19px; }
+html.movil .puerta p{ font-size:15px; line-height:1.5; }
+html.movil .aula-fila{ flex-direction:column; align-items:stretch; }
+html.movil .aula-campo{ width:100%; }
+html.movil .aula-campo input{ width:100% !important; max-width:none !important; box-sizing:border-box; font-size:17px; padding:11px 12px; }
+html.movil #aulaEntrar, html.movil #aulaPractica{ width:100%; font-size:17px; padding:12px; }
+
+/* ---------- la diapositiva ocupa toda la pantalla del celular ---------- */
+html.movil .esc{ height:100vh; height:100dvh; max-height:none; min-height:0; aspect-ratio:auto;
+  border-radius:0; border-left:0; border-right:0; margin-left:-12px; margin-right:-12px; margin-top:12px; }
+html.movil .esc .cab{ padding:7px 10px; gap:7px; border-bottom-width:3px; }
+html.movil .esc .cab .et{ font-size:11px; padding:3px 7px; letter-spacing:.05em; }
+html.movil .esc .cab .t{ font-size:15px; line-height:1.25; white-space:normal; overflow:hidden;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
+html.movil .esc .cab .cu{ font-size:13px; }
+html.movil .esc .cab .lgb{ display:none; }
+html.movil .esc .cab .btf{ padding:5px 8px; font-size:16px; }
+
+/* el contenido: un poco más chico que en el proyector y siempre a lo ancho de la pantalla */
+html.movil .esc .lam{ zoom:.86; padding:14px 13px 22px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+html.movil .teo2{ grid-template-columns:minmax(0,1fr) !important; gap:14px; }
+html.movil .duo{ grid-template-columns:minmax(0,1fr) !important; }
+html.movil .dos-d{ grid-template-columns:minmax(0,1fr) !important; }
+html.movil .lam table{ max-width:100%; }
+html.movil .relleno{ display:none !important; }   /* en el celular no hacen falta: se desliza */
+
+/* ---------- arrastrar con el dedo ---------- */
+/* sin esto, el dedo desplaza la pantalla y la ficha no se mueve */
+html.movil .ficha{ touch-action:none; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
+  font-size:19px; padding:9px 13px; }
+html.movil .banco{ gap:8px; padding:9px; position:sticky; top:-14px; z-index:3; background:#F4F7FD;
+  border-radius:12px; box-shadow:0 6px 14px rgba(7,23,103,.10); }
+/* las cajas lado a lado: todo el juego entra en la pantalla y el arrastre es corto */
+html.movil .cajas{ grid-template-columns:repeat(auto-fit, minmax(96px, 1fr)) !important; gap:7px; }
+html.movil .caja > h5{ font-size:14px; padding:7px 8px; line-height:1.25; }
+html.movil .caja .z{ min-height:84px; padding:7px; gap:6px; }
+html.movil .caja .z .ficha{ font-size:16px; padding:6px 9px; }
+html.movil .par{ gap:8px; }
+html.movil .fantasma{ font-size:19px !important; }
+
+/* ---------- pie, avance y botones: finos, para no tapar la lámina ---------- */
+html.movil .pie-equipo{ padding:3px 62px 3px 10px; font-size:10.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; }
+html.movil .pie-equipo .pe-der{ display:none; }
+html.movil .avance{ padding:4px 62px 4px 10px; gap:8px; }   /* a la derecha queda la calculadora */
+html.movil .avance .riel{ height:5px; }
+html.movil .avance b{ font-size:12px; }
+html.movil .nav{ padding:7px 10px calc(7px + env(safe-area-inset-bottom)); gap:8px; flex-wrap:nowrap; }
+html.movil .nav .pts{ display:none; }   /* el número de diapositiva ya está arriba */
+html.movil .nav .o-btn{ flex:1 1 0; font-size:16px; padding:11px 8px; text-align:center; justify-content:center; }
+
+/* ---------- botones flotantes: por encima de la botonera, más pequeños ---------- */
+html.movil .ca-btn{ bottom:66px !important; right:10px !important; width:44px !important; height:44px !important; font-size:20px !important; }
+html.movil .ca-p{ bottom:118px !important; right:10px !important; }
+html.movil .aula-av{ left:10px; bottom:66px; }
+html.movil .aula-av .av-fab{ font-size:13px; padding:9px 13px; }
+html.movil .aula-av .av-pan{ bottom:48px; }
+html.movil .flopart{ bottom:66px !important; }
+
+/* ---------- celular de lado: la pantalla es baja, todo más compacto ---------- */
+@media (max-height:500px){
+  html.movil .esc .cab{ padding:4px 10px; }
+  html.movil .esc .cab .t{ font-size:14px; -webkit-line-clamp:1; }
+  html.movil .esc .lam{ padding:8px 13px 12px; }
+  html.movil .pie-equipo{ font-size:9.5px; padding:1px 62px 1px 10px; }
+  html.movil .avance{ padding:2px 62px 2px 10px; }
+  html.movil .avance .riel{ height:4px; }
+  html.movil .nav{ padding:4px 10px calc(4px + env(safe-area-inset-bottom)); }
+  html.movil .nav .o-btn{ padding:6px 8px; font-size:14px; }
+  html.movil .ca-btn{ bottom:46px !important; width:38px !important; height:38px !important; }
+  html.movil .aula-av{ bottom:46px; }
+}
