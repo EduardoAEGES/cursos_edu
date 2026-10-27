@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s11-miercoles_v1-a">
+<meta name="version" content="2026-10-27-ic_s11-miercoles_v2-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -969,7 +969,7 @@
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
       <h1>Prueba T de Student: comparar dos medias</h1>
-      <p><span class="sem">Semana 11 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - ¿Les gusta más a unos que a otros?</p>
+      <p><span class="sem">Semana 11 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - ¿Les gusta más a unos que a otros? Explicado paso a paso</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -1047,7 +1047,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="ic-tj.js?v=20261027a"></script>
+<script src="ic-tj.js?v=20261027b"></script>
 <script src="aula.js?v=20261025f"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
@@ -1298,48 +1298,71 @@ var ACT={
    }
   ]
  },
+ "prom": {
+  "tipo": "cal",
+  "titulo": "Promedio y dispersión",
+  "lista": [
+   {
+    "q": "Promedio del grupo A: 7, 7, 7, 7",
+    "f": "Suma ÷ 4",
+    "e": 7,
+    "tol": 0.01,
+    "ph": "0",
+    "pq": "28 ÷ 4 = 7"
+   },
+   {
+    "q": "Promedio del grupo B: 4, 10, 4, 10",
+    "f": "Suma ÷ 4",
+    "e": 7,
+    "tol": 0.01,
+    "ph": "0",
+    "pq": "28 ÷ 4 = 7. ¡El mismo promedio! Pero en B las notas están muy dispersas: unos la aman y otros no."
+   }
+  ],
+  "fin": "<p class=\"pq\">Mismo promedio, distinta <b>dispersión</b>. Por eso la prueba T mira las dos cosas.</p>"
+ },
  "cual": {
   "tipo": "quiz",
   "titulo": "¿Prueba T o ji-cuadrada?",
   "lista": [
    {
-    "q": "¿En cuál de estos casos corresponde la prueba T?",
+    "q": "¿En cuál de estos casos usarías la prueba T?",
     "ops": [
-     "Comparar el gasto promedio mensual entre Lima Norte y Lima Sur",
-     "Ver si el distrito se relaciona con la marca preferida",
-     "Comparar el % que compra entre hombres y mujeres",
-     "Contar cuántos prefieren cada sabor"
+     "Gasto promedio mensual: Lima Norte vs Lima Sur",
+     "¿El distrito se relaciona con la marca?",
+     "¿Compran más las mujeres o los varones? (sí / no)",
+     "¿Cuántos eligen cada sabor?"
     ],
     "ok": 0,
-    "pq": "Prueba T: una variable numérica (gasto) y dos grupos. Un % sale de categorías: eso va con ji-cuadrada."
+    "pq": "Prueba T: un número (gasto en soles) y dos grupos. Si las respuestas son categorías (sí / no, marca), se usa ji-cuadrada."
    },
    {
-    "q": "En =PRUEBA.T(A2:A41; B2:B41; 2; 3), ¿qué significa el 2?",
+    "q": "Excel da =PRUEBA.T(...) = 0.04. ¿Qué concluimos?",
     "ops": [
-     "Que el resultado se muestra con dos decimales",
-     "Que se asumen varianzas iguales en ambos grupos",
-     "Que la prueba es de dos colas",
-     "Que se comparan dos grupos de datos"
+     "La diferencia es de 4 puntos",
+     "El 4 % prefiere la bebida",
+     "La diferencia es casualidad",
+     "Los promedios son distintos de verdad"
     ],
-    "ok": 2,
-    "pq": "El tercer argumento son las colas (2 = dos colas). El cuarto es el tipo: 3 = varianzas distintas."
+    "ok": 3,
+    "pq": "PRUEBA.T devuelve el p-valor. 0.04 es menor que 0.05: la diferencia es real."
    }
   ]
  },
  "t": {
   "tipo": "cal",
-  "titulo": "Calcula el estadístico t",
+  "titulo": "Calcula el t paso a paso",
   "lista": [
    {
-    "q": "Diferencia de medias",
+    "q": "Diferencia de promedios",
     "f": "7.4 − 6.8",
     "e": 0.6,
     "tol": 0.001,
     "ph": "0.0",
-    "pq": "7.4 − 6.8 = 0.6"
+    "pq": "7.4 − 6.8 = 0.6 puntos"
    },
    {
-    "q": "Error estándar de la diferencia",
+    "q": "Error estándar: cuánto puede moverse la diferencia por casualidad",
     "f": "√(1.2² ÷ 40 + 1.4² ÷ 40)",
     "e": 0.29,
     "tol": 0.01,
@@ -1347,47 +1370,25 @@ var ACT={
     "pq": "1.44 ÷ 40 = 0.036; 1.96 ÷ 40 = 0.049; √0.085 = 0.29"
    },
    {
-    "q": "Estadístico t",
-    "f": "diferencia ÷ error estándar",
+    "q": "t = diferencia ÷ error estándar",
+    "f": "0.6 ÷ 0.29",
     "e": 2.06,
-    "tol": 0.03,
+    "tol": 0.04,
     "ph": "0.00",
-    "pq": "0.6 ÷ 0.2915 = 2.06"
-   },
-   {
-    "q": "Grados de libertad",
-    "f": "n₁ + n₂ − 2",
-    "e": 78,
-    "tol": 0,
-    "ph": "0",
-    "pq": "40 + 40 − 2 = 78. El valor crítico con 78 gl y dos colas es ≈ 1.99."
+    "pq": "0.6 ÷ 0.2915 = 2.06: la diferencia es unas 2 veces lo que daría la casualidad. Como pasa de ≈ 2, es real."
    }
   ]
  },
  "cr": {
   "tipo": "cruz",
   "titulo": "Crucigrama de la prueba T",
-  "filas": 8,
-  "cols": 9,
+  "filas": 9,
+  "cols": 10,
   "palabras": [
    {
-    "p": "STUDENT",
-    "pista": "Seudónimo de Gosset, autor de la prueba T",
-    "r": 5,
-    "c": 2,
-    "dir": "H"
-   },
-   {
-    "p": "MEDIA",
-    "pista": "Lo que se compara entre los dos grupos",
+    "p": "PROMEDIO",
+    "pista": "Suma de las notas ÷ cantidad de notas",
     "r": 3,
-    "c": 5,
-    "dir": "V"
-   },
-   {
-    "p": "COLAS",
-    "pista": "Una o dos, según el sentido de H1",
-    "r": 7,
     "c": 2,
     "dir": "H"
    },
@@ -1399,113 +1400,67 @@ var ACT={
     "dir": "V"
    },
    {
-    "p": "VARIANZA",
-    "pista": "Desviación estándar al cuadrado",
-    "r": 1,
+    "p": "DISPERSION",
+    "pista": "Qué tan distintas son las notas entre sí",
+    "r": 5,
     "c": 0,
-    "dir": "H"
-   }
-  ]
- },
- "sp": {
-  "tipo": "sopa",
-  "titulo": "Sopa de letras de la prueba T",
-  "grilla": [
-   "HUFCOBRUBC",
-   "FFJCRVMNFR",
-   "MGPRUEBATI",
-   "JUNRDBPSTT",
-   "AEEDJECTJI",
-   "HSRSJLSHIC",
-   "ACURTDDVBO",
-   "LAVMORJAIM",
-   "GLFOMRANHO",
-   "GARBMNSFBT"
-  ],
-  "palabras": [
-   {
-    "p": "PRUEBAT",
-    "pista": "Compara dos medias",
-    "r": 2,
-    "c": 2,
     "dir": "H"
    },
    {
-    "p": "CRITICO",
-    "pista": "Valor de la tabla que se compara con t",
-    "r": 0,
-    "c": 9,
+    "p": "STUDENT",
+    "pista": "Seudónimo del creador de la prueba T",
+    "r": 2,
+    "c": 0,
     "dir": "V"
    },
    {
     "p": "ERROR",
-    "pista": "… estándar: el denominador de t",
-    "r": 4,
+    "pista": "… estándar: lo que puede moverse la diferencia por casualidad",
+    "r": 1,
     "c": 1,
-    "dir": "D"
-   },
-   {
-    "p": "MUESTRA",
-    "pista": "De ella salen las medias",
-    "r": 2,
-    "c": 0,
-    "dir": "D"
-   },
-   {
-    "p": "ESCALA",
-    "pista": "Nivel de medición que necesita la prueba T",
-    "r": 4,
-    "c": 1,
-    "dir": "V"
-   },
-   {
-    "p": "DESVIO",
-    "pista": "Cuánto se alejan los datos de la media",
-    "r": 3,
-    "c": 4,
-    "dir": "D"
+    "dir": "H"
    }
-  ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> Prueba T: <b>número</b> y <b>dos grupos</b>. Ji-cuadrada: <b>categorías</b> cruzadas. Esa es la primera pregunta antes de calcular.</p>"
+  ]
  },
  "fin": {
   "tipo": "quiz",
   "titulo": "Reto final",
   "lista": [
    {
-    "q": "t = 2.06 y valor crítico = 1.99 (α = 0.05, dos colas). ¿Conclusión?",
+    "q": "Deportistas: 7.4; no deportistas: 6.8. Sale t = 2.06 (el límite es ≈ 1.99). ¿Qué le dices al gerente?",
     "ops": [
-     "No es significativa, porque 2.06 y 1.99 son casi iguales",
-     "Es significativa: a los deportistas les agrada más",
+     "A los deportistas les gusta más la bebida",
+     "Los dos grupos califican igual",
      "Hay 2.06 % de error",
-     "El agrado de los deportistas es 2.06 veces el de los demás"
+     "A los deportistas les gusta 2.06 veces más"
+    ],
+    "ok": 0,
+    "pq": "2.06 > 1.99: la diferencia es real. Conviene apuntar la campaña a deportistas."
+   },
+   {
+    "q": "Mismos promedios, pero solo 10 personas por grupo. ¿Qué pasa con t?",
+    "ops": [
+     "Se vuelve negativo",
+     "Baja a ≈ 1.03 y ya no es significativa",
+     "Sube, porque hay menos datos que revisar",
+     "No cambia"
     ],
     "ok": 1,
-    "pq": "2.06 > 1.99: se rechaza H0 de medias iguales."
+    "pq": "Con pocas personas la casualidad pesa más: el error estándar sube a 0.58 y t = 0.6 ÷ 0.58 = 1.03."
    },
    {
-    "q": "Mismas medias (7.4 y 6.8) y desviaciones, pero solo 10 personas por grupo. ¿Qué pasa con t?",
+    "q": "Quieres comparar el agrado de 3 sabores a la vez. ¿Basta una prueba T?",
     "ops": [
-     "No cambia: t solo depende de la diferencia de medias",
-     "Se vuelve negativo",
-     "Sube, porque con menos personas hay menos dispersión",
-     "Baja a ≈ 1.03 y deja de ser significativa"
+     "Mejor la ji-cuadrada de los promedios",
+     "Sí, con tres columnas",
+     "Sí, si subo α a 10 %",
+     "No: la prueba T compara solo dos grupos"
     ],
     "ok": 3,
-    "pq": "√(1.44 ÷ 10 + 1.96 ÷ 10) = 0.58 y 0.6 ÷ 0.58 = 1.03. Por eso el tamaño de muestra importa."
-   },
-   {
-    "q": "Quieres comparar el agrado medio de 3 sabores a la vez. ¿Usas una sola prueba T?",
-    "ops": [
-     "Mejor ji-cuadrada sobre las medias",
-     "Sí, pero subiendo α a 0.10 para compensar",
-     "No: para tres grupos se usa ANOVA",
-     "Sí, poniendo los tres sabores en tres columnas"
-    ],
-    "ok": 2,
-    "pq": "La prueba T es para dos grupos. Para tres o más medias se usa el análisis de varianza (ANOVA)."
+    "pq": "La prueba T es para dos grupos. Para tres o más promedios se usa ANOVA."
    }
-  ]
+  ],
+  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> prueba T = <b>un número</b> (nota, gasto) y <b>dos grupos</b>. Ji-cuadrada = <b>categorías</b> cruzadas.</p>"
  }
 };
 
@@ -1517,45 +1472,46 @@ var D=[
   claves:["c0"],
   h:TAPA('¿Les gusta más a unos que a otros?','Semana 11 · Prueba T de Student',null,'pres','En la prueba de Quinua Fresh, <b>40 jóvenes que hacen deporte</b> y <b>40 que no</b> calificaron la bebida del 1 al 10.') },
 
+{ et:"Promedio",
+  t:"Promedio y dispersión",
+  claves:["prom"],
+  lado:1,
+  h:'<p class="teo-def"><b>Promedio (media):</b> suma de las notas ÷ cantidad. Resume al grupo en un número.</p>'+
+'<p class="teo-def"><b>Dispersión (desviación estándar):</b> qué tan distintas son las notas entre sí. Poca dispersión = todos opinan parecido.</p>'+
+'<div class="clave">&#127919; Dos grupos pueden tener el <b>mismo promedio</b> y opiniones muy distintas.</div>' },
+
 { et:"Prueba T",
-  t:"Cuándo se usa la prueba T",
+  t:"¿Cuándo se usa la prueba T?",
   claves:["cual"],
   lado:1,
-  h:'<p class="teo-def">Compara la <b>media</b> de una variable numérica entre <b>dos grupos</b> independientes.</p>'+
-'<div class="dos"><div class="fc"><h4>H0</h4><div class="c">μ₁ = μ₂<br>Las medias son iguales.</div></div><div class="fc rj"><h4>H1</h4><div class="c">μ₁ ≠ μ₂<br>Las medias difieren.</div></div></div>'+
-SINTAXIS('En Excel',[['=PRUEBA.T(rango1; rango2; 2; 3)','p-valor · dos colas · varianzas distintas']]) },
+  h:'<p class="teo-def">La <b>prueba T</b> compara el <b>promedio de dos grupos</b> para saber si la diferencia es real o casualidad.</p>'+
+'<div class="dos"><div class="fc"><h4>H0</h4><div class="c">Los dos grupos califican <b>igual</b>.</div></div><div class="fc rj"><h4>H1</h4><div class="c">Los dos grupos califican <b>distinto</b>.</div></div></div>'+
+SINTAXIS('En Excel',[['=PRUEBA.T(grupo1; grupo2; 2; 3)','Da el p-valor directamente']]) },
 
 { et:"Cálculo",
-  t:"El estadístico t paso a paso",
+  t:"El t paso a paso",
   claves:["t"],
   lado:1,
-  h:TABLA(['Grupo','n','Media','Desv. estándar'],[['Hace deporte','40','7.4','1.2'],['No hace deporte','40','6.8','1.4']])+
-'<div class="form">t = (x̄₁ − x̄₂) ÷ √(s₁²/n₁ + s₂²/n₂)</div>'+
-'<div class="clave">Si |t| es mayor que el valor crítico, se rechaza H0.</div>' },
+  h:TABLA(['Grupo','Personas','Promedio','Dispersión'],[['Hace deporte','40','7.4','1.2'],['No hace deporte','40','6.8','1.4']])+
+'<ul class="pasos"><li><b>Diferencia</b> de promedios.</li><li><b>Error estándar:</b> cuánto podría moverse esa diferencia por casualidad.</li><li><b>t</b> = diferencia ÷ error. Si pasa de <b>≈ 2</b>, es real.</li></ul>' },
 
 { et:"Crucigrama",
   t:"Crucigrama de la prueba T",
   claves:["cr"],
   h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>STUDENT</b></td><td>Seudónimo de Gosset, autor de la prueba T</td></tr><tr><td><b>MEDIA</b></td><td>Lo que se compara entre los dos grupos</td></tr><tr><td><b>COLAS</b></td><td>Una o dos, según el sentido de H1</td></tr><tr><td><b>GRUPOS</b></td><td>La prueba T compara solo dos</td></tr><tr><td><b>VARIANZA</b></td><td>Desviación estándar al cuadrado</td></tr></tbody></table></div>" },
-
-{ et:"Sopa",
-  t:"Sopa de letras",
-  claves:["sp"],
-  h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>PRUEBAT</b></td><td>Compara dos medias</td></tr><tr><td><b>CRITICO</b></td><td>Valor de la tabla que se compara con t</td></tr><tr><td><b>ERROR</b></td><td>… estándar: el denominador de t</td></tr><tr><td><b>MUESTRA</b></td><td>De ella salen las medias</td></tr><tr><td><b>ESCALA</b></td><td>Nivel de medición que necesita la prueba T</td></tr><tr><td><b>DESVIO</b></td><td>Cuánto se alejan los datos de la media</td></tr></tbody></table></div>" },
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>PROMEDIO</b></td><td>Suma de las notas ÷ cantidad de notas</td></tr><tr><td><b>GRUPOS</b></td><td>La prueba T compara solo dos</td></tr><tr><td><b>DISPERSION</b></td><td>Qué tan distintas son las notas entre sí</td></tr><tr><td><b>STUDENT</b></td><td>Seudónimo del creador de la prueba T</td></tr><tr><td><b>ERROR</b></td><td>… estándar: lo que puede moverse la diferencia por casualidad</td></tr></tbody></table></div>" },
 
 { et:"Reto",
   t:"Reto final",
   claves:["fin"],
   h:'',
-  pdf:"<ol class=\"pasos\"><li><b>t = 2.06 y valor crítico = 1.99 (α = 0.05, dos colas). ¿Conclusión?</b><br>Respuesta: Es significativa: a los deportistas les agrada más. <i>2.06 > 1.99: se rechaza H0 de medias iguales.</i></li><li><b>Mismas medias (7.4 y 6.8) y desviaciones, pero solo 10 personas por grupo. ¿Qué pasa con t?</b><br>Respuesta: Baja a ≈ 1.03 y deja de ser significativa. <i>√(1.44 ÷ 10 + 1.96 ÷ 10) = 0.58 y 0.6 ÷ 0.58 = 1.03. Por eso el tamaño de muestra importa.</i></li><li><b>Quieres comparar el agrado medio de 3 sabores a la vez. ¿Usas una sola prueba T?</b><br>Respuesta: No: para tres grupos se usa ANOVA. <i>La prueba T es para dos grupos. Para tres o más medias se usa el análisis de varianza (ANOVA).</i></li></ol><div class=\"clave\"><b>Para cerrar:</b> Prueba T: <b>número</b> y <b>dos grupos</b>. Ji-cuadrada: <b>categorías</b> cruzadas. Esa es la primera pregunta antes de calcular.</div>" }
+  pdf:"<ol class=\"pasos\"><li><b>Deportistas: 7.4; no deportistas: 6.8. Sale t = 2.06 (el límite es ≈ 1.99). ¿Qué le dices al gerente?</b><br>Respuesta: A los deportistas les gusta más la bebida. <i>2.06 > 1.99: la diferencia es real. Conviene apuntar la campaña a deportistas.</i></li><li><b>Mismos promedios, pero solo 10 personas por grupo. ¿Qué pasa con t?</b><br>Respuesta: Baja a ≈ 1.03 y ya no es significativa. <i>Con pocas personas la casualidad pesa más: el error estándar sube a 0.58 y t = 0.6 ÷ 0.58 = 1.03.</i></li><li><b>Quieres comparar el agrado de 3 sabores a la vez. ¿Basta una prueba T?</b><br>Respuesta: No: la prueba T compara solo dos grupos. <i>La prueba T es para dos grupos. Para tres o más promedios se usa ANOVA.</i></li></ol>" }
 ];
 
 /* ================= estado ================= */
-var LS='ic_s11-miercoles_v1';
+var LS='ic_s11-miercoles_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "cual", "t", "cr", "sp", "fin"];
+var CLAVES=["c0", "prom", "cual", "t", "cr", "fin"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -2918,7 +2874,7 @@ $('btnElige').addEventListener('click', function(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('ic_s11-miercoles_v1_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ic_s11-miercoles_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -2966,7 +2922,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('ic_s11-miercoles_v1_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ic_s11-miercoles_v2_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
@@ -3288,6 +3244,6 @@ pinta();
 })();
 </script>
 
-<script src="mat-tj.js?v=20261027a"></script>
+<script src="mat-tj.js?v=20261027b"></script>
 </body>
 </html>
