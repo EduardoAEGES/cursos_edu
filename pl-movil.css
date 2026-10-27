@@ -72,9 +72,9 @@ html.movil .nav .o-btn{ flex:1 1 0; font-size:16px; padding:11px 8px; text-align
 /* ---------- botones flotantes: por encima de la botonera, más pequeños ---------- */
 html.movil .ca-btn{ bottom:66px !important; right:10px !important; width:44px !important; height:44px !important; font-size:20px !important; }
 html.movil .ca-p{ bottom:118px !important; right:10px !important; }
-html.movil .aula-av{ left:10px; bottom:66px; }
+html.movil .aula-av{ left:10px; bottom:132px; }   /* por encima de la barra de avance y de los botones */
 html.movil .aula-av .av-fab{ font-size:13px; padding:9px 13px; }
-html.movil .aula-av .av-pan{ bottom:48px; }
+html.movil .aula-av .av-pan{ bottom:52px; }
 html.movil .flopart{ bottom:66px !important; }
 
 /* ---------- celular de lado: la pantalla es baja, todo más compacto ---------- */
