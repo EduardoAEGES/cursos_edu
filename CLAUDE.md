@@ -23,6 +23,11 @@ actividades), `D` (las diapositivas), `CLAVES`, `LS` y la `sala` de
 Compartido por todas las páginas: `odoo.css`, `aula.css`, `aula.js`,
 `reiniciar.js`, `calculadora.js`.
 
+**La clave del docente no se pone en la página.** `aula.js` ya trae la del
+docente; pasar `clave:` en `Aula.iniciar` la reemplaza y deja fuera al docente.
+Solo Pensamiento Lógico la cambia, porque tiene la suya. En todo lo demás, esa
+opción se omite.
+
 ## Las dos marcas
 
 El repositorio sirve a dos instituciones y cada curso lleva la suya.
