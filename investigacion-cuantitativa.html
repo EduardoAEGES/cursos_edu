@@ -8,6 +8,57 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="odoo.css">
+<style>
+  /* ---------- menú: Bloque I y una pestaña por semana ---------- */
+  .ic-menu{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 18px; }
+  .ic-menu button{
+    font:inherit; font-size:15px; font-weight:700; cursor:pointer;
+    padding:10px 18px; border-radius:999px; border:2px solid #DCDCE0; background:#fff; color:#505050;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;
+  }
+  .ic-menu button:hover{ border-color:#E31E24; color:#E31E24; }
+  .ic-menu button[aria-selected="true"]{ background:#E31E24; border-color:#E31E24; color:#fff; }
+  .ic-menu button[data-p="b1"]{ background:#505050; border-color:#505050; color:#fff; }
+  .ic-menu button[data-p="b1"][aria-selected="true"]{ background:#E31E24; border-color:#E31E24; }
+  .ic-sub{ margin:0 0 6px; font-size:13px; font-weight:600; color:#505050; }
+  .ic-panel[hidden]{ display:none; }
+  .ic-panel .ic-semanas{ grid-template-columns:repeat(auto-fill, minmax(270px, 380px)); }
+
+  /* ---------- bloque II: tarjetas por semana ---------- */
+  .ic-semanas{ display:grid; gap:18px; grid-template-columns:repeat(auto-fill, minmax(270px, 1fr)); }
+  @media (max-width:420px){ .ic-semanas{ grid-template-columns:1fr; } }
+  .ic-sem{
+    display:flex; flex-direction:column; min-width:0;
+    background:#fff; border:1px solid var(--o-border); border-radius:10px; overflow:hidden;
+    box-shadow:0 2px 6px rgba(0,0,0,.08); transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .ic-sem:hover{ box-shadow:0 10px 24px rgba(0,0,0,.16); transform:translateY(-3px); }
+  .ic-sem .portada{ position:relative; border-top:6px solid #E31E24; line-height:0; }
+  .ic-sem .portada svg{ display:block; width:100%; height:auto; }
+  .ic-sem .etiqueta{
+    position:absolute; left:10px; top:12px; line-height:1;
+    background:#E31E24; color:#fff; font-weight:600; font-size:19px; padding:7px 10px 8px; letter-spacing:.2px;
+  }
+  .ic-sem .cuerpo{ display:flex; flex-direction:column; gap:10px; padding:14px; flex:1; }
+  .ic-sem .tema{ margin:0; font-size:13px; font-weight:600; color:#505050; }
+  .ic-ses{
+    display:flex; align-items:center; gap:10px; min-width:0;
+    padding:10px 12px; border-radius:8px; text-decoration:none; color:inherit;
+    background:#F4F4F6; border:1px solid #DCDCE0;
+    transition:background .12s ease, border-color .12s ease, color .12s ease;
+  }
+  .ic-ses:hover{ background:#505050; border-color:#505050; color:#fff; }
+  .ic-ses .num{
+    flex:none; width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+    background:#E31E24; color:#fff; font-weight:700; font-size:13px; transition:background .12s ease, color .12s ease;
+  }
+  .ic-ses:hover .num{ background:#fff; color:#E31E24; }
+  .ic-ses .txt{ flex:1; min-width:0; }
+  .ic-ses .s{ display:block; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:#E31E24; }
+  .ic-ses:hover .s{ color:#FFD9DB; }
+  .ic-ses .t{ display:block; font-size:13px; font-weight:500; line-height:1.3; overflow-wrap:anywhere; }
+  .ic-ses .flecha{ flex:none; font-size:18px; opacity:.6; }
+</style>
 </head>
 <body>
 
@@ -25,7 +76,7 @@
 <div class="o-cp">
   <a class="o-btn o-btn-primary" href="index.html">Volver al repositorio</a>
   <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / Cursos</span> / <b>Investigación Cuantitativa</b></span>
-  <div class="o-cp-right"><span class="o-count">6 sesiones</span></div>
+  <div class="o-cp-right"><span class="o-count">17 sesiones</span></div>
 </div>
 
 <div class="o-content">
@@ -43,8 +94,18 @@
   </div>
 
   <div class="o-sheet">
-    <h2 class="o-section-title">Sesiones</h2>
-    <div class="o-list">
+    <nav class="ic-menu" role="tablist" aria-label="Bloques y semanas">
+      <button type="button" role="tab" data-p="b1">Bloque I</button>
+      <button type="button" role="tab" data-p="s11">Semana 11</button>
+      <button type="button" role="tab" data-p="s12">Semana 12</button>
+      <button type="button" role="tab" data-p="s13">Semana 13</button>
+      <button type="button" role="tab" data-p="s14">Semana 14</button>
+      <button type="button" role="tab" data-p="s15">Semana 15</button>
+    </nav>
+
+    <div class="ic-panel" id="b1" role="tabpanel">
+      <p class="ic-sub">Sesiones anteriores · 7 sesiones</p>
+      <div class="o-list">
       <a class="o-row" href="sesion-5-niveles.html">
         <span class="n">5</span>
         <span class="info"><span class="t">Sesión 5 — Niveles de medición</span><span class="d">Niveles de medición y tipos de pregunta · práctica que se guarda sola</span></span>
@@ -87,8 +148,133 @@
         <span class="o-chip o-chip-ok">Disponible</span>
         <span class="chev">›</span>
       </a>
-</div>
+      </div>
+    </div>
 
+    <div class="ic-panel" id="s11" role="tabpanel">
+      <div class="ic-semanas">
+      <!-- Semana 11 -->
+      <section class="ic-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Curva normal con la cola de rechazo y los símbolos p menor que alfa y ji-cuadrada"><defs><linearGradient id="ic11" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A6A6E"/><stop offset="1" stop-color="#3A3A3E"/></linearGradient></defs><rect width="320" height="180" fill="url(#ic11)"/><g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g><path d="M20 150C70 150 80 40 130 40S190 150 240 150" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/><path d="M200 150C210 140 214 126 218 116L218 150Z" fill="#E31E24"/><path d="M202 150Q212 136 218 116" fill="none" stroke="#E31E24" stroke-width="5"/><path d="M130 40V150" stroke="#fff" stroke-opacity=".4" stroke-dasharray="5 5" stroke-width="2"/><text x="250" y="70" font-family="Inter,sans-serif" font-weight="800" font-size="26" fill="#fff">p &lt; α</text><text x="252" y="106" font-family="Inter,sans-serif" font-weight="800" font-size="30" fill="#FFD9DB">χ²</text></svg>
+          <span class="etiqueta">Semana 11</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Inferencia estadística</p>
+          <a class="ic-ses" href="ic-s11-martes.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Martes</span><span class="t">Contraste de hipótesis, p-valor y ji-cuadrada</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="ic-ses" href="ic-s11-miercoles.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Miércoles</span><span class="t">Prueba T de Student para comparar dos medias</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <div class="ic-panel" id="s12" role="tabpanel">
+      <div class="ic-semanas">
+      <!-- Semana 12 -->
+      <section class="ic-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Tres consumidores y barras de frecuencia de uso"><defs><linearGradient id="ic12" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A6A6E"/><stop offset="1" stop-color="#3A3A3E"/></linearGradient></defs><rect width="320" height="180" fill="url(#ic12)"/><g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g><circle cx="46" cy="58" r="13" fill="#fff"/><path d="M30 110v-22a16 16 0 0 1 32 0v22Z" fill="#fff"/><circle cx="92" cy="58" r="13" fill="#E31E24"/><path d="M76 110v-22a16 16 0 0 1 32 0v22Z" fill="#E31E24"/><circle cx="138" cy="58" r="13" fill="#fff"/><path d="M122 110v-22a16 16 0 0 1 32 0v22Z" fill="#fff"/><g fill="#fff"><rect x="190" y="110" width="22" height="40" rx="3"/><rect x="220" y="80" width="22" height="70" rx="3" fill="#E31E24"/><rect x="250" y="96" width="22" height="54" rx="3"/><rect x="280" y="60" width="22" height="90" rx="3" fill="#E31E24"/></g><path d="M182 150H306" stroke="#fff" stroke-width="3" stroke-linecap="round"/><text x="30" y="150" font-family="Inter,sans-serif" font-weight="800" font-size="26" fill="#FFD9DB">U&amp;A</text></svg>
+          <span class="etiqueta">Semana 12</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Estudio de usos y actitudes (U&amp;A)</p>
+          <a class="ic-ses" href="ic-s12-martes.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Martes</span><span class="t">Usos, actitudes y perfil del consumidor</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="ic-ses" href="ic-s12-miercoles.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Miércoles</span><span class="t">Contraste entre segmentos y perfil</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <div class="ic-panel" id="s13" role="tabpanel">
+      <div class="ic-semanas">
+      <!-- Semana 13 -->
+      <section class="ic-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Botella de la bebida con estrellas de agrado y el top two boxes"><defs><linearGradient id="ic13" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A6A6E"/><stop offset="1" stop-color="#3A3A3E"/></linearGradient></defs><rect width="320" height="180" fill="url(#ic13)"/><g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g><path d="M64 40h44l-6 22c14 8 18 20 18 34v52a8 8 0 0 1-8 8H60a8 8 0 0 1-8-8V96c0-14 4-26 18-34Z" fill="#fff"/><rect x="52" y="96" width="68" height="34" fill="#E31E24"/><text x="86" y="119" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="#fff">QUINUA</text><g font-family="Inter,sans-serif" font-weight="800" font-size="34" fill="#FFD9DB"><text x="150" y="78">★★★★</text><text x="150" y="78" fill="#E31E24">★★</text></g><text x="150" y="128" font-family="Inter,sans-serif" font-weight="800" font-size="28" fill="#fff">T2B 50%</text></svg>
+          <span class="etiqueta">Semana 13</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Estudio de producto</p>
+          <a class="ic-ses" href="ic-s13-martes.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Martes</span><span class="t">Prueba de concepto y de producto, top two boxes</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="ic-ses" href="ic-s13-miercoles.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Miércoles</span><span class="t">Comparación de medias, producto ganador y mejoras</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <div class="ic-panel" id="s14" role="tabpanel">
+      <div class="ic-semanas">
+      <!-- Semana 14 -->
+      <section class="ic-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Mapa de posicionamiento con cuatro cuadrantes, marcas y un punto ideal"><defs><linearGradient id="ic14" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A6A6E"/><stop offset="1" stop-color="#3A3A3E"/></linearGradient></defs><rect width="320" height="180" fill="url(#ic14)"/><g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g><g stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M40 90H290M165 22V160"/></g><circle cx="110" cy="58" r="11" fill="#E31E24"/><circle cx="214" cy="48" r="11" fill="#fff"/><circle cx="246" cy="134" r="11" fill="#fff" fill-opacity=".7"/><circle cx="84" cy="128" r="11" fill="#fff" fill-opacity=".5"/><path d="M232 30l4 9 10 1-8 6 3 10-9-5-9 5 3-10-8-6 10-1z" fill="#FFD9DB"/><g font-family="Inter,sans-serif" font-weight="800" font-size="12" fill="#fff"><text x="88" y="40">Quinua Fresh</text><text x="250" y="174" text-anchor="end">Precio accesible →</text></g></svg>
+          <span class="etiqueta">Semana 14</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Imagen y posicionamiento</p>
+          <a class="ic-ses" href="ic-s14-martes.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Martes</span><span class="t">Batería de atributos y promedios por marca</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="ic-ses" href="ic-s14-miercoles.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Miércoles</span><span class="t">Mapa de posicionamiento en Excel</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
+
+    <div class="ic-panel" id="s15" role="tabpanel">
+      <div class="ic-semanas">
+      <!-- Semana 15 -->
+      <section class="ic-sem">
+        <div class="portada">
+          <svg viewBox="0 0 320 180" role="img" aria-label="Velocímetro del NPS con detractores, pasivos y promotores"><defs><linearGradient id="ic15" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6A6A6E"/><stop offset="1" stop-color="#3A3A3E"/></linearGradient></defs><rect width="320" height="180" fill="url(#ic15)"/><g stroke="#fff" stroke-opacity=".07"><path d="M0 45H320M0 90H320M0 135H320M80 0V180M160 0V180M240 0V180"/></g><path d="M60 150A100 100 0 0 1 160 50" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="22"/><path d="M160 50A100 100 0 0 1 231 79" fill="none" stroke="#FFD9DB" stroke-width="22"/><path d="M231 79A100 100 0 0 1 260 150" fill="none" stroke="#E31E24" stroke-width="22"/><path d="M160 150L222 92" stroke="#fff" stroke-width="6" stroke-linecap="round"/><circle cx="160" cy="150" r="10" fill="#fff"/><g font-family="Inter,sans-serif" font-weight="800" font-size="13" fill="#fff"><text x="40" y="172">0–6</text><text x="168" y="40">7–8</text><text x="258" y="172">9–10</text></g><text x="22" y="56" font-family="Inter,sans-serif" font-weight="800" font-size="26" fill="#fff">NPS</text></svg>
+          <span class="etiqueta">Semana 15</span>
+        </div>
+        <div class="cuerpo">
+          <p class="tema">Segmentación, satisfacción, NPS e informe</p>
+          <a class="ic-ses" href="ic-s15-martes.html">
+            <span class="num">1</span>
+            <span class="txt"><span class="s">Martes</span><span class="t">Segmentación, satisfacción y NPS</span></span>
+            <span class="flecha">›</span>
+          </a>
+          <a class="ic-ses" href="ic-s15-miercoles.html">
+            <span class="num">2</span>
+            <span class="txt"><span class="s">Miércoles</span><span class="t">Informe de resultados y mini-informe</span></span>
+            <span class="flecha">›</span>
+          </a>
+        </div>
+      </section>
+      </div>
+    </div>
   </div>
 
   <div class="o-acciones centrado o-mb">
@@ -103,6 +289,23 @@
 </div>
 </div>
 
+<script>
+(function(){
+  var bts=[].slice.call(document.querySelectorAll('.ic-menu button'));
+  function abre(id){
+    bts.forEach(function(b){
+      var on=(b.dataset.p===id);
+      b.setAttribute('aria-selected', on?'true':'false');
+      document.getElementById(b.dataset.p).hidden=!on;
+    });
+    try{ localStorage.setItem('ic_menu', id); }catch(e){}
+  }
+  bts.forEach(function(b){ b.addEventListener('click', function(){ abre(b.dataset.p); }); });
+  var ini=null; try{ ini=localStorage.getItem('ic_menu'); }catch(e){}
+  if(!ini || !document.getElementById(ini)) ini=bts[1].dataset.p;
+  abre(ini);
+})();
+</script>
 <script src="pendiente.js" defer></script>
 
 </body>
