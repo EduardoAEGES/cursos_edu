@@ -75,7 +75,49 @@ var R={
     ['r','Toda respuesta en la sustentación lleva <b>un número y su origen</b>.']],
   'mat-s16-jueves':[
     ['r','El orden: <b>margen → flujos → VAN → recuperación → equilibrio → seguridad</b>.'],
-    ['r','En la sustentación <b>nadie lee</b>: si necesitas leer una cifra, repásala.']]
+    ['r','En la sustentación <b>nadie lee</b>: si necesitas leer una cifra, repásala.']],
+
+  /* Investigación Cuantitativa, semanas 11 a 15 */
+  'ic-s11-martes':[
+    ['r','<b>H0</b> dice «no hay relación». Se rechaza si <b>p-valor &lt; α</b>.'],
+    ['r','Esperada = <b>total fila × total columna ÷ total</b>.'],
+    ['r','Grados de libertad = <b>(filas − 1) × (columnas − 1)</b>.'],
+    ['r','La ji-cuadrada prueba <b>asociación</b>, no causalidad.']],
+  'ic-s11-miercoles':[
+    ['r','Prueba T: una variable <b>numérica</b> y <b>dos grupos</b>.'],
+    ['r','En Excel: <b>=PRUEBA.T(rango1; rango2; 2; 3)</b> devuelve el p-valor.'],
+    ['r','Con menos datos, el error estándar <b>crece</b> y t <b>baja</b>.']],
+  'ic-s12-martes':[
+    ['r','U&amp;A: <b>quién</b> (perfil), <b>qué hace</b> (uso) y <b>por qué</b> (actitud).'],
+    ['r','Para comparar grupos de distinto tamaño usa el <b>% de columna</b>.'],
+    ['r','<b>Heavy user</b>: consume a diario o cada semana.']],
+  'ic-s12-miercoles':[
+    ['r','<b>Índice</b> = % en heavy ÷ % en la base × 100. Más de 100: sobrerrepresentado.'],
+    ['r','60 % vs 40 % son <b>20 puntos porcentuales</b>, no 20 %.'],
+    ['r','Porcentajes de categorías: <b>ji-cuadrada</b>. Promedios: <b>prueba T</b>.']],
+  'ic-s13-martes':[
+    ['r','<b>T2B</b> = (casilla 5 + casilla 4) ÷ total × 100.'],
+    ['r','Se mejora primero lo que <b>importa mucho</b> y <b>gusta poco</b>.'],
+    ['r','Concepto: la <b>idea</b>. Producto: la <b>receta</b>.']],
+  'ic-s13-miercoles':[
+    ['r','La receta con media más alta se compara contra <b>cada una</b> de las otras.'],
+    ['r','Si hay empate, deciden el <b>T2B, los atributos y el costo</b>.']],
+  'ic-s14-martes':[
+    ['r','<b>Punto de diferencia</b>: donde tu marca destaca sola.'],
+    ['r','<b>Punto de paridad</b>: donde todas las marcas se parecen.'],
+    ['r','Lee la batería <b>por fila</b>: ¿quién lidera cada atributo?']],
+  'ic-s14-miercoles':[
+    ['r','Mapa en Excel: gráfico de <b>dispersión</b>, un punto por marca.'],
+    ['r','Los ejes se cruzan en el <b>promedio del mercado</b>.'],
+    ['r','Distancia al ideal = <b>√((x₁ − x₂)² + (y₁ − y₂)²)</b>.']],
+  'ic-s15-martes':[
+    ['r','<b>NPS</b> = % promotores (9–10) − % detractores (0–6).'],
+    ['r','Los <b>pasivos</b> (7–8) no suman ni restan, pero cuentan en el total.'],
+    ['r','El NPS va de <b>−100 a 100</b>.']],
+  'ic-s15-miercoles':[
+    ['r','Margen de error = <b>1.96 × √(p × q ÷ n)</b>.'],
+    ['r','Resultado = <b>dato</b>. Conclusión = <b>qué significa</b>. Recomendación = <b>qué hacer</b>.'],
+    ['r','El título del gráfico <b>dice la conclusión</b>.']]
 };
 var archivo=(location.pathname.split('/').pop()||'').replace(/\.html?$/,'');
 var propios=R[archivo] || MATE;
@@ -138,6 +180,18 @@ function rellena(){
         var rl=lam.getBoundingClientRect(), padB=parseFloat(getComputedStyle(lam).paddingBottom)||0;
         var libre=(rl.bottom - ult.getBoundingClientRect().bottom)/z - padB - 26;
         if(libre>=64) lam.appendChild(tarjeta(n+1, Math.min(libre, 380), false));
+      }
+    }
+
+    /* 3. si una tarjeta hizo desbordar la lámina, se achica; si aun así no cabe, se quita */
+    var sobra=lam.scrollHeight-lam.clientHeight;
+    if(sobra>1){
+      var ts=lam.querySelectorAll('.relleno');
+      for(var t=ts.length-1;t>=0 && sobra>1;t--){
+        var alto=ts[t].getBoundingClientRect().height/z, nuevo=alto-sobra/z-4;
+        if(nuevo>=64){ ts[t].style.minHeight=Math.round(nuevo)+'px'; ts[t].style.height=Math.round(nuevo)+'px'; ts[t].style.overflow='hidden'; }
+        else ts[t].remove();
+        sobra=lam.scrollHeight-lam.clientHeight;
       }
     }
   }finally{ ocupado=false; }
