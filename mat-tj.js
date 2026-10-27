@@ -79,14 +79,16 @@ var R={
 
   /* Investigación Cuantitativa, semanas 11 a 15 */
   'ic-s11-martes':[
-    ['r','<b>H0</b> dice «no hay relación». Se rechaza si <b>p-valor &lt; α</b>.'],
-    ['r','Esperada = <b>total fila × total columna ÷ total</b>.'],
-    ['r','Grados de libertad = <b>(filas − 1) × (columnas − 1)</b>.'],
-    ['r','La ji-cuadrada prueba <b>asociación</b>, no causalidad.']],
+    ['r','<b>Muestra</b>: los que respondieron. <b>Población</b>: todos sobre quienes queremos concluir.'],
+    ['r','<b>H0</b> dice «no pasa nada». <b>H1</b> dice «sí pasa algo».'],
+    ['r','<b>p-valor menor que 0.05</b>: la diferencia es real. Si no, puede ser casualidad.'],
+    ['r','<b>Esperada</b> = lo que veríamos si el sexo no influyera.'],
+    ['r','En el informe se escribe <b>«hay relación»</b>, nunca «causa».']],
   'ic-s11-miercoles':[
-    ['r','Prueba T: una variable <b>numérica</b> y <b>dos grupos</b>.'],
-    ['r','En Excel: <b>=PRUEBA.T(rango1; rango2; 2; 3)</b> devuelve el p-valor.'],
-    ['r','Con menos datos, el error estándar <b>crece</b> y t <b>baja</b>.']],
+    ['r','<b>Promedio</b> = suma de las notas ÷ cantidad de notas.'],
+    ['r','Prueba T: <b>un número</b> (nota, gasto) y <b>dos grupos</b>.'],
+    ['r','Si <b>t pasa de ≈ 2</b>, la diferencia de promedios es real.'],
+    ['r','En Excel: <b>=PRUEBA.T(grupo1; grupo2; 2; 3)</b> da el p-valor.']],
   'ic-s12-martes':[
     ['r','U&amp;A: <b>quién</b> (perfil), <b>qué hace</b> (uso) y <b>por qué</b> (actitud).'],
     ['r','Para comparar grupos de distinto tamaño usa el <b>% de columna</b>.'],

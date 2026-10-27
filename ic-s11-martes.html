@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s11-martes_v1-a">
+<meta name="version" content="2026-10-27-ic_s11-martes_v2-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -969,7 +969,7 @@
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
       <h1>Contraste de hipótesis y ji-cuadrada</h1>
-      <p><span class="sem">Semana 11 &middot; Martes</span> - Investigaci&oacute;n Cuantitativa - ¿Diferencia real o casualidad de la muestra?</p>
+      <p><span class="sem">Semana 11 &middot; Martes</span> - Investigaci&oacute;n Cuantitativa - ¿Diferencia real o casualidad? Explicado paso a paso</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -1047,7 +1047,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="ic-tj.js?v=20261027a"></script>
+<script src="ic-tj.js?v=20261027b"></script>
 <script src="aula.js?v=20261025f"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
@@ -1298,31 +1298,159 @@ var ACT={
    }
   ]
  },
- "hip": {
+ "pob": {
   "tipo": "quiz",
-  "titulo": "Lee bien el p-valor",
+  "titulo": "Muestra y población",
   "lista": [
    {
-    "q": "Una prueba da p-valor = 0.03 con α = 0.05. ¿Qué conclusión es correcta?",
+    "q": "Quinua Fresh encuestó a 200 jóvenes de Lima. ¿Cuál es la población?",
     "ops": [
-     "No se rechaza H0, porque 0.03 es muy pequeño",
-     "Se rechaza H0: la diferencia es significativa al 5 %",
-     "Se acepta H1 con 97 % de certeza",
-     "Hay 3 % de probabilidad de que H0 sea verdadera"
+     "Todos los jóvenes de Lima",
+     "Las mujeres que eligen maracuyá",
+     "Los 200 encuestados",
+     "Las bodegas de Lima"
     ],
-    "ok": 1,
-    "pq": "0.03 < 0.05, se rechaza H0. Ojo: el p-valor NO es la probabilidad de que H0 sea cierta; es la probabilidad de ver un resultado así de extremo si H0 lo fuera."
+    "ok": 0,
+    "pq": "La muestra son los 200 que respondieron. La población es todo el grupo sobre el que queremos concluir: los jóvenes de Lima."
    },
    {
-    "q": "¿Cuál es la H0 bien planteada para el caso del maracuyá?",
+    "q": "En la muestra, el 60 % de las mujeres y el 45 % de los varones eligen maracuyá. ¿Qué podemos decir sin hacer ninguna prueba?",
     "ops": [
-     "Las mujeres prefieren más el maracuyá",
-     "Preferir maracuyá depende del sexo",
-     "Preferir maracuyá es independiente del sexo",
-     "El 60 % de las mujeres prefiere maracuyá"
+     "Que a los varones no les gusta",
+     "Solo que en esta muestra hubo diferencia",
+     "Que en Lima la diferencia es exactamente 15 %",
+     "Que en todo Lima las mujeres lo prefieren más"
     ],
-    "ok": 2,
-    "pq": "H0 siempre dice «no hay relación / no hay diferencia». La primera y la tercera son H1; la cuarta es solo un dato."
+    "ok": 1,
+    "pq": "Con otros 200 encuestados los números cambiarían un poco. Para hablar de todo Lima necesitamos una prueba."
+   }
+  ]
+ },
+ "h01": {
+  "tipo": "arr",
+  "titulo": "¿H0 o H1?",
+  "cajas": [
+   {
+    "id": "n",
+    "t": "H0 · «No pasa nada»"
+   },
+   {
+    "id": "s",
+    "t": "H1 · «Sí pasa algo»"
+   }
+  ],
+  "fichas": [
+   {
+    "id": "f1",
+    "t": "Hombres y mujeres gastan lo mismo en bebidas",
+    "g": "n"
+   },
+   {
+    "id": "f2",
+    "t": "El distrito no influye en la marca que se compra",
+    "g": "n"
+   },
+   {
+    "id": "f4",
+    "t": "El precio influye en la decisión de compra",
+    "g": "s"
+   },
+   {
+    "id": "f5",
+    "t": "Las mujeres eligen más el maracuyá que los varones",
+    "g": "s"
+   }
+  ],
+  "fin": "<p class=\"pq\">H0 siempre dice <b>«no hay diferencia»</b> o <b>«no influye»</b>. H1 dice lo contrario.</p>"
+ },
+ "pv": {
+  "tipo": "quiz",
+  "titulo": "Lee el p-valor",
+  "lista": [
+   {
+    "q": "Excel da p-valor = 0.03. ¿Qué concluimos?",
+    "ops": [
+     "El 3 % elige maracuyá",
+     "La diferencia es real",
+     "Puede ser casualidad",
+     "Hay que repetir la encuesta"
+    ],
+    "ok": 1,
+    "pq": "0.03 es menor que 0.05: es poco probable que sea casualidad. Se rechaza H0."
+   },
+   {
+    "q": "Excel da p-valor = 0.40. ¿Qué concluimos?",
+    "ops": [
+     "Puede ser casualidad",
+     "El 40 % elige maracuyá",
+     "H1 queda demostrada",
+     "La diferencia es real"
+    ],
+    "ok": 0,
+    "pq": "0.40 es mayor que 0.05: hay 40 % de probabilidad de ver esa diferencia solo por casualidad. No se rechaza H0."
+   }
+  ]
+ },
+ "tc": {
+  "tipo": "cal",
+  "titulo": "Lee la tabla cruzada",
+  "lista": [
+   {
+    "q": "¿Qué % de las mujeres elige maracuyá?",
+    "f": "60 ÷ 100 × 100",
+    "e": 60,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "60 de 100 mujeres = 60 %"
+   },
+   {
+    "q": "¿Qué % de los varones elige maracuyá?",
+    "f": "45 ÷ 100 × 100",
+    "e": 45,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "45 de 100 varones = 45 %"
+   },
+   {
+    "q": "¿Qué % del total elige maracuyá?",
+    "f": "105 ÷ 200 × 100",
+    "e": 52.5,
+    "tol": 0.1,
+    "ph": "0.0",
+    "u": "%",
+    "pq": "105 de 200 = 52.5 %. Este dato sirve para la frecuencia esperada."
+   }
+  ]
+ },
+ "esp": {
+  "tipo": "cal",
+  "titulo": "Calcula lo esperado",
+  "lista": [
+   {
+    "q": "Mujeres que esperaríamos que elijan maracuyá",
+    "f": "100 × 105 ÷ 200",
+    "e": 52.5,
+    "tol": 0.05,
+    "ph": "0.0",
+    "pq": "Si el sexo no influyera, el 52.5 % de las 100 mujeres lo elegiría: 52.5. ¡Pero vimos 60!"
+   },
+   {
+    "q": "Mujeres que esperaríamos que NO lo elijan",
+    "f": "100 × 95 ÷ 200",
+    "e": 47.5,
+    "tol": 0.05,
+    "ph": "0.0",
+    "pq": "100 × 95 ÷ 200 = 47.5. Vimos 40."
+   },
+   {
+    "q": "Varones que esperaríamos que elijan maracuyá",
+    "f": "100 × 105 ÷ 200",
+    "e": 52.5,
+    "tol": 0.05,
+    "ph": "0.0",
+    "pq": "También 52.5, porque hay 100 varones. Vimos 45."
    }
   ]
  },
@@ -1331,181 +1459,106 @@ var ACT={
   "titulo": "Calcula la ji-cuadrada",
   "lista": [
    {
-    "q": "Frecuencia esperada de «Mujer – Sí»",
-    "f": "(total fila × total columna) ÷ total = 100 × 105 ÷ 200",
-    "e": 52.5,
-    "tol": 0.05,
-    "ph": "0.0",
-    "pq": "100 × 105 ÷ 200 = 52.5. Si el sexo no influyera, esperaríamos 52.5 mujeres que eligen maracuyá."
-   },
-   {
-    "q": "Aporte de esa celda: (O − E)² ÷ E",
+    "q": "Distancia de la celda «Mujer – Sí»",
     "f": "(60 − 52.5)² ÷ 52.5",
     "e": 1.07,
     "tol": 0.01,
     "ph": "0.00",
-    "pq": "7.5² = 56.25; 56.25 ÷ 52.5 = 1.07"
+    "pq": "60 − 52.5 = 7.5; 7.5² = 56.25; 56.25 ÷ 52.5 = 1.07"
    },
    {
-    "q": "Ji-cuadrada total (suma de las 4 celdas)",
-    "f": "Las esperadas son 52.5 y 47.5 en cada fila",
+    "q": "Ji-cuadrada total: suma las 4 celdas",
+    "f": "1.07 + 1.18 + 1.07 + 1.18",
     "e": 4.51,
     "tol": 0.02,
     "ph": "0.00",
-    "pq": "1.07 + 1.18 + 1.07 + 1.18 = 4.51"
-   },
-   {
-    "q": "Grados de libertad de la tabla 2 × 2",
-    "f": "(filas − 1) × (columnas − 1)",
-    "e": 1,
-    "tol": 0,
-    "ph": "0",
-    "pq": "(2 − 1) × (2 − 1) = 1. Con gl = 1 y α = 0.05, el valor crítico es 3.84."
+    "pq": "4.51 es mayor que 3.84: la diferencia es real."
    }
-  ]
+  ],
+  "ayuda": "En Excel: <code>=PRUEBA.CHI.CUAD(vimos; esperado)</code> da el p-valor directamente. Aquí sale <b>0.034</b>, menor que 0.05."
  },
  "cr": {
   "tipo": "cruz",
-  "titulo": "Crucigrama del contraste",
+  "titulo": "Crucigrama de la clase",
   "filas": 8,
-  "cols": 12,
+  "cols": 11,
   "palabras": [
    {
-    "p": "CONTINGENCIA",
-    "pista": "Tabla que cruza dos variables categóricas",
-    "r": 2,
+    "p": "CASUALIDAD",
+    "pista": "Lo que H0 dice que explica la diferencia",
+    "r": 6,
     "c": 0,
     "dir": "H"
    },
    {
     "p": "NULA",
-    "pista": "Hipótesis que dice «no hay relación»",
-    "r": 2,
-    "c": 2,
+    "pista": "Hipótesis que dice «no pasa nada»",
+    "r": 3,
+    "c": 1,
     "dir": "V"
    },
    {
     "p": "ALFA",
-    "pista": "Nivel de significancia, casi siempre 0.05",
-    "r": 2,
-    "c": 11,
+    "pista": "Riesgo de equivocarnos que aceptamos: 5 %",
+    "r": 3,
+    "c": 4,
     "dir": "V"
    },
    {
     "p": "ESPERADA",
-    "pista": "Frecuencia que habría si no hubiera relación",
-    "r": 5,
-    "c": 4,
-    "dir": "H"
+    "pista": "Frecuencia que veríamos si el sexo no influyera",
+    "r": 0,
+    "c": 7,
+    "dir": "V"
    },
    {
-    "p": "RECHAZAR",
-    "pista": "Lo que se hace con H0 si p < α",
-    "r": 0,
-    "c": 0,
-    "dir": "V"
+    "p": "MUESTRA",
+    "pista": "Los 200 jóvenes que respondieron",
+    "r": 1,
+    "c": 4,
+    "dir": "H"
    }
   ]
- },
- "sp": {
-  "tipo": "sopa",
-  "titulo": "Sopa de letras de la inferencia",
-  "grilla": [
-   "GAEHPVALOR",
-   "ROHIVDRNUP",
-   "ABBOCORNUC",
-   "DGESREAZAR",
-   "OEROEOBTLR",
-   "STLCNRVFAS",
-   "DSDRSSVVDN",
-   "JICUADRADA",
-   "ORLCJSBUDV",
-   "NONEJADGPA"
-  ],
-  "palabras": [
-   {
-    "p": "JICUADRADA",
-    "pista": "Prueba para cruzar dos variables categóricas",
-    "r": 7,
-    "c": 0,
-    "dir": "H"
-   },
-   {
-    "p": "PVALOR",
-    "pista": "Se compara con α para decidir",
-    "r": 0,
-    "c": 4,
-    "dir": "H"
-   },
-   {
-    "p": "OBSERVADA",
-    "pista": "Frecuencia que sale de la encuesta",
-    "r": 1,
-    "c": 1,
-    "dir": "D"
-   },
-   {
-    "p": "GRADOS",
-    "pista": "… de libertad",
-    "r": 0,
-    "c": 0,
-    "dir": "V"
-   },
-   {
-    "p": "AZAR",
-    "pista": "Lo que H0 dice que explica la diferencia",
-    "r": 3,
-    "c": 6,
-    "dir": "H"
-   },
-   {
-    "p": "CRUCE",
-    "pista": "Tabla de doble entrada",
-    "r": 5,
-    "c": 3,
-    "dir": "V"
-   }
-  ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> Primero H0, luego α, luego el p-valor (o el valor crítico). Y en el informe: <b>relación significativa</b>, nunca «causa».</p>"
  },
  "fin": {
   "tipo": "quiz",
   "titulo": "Reto final",
   "lista": [
    {
-    "q": "χ² = 4.51 con gl = 1 (valor crítico 3.84). ¿Qué escribe el analista?",
+    "q": "La ji-cuadrada da 4.51 y el valor de la tabla es 3.84. ¿Qué le dices al gerente de marketing?",
     "ops": [
-     "El sexo causa la preferencia por maracuyá, con 95 % de confianza",
-     "No hay relación: 4.51 está lejos de 5, el mínimo exigido",
-     "El 4.51 % prefiere maracuyá",
-     "Sexo y preferencia están relacionados (al 5 %)"
+     "Que la preferencia por maracuyá cambia según el sexo",
+     "Que el 4.51 % elige maracuyá",
+     "Que ser mujer causa que guste el maracuyá",
+     "Que la diferencia es casualidad"
     ],
-    "ok": 3,
-    "pq": "4.51 > 3.84: se rechaza H0. La ji-cuadrada prueba asociación, no causalidad."
+    "ok": 0,
+    "pq": "4.51 > 3.84: la relación es real y conviene comunicar distinto a mujeres y varones. Ojo: decimos «hay relación», no «causa»."
    },
    {
-    "q": "Una tabla cruza distrito (3 zonas) con marca preferida (4 marcas). ¿Cuántos grados de libertad tiene?",
+    "q": "Sale p-valor = 0.08. Un compañero escribe: «demostramos que el sexo no influye». ¿Está bien?",
     "ops": [
-     "12",
-     "6",
-     "7",
-     "5"
-    ],
-    "ok": 1,
-    "pq": "(3 − 1) × (4 − 1) = 2 × 3 = 6"
-   },
-   {
-    "q": "Con p-valor = 0.08 y α = 0.05, el analista escribe: «se demostró que no hay relación». ¿Qué falla?",
-    "ops": [
-     "Nada: como 0.08 > 0.05, H0 queda demostrada",
-     "Debió subir α a 0.10 para que salga significativo",
-     "No rechazar H0 no prueba que H0 sea cierta",
-     "Debió rechazar H0"
+     "Sí, porque 0.08 es mayor que 0.05",
+     "No: debió decir que la diferencia es real",
+     "No: solo no hay pruebas suficientes",
+     "Sí, porque 0.08 es un número pequeño"
     ],
     "ok": 2,
-    "pq": "Se escribe «no hay evidencia suficiente de relación». Cambiar α después de ver el resultado es hacer trampa."
+    "pq": "No rechazar H0 no demuestra que H0 sea cierta: solo que con estos datos no alcanza."
+   },
+   {
+    "q": "Quieres saber si el distrito (Norte, Sur, Este) se relaciona con la marca preferida. ¿Qué usas?",
+    "ops": [
+     "Una tabla cruzada y la ji-cuadrada",
+     "La marca que más se repite",
+     "Un gráfico circular y nada más",
+     "El promedio de cada distrito"
+    ],
+    "ok": 0,
+    "pq": "Dos preguntas con categorías (distrito y marca): tabla cruzada y ji-cuadrada."
    }
-  ]
+  ],
+  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> primero planteo H0, luego miro el p-valor (o la ji-cuadrada) y en el informe escribo <b>«hay relación»</b>, nunca «causa».</p>"
  }
 };
 
@@ -1517,46 +1570,68 @@ var D=[
   claves:["c0"],
   h:TAPA('¿Diferencia real o casualidad?','Semana 11 · Inferencia estadística',null,'pres','Quinua Fresh encuestó a <b>200 jóvenes</b> de Lima. Hoy no basta con describir: queremos saber si lo que vemos en la muestra <b>también pasa en la población</b>.') },
 
-{ et:"Hipótesis",
-  t:"H0, H1, significancia y p-valor",
-  claves:["hip"],
+{ et:"Muestra",
+  t:"¿Por qué no basta con mirar los porcentajes?",
+  claves:["pob"],
   lado:1,
-  h:'<div class="dos"><div class="fc"><h4>H0 · hipótesis nula</h4><div class="c">No hay relación ni diferencia. Se mantiene salvo que los datos la contradigan.</div></div>'+
-'<div class="fc rj"><h4>H1 · alternativa</h4><div class="c">Sí hay relación o diferencia. Es lo que el investigador quiere probar.</div></div></div>'+
-'<p class="teo-def"><b>α (significancia)</b>: riesgo que aceptamos de rechazar H0 cuando era cierta. Casi siempre <b>0.05</b>.</p>'+
-'<div class="form">p-valor &lt; α → se rechaza H0</div>' },
+  h:'<p class="teo-def">Encuestamos a <b>200 jóvenes</b>, no a todo Lima. Si mañana encuestamos a <b>otros 200</b>, los porcentajes saldrían un poco distintos.</p>'+
+'<div class="clave">&#129689; Lanzas una moneda 10 veces y salen 6 caras. ¿Está trucada? No necesariamente: <b>puede ser casualidad</b>.</div>'+
+'<p class="teo-def">La <b>inferencia estadística</b> nos ayuda a decidir si una diferencia de la muestra es <b>real</b> en toda la población o solo <b>casualidad</b>.</p>' },
+
+{ et:"Hipótesis",
+  t:"Las dos hipótesis: H0 y H1",
+  claves:["h01"],
+  h:'<div class="dos"><div class="fc"><h4>H0 · hipótesis nula</h4><div class="c"><b>«No pasa nada»</b>: la diferencia es casualidad. <i>El sexo NO influye en el sabor.</i> &#9878;&#65039; Como en un juicio: «inocente» hasta que las pruebas digan lo contrario.</div></div><div class="fc rj"><h4>H1 · alternativa</h4><div class="c"><b>«Sí pasa algo»</b>: la diferencia es real. <i>El sexo SÍ influye en el sabor.</i></div></div></div>' },
+
+{ et:"p-valor",
+  t:"Alfa y p-valor en palabras simples",
+  claves:["pv"],
+  lado:1,
+  h:'<p class="teo-def"><b>α (alfa)</b>: el riesgo de equivocarnos que aceptamos. Casi siempre <b>5 % (0.05)</b>: fallar 5 de cada 100 veces.</p>'+
+'<p class="teo-def"><b>p-valor</b>: qué tan probable es ver esa diferencia <b>solo por casualidad</b>. Lo calcula Excel.</p>'+
+'<div class="dos"><div class="fc"><h4>p menor que 0.05</h4><div class="c">&#9989; Diferencia <b>real</b>.<br>Se rechaza H0.</div></div><div class="fc rj"><h4>p de 0.05 o más</h4><div class="c">&#129335; Puede ser <b>casualidad</b>.<br>No se rechaza H0.</div></div></div>' },
+
+{ et:"Tabla cruzada",
+  t:"La tabla cruzada (o de contingencia)",
+  claves:["tc"],
+  lado:1,
+  h:'<p class="teo-def">Una <b>tabla cruzada</b>, también llamada <b>tabla de contingencia</b>, junta las respuestas de <b>dos preguntas</b> de la encuesta: el <b>sexo</b> y si <b>elige maracuyá</b>.</p>'+
+TABLA(['Sexo','Elige maracuyá','No','Total'],[['Mujer','60','40','100'],['Varón','45','55','100'],['*Total','105','95','200']])+
+'<div class="clave">Estas cantidades son las <b>frecuencias observadas</b>: lo que <b>vimos</b> en la encuesta.</div>' },
+
+{ et:"Esperada",
+  t:"La frecuencia esperada",
+  claves:["esp"],
+  lado:1,
+  h:'<p class="teo-def">La <b>frecuencia esperada</b> es lo que veríamos <b>si el sexo no influyera</b>, es decir, si H0 fuera cierta.</p>'+
+'<ul class="pasos"><li>En total, el <b>52.5 %</b> elige maracuyá (105 de 200).</li><li>Si el sexo no importara, el 52.5 % de las <b>100 mujeres</b> también lo elegiría.</li><li>Esperábamos <b>52.5</b> mujeres… y vimos <b>60</b>.</li></ul>'+
+'<div class="form">Esperada = total de la fila × total de la columna ÷ total</div>' },
 
 { et:"Ji-cuadrada",
-  t:"Ji-cuadrada para cruzar dos variables",
+  t:"La ji-cuadrada: lo que vimos frente a lo esperado",
   claves:["chi"],
   lado:1,
-  h:TABLA(['Sexo','Maracuyá: Sí','No','Total'],[['Mujer','60','40','100'],['Varón','45','55','100'],['*Total','105','95','200']],'Frecuencias observadas (O).')+
-'<div class="form">χ² = Σ (O − E)² ÷ E<small>E = total fila × total columna ÷ total general</small></div>'+
-SINTAXIS('En Excel',[['=PRUEBA.CHI.CUAD(obs; esp)','Devuelve el p-valor directamente']]) },
+  h:'<p class="teo-def">La <b>ji-cuadrada (χ²)</b> mide qué tan lejos está <b>lo que vimos</b> de <b>lo que esperábamos</b>. Mientras más grande, menos probable es la casualidad.</p>'+
+TABLA(['Celda','Vimos','Esperado','Distancia'],[['Mujer – Sí','60','52.5','?'],['Mujer – No','40','47.5','1.18'],['Varón – Sí','45','52.5','1.07'],['Varón – No','55','47.5','1.18']])+
+'<div class="clave">Si χ² es mayor que <b>3.84</b> (valor de la tabla para una tabla 2 × 2 con α = 5 %), la diferencia es <b>real</b>.</div>' },
 
 { et:"Crucigrama",
-  t:"Crucigrama del contraste",
+  t:"Crucigrama de la clase",
   claves:["cr"],
   h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>CONTINGENCIA</b></td><td>Tabla que cruza dos variables categóricas</td></tr><tr><td><b>NULA</b></td><td>Hipótesis que dice «no hay relación»</td></tr><tr><td><b>ALFA</b></td><td>Nivel de significancia, casi siempre 0.05</td></tr><tr><td><b>ESPERADA</b></td><td>Frecuencia que habría si no hubiera relación</td></tr><tr><td><b>RECHAZAR</b></td><td>Lo que se hace con H0 si p < α</td></tr></tbody></table></div>" },
-
-{ et:"Sopa",
-  t:"Sopa de letras",
-  claves:["sp"],
-  h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>JICUADRADA</b></td><td>Prueba para cruzar dos variables categóricas</td></tr><tr><td><b>PVALOR</b></td><td>Se compara con α para decidir</td></tr><tr><td><b>OBSERVADA</b></td><td>Frecuencia que sale de la encuesta</td></tr><tr><td><b>GRADOS</b></td><td>… de libertad</td></tr><tr><td><b>AZAR</b></td><td>Lo que H0 dice que explica la diferencia</td></tr><tr><td><b>CRUCE</b></td><td>Tabla de doble entrada</td></tr></tbody></table></div>" },
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>CASUALIDAD</b></td><td>Lo que H0 dice que explica la diferencia</td></tr><tr><td><b>NULA</b></td><td>Hipótesis que dice «no pasa nada»</td></tr><tr><td><b>ALFA</b></td><td>Riesgo de equivocarnos que aceptamos: 5 %</td></tr><tr><td><b>ESPERADA</b></td><td>Frecuencia que veríamos si el sexo no influyera</td></tr><tr><td><b>MUESTRA</b></td><td>Los 200 jóvenes que respondieron</td></tr></tbody></table></div>" },
 
 { et:"Reto",
   t:"Reto final",
   claves:["fin"],
   h:'',
-  pdf:"<ol class=\"pasos\"><li><b>χ² = 4.51 con gl = 1 (valor crítico 3.84). ¿Qué escribe el analista?</b><br>Respuesta: Sexo y preferencia están relacionados (al 5 %). <i>4.51 > 3.84: se rechaza H0. La ji-cuadrada prueba asociación, no causalidad.</i></li><li><b>Una tabla cruza distrito (3 zonas) con marca preferida (4 marcas). ¿Cuántos grados de libertad tiene?</b><br>Respuesta: 6. <i>(3 − 1) × (4 − 1) = 2 × 3 = 6</i></li><li><b>Con p-valor = 0.08 y α = 0.05, el analista escribe: «se demostró que no hay relación». ¿Qué falla?</b><br>Respuesta: No rechazar H0 no prueba que H0 sea cierta. <i>Se escribe «no hay evidencia suficiente de relación». Cambiar α después de ver el resultado es hacer trampa.</i></li></ol><div class=\"clave\"><b>Para cerrar:</b> Primero H0, luego α, luego el p-valor (o el valor crítico). Y en el informe: <b>relación significativa</b>, nunca «causa».</div>" }
+  pdf:"<ol class=\"pasos\"><li><b>La ji-cuadrada da 4.51 y el valor de la tabla es 3.84. ¿Qué le dices al gerente de marketing?</b><br>Respuesta: Que la preferencia por maracuyá cambia según el sexo. <i>4.51 > 3.84: la relación es real y conviene comunicar distinto a mujeres y varones. Ojo: decimos «hay relación», no «causa».</i></li><li><b>Sale p-valor = 0.08. Un compañero escribe: «demostramos que el sexo no influye». ¿Está bien?</b><br>Respuesta: No: solo no hay pruebas suficientes. <i>No rechazar H0 no demuestra que H0 sea cierta: solo que con estos datos no alcanza.</i></li><li><b>Quieres saber si el distrito (Norte, Sur, Este) se relaciona con la marca preferida. ¿Qué usas?</b><br>Respuesta: Una tabla cruzada y la ji-cuadrada. <i>Dos preguntas con categorías (distrito y marca): tabla cruzada y ji-cuadrada.</i></li></ol>" }
 ];
 
 /* ================= estado ================= */
-var LS='ic_s11-martes_v1';
+var LS='ic_s11-martes_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "hip", "chi", "cr", "sp", "fin"];
+var CLAVES=["c0", "pob", "h01", "pv", "tc", "esp", "chi", "cr", "fin"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -2919,7 +2994,7 @@ $('btnElige').addEventListener('click', function(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('ic_s11-martes_v1_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ic_s11-martes_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -2967,7 +3042,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('ic_s11-martes_v1_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ic_s11-martes_v2_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
@@ -3289,6 +3364,6 @@ pinta();
 })();
 </script>
 
-<script src="mat-tj.js?v=20261027a"></script>
+<script src="mat-tj.js?v=20261027b"></script>
 </body>
 </html>
