@@ -38,7 +38,7 @@ html.movil .esc .cab .lgb{ display:none; }
 html.movil .esc .cab .btf{ padding:5px 8px; font-size:16px; }
 
 /* el contenido: un poco más chico que en el proyector y siempre a lo ancho de la pantalla */
-html.movil .esc .lam{ zoom:.86; padding:14px 13px 22px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+html.movil .esc .lam{ zoom:.72; padding:14px 13px 22px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
 html.movil .teo2{ grid-template-columns:minmax(0,1fr) !important; gap:14px; }
 html.movil .duo{ grid-template-columns:minmax(0,1fr) !important; }
 html.movil .dos-d{ grid-template-columns:minmax(0,1fr) !important; }
