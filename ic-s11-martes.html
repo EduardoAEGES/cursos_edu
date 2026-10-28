@@ -920,6 +920,12 @@
   .lam > [data-act] .par{ grid-template-columns:auto minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
   .lam .teo .sintaxis .sx{ grid-template-columns:1fr; } .lam .teo .sintaxis .sx > div.ex{ border-top:0; padding-top:0; }
   .lam .sintaxis .sx > div{ padding:6px 12px; font-size:17px; } .lam .sintaxis code{ font-size:17px; }
+  .lam table.hoja th, .lam table.hoja td{ height:30px; padding:1px 6px; font-size:16px; line-height:1.2; }
+  .lam table.hoja td .q{ font-size:16px; } .lam table.hoja input.hc{ font-size:16px; height:28px; padding:0 6px; }
+  .lam table.hoja td.rot{ font-weight:600; } .lam .hbar{ margin-top:8px; } .lam .avisofx{ margin:4px 0 0; font-size:15px; }
+  .lam > [data-act] .lineas{ grid-template-columns:1fr 1fr; }
+  .lam .hbar .fx{ font-size:15px; }
+  .lam .pista-fx{ font-size:16px; margin:6px 0; }
   /* ---------- sopa de letras ---------- */
   .sopa{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
   @media (min-width:860px){ .sopa{ grid-template-columns:auto minmax(0,1fr); } }
@@ -1023,7 +1029,7 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Quinua Fresh, sus competidores y la base de 200 encuestados son un caso de clase simulado, no un estudio real.</p>
+  <p class="aviso" style="margin-top:16px">Quinua Fresh, sus competidores y sus encuestas son un caso de clase simulado, no un estudio real.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
@@ -1095,6 +1101,17 @@ function HojaFx(leeCelda){
   function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
   function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
 
+  function cumple(v, crit){
+    var s=String(crit===undefined?'':crit).trim();
+    var m=/^(<=|>=|<>|<|>|=)?([\s\S]*)$/.exec(s), op=m[1]||'=', x=m[2].trim();
+    var a=aNumero(v), b=aNumero(x), cmp;
+    if(x!=='' && !isNaN(a) && !isNaN(b)) cmp = a<b ? -1 : a>b ? 1 : 0;
+    else{ var t1=String(v).trim().toUpperCase(), t2=x.toUpperCase();
+          if(op!=='=' && op!=='<>') return false;
+          cmp = t1===t2 ? 0 : 1; }
+    return op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
+           op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
+  }
   var FN={
     SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
     PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
@@ -1114,12 +1131,32 @@ function HojaFx(leeCelda){
     Y:     function(a){ return a.every(bool); },
     O:     function(a){ return a.some(bool); },
     NO:    function(a){ return !bool(a[0]); },
-    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
+    SIERROR: function(a){ return a[0]; },   /* el error se captura antes */
+    /* criterio como en Excel: 1, ">=4", "<>2" o un texto */
+    'CONTAR.SI': function(a, args){
+      var r=args[0], vals=(r && r.rango) ? r.valores : [r];
+      return vals.filter(function(v){ return cumple(v, args[1]); }).length; },
+    'CONTAR.SI.CONJUNTO': function(a, args){
+      if(args.length<2 || args.length%2) throw new Error('#VALOR');
+      var listas=[], crits=[];
+      for(var q=0;q<args.length;q+=2){
+        listas.push((args[q] && args[q].rango) ? args[q].valores : [args[q]]); crits.push(args[q+1]); }
+      var n=listas[0].length;
+      if(listas.some(function(l){ return l.length!==n; })) throw new Error('#VALOR');
+      var c=0;
+      for(var i=0;i<n;i++){ if(listas.every(function(l,q){ return cumple(l[i], crits[q]); })) c++; }
+      return c; },
+    MEDIANA: function(a){
+      var v=a.map(aNumero).filter(function(n){ return !isNaN(n); }).sort(function(x,y){ return x-y; });
+      if(!v.length) throw new Error('#NUM');
+      var m=Math.floor(v.length/2);
+      return v.length%2 ? v[m] : (v[m-1]+v[m])/2; }
   };
   /* nombres en inglés y variantes con punto */
   var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
               ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
-              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
+              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR',
+              COUNTIF:'CONTAR.SI', COUNTIFS:'CONTAR.SI.CONJUNTO', MEDIAN:'MEDIANA' };
 
   /* ---------- analizador ---------- */
   function evalua(txt, pide){
@@ -1188,7 +1225,7 @@ function HojaFx(leeCelda){
         }
         var llanos=[];
         args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
-        return FN[nom](llanos);
+        return FN[nom](llanos, args);
       }
       var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
       if(r){
@@ -1480,42 +1517,42 @@ var ACT={
  "cr": {
   "tipo": "cruz",
   "titulo": "Crucigrama de la clase",
-  "filas": 8,
-  "cols": 11,
+  "filas": 4,
+  "cols": 15,
   "palabras": [
    {
     "p": "CASUALIDAD",
     "pista": "Lo que H0 dice que explica la diferencia",
-    "r": 6,
-    "c": 0,
+    "r": 3,
+    "c": 1,
     "dir": "H"
    },
    {
     "p": "NULA",
     "pista": "Hipótesis que dice «no pasa nada»",
-    "r": 3,
-    "c": 1,
+    "r": 0,
+    "c": 9,
     "dir": "V"
    },
    {
     "p": "ALFA",
     "pista": "Riesgo de equivocarnos que aceptamos: 5 %",
-    "r": 3,
-    "c": 4,
+    "r": 0,
+    "c": 5,
     "dir": "V"
    },
    {
     "p": "ESPERADA",
     "pista": "Frecuencia que veríamos si el sexo no influyera",
     "r": 0,
-    "c": 7,
-    "dir": "V"
+    "c": 0,
+    "dir": "H"
    },
    {
     "p": "MUESTRA",
     "pista": "Los 200 jóvenes que respondieron",
     "r": 1,
-    "c": 4,
+    "c": 8,
     "dir": "H"
    }
   ]
@@ -2110,7 +2147,7 @@ function vHoja(k){
      'Con Mays&uacute;s + clic armas un rango.</p>';
   h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
      'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
-     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+     'Puedes usar <b>CONTAR.SI</b>, <b>CONTAR.SI.CONJUNTO</b>, <b>PROMEDIO</b>, <b>MEDIANA</b>, <b>MIN</b>, <b>MAX</b> y <b>SUMA</b>.</span></div>';
   if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';

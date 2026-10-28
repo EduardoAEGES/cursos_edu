@@ -85,10 +85,11 @@ var R={
     ['r','<b>Esperada</b> = lo que veríamos si el sexo no influyera.'],
     ['r','En el informe se escribe <b>«hay relación»</b>, nunca «causa».']],
   'ic-s11-miercoles':[
-    ['r','<b>Promedio</b> = suma de las notas ÷ cantidad de notas.'],
-    ['r','Prueba T: <b>un número</b> (nota, gasto) y <b>dos grupos</b>.'],
-    ['r','Si <b>t pasa de ≈ 2</b>, la diferencia de promedios es real.'],
-    ['r','En Excel: <b>=PRUEBA.T(grupo1; grupo2; 2; 3)</b> da el p-valor.']],
+    ['r','La <b>pregunta</b> se arma uniendo los cinco pilares: qué, de quién, dónde, cuándo y para qué.'],
+    ['r','El <b>objetivo general</b> es la pregunta con un verbo: «Determinar…».'],
+    ['r','En la base: <b>una fila por encuestado</b> y <b>una columna por pregunta</b>.'],
+    ['r','<b>=CONTAR.SI(rango;código)</b> cuenta cuántos marcaron una opción.'],
+    ['r','<b>T2B</b> = los que marcan 4 y 5: <b>=CONTAR.SI(rango;">=4")</b>.']],
   'ic-s12-martes':[
     ['r','U&amp;A: <b>quién</b> (perfil), <b>qué hace</b> (uso) y <b>por qué</b> (actitud).'],
     ['r','Para comparar grupos de distinto tamaño usa el <b>% de columna</b>.'],

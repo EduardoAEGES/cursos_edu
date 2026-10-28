@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s11-miercoles_v2-a">
+<meta name="version" content="2026-10-27-ic_s11-miercoles_v3-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -920,6 +920,12 @@
   .lam > [data-act] .par{ grid-template-columns:auto minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
   .lam .teo .sintaxis .sx{ grid-template-columns:1fr; } .lam .teo .sintaxis .sx > div.ex{ border-top:0; padding-top:0; }
   .lam .sintaxis .sx > div{ padding:6px 12px; font-size:17px; } .lam .sintaxis code{ font-size:17px; }
+  .lam table.hoja th, .lam table.hoja td{ height:30px; padding:1px 6px; font-size:16px; line-height:1.2; }
+  .lam table.hoja td .q{ font-size:16px; } .lam table.hoja input.hc{ font-size:16px; height:28px; padding:0 6px; }
+  .lam table.hoja td.rot{ font-weight:600; } .lam .hbar{ margin-top:8px; } .lam .avisofx{ margin:4px 0 0; font-size:15px; }
+  .lam > [data-act] .lineas{ grid-template-columns:1fr 1fr; }
+  .lam .hbar .fx{ font-size:15px; }
+  .lam .pista-fx{ font-size:16px; margin:6px 0; }
   /* ---------- sopa de letras ---------- */
   .sopa{ display:grid; gap:16px; grid-template-columns:1fr; align-items:start; }
   @media (min-width:860px){ .sopa{ grid-template-columns:auto minmax(0,1fr); } }
@@ -968,8 +974,8 @@
   <div class="marca">
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
-      <h1>Prueba T de Student: comparar dos medias</h1>
-      <p><span class="sem">Semana 11 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - ¿Les gusta más a unos que a otros? Explicado paso a paso</p>
+      <h1>Caso integral resuelto paso a paso</h1>
+      <p><span class="sem">Semana 11 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - De la problemática a la conclusión, como en tu proyecto</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -1023,7 +1029,7 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Quinua Fresh, sus competidores y la base de 200 encuestados son un caso de clase simulado, no un estudio real.</p>
+  <p class="aviso" style="margin-top:16px">Quinua Fresh, sus competidores y sus encuestas son un caso de clase simulado, no un estudio real.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
@@ -1095,6 +1101,17 @@ function HojaFx(leeCelda){
   function num(v){ var n=aNumero(v); if(isNaN(n)) throw new Error('#VALOR'); return n; }
   function bool(v){ if(typeof v==='boolean') return v; var n=aNumero(v); return isNaN(n) ? String(v)!=='' : n!==0; }
 
+  function cumple(v, crit){
+    var s=String(crit===undefined?'':crit).trim();
+    var m=/^(<=|>=|<>|<|>|=)?([\s\S]*)$/.exec(s), op=m[1]||'=', x=m[2].trim();
+    var a=aNumero(v), b=aNumero(x), cmp;
+    if(x!=='' && !isNaN(a) && !isNaN(b)) cmp = a<b ? -1 : a>b ? 1 : 0;
+    else{ var t1=String(v).trim().toUpperCase(), t2=x.toUpperCase();
+          if(op!=='=' && op!=='<>') return false;
+          cmp = t1===t2 ? 0 : 1; }
+    return op==='=' ? cmp===0 : op==='<>' ? cmp!==0 : op==='>' ? cmp>0 :
+           op==='<' ? cmp<0 : op==='>=' ? cmp>=0 : cmp<=0;
+  }
   var FN={
     SUMA:  function(a){ var s=0; a.forEach(function(v){ var n=aNumero(v); if(!isNaN(n)) s+=n; }); return s; },
     PROMEDIO: function(a){ var v=a.map(aNumero).filter(function(n){ return !isNaN(n); });
@@ -1114,12 +1131,32 @@ function HojaFx(leeCelda){
     Y:     function(a){ return a.every(bool); },
     O:     function(a){ return a.some(bool); },
     NO:    function(a){ return !bool(a[0]); },
-    SIERROR: function(a){ return a[0]; }   /* el error se captura antes */
+    SIERROR: function(a){ return a[0]; },   /* el error se captura antes */
+    /* criterio como en Excel: 1, ">=4", "<>2" o un texto */
+    'CONTAR.SI': function(a, args){
+      var r=args[0], vals=(r && r.rango) ? r.valores : [r];
+      return vals.filter(function(v){ return cumple(v, args[1]); }).length; },
+    'CONTAR.SI.CONJUNTO': function(a, args){
+      if(args.length<2 || args.length%2) throw new Error('#VALOR');
+      var listas=[], crits=[];
+      for(var q=0;q<args.length;q+=2){
+        listas.push((args[q] && args[q].rango) ? args[q].valores : [args[q]]); crits.push(args[q+1]); }
+      var n=listas[0].length;
+      if(listas.some(function(l){ return l.length!==n; })) throw new Error('#VALOR');
+      var c=0;
+      for(var i=0;i<n;i++){ if(listas.every(function(l,q){ return cumple(l[i], crits[q]); })) c++; }
+      return c; },
+    MEDIANA: function(a){
+      var v=a.map(aNumero).filter(function(n){ return !isNaN(n); }).sort(function(x,y){ return x-y; });
+      if(!v.length) throw new Error('#NUM');
+      var m=Math.floor(v.length/2);
+      return v.length%2 ? v[m] : (v[m-1]+v[m])/2; }
   };
   /* nombres en inglés y variantes con punto */
   var ALIAS={ SUM:'SUMA', AVERAGE:'PROMEDIO', COUNT:'CONTAR', PRODUCT:'PRODUCTO',
               ROUND:'REDONDEAR', IF:'SI', AND:'Y', OR:'O', NOT:'NO',
-              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR' };
+              INT:'ENTERO', 'SI.ERROR':'SIERROR', IFERROR:'SIERROR',
+              COUNTIF:'CONTAR.SI', COUNTIFS:'CONTAR.SI.CONJUNTO', MEDIAN:'MEDIANA' };
 
   /* ---------- analizador ---------- */
   function evalua(txt, pide){
@@ -1188,7 +1225,7 @@ function HojaFx(leeCelda){
         }
         var llanos=[];
         args.forEach(function(a){ if(a && a.rango) llanos=llanos.concat(a.valores); else llanos.push(a); });
-        return FN[nom](llanos);
+        return FN[nom](llanos, args);
       }
       var r=/^(\$?)([A-Za-z]{1,2})(\$?)(\d{1,4})/.exec(s.slice(i));
       if(r){
@@ -1281,186 +1318,792 @@ pintaSon();
 var ACT={
  "c0": {
   "tipo": "opi",
-  "titulo": "Conectemos: ¿qué opinas?",
+  "titulo": "Conectemos: ¿en qué paso estás?",
   "lista": [
    {
-    "q": "Quienes hacen deporte califican la bebida con 7.4 de 10 y quienes no, con 6.8. ¿Ya podemos decir que a los deportistas les gusta más?",
+    "q": "En tu proyecto, ¿qué paso te cuesta más?",
     "ops": [
-     "Sí, 7.4 es mayor",
-     "Depende de cuántos son y de cuánto varían",
-     "No, la diferencia es mínima"
+     "Plantear la pregunta y los objetivos",
+     "Armar el cuestionario y los códigos",
+     "Hacer las tablas en Excel"
     ],
     "com": [
-     "Mayor en la muestra, sí. Pero ¿y en la población? Lo vemos con la prueba T.",
-     "Exacto: la prueba T mira la diferencia, el tamaño de los grupos y la dispersión.",
-     "0.6 puntos parece poco, pero con grupos grandes puede ser significativo. Hay que probarlo."
+     "Hoy vemos cómo los cinco pilares arman la pregunta casi sola.",
+     "Hoy vemos cómo cada objetivo se vuelve preguntas y cada respuesta un número.",
+     "Hoy practicamos CONTAR.SI y armamos las tablas con un caso completo."
     ]
    }
   ]
  },
- "prom": {
-  "tipo": "cal",
-  "titulo": "Promedio y dispersión",
-  "lista": [
+ "ruta": {
+  "tipo": "par",
+  "titulo": "Ordena la ruta del proyecto",
+  "fichas": [
    {
-    "q": "Promedio del grupo A: 7, 7, 7, 7",
-    "f": "Suma ÷ 4",
-    "e": 7,
-    "tol": 0.01,
-    "ph": "0",
-    "pq": "28 ÷ 4 = 7"
+    "id": "a",
+    "t": "Problemática y pregunta"
    },
    {
-    "q": "Promedio del grupo B: 4, 10, 4, 10",
-    "f": "Suma ÷ 4",
-    "e": 7,
-    "tol": 0.01,
-    "ph": "0",
-    "pq": "28 ÷ 4 = 7. ¡El mismo promedio! Pero en B las notas están muy dispersas: unos la aman y otros no."
+    "id": "b",
+    "t": "Objetivos"
+   },
+   {
+    "id": "c",
+    "t": "Dimensiones e indicadores"
+   },
+   {
+    "id": "d",
+    "t": "Cuestionario"
+   },
+   {
+    "id": "e",
+    "t": "Codificación y base de datos"
+   },
+   {
+    "id": "f",
+    "t": "Tablas, gráficos y conclusión"
    }
   ],
-  "fin": "<p class=\"pq\">Mismo promedio, distinta <b>dispersión</b>. Por eso la prueba T mira las dos cosas.</p>"
- },
- "cual": {
-  "tipo": "quiz",
-  "titulo": "¿Prueba T o ji-cuadrada?",
-  "lista": [
+  "huecos": [
    {
-    "q": "¿En cuál de estos casos usarías la prueba T?",
-    "ops": [
-     "Gasto promedio mensual: Lima Norte vs Lima Sur",
-     "¿El distrito se relaciona con la marca?",
-     "¿Compran más las mujeres o los varones? (sí / no)",
-     "¿Cuántos eligen cada sabor?"
-    ],
-    "ok": 0,
-    "pq": "Prueba T: un número (gasto en soles) y dos grupos. Si las respuestas son categorías (sí / no, marca), se usa ji-cuadrada."
+    "id": "a",
+    "q": "Paso 1"
    },
    {
-    "q": "Excel da =PRUEBA.T(...) = 0.04. ¿Qué concluimos?",
+    "id": "b",
+    "q": "Paso 2"
+   },
+   {
+    "id": "c",
+    "q": "Paso 3"
+   },
+   {
+    "id": "d",
+    "q": "Paso 4"
+   },
+   {
+    "id": "e",
+    "q": "Paso 5"
+   },
+   {
+    "id": "f",
+    "q": "Paso 6"
+   }
+  ],
+  "fin": "<p class=\"pq\">Es el mismo orden de las hojas de tu Excel: cada paso usa lo que salió del anterior.</p>"
+ },
+ "pil": {
+  "tipo": "par",
+  "titulo": "Une cada pilar con su respuesta",
+  "fichas": [
+   {
+    "id": "a",
+    "t": "Intención de compra y precio que pagarían"
+   },
+   {
+    "id": "b",
+    "t": "Jóvenes de 18 a 35 años"
+   },
+   {
+    "id": "c",
+    "t": "Cinco distritos de Arequipa"
+   },
+   {
+    "id": "d",
+    "t": "Noviembre de 2026"
+   },
+   {
+    "id": "e",
+    "t": "Decidir si lanzarla, a qué precio y por qué canal"
+   }
+  ],
+  "huecos": [
+   {
+    "id": "a",
+    "q": "Qué medir"
+   },
+   {
+    "id": "b",
+    "q": "De quién"
+   },
+   {
+    "id": "c",
+    "q": "Dónde"
+   },
+   {
+    "id": "d",
+    "q": "Cuándo"
+   },
+   {
+    "id": "e",
+    "q": "Para qué"
+   }
+  ],
+  "fin": "<p class=\"pq\">Con los cinco pilares listos, la pregunta de investigación se arma uniéndolos.</p>"
+ },
+ "preg": {
+  "tipo": "quiz",
+  "titulo": "Elige la mejor pregunta",
+  "lista": [
+   {
+    "q": "¿Cuál es la mejor pregunta de investigación para el caso?",
     "ops": [
-     "La diferencia es de 4 puntos",
-     "El 4 % prefiere la bebida",
-     "La diferencia es casualidad",
-     "Los promedios son distintos de verdad"
+     "¿Por qué los jóvenes arequipeños prefieren las bebidas saludables a las gaseosas?",
+     "¿Cuántas botellas de la bebida de quinua venderá Quinua Fresh en Arequipa en 2026?",
+     "¿Les gustaría a los jóvenes de Arequipa una bebida de quinua con maracuyá?",
+     "¿Cuál es la intención de compra de una bebida de quinua entre jóvenes de 18 a 35 años de Arequipa en noviembre de 2026?"
     ],
     "ok": 3,
-    "pq": "PRUEBA.T devuelve el p-valor. 0.04 es menor que 0.05: la diferencia es real."
+    "pq": "Une los pilares: qué (intención de compra), de quién (18 a 35), dónde (Arequipa) y cuándo (noviembre de 2026). La primera se responde con sí o no, la tercera da por hecho una preferencia y la cuarta es un pronóstico de ventas."
    }
   ]
  },
- "t": {
-  "tipo": "cal",
-  "titulo": "Calcula el t paso a paso",
+ "dim": {
+  "tipo": "par",
+  "titulo": "Cada objetivo específico, su dimensión",
+  "fichas": [
+   {
+    "id": "a",
+    "t": "Hábitos de consumo"
+   },
+   {
+    "id": "b",
+    "t": "Precio"
+   },
+   {
+    "id": "c",
+    "t": "Intención de compra"
+   },
+   {
+    "id": "d",
+    "t": "Segmentación"
+   }
+  ],
+  "huecos": [
+   {
+    "id": "a",
+    "q": "Establecer la bebida, la frecuencia y el lugar de compra"
+   },
+   {
+    "id": "b",
+    "q": "Determinar el precio que pagarían por una botella de 500 ml"
+   },
+   {
+    "id": "c",
+    "q": "Medir la intención de compra (T2B)"
+   },
+   {
+    "id": "d",
+    "q": "Segmentar la intención según sexo, edad y distrito"
+   }
+  ],
+  "fin": "<p class=\"pq\">Cada dimensión tiene su <b>indicador</b> (lo que vas a contar) y sus <b>preguntas</b> en el cuestionario.</p>"
+ },
+ "niv": {
+  "tipo": "sel",
+  "titulo": "¿Qué nivel de medición tiene cada pregunta?",
   "lista": [
    {
-    "q": "Diferencia de promedios",
-    "f": "7.4 − 6.8",
-    "e": 0.6,
-    "tol": 0.001,
-    "ph": "0.0",
-    "pq": "7.4 − 6.8 = 0.6 puntos"
+    "q": "P1 · ¿Qué bebida toma con más frecuencia?",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 0,
+    "pq": "Nominal: categorías sin orden."
    },
    {
-    "q": "Error estándar: cuánto puede moverse la diferencia por casualidad",
-    "f": "√(1.2² ÷ 40 + 1.4² ÷ 40)",
-    "e": 0.29,
+    "q": "P2 · ¿Con qué frecuencia la toma? (diario … casi nunca)",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 1,
+    "pq": "Ordinal: hay un orden."
+   },
+   {
+    "q": "P4 · ¿Cuánto pagaría? S/ ____",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 2,
+    "pq": "Razón: es un monto, se puede promediar."
+   },
+   {
+    "q": "P5 · Del 1 al 5, ¿qué tan probable es que la compre?",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 1,
+    "pq": "Ordinal: escala de 1 a 5."
+   },
+   {
+    "q": "D1 · Sexo",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 0,
+    "pq": "Nominal: dos categorías sin orden."
+   },
+   {
+    "q": "D2 · ¿Cuántos años tiene?",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Razón"
+    ],
+    "ok": 2,
+    "pq": "Razón: la edad es un número real."
+   }
+  ]
+ },
+ "cue": {
+  "tipo": "arr",
+  "titulo": "Ubica cada pregunta en su bloque",
+  "cajas": [
+   {
+    "id": "a",
+    "t": "A · Hábitos"
+   },
+   {
+    "id": "b",
+    "t": "B · Precio"
+   },
+   {
+    "id": "c",
+    "t": "C · Intención"
+   },
+   {
+    "id": "d",
+    "t": "D · Datos personales"
+   }
+  ],
+  "fichas": [
+   {
+    "id": "f1",
+    "t": "¿Qué bebida toma con más frecuencia?",
+    "g": "a"
+   },
+   {
+    "id": "f2",
+    "t": "¿Dónde la compra normalmente?",
+    "g": "a"
+   },
+   {
+    "id": "f3",
+    "t": "¿Cuánto pagaría por una botella de 500 ml?",
+    "g": "b"
+   },
+   {
+    "id": "f4",
+    "t": "Del 1 al 5, ¿qué tan probable es que la compre?",
+    "g": "c"
+   },
+   {
+    "id": "f5",
+    "t": "¿Qué es lo que más le atrae de la bebida?",
+    "g": "c"
+   },
+   {
+    "id": "f6",
+    "t": "¿En qué distrito vive?",
+    "g": "d"
+   },
+   {
+    "id": "f7",
+    "t": "¿Cuántos años tiene?",
+    "g": "d"
+   }
+  ],
+  "fin": "<p class=\"pq\">Los datos personales van <b>al final</b>: primero se pregunta lo importante, cuando la persona aún tiene paciencia.</p>"
+ },
+ "cod": {
+  "tipo": "cal",
+  "titulo": "Codifica las respuestas de Valeria",
+  "lista": [
+   {
+    "q": "Lugar: «en el supermercado»",
+    "f": "P3_Lugar",
+    "e": 2,
+    "tol": 0,
+    "ph": "0",
+    "pq": "Supermercado = 2"
+   },
+   {
+    "q": "Intención: marcó «Probable»",
+    "f": "P5_Intencion",
+    "e": 4,
+    "tol": 0,
+    "ph": "0",
+    "pq": "Probable = 4 (el código es el número de la escala)"
+   },
+   {
+    "q": "Sexo: femenino",
+    "f": "D1_Sexo",
+    "e": 1,
+    "tol": 0,
+    "ph": "0",
+    "pq": "Femenino = 1"
+   },
+   {
+    "q": "Distrito: Yanahuara",
+    "f": "D3_Distrito",
+    "e": 3,
+    "tol": 0,
+    "ph": "0",
+    "pq": "Yanahuara = 3"
+   }
+  ],
+  "fin": "<p class=\"pq\">Su fila en la base queda así: <b>… 2 · 5.5 · 4 · 1 · 24 · 3</b>. Una fila por persona, una columna por pregunta.</p>"
+ },
+ "xl": {
+  "tipo": "hoja",
+  "titulo": "Escribe las fórmulas en la columna H",
+  "cols": [
+   {
+    "w": 40
+   },
+   {
+    "w": 62
+   },
+   {
+    "w": 84
+   },
+   {
+    "w": 54
+   },
+   {
+    "w": 64
+   },
+   {
+    "w": 12
+   },
+   {
+    "w": 230
+   },
+   {
+    "w": 330
+   }
+  ],
+  "filas": [
+   [
+    {
+     "x": "ID"
+    },
+    {
+     "x": "Lugar"
+    },
+    {
+     "x": "Intención"
+    },
+    {
+     "x": "Sexo"
+    },
+    {
+     "x": "Precio"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Qué calcular"
+    },
+    {
+     "x": "Tu fórmula"
+    }
+   ],
+   [
+    {
+     "x": "1"
+    },
+    {
+     "x": "1"
+    },
+    {
+     "x": "4"
+    },
+    {
+     "x": "1"
+    },
+    {
+     "x": "6.00"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Compran en bodega (código 1)"
+    },
+    {
+     "e": 2,
+     "f": true,
+     "ph": "=CONTAR.SI(rango;criterio)"
+    }
+   ],
+   [
+    {
+     "x": "2"
+    },
+    {
+     "x": "1"
+    },
+    {
+     "x": "4"
+    },
+    {
+     "x": "1"
+    },
+    {
+     "x": "6.50"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Comprarían (T2B: 4 y 5)"
+    },
+    {
+     "e": 4,
+     "f": true,
+     "ph": "=CONTAR.SI(rango;\">=4\")"
+    }
+   ],
+   [
+    {
+     "x": "3"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "5"
+    },
+    {
+     "x": "1"
+    },
+    {
+     "x": "6.50"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Mujeres que comprarían"
+    },
+    {
+     "e": 3,
+     "f": true,
+     "ph": "=CONTAR.SI.CONJUNTO(rango1;1;rango2;\">=4\")"
+    }
+   ],
+   [
+    {
+     "x": "4"
+    },
+    {
+     "x": "5"
+    },
+    {
+     "x": "5"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "5.00"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Precio promedio (S/)"
+    },
+    {
+     "e": 5.25,
+     "f": true,
+     "ph": "=PROMEDIO(rango)"
+    }
+   ],
+   [
+    {
+     "x": "5"
+    },
+    {
+     "x": "3"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "4.00"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": "Precio mediano (S/)"
+    },
+    {
+     "e": 5.5,
+     "f": true,
+     "ph": "=MEDIANA(rango)"
+    }
+   ],
+   [
+    {
+     "x": "6"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "3"
+    },
+    {
+     "x": "2"
+    },
+    {
+     "x": "3.50"
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": ""
+    },
+    {
+     "x": ""
+    }
+   ]
+  ],
+  "ayuda": "Lugar: 1 bodega · Intención: 1 a 5 · Sexo: 1 mujer, 2 varón. Separa los argumentos con <b>;</b> y pon el criterio entre comillas: <code>\">=4\"</code>.",
+  "fin": "<p class=\"pq\">Las fórmulas: <code>=CONTAR.SI(B2:B7;1)</code> · <code>=CONTAR.SI(C2:C7;\">=4\")</code> · <code>=CONTAR.SI.CONJUNTO(D2:D7;1;C2:C7;\">=4\")</code> · <code>=PROMEDIO(E2:E7)</code> · <code>=MEDIANA(E2:E7)</code>. Con las 80 filas solo cambia el rango: <code>B2:B81</code>.</p>"
+ },
+ "t1": {
+  "tipo": "cal",
+  "titulo": "Tabla 1: completa los porcentajes",
+  "lista": [
+   {
+    "q": "% que compra en bodega",
+    "f": "28 ÷ 80 × 100",
+    "e": 35,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "28 ÷ 80 = 35 %"
+   },
+   {
+    "q": "% que compra en supermercado",
+    "f": "20 ÷ 80 × 100",
+    "e": 25,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "20 ÷ 80 = 25 %"
+   },
+   {
+    "q": "% que compra por delivery o en línea",
+    "f": "8 ÷ 80 × 100",
+    "e": 10,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "8 ÷ 80 = 10 %"
+   }
+  ],
+  "fin": "<p class=\"pq\"><b>Gráfico:</b> barras. <b>Interpretación:</b> la opción más elegida es la bodega, con el 35 % de los encuestados.</p>"
+ },
+ "t2": {
+  "tipo": "cal",
+  "titulo": "Tabla 2: la intención de compra",
+  "lista": [
+   {
+    "q": "Sí compraría (T2B: 4 y 5)",
+    "f": "(22 + 14) ÷ 80 × 100",
+    "e": 45,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "36 ÷ 80 = 45 %"
+   },
+   {
+    "q": "Tal vez (3)",
+    "f": "20 ÷ 80 × 100",
+    "e": 25,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "20 ÷ 80 = 25 %"
+   },
+   {
+    "q": "No compraría (1 y 2)",
+    "f": "(10 + 14) ÷ 80 × 100",
+    "e": 30,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "24 ÷ 80 = 30 %. Las tres suman 100 %."
+   }
+  ],
+  "fin": "<p class=\"pq\"><b>Gráfico:</b> circular. <b>Interpretación:</b> el 45 % compraría, el 25 % tal vez y el 30 % no compraría.</p>"
+ },
+ "t3": {
+  "tipo": "cal",
+  "titulo": "Tabla 3: intención según sexo",
+  "lista": [
+   {
+    "q": "% de mujeres que compraría",
+    "f": "22 ÷ 40 × 100",
+    "e": 55,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "22 de 40 mujeres = 55 %"
+   },
+   {
+    "q": "% de varones que compraría",
+    "f": "14 ÷ 40 × 100",
+    "e": 35,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "%",
+    "pq": "14 de 40 varones = 35 %"
+   },
+   {
+    "q": "Diferencia",
+    "f": "55 − 35, en puntos porcentuales",
+    "e": 20,
+    "tol": 0.1,
+    "ph": "0",
+    "u": "pp",
+    "pq": "20 puntos más en mujeres"
+   }
+  ],
+  "fin": "<p class=\"pq\"><b>Gráfico:</b> columnas agrupadas. <b>Interpretación:</b> entre las mujeres el 55 % compraría frente al 35 % de los varones.</p>"
+ },
+ "t4": {
+  "tipo": "cal",
+  "titulo": "Tabla 4: el precio",
+  "lista": [
+   {
+    "q": "Precio promedio",
+    "f": "Suma de los 80 precios ÷ 80 = 372 ÷ 80",
+    "e": 4.65,
     "tol": 0.01,
     "ph": "0.00",
-    "pq": "1.44 ÷ 40 = 0.036; 1.96 ÷ 40 = 0.049; √0.085 = 0.29"
+    "u": "S/",
+    "pq": "372 ÷ 80 = S/ 4.65"
    },
    {
-    "q": "t = diferencia ÷ error estándar",
-    "f": "0.6 ÷ 0.29",
-    "e": 2.06,
-    "tol": 0.04,
+    "q": "Rango de precios",
+    "f": "Máximo − mínimo = 6.50 − 3.00",
+    "e": 3.5,
+    "tol": 0.01,
     "ph": "0.00",
-    "pq": "0.6 ÷ 0.2915 = 2.06: la diferencia es unas 2 veces lo que daría la casualidad. Como pasa de ≈ 2, es real."
+    "u": "S/",
+    "pq": "Van de S/ 3.00 a S/ 6.50: S/ 3.50 de diferencia"
+   }
+  ],
+  "fin": "<p class=\"pq\"><b>Interpretación:</b> el precio promedio es S/ 4.65 y la mediana S/ 4.50: la mitad pagaría S/ 4.50 o menos. Un precio de lanzamiento cerca de <b>S/ 4.50</b> alcanza a la mitad del público.</p>"
+ },
+ "conc": {
+  "tipo": "quiz",
+  "titulo": "La conclusión del estudio",
+  "lista": [
+   {
+    "q": "¿Cuál conclusión responde mejor la pregunta de investigación?",
+    "ops": [
+     "La intención de compra es moderada: el 45 % compraría (55 % de mujeres y 35 % de varones) y pagaría en promedio S/ 4.65.",
+     "Los jóvenes de Arequipa toman muchas bebidas y les gusta la quinua.",
+     "El 35 % compra en bodega, el 25 % en supermercado y el 10 % por delivery.",
+     "Quinua Fresh debe lanzar la bebida porque es saludable y tiene futuro en Arequipa."
+    ],
+    "ok": 0,
+    "pq": "La conclusión responde la pregunta con los datos clave: intención (T2B), quiénes y a qué precio. La última es solo un resultado de una tabla."
+   },
+   {
+    "q": "Con estos resultados, ¿qué recomendación está mejor sustentada?",
+    "ops": [
+     "Lanzar a S/ 6.50, el precio máximo que alguien pagaría.",
+     "Lanzar a unos S/ 4.50, en bodegas y supermercados, con una campaña dirigida a mujeres.",
+     "Lanzar en gimnasios porque el público es saludable.",
+     "No lanzar, porque el 30 % no compraría."
+    ],
+    "ok": 1,
+    "pq": "Cada parte nace de un dato: mediana S/ 4.50, bodegas y supermercados suman 60 % y las mujeres tienen la mayor intención (55 %)."
    }
   ]
  },
  "cr": {
   "tipo": "cruz",
-  "titulo": "Crucigrama de la prueba T",
-  "filas": 9,
-  "cols": 10,
+  "titulo": "Crucigrama del proyecto",
+  "filas": 6,
+  "cols": 15,
   "palabras": [
    {
-    "p": "PROMEDIO",
-    "pista": "Suma de las notas ÷ cantidad de notas",
+    "p": "PILARES",
+    "pista": "Qué, de quién, dónde, cuándo y para qué",
     "r": 3,
-    "c": 2,
+    "c": 6,
     "dir": "H"
    },
    {
-    "p": "GRUPOS",
-    "pista": "La prueba T compara solo dos",
-    "r": 0,
-    "c": 2,
-    "dir": "V"
-   },
-   {
-    "p": "DISPERSION",
-    "pista": "Qué tan distintas son las notas entre sí",
-    "r": 5,
-    "c": 0,
-    "dir": "H"
-   },
-   {
-    "p": "STUDENT",
-    "pista": "Seudónimo del creador de la prueba T",
-    "r": 2,
-    "c": 0,
-    "dir": "V"
-   },
-   {
-    "p": "ERROR",
-    "pista": "… estándar: lo que puede moverse la diferencia por casualidad",
+    "p": "OBJETIVO",
+    "pista": "La pregunta convertida en acción",
     "r": 1,
-    "c": 1,
+    "c": 0,
+    "dir": "H"
+   },
+   {
+    "p": "CODIGO",
+    "pista": "Número que se le da a cada alternativa",
+    "r": 0,
+    "c": 7,
+    "dir": "V"
+   },
+   {
+    "p": "BASE",
+    "pista": "Hoja con una fila por encuestado",
+    "r": 2,
+    "c": 9,
+    "dir": "V"
+   },
+   {
+    "p": "CONTARSI",
+    "pista": "Función de Excel para contar respuestas (sin punto)",
+    "r": 0,
+    "c": 7,
     "dir": "H"
    }
   ]
  },
- "fin": {
+ "obj": {
   "tipo": "quiz",
-  "titulo": "Reto final",
+  "titulo": "Elige el objetivo general",
   "lista": [
    {
-    "q": "Deportistas: 7.4; no deportistas: 6.8. Sale t = 2.06 (el límite es ≈ 1.99). ¿Qué le dices al gerente?",
+    "q": "¿Cuál es el objetivo general correcto?",
     "ops": [
-     "A los deportistas les gusta más la bebida",
-     "Los dos grupos califican igual",
-     "Hay 2.06 % de error",
-     "A los deportistas les gusta 2.06 veces más"
-    ],
-    "ok": 0,
-    "pq": "2.06 > 1.99: la diferencia es real. Conviene apuntar la campaña a deportistas."
-   },
-   {
-    "q": "Mismos promedios, pero solo 10 personas por grupo. ¿Qué pasa con t?",
-    "ops": [
-     "Se vuelve negativo",
-     "Baja a ≈ 1.03 y ya no es significativa",
-     "Sube, porque hay menos datos que revisar",
-     "No cambia"
-    ],
-    "ok": 1,
-    "pq": "Con pocas personas la casualidad pesa más: el error estándar sube a 0.58 y t = 0.6 ÷ 0.58 = 1.03."
-   },
-   {
-    "q": "Quieres comparar el agrado de 3 sabores a la vez. ¿Basta una prueba T?",
-    "ops": [
-     "Mejor la ji-cuadrada de los promedios",
-     "Sí, con tres columnas",
-     "Sí, si subo α a 10 %",
-     "No: la prueba T compara solo dos grupos"
+     "Lanzar la bebida de quinua en cinco distritos de Arequipa en noviembre de 2026.",
+     "¿Determinar la intención de compra de una bebida de quinua en Arequipa?",
+     "Conocer si la bebida de quinua es buena para la salud de los jóvenes de Arequipa.",
+     "Determinar la intención de compra de una bebida de quinua entre jóvenes de 18 a 35 años de Arequipa, en noviembre de 2026."
     ],
     "ok": 3,
-    "pq": "La prueba T es para dos grupos. Para tres o más promedios se usa ANOVA."
+    "pq": "Es la pregunta convertida en acción: cambia «¿Cuál es…?» por un verbo de investigación. «Lanzar» es una decisión de negocio, no un objetivo de investigación."
    }
-  ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> prueba T = <b>un número</b> (nota, gasto) y <b>dos grupos</b>. Ji-cuadrada = <b>categorías</b> cruzadas.</p>"
+  ]
  }
 };
 
@@ -1468,50 +2111,96 @@ var ACT={
 var D=[
 
 { et:"Conectemos",
-  t:"¿Les gusta más a unos que a otros?",
+  t:"Un proyecto completo, de principio a fin",
   claves:["c0"],
-  h:TAPA('¿Les gusta más a unos que a otros?','Semana 11 · Prueba T de Student',null,'pres','En la prueba de Quinua Fresh, <b>40 jóvenes que hacen deporte</b> y <b>40 que no</b> calificaron la bebida del 1 al 10.') },
+  h:TAPA('Un proyecto completo, de principio a fin','Semana 11 · Caso integral resuelto paso a paso',null,'pres','<b>Quinua Fresh</b> quiere lanzar en <b>Arequipa</b> una bebida de quinua con maracuyá de 500 ml. Hoy resolvemos su estudio completo, igual que tu proyecto.') },
 
-{ et:"Promedio",
-  t:"Promedio y dispersión",
-  claves:["prom"],
-  lado:1,
-  h:'<p class="teo-def"><b>Promedio (media):</b> suma de las notas ÷ cantidad. Resume al grupo en un número.</p>'+
-'<p class="teo-def"><b>Dispersión (desviación estándar):</b> qué tan distintas son las notas entre sí. Poca dispersión = todos opinan parecido.</p>'+
-'<div class="clave">&#127919; Dos grupos pueden tener el <b>mismo promedio</b> y opiniones muy distintas.</div>' },
+{ et:"Ruta",
+  t:"La ruta del proyecto",
+  claves:["ruta"],
+  h:'<p class="teo-def">Tu proyecto tiene <b>seis pasos</b>, uno por hoja de tu Excel: la <b>pregunta</b> dice qué quieres saber, los <b>objetivos</b> la dividen, cada objetivo se vuelve <b>preguntas</b>, cada respuesta un <b>número</b> en la base y con la base salen las <b>tablas</b> y la <b>conclusión</b>.</p>' },
 
-{ et:"Prueba T",
-  t:"¿Cuándo se usa la prueba T?",
-  claves:["cual"],
-  lado:1,
-  h:'<p class="teo-def">La <b>prueba T</b> compara el <b>promedio de dos grupos</b> para saber si la diferencia es real o casualidad.</p>'+
-'<div class="dos"><div class="fc"><h4>H0</h4><div class="c">Los dos grupos califican <b>igual</b>.</div></div><div class="fc rj"><h4>H1</h4><div class="c">Los dos grupos califican <b>distinto</b>.</div></div></div>'+
-SINTAXIS('En Excel',[['=PRUEBA.T(grupo1; grupo2; 2; 3)','Da el p-valor directamente']]) },
+{ et:"Paso 1",
+  t:"Problemática: los cinco pilares",
+  claves:["pil"],
+  h:'<p class="teo-def"><b>Tema:</b> bebida de quinua con maracuyá, 500 ml, para jóvenes de Arequipa. Los <b>cinco pilares</b> responden: ¿qué quiero saber?, ¿a quiénes?, ¿dónde?, ¿cuándo? y ¿qué decisión se tomará?</p>' },
 
-{ et:"Cálculo",
-  t:"El t paso a paso",
-  claves:["t"],
+{ et:"Paso 1",
+  t:"La pregunta de investigación",
+  claves:["preg"],
+  h:'<div class="clave"><b>Pregunta</b> = ¿Cuál es <b>[qué medir]</b> de <b>[producto]</b> entre <b>[quiénes]</b> en <b>[dónde]</b> durante <b>[cuándo]</b>? Se arma uniendo los cinco pilares.</div>' },
+
+{ et:"Paso 2",
+  t:"El objetivo general",
+  claves:["obj"],
+  h:'<div class="clave"><b>Objetivo general</b> = la pregunta convertida en acción: «¿Cuál es…?» pasa a un verbo de investigación: <b>Determinar, Establecer, Medir…</b></div>' },
+
+{ et:"Paso 2 y 3",
+  t:"Objetivos específicos y dimensiones",
+  claves:["dim"],
+  h:'<p class="teo-def">Cada <b>objetivo específico</b> responde una parte de la pregunta y se convierte en una <b>dimensión</b> del estudio. Verbos útiles: <b>establecer, determinar, medir, segmentar</b>.</p>' },
+
+{ et:"Paso 3",
+  t:"Niveles de medición de cada pregunta",
+  claves:["niv"],
+  h:'<ul class="pasos"><li><b>Nominal:</b> categorías sin orden (bebida, sexo). Se resume con %.</li><li><b>Ordinal:</b> categorías con orden (frecuencia, escala 1 a 5). Se resume con % y T2B.</li><li><b>Razón:</b> números reales (soles, años). Se resume con promedio y mediana.</li></ul>' },
+
+{ et:"Paso 4",
+  t:"El cuestionario por bloques",
+  claves:["cue"],
+  h:'<p class="teo-def">Las preguntas se ordenan en <b>bloques</b>, uno por objetivo específico. Escríbelas en lenguaje sencillo y con alternativas claras.</p>' },
+
+{ et:"Paso 5",
+  t:"La codificación: cada respuesta, un número",
+  claves:["cod"],
   lado:1,
-  h:TABLA(['Grupo','Personas','Promedio','Dispersión'],[['Hace deporte','40','7.4','1.2'],['No hace deporte','40','6.8','1.4']])+
-'<ul class="pasos"><li><b>Diferencia</b> de promedios.</li><li><b>Error estándar:</b> cuánto podría moverse esa diferencia por casualidad.</li><li><b>t</b> = diferencia ÷ error. Si pasa de <b>≈ 2</b>, es real.</li></ul>' },
+  h:TABLA(["Variable", "Códigos"],[["P3_Lugar", "1 Bodega · 2 Supermercado · 3 Gimnasio · 4 Delivery · 5 Mercado"], ["P5_Intencion", "1 Nada probable … 5 Muy probable"], ["D1_Sexo", "1 Femenino · 2 Masculino"], ["D3_Distrito", "1 Cercado · 2 Cayma · 3 Yanahuara · 4 Cerro Colorado · 5 J. L. Bustamante y Rivero"]])+'<div class="clave"><b>Valeria</b>, 24 años, de Yanahuara: compra en el supermercado, pagaría S/ 5.50 y marcó «Probable».</div>' },
+
+{ et:"Paso 6",
+  t:"La base en Excel: CONTAR.SI",
+  claves:["xl"],
+  h:'' },
+
+{ et:"Tabla 1",
+  t:"Tabla 1: lugar de compra",
+  claves:["t1"],
+  lado:1,
+  h:TABLA(["Lugar", "Código", "Personas", "%"],[["Bodega", "1", "28", "?"], ["Supermercado", "2", "20", "?"], ["Gimnasio o tienda saludable", "3", "12", "15 %"], ["Delivery o en línea", "4", "8", "?"], ["Mercado", "5", "12", "15 %"], ["*Total", "", "80", "100 %"]],"Personas = CONTAR.SI(Base!D2:D81; código). % = personas ÷ total.") },
+
+{ et:"Tabla 2",
+  t:"Tabla 2: intención de compra (T2B)",
+  claves:["t2"],
+  lado:1,
+  h:TABLA(["Respuesta (P5)", "Personas"],[["5 · Muy probable", "14"], ["4 · Probable", "22"], ["3 · Tal vez", "20"], ["2 · Poco probable", "14"], ["1 · Nada probable", "10"], ["*Total", "80"]])+'<div class="clave"><b>T2B</b> = los que marcan 4 y 5: <code>=CONTAR.SI(F2:F81;">=4")</code></div>' },
+
+{ et:"Tabla 3",
+  t:"Tabla 3: intención según sexo",
+  claves:["t3"],
+  lado:1,
+  h:TABLA(["Respuesta", "Mujer", "Varón", "Total"],[["Sí compraría (4 y 5)", "22", "14", "36"], ["Tal vez (3)", "9", "11", "20"], ["No compraría (1 y 2)", "9", "15", "24"], ["*Total", "40", "40", "80"]])+'<div class="clave">Para comparar grupos se usa el <b>% de columna</b>: cada celda ÷ total de su columna.</div>' },
+
+{ et:"Tabla 4",
+  t:"Tabla 4: precio dispuesto a pagar",
+  claves:["t4"],
+  lado:1,
+  h:TABLA(["Medida", "Resultado", "Fórmula"],[["Promedio", "?", "=PROMEDIO(E2:E81)"], ["Mediana", "S/ 4.50", "=MEDIANA(E2:E81)"], ["Mínimo", "S/ 3.00", "=MIN(E2:E81)"], ["Máximo", "S/ 6.50", "=MAX(E2:E81)"]],"Suma de los 80 precios: S/ 372.") },
+
+{ et:"Conclusión",
+  t:"La conclusión: responder la pregunta",
+  claves:["conc"],
+  h:'<p class="teo-def">La <b>conclusión</b> responde la pregunta de investigación con los datos clave; la <b>recomendación</b> dice qué hacer y nace de un dato.</p>' },
 
 { et:"Crucigrama",
-  t:"Crucigrama de la prueba T",
+  t:"Crucigrama del proyecto",
   claves:["cr"],
   h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>PROMEDIO</b></td><td>Suma de las notas ÷ cantidad de notas</td></tr><tr><td><b>GRUPOS</b></td><td>La prueba T compara solo dos</td></tr><tr><td><b>DISPERSION</b></td><td>Qué tan distintas son las notas entre sí</td></tr><tr><td><b>STUDENT</b></td><td>Seudónimo del creador de la prueba T</td></tr><tr><td><b>ERROR</b></td><td>… estándar: lo que puede moverse la diferencia por casualidad</td></tr></tbody></table></div>" },
-
-{ et:"Reto",
-  t:"Reto final",
-  claves:["fin"],
-  h:'',
-  pdf:"<ol class=\"pasos\"><li><b>Deportistas: 7.4; no deportistas: 6.8. Sale t = 2.06 (el límite es ≈ 1.99). ¿Qué le dices al gerente?</b><br>Respuesta: A los deportistas les gusta más la bebida. <i>2.06 > 1.99: la diferencia es real. Conviene apuntar la campaña a deportistas.</i></li><li><b>Mismos promedios, pero solo 10 personas por grupo. ¿Qué pasa con t?</b><br>Respuesta: Baja a ≈ 1.03 y ya no es significativa. <i>Con pocas personas la casualidad pesa más: el error estándar sube a 0.58 y t = 0.6 ÷ 0.58 = 1.03.</i></li><li><b>Quieres comparar el agrado de 3 sabores a la vez. ¿Basta una prueba T?</b><br>Respuesta: No: la prueba T compara solo dos grupos. <i>La prueba T es para dos grupos. Para tres o más promedios se usa ANOVA.</i></li></ol>" }
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>PILARES</b></td><td>Qué, de quién, dónde, cuándo y para qué</td></tr><tr><td><b>OBJETIVO</b></td><td>La pregunta convertida en acción</td></tr><tr><td><b>CODIGO</b></td><td>Número que se le da a cada alternativa</td></tr><tr><td><b>BASE</b></td><td>Hoja con una fila por encuestado</td></tr><tr><td><b>CONTARSI</b></td><td>Función de Excel para contar respuestas (sin punto)</td></tr></tbody></table></div>" }
 ];
 
 /* ================= estado ================= */
-var LS='ic_s11-miercoles_v2';
+var LS='ic_s11-miercoles_v3';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "prom", "cual", "t", "cr", "fin"];
+var CLAVES=["c0", "ruta", "pil", "preg", "obj", "dim", "niv", "cue", "cod", "xl", "t1", "t2", "t3", "t4", "conc", "cr"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -1990,7 +2679,7 @@ function vHoja(k){
      'Con Mays&uacute;s + clic armas un rango.</p>';
   h+='<div class="hbar"><button type="button" class="o-btn o-btn-primary" data-chk="'+k+'">'+
      'Comprobar la hoja</button><span class="fx">Escribe la f&oacute;rmula empezando con <b>=</b>. '+
-     'Puedes usar <b>SUMA</b>, <b>REDONDEAR</b>, <b>SI</b>, <b>MAX</b>, <b>MIN</b> y <b>PROMEDIO</b>.</span></div>';
+     'Puedes usar <b>CONTAR.SI</b>, <b>CONTAR.SI.CONJUNTO</b>, <b>PROMEDIO</b>, <b>MEDIANA</b>, <b>MIN</b>, <b>MAX</b> y <b>SUMA</b>.</span></div>';
   if(A.ayuda) h+='<p class="pista-fx">'+A.ayuda+'</p>';
   if(lista(k) && A.fin) h+=A.fin;
   return h+'</div></div>';
@@ -2874,7 +3563,7 @@ $('btnElige').addEventListener('click', function(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('ic_s11-miercoles_v2_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ic_s11-miercoles_v3_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -2922,7 +3611,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('ic_s11-miercoles_v2_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ic_s11-miercoles_v3_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
