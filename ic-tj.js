@@ -32,7 +32,8 @@ window.SINTAXIS=function(titulo, filas){
 };
 /* filas que empiezan con «*» se pintan como total */
 window.TABLA=function(cab, filas, nota){
-  function celda(x, j, tag){ return '<'+tag+(j>0?' class="n"':'')+'>'+x+'</'+tag+'>'; }
+  /* solo los números se alinean a la derecha; el texto largo puede partirse en líneas */
+  function celda(x, j, tag){ var num=j>0 && /^[\s\d.,%?\u2212+\-S\/]*$/.test(String(x)); return '<'+tag+(num?' class="n"':'')+'>'+x+'</'+tag+'>'; }
   return '<div class="tabenv"><table class="t chica"><thead><tr>'+
          cab.map(function(x,j){ return celda(x,j,'th'); }).join('')+'</tr></thead><tbody>'+
          filas.map(function(f){
@@ -41,4 +42,42 @@ window.TABLA=function(cab, filas, nota){
              return celda(j===0&&tot ? String(x).slice(1) : x, j, 'td'); }).join('')+'</tr>';
          }).join('')+'</tbody></table></div>'+(nota ? '<p class="hint" style="margin-top:-6px">'+nota+'</p>' : '');
 };
+})();
+
+/* ---------- sesiones «grandes»: cada lámina se amplía hasta llenar el espacio ----------
+   Solo en las páginas con <body class="ic-grande">. Busca el mayor zoom con el que el
+   contenido cabe sin desplazarse (entre 0.8 y 1.8), en pantalla normal y completa. */
+(function(){
+'use strict';
+if(!document.body || !document.body.classList.contains('ic-grande')) return;
+var lam=document.getElementById('lam');
+if(!lam) return;
+var ocupado=false, t=null;
+function cabe(){
+  if(lam.scrollHeight>lam.clientHeight+1 || lam.scrollWidth>lam.clientWidth+1) return false;
+  /* la hoja, las tablas y el crucigrama se desplazan por dentro: tampoco deben cortarse */
+  var cajas=lam.querySelectorAll('.hojaenv,.tabenv,.cruz,.sp-tab');
+  for(var i=0;i<cajas.length;i++){ if(cajas[i].scrollWidth>cajas[i].clientWidth+1) return false; }
+  return true;
+}
+function pon(z){ for(var i=0;i<lam.children.length;i++) lam.children[i].style.zoom=z; }
+function ajusta(){
+  if(ocupado || !lam.children.length || !lam.clientHeight) return;
+  ocupado=true;
+  try{
+    var lo=0.8, hi=1.8;
+    pon(1);
+    if(cabe()) lo=1; else hi=1;
+    for(var k=0;k<7;k++){ var m=(lo+hi)/2; pon(m); if(cabe()) lo=m; else hi=m; }
+    pon(lo);
+  }finally{ ocupado=false; }
+}
+function programa(){ clearTimeout(t); t=setTimeout(function(){ requestAnimationFrame(ajusta); }, 40); }
+new MutationObserver(function(){ if(!ocupado) programa(); }).observe(lam, { childList:true });
+window.addEventListener('resize', programa);
+document.addEventListener('fullscreenchange', programa);
+var esc=document.getElementById('esc');
+if(esc) new MutationObserver(programa).observe(esc, { attributes:true, attributeFilter:['class'] });
+lam.addEventListener('load', programa, true);     /* las imágenes cambian el alto al cargar */
+programa();
 })();

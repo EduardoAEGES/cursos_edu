@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s11-miercoles_v3-a">
+<meta name="version" content="2026-10-27-ic_s11-miercoles_v4-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1080,7 +1080,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="ic-tj.js?v=20261028a"></script>
+<script src="ic-tj.js?v=20261028b"></script>
 <script src="aula.js?v=20261025f"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
@@ -1343,25 +1343,6 @@ pintaSon();
 
 /* ================= las actividades ================= */
 var ACT={
- "c0": {
-  "tipo": "opi",
-  "titulo": "Conectemos: ¿en qué paso estás?",
-  "lista": [
-   {
-    "q": "En tu proyecto, ¿qué paso te cuesta más?",
-    "ops": [
-     "Plantear la pregunta y los objetivos",
-     "Armar el cuestionario y los códigos",
-     "Hacer las tablas en Excel"
-    ],
-    "com": [
-     "Hoy vemos cómo los cinco pilares arman la pregunta casi sola.",
-     "Hoy vemos cómo cada objetivo se vuelve preguntas y cada respuesta un número.",
-     "Hoy practicamos CONTAR.SI y armamos las tablas con un caso completo."
-    ]
-   }
-  ]
- },
  "ruta": {
   "tipo": "par",
   "titulo": "Ordena la ruta del proyecto",
@@ -2206,10 +2187,9 @@ var ACT={
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:"Conectemos",
-  t:"Un proyecto completo, de principio a fin",
-  claves:["c0"],
-  h:TAPA('Un proyecto completo, de principio a fin','Semana 11 · Caso integral resuelto paso a paso',null,'pres','<b>Quinua Fresh</b> quiere lanzar en <b>Arequipa</b> una bebida de quinua con maracuyá de 500 ml. Hoy resolvemos su estudio completo, igual que tu proyecto.') },
+{ et:"Inicio",
+  t:"Evaluación de resultados",
+  h:TAPA('Evaluación de resultados','Semana 11 · Caso integral resuelto paso a paso',['Problemática','Objetivos','Cuestionario','Base de datos','Tablas','Conclusión'],'pres','<b>Quinua Fresh</b> quiere lanzar en <b>Arequipa</b> una bebida de quinua con maracuyá de 500 ml. Hoy resolvemos su estudio completo, igual que tu proyecto.') },
 
 { et:"Ruta",
   t:"La ruta del proyecto",
@@ -2299,9 +2279,9 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='ic_s11-miercoles_v3';
+var LS='ic_s11-miercoles_v4';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "ruta", "pil", "preg", "obj", "dim", "niv", "cue", "cod", "xl", "t1", "t2", "t3", "t4", "conc", "mem", "cr"];
+var CLAVES=["ruta", "pil", "preg", "obj", "dim", "niv", "cue", "cod", "xl", "t1", "t2", "t3", "t4", "conc", "mem", "cr"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -3707,7 +3687,7 @@ $('btnElige').addEventListener('click', function(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('ic_s11-miercoles_v3_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ic_s11-miercoles_v4_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -3755,7 +3735,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('ic_s11-miercoles_v3_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ic_s11-miercoles_v4_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
@@ -4077,6 +4057,6 @@ pinta();
 })();
 </script>
 
-<script src="mat-tj.js?v=20261028a"></script>
+<script src="mat-tj.js?v=20261028b"></script>
 </body>
 </html>
