@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s11-miercoles_v4-a">
+<meta name="version" content="2026-10-27-ic_s11-miercoles_v5-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -917,7 +917,7 @@
   .lam .ops.fila{ grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
   .lam .cuad td{ line-height:0; } .lam .cuad input{ display:block; height:31px; line-height:31px; padding:0; }
   .lam > [data-act] .pares{ grid-template-columns:1fr 1fr; }
-  .lam > [data-act] .par{ grid-template-columns:auto minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
+  .lam > [data-act] .par{ grid-template-columns:minmax(min-content,1.3fr) minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
   .lam .teo .sintaxis .sx{ grid-template-columns:1fr; } .lam .teo .sintaxis .sx > div.ex{ border-top:0; padding-top:0; }
   .lam .sintaxis .sx > div{ padding:6px 12px; font-size:17px; } .lam .sintaxis code{ font-size:17px; }
   .lam table.hoja th, .lam table.hoja td{ height:30px; padding:1px 6px; font-size:16px; line-height:1.2; }
@@ -1672,232 +1672,6 @@ var ACT={
   ],
   "fin": "<p class=\"pq\">Su fila en la base queda así: <b>… 2 · 5.5 · 4 · 1 · 24 · 3</b>. Una fila por persona, una columna por pregunta.</p>"
  },
- "xl": {
-  "tipo": "hoja",
-  "titulo": "Escribe las fórmulas en la columna H",
-  "cols": [
-   {
-    "w": 40
-   },
-   {
-    "w": 62
-   },
-   {
-    "w": 84
-   },
-   {
-    "w": 54
-   },
-   {
-    "w": 64
-   },
-   {
-    "w": 12
-   },
-   {
-    "w": 230
-   },
-   {
-    "w": 330
-   }
-  ],
-  "filas": [
-   [
-    {
-     "x": "ID"
-    },
-    {
-     "x": "Lugar"
-    },
-    {
-     "x": "Intención"
-    },
-    {
-     "x": "Sexo"
-    },
-    {
-     "x": "Precio"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Qué calcular"
-    },
-    {
-     "x": "Tu fórmula"
-    }
-   ],
-   [
-    {
-     "x": "1"
-    },
-    {
-     "x": "1"
-    },
-    {
-     "x": "4"
-    },
-    {
-     "x": "1"
-    },
-    {
-     "x": "6.00"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Compran en bodega (código 1)"
-    },
-    {
-     "e": 2,
-     "f": true,
-     "ph": "=CONTAR.SI(rango;criterio)"
-    }
-   ],
-   [
-    {
-     "x": "2"
-    },
-    {
-     "x": "1"
-    },
-    {
-     "x": "4"
-    },
-    {
-     "x": "1"
-    },
-    {
-     "x": "6.50"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Comprarían (T2B: 4 y 5)"
-    },
-    {
-     "e": 4,
-     "f": true,
-     "ph": "=CONTAR.SI(rango;\">=4\")"
-    }
-   ],
-   [
-    {
-     "x": "3"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "5"
-    },
-    {
-     "x": "1"
-    },
-    {
-     "x": "6.50"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Mujeres que comprarían"
-    },
-    {
-     "e": 3,
-     "f": true,
-     "ph": "=CONTAR.SI.CONJUNTO(rango1;1;rango2;\">=4\")"
-    }
-   ],
-   [
-    {
-     "x": "4"
-    },
-    {
-     "x": "5"
-    },
-    {
-     "x": "5"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "5.00"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Precio promedio (S/)"
-    },
-    {
-     "e": 5.25,
-     "f": true,
-     "ph": "=PROMEDIO(rango)"
-    }
-   ],
-   [
-    {
-     "x": "5"
-    },
-    {
-     "x": "3"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "4.00"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": "Precio mediano (S/)"
-    },
-    {
-     "e": 5.5,
-     "f": true,
-     "ph": "=MEDIANA(rango)"
-    }
-   ],
-   [
-    {
-     "x": "6"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "3"
-    },
-    {
-     "x": "2"
-    },
-    {
-     "x": "3.50"
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": ""
-    },
-    {
-     "x": ""
-    }
-   ]
-  ],
-  "ayuda": "Lugar: 1 bodega · Intención: 1 a 5 · Sexo: 1 mujer, 2 varón. Separa los argumentos con <b>;</b> y pon el criterio entre comillas: <code>\">=4\"</code>.",
-  "fin": "<p class=\"pq\">Las fórmulas: <code>=CONTAR.SI(B2:B7;1)</code> · <code>=CONTAR.SI(C2:C7;\">=4\")</code> · <code>=CONTAR.SI.CONJUNTO(D2:D7;1;C2:C7;\">=4\")</code> · <code>=PROMEDIO(E2:E7)</code> · <code>=MEDIANA(E2:E7)</code>. Con las 80 filas solo cambia el rango: <code>B2:B81</code>.</p>"
- },
  "t1": {
   "tipo": "cal",
   "titulo": "Tabla 1: completa los porcentajes",
@@ -2113,74 +1887,123 @@ var ACT={
    }
   ]
  },
- "mem": {
-  "tipo": "memo",
-  "titulo": "Juego: tarjetas parejas",
-  "pares": [
-   [
-    "Promedio",
-    "Suma de los datos ÷ cantidad de datos"
-   ],
-   [
-    "Desviación estándar",
-    "Qué tan dispersas están las respuestas"
-   ],
-   [
-    "Error estándar",
-    "Cuánto puede moverse una diferencia por casualidad"
-   ],
-   [
-    "Prueba T",
-    "Compara el promedio de dos grupos"
-   ],
-   [
-    "p-valor menor que 0.05",
-    "La diferencia es real"
-   ]
-  ],
-  "cartas": [
+ "f1": {
+  "tipo": "quiz",
+  "titulo": "Elige la fórmula correcta",
+  "lista": [
    {
-    "p": 1,
-    "t": "Desviación estándar"
+    "q": "¿Cuántos compran en bodega (código 1)?",
+    "ops": [
+     "=CONTAR.SI(B2:B7;1)",
+     "=SUMA(B2:B7)",
+     "=CONTAR(B2:B7)",
+     "=CONTAR.SI(1;B2:B7)"
+    ],
+    "ok": 0,
+    "pq": "CONTAR.SI(rango; criterio): primero dónde busca (columna B, Lugar) y luego qué cuenta (el código 1). Resultado: 2."
    },
    {
-    "p": 3,
-    "t": "Prueba T"
-   },
-   {
-    "p": 0,
-    "t": "Promedio"
-   },
-   {
-    "p": 0,
-    "t": "Suma de los datos ÷ cantidad de datos"
-   },
-   {
-    "p": 2,
-    "t": "Cuánto puede moverse una diferencia por casualidad"
-   },
-   {
-    "p": 2,
-    "t": "Error estándar"
-   },
-   {
-    "p": 1,
-    "t": "Qué tan dispersas están las respuestas"
-   },
-   {
-    "p": 4,
-    "t": "La diferencia es real"
-   },
-   {
-    "p": 4,
-    "t": "p-valor menor que 0.05"
-   },
-   {
-    "p": 3,
-    "t": "Compara el promedio de dos grupos"
+    "q": "¿Cuántos comprarían (T2B: marcan 4 y 5)?",
+    "ops": [
+     "=CONTAR.SI(C2:C7;\">4\")",
+     "=CONTAR.SI(C2:C7;\">=4\")",
+     "=PROMEDIO(C2:C7)",
+     "=CONTAR.SI(C2:C7;4)"
+    ],
+    "ok": 1,
+    "pq": "\">=4\" cuenta los 4 y los 5. Con 4 solo cuenta los 4, y con \">4\" solo los 5. Resultado: 4."
    }
+  ]
+ },
+ "f2": {
+  "tipo": "quiz",
+  "titulo": "Elige la fórmula correcta",
+  "lista": [
+   {
+    "q": "¿Cuántas mujeres (sexo 1) comprarían?",
+    "ops": [
+     "=CONTAR.SI(D2:D7;1)",
+     "=CONTAR.SI.CONJUNTO(C2:C7;1;D2:D7;\">=4\")",
+     "=CONTAR.SI(C2:C7;\">=4\")",
+     "=CONTAR.SI.CONJUNTO(D2:D7;1;C2:C7;\">=4\")"
+    ],
+    "ok": 3,
+    "pq": "Dos condiciones a la vez: sexo = 1 en la columna D y intención 4 o 5 en la columna C. Cada rango va con su criterio. Resultado: 3."
+   },
+   {
+    "q": "¿Cuál es el precio mediano?",
+    "ops": [
+     "=MAX(E2:E7)-MIN(E2:E7)",
+     "=MEDIANA(E2:E7)",
+     "=PROMEDIO(E2:E7)",
+     "=MODA(E2:E7)"
+    ],
+    "ok": 1,
+    "pq": "MEDIANA ordena los precios y toma el del medio: S/ 5.50. PROMEDIO da S/ 5.25 y MAX − MIN es el rango."
+   }
+  ]
+ },
+ "sp": {
+  "tipo": "sopa",
+  "facil": true,
+  "titulo": "Sopa de letras del proyecto",
+  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>¡Muy bien!</b> Ya tienes todas las palabras clave de tu proyecto.</p>",
+  "grilla": [
+   "JCPILARESR",
+   "VMNFGJNRBP",
+   "SOBJETIVOT",
+   "ADJCNTJHJL",
+   "CHIACUDDBL",
+   "OVBMUJAMGF",
+   "DOAMEDIANA",
+   "IMSNSHGRBM",
+   "GNESTFBTJM",
+   "OPOIAFFEFD"
   ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>¡Muy bien!</b> Cada concepto tiene su explicación: esas cinco parejas son la base del caso.</p>"
+  "palabras": [
+   {
+    "p": "PILARES",
+    "pista": "Qué, de quién, dónde, cuándo y para qué",
+    "r": 0,
+    "c": 2,
+    "dir": "H"
+   },
+   {
+    "p": "OBJETIVO",
+    "pista": "La pregunta convertida en acción",
+    "r": 2,
+    "c": 1,
+    "dir": "H"
+   },
+   {
+    "p": "ENCUESTA",
+    "pista": "Se aplica a 80 personas",
+    "r": 2,
+    "c": 4,
+    "dir": "V"
+   },
+   {
+    "p": "CODIGO",
+    "pista": "Número de cada alternativa",
+    "r": 4,
+    "c": 0,
+    "dir": "V"
+   },
+   {
+    "p": "BASE",
+    "pista": "Una fila por encuestado",
+    "r": 5,
+    "c": 2,
+    "dir": "V"
+   },
+   {
+    "p": "MEDIANA",
+    "pista": "El precio del medio",
+    "r": 6,
+    "c": 3,
+    "dir": "H"
+   }
+  ]
  }
 };
 
@@ -2234,8 +2057,15 @@ var D=[
 
 { et:"Paso 6",
   t:"La base en Excel: CONTAR.SI",
-  claves:["xl"],
-  h:'' },
+  claves:["f1"],
+  lado:1,
+  h:TABLA(['Fila','A · ID','B · Lugar','C · Intención','D · Sexo','E · Precio'],[['2','1','1','4','1','6.00'],['3','2','1','4','1','6.50'],['4','3','2','5','1','6.50'],['5','4','5','5','2','5.00'],['6','5','3','2','2','4.00'],['7','6','2','3','2','3.50']],'La fila 1 son los títulos: los datos van de la fila 2 a la 7. Lugar: 1 bodega · Sexo: 1 mujer, 2 varón.')+'<div class="clave"><b>=CONTAR.SI(rango;criterio)</b> cuenta cuántas filas cumplen el criterio.</div>' },
+
+{ et:"Paso 6",
+  t:"La base en Excel: dos condiciones y la mediana",
+  claves:["f2"],
+  lado:1,
+  h:TABLA(['Fila','A · ID','B · Lugar','C · Intención','D · Sexo','E · Precio'],[['2','1','1','4','1','6.00'],['3','2','1','4','1','6.50'],['4','3','2','5','1','6.50'],['5','4','5','5','2','5.00'],['6','5','3','2','2','4.00'],['7','6','2','3','2','3.50']],'La fila 1 son los títulos: los datos van de la fila 2 a la 7. Lugar: 1 bodega · Sexo: 1 mujer, 2 varón.')+'<div class="clave"><b>=CONTAR.SI.CONJUNTO(rango1;criterio1;rango2;criterio2)</b> cuenta las filas que cumplen las dos condiciones.</div>' },
 
 { et:"Tabla 1",
   t:"Tabla 1: lugar de compra",
@@ -2267,9 +2097,10 @@ var D=[
   h:'<p class="teo-def">La <b>conclusión</b> responde la pregunta de investigación con los datos clave; la <b>recomendación</b> dice qué hacer y nace de un dato.</p>' },
 
 { et:"Juego",
-  t:"Tarjetas parejas",
-  claves:["mem"],
-  h:'' },
+  t:"Sopa de letras",
+  claves:["sp"],
+  h:'',
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>PILARES</b></td><td>Qué, de quién, dónde, cuándo y para qué</td></tr><tr><td><b>OBJETIVO</b></td><td>La pregunta convertida en acción</td></tr><tr><td><b>ENCUESTA</b></td><td>Se aplica a 80 personas</td></tr><tr><td><b>CODIGO</b></td><td>Número de cada alternativa</td></tr><tr><td><b>BASE</b></td><td>Una fila por encuestado</td></tr><tr><td><b>MEDIANA</b></td><td>El precio del medio</td></tr></tbody></table></div>" },
 
 { et:"Crucigrama",
   t:"Crucigrama del proyecto",
@@ -2279,9 +2110,9 @@ var D=[
 ];
 
 /* ================= estado ================= */
-var LS='ic_s11-miercoles_v4';
+var LS='ic_s11-miercoles_v5';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["ruta", "pil", "preg", "obj", "dim", "niv", "cue", "cod", "xl", "t1", "t2", "t3", "t4", "conc", "mem", "cr"];
+var CLAVES=["ruta", "pil", "preg", "obj", "dim", "niv", "cue", "cod", "f1", "f2", "t1", "t2", "t3", "t4", "conc", "sp", "cr"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -2604,11 +2435,11 @@ function vSopa(k){
   });
   h+='</tbody></table></div><div><ol class="sp-lis">';
   A.palabras.forEach(function(w){
-    var ok=!!g[w.p], oculta=w.p.charAt(0)+new Array(w.p.length).join(' _');
+    var ok=!!g[w.p], oculta=A.facil ? w.p : w.p.charAt(0)+new Array(w.p.length).join(' _');
     h+='<li class="'+(ok?'ok':'')+'"><b>'+esc(ok?w.p:oculta)+'</b> <span>'+esc(w.pista)+'</span>'+
        (ok?'':' '+btnR(k, w.p))+'</li>';
   });
-  h+='</ol><p class="hint">Toca la primera letra y luego la última, o arrastra. Van → , ↓ o en diagonal ↘.</p>'+
+  h+='</ol><p class="hint">Toca la primera letra y luego la última, o arrastra. '+(A.facil ? 'Van → o ↓.' : 'Van → , ↓ o en diagonal ↘.')+'</p>'+
      (lista(k) && A.fin ? A.fin : '')+'</div></div>';
   return h+'</div></div>';
 }
@@ -3687,7 +3518,7 @@ $('btnElige').addEventListener('click', function(){
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('ic_s11-miercoles_v4_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('ic_s11-miercoles_v5_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -3735,7 +3566,7 @@ function difunde(){
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('ic_s11-miercoles_v4_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('ic_s11-miercoles_v5_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)

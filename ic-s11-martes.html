@@ -917,7 +917,7 @@
   .lam .ops.fila{ grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); }
   .lam .cuad td{ line-height:0; } .lam .cuad input{ display:block; height:31px; line-height:31px; padding:0; }
   .lam > [data-act] .pares{ grid-template-columns:1fr 1fr; }
-  .lam > [data-act] .par{ grid-template-columns:auto minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
+  .lam > [data-act] .par{ grid-template-columns:minmax(min-content,1.3fr) minmax(0,1fr); padding:5px 10px; } .lam > [data-act] .par .hueco{ min-height:36px; }
   .lam .teo .sintaxis .sx{ grid-template-columns:1fr; } .lam .teo .sintaxis .sx > div.ex{ border-top:0; padding-top:0; }
   .lam .sintaxis .sx > div{ padding:6px 12px; font-size:17px; } .lam .sintaxis code{ font-size:17px; }
   .lam table.hoja th, .lam table.hoja td{ height:30px; padding:1px 6px; font-size:16px; line-height:1.2; }
@@ -2018,11 +2018,11 @@ function vSopa(k){
   });
   h+='</tbody></table></div><div><ol class="sp-lis">';
   A.palabras.forEach(function(w){
-    var ok=!!g[w.p], oculta=w.p.charAt(0)+new Array(w.p.length).join(' _');
+    var ok=!!g[w.p], oculta=A.facil ? w.p : w.p.charAt(0)+new Array(w.p.length).join(' _');
     h+='<li class="'+(ok?'ok':'')+'"><b>'+esc(ok?w.p:oculta)+'</b> <span>'+esc(w.pista)+'</span>'+
        (ok?'':' '+btnR(k, w.p))+'</li>';
   });
-  h+='</ol><p class="hint">Toca la primera letra y luego la última, o arrastra. Van → , ↓ o en diagonal ↘.</p>'+
+  h+='</ol><p class="hint">Toca la primera letra y luego la última, o arrastra. '+(A.facil ? 'Van → o ↓.' : 'Van → , ↓ o en diagonal ↘.')+'</p>'+
      (lista(k) && A.fin ? A.fin : '')+'</div></div>';
   return h+'</div></div>';
 }
