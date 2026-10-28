@@ -158,6 +158,8 @@ var ocupado=false;
 function zoomDe(el){ var z=parseFloat(getComputedStyle(el).zoom); return (z && isFinite(z)) ? z : 1; }
 function rellena(){
   if(ocupado) return;
+  /* las sesiones con clase sin-relleno no llenan los huecos con tarjetas */
+  if(document.body.classList.contains('sin-relleno')) return;
   ocupado=true;
   try{
     var viejos=lam.querySelectorAll('.relleno');
