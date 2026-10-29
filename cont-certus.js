@@ -54,6 +54,13 @@ var R={
     ['r','Moneda extranjera × <b>tipo de cambio</b> antes de sumarla.'],
     ['r','Impuesto a la renta: <b>29.5 %</b> de la utilidad antes de impuestos.'],
     ['r','<b>PDT 621</b>: IGV y renta mensual · <b>PLAME</b>: planilla · <b>Form. 710</b>: renta anual.']],
+  'ef-comprobantes':[
+    ['r','<b>Factura</b>: a quien tiene RUC y da <b>crédito fiscal</b>. <b>Boleta</b>: consumidor final.'],
+    ['r','Valor de venta × <b>18 %</b> = IGV. Importe total ÷ <b>1.18</b> = valor de venta.'],
+    ['r','La <b>guía de remisión</b> sustenta el traslado; no es comprobante de pago.'],
+    ['r','Recibo por honorarios de más de <b>S/ 1,500</b>: la empresa retiene el <b>8 %</b>.'],
+    ['r','<b>Nota de crédito</b>: disminuye. <b>Nota de débito</b>: aumenta. Siempre citan el comprobante original.'],
+    ['r','Suspensión de 4.ª categoría: <b>Formulario Virtual 1609</b>, con Clave SOL, cada enero.']],
   'cont-s8':[
     ['r','Utilidad bruta → operativa → antes de impuestos → <b>neta</b>.'],
     ['r','La utilidad neta del ER se traslada al <b>patrimonio</b> del ESF.'],
