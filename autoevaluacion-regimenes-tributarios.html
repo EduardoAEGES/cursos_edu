@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="1">
+<title>Autoevaluación · Regímenes tributarios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  .ar{ --nrus:#7B2CB8; --rer:#16A34A; --rmt:#16257A; --rg:#0EA5E9;
+       --verde:#147A5C; --rojo:#B42318; --gris:#4A4A4A;
+       --ama:#FFF8E1; --amaBd:#E8CE8A;
+       max-width:900px; margin:0 auto; }
+  [hidden]{ display:none !important; }
+
+  .titulo{ display:flex; align-items:flex-start; gap:14px; flex-wrap:wrap;
+           border-bottom:3px solid var(--rmt); padding-bottom:11px; margin-bottom:14px; }
+  .titulo h1{ margin:0; font-size:clamp(18px,2.4vw,23px); font-weight:800; color:var(--gris); }
+  .titulo p{ margin:2px 0 0; font-size:13px; color:var(--o-muted); }
+  .titulo .der{ margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .regs{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .regs span{ color:#fff; font-size:11px; font-weight:800; border-radius:6px; padding:3px 8px; }
+
+  .idea{ background:var(--ama); border:1px solid var(--amaBd); border-radius:10px;
+         padding:10px 13px; font-size:12.5px; line-height:1.6; color:#5B4A15; }
+  .idea b{ color:#3F3208; }
+
+  .avance{ display:flex; gap:9px; align-items:center; flex-wrap:wrap; font-size:12.5px; margin:14px 0 4px; }
+  .avance .barra{ flex:1; min-width:120px; height:8px; border-radius:99px; background:#E9ECF0; overflow:hidden; }
+  .avance .barra i{ display:block; height:100%; width:0; background:var(--verde); transition:width .35s ease; }
+  .puntos{ font-weight:800; color:var(--verde); font-variant-numeric:tabular-nums; }
+
+  .preg{ border:1px solid var(--o-border); border-radius:12px; background:#fff; overflow:hidden; }
+  .preg .cab{ display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;
+              padding:9px 14px; background:var(--rmt); color:#fff; font-size:12px; font-weight:800;
+              letter-spacing:.04em; text-transform:uppercase; }
+  .preg .cab .tipo{ font-weight:600; text-transform:none; letter-spacing:0; opacity:.9; }
+  .preg .cuerpo{ padding:14px 16px 16px; }
+  .preg .caso{ background:#F3F6FB; border-left:4px solid var(--rg); border-radius:8px;
+               padding:9px 12px; font-size:13px; line-height:1.6; color:#2B3A4E; margin-bottom:10px; }
+  .preg .enun{ font-size:15px; font-weight:700; line-height:1.5; color:#1F2937; margin:0 0 12px; }
+
+  .ops{ display:grid; gap:8px; }
+  .op{ font:inherit; text-align:left; display:flex; gap:10px; align-items:flex-start;
+       border:1.5px solid #D5DBE3; background:#fff; border-radius:10px; padding:10px 12px;
+       font-size:14px; line-height:1.45; color:#1F2937; cursor:pointer; min-height:44px; }
+  .op:hover:not(:disabled){ border-color:var(--rmt); background:#F4F6FC; }
+  .op .l{ flex:none; width:24px; height:24px; border-radius:50%; display:grid; place-items:center;
+          font-size:12px; font-weight:800; background:#EEF1F6; color:#46546A; }
+  .op:disabled{ cursor:default; }
+  .op.bien{ border-color:#7CC29B; background:#E9F7EF; color:#14532D; }
+  .op.bien .l{ background:var(--verde); color:#fff; }
+  .op.mal{ border-color:#E3A9A2; background:#FDECEA; color:#7A1C12; }
+  .op.mal .l{ background:var(--rojo); color:#fff; }
+  .op.apagada{ opacity:.55; }
+
+  .expl{ margin-top:12px; border-radius:10px; padding:10px 13px; font-size:13px; line-height:1.6; }
+  .expl.bien{ background:#E9F7EF; border:1px solid #9FD6AE; color:#14532D; }
+  .expl.mal{ background:#FDECEA; border:1px solid #E3A9A2; color:#7A1C12; }
+  .expl b{ font-weight:800; }
+
+  .nav{ display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; margin-top:14px; }
+
+  .fin{ text-align:center; padding:6px 0 4px; }
+  .fin .nota{ font-size:44px; font-weight:800; color:var(--rmt); font-variant-numeric:tabular-nums; line-height:1.1; }
+  .fin .msj{ font-size:14px; color:#33404E; margin:6px 0 12px; }
+  .repaso{ display:grid; gap:6px; text-align:left; margin:12px 0; }
+  .repaso button{ font:inherit; font-size:13px; text-align:left; border:1px solid var(--o-border);
+                  border-radius:8px; background:#fff; padding:7px 10px; cursor:pointer; color:#33404E;
+                  display:flex; gap:8px; }
+  .repaso button:hover{ background:#F4F6FC; }
+  .repaso .m{ flex:none; font-weight:800; }
+  .repaso .m.ok{ color:var(--verde); } .repaso .m.no{ color:var(--rojo); }
+
+  .tabla-wrap{ overflow-x:auto; margin-top:6px; }
+  table.reg{ border-collapse:separate; border-spacing:3px; width:100%; min-width:600px; font-size:12.5px; }
+  table.reg th, table.reg td{ padding:7px 8px; border-radius:4px; line-height:1.4; vertical-align:middle; }
+  table.reg thead th{ color:#fff; font-weight:800; text-align:center; }
+  table.reg tbody th{ text-align:left; font-weight:800; color:#1F2937; background:#fff; }
+  table.reg tbody tr:nth-child(even) td{ background:#DCE8F5; }
+  table.reg tbody tr:nth-child(odd) td{ background:#F6F8FB; }
+  .tabla-nota{ font-size:12px; color:var(--o-muted); margin:8px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">▦</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="estados-financieros.html">Estados Financieros</a></span> / <b>Autoevaluación</b></span>
+  <div class="o-cp-right"><span class="o-count" id="cuenta">16 preguntas</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap ar">
+
+  <div class="o-sheet">
+    <div class="titulo">
+      <div>
+        <h1>Autoevaluación · Regímenes tributarios</h1>
+        <p>Nuevo RUS, Régimen Especial (RER), Régimen MYPE Tributario y Régimen General</p>
+        <div class="regs">
+          <span style="background:var(--nrus)">Nuevo RUS</span>
+          <span style="background:var(--rer)">RER</span>
+          <span style="background:var(--rmt)">MYPE Tributario</span>
+          <span style="background:var(--rg)">General</span>
+        </div>
+      </div>
+      <div class="der"><span id="reinicio"></span></div>
+    </div>
+    <div class="idea">
+      <b>Responde y aprende de cada respuesta.</b> Hay preguntas de opción múltiple,
+      de verdadero o falso y casos de empresas. Al elegir verás si acertaste y por qué.
+      Al final sale tu nota y el cuadro comparativo completo para repasar.
+      Tu avance se guarda en este navegador.
+    </div>
+    <div class="avance">
+      <span id="txtAvance">Pregunta 1 de 16</span>
+      <span class="barra"><i id="barra"></i></span>
+      <span class="puntos" id="puntos">0 aciertos</span>
+    </div>
+  </div>
+
+  <div class="o-sheet" id="hojaPreg">
+    <div class="preg">
+      <div class="cab"><span id="pNum">Pregunta 1</span><span class="tipo" id="pTipo"></span></div>
+      <div class="cuerpo">
+        <div class="caso" id="pCaso" hidden></div>
+        <p class="enun" id="pEnun"></p>
+        <div class="ops" id="pOps"></div>
+        <div class="expl" id="pExpl" hidden></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="o-btn o-btn-secondary" id="btnAnt" type="button">‹ Anterior</button>
+      <button class="o-btn o-btn-primary" id="btnSig" type="button">Siguiente ›</button>
+    </div>
+  </div>
+
+  <div class="o-sheet" id="hojaFin" hidden>
+    <div class="fin">
+      <div class="nota" id="fNota">0 / 16</div>
+      <div class="msj" id="fMsj"></div>
+      <div class="o-acciones centrado">
+        <button class="o-btn o-btn-primary" id="btnOtra" type="button">Intentar de nuevo</button>
+        <button class="o-btn o-btn-secondary" id="btnRevisar" type="button">Revisar desde la primera</button>
+      </div>
+    </div>
+    <div class="repaso" id="fRepaso"></div>
+  </div>
+
+  <div class="o-sheet" id="hojaTabla" hidden>
+    <h2 class="o-section-title">Cuadro comparativo para repasar</h2>
+    <div class="tabla-wrap">
+      <table class="reg">
+        <thead>
+          <tr>
+            <th style="background:transparent"></th>
+            <th style="background:var(--nrus)">Nuevo RUS</th>
+            <th style="background:var(--rer)">Régimen Especial RER</th>
+            <th style="background:var(--rmt)">Régimen MYPE Tributario</th>
+            <th style="background:var(--rg)">Régimen General</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th>Persona natural</th><td>Sí</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+          <tr><th>Persona jurídica</th><td>No</td><td>Sí</td><td>Sí</td><td>Sí</td></tr>
+          <tr><th>Límite de ingresos</th><td>Hasta S/ 96,000 anuales o S/ 8,000 mensuales</td><td>Hasta S/ 525,000 anuales</td><td>Ingresos netos que no superen las 1700 UIT en el ejercicio</td><td>Sin límite</td></tr>
+          <tr><th>Límite de compras</th><td>Hasta S/ 96,000 anuales o S/ 8,000 mensuales</td><td>Hasta S/ 525,000 anuales</td><td>Sin límite</td><td>Sin límite</td></tr>
+          <tr><th>Comprobantes que puede emitir</th><td>Boleta de venta y tickets que no dan derecho a crédito fiscal, gasto o costo</td><td>Factura, boleta y todos los demás permitidos</td><td>Factura, boleta y todos los demás permitidos</td><td>Factura, boleta y todos los demás permitidos</td></tr>
+          <tr><th>Declaración jurada anual del Impuesto a la Renta</th><td>No</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+          <tr><th>Valor de activos fijos</th><td>S/ 70,000, sin contar predios y vehículos</td><td>S/ 126,000, sin contar predios y vehículos</td><td>Sin límite</td><td>Sin límite</td></tr>
+          <tr><th>Trabajadores</th><td>Sin límite</td><td>10 por turno</td><td>Sin límite</td><td>Sin límite</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tabla-nota">Fuente: cuadro comparativo de regímenes tributarios visto en clase.</p>
+  </div>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:16px">
+    <a class="o-btn o-btn-primary" href="estados-financieros.html">Volver al curso</a>
+  </div>
+
+  <div class="o-footer">
+    <span>Estados Financieros</span>
+    <span>Autoevaluación · regímenes tributarios</span>
+  </div>
+
+</div>
+</div>
+
+<script src="reiniciar.js?v=1"></script>
+<script>
+(function(){
+'use strict';
+
+var LS='ar_regimenes_v1';
+
+/* Cada pregunta: tipo, caso (opcional), enunciado, opciones, índice de la correcta
+   y la explicación que se muestra al responder. */
+var P=[
+  { t:'Opción múltiple', e:'¿Qué régimen <b>no</b> admite personas jurídicas (empresas como una S.A.C. o una E.I.R.L.)?',
+    o:['Nuevo RUS','Régimen Especial (RER)','Régimen MYPE Tributario','Régimen General'], c:0,
+    x:'Solo el <b>Nuevo RUS</b> es exclusivo para personas naturales. Los otros tres aceptan personas naturales y jurídicas.' },
+  { t:'Opción múltiple', e:'¿Cuál es el límite de ingresos del <b>Nuevo RUS</b>?',
+    o:['Hasta S/ 96,000 anuales o S/ 8,000 mensuales','Hasta S/ 525,000 anuales','Hasta 1700 UIT en el ejercicio','No tiene límite'], c:0,
+    x:'El Nuevo RUS permite ingresos de hasta <b>S/ 96,000 al año</b>, es decir, <b>S/ 8,000 al mes</b>.' },
+  { t:'Opción múltiple', e:'¿Cuál es el límite de ingresos anuales del <b>Régimen Especial (RER)</b>?',
+    o:['S/ 96,000','S/ 126,000','S/ 525,000','1700 UIT'], c:2,
+    x:'El RER admite ingresos de hasta <b>S/ 525,000 anuales</b>. S/ 126,000 es su límite de <b>activos fijos</b>, no de ingresos.' },
+  { t:'Opción múltiple', e:'En el <b>Régimen MYPE Tributario</b>, ¿cuál es el límite de ingresos?',
+    o:['S/ 525,000 anuales','Ingresos netos que no superen las 1700 UIT en el ejercicio','S/ 8,000 mensuales','No tiene límite'], c:1,
+    x:'El límite del RMT se mide en UIT: <b>ingresos netos de hasta 1700 UIT</b> en el ejercicio.' },
+  { t:'Verdadero o falso', e:'«Un contribuyente del <b>Nuevo RUS</b> puede emitir facturas a sus clientes.»',
+    o:['Verdadero','Falso'], c:1,
+    x:'<b>Falso.</b> En el Nuevo RUS solo se emiten <b>boletas de venta y tickets</b>, que no dan derecho a crédito fiscal, gasto ni costo a quien compra.' },
+  { t:'Verdadero o falso', e:'«Los contribuyentes del <b>RER</b> presentan la declaración jurada anual del Impuesto a la Renta.»',
+    o:['Verdadero','Falso'], c:1,
+    x:'<b>Falso.</b> Solo el <b>Régimen MYPE Tributario</b> y el <b>Régimen General</b> presentan la declaración jurada anual. El Nuevo RUS y el RER no la presentan.' },
+  { t:'Opción múltiple', e:'¿Qué regímenes presentan la <b>declaración jurada anual</b> del Impuesto a la Renta?',
+    o:['Nuevo RUS y RER','RER y Régimen General','Régimen MYPE Tributario y Régimen General','Los cuatro regímenes'], c:2,
+    x:'La declaración jurada anual la presentan el <b>RMT</b> y el <b>Régimen General</b>.' },
+  { t:'Opción múltiple', e:'¿Cuál es el valor máximo de <b>activos fijos</b> en el <b>Nuevo RUS</b>?',
+    o:['S/ 70,000, sin contar predios y vehículos','S/ 126,000, sin contar predios y vehículos','S/ 96,000, incluidos predios y vehículos','No tiene límite'], c:0,
+    x:'En el Nuevo RUS los activos fijos no pueden superar <b>S/ 70,000</b>, sin contar los <b>predios y vehículos</b>.' },
+  { t:'Opción múltiple', e:'¿Cuál es el valor máximo de <b>activos fijos</b> en el <b>RER</b>?',
+    o:['S/ 70,000','S/ 126,000, sin contar predios y vehículos','S/ 525,000','No tiene límite'], c:1,
+    x:'En el RER el tope de activos fijos es <b>S/ 126,000</b>, sin contar los <b>predios y vehículos</b>.' },
+  { t:'Opción múltiple', e:'¿Qué régimen pone un límite al número de <b>trabajadores</b>?',
+    o:['Nuevo RUS','Régimen Especial (RER)','Régimen MYPE Tributario','Régimen General'], c:1,
+    x:'Solo el <b>RER</b> limita el personal: <b>10 trabajadores por turno</b>. En los demás no hay límite.' },
+  { t:'Verdadero o falso', e:'«En el <b>Régimen MYPE Tributario</b> no hay límite de compras.»',
+    o:['Verdadero','Falso'], c:0,
+    x:'<b>Verdadero.</b> El RMT y el Régimen General no tienen límite de compras. Sí lo tienen el Nuevo RUS (S/ 96,000 al año) y el RER (S/ 525,000 al año).' },
+  { t:'Caso', s:'Rosa es persona natural y tiene una bodega en su barrio. Vende unos <b>S/ 6,500 al mes</b>, sus compras son menores a esa cifra, sus clientes son vecinos que piden <b>boleta</b> y sus activos fijos valen S/ 15,000.',
+    e:'¿Cuál es el régimen más sencillo que puede elegir?',
+    o:['Nuevo RUS','Régimen Especial (RER)','Régimen MYPE Tributario','Régimen General'], c:0,
+    x:'Cumple todo lo del <b>Nuevo RUS</b>: es persona natural, vende menos de S/ 8,000 al mes, sus activos no pasan de S/ 70,000 y solo necesita emitir boletas.' },
+  { t:'Caso', s:'Don Julio es persona natural y vende repuestos a <b>empresas</b>, que le piden <b>factura</b> para usar el crédito fiscal. Vende S/ 7,000 al mes.',
+    e:'¿Qué régimen <b>no</b> le conviene, aunque sus ventas estén dentro del límite?',
+    o:['Nuevo RUS','Régimen Especial (RER)','Régimen MYPE Tributario','Régimen General'], c:0,
+    x:'Aunque vende menos de S/ 8,000 al mes, en el <b>Nuevo RUS</b> no podría emitir facturas, y sus clientes las necesitan. Le conviene un régimen que sí permita facturar.' },
+  { t:'Caso', s:'Servicios Andinos S.A.C. espera vender <b>S/ 400,000</b> este año, tiene <b>8 trabajadores por turno</b>, activos fijos por S/ 90,000 (sin contar vehículos) y emite facturas.',
+    e:'¿En cuál de estos regímenes con límites puede estar?',
+    o:['Nuevo RUS','Régimen Especial (RER)','Ninguno: solo puede ir al Régimen General'], c:1,
+    x:'Puede estar en el <b>RER</b>: ventas menores a S/ 525,000, activos menores a S/ 126,000 y menos de 10 trabajadores por turno. No puede ir al Nuevo RUS porque es persona jurídica. También podría elegir el RMT o el General.' },
+  { t:'Caso', s:'Textiles Kusi E.I.R.L. vende <b>S/ 480,000 al año</b>, pero trabaja en dos turnos con <b>14 trabajadores por turno</b>.',
+    e:'¿Por qué <b>no</b> puede acogerse al RER?',
+    o:['Porque supera el límite de ingresos','Porque es persona jurídica','Porque tiene más de 10 trabajadores por turno','Porque emite facturas'], c:2,
+    x:'Sus ingresos están por debajo de S/ 525,000, pero el RER permite como máximo <b>10 trabajadores por turno</b>. Puede ir al <b>RMT</b> o al <b>General</b>.' },
+  { t:'Caso', s:'Minera del Sur S.A. es una empresa grande que factura varios millones de soles al año, <b>muy por encima de las 1700 UIT</b>.',
+    e:'¿En qué régimen debe tributar?',
+    o:['Régimen MYPE Tributario','Régimen Especial (RER)','Nuevo RUS','Régimen General'], c:3,
+    x:'Al superar las 1700 UIT ya no entra en el RMT, y tampoco en el RER ni en el Nuevo RUS. Solo queda el <b>Régimen General</b>, que no tiene límite de ingresos.' }
+];
+
+var N=P.length, LET='ABCD';
+
+function baraja(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)), t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function rango(n){ var a=[]; for(var i=0;i<n;i++) a.push(i); return a; }
+
+/* El orden de las opciones se baraja una vez por intento (V/F no se baraja). */
+function nuevo(){
+  return { i:0, r:{}, fin:false,
+    ord:P.map(function(p){ return p.o.length===2 ? rango(2) : baraja(rango(p.o.length)); }) };
+}
+function lee(){
+  try{ var g=JSON.parse(localStorage.getItem(LS)); if(g && g.ord && g.ord.length===N) return g; }catch(e){}
+  return nuevo();
+}
+function guarda(){ try{ localStorage.setItem(LS, JSON.stringify(G)); }catch(e){} }
+
+var G=lee();
+var $=function(id){ return document.getElementById(id); };
+
+function aciertos(){ var k=0; for(var q in G.r) if(G.r[q]===P[q].c) k++; return k; }
+function respondidas(){ return Object.keys(G.r).length; }
+
+function pintaAvance(){
+  var hechas=respondidas();
+  $('txtAvance').textContent = G.fin ? 'Terminado' : 'Pregunta '+(G.i+1)+' de '+N;
+  $('barra').style.width = (hechas/N*100)+'%';
+  var a=aciertos();
+  $('puntos').textContent = a+(a===1?' acierto':' aciertos');
+}
+
+function pintaPreg(){
+  var q=G.i, p=P[q], resp=G.r[q];
+  $('pNum').textContent='Pregunta '+(q+1)+' de '+N;
+  $('pTipo').textContent=p.t;
+  $('pCaso').hidden=!p.s; $('pCaso').innerHTML=p.s||'';
+  $('pEnun').innerHTML=p.e;
+  var cont=$('pOps'); cont.innerHTML='';
+  G.ord[q].forEach(function(k,pos){
+    var b=document.createElement('button');
+    b.type='button'; b.className='op';
+    b.innerHTML='<span class="l">'+LET[pos]+'</span><span>'+p.o[k]+'</span>';
+    if(resp!==undefined){
+      b.disabled=true;
+      if(k===p.c) b.classList.add('bien');
+      else if(k===resp) b.classList.add('mal');
+      else b.classList.add('apagada');
+    } else {
+      b.addEventListener('click', function(){ responde(q,k); });
+    }
+    cont.appendChild(b);
+  });
+  var ex=$('pExpl');
+  if(resp!==undefined){
+    var ok=resp===p.c;
+    ex.hidden=false; ex.className='expl '+(ok?'bien':'mal');
+    ex.innerHTML=(ok?'<b>¡Correcto!</b> ':'<b>No es así.</b> ')+p.x;
+  } else ex.hidden=true;
+  $('btnAnt').disabled = q===0;
+  $('btnSig').disabled = resp===undefined;
+  $('btnSig').textContent = q===N-1 ? 'Ver mi nota ›' : 'Siguiente ›';
+}
+
+function pintaFin(){
+  var a=aciertos(), pct=a/N;
+  $('fNota').textContent=a+' / '+N;
+  $('fMsj').textContent = pct>=0.9 ? 'Excelente: dominas los regímenes tributarios.' :
+                          pct>=0.7 ? 'Bien. Repasa las preguntas que fallaste en el cuadro de abajo.' :
+                          pct>=0.5 ? 'Vas en camino. Revisa el cuadro comparativo y vuelve a intentarlo.' :
+                                     'Conviene repasar el cuadro comparativo antes de intentarlo otra vez.';
+  var r=$('fRepaso'); r.innerHTML='';
+  P.forEach(function(p,q){
+    var ok=G.r[q]===p.c, b=document.createElement('button');
+    b.type='button';
+    var txt=document.createElement('div'); txt.innerHTML=p.e;
+    b.innerHTML='<span class="m '+(ok?'ok':'no')+'">'+(ok?'✓':'✗')+'</span><span>'+(q+1)+'. '+txt.textContent+'</span>';
+    b.addEventListener('click', function(){ G.i=q; G.fin=false; guarda(); pinta(); window.scrollTo(0,0); });
+    r.appendChild(b);
+  });
+}
+
+function pinta(){
+  $('hojaPreg').hidden=G.fin;
+  $('hojaFin').hidden=!G.fin;
+  $('hojaTabla').hidden=!G.fin;
+  if(G.fin) pintaFin(); else pintaPreg();
+  pintaAvance();
+}
+
+function responde(q,k){
+  if(G.r[q]!==undefined) return;
+  G.r[q]=k; guarda(); pinta();
+}
+
+$('btnAnt').addEventListener('click', function(){ if(G.i>0){ G.i--; guarda(); pinta(); } });
+$('btnSig').addEventListener('click', function(){
+  if(G.r[G.i]===undefined) return;
+  if(G.i<N-1){ G.i++; }
+  else { G.fin=true; }
+  guarda(); pinta(); window.scrollTo(0,0);
+});
+$('btnOtra').addEventListener('click', function(){ G=nuevo(); guarda(); pinta(); window.scrollTo(0,0); });
+$('btnRevisar').addEventListener('click', function(){ G.i=0; G.fin=false; guarda(); pinta(); window.scrollTo(0,0); });
+
+$('cuenta').textContent=N+' preguntas';
+
+if(window.Reinicio) Reinicio.monta({
+  donde:'reinicio', claves:[LS], texto:'Empezar de nuevo',
+  aviso:'Se borran tus respuestas y empiezas desde la primera pregunta.',
+  hecho:function(){ G=nuevo(); pinta(); }
+});
+
+pinta();
+})();
+</script>
+</body>
+</html>
