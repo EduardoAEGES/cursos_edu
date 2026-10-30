@@ -53,12 +53,12 @@ var R={
     ['r','Revisa siempre: <b>reemplaza x</b> en la ecuación y comprueba que se cumple.'],
     ['r','«El doble de un número» es <b>2x</b>; «un número aumentado en 5» es <b>x + 5</b>.']],
   'pl-semana-2-parte-3':[
-    ['r','Antes de plantear, decide qué es <b>x</b> y escríbelo: «x = saldo inicial».'],
+    ['r','Primero el <b>modelo general</b> (CT = CF + CV) y después <b>reemplaza los datos</b>.'],
     ['r','En caja, lo que <b>se cobra suma</b> y lo que <b>se paga resta</b>.'],
     ['r','Sumar 30 % al costo es <b>x + 0.30x = 1.30x</b>; descontar 13 % es <b>x − 0.13x = 0.87x</b>.'],
-    ['r','«El doble de Taquilla» es <b>2x</b> y «S/ 500 más que Taquilla» es <b>x + 500</b>.'],
+    ['r','«El doble de Taquilla» es <b>2T</b> y «S/ 500 más que Taquilla» es <b>T + 500</b>.'],
     ['r','Costo total = <b>costo fijo + costo variable × cantidad</b>.'],
-    ['r','Revisa siempre: <b>reemplaza x</b> en el enunciado y comprueba el total.']],
+    ['r','Revisa siempre: reemplaza tu respuesta en el <b>modelo</b> y comprueba el total.']],
   'pl-semana-3-parte-1':[
     ['r','<b>Costo total:</b> CT = CF + CV, donde CV = costo variable unitario × cantidad.'],
     ['r','<b>Ingreso:</b> I = precio × cantidad.'],
