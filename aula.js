@@ -57,6 +57,13 @@
        El alumno entra solo con su nombre, y hasta sin él (queda como
        «Participante 123»). No se pide código de sala: se usa el de la clase.
 
+   Opcional: ajusta: function(est, quien){ return est; }
+       Antes de armar el reporte, la página puede recalcular ok, total y
+       rejilla de cada alumno (por ejemplo, solo con las actividades elegidas).
+       tituloReporte: 'texto' cambia el título del Excel y del PDF.
+       Aula.renombra('Nuevo nombre') cambia el nombre sin salir de la sala.
+       Aula.filas da las filas de la sala que ve el docente.
+
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
        equipo, una pista al azar de la carpeta sonidos/ del repositorio
@@ -560,7 +567,7 @@ function trae(){
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
-      fallos=0; gente=quitaSacados(rows||[]);
+      fallos=0; gente=sinRenombrados(quitaSacados(rows||[]));
       if(docente) detectaAvisos(gente);
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
@@ -815,6 +822,36 @@ function quitaSacados(rows){
   var m=leeSacados();
   return rows.filter(function(g){ return !m[g.alumno]; });
 }
+/* la fila que dejó quien cambió de nombre no cuenta como otro alumno */
+function sinRenombrados(rows){
+  return rows.filter(function(g){ return !(g.estado && g.estado.renombrado); });
+}
+/* ---------------- cambiar de nombre dentro de la sala ----------------
+   Aula.renombra('Ana Pérez'): el alumno (o el docente) corrige su nombre sin salir.
+   La fila vieja queda marcada como renombrada y se intenta borrar. */
+function renombra(n){
+  n=String(n||'').trim().replace(/\s+/g,' ').slice(0,60);
+  if(n.length<2) return Promise.reject('corto');
+  if(docente){
+    guardaLocal('docente_nombre', n);
+    dentro('Docente · '+n+(pin() ? ' · código '+sala : ''));
+    return Promise.resolve(n);
+  }
+  if(!sala || !yo || conFicha()) return Promise.reject('fuera');
+  if(n===yo) return Promise.resolve(n);
+  var viejo=yo, fila=cfg.sala+'-'+sala;
+  yo=n; guardaLocal('nombre', n);
+  dentro(n+(pin() ? ' · sesión '+sala : ''));
+  empuja(true);
+  return fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:fila, alumno:viejo, caso:'', estado:{ renombrado:n },
+                           actualizado:new Date().toISOString() }])
+  }).catch(function(){}).then(function(){
+    return fetch(TABLA+'?sala=eq.'+encodeURIComponent(fila)+'&alumno=eq.'+encodeURIComponent(viejo),
+                 { method:'DELETE', headers:hdr({ Prefer:'return=minimal' }) }).catch(function(){});
+  }).then(function(){ return n; });
+}
 function sacaAlumno(nombre){
   if(!docente || !sala || !nombre) return;
   if(!window.confirm('¿Sacar a ' + nombre + ' de la sala ' + sala + '?\n\n' +
@@ -945,7 +982,7 @@ function traeFilasReporte(){
   return fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-    .then(function(rows){ return quitaSacados(rows||[]); });
+    .then(function(rows){ return sinRenombrados(quitaSacados(rows||[])); });
 }
 function nivel(p){
   if(p>=1)   return { t:'Completó',    f:'D8F3E6', c:'0F6B45' };
@@ -958,7 +995,9 @@ function datosReporte(rows){
   var acts=null;
   try{ acts=cfg.actividades ? cfg.actividades() : null; }catch(e){ acts=null; }
   var alumnos=rows.map(function(g){
-    var e=g.estado||{}, ok=+e.ok||0, tot=+e.total||0;
+    var e=g.estado||{};
+    if(cfg.ajusta){ try{ e=cfg.ajusta(e, g.alumno)||e; }catch(x){} }
+    var ok=+e.ok||0, tot=+e.total||0;
     return { nombre:g.alumno, dni:g.caso||'', lamina:e.lamina||'', titulo:e.titulo||'',
              ok:ok, total:tot, pct:(tot ? ok/tot : 0), cambio:fechaLocal(g.actualizado), rej:e.rejilla||[] };
   });
@@ -977,7 +1016,7 @@ function datosReporte(rows){
     return { p:p, completos:vals.filter(function(v){ return v.t && v.n>=v.t; }).length };
   });
   return {
-    titulo: document.title || 'Reporte del aula',
+    titulo: cfg.tituloReporte || document.title || 'Reporte del aula',
     sala: sala, docente: leeLocal('docente_nombre') || '',
     fecha: fechaLocal(new Date().toISOString()),
     conAvance: alumnos.some(function(a){ return a.total>0; }),
@@ -1682,6 +1721,10 @@ window.Aula={
   guardaRecurso:function(r){ return publicaRecurso(r); },
   get recurso(){ return recurso; },
   /* los nombres de quienes están en la sala, para sortear parejas y equipos */
-  get participantes(){ return gente.map(function(g){ return g.alumno; }); }
+  get participantes(){ return gente.map(function(g){ return g.alumno; }); },
+  /* las filas de la sala (solo el docente las trae): para pizarras y tableros */
+  get filas(){ return gente.map(function(g){ return { alumno:g.alumno, estado:g.estado||{}, actualizado:g.actualizado }; }); },
+  get yo(){ return docente ? (leeLocal('docente_nombre') || 'Docente') : yo; },
+  renombra:function(n){ return renombra(n); }
 };
 })();

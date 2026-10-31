@@ -123,7 +123,8 @@ var R={
     ['r','Repasa: S = C(1 + i)ⁿ y C = S / (1 + i)ⁿ son la misma fórmula despejada.']]
 };
 var archivo=(location.pathname.split('/').pop()||'').replace(/\.html?$/,'');
-var propios=R[archivo] || LOGICA;
+/* la versión demo de una sesión usa los recordatorios de la sesión original */
+var propios=R[archivo] || R[archivo.replace(/-demo$/,'')] || LOGICA;
 var ICONOS=['foco','libreta','lapiz','lista','barras','crece','pantalla','pastel','reloj','laptop',
             'celular','cuaderno','tarjeta','billetes','porcentaje','linea','flecha','globo','nube','formulario'];
 var PERSONAJES=['profe-idea','tutor-explica','alumno-senala','profe-presenta','tutor-bien'];
