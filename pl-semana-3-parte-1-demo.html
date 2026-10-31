@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-b">
+<meta name="version" content="2026-10-31-s5demo-c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -974,6 +974,18 @@
   .dm-it input{ width:20px; height:20px; accent-color:#071767; }
   .dm-it small{ color:#55607F; margin-left:auto; font-size:14px; white-space:nowrap; }
 
+  /* ---- evidencia de fallos ---- */
+  .tf{ overflow:auto; max-height:300px; }
+  .tf table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .tf th{ background:#071767; color:#fff; text-align:left; padding:5px 7px; position:sticky; top:0; font-size:13px; }
+  .tf td{ padding:5px 7px; border-bottom:1px solid #F1F3F7; vertical-align:top; }
+  .tf td.m{ color:#A4161A; font-weight:800; } .tf td.b{ color:#0F6B45; font-weight:800; }
+  .cie2{ display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:14px; align-items:start; margin-top:10px; }
+  .cie2 .dbox{ background:#fff; margin:0; }
+  .cie2 [data-misfallos]:empty{ display:none; }
+  html.movil .cie2{ grid-template-columns:minmax(0,1fr); }
+  .esc .lam .tf table{ font-size:15px; }
+
   /* ---- dashboard del docente ---- */
   .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
   .kpi{ background:#F1F5FD; border-radius:14px; padding:12px 14px; }
@@ -1481,14 +1493,14 @@ var D=[
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 3: el caso de la juguería", "h": "<div class=\"enunciado\"><b>Juguer&iacute;a Frutal:</b> paga S/ 1,200 al mes entre alquiler y sueldos. Cada jugo le cuesta <b>S/ 2.50</b> en fruta y vaso, y lo vende a <b>S/ 6</b>. <i>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</i></div>", "claves": ["r3"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 4: lee la gráfica", "lado": 1, "h": "<div class=\"enunciado\">Don Pedro: alquiler S/ 180, cada empanada le cuesta S/ 1.50 y la vende a S/ 3.50.</div><div data-graf></div>", "claves": ["r4"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 5: crucigrama", "h": "", "claves": ["r5"]},
-{"et": "Cierre", "t": "Lo que verificamos hoy", "h": "<p class=\"fase f4\"><i>3</i><span>Cierre</span></p><ul class=\"chk\"><li>El costo fijo se paga aunque no se produzca nada; el variable depende de la producci&oacute;n.</li><li>CT = CF + Cu&middot;q, &nbsp;I = p&middot;q, &nbsp;U = I &minus; CT.</li><li>En el punto de equilibrio la utilidad es cero: q = CF &divide; (p &minus; Cu).</li><li>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</li></ul><div class=\"perso\"><img src=\"personajes/tutor-bien.webp\" alt=\"\" loading=\"lazy\"><div class=\"globo\"><span class=\"et\">Antes de irte</span>Mira la pizarra de <b>Conectemos</b> otra vez: &iquest;cambiar&iacute;as tu respuesta despu&eacute;s de las actividades?</div></div>"}
+{"et": "Cierre", "t": "Lo que verificamos hoy", "h": "<p class=\"fase f4\"><i>3</i><span>Cierre</span></p><ul class=\"chk\"><li>El costo fijo se paga aunque no se produzca nada; el variable depende de la producci&oacute;n.</li><li>CT = CF + Cu&middot;q, &nbsp;I = p&middot;q, &nbsp;U = I &minus; CT.</li><li>En el punto de equilibrio la utilidad es cero: q = CF &divide; (p &minus; Cu).</li><li>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</li></ul><div class=\"cie2\"><div data-misfallos></div><div class=\"perso\"><img src=\"personajes/tutor-bien.webp\" alt=\"\" loading=\"lazy\"><div class=\"globo\"><span class=\"et\">Antes de irte</span>Mira la pizarra de <b>Conectemos</b> otra vez: &iquest;cambiar&iacute;as tu respuesta despu&eacute;s de las actividades?</div></div></div>"}
 ];
 
 /* ================= estado ================= */
 var LS='pl_s5demo_v1';
 /* en el mismo orden en que aparecen las diapositivas */
 var CLAVES=["c1", "c2", "c3", "c4", "r1", "r2", "r3", "r4", "r5"];
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{}, fallos:[] };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 function cargaG(){
@@ -2191,7 +2203,7 @@ function cableaUna(k, lam){
       var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
       if(!f || !zona) return;
       if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   if(A.tipo==='cuadro'){
@@ -2199,7 +2211,7 @@ function cableaUna(k, lam){
       var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
       if(!f || !zona) return;
       if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   if(A.tipo==='par'){
@@ -2207,14 +2219,14 @@ function cableaUna(k, lam){
       var caja=lam.querySelector('.par[data-z="'+zona+'"]');
       if(!caja) return;
       if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   qq('#lam button[data-q]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
       if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
-      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+      else{ G.mal[cl+'|'+n+'|'+j]=1; falla(cl, n, j); mal();
             b.classList.add('mala','temblor'); b.disabled=true;
             setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
     });
@@ -2231,7 +2243,7 @@ function cableaUna(k, lam){
       if(sl.value==='') return;
       var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
       if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(sl.closest('.linea'));
+      else{ falla(cl, n, +sl.value); mal(); sacude(sl.closest('.linea'));
             sl.classList.add('mal'); sl.value='';
             setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
     });
@@ -2248,7 +2260,7 @@ function cableaUna(k, lam){
       if(Math.abs(v-p.e) <= (p.tol===undefined ? 0.05 : p.tol)){
         G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
       }else{
-        mal(); x.classList.add('mal','temblor');
+        falla(cl, n, x.value.trim()); mal(); x.classList.add('mal','temblor');
         setTimeout(function(){ x.classList.remove('temblor'); }, 450);
       }
     }
@@ -2270,7 +2282,7 @@ function cableaUna(k, lam){
       if(Math.abs(v-c.e) <= (c.tol===undefined ? 0.05 : c.tol)){
         G[cl][id]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
       }else{
-        mal(); x.classList.add('mal','temblor');
+        falla(cl, id, x.value.trim()); mal(); x.classList.add('mal','temblor');
         setTimeout(function(){ x.classList.remove('temblor'); }, 450);
       }
     }
@@ -2527,6 +2539,7 @@ function cableaCruz(k, A, lam){
     yaCruz[w.p]=s;
     if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
     else{
+      falla(k, w.p, s);
       mal();
       for(var j=0;j<w.p.length;j++){
         var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
@@ -2908,7 +2921,8 @@ function resumenAula(){
   var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
           idx:i, G:{ mal:G.mal },
           rejilla:cuenta(G).rejB };
-  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });
+  r.G.fallos=(G.fallos||[]).slice(-80);   /* la evidencia de fallos viaja al docente */   /* para repintar su pantalla en la del docente */
   return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
@@ -2990,7 +3004,9 @@ function pantalla(e, alumno, cont){
        '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
        '</tr>';
   });
+  var fa=((e.G||{}).fallos||[]).slice().reverse();
   h+='</tbody></table>'+
+     '<div class="dbox" style="margin-top:12px"><h4>&#128221; Evidencia de fallos &middot; '+fa.length+'</h4>'+tablaFallos(fa, false)+'</div>'+
      '<div class="apacc"><button type="button" class="o-btn o-btn-secondary" id="apSaca">'+
      '&#10005; Sacar de la sala a '+esc(alumno||'')+'</button></div>'+
      '</div>';
@@ -3212,6 +3228,72 @@ setInterval(function(){
   if(dashVivo()) pintaDash();
 }, 3000);
 
+/* ================= evidencia de fallos ================= */
+/* cada respuesta equivocada queda guardada: actividad, ítem, lo que respondió y cuándo */
+function falla(k, item, resp){
+  if(replica || !ACT[k]) return;
+  if(!G.fallos) G.fallos=[];
+  G.fallos.push({ k:k, i:String(item), r:String(resp==null?'':resp).slice(0,60), h:Date.now() });
+  if(G.fallos.length>120) G.fallos=G.fallos.slice(-120);
+  graba();
+}
+/* el fallo en palabras: qué se preguntó, qué respondió y cuál era la respuesta */
+function descFallo(f){
+  var A=ACT[f.k], d={ act:(A && (A.corto||f.k)) || f.k, q:'', dio:f.r, ok:'' };
+  if(!A) return d;
+  function ficha(id){ var t=id; (A.fichas||[]).forEach(function(x){ if(x.id===id) t=x.t; }); return t; }
+  if(A.tipo==='quiz' || A.tipo==='sel'){
+    var p=A.lista[+f.i]||{}; d.q=p.q||''; d.dio=(p.ops||[])[+f.r]; d.ok=(p.ops||[])[p.ok];
+  }else if(A.tipo==='arr' || A.tipo==='cuadro'){
+    var fi=null; A.fichas.forEach(function(x){ if(x.id===f.i) fi=x; });
+    function caja(id){ var t=id; A.cajas.forEach(function(c){ if(c.id===id) t=c.t; }); return t; }
+    d.q='¿Dónde va «'+(fi?fi.t:f.i)+'»?'; d.dio=caja(f.r); d.ok=fi?caja(fi.g):'';
+  }else if(A.tipo==='par'){
+    var n=parseInt(String(f.r).replace(/\D/g,''),10), hu=A.huecos[n]||{}, bu=null;
+    A.huecos.forEach(function(x){ if(x.id===f.i) bu=x; });
+    d.q='¿Con qué va «'+ficha(f.i)+'»?'; d.dio=hu.q||f.r; d.ok=bu?bu.q:'';
+  }else if(A.tipo==='cal'){
+    var c=A.lista[+f.i]||{}; d.q=c.q||''; d.ok=(c.e!==undefined ? FX.fmt(c.e) : '')+(c.u?' '+c.u:'');
+  }else if(A.tipo==='cruz'){
+    var w=null; A.palabras.forEach(function(x){ if(x.p===f.i) w=x; });
+    d.q='Crucigrama: '+(w?w.pista:''); d.ok=f.i;
+  }
+  return d;
+}
+function hora(h){ var t=new Date(h); if(isNaN(t)) return ''; function d2(n){ return (n<10?'0':'')+n; }
+  return d2(t.getHours())+':'+d2(t.getMinutes())+':'+d2(t.getSeconds()); }
+function tablaFallos(lista, conAlumno){
+  if(!lista.length) return '<p class="dvacio">Sin fallos registrados.</p>';
+  return '<div class="tf"><table><thead><tr><th>Hora</th>'+(conAlumno?'<th>Alumno</th>':'')+'<th>Actividad</th><th>Pregunta</th><th>Respondió</th><th>Correcta</th></tr></thead><tbody>'+
+    lista.map(function(f){ var d=descFallo(f);
+      return '<tr><td>'+hora(f.h)+'</td>'+(conAlumno?'<td>'+esc(f.al||'')+'</td>':'')+'<td>'+esc(d.act)+'</td><td>'+esc(d.q)+'</td>'+
+             '<td class="m">'+esc(d.dio==null?'':d.dio)+'</td><td class="b">'+esc(d.ok==null?'':d.ok)+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+/* todos los fallos de la sala, del más reciente al más antiguo */
+function fallosSala(){
+  var t=[];
+  ((window.Aula && Aula.filas) || []).forEach(function(f){
+    (((f.estado||{}).G||{}).fallos||[]).forEach(function(x){ var o={}; for(var y in x) o[y]=x[y]; o.al=f.alumno; t.push(o); });
+  });
+  var ks=clavesVis();
+  return t.filter(function(x){ return ks.indexOf(x.k)>=0; }).sort(function(a,b){ return b.h-a.h; });
+}
+function csvFallos(){
+  function c(v){ v=(v===undefined||v===null)?'':String(v); return /[",;\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  var filas=[['Fecha y hora','Alumno','Actividad','Pregunta','Respondió','Respuesta correcta']];
+  fallosSala().slice().reverse().forEach(function(f){
+    var d=descFallo(f), t=new Date(f.h);
+    filas.push([t.toLocaleDateString('es-PE')+' '+hora(f.h), f.al, ACT[f.k].titulo, d.q, d.dio, d.ok]);
+  });
+  var txt='\ufeff'+filas.map(function(r){ return r.map(c).join(','); }).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt], { type:'text/csv;charset=utf-8' }));
+  a.download='evidencia-fallos-'+((window.Aula && Aula.sala)||'sala')+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
 /* ================= el avance, contado solo con las actividades elegidas ================= */
 function cuenta(GG){
   var ok=0, tot=0, rejB=[], rejP=[];
@@ -3392,23 +3474,18 @@ function datosDash(){
     al.forEach(function(a){ var h=hechasEn(a.G,k); suma+=h/t; if(h>=t) comp++; if(h>0) emp++; });
     return { k:k, p: al.length ? suma/al.length : 0, comp:comp, emp:emp };
   });
-  /* las preguntas en que más se equivocan (alumnos distintos con al menos un error) */
-  var err={};
-  al.forEach(function(a){
-    var vistos={};
-    Object.keys((a.G||{}).mal||{}).forEach(function(m){
-      var p=m.split('|'), k=p[0];
-      if(ks.indexOf(k)<0 || !ACT[k] || !ACT[k].lista) return;
-      var id=k+'|'+p[1];
-      if(vistos[id]) return; vistos[id]=1;
-      err[id]=(err[id]||0)+1;
-    });
+  /* las preguntas en que más se equivocan: alumnos distintos con al menos un fallo */
+  var err={}, todos=fallosSala();
+  todos.forEach(function(f){
+    var id=f.k+'|'+f.i;
+    if(!err[id]) err[id]={ k:f.k, f:f, al:{}, n:0, veces:0 };
+    err[id].veces++;
+    if(!err[id].al[f.al]){ err[id].al[f.al]=1; err[id].n++; }
   });
-  var errores=Object.keys(err).map(function(id){
-    var p=id.split('|'), q=(ACT[p[0]].lista[+p[1]]||{}).q||'';
-    return { id:id, k:p[0], q:q, n:err[id] };
-  }).sort(function(a,b){ return b.n-a.n; }).slice(0,6);
-  return { al:al, porAct:porAct, errores:errores, ks:ks };
+  var errores=Object.keys(err).map(function(id){ var e=err[id]; return { k:e.k, q:descFallo(e.f).q, n:e.n, veces:e.veces }; })
+    .sort(function(a,b){ return b.n-a.n || b.veces-a.veces; }).slice(0,6);
+  al.forEach(function(a){ a.nf=todos.filter(function(f){ return f.al===a.n; }).length; });
+  return { al:al, porAct:porAct, errores:errores, ks:ks, fallos:todos };
 }
 function pintaDash(){
   var box=$('dmDash'); if(!box) return;
@@ -3436,13 +3513,15 @@ function pintaDash(){
     }).join('')+'</div>'+
     '<div class="dbox"><h4>Preguntas con m&aacute;s errores</h4>'+
     (d.errores.length ? '<ul class="dlista">'+d.errores.map(function(e){
-      return '<li><span>'+esc(ACT[e.k].corto)+': '+esc(e.q)+'</span><span class="v">'+e.n+(e.n===1?' alumno':' alumnos')+'</span></li>';
-    }).join('')+'</ul>' : '<p class="dvacio">Nadie se ha equivocado en las preguntas de opciones todav&iacute;a.</p>')+'</div>'+
+      return '<li><span>'+esc(ACT[e.k].corto)+': '+esc(e.q)+'</span><span class="v">'+e.n+(e.n===1?' alumno':' alumnos')+' &middot; '+e.veces+'&times;</span></li>';
+    }).join('')+'</ul>' : '<p class="dvacio">Nadie se ha equivocado todav&iacute;a.</p>')+'</div>'+
+    '<div class="dbox"><h4>&#128221; Evidencia de fallos &middot; '+d.fallos.length+' en total</h4>'+tablaFallos(d.fallos.slice(0,12), true)+
+    (d.fallos.length>12 ? '<p class="dvacio">Y '+(d.fallos.length-12)+' m&aacute;s en el CSV de evidencia.</p>' : '')+'</div>'+
     '</div><div>'+
     '<div class="dbox"><h4>Necesitan apoyo (menos de 50 %)</h4>';
   var bajos=al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; }).slice(0,10);
   h+= bajos.length ? '<ul class="dlista">'+bajos.map(function(a){
-        return '<li><span>'+esc(a.n)+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span>'+
+        return '<li><span>'+esc(a.n)+(a.nf?' <small class="dvacio">&middot; '+a.nf+' fallos</small>':'')+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span>'+
                '<button type="button" data-ver="'+esc(a.n)+'">Ver</button></li>';
       }).join('')+'</ul>' : '<p class="dvacio">'+(n?'Todos van por encima del 50 %.':'Todav&iacute;a no hay alumnos.')+'</p>';
   h+='</div><div class="dbox"><h4>Conectemos: respuestas en la pizarra</h4><ul class="dlista">'+
@@ -3484,11 +3563,13 @@ function abreDash(){
   dialogo('<div class="dm-h"><b>&#128202; Dashboard de la clase</b><span class="dvacio">Sala '+esc((Aula.sala)||'')+' &middot; se actualiza cada 3 s</span>'+
     '<button type="button" class="x" data-cierra>Cerrar &#10005;</button></div>'+
     '<div id="dmDash"></div>'+
-    '<div class="dm-b"><button type="button" class="o-btn" id="dmCsv">&#11015; Respuestas de la pizarra (CSV)</button>'+
+    '<div class="dm-b"><button type="button" class="o-btn" id="dmFal">&#11015; Evidencia de fallos (CSV)</button>'+
+    '<button type="button" class="o-btn" id="dmCsv">&#11015; Respuestas de la pizarra (CSV)</button>'+
     '<button type="button" class="o-btn" id="dmPdf">&#128202; Reporte para imprimir</button>'+
     '<button type="button" class="o-btn o-btn-primary" id="dmXls">&#11015; Reporte de participaci&oacute;n (Excel)</button></div>', true);
   dashAbierto=true;
   $('dmCsv').addEventListener('click', csvPizarra);
+  $('dmFal').addEventListener('click', csvFallos);
   $('dmPdf').addEventListener('click', function(){ var b=$('aulaRepoVer'); if(b) b.click(); });
   $('dmXls').addEventListener('click', function(){ var b=$('aulaRepoBtn'); if(b){ b.click(); sopla('Preparando el reporte de participación…'); } });
   pintaDash();
@@ -3562,6 +3643,13 @@ function decora(){
     if(!enSala()){ el.innerHTML=''; return; }
     el.innerHTML='Est&aacute;s como <b>'+esc(Aula.yo||'')+'</b><button type="button" data-ab="nom">&#9999;&#65039; Cambiar mi nombre</button>';
   });
+  qq('#lam [data-misfallos]').forEach(function(el){
+    if(soyDocente() && !replica){ el.innerHTML=''; return; }   /* el docente ve la de toda la clase en el dashboard */
+    var ks=clavesVis(), mis=(G.fallos||[]).filter(function(f){ return ks.indexOf(f.k)>=0; }).slice().reverse();
+    el.innerHTML='<div class="dbox mf"><h4>&#128221; Mi evidencia de fallos: '+mis.length+(mis.length===1?' error':' errores')+'</h4>'+
+      (mis.length ? '<p class="dvacio" style="margin:0 0 6px">Revisa en qu&eacute; te equivocaste y cu&aacute;l era la respuesta. Tambi&eacute;n la ve tu docente.</p>'+tablaFallos(mis.slice(0,8), false)
+                  : '<p class="dvacio">&iexcl;Sin errores registrados! &#127881;</p>')+'</div>';
+  });
   qq('#lam [data-ab]').forEach(function(b){
     b.addEventListener('click', function(){ if(b.dataset.ab==='link') abreEnlace(); else abreNombre(); });
   });
@@ -3629,7 +3717,7 @@ if(window.Aula){
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
   aviso:'Se borrarán tus respuestas de esta sesión.',
-  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+  hecho:function(){ var ev=G.fallos||[]; G=vacio(); G.fallos=ev; yaCruz={}; i=0; pinta();   /* la evidencia de fallos no se borra */
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
 
