@@ -61,6 +61,7 @@
        Antes de armar el reporte, la página puede recalcular ok, total y
        rejilla de cada alumno (por ejemplo, solo con las actividades elegidas).
        tituloReporte: 'texto' cambia el título del Excel y del PDF.
+       excelExtra: function(libro, datos){ } agrega hojas propias al Excel (ExcelJS).
        Aula.renombra('Nuevo nombre') cambia el nombre sin salir de la sala.
        Aula.filas da las filas de la sala que ve el docente.
 
@@ -1144,6 +1145,8 @@ function excelPro(X, d, rowsCrudas){
     pinta(r.getCell(5), d.porAct[j].p);
   });
   [5,22,50,9,17,14].forEach(function(w,j){ wd.getColumn(j+1).width=w; });
+  /* la página puede agregar sus propias hojas (por ejemplo, su dashboard) */
+  if(cfg.excelExtra){ try{ cfg.excelExtra(wb, d); }catch(e){} }
   return wb;
 }
 function descargaReporte(){

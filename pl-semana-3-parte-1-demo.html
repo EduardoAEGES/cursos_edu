@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-d">
+<meta name="version" content="2026-10-31-s5demo-f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -985,6 +985,10 @@
   .cie2 [data-misfallos]:empty{ display:none; }
   html.movil .cie2{ grid-template-columns:minmax(0,1fr); }
   .esc .lam .tf table{ font-size:15px; }
+  #aulaRepo{ display:none !important; }   /* el reporte se baja desde el dashboard */
+  .tf.rp td, .tf.rp th{ text-align:center; } .tf.rp td:first-child, .tf.rp th:first-child{ text-align:left; }
+  .esc .lam .mf{ background:#fff; margin:0; }
+  .esc .lam .mf .tf{ max-height:none; }
 
   /* ---- dashboard del docente ---- */
   .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
@@ -1259,7 +1263,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261031a"></script>
+<script src="aula.js?v=20261031b"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1485,7 +1489,7 @@ var ACT={
 c1:{"tipo": "con", "modo": "abierta", "corto": "Conectemos 1", "titulo": "Conectemos 1 · Pregunta abierta", "q": "Piensa en un negocio que conoces (una bodega, un puesto del mercado, una tienda). ¿Qué gastos tiene cada mes?", "ph": "Ej.: el alquiler del local, la harina, la luz…"},
 c2:{"tipo": "con", "modo": "debate", "corto": "Conectemos 2", "titulo": "Conectemos 2 · Debate", "q": "«Para ganar más conviene vender barato y mucho, antes que caro y poco.»", "ops": ["A favor", "En contra"], "ph": "Tu argumento en una línea"},
 c3:{"tipo": "con", "modo": "poll", "corto": "Conectemos 3", "titulo": "Conectemos 3 · Encuesta", "q": "En un puesto de empanadas, ¿qué gasto crees que pesa más cada mes?", "ops": ["Alquiler del local", "Carne y harina", "Sueldo del ayudante", "Luz y gas"]},
-c4:{"tipo": "con", "modo": "opinion", "corto": "Conectemos 4", "titulo": "Conectemos 4 · Tu opinión", "q": "«Si vendo más unidades, siempre gano más dinero.» ¿Qué tan de acuerdo estás?", "ops": ["😠 Nada", "🙁 Poco", "😐 Ni sí ni no", "🙂 Bastante", "😄 Totalmente"], "ph": "¿Por qué? (opcional)"},
+c4:{"tipo": "con", "modo": "opinion", "corto": "Conectemos 4", "titulo": "Conectemos 4 · Tu opinión", "q": "«Si vendo más unidades, siempre gano más dinero.» ¿Qué tan de acuerdo estás?", "ops": ["😠 Nada", "🙁 Poco", "😐 Ni sí ni no", "🙂 Bastante", "😄 Totalmente"]},
 r1:{"tipo": "arr", "corto": "Reflexión 1", "titulo": "Actividad de reflexión / cierre 1 · ¿Costo fijo o variable?", "cajas": [{"id": "f", "t": "Costo fijo"}, {"id": "v", "t": "Costo variable"}], "fichas": [{"id": "a1", "t": "Harina: S/ 0.40 por empanada", "g": "v"}, {"id": "a2", "t": "Alquiler del puesto: S/ 180 al mes", "g": "f"}, {"id": "a3", "t": "Carne del relleno: S/ 0.80 por empanada", "g": "v"}, {"id": "a4", "t": "Sueldo del ayudante: S/ 900 al mes", "g": "f"}, {"id": "a5", "t": "Bolsa para llevar: S/ 0.05 por empanada", "g": "v"}, {"id": "a6", "t": "Licencia municipal: S/ 50 al mes", "g": "f"}, {"id": "a7", "t": "Comisión del delivery: S/ 0.30 por empanada vendida", "g": "v"}, {"id": "a8", "t": "Seguro del puesto: S/ 40 al mes", "g": "f"}], "fin": "<p class=\"pq\">Fijo: el monto es el mismo al mes, hagas 100 o 1,000 empanadas. Variable: se paga <b>por cada empanada</b>, así que sube con la cantidad. Ojo: lo mismo puede ser fijo en un negocio y variable en otro; depende de cómo se paga.</p>"},
 r2:{"tipo": "par", "corto": "Reflexión 2", "titulo": "Actividad de reflexión / cierre 2 · Une cada fórmula", "huecos": [{"id": "p1", "q": "Costo total (CT)"}, {"id": "p2", "q": "Ingreso (I)"}, {"id": "p3", "q": "Utilidad (U)"}, {"id": "p4", "q": "Margen por unidad"}, {"id": "p5", "q": "Punto de equilibrio (q)"}, {"id": "p6", "q": "Cantidad para ganar una utilidad U"}], "fichas": [{"id": "p5", "t": "CF ÷ (p − Cu)"}, {"id": "p2", "t": "p · q"}, {"id": "p6", "t": "(CF + U) ÷ (p − Cu)"}, {"id": "p1", "t": "CF + Cu · q"}, {"id": "p4", "t": "p − Cu"}, {"id": "p3", "t": "I − CT"}]},
 r3:{"tipo": "cal", "corto": "Reflexión 3", "titulo": "Actividad de reflexión / cierre 3 · El caso de la juguería", "lista": [{"q": "Margen por cada jugo", "e": 3.5, "pq": "p − Cu = 6 − 2.50 = 3.50.", "u": "S/", "f": "p − Cu"}, {"q": "¿Cuántos jugos como mínimo para no perder? (redondea hacia arriba)", "e": 343, "tol": 0, "pq": "1200 ÷ 3.50 = 342.9 → 343 jugos.", "u": "jugos", "f": "q = CF ÷ (p − Cu)"}, {"q": "Si vende 500 jugos, ¿costo total?", "e": 2450, "pq": "1200 + 2.50 × 500 = 2450.", "u": "S/", "f": "CT = CF + Cu · q"}, {"q": "Si vende 500 jugos, ¿utilidad?", "e": 550, "pq": "I = 6 × 500 = 3000; U = 3000 − 2450 = 550.", "u": "S/", "f": "U = I − CT"}, {"q": "¿Cuántos jugos para ganar S/ 1,600?", "e": 800, "pq": "(1200 + 1600) ÷ 3.50 = 800.", "u": "jugos", "f": "q = (CF + U) ÷ (p − Cu)"}]},
@@ -1505,7 +1509,7 @@ var D=[
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 3: el caso de la juguería", "h": "<div class=\"enunciado\"><b>Juguer&iacute;a Frutal:</b> paga S/ 1,200 al mes entre alquiler y sueldos. Cada jugo le cuesta <b>S/ 2.50</b> en fruta y vaso, y lo vende a <b>S/ 6</b>. <i>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</i></div>", "claves": ["r3"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 4: lee la gráfica", "lado": 1, "h": "<div class=\"enunciado\">Don Pedro: alquiler S/ 180, cada empanada le cuesta S/ 1.50 y la vende a S/ 3.50.</div><div data-graf></div>", "claves": ["r4"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 5: crucigrama", "h": "", "claves": ["r5"]},
-{"et": "Cierre", "t": "Lo que verificamos hoy", "h": "<p class=\"fase f4\"><i>3</i><span>Cierre</span></p><ul class=\"chk\"><li>El costo fijo se paga aunque no se produzca nada; el variable depende de la producci&oacute;n.</li><li>CT = CF + Cu&middot;q, &nbsp;I = p&middot;q, &nbsp;U = I &minus; CT.</li><li>En el punto de equilibrio la utilidad es cero: q = CF &divide; (p &minus; Cu).</li><li>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</li></ul><div class=\"cie2\"><div data-misfallos></div><div class=\"perso\"><img src=\"personajes/tutor-bien.webp\" alt=\"\" loading=\"lazy\"><div class=\"globo\"><span class=\"et\">Antes de irte</span>Mira la pizarra de <b>Conectemos</b> otra vez: &iquest;cambiar&iacute;as tu respuesta despu&eacute;s de las actividades?</div></div></div>"}
+{"et": "Cierre", "t": "Mi evidencia de fallos", "h": "<div data-misfallos></div>"}
 ];
 
 /* ================= estado ================= */
@@ -3105,11 +3109,12 @@ function barrasHtml(ops, items, mia){
 }
 function pizHtml(k){
   var A=ACT[k], items=itemsDe(k), g=G[k]||{}, h='', doc=soyDocente();
-  h+='<div class="piz-h"><b>&#128204; Pizarra de la clase</b><span class="n">'+items.length+
-     (items.length===1?' respuesta':' respuestas')+'</span>'+
-     (doc ? '<button type="button" data-anon="1">'+(PIZ.anon?'&#128100; Nombres: no':'&#128100; Nombres: s&iacute;')+'</button>' : '')+'</div>';
+  var barras=(A.modo==='poll' || A.modo==='opinion');
+  h+='<div class="piz-h"><b>'+(barras?'&#128202; Resultados de la clase':'&#128204; Pizarra de la clase')+'</b><span class="n">'+items.length+
+     (barras ? (items.length===1?' voto':' votos') : (items.length===1?' respuesta':' respuestas'))+'</span>'+
+     (doc && !barras ? '<button type="button" data-anon="1">'+(PIZ.anon?'&#128100; Nombres: no':'&#128100; Nombres: s&iacute;')+'</button>' : '')+'</div>';
   h+='<div class="piz-c">';
-  if(!items.length){
+  if(!items.length && !barras){
     h+='<div class="piz-vacio">'+(enSala() ? 'Todav&iacute;a no hay respuestas. &iexcl;S&eacute; el primero!'
                                          : 'La pizarra se llena cuando entras a la sala con el c&oacute;digo de tu docente.')+'</div>';
   }else if(A.modo==='debate'){
@@ -3118,16 +3123,9 @@ function pizHtml(k){
       return '<div class="'+(j?'b':'a')+'"><h5>'+esc(o)+' &middot; '+de.length+'</h5><div class="notas">'+
              de.map(function(x){ return notaHtml(k, x, j?1:2); }).join('')+'</div></div>';
     }).join('')+'</div>';
-  }else if(A.modo==='poll'){
-    var ve = doc || g.v!==undefined || replica;
-    h+= ve ? barrasHtml(A.ops, items, doc?undefined:g.v)
-           : '<div class="piz-vacio">Vota para ver c&oacute;mo respondi&oacute; la clase.</div>';
-  }else if(A.modo==='opinion'){
+  }else if(A.modo==='poll' || A.modo==='opinion'){
+    /* encuesta y opinión: solo el gráfico de barras, sin textos */
     h+=barrasHtml(A.ops, items, doc?undefined:g.v);
-    var con=items.filter(function(x){ return x.t; });
-    if(con.length) h+='<div class="notas" style="margin-top:10px">'+con.map(function(x){
-      return notaHtml(k, x, [1,1,4,3,3][x.v] );
-    }).join('')+'</div>';
   }else{
     h+='<div class="notas">'+items.map(function(x){ return notaHtml(k, x); }).join('')+'</div>';
   }
@@ -3146,7 +3144,7 @@ function vCon(k){
              (A.modo==='opinion' ? '<span class="emo">'+esc(o.split(' ')[0])+'</span>'+esc(o.split(' ').slice(1).join(' ')) : esc(o))+'</button>';
     }).join('')+'</div>';
   }
-  if(A.modo!=='poll'){
+  if(A.modo==='abierta' || A.modo==='debate'){
     h+='<textarea data-ct="'+k+'" maxlength="140" placeholder="'+esc(A.ph||'Escribe aquí')+'">'+esc(g.t||'')+'</textarea>'+
        '<div class="cenv"><button type="button" class="o-btn o-btn-primary" data-cs="'+k+'">'+
        (conHecha(A,g) ? '&#8635; Cambiar mi sticker' : '&#128204; Pegar en la pizarra')+'</button><small data-cc="'+k+'">'+
@@ -3186,7 +3184,7 @@ function cableaCon(k, lam){
   qq('button[data-cv]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var j=+b.dataset.j;
-      if(A.modo==='poll'){
+      if(A.modo==='poll' || A.modo==='opinion'){
         G[k]={ v:j, h:Date.now() }; graba(); bien(); pinta(true);
         if(soyDocente()) refrescaPiz(true);
         sopla('¡Tu voto está en la pizarra!');
@@ -3543,10 +3541,24 @@ function pintaDash(){
      '<div class="dbox"><h4>Ranking de participaci&oacute;n</h4>';
   var top=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,8);
   h+= top.length ? '<ul class="dlista">'+top.map(function(a,j){
-        return '<li><span>'+(j+1)+'. '+esc(a.n)+'</span><span class="v" style="color:'+tono(a.p)+'">'+a.ok+' / '+a.tot+' &middot; '+Math.round(a.p*100)+'%</span></li>';
+        return '<li><span>'+(j+1)+'. '+esc(a.n)+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span></li>';
       }).join('')+'</ul>' : '<p class="dvacio">Sin datos todav&iacute;a.</p>';
   h+='</div></div></div>';
+  /* el reporte de participación, aquí mismo */
+  h+='<div class="dbox"><h4>&#128203; Reporte de participaci&oacute;n (1 punto por actividad elegida)</h4>'+
+     (n ? '<div class="tf rp"><table><thead><tr><th>Alumno</th>'+d.ks.map(function(k){ return '<th>'+esc(ACT[k].corto||k)+'</th>'; }).join('')+
+          '<th>Puntos</th><th>Avance</th><th>Fallos</th></tr></thead><tbody>'+
+          al.slice().sort(function(a,b){ return a.n.localeCompare(b.n); }).map(function(a){
+            return '<tr><td><b>'+esc(a.n)+'</b></td>'+d.ks.map(function(k){
+              var p=Math.min(1, hechasEn(a.G,k)/cuantas(k));
+              return '<td style="color:'+tono(p)+';font-weight:800">'+Math.round(p*100)+'%</td>';
+            }).join('')+'<td>'+a.ok+' / '+a.tot+'</td><td style="color:'+tono(a.p)+';font-weight:900">'+Math.round(a.p*100)+'%</td><td>'+(a.nf||0)+'</td></tr>';
+          }).join('')+'</tbody></table></div>'
+        : '<p class="dvacio">Todav&iacute;a no hay alumnos en la sala.</p>')+
+     '<p class="dvacio" id="dmRepTx" style="margin:6px 0 0">El Excel trae el reporte, esta hoja de dashboard, la evidencia de fallos y la pizarra.</p></div>';
+  var txv=$('dmRepTx') && $('dmRepTx').textContent;
   box.innerHTML=h;
+  if(txv && $('dmRepTx')) $('dmRepTx').textContent=txv;
   qq('button[data-ver]', box).forEach(function(b){
     b.addEventListener('click', function(){ var nm=b.dataset.ver; cierraDialogo(); if(Aula.verPantalla) Aula.verPantalla(nm); });
   });
@@ -3569,6 +3581,82 @@ function csvPizarra(){
   document.body.appendChild(a); a.click();
   setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
 }
+/* el Excel del reporte lleva también el dashboard, la evidencia de fallos y la pizarra */
+function excelExtra(wb){
+  var d=datosDash(), al=d.al, n=al.length, BORDE={ style:'thin', color:{ argb:'FFD5DDEF' } };
+  var caja={ top:BORDE, left:BORDE, bottom:BORDE, right:BORDE };
+  function arg(c){ return 'FF'+c.replace('#','').toUpperCase(); }
+  function tit(ws, txt, ncol){
+    ws.mergeCells(1,1,1,ncol);
+    var c=ws.getCell(1,1); c.value=txt; c.font={ bold:true, size:15, color:{ argb:'FFFFFFFF' } };
+    c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; c.alignment={ vertical:'middle' };
+    ws.getRow(1).height=26;
+    ws.mergeCells(2,1,2,ncol);
+    ws.getCell(2,1).value='Sala '+((window.Aula && Aula.sala)||'')+' · '+new Date().toLocaleString('es-PE');
+    ws.getCell(2,1).font={ italic:true, color:{ argb:'FF55607F' } };
+  }
+  function sec(ws, txt){ var r=ws.addRow([]); r=ws.addRow([txt]); r.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } }; }
+  function cab(ws, vals){
+    var r=ws.addRow(vals);
+    r.eachCell(function(c){ c.font={ bold:true, color:{ argb:'FFFFFFFF' } }; c.border=caja;
+      c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; c.alignment={ wrapText:true, vertical:'middle' }; });
+  }
+  function fila(ws, vals, pctCol, p){
+    var r=ws.addRow(vals);
+    r.eachCell({ includeEmpty:true }, function(c){ c.border=caja; c.alignment={ wrapText:true, vertical:'top' }; });
+    if(pctCol){ var c=r.getCell(pctCol); c.numFmt='0%'; c.font={ bold:true, color:{ argb:arg(tono(p)) } }; }
+    return r;
+  }
+  /* ---- Dashboard ---- */
+  var ws=wb.addWorksheet('Dashboard');
+  tit(ws, 'Dashboard de la clase · '+document.title.replace(/^Pensamiento L.gico - /,''), 6);
+  var prom = n ? al.reduce(function(s,a){ return s+a.p; },0)/n : 0;
+  sec(ws, 'Indicadores');
+  cab(ws, ['Indicador','Valor']);
+  fila(ws, ['En la sala', n]);
+  fila(ws, ['Participación promedio (sobre lo elegido)', prom], 2, prom);
+  fila(ws, ['Completaron todo', al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length]);
+  fila(ws, ['Sin empezar', al.filter(function(a){ return !a.ok; }).length]);
+  fila(ws, ['Fallos registrados', d.fallos.length]);
+  sec(ws, 'Avance por actividad (solo las elegidas)');
+  cab(ws, ['Actividad','Promedio del aula','Completaron','Empezaron']);
+  d.porAct.forEach(function(r){ fila(ws, [ACT[r.k].titulo, r.p, r.comp+' de '+n, r.emp+' de '+n], 2, r.p); });
+  sec(ws, 'Preguntas con más errores');
+  cab(ws, ['Actividad','Pregunta','Alumnos','Veces']);
+  if(d.errores.length) d.errores.forEach(function(e){ fila(ws, [ACT[e.k].corto, e.q, e.n, e.veces]); });
+  else fila(ws, ['Sin errores registrados','','','']);
+  sec(ws, 'Necesitan apoyo (menos de 50 %)');
+  cab(ws, ['Alumno','Avance','Fallos']);
+  var bajos=al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; });
+  if(bajos.length) bajos.forEach(function(a){ fila(ws, [a.n, a.p, a.nf||0], 2, a.p); });
+  else fila(ws, ['Todos sobre el 50 %','','']);
+  sec(ws, 'Ranking de participación');
+  cab(ws, ['Puesto','Alumno','Puntos','Avance']);
+  al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); })
+    .forEach(function(a,i){ fila(ws, [i+1, a.n, a.ok+' de '+a.tot, a.p], 4, a.p); });
+  sec(ws, 'Conectemos: respuestas en la pizarra');
+  cab(ws, ['Actividad','Respuestas']);
+  CON.forEach(function(k){ fila(ws, [ACT[k].titulo, d.ks.indexOf(k)>=0 ? (PIZ[k]||[]).length+' de '+n : 'no elegida']); });
+  [48,40,16,14,12,12].forEach(function(w,j){ ws.getColumn(j+1).width=w; });
+  /* ---- Evidencia de fallos ---- */
+  var wf=wb.addWorksheet('Evidencia de fallos', { views:[{ state:'frozen', ySplit:3 }] });
+  tit(wf, 'Evidencia de fallos', 6);
+  cab(wf, ['Hora','Alumno','Actividad','Pregunta','Respondió','Respuesta correcta']);
+  d.fallos.slice().reverse().forEach(function(f){
+    var x=descFallo(f), r=fila(wf, [new Date(f.h).toLocaleString('es-PE'), f.al, ACT[f.k].titulo, x.q, x.dio, x.ok]);
+    r.getCell(5).font={ bold:true, color:{ argb:'FFA4161A' } }; r.getCell(6).font={ bold:true, color:{ argb:'FF0F6B45' } };
+  });
+  [20,24,40,50,22,22].forEach(function(w,j){ wf.getColumn(j+1).width=w; });
+  /* ---- Pizarra ---- */
+  var wp=wb.addWorksheet('Pizarra Conectemos', { views:[{ state:'frozen', ySplit:3 }] });
+  tit(wp, 'Respuestas de Conectemos', 4);
+  cab(wp, ['Actividad','Alumno','Opción','Respuesta']);
+  CON.forEach(function(k){
+    var A=ACT[k];
+    (PIZ[k]||[]).forEach(function(x){ fila(wp, [A.titulo, x.n, (A.ops && typeof x.v==='number') ? A.ops[x.v] : '', x.t||'']); });
+  });
+  [34,26,24,60].forEach(function(w,j){ wp.getColumn(j+1).width=w; });
+}
 function abreDash(){
   if(!soyDocente()) return;
   dialogo('<div class="dm-h"><b>&#128202; Dashboard de la clase</b><span class="dvacio">Sala '+esc((Aula.sala)||'')+' &middot; se actualiza cada 3 s</span>'+
@@ -3582,7 +3670,16 @@ function abreDash(){
   $('dmCsv').addEventListener('click', csvPizarra);
   $('dmFal').addEventListener('click', csvFallos);
   $('dmPdf').addEventListener('click', function(){ var b=$('aulaRepoVer'); if(b) b.click(); });
-  $('dmXls').addEventListener('click', function(){ var b=$('aulaRepoBtn'); if(b){ b.click(); sopla('Preparando el reporte de participación…'); } });
+  $('dmXls').addEventListener('click', function(){
+    var b=$('aulaRepoBtn'); if(!b) return;
+    b.click(); sopla('Preparando el reporte de participación…');
+    /* el estado de la descarga se ve aquí, en el dashboard */
+    var n=0, t=setInterval(function(){
+      var x=$('aulaRepoTx'), y=$('dmRepTx');
+      if(x && y) y.textContent=x.textContent;
+      if(++n>40 || !y) clearInterval(t);
+    }, 400);
+  });
   pintaDash();
 }
 
@@ -3661,10 +3758,14 @@ function decora(){
                  (ref.length ? '<p><b class="sub">Actividades de reflexi&oacute;n / cierre</b></p><ul>'+ref.map(li).join('')+'</ul>' : '');
   });
   qq('#lam [data-misfallos]').forEach(function(el){
-    if(soyDocente() && !replica){ el.innerHTML=''; return; }   /* el docente ve la de toda la clase en el dashboard */
+    if(soyDocente() && !replica){   /* el docente ve la de toda la clase */
+      var fs=enSala() ? fallosSala() : [];
+      el.innerHTML='<div class="dbox mf"><h4>&#128221; Evidencia de fallos de la clase: '+fs.length+'</h4>'+tablaFallos(fs.slice(0,40), true)+'</div>';
+      return;
+    }
     var ks=clavesVis(), mis=(G.fallos||[]).filter(function(f){ return ks.indexOf(f.k)>=0; }).slice().reverse();
-    el.innerHTML='<div class="dbox mf"><h4>&#128221; Mi evidencia de fallos: '+mis.length+(mis.length===1?' error':' errores')+'</h4>'+
-      (mis.length ? '<p class="dvacio" style="margin:0 0 6px">Revisa en qu&eacute; te equivocaste y cu&aacute;l era la respuesta. Tambi&eacute;n la ve tu docente.</p>'+tablaFallos(mis.slice(0,8), false)
+    el.innerHTML='<div class="dbox mf"><h4>&#128221; Mis errores en esta sesi&oacute;n: '+mis.length+(mis.length===1?' error':' errores')+'</h4>'+
+      (mis.length ? '<p class="dvacio" style="margin:0 0 6px">Revisa en qu&eacute; te equivocaste y cu&aacute;l era la respuesta. Tambi&eacute;n la ve tu docente.</p>'+tablaFallos(mis.slice(0,40), false)
                   : '<p class="dvacio">&iexcl;Sin errores registrados! &#127881;</p>')+'</div>';
   });
   qq('#lam [data-ab]').forEach(function(b){
@@ -3680,7 +3781,7 @@ $('btnDash2').addEventListener('click', abreDash);
 var textoPuerta=null;
 if(window.Aula){
   Aula.iniciar({ sala:'PLS5D', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, ventana:ventanaAula,
-    actividades:actividadesReporte, ajusta:ajustaReporte, tituloReporte:'Reporte de participación · Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)',
+    actividades:actividadesReporte, ajusta:ajustaReporte, excelExtra:excelExtra, tituloReporte:'Reporte de participación · Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)',
     pantalla:pantalla, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
