@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-a">
+<meta name="version" content="2026-10-31-s5demo-b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -996,6 +996,82 @@
   .dlista button{ font:inherit; font-size:13px; font-weight:800; border:1px solid #D5DDEF; background:#fff; border-radius:8px; padding:3px 8px; cursor:pointer; }
   .dvacio{ color:#8A8A92; font-size:15px; }
 
+  /* en la demo solo va la actividad: sin tarjetas de «Tip» ni «Recuerda» */
+  .relleno{ display:none !important; }
+
+  /* ---- contexto de la clasificación (con animación) ---- */
+  .ctx{ display:grid; grid-template-columns:minmax(0,1fr) 230px; gap:14px; align-items:center; background:#fff;
+        border:2px solid var(--linea); border-left:6px solid var(--aqua); border-radius:14px; padding:10px 14px; margin-bottom:12px; }
+  .ctx-tx{ font-size:18px; line-height:1.45; }
+  .ctx-tx small{ display:block; margin-top:4px; font-size:16px; color:#55607F; }
+  .emp-fila{ display:flex; gap:4px; font-size:30px; justify-content:center; }
+  .emp-fila span{ animation:salta 1.6s ease-in-out infinite; }
+  .emp-fila span:nth-child(2){ animation-delay:.2s; } .emp-fila span:nth-child(3){ animation-delay:.4s; } .emp-fila span:nth-child(4){ animation-delay:.6s; }
+  .emp-bar{ display:grid; gap:5px; margin-top:6px; }
+  .emp-bar i{ display:block; font-style:normal; font-size:13px; font-weight:900; color:#fff; border-radius:99px; padding:3px 10px; white-space:nowrap; }
+  .emp-bar .bf{ background:var(--marino); width:60%; }
+  .emp-bar .bv{ background:var(--fucsia); animation:crece 3.2s ease-in-out infinite; }
+  @keyframes salta{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-8px) rotate(-8deg); } }
+  .emp-bar .bv{ min-width:86px; }
+  @keyframes crece{ 0%{ width:22%; } 60%,100%{ width:100%; } }
+
+  /* ---- leyenda de las letras ---- */
+  .ley{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 10px; }
+  .ley-t{ font-weight:900; color:var(--fucsia); font-size:16px; text-transform:uppercase; letter-spacing:.05em; }
+  .ley span:not(.ley-t){ background:#fff; border:2px solid var(--linea); border-radius:99px; padding:5px 12px; font-size:17px; }
+  .ley b{ color:var(--marino); margin-right:4px; }
+
+  /* ---- gráfica interactiva ---- */
+  .graf{ background:#fff; border:2px solid var(--linea); border-radius:14px; padding:8px 10px; }
+  .g-svg{ width:100%; height:auto; max-height:46vh; display:block; }
+  .g-grid{ stroke:#E3E8F4; stroke-width:1; } .g-eje{ stroke:#071767; stroke-width:2.5; }
+  .g-tx{ font-size:12px; fill:#55607F; } .g-et{ font-size:14px; font-weight:800; fill:#071767; }
+  .g-et.i{ fill:#0E8F95; } .g-et.ct{ fill:#C600A3; }
+  .g-i{ stroke:#0E8F95; stroke-width:4; stroke-linecap:round; } .g-ct{ stroke:#C600A3; stroke-width:4; stroke-linecap:round; }
+  .dibuja{ stroke-dasharray:520; stroke-dashoffset:520; animation:traza 1.6s ease-out forwards; }
+  .dibuja.d2{ animation-delay:.5s; }
+  @keyframes traza{ to{ stroke-dashoffset:0; } }
+  .g-eq{ fill:#FC0045; stroke:#fff; stroke-width:2; }
+  .g-eq-onda{ fill:none; stroke:#FC0045; stroke-width:3; transform-box:fill-box; transform-origin:center; animation:onda 1.8s ease-out infinite; }
+  @keyframes onda{ from{ transform:scale(1); opacity:.9; } to{ transform:scale(3.2); opacity:0; } }
+  .g-q{ stroke:#071767; stroke-width:2; stroke-dasharray:5 5; }
+  .g-pi{ fill:#0E8F95; stroke:#fff; stroke-width:2; } .g-pc{ fill:#C600A3; stroke:#fff; stroke-width:2; }
+  .g-zona{ stroke-width:10; stroke-linecap:round; opacity:.55; stroke:#B9C2D8; }
+  .g-zona.gana{ stroke:#16A34A; } .g-zona.pierde{ stroke:#DC2626; }
+  .g-ctl{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:16px; font-weight:700; color:#55607F; margin-top:4px; }
+  .g-ctl b{ color:var(--marino); min-width:70px; }
+  .g-ctl input{ flex:1; min-width:150px; accent-color:#FC0045; height:26px; }
+  .g-lee{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .g-lee span{ border-radius:99px; padding:4px 10px; font-weight:800; font-size:16px; background:#F1F5FD; }
+  .g-lee .i{ color:#0E8F95; } .g-lee .ct{ color:#C600A3; }
+  .g-lee .u.gana{ background:#DCFCE7; color:#166534; } .g-lee .u.pierde{ background:#FEE2E2; color:#991B1B; } .g-lee .u.cero{ background:#FFF1CC; color:#8A5A00; }
+
+  /* ---- portada en 3D ---- */
+  .pt-3d{ position:relative; height:96px; perspective:700px; margin:0 auto 6px; width:260px; }
+  .moneda{ position:absolute; left:50%; top:4px; width:86px; height:86px; margin-left:-43px; transform-style:preserve-3d;
+           animation:gira 5s linear infinite; }
+  .moneda .cara{ position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center;
+                 font-size:34px; font-weight:900; color:#8A5A00; backface-visibility:hidden;
+                 background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFC94D 55%, #E0A100); box-shadow:inset 0 0 0 6px #F5B700, 0 10px 18px rgba(7,23,103,.25); }
+  .moneda .atras{ transform:rotateY(180deg); }
+  @keyframes gira{ from{ transform:rotateY(0) rotateX(12deg); } to{ transform:rotateY(360deg) rotateX(12deg); } }
+  .flota{ position:absolute; width:44px; height:44px; animation:flota 3.4s ease-in-out infinite; }
+  .flota.f1{ left:6px; top:28px; } .flota.f2{ right:10px; top:6px; animation-delay:.8s; } .flota.f3{ right:44px; top:52px; animation-delay:1.6s; }
+  @keyframes flota{ 0%,100%{ transform:translateY(0) rotate(-6deg); } 50%{ transform:translateY(-12px) rotate(6deg); } }
+
+  /* ---- personajes que se mueven y stickers con relieve ---- */
+  .cqf{ display:flex; gap:10px; align-items:flex-start; }
+  .cpj{ width:64px; height:64px; object-fit:contain; flex:none; animation:flota 3s ease-in-out infinite; }
+  .perso img{ animation:flota 3.6s ease-in-out infinite; }
+  .notas{ perspective:600px; }
+  .nota{ transition:transform .25s; }
+  .nota:hover{ transform:rotateX(8deg) rotateY(-10deg) scale(1.05); z-index:2; }
+  .nota.doc{ background:#071767; color:#fff; } .nota.doc small{ color:#FFD166; }
+  @media (prefers-reduced-motion:reduce){
+    .moneda, .flota, .cpj, .perso img, .emp-fila span, .emp-bar .bv, .g-eq-onda, .nota{ animation:none !important; }
+    .dibuja{ animation:none; stroke-dashoffset:0; }
+  }
+
   /* ---- que cada actividad quepa en la lámina ---- */
   @media (min-width:861px){
     html:not(.movil) [data-act="r2"] .pares{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
@@ -1029,6 +1105,7 @@
 
   /* ---- en el celular ---- */
   html.movil .cgrid, html.movil .dgrid{ grid-template-columns:minmax(0,1fr); }
+  html.movil .ctx{ grid-template-columns:minmax(0,1fr); }
   html.movil .cops.g2{ grid-template-columns:minmax(0,1fr); }
   html.movil .notas{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   html.movil .deb{ grid-template-columns:minmax(0,1fr); }
@@ -1365,18 +1442,10 @@ function nota(f,ini,dur,vol,tipo){
   }catch(e){}
 }
 function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
-var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
-var fallo=new Audio(), falloI=0;
-fallo.preload='auto'; fallo.volume=0.7;
-fallo.addEventListener('error', function(){
-  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
-fallo.src=FALLO[0];
+/* sonido de error: dos notas graves y cortas, como un «no» */
 function mal(){
   if(!son) return;
-  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
-  try{ fallo.currentTime=0; var p=fallo.play();
-       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
-  }catch(e){ nota(200,0,.18,.05,'square'); }
+  nota(311,0,.11,.06,'square'); nota(208,.12,.24,.06,'square');
 }
 function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
 function pintaSon(){ var b=$('btnSon');
@@ -1393,7 +1462,7 @@ c1:{"tipo": "con", "modo": "abierta", "corto": "Conectemos 1", "titulo": "Conect
 c2:{"tipo": "con", "modo": "debate", "corto": "Conectemos 2", "titulo": "Conectemos 2 · Debate", "q": "«Para ganar más conviene vender barato y mucho, antes que caro y poco.»", "ops": ["A favor", "En contra"], "ph": "Tu argumento en una línea"},
 c3:{"tipo": "con", "modo": "poll", "corto": "Conectemos 3", "titulo": "Conectemos 3 · Encuesta", "q": "En un puesto de empanadas, ¿qué gasto crees que pesa más cada mes?", "ops": ["Alquiler del local", "Carne y harina", "Sueldo del ayudante", "Luz y gas"]},
 c4:{"tipo": "con", "modo": "opinion", "corto": "Conectemos 4", "titulo": "Conectemos 4 · Tu opinión", "q": "«Si vendo más unidades, siempre gano más dinero.» ¿Qué tan de acuerdo estás?", "ops": ["😠 Nada", "🙁 Poco", "😐 Ni sí ni no", "🙂 Bastante", "😄 Totalmente"], "ph": "¿Por qué? (opcional)"},
-r1:{"tipo": "arr", "corto": "Reflexión 1", "titulo": "Actividad de reflexión / cierre 1 · ¿Costo fijo o variable?", "cajas": [{"id": "f", "t": "Costo fijo"}, {"id": "v", "t": "Costo variable"}], "fichas": [{"id": "a1", "t": "Harina", "g": "v"}, {"id": "a2", "t": "Alquiler del local", "g": "f"}, {"id": "a3", "t": "Carne del relleno", "g": "v"}, {"id": "a4", "t": "Sueldo del administrador", "g": "f"}, {"id": "a5", "t": "Bolsas para llevar", "g": "v"}, {"id": "a6", "t": "Internet del local", "g": "f"}, {"id": "a7", "t": "Comisión por cada venta", "g": "v"}, {"id": "a8", "t": "Seguro del local", "g": "f"}], "fin": "<p class=\"pq\">El costo fijo se paga aunque no vendas nada; el variable crece con cada unidad.</p>"},
+r1:{"tipo": "arr", "corto": "Reflexión 1", "titulo": "Actividad de reflexión / cierre 1 · ¿Costo fijo o variable?", "cajas": [{"id": "f", "t": "Costo fijo"}, {"id": "v", "t": "Costo variable"}], "fichas": [{"id": "a1", "t": "Harina: S/ 0.40 por empanada", "g": "v"}, {"id": "a2", "t": "Alquiler del puesto: S/ 180 al mes", "g": "f"}, {"id": "a3", "t": "Carne del relleno: S/ 0.80 por empanada", "g": "v"}, {"id": "a4", "t": "Sueldo del ayudante: S/ 900 al mes", "g": "f"}, {"id": "a5", "t": "Bolsa para llevar: S/ 0.05 por empanada", "g": "v"}, {"id": "a6", "t": "Licencia municipal: S/ 50 al mes", "g": "f"}, {"id": "a7", "t": "Comisión del delivery: S/ 0.30 por empanada vendida", "g": "v"}, {"id": "a8", "t": "Seguro del puesto: S/ 40 al mes", "g": "f"}], "fin": "<p class=\"pq\">Fijo: el monto es el mismo al mes, hagas 100 o 1,000 empanadas. Variable: se paga <b>por cada empanada</b>, así que sube con la cantidad. Ojo: lo mismo puede ser fijo en un negocio y variable en otro; depende de cómo se paga.</p>"},
 r2:{"tipo": "par", "corto": "Reflexión 2", "titulo": "Actividad de reflexión / cierre 2 · Une cada fórmula", "huecos": [{"id": "p1", "q": "Costo total (CT)"}, {"id": "p2", "q": "Ingreso (I)"}, {"id": "p3", "q": "Utilidad (U)"}, {"id": "p4", "q": "Margen por unidad"}, {"id": "p5", "q": "Punto de equilibrio (q)"}, {"id": "p6", "q": "Cantidad para ganar una utilidad U"}], "fichas": [{"id": "p5", "t": "CF ÷ (p − Cu)"}, {"id": "p2", "t": "p · q"}, {"id": "p6", "t": "(CF + U) ÷ (p − Cu)"}, {"id": "p1", "t": "CF + Cu · q"}, {"id": "p4", "t": "p − Cu"}, {"id": "p3", "t": "I − CT"}]},
 r3:{"tipo": "cal", "corto": "Reflexión 3", "titulo": "Actividad de reflexión / cierre 3 · El caso de la juguería", "lista": [{"q": "Margen por cada jugo", "e": 3.5, "pq": "p − Cu = 6 − 2.50 = 3.50.", "u": "S/", "f": "p − Cu"}, {"q": "¿Cuántos jugos como mínimo para no perder? (redondea hacia arriba)", "e": 343, "tol": 0, "pq": "1200 ÷ 3.50 = 342.9 → 343 jugos.", "u": "jugos", "f": "q = CF ÷ (p − Cu)"}, {"q": "Si vende 500 jugos, ¿costo total?", "e": 2450, "pq": "1200 + 2.50 × 500 = 2450.", "u": "S/", "f": "CT = CF + Cu · q"}, {"q": "Si vende 500 jugos, ¿utilidad?", "e": 550, "pq": "I = 6 × 500 = 3000; U = 3000 − 2450 = 550.", "u": "S/", "f": "U = I − CT"}, {"q": "¿Cuántos jugos para ganar S/ 1,600?", "e": 800, "pq": "(1200 + 1600) ÷ 3.50 = 800.", "u": "jugos", "f": "q = (CF + U) ÷ (p − Cu)"}]},
 r4:{"tipo": "quiz", "corto": "Reflexión 4", "titulo": "Actividad de reflexión / cierre 4 · Lee la gráfica", "lista": [{"q": "Si don Pedro vende 0 empanadas, ¿cuánto es su costo?", "ops": ["S/ 0", "S/ 180", "S/ 315"], "ok": 1, "pq": "Igual paga el costo fijo: S/ 180."}, {"q": "Si vende 60 empanadas, ¿gana o pierde?", "ops": ["Gana", "Pierde", "Ni gana ni pierde"], "ok": 1, "pq": "60 es menos que 90: la recta del costo está más arriba."}, {"q": "¿Qué pasa en el punto (90; 315)?", "ops": ["La utilidad es cero", "Gana S/ 315", "Pierde S/ 315"], "ok": 0, "pq": "Ingreso = costo = S/ 315: utilidad cero."}, {"q": "Si el precio sube y lo demás sigue igual, el punto de equilibrio…", "ops": ["Sube", "Baja", "No cambia"], "ok": 1, "pq": "Con más margen por unidad se necesitan menos ventas."}]},
@@ -1402,15 +1471,15 @@ r5:{"tipo": "cruz", "corto": "Reflexión 5", "titulo": "Actividad de reflexión 
 
 /* ================= las diapositivas ================= */
 var D=[
-{"et": "Portada", "t": "Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><span class=\"pt-sem\">Semana 3 &middot; Parte 1 &middot; Demo</span><h2>Costo, ingreso y utilidad</h2><p class=\"pt-ses\">Sesi&oacute;n de verificaci&oacute;n: lo vimos en la pizarra, ahora lo comprobamos</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>Para qu&eacute; es esta sesi&oacute;n</b>Comprobar que sabes distinguir costos fijos y variables, calcular CT, I, U y el punto de equilibrio, y leer su gr&aacute;fica.</div><div class=\"pt-agenda\"><b>Hoy haremos</b><ol><li><b>Conectemos:</b> pregunta abierta, debate, encuesta y opini&oacute;n. Tus respuestas salen como stickers en la pizarra.</li><li><b>Actividades de reflexi&oacute;n / cierre:</b> clasificar, unir f&oacute;rmulas, calcular, leer la gr&aacute;fica y el crucigrama.</li></ol></div></div><div class=\"pt-yo\" data-yo></div></div>"},
+{"et": "Portada", "t": "Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><div class=\"pt-3d\" aria-hidden=\"true\"><div class=\"moneda\"><b class=\"cara\">S/</b><b class=\"cara atras\">&#129375;</b></div><img class=\"flota f1\" src=\"marca/iconos/billetes.png\" alt=\"\"><img class=\"flota f2\" src=\"marca/iconos/crece.png\" alt=\"\"><img class=\"flota f3\" src=\"marca/iconos/barras.png\" alt=\"\"></div><span class=\"pt-sem\">Semana 3 &middot; Parte 1 &middot; Demo</span><h2>Costo, ingreso y utilidad</h2><p class=\"pt-ses\">Sesi&oacute;n de verificaci&oacute;n: lo vimos en la pizarra, ahora lo comprobamos</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>Para qu&eacute; es esta sesi&oacute;n</b>Comprobar que sabes distinguir costos fijos y variables, calcular CT, I, U y el punto de equilibrio, y leer su gr&aacute;fica.</div><div class=\"pt-agenda\"><b>Hoy haremos</b><ol><li><b>Conectemos:</b> pregunta abierta, debate, encuesta y opini&oacute;n. Tus respuestas salen como stickers en la pizarra.</li><li><b>Actividades de reflexi&oacute;n / cierre:</b> clasificar, unir f&oacute;rmulas, calcular, leer la gr&aacute;fica y el crucigrama.</li></ol></div></div><div class=\"pt-yo\" data-yo></div></div>"},
 {"et": "Conectemos", "t": "Conectemos 1 · Pregunta abierta", "h": "", "claves": ["c1"]},
 {"et": "Conectemos", "t": "Conectemos 2 · Debate", "h": "", "claves": ["c2"]},
 {"et": "Conectemos", "t": "Conectemos 3 · Encuesta", "h": "", "claves": ["c3"]},
 {"et": "Conectemos", "t": "Conectemos 4 · Tu opinión", "h": "", "claves": ["c4"]},
-{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 1: ¿costo fijo o variable?", "h": "<p class=\"teo-def\" style=\"margin-top:0\">Arrastra cada gasto del puesto de empanadas a su caja (o t&oacute;calo y luego toca la caja).</p>", "claves": ["r1"]},
-{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 2: une cada fórmula", "h": "", "claves": ["r2"]},
+{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 1: ¿costo fijo o variable?", "h": "<div class=\"ctx\"><div class=\"ctx-tx\"><b>El puesto de empanadas de don Pedro.</b> Este mes puede hacer <b>100</b> o <b>1,000</b> empanadas. Mira <b>c&oacute;mo se paga</b> cada gasto: si el monto <b>sube con cada empanada</b>, es <b>variable</b>; si se paga <b>igual cada mes</b>, sin importar cu&aacute;ntas haga, es <b>fijo</b>.<small>Arrastra cada tarjeta a su caja, o t&oacute;cala y luego toca la caja.</small></div><div class=\"ctx-anim\" aria-hidden=\"true\"><div class=\"emp-fila\"><span>&#129375;</span><span>&#129375;</span><span>&#129375;</span><span>&#129375;</span></div><div class=\"emp-bar\"><i class=\"bf\">Fijo</i><i class=\"bv\">Variable</i></div></div></div>", "claves": ["r1"]},
+{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 2: une cada fórmula", "h": "<div class=\"ley\"><span class=\"ley-t\">Las letras:</span><span><b>CF</b> costo fijo</span><span><b>Cu</b> costo por unidad</span><span><b>q</b> cantidad</span><span><b>p</b> precio de venta</span><span><b>CT</b> costo total</span><span><b>I</b> ingreso</span><span><b>U</b> utilidad</span></div>", "claves": ["r2"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 3: el caso de la juguería", "h": "<div class=\"enunciado\"><b>Juguer&iacute;a Frutal:</b> paga S/ 1,200 al mes entre alquiler y sueldos. Cada jugo le cuesta <b>S/ 2.50</b> en fruta y vaso, y lo vende a <b>S/ 6</b>. <i>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</i></div>", "claves": ["r3"]},
-{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 4: lee la gráfica", "lado": 1, "h": "<div class=\"enunciado\">Don Pedro: alquiler S/ 180, cada empanada le cuesta S/ 1.50 y la vende a S/ 3.50.</div><svg class=\"grafico\" viewBox=\"0 0 520 360\" role=\"img\"><line x1=\"38.0\" y1=\"322.0\" x2=\"38.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><line x1=\"112.0\" y1=\"322.0\" x2=\"112.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"112.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">30</text><line x1=\"186.0\" y1=\"322.0\" x2=\"186.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"186.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">60</text><line x1=\"260.0\" y1=\"322.0\" x2=\"260.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"260.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">90</text><line x1=\"334.0\" y1=\"322.0\" x2=\"334.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"334.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">120</text><line x1=\"408.0\" y1=\"322.0\" x2=\"408.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"408.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">150</text><line x1=\"482.0\" y1=\"322.0\" x2=\"482.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"482.0\" y=\"337.0\" font-size=\"12\" text-anchor=\"middle\" fill=\"#55607F\">180</text><line x1=\"38.0\" y1=\"322.0\" x2=\"482.0\" y2=\"322.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><line x1=\"38.0\" y1=\"281.4\" x2=\"482.0\" y2=\"281.4\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"285.4\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">100</text><line x1=\"38.0\" y1=\"240.9\" x2=\"482.0\" y2=\"240.9\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"244.9\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">200</text><line x1=\"38.0\" y1=\"200.3\" x2=\"482.0\" y2=\"200.3\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"204.3\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">300</text><line x1=\"38.0\" y1=\"159.7\" x2=\"482.0\" y2=\"159.7\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"163.7\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">400</text><line x1=\"38.0\" y1=\"119.1\" x2=\"482.0\" y2=\"119.1\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"123.1\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">500</text><line x1=\"38.0\" y1=\"78.6\" x2=\"482.0\" y2=\"78.6\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"82.6\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">600</text><line x1=\"38.0\" y1=\"38.0\" x2=\"482.0\" y2=\"38.0\" stroke=\"#E3E8F4\" stroke-width=\"1\"/><text x=\"33.0\" y=\"42.0\" font-size=\"12\" text-anchor=\"end\" fill=\"#55607F\">700</text><line x1=\"38.0\" y1=\"322.0\" x2=\"482.0\" y2=\"322.0\" stroke=\"#071767\" stroke-width=\"2.4\"/><line x1=\"38.0\" y1=\"322.0\" x2=\"38.0\" y2=\"38.0\" stroke=\"#071767\" stroke-width=\"2.4\"/><text x=\"482.0\" y=\"314.0\" font-size=\"15\" font-weight=\"800\" fill=\"#071767\" text-anchor=\"end\">empanadas (q)</text><text x=\"46.0\" y=\"42.0\" font-size=\"15\" font-weight=\"800\" fill=\"#071767\">soles</text><line x1=\"38.0\" y1=\"322.0\" x2=\"482.0\" y2=\"66.4\" stroke=\"#0E7C66\" stroke-width=\"3.2\" stroke-linecap=\"round\"/><text x=\"478.0\" y=\"58.4\" font-size=\"14\" font-weight=\"800\" fill=\"#0E7C66\" text-anchor=\"end\">Ingreso</text><line x1=\"38.0\" y1=\"249.0\" x2=\"482.0\" y2=\"139.4\" stroke=\"#C600A3\" stroke-width=\"3.2\" stroke-linecap=\"round\"/><text x=\"478.0\" y=\"131.4\" font-size=\"14\" font-weight=\"800\" fill=\"#C600A3\" text-anchor=\"end\">Costo total</text><circle cx=\"260.0\" cy=\"194.2\" r=\"6\" fill=\"#FC0045\" stroke=\"#fff\" stroke-width=\"2\"/><text x=\"269.0\" y=\"186.2\" font-size=\"14\" font-weight=\"800\" fill=\"#FC0045\">Equilibrio (90; 315)</text></svg>", "claves": ["r4"]},
+{"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 4: lee la gráfica", "lado": 1, "h": "<div class=\"enunciado\">Don Pedro: alquiler S/ 180, cada empanada le cuesta S/ 1.50 y la vende a S/ 3.50.</div><div data-graf></div>", "claves": ["r4"]},
 {"et": "Reflexión / cierre", "t": "Actividad de reflexión / cierre 5: crucigrama", "h": "", "claves": ["r5"]},
 {"et": "Cierre", "t": "Lo que verificamos hoy", "h": "<p class=\"fase f4\"><i>3</i><span>Cierre</span></p><ul class=\"chk\"><li>El costo fijo se paga aunque no se produzca nada; el variable depende de la producci&oacute;n.</li><li>CT = CF + Cu&middot;q, &nbsp;I = p&middot;q, &nbsp;U = I &minus; CT.</li><li>En el punto de equilibrio la utilidad es cero: q = CF &divide; (p &minus; Cu).</li><li>Si el resultado no es exacto, en producci&oacute;n se redondea hacia arriba.</li></ul><div class=\"perso\"><img src=\"personajes/tutor-bien.webp\" alt=\"\" loading=\"lazy\"><div class=\"globo\"><span class=\"et\">Antes de irte</span>Mira la pizarra de <b>Conectemos</b> otra vez: &iquest;cambiar&iacute;as tu respuesta despu&eacute;s de las actividades?</div></div>"}
 ];
@@ -2968,6 +3037,14 @@ function calculaPiz(){
       p[k].push({ n:f.alumno, t:t, v:(typeof g.v==='number' ? g.v : undefined), h:+g.h||0 });
     });
   });
+  /* lo que responde el propio docente también va a la pizarra */
+  if(soyDocente()) CON.forEach(function(k){
+    var g=G[k];
+    if(!g || (g.t===undefined && g.v===undefined)) return;
+    var t=String(g.t||'').slice(0,140), n=(window.Aula && Aula.yo) || 'Docente';
+    if(oc[k+'|'+n+'|'+t]) return;
+    p[k].push({ n:n, t:t, v:(typeof g.v==='number' ? g.v : undefined), h:+g.h||0, doc:1 });
+  });
   CON.forEach(function(k){ p[k].sort(function(a,b){ return a.h-b.h; }); });
   return p;
 }
@@ -2983,8 +3060,8 @@ function itemsDe(k){
 }
 function notaHtml(k, x, extra){
   var anon=!!PIZ.anon, doc=soyDocente();
-  var quien = x.mia ? 'Tú' : (anon ? '' : x.n);
-  return '<div class="nota k'+(extra===undefined ? color(x.n) : extra)+(x.mia?' mia':'')+'">'+
+  var quien = x.mia ? 'Tú' : (x.doc ? '👩‍🏫 '+x.n : (anon ? '' : x.n));
+  return '<div class="nota k'+(extra===undefined ? color(x.n) : extra)+(x.mia?' mia':'')+(x.doc?' doc':'')+'">'+
          (doc ? '<button type="button" class="x" title="Quitar de la pizarra" data-oc="'+esc(k+'|'+x.n+'|'+(x.t||''))+'">&#10005;</button>' : '')+
          esc(x.t||'')+(quien ? '<small>'+esc(quien)+'</small>' : '')+'</div>';
 }
@@ -3033,7 +3110,8 @@ function pizHtml(k){
 function vCon(k){
   var A=ACT[k], g=G[k]||{}, h=cabTarea(k);
   var marcado = ELV[k]!==undefined ? ELV[k] : g.v;
-  h+='<div class="cgrid"><div class="cform"><p class="cq">'+esc(A.q)+'</p>';
+  var PJ={ abierta:'tutor-explica', debate:'alumno-senala', poll:'profe-idea', opinion:'profe-presenta' };
+  h+='<div class="cgrid"><div class="cform"><div class="cqf"><img class="cpj" src="personajes/'+PJ[A.modo]+'.webp" alt="" aria-hidden="true"><p class="cq">'+esc(A.q)+'</p></div>';
   if(A.ops){
     h+='<div class="cops '+(A.modo==='opinion'?'esc5':(A.modo==='poll'?'g2':''))+'">'+A.ops.map(function(o,j){
       return '<button type="button" data-cv="'+k+'" data-j="'+j+'" class="'+(marcado===j?'on':'')+'">'+
@@ -3082,6 +3160,7 @@ function cableaCon(k, lam){
       var j=+b.dataset.j;
       if(A.modo==='poll'){
         G[k]={ v:j, h:Date.now() }; graba(); bien(); pinta(true);
+        if(soyDocente()) refrescaPiz(true);
         sopla('¡Tu voto está en la pizarra!');
         return;
       }
@@ -3115,6 +3194,7 @@ function cableaCon(k, lam){
     G[k]=o; delete ELV[k];
     graba(); bien(); pinta(true);
     sopla(enSala() ? '¡Tu sticker está en la pizarra!' : 'Listo. Entra con el código para que lo vea la clase');
+    if(soyDocente()) refrescaPiz(true);
   }
 }
 /* el docente revisa la sala cada 3 s: pizarra y tablero al día */
@@ -3428,8 +3508,51 @@ function pintaExtras(){
   if($('notaEnlace')) $('notaEnlace').hidden=dentro;
   decora();
 }
+/* ---- la gráfica de don Pedro: se dibuja sola y se explora con el deslizador ---- */
+function grafHtml(){
+  var X=function(q){ return 46+q*2.4; }, Y=function(v){ return 300-v*0.4; };
+  var h='<div class="graf"><svg viewBox="0 0 500 340" class="g-svg" role="img" aria-label="Gráfica de ingreso y costo total de don Pedro">';
+  for(var q=30;q<=180;q+=30) h+='<line x1="'+X(q)+'" y1="'+Y(0)+'" x2="'+X(q)+'" y2="'+Y(650)+'" class="g-grid"/><text x="'+X(q)+'" y="318" class="g-tx" text-anchor="middle">'+q+'</text>';
+  for(var v=100;v<=600;v+=100) h+='<line x1="'+X(0)+'" y1="'+Y(v)+'" x2="'+X(180)+'" y2="'+Y(v)+'" class="g-grid"/><text x="40" y="'+(Y(v)+4)+'" class="g-tx" text-anchor="end">'+v+'</text>';
+  h+='<path id="gZona" class="g-zona" d=""/>'+
+     '<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(185)+'" y2="'+Y(0)+'" class="g-eje"/><line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(0)+'" y2="'+Y(660)+'" class="g-eje"/>'+
+     '<text x="'+X(180)+'" y="'+(Y(0)-8)+'" class="g-et" text-anchor="end">empanadas (q)</text><text x="'+(X(0)+8)+'" y="'+Y(640)+'" class="g-et">soles</text>'+
+     '<line x1="'+X(0)+'" y1="'+Y(180)+'" x2="'+X(180)+'" y2="'+Y(450)+'" class="g-ct dibuja"/>'+
+     '<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(180)+'" y2="'+Y(630)+'" class="g-i dibuja d2"/>'+
+     '<text x="'+X(176)+'" y="'+(Y(630)+18)+'" class="g-et i" text-anchor="end">Ingreso</text>'+
+     '<text x="'+X(176)+'" y="'+(Y(450)+22)+'" class="g-et ct" text-anchor="end">Costo total</text>'+
+     '<circle cx="'+X(90)+'" cy="'+Y(315)+'" r="7" class="g-eq"/><circle cx="'+X(90)+'" cy="'+Y(315)+'" r="7" class="g-eq-onda"/>'+
+     '<line id="gQ" class="g-q" y1="'+Y(0)+'" y2="'+Y(650)+'"/><circle id="gPi" r="6" class="g-pi"/><circle id="gPc" r="6" class="g-pc"/>'+
+     '</svg><label class="g-ctl">Mueve la cantidad: <b id="gQv">q = 120</b><input type="range" id="gRng" min="0" max="180" step="5" value="120" aria-label="Cantidad de empanadas"></label>'+
+     '<div class="g-lee" id="gLee"></div></div>';
+  return h;
+}
+function cableaGraf(box){
+  var X=function(q){ return 46+q*2.4; }, Y=function(v){ return 300-v*0.4; };
+  var r=box.querySelector('#gRng');
+  function fmt(n){ return (n<0?'−':'')+'S/ '+Math.abs(n).toLocaleString('es-PE'); }
+  function pon(){
+    var q=+r.value, I=3.5*q, CT=180+1.5*q, U=I-CT;
+    box.querySelector('#gQv').textContent='q = '+q;
+    var l=box.querySelector('#gQ'); l.setAttribute('x1',X(q)); l.setAttribute('x2',X(q));
+    var pi=box.querySelector('#gPi'); pi.setAttribute('cx',X(q)); pi.setAttribute('cy',Y(I));
+    var pc=box.querySelector('#gPc'); pc.setAttribute('cx',X(q)); pc.setAttribute('cy',Y(CT));
+    var z=box.querySelector('#gZona');
+    z.setAttribute('d','M'+X(q)+' '+Y(I)+' L'+X(q)+' '+Y(CT));
+    z.setAttribute('class','g-zona '+(U>0?'gana':(U<0?'pierde':'')));
+    box.querySelector('#gLee').innerHTML='<span class="i">I = '+fmt(I)+'</span><span class="ct">CT = '+fmt(CT)+'</span>'+
+      '<span class="u '+(U>0?'gana':(U<0?'pierde':'cero'))+'">U = '+fmt(U)+(U>0?' &#128512; gana':(U<0?' &#128543; pierde':' &#9878;&#65039; equilibrio'))+'</span>';
+  }
+  r.addEventListener('input', pon);
+  r.addEventListener('keydown', function(e){ e.stopPropagation(); });
+  pon();
+}
 /* la portada muestra el código grande y quién soy */
 function decora(){
+  qq('#lam [data-graf]').forEach(function(el){
+    if(el.dataset.listo) return;
+    el.dataset.listo='1'; el.innerHTML=grafHtml(); cableaGraf(el);
+  });
   qq('#lam [data-sala]').forEach(function(el){
     var c=window.Aula && Aula.sala;
     el.innerHTML = c ? '<span class="cod">C&oacute;digo de la sala <b>'+esc(c)+'</b></span>'+
