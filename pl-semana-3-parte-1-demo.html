@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-h">
+<meta name="version" content="2026-10-31-s5demo-i">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1132,6 +1132,19 @@
     .cajas .caja{ min-height:0; }
     [data-act="r4"] .preg{ font-size:18px; }
   }
+
+  /* ---- «Avisar al docente» en el celular: botón redondo como el de la calculadora ---- */
+  html.movil .aula-av{ left:auto; right:10px; bottom:120px; }   /* encima de la calculadora (44 px, a 66 px del borde) */
+  html.movil .aula-av .av-fab{ width:44px; height:44px; padding:0; border-radius:50%; font-size:0; line-height:0;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(7,23,103,.35); }
+  html.movil .aula-av .av-fab::before{ content:'\1F64B'; font-size:22px; line-height:1; }
+  html.movil .aula-av .av-fab.ok::before{ content:'\1F44C'; }
+  html.movil .aula-av .av-fab.duda::before{ content:'\270B'; }
+  html.movil .aula-av .av-pan{ left:auto; right:0; bottom:52px; }
+  @media (max-height:560px){ html.movil .aula-av{ bottom:94px; } }
+  html.movil .ctx-anim{ display:none; }
+  /* mientras se arrastra una ficha, los botones flotantes no estorban */
+  html.arrastra .aula-av, html.arrastra .ca-btn{ opacity:.15; pointer-events:none !important; }
 
   /* ---- en el celular ---- */
   html.movil .cgrid, html.movil .dgrid{ grid-template-columns:minmax(0,1fr); }
@@ -3778,6 +3791,16 @@ function decora(){
     b.addEventListener('click', function(){ if(b.dataset.ab==='link') abreEnlace(); else abreNombre(); });
   });
 }
+/* al arrastrar una ficha, los botones flotantes se apartan para poder soltarla debajo */
+(function(){
+  var raiz=document.documentElement;
+  document.addEventListener('pointermove', function(){
+    raiz.classList.toggle('arrastra', !!document.querySelector('.fantasma'));
+  }, { passive:true });
+  ['pointerup','pointercancel'].forEach(function(t){
+    document.addEventListener(t, function(){ setTimeout(function(){ raiz.classList.remove('arrastra'); }, 0); }, { passive:true });
+  });
+})();
 $('salaTit').addEventListener('click', abreEnlace);
 $('btnLink').addEventListener('click', abreEnlace);
 $('btnDash').addEventListener('click', abreDash);
