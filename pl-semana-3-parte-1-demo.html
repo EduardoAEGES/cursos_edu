@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-c">
+<meta name="version" content="2026-10-31-s5demo-d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1008,6 +1008,17 @@
   .dlista button{ font:inherit; font-size:13px; font-weight:800; border:1px solid #D5DDEF; background:#fff; border-radius:8px; padding:3px 8px; cursor:pointer; }
   .dvacio{ color:#8A8A92; font-size:15px; }
 
+  /* sin música ni botones que no se usan; la zona de la sala ocupa poco */
+  #aulaGrande, #aulaRefresca, #aulaMus{ display:none !important; }
+  .puerta.dentro{ padding:8px 12px; margin-top:10px; border-style:solid; }
+  .puerta.dentro h2{ display:none; }
+  .puerta.dentro .aula-filas{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .puerta.dentro .aula-fila{ align-items:center; gap:8px; }
+  .puerta.dentro .o-btn{ padding:5px 10px; font-size:14px; }
+  .puerta.dentro .aula-rol{ font-size:12px; }
+  .pt-agenda [data-agenda] p{ margin:4px 0 2px; }
+  .pt-agenda [data-agenda] ul{ margin:0 0 4px; padding-left:22px; columns:2; column-gap:18px; font-size:.9em; }
+  .pt-agenda b.sub{ display:inline; font-size:inherit; letter-spacing:0; text-transform:none; color:var(--marino); margin:0; }
   /* en la demo solo va la actividad: sin tarjetas de «Tip» ni «Recuerda» */
   .relleno{ display:none !important; }
 
@@ -1059,11 +1070,11 @@
   .g-lee .u.gana{ background:#DCFCE7; color:#166534; } .g-lee .u.pierde{ background:#FEE2E2; color:#991B1B; } .g-lee .u.cero{ background:#FFF1CC; color:#8A5A00; }
 
   /* ---- portada en 3D ---- */
-  .pt-3d{ position:relative; height:96px; perspective:700px; margin:0 auto 6px; width:260px; }
-  .moneda{ position:absolute; left:50%; top:4px; width:86px; height:86px; margin-left:-43px; transform-style:preserve-3d;
+  .pt-3d{ position:relative; height:78px; perspective:700px; margin:0 auto 6px; width:260px; }
+  .moneda{ position:absolute; left:50%; top:4px; width:70px; height:70px; margin-left:-35px; transform-style:preserve-3d;
            animation:gira 5s linear infinite; }
   .moneda .cara{ position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center;
-                 font-size:34px; font-weight:900; color:#8A5A00; backface-visibility:hidden;
+                 font-size:28px; font-weight:900; color:#8A5A00; backface-visibility:hidden;
                  background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFC94D 55%, #E0A100); box-shadow:inset 0 0 0 6px #F5B700, 0 10px 18px rgba(7,23,103,.25); }
   .moneda .atras{ transform:rotateY(180deg); }
   @keyframes gira{ from{ transform:rotateY(0) rotateX(12deg); } to{ transform:rotateY(360deg) rotateX(12deg); } }
@@ -1118,6 +1129,7 @@
   /* ---- en el celular ---- */
   html.movil .cgrid, html.movil .dgrid{ grid-template-columns:minmax(0,1fr); }
   html.movil .ctx{ grid-template-columns:minmax(0,1fr); }
+  html.movil .pt-agenda [data-agenda] ul{ columns:1; }
   html.movil .cops.g2{ grid-template-columns:minmax(0,1fr); }
   html.movil .notas{ grid-template-columns:repeat(2,minmax(0,1fr)); }
   html.movil .deb{ grid-template-columns:minmax(0,1fr); }
@@ -1483,7 +1495,7 @@ r5:{"tipo": "cruz", "corto": "Reflexión 5", "titulo": "Actividad de reflexión 
 
 /* ================= las diapositivas ================= */
 var D=[
-{"et": "Portada", "t": "Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><div class=\"pt-3d\" aria-hidden=\"true\"><div class=\"moneda\"><b class=\"cara\">S/</b><b class=\"cara atras\">&#129375;</b></div><img class=\"flota f1\" src=\"marca/iconos/billetes.png\" alt=\"\"><img class=\"flota f2\" src=\"marca/iconos/crece.png\" alt=\"\"><img class=\"flota f3\" src=\"marca/iconos/barras.png\" alt=\"\"></div><span class=\"pt-sem\">Semana 3 &middot; Parte 1 &middot; Demo</span><h2>Costo, ingreso y utilidad</h2><p class=\"pt-ses\">Sesi&oacute;n de verificaci&oacute;n: lo vimos en la pizarra, ahora lo comprobamos</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>Para qu&eacute; es esta sesi&oacute;n</b>Comprobar que sabes distinguir costos fijos y variables, calcular CT, I, U y el punto de equilibrio, y leer su gr&aacute;fica.</div><div class=\"pt-agenda\"><b>Hoy haremos</b><ol><li><b>Conectemos:</b> pregunta abierta, debate, encuesta y opini&oacute;n. Tus respuestas salen como stickers en la pizarra.</li><li><b>Actividades de reflexi&oacute;n / cierre:</b> clasificar, unir f&oacute;rmulas, calcular, leer la gr&aacute;fica y el crucigrama.</li></ol></div></div><div class=\"pt-yo\" data-yo></div></div>"},
+{"et": "Portada", "t": "Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><div class=\"pt-3d\" aria-hidden=\"true\"><div class=\"moneda\"><b class=\"cara\">S/</b><b class=\"cara atras\">&#129375;</b></div><img class=\"flota f1\" src=\"marca/iconos/billetes.png\" alt=\"\"><img class=\"flota f2\" src=\"marca/iconos/crece.png\" alt=\"\"><img class=\"flota f3\" src=\"marca/iconos/barras.png\" alt=\"\"></div><span class=\"pt-sem\">Semana 3 &middot; Parte 1 &middot; Demo</span><h2>Costo, ingreso y utilidad</h2><p class=\"pt-ses\">Sesi&oacute;n de verificaci&oacute;n: lo vimos en la pizarra, ahora lo comprobamos</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>Para qu&eacute; es esta sesi&oacute;n</b>Comprobar que sabes distinguir costos fijos y variables, calcular CT, I, U y el punto de equilibrio, y leer su gr&aacute;fica.</div><div class=\"pt-agenda\"><b>Hoy haremos</b><div data-agenda></div></div></div><div class=\"pt-yo\" data-yo></div></div>"},
 {"et": "Conectemos", "t": "Conectemos 1 · Pregunta abierta", "h": "", "claves": ["c1"]},
 {"et": "Conectemos", "t": "Conectemos 2 · Debate", "h": "", "claves": ["c2"]},
 {"et": "Conectemos", "t": "Conectemos 3 · Encuesta", "h": "", "claves": ["c3"]},
@@ -1553,8 +1565,8 @@ function cuantas(k){
 }
 function hechas(k){ return hechasEn(G, k); }
 function lista(k){ return hechas(k)>=cuantas(k); }
-function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=hechas(k); }); return s; }
-function totalMax(){ var s=0; clavesVis().forEach(function(k){ s+=cuantas(k); }); return s; }
+function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=Math.min(1, hechas(k)/cuantas(k)); }); return Math.round(s*10)/10; }
+function totalMax(){ return clavesVis().length; }
 var i=0;
 try{ var i0=parseInt(sessionStorage.getItem(LS+'_i'),10); if(i0>0 && i0<D.length) i=i0; }catch(e){}
 
@@ -2168,7 +2180,7 @@ function pinta(quieto){
   $('sig').disabled=(posVis(i)>=vis().length-1);
   var ok=totalOk(), mx=totalMax();
   $('riel').style.width=Math.round(ok/mx*100)+'%';
-  $('marcador').textContent=ok+' de '+mx;
+  $('marcador').textContent=(mx ? Math.round(ok/mx*100) : 0)+' % · '+clavesVis().filter(lista).length+' de '+mx+' actividades';
   $('rotulo').textContent='Diapositiva '+(posVis(i)+1)+' de '+vis().length;
   $('pts').innerHTML=vis().map(function(n){ var x=D[n];
     var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
@@ -2949,7 +2961,7 @@ function ventanaAula(e){
         '<div class="lin"><span>Va en la diapositiva</span><b>'+esc(e.lamina||'—')+'</b></div>'+
         '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
         '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
+        '<div class="lin"><span>Avance</span><b>'+pct+' %</b></div>'+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
     var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
@@ -2985,7 +2997,7 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Alumno<b>'+esc(alumno||'—')+'</b></span>'+
       '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
       '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
-      '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
+      '<span class="dato">Avance<b>'+pct+' %</b></span>'+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
     replicaAlumno(e)+
@@ -3299,11 +3311,11 @@ function cuenta(GG){
   var ok=0, tot=0, rejB=[], rejP=[];
   clavesVis().forEach(function(k,n){
     var h=hechasEn(GG,k), t=cuantas(k);
-    ok+=h; tot+=t;
+    ok+=Math.min(1, h/t); tot+=1;   /* cada actividad vale 1 punto */
     rejB.push({ b:CLAVES.indexOf(k), n:h, t:t });
     rejP.push({ b:n, n:h, t:t });
   });
-  return { ok:ok, total:tot, rejB:rejB, rejP:rejP };
+  return { ok:Math.round(ok*10)/10, total:tot, rejB:rejB, rejP:rejP };
 }
 /* para el reporte del aula: cada alumno se mide sobre lo que el docente eligió */
 function ajustaReporte(e){
@@ -3320,7 +3332,7 @@ function ajustaVista(e){
   return o;
 }
 function actividadesReporte(){
-  return clavesVis().map(function(k){ return { et:ACT[k].corto||k, t:ACT[k].titulo, max:cuantas(k) }; });
+  return clavesVis().map(function(k){ return { et:ACT[k].corto||k, t:ACT[k].titulo, max:1 }; });
 }
 
 /* ================= diálogos ================= */
@@ -3427,7 +3439,7 @@ function abreElige(){
   function it(k){
     var A=ACT[k];
     return '<label class="dm-it"><input type="checkbox" data-k="'+k+'"'+(on.indexOf(k)>=0?' checked':'')+'>'+
-           '<span>'+esc(A.titulo)+'</span><small>'+cuantas(k)+(cuantas(k)===1?' punto':' puntos')+'</small></label>';
+           '<span>'+esc(A.titulo)+'</span></label>';
   }
   var v=dialogo('<div class="dm-h"><b>Actividades de hoy</b><span id="dmCuenta" class="dvacio"></span>'+
       '<button type="button" class="x" data-cierra>&#10005;</button></div>'+
@@ -3439,8 +3451,7 @@ function abreElige(){
       '<button type="button" class="o-btn o-btn-primary" id="dmAplica">Aplicar</button></div>');
   function marcadas(){ return qq('input[data-k]', v).filter(function(c){ return c.checked; }).map(function(c){ return c.dataset.k; }); }
   function cuentaSel(){
-    var m=marcadas(), pts=0; m.forEach(function(k){ pts+=cuantas(k); });
-    $('dmCuenta').textContent=m.length+' de '+CLAVES.length+' · '+pts+' puntos';
+    $('dmCuenta').textContent=marcadas().length+' de '+CLAVES.length;
   }
   v.addEventListener('change', cuentaSel); cuentaSel();
   $('dmTodas').addEventListener('click', function(){ qq('input[data-k]', v).forEach(function(c){ c.checked=true; }); cuentaSel(); });
@@ -3643,6 +3654,12 @@ function decora(){
     if(!enSala()){ el.innerHTML=''; return; }
     el.innerHTML='Est&aacute;s como <b>'+esc(Aula.yo||'')+'</b><button type="button" data-ab="nom">&#9999;&#65039; Cambiar mi nombre</button>';
   });
+  qq('#lam [data-agenda]').forEach(function(el){
+    var ks=clavesVis(), con=ks.filter(function(k){ return ACT[k].tipo==='con'; }), ref=ks.filter(function(k){ return ACT[k].tipo!=='con'; });
+    function li(k){ return '<li>'+esc(ACT[k].titulo.replace(/^Actividad de reflexión \/ cierre \d+ · /,''))+'</li>'; }
+    el.innerHTML=(con.length ? '<p><b class="sub">Conectemos</b> &mdash; tus respuestas salen como stickers en la pizarra</p><ul>'+con.map(li).join('')+'</ul>' : '')+
+                 (ref.length ? '<p><b class="sub">Actividades de reflexi&oacute;n / cierre</b></p><ul>'+ref.map(li).join('')+'</ul>' : '');
+  });
   qq('#lam [data-misfallos]').forEach(function(el){
     if(soyDocente() && !replica){ el.innerHTML=''; return; }   /* el docente ve la de toda la clase en el dashboard */
     var ks=clavesVis(), mis=(G.fallos||[]).filter(function(f){ return ks.indexOf(f.k)>=0; }).slice().reverse();
@@ -3664,7 +3681,7 @@ var textoPuerta=null;
 if(window.Aula){
   Aula.iniciar({ sala:'PLS5D', codigo:'PL', clave:'LOGICO', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, ventana:ventanaAula,
     actividades:actividadesReporte, ajusta:ajustaReporte, tituloReporte:'Reporte de participación · Semana 3 · Parte 1: Costo, ingreso y utilidad (demo)',
-    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+    pantalla:pantalla, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if(doc){ if(SEL===null) leeSel(); } else if(!Aula.enSala){ SEL=null; }   /* alumno sin sala: se ven todas */
@@ -3674,6 +3691,7 @@ if(window.Aula){
       var pp=$('puerta').querySelector('p');
       if(textoPuerta===null) textoPuerta=pp.innerHTML;
       $('puerta').querySelector('h2').textContent = prac ? 'Modo práctica' : (dentro ? 'Estás dentro' : 'Entra a la sala');
+      $('puerta').classList.toggle('dentro', !!Aula.enSala);
       if(prac){
         pp.innerHTML='Estás practicando: <b>tus respuestas son temporales</b> y no se guardan ni las ve el docente. '+
                      'Para guardar tu avance, pulsa <b>Salir</b> y entra con el código de tu docente.';
