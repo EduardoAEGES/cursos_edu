@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-i">
+<meta name="version" content="2026-10-31-s5demo-j">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -990,6 +990,8 @@
   .esc .lam .mf .tf{ max-height:none; }
 
   /* ---- dashboard del docente ---- */
+  .dgraf{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:14px; margin-bottom:14px; align-items:start; }
+  .dgraf .dg svg{ width:100%; height:auto; display:block; }
   .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
   .kpi{ background:#F1F5FD; border-radius:14px; padding:12px 14px; }
   .kpi span{ display:block; font-size:14px; font-weight:800; color:#55607F; text-transform:uppercase; letter-spacing:.05em; }
@@ -1281,7 +1283,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261031b"></script>
+<script src="aula.js?v=20261031c"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -3485,6 +3487,114 @@ function abreElige(){
   });
 }
 
+/* ================= gráficos del dashboard (SVG: sirven en pantalla y, como imagen, en el Excel) ================= */
+var NIVELES=[ { t:'Completó', c:'#0F6B45', ok:function(p){ return p>=1; } },
+              { t:'Avanzado', c:'#22A06B', ok:function(p){ return p>=0.8 && p<1; } },
+              { t:'En proceso', c:'#E0A100', ok:function(p){ return p>=0.5 && p<0.8; } },
+              { t:'Inicio', c:'#D64545', ok:function(p){ return p>0 && p<0.5; } },
+              { t:'Sin empezar', c:'#B9C2D8', ok:function(p){ return !p; } } ];
+var FUENTE='font-family="Segoe UI,Arial,Helvetica,sans-serif"';
+function corta(t, n){ t=String(t||''); return t.length>n ? t.slice(0,n-1)+'…' : t; }
+function svgCaja(W, H, titulo, cuerpo){
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" '+FUENTE+'>'+
+    '<rect width="'+W+'" height="'+H+'" rx="14" fill="#ffffff" stroke="#E3E8F4" stroke-width="2"/>'+
+    '<text x="18" y="30" font-size="17" font-weight="800" fill="#071767">'+esc(titulo)+'</text>'+cuerpo+'</svg>';
+}
+function svgDona(datos, titulo, W, H){
+  var tot=datos.reduce(function(s,x){ return s+x.v; },0), cx=150, cy=H/2+14, R=92, r0=56, ang=-Math.PI/2, b='';
+  function pt(a, rr){ return (cx+rr*Math.cos(a)).toFixed(1)+' '+(cy+rr*Math.sin(a)).toFixed(1); }
+  if(!tot) b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="#E3E8F4" stroke-width="'+(R-r0)+'"/>';
+  datos.forEach(function(x){
+    if(!x.v) return;
+    var a2=ang+(x.v/tot)*Math.PI*2-(x.v===tot?0.0001:0), g=(a2-ang)>Math.PI?1:0;
+    b+='<path d="M'+pt(ang,R)+' A'+R+' '+R+' 0 '+g+' 1 '+pt(a2,R)+' L'+pt(a2,r0)+' A'+r0+' '+r0+' 0 '+g+' 0 '+pt(ang,r0)+' Z" fill="'+x.c+'"/>';
+    ang=a2;
+  });
+  b+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="30" font-weight="900" fill="#071767">'+tot+'</text>'+
+     '<text x="'+cx+'" y="'+(cy+24)+'" text-anchor="middle" font-size="12" fill="#55607F">alumnos</text>';
+  datos.forEach(function(x,i){
+    var y=70+i*36;
+    b+='<rect x="280" y="'+(y-13)+'" width="16" height="16" rx="4" fill="'+x.c+'"/>'+
+       '<text x="304" y="'+y+'" font-size="15" fill="#0B1B3F">'+esc(x.t)+'</text>'+
+       '<text x="'+(W-20)+'" y="'+y+'" font-size="15" font-weight="800" text-anchor="end" fill="#0B1B3F">'+x.v+
+       (tot?' · '+Math.round(x.v/tot*100)+'%':'')+'</text>';
+  });
+  return svgCaja(W, H, titulo, b);
+}
+/* barras horizontales: datos [{t, v, c, lbl}] con v entre 0 y max */
+function svgBarrasH(datos, titulo, W, max){
+  var fila=34, H=Math.max(140, 56+datos.length*fila+10), x0=190, ancho=W-x0-80, b='';
+  if(!datos.length) b+='<text x="18" y="70" font-size="15" fill="#8A8A92">Sin datos todavía</text>';
+  datos.forEach(function(x,i){
+    var y=50+i*fila, w=max ? Math.max(2, ancho*Math.min(1, x.v/max)) : 2;
+    b+='<text x="'+(x0-10)+'" y="'+(y+17)+'" font-size="14" text-anchor="end" fill="#0B1B3F">'+esc(corta(x.t, 24))+'</text>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+ancho+'" height="18" rx="9" fill="#EEF2FA"/>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+w.toFixed(1)+'" height="18" rx="9" fill="'+x.c+'"/>'+
+       '<text x="'+(x0+ancho+8)+'" y="'+(y+18)+'" font-size="14" font-weight="800" fill="'+x.c+'">'+esc(x.lbl)+'</text>';
+  });
+  return { svg:svgCaja(W, H, titulo, b), h:H };
+}
+/* columnas: datos [{t, v}] */
+function svgColumnas(datos, titulo, W, H, color){
+  var mx=Math.max(1, Math.max.apply(null, datos.map(function(x){ return x.v; }).concat([0]))), base=H-46, alto=base-64, b='';
+  var paso=datos.length ? (W-60)/datos.length : 1, ancho=Math.min(56, paso*0.6);
+  b+='<line x1="30" y1="'+base+'" x2="'+(W-20)+'" y2="'+base+'" stroke="#C9D2E6" stroke-width="2"/>';
+  if(!datos.length) b+='<text x="18" y="70" font-size="15" fill="#8A8A92">Sin datos todavía</text>';
+  datos.forEach(function(x,i){
+    var h=alto*x.v/mx, cx=40+paso*i+paso/2;
+    b+='<rect x="'+(cx-ancho/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+ancho.toFixed(1)+'" height="'+Math.max(h,1).toFixed(1)+'" rx="6" fill="'+(x.c||color)+'"/>'+
+       '<text x="'+cx.toFixed(1)+'" y="'+(base-h-8).toFixed(1)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#0B1B3F">'+x.v+'</text>'+
+       '<text x="'+cx.toFixed(1)+'" y="'+(base+20)+'" text-anchor="middle" font-size="13" fill="#55607F">'+esc(corta(x.t, 14))+'</text>';
+  });
+  return svgCaja(W, H, titulo, b);
+}
+/* todos los gráficos del tablero, solo con lo que el docente eligió */
+function graficosDash(d){
+  var al=d.al, W=560, g=[];
+  g.push({ t:'niveles', svg:svgDona(NIVELES.map(function(nv){
+    return { t:nv.t, c:nv.c, v:al.filter(function(a){ return nv.ok(a.p); }).length };
+  }), 'Niveles de la clase', W, 300), h:300 });
+  var b1=svgBarrasH(d.porAct.map(function(x){
+    return { t:ACT[x.k].corto||x.k, v:x.p, c:tono(x.p), lbl:Math.round(x.p*100)+'%' };
+  }), 'Avance promedio por actividad', W, 1);
+  g.push({ t:'actividades', svg:b1.svg, h:b1.h });
+  var ref=d.ks.filter(function(k){ return ACT[k].tipo!=='con'; });
+  g.push({ t:'fallos', svg:svgColumnas(ref.map(function(k){
+    return { t:ACT[k].corto||k, v:d.fallos.filter(function(f){ return f.k===k; }).length };
+  }), 'Fallos por actividad', W, 300, '#FC0045'), h:300 });
+  var ord=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,20);
+  var b2=svgBarrasH(ord.map(function(a){ return { t:a.n, v:a.p, c:tono(a.p), lbl:Math.round(a.p*100)+'%' }; }),
+                    'Avance por alumno'+(al.length>20?' (los 20 primeros)':''), W, 1);
+  g.push({ t:'alumnos', svg:b2.svg, h:b2.h });
+  d.ks.forEach(function(k){
+    var A=ACT[k];
+    if(A.tipo!=='con' || (A.modo!=='poll' && A.modo!=='opinion')) return;
+    var it=PIZ[k]||[], tot=it.length;
+    var b3=svgBarrasH(A.ops.map(function(o,j){
+      var n=it.filter(function(x){ return x.v===j; }).length;
+      return { t:o.replace(/^[^\wÁÉÍÓÚáéíóúÑñ]+\s*/,''), v:n, c:'#071767', lbl:n+(tot?' · '+Math.round(n/tot*100)+'%':'') };
+    }), A.titulo, W, Math.max(1, tot));
+    g.push({ t:k, svg:b3.svg, h:b3.h });
+  });
+  return g;
+}
+/* un SVG convertido en PNG (para el Excel) */
+function pngDe(svg, W, H){
+  return new Promise(function(ok){
+    var img=new Image(), esc2=2;
+    img.onload=function(){
+      try{
+        var c=document.createElement('canvas'); c.width=W*esc2; c.height=H*esc2;
+        var x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+        x.drawImage(img, 0, 0, c.width, c.height);
+        ok(c.toDataURL('image/png'));
+      }catch(e){ ok(null); }
+    };
+    img.onerror=function(){ ok(null); };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+}
+
 /* ================= dashboard del docente ================= */
 var dashAbierto=false;
 function dashVivo(){ return dashAbierto && !!$('dmDash'); }
@@ -3529,14 +3639,8 @@ function pintaDash(){
     '<div class="kpi f"><span>Sin empezar</span><b>'+nada+'</b><small>de '+n+'</small></div>'+
     (conVis.length ? '<div class="kpi"><span>Conectemos</span><b>'+conUno+'</b><small>respondieron al menos una</small></div>' : '')+
     '<div class="kpi f"><span>Manos levantadas</span><b>'+manos.length+'</b><small>'+(manos.length?esc(manos.map(function(a){ return a.n; }).slice(0,3).join(', ')):'nadie por ahora')+'</small></div>'+
-    '</div><div class="dgrid"><div>'+
-    '<div class="dbox"><h4>Avance por actividad (solo las elegidas)</h4>'+
-    d.porAct.map(function(r){
-      var A=ACT[r.k];
-      return '<div class="dfila"><span>'+esc(A.corto||r.k)+' &middot; '+esc(A.titulo.replace(/^[^·]*·\s*/,''))+'</span>'+
-             '<span class="riel2"><i style="width:'+Math.round(r.p*100)+'%;background:'+tono(r.p)+'"></i></span>'+
-             '<b>'+Math.round(r.p*100)+'% &middot; '+r.comp+'/'+n+'</b></div>';
-    }).join('')+'</div>'+
+    '</div><div class="dgraf">'+graficosDash(d).map(function(x){ return '<div class="dg">'+x.svg+'</div>'; }).join('')+'</div>'+
+    '<div class="dgrid"><div>'+
     '<div class="dbox"><h4>Preguntas con m&aacute;s errores</h4>'+
     (d.errores.length ? '<ul class="dlista">'+d.errores.map(function(e){
       return '<li><span>'+esc(ACT[e.k].corto)+': '+esc(e.q)+'</span><span class="v">'+e.n+(e.n===1?' alumno':' alumnos')+' &middot; '+e.veces+'&times;</span></li>';
@@ -3551,10 +3655,10 @@ function pintaDash(){
                '<button type="button" data-ver="'+esc(a.n)+'">Ver</button></li>';
       }).join('')+'</ul>' : '<p class="dvacio">'+(n?'Todos van por encima del 50 %.':'Todav&iacute;a no hay alumnos.')+'</p>';
   h+='</div><div class="dbox"><h4>Conectemos: respuestas en la pizarra</h4><ul class="dlista">'+
-     CON.map(function(k){
-       var on=d.ks.indexOf(k)>=0, c=(PIZ[k]||[]).length;
-       return '<li><span>'+esc(ACT[k].titulo)+'</span><span class="v">'+(on ? c+' de '+n : 'no elegida')+'</span></li>';
-     }).join('')+'</ul></div>'+
+     (CON.filter(function(k){ return d.ks.indexOf(k)>=0; }).map(function(k){
+       var c=(PIZ[k]||[]).length;
+       return '<li><span>'+esc(ACT[k].titulo)+'</span><span class="v">'+c+' de '+n+'</span></li>';
+     }).join('') || '<li class="dvacio">Hoy no se eligió ning&uacute;n Conectemos.</li>')+'</ul></div>'+
      '<div class="dbox"><h4>Ranking de participaci&oacute;n</h4>';
   var top=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,8);
   h+= top.length ? '<ul class="dlista">'+top.map(function(a,j){
@@ -3624,37 +3728,79 @@ function excelExtra(wb){
     if(pctCol){ var c=r.getCell(pctCol); c.numFmt='0%'; c.font={ bold:true, color:{ argb:arg(tono(p)) } }; }
     return r;
   }
-  /* ---- Dashboard ---- */
-  var ws=wb.addWorksheet('Dashboard');
-  tit(ws, 'Dashboard de la clase · '+document.title.replace(/^Pensamiento L.gico - /,''), 6);
+  /* ---- Dashboard: tarjetas, gráficos y tablas ---- */
+  var ws=wb.addWorksheet('Dashboard', { views:[{ showGridLines:false }] });
+  for(var cc=1; cc<=12; cc++) ws.getColumn(cc).width=13.5;
+  tit(ws, 'Dashboard de la clase · '+document.title.replace(/^Pensamiento L.gico - /,''), 12);
   var prom = n ? al.reduce(function(s,a){ return s+a.p; },0)/n : 0;
-  sec(ws, 'Indicadores');
-  cab(ws, ['Indicador','Valor']);
-  fila(ws, ['En la sala', n]);
-  fila(ws, ['Participación promedio (sobre lo elegido)', prom], 2, prom);
-  fila(ws, ['Completaron todo', al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length]);
-  fila(ws, ['Sin empezar', al.filter(function(a){ return !a.ok; }).length]);
-  fila(ws, ['Fallos registrados', d.fallos.length]);
-  sec(ws, 'Avance por actividad (solo las elegidas)');
-  cab(ws, ['Actividad','Promedio del aula','Completaron','Empezaron']);
-  d.porAct.forEach(function(r){ fila(ws, [ACT[r.k].titulo, r.p, r.comp+' de '+n, r.emp+' de '+n], 2, r.p); });
-  sec(ws, 'Preguntas con más errores');
-  cab(ws, ['Actividad','Pregunta','Alumnos','Veces']);
-  if(d.errores.length) d.errores.forEach(function(e){ fila(ws, [ACT[e.k].corto, e.q, e.n, e.veces]); });
-  else fila(ws, ['Sin errores registrados','','','']);
-  sec(ws, 'Necesitan apoyo (menos de 50 %)');
-  cab(ws, ['Alumno','Avance','Fallos']);
-  var bajos=al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; });
-  if(bajos.length) bajos.forEach(function(a){ fila(ws, [a.n, a.p, a.nf||0], 2, a.p); });
-  else fila(ws, ['Todos sobre el 50 %','','']);
-  sec(ws, 'Ranking de participación');
-  cab(ws, ['Puesto','Alumno','Puntos','Avance']);
-  al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); })
-    .forEach(function(a,i){ fila(ws, [i+1, a.n, a.ok+' de '+a.tot, a.p], 4, a.p); });
-  sec(ws, 'Conectemos: respuestas en la pizarra');
-  cab(ws, ['Actividad','Respuestas']);
-  CON.forEach(function(k){ fila(ws, [ACT[k].titulo, d.ks.indexOf(k)>=0 ? (PIZ[k]||[]).length+' de '+n : 'no elegida']); });
-  [48,40,16,14,12,12].forEach(function(w,j){ ws.getColumn(j+1).width=w; });
+  var conVis=CON.filter(function(k){ return d.ks.indexOf(k)>=0; });
+  var tarjetas=[
+    ['En la sala', n, 'FF071767'],
+    ['Participación', Math.round(prom*100)+'%', 'FF0E8F95'],
+    ['Completaron', al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length+' de '+n, 'FF0F6B45'],
+    ['Sin empezar', al.filter(function(a){ return !a.ok; }).length+' de '+n, 'FF8A8A92'],
+    ['Fallos', d.fallos.length, 'FFFC0045'],
+    ['Actividades', d.ks.length+' de '+CLAVES.length, 'FFC600A3']
+  ];
+  ws.getRow(4).height=22; ws.getRow(5).height=40;
+  tarjetas.forEach(function(t,i){
+    var c1=1+i*2;
+    ws.mergeCells(4,c1,4,c1+1); ws.mergeCells(5,c1,5,c1+1);
+    var a1=ws.getCell(4,c1), a2=ws.getCell(5,c1);
+    a1.value=t[0]; a2.value=t[1];
+    [a1,a2].forEach(function(x){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:t[2] } }; x.alignment={ horizontal:'center', vertical:'middle' }; });
+    a1.font={ bold:true, size:10, color:{ argb:'FFFFFFFF' } };
+    a2.font={ bold:true, size:22, color:{ argb:'FFFFFFFF' } };
+  });
+  /* zona de gráficos: dos por fila; las imágenes se agregan al final */
+  var graf=graficosDash(d), filaG=7, puestos=[];
+  for(var gi=0; gi<graf.length; gi+=2){
+    var hmax=Math.max(graf[gi].h, graf[gi+1] ? graf[gi+1].h : 0);
+    puestos.push({ g:graf[gi], col:0, row:filaG });
+    if(graf[gi+1]) puestos.push({ g:graf[gi+1], col:6, row:filaG });
+    filaG += Math.ceil(hmax/20)+1;
+  }
+  var rr=filaG+1;   /* siguiente fila libre, debajo de los gráficos */
+  /* tablas: el texto ocupa varias columnas unidas */
+  function tabla(titulo, cols, filas){
+    rr++;
+    var tr=ws.getRow(rr++); tr.getCell(1).value=titulo; tr.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } };
+    function pon(vals, esCab, pctIdx, p){
+      var row=ws.getRow(rr++), c=1;
+      cols.forEach(function(span, i){
+        var cel=row.getCell(c); cel.value=vals[i];
+        if(span>1) ws.mergeCells(row.number, c, row.number, c+span-1);
+        for(var k=0;k<span;k++){
+          var x=row.getCell(c+k); x.border=caja; x.alignment={ wrapText:true, vertical:'middle' };
+          if(esCab){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; x.font={ bold:true, color:{ argb:'FFFFFFFF' } }; }
+        }
+        if(i===pctIdx){ cel.numFmt='0%'; cel.font={ bold:true, color:{ argb:arg(tono(p)) } }; }
+        c+=span;
+      });
+    }
+    pon(filas.cab, true);
+    if(!filas.datos.length) pon(cols.map(function(x,i){ return i ? '' : filas.vacio; }));
+    filas.datos.forEach(function(f){ pon(f.v, false, f.pi, f.p); });
+  }
+  tabla('Avance por actividad (solo las elegidas)', [6,2,2,2], { cab:['Actividad','Promedio','Completaron','Empezaron'], vacio:'—',
+    datos:d.porAct.map(function(x){ return { v:[ACT[x.k].titulo, x.p, x.comp+' de '+n, x.emp+' de '+n], pi:1, p:x.p }; }) });
+  tabla('Preguntas con más errores', [2,6,2,2], { cab:['Actividad','Pregunta','Alumnos','Veces'], vacio:'Sin errores registrados',
+    datos:d.errores.map(function(e){ return { v:[ACT[e.k].corto, e.q, e.n, e.veces] }; }) });
+  tabla('Necesitan apoyo (menos de 50 %)', [6,3,3], { cab:['Alumno','Avance','Fallos'], vacio:'Todos sobre el 50 %',
+    datos:al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; })
+            .map(function(a){ return { v:[a.n, a.p, a.nf||0], pi:1, p:a.p }; }) });
+  tabla('Ranking de participación', [2,7,3], { cab:['Puesto','Alumno','Avance'], vacio:'Sin alumnos',
+    datos:al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); })
+            .map(function(a,i){ return { v:[i+1, a.n, a.p], pi:2, p:a.p }; }) });
+  if(conVis.length) tabla('Conectemos: respuestas en la pizarra', [8,4], { cab:['Actividad','Respuestas'], vacio:'',
+    datos:conVis.map(function(k){ return { v:[ACT[k].titulo, (PIZ[k]||[]).length+' de '+n] }; }) });
+  var espera=Promise.all(puestos.map(function(p){
+    return pngDe(p.g.svg, 560, p.g.h).then(function(png){
+      if(!png) return;
+      var id=wb.addImage({ base64:png, extension:'png' });
+      ws.addImage(id, { tl:{ col:p.col, row:p.row }, ext:{ width:560, height:p.g.h } });
+    });
+  }));
   /* ---- Evidencia de fallos ---- */
   var wf=wb.addWorksheet('Evidencia de fallos', { views:[{ state:'frozen', ySplit:3 }] });
   tit(wf, 'Evidencia de fallos', 6);
@@ -3668,11 +3814,12 @@ function excelExtra(wb){
   var wp=wb.addWorksheet('Pizarra Conectemos', { views:[{ state:'frozen', ySplit:3 }] });
   tit(wp, 'Respuestas de Conectemos', 4);
   cab(wp, ['Actividad','Alumno','Opción','Respuesta']);
-  CON.forEach(function(k){
+  CON.filter(function(k){ return d.ks.indexOf(k)>=0; }).forEach(function(k){
     var A=ACT[k];
     (PIZ[k]||[]).forEach(function(x){ fila(wp, [A.titulo, x.n, (A.ops && typeof x.v==='number') ? A.ops[x.v] : '', x.t||'']); });
   });
   [34,26,24,60].forEach(function(w,j){ wp.getColumn(j+1).width=w; });
+  return espera;
 }
 function abreDash(){
   if(!soyDocente()) return;
