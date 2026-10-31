@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-m">
+<meta name="version" content="2026-10-31-s5demo-n">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1317,7 +1317,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261101a"></script>
+<script src="aula.js?v=20261101b"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script src="bbb-chat.js?v=20261031"></script>
@@ -4169,9 +4169,51 @@ function abreAdmin(){
   $('admXls').addEventListener('click', excelAdmin);
   traeAdmin();
 }
+/* títulos de la versión anterior de la sesión (antes de dejar 4 actividades de cierre) */
+var ACT_ANT={ r1:'Reflexión 1 (versión anterior) · ¿Costo fijo o variable?', r2:'Reflexión 2 (versión anterior) · Une cada fórmula',
+  r3:'Reflexión 3 (versión anterior) · El caso de la juguería', r4:'Reflexión 4 (versión anterior) · Lee la gráfica',
+  r5:'Reflexión 5 (versión anterior) · Crucigrama' };
+/* sesiones sin registro (versión anterior): se arman con las filas de cada código de sala, por código y día */
+function reconstruye(filas, reg){
+  var por={};
+  (filas||[]).forEach(function(f){
+    var m=/^[^-]+-(\d{4})(-(ABIERTA|BATUTA))?$/.exec(f.sala); if(!m) return;
+    var pin=m[1], t=new Date(f.actualizado).getTime(), k=pin+'|'+new Date(t).toDateString();
+    var s=por[k]; if(!s) s=por[k]={ pin:pin, ini:t, fin:t, docente:'', alumnos:{}, claves:{} };
+    if(t<s.ini) s.ini=t; if(t>s.fin) s.fin=t;
+    var e=f.estado||{};
+    if(m[3]==='ABIERTA'){ if(e.docente) s.docente=e.docente; return; }
+    if(m[3] || e.renombrado) return;
+    var G0=e.G||{}, ant=!!G0.r5;
+    Object.keys(G0).filter(function(x){ return /^[cr]\d$/.test(x) && G0[x] && Object.keys(G0[x]).length; })
+      .forEach(function(x){ s.claves[x]= ant && ACT_ANT[x] ? ACT_ANT[x] : (ACT[x] ? ACT[x].titulo : x); });
+    var p;
+    if(ant) p=(+e.total||0) ? (+e.ok||0)/(+e.total) : 0;
+    else { var c=cuenta(G0); p=c.total ? c.ok/c.total : 0; }
+    s.alumnos[f.alumno]={ n:f.alumno, p:Math.round(p*1000)/1000, nf:(G0.fallos||[]).length };
+  });
+  /* las que ya tienen registro (mismo código y mismo día) no se repiten */
+  var hay={};
+  reg.forEach(function(r){ hay[(r.estado.pin||'')+'|'+new Date(r.estado.inicio).toDateString()]=1; });
+  return Object.keys(por).filter(function(k){ return !hay[k] && Object.keys(por[k].alumnos).length; }).map(function(k){
+    var s=por[k], al=Object.keys(s.alumnos).map(function(n){ return s.alumnos[n]; }), cl=Object.keys(s.claves).sort();
+    return { alumno:'ant-'+k, actualizado:new Date(s.fin).toISOString(), estado:{
+      docente:s.docente || 'Sin nombre (versión anterior)', pin:s.pin, inicio:s.ini, fin:s.fin, reconstruida:1,
+      actividades:cl.map(function(x){ return s.claves[x]; }), nAlumnos:al.length,
+      promedio:al.reduce(function(t,a){ return t+a.p; },0)/al.length,
+      fallos:al.reduce(function(t,a){ return t+a.nf; },0),
+      porAct:cl.map(function(x){ return { t:s.claves[x], p:0, comp:0, emp:al.length }; }),
+      alumnos:al } };
+  });
+}
 function traeAdmin(){
   if(!window.Aula || !Aula.leeRegistros) return;
-  Aula.leeRegistros().then(function(rows){ regs=(rows||[]).filter(function(r){ return r.estado && r.estado.docente; }); pintaAdmin(); })
+  Promise.all([ Aula.leeRegistros(), Aula.leeTodo ? Aula.leeTodo().catch(function(){ return []; }) : Promise.resolve([]) ])
+  .then(function(res){
+    var reg=(res[0]||[]).filter(function(r){ return r.estado && r.estado.docente; });
+    regs=reg.concat(reconstruye(res[1], reg)).sort(function(a,b){ return (b.estado.inicio||0)-(a.estado.inicio||0); });
+    pintaAdmin();
+  })
     .catch(function(e){ var b=$('dmAdm'); if(b) b.innerHTML='<p class="dvacio">No se pudo leer el hist&oacute;rico ('+esc(String(e))+').</p>'; });
 }
 function regsFiltrados(){
@@ -4198,11 +4240,12 @@ function pintaAdmin(){
   h+= R.length ? '<div class="tf ch"><table><thead><tr><th>Fecha</th><th>Docente</th><th>C&oacute;digo</th><th>Estudiantes</th><th>Actividades</th><th>Participaci&oacute;n</th><th>Fallos</th></tr></thead><tbody>'+
     R.map(function(r,i){
       var e=r.estado, ab=admAbierto[r.alumno];
-      var fila='<tr class="chf" data-r="'+esc(r.alumno)+'"><td>'+fechaHora(e.inicio)+' &ndash; '+horaCorta(e.fin).slice(0,5)+'</td><td><b>'+esc(e.docente)+'</b></td><td>'+esc(e.pin||'')+'</td>'+
+      var fila='<tr class="chf" data-r="'+esc(r.alumno)+'"><td>'+fechaHora(e.inicio)+' &ndash; '+horaCorta(e.fin).slice(0,5)+'</td><td><b>'+esc(e.docente)+'</b>'+(e.reconstruida?' <small class="dvacio">reconstruida</small>':'')+'</td><td>'+esc(e.pin||'')+'</td>'+
         '<td>'+(e.nAlumnos||0)+'</td><td>'+(e.actividades||[]).length+' <small class="dvacio">'+(ab?'&#9650;':'&#9660;')+' ver</small></td>'+
         '<td style="color:'+tono(e.promedio||0)+';font-weight:800">'+Math.round((e.promedio||0)*100)+'%</td><td>'+(e.fallos||0)+'</td></tr>';
-      if(ab) fila+='<tr class="chm"><td colspan="7"><div class="admdet"><div><b>Actividades realizadas</b><ul>'+(e.porAct||[]).map(function(x){
-          return '<li>'+esc(x.t)+' &mdash; <b style="color:'+tono(x.p)+'">'+Math.round(x.p*100)+'%</b> &middot; completaron '+x.comp+' de '+(e.nAlumnos||0)+'</li>'; }).join('')+'</ul></div>'+
+      if(ab) fila+='<tr class="chm"><td colspan="7"><div class="admdet"><div><b>Actividades '+(e.reconstruida?'con respuestas':'realizadas')+'</b><ul>'+(e.porAct||[]).map(function(x){
+          return '<li>'+esc(x.t)+(e.reconstruida ? '' : ' &mdash; <b style="color:'+tono(x.p)+'">'+Math.round(x.p*100)+'%</b> &middot; completaron '+x.comp+' de '+(e.nAlumnos||0))+'</li>'; }).join('')+'</ul>'+
+          (e.reconstruida?'<p class="dvacio">Sesi&oacute;n de la versi&oacute;n anterior: se arm&oacute; con las respuestas guardadas en la sala.</p>':'')+'</div>'+
         '<div><b>Estudiantes</b><ul>'+(e.alumnos||[]).map(function(a){ return '<li>'+esc(a.n)+' &mdash; '+Math.round(a.p*100)+'%'+(a.nf?' &middot; '+a.nf+' fallos':'')+'</li>'; }).join('')+'</ul></div></div></td></tr>';
       return fila;
     }).join('')+'</tbody></table></div>' : '<p class="dvacio">No hay sesiones registradas'+(regFiltro?' con ese filtro':'')+'. Se registran solas cuando un docente da clase con estudiantes en la sala.</p>';
@@ -4213,11 +4256,11 @@ function excelAdmin(){
   var R=regsFiltrados(); if(!R.length){ sopla('No hay sesiones para descargar'); return; }
   cargaXls().then(function(X){
     var wb=new X.Workbook(), ws=wb.addWorksheet('Sesiones', { views:[{ state:'frozen', ySplit:3 }] }), h=xlsHerr(ws);
-    h.tit('Histórico de sesiones · '+document.title.replace(/^Pensamiento L.gico - /,''), 'Generado el '+new Date().toLocaleString('es-PE'), 8);
-    h.cab(['Fecha','Inicio','Fin','Docente','Código','Estudiantes','Actividades','Participación promedio']);
+    h.tit('Histórico de sesiones · '+document.title.replace(/^Pensamiento L.gico - /,''), 'Generado el '+new Date().toLocaleString('es-PE'), 9);
+    h.cab(['Fecha','Inicio','Fin','Docente','Código','Estudiantes','Actividades','Participación promedio','Origen']);
     R.forEach(function(r){ var e=r.estado, f=h.fila([new Date(e.inicio).toLocaleDateString('es-PE'), horaCorta(e.inicio), horaCorta(e.fin), e.docente, e.pin, e.nAlumnos||0,
-      (e.actividades||[]).join('\n'), e.promedio||0]); f.getCell(8).numFmt='0%'; });
-    [12,10,10,36,10,12,60,14].forEach(function(w,j){ ws.getColumn(j+1).width=w; });
+      (e.actividades||[]).join('\n'), e.promedio||0, e.reconstruida?'Reconstruida (versión anterior)':'Registro']); f.getCell(8).numFmt='0%'; });
+    [12,10,10,36,10,12,60,14,24].forEach(function(w,j){ ws.getColumn(j+1).width=w; });
     var wd=wb.addWorksheet('Detalle por estudiante', { views:[{ state:'frozen', ySplit:3 }] }), hd=xlsHerr(wd);
     hd.tit('Estudiantes por sesión', '', 5);
     hd.cab(['Fecha','Docente','Código','Estudiante','Participación']);

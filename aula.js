@@ -178,7 +178,8 @@ function abreSala(c){
   return fetch(TABLA+'?on_conflict=sala,alumno', {
     method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
     body:JSON.stringify([{ sala:salaAbierta(c), alumno:'docente', caso:'',
-                           estado:{ abierta:1 }, actualizado:new Date().toISOString() }])
+                           estado:{ abierta:1, docente:leeLocal('docente_nombre')||'' },   /* para el histórico */
+                           actualizado:new Date().toISOString() }])
   }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
 }
 function latidoSala(){
@@ -706,6 +707,12 @@ function guardaRegistro(id, est){
     body:JSON.stringify([{ sala:cfg.sala+'-REG', alumno:String(id).slice(0,120), caso:'',
                            estado:est||{}, actualizado:new Date().toISOString() }])
   }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
+}
+/* todas las filas de esta clase (todas sus salas), para reconstruir sesiones antiguas */
+function leeTodo(){
+  return fetch(TABLA+'?select=sala,alumno,estado,actualizado&sala=like.'+encodeURIComponent(cfg.sala+'-*')+
+               '&order=actualizado.asc&limit=5000', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); });
 }
 function leeRegistros(){
   return fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-REG')+
@@ -1748,6 +1755,7 @@ window.Aula={
   renombra:function(n){ return renombra(n); },
   /* histórico de sesiones (para la vista de administración) */
   guardaRegistro:function(id, est){ return guardaRegistro(id, est); },
-  leeRegistros:function(){ return leeRegistros(); }
+  leeRegistros:function(){ return leeRegistros(); },
+  leeTodo:function(){ return leeTodo(); }
 };
 })();
