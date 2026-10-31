@@ -65,6 +65,7 @@
        si devuelve una promesa, el Excel se guarda cuando termina.
        Aula.renombra('Nuevo nombre') cambia el nombre sin salir de la sala.
        Aula.filas da las filas de la sala que ve el docente.
+       Aula.guardaRegistro(id, datos) y Aula.leeRegistros(): histórico de sesiones en cfg.sala-REG.
 
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
@@ -697,6 +698,19 @@ function publicaRecurso(r){
     if(cfg.recurso) cfg.recurso(recurso);
     return recurso;
   });
+}
+/* el histórico de sesiones: una fila por sesión en una sala aparte (cfg.sala-REG) */
+function guardaRegistro(id, est){
+  return fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:cfg.sala+'-REG', alumno:String(id).slice(0,120), caso:'',
+                           estado:est||{}, actualizado:new Date().toISOString() }])
+  }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
+}
+function leeRegistros(){
+  return fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-REG')+
+               '&order=actualizado.desc&limit=1000', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); });
 }
 function oyeRecurso(){
   if(!cfg.recurso) return;
@@ -1731,6 +1745,9 @@ window.Aula={
   /* las filas de la sala (solo el docente las trae): para pizarras y tableros */
   get filas(){ return gente.map(function(g){ return { alumno:g.alumno, estado:g.estado||{}, actualizado:g.actualizado }; }); },
   get yo(){ return docente ? (leeLocal('docente_nombre') || 'Docente') : yo; },
-  renombra:function(n){ return renombra(n); }
+  renombra:function(n){ return renombra(n); },
+  /* histórico de sesiones (para la vista de administración) */
+  guardaRegistro:function(id, est){ return guardaRegistro(id, est); },
+  leeRegistros:function(){ return leeRegistros(); }
 };
 })();
