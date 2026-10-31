@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pensamiento L&oacute;gico - Modo administrador</title>
+<meta name="robots" content="noindex">
+<meta name="version" content="2026-11-01-admin-a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  :root{ --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --tinta:#0B1B3F; --linea:#D5DDEF; --humo:#F1F5FD; --gris:#55607F; }
+  body{ background:#F4F6FB; }
+  .ad{ max-width:1400px; margin:0 auto; font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:var(--tinta); }
+  .ad button, .ad input, .ad select, .ad textarea{ font-family:inherit; }
+  [hidden]{ display:none !important; }
+  .cab{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; border-bottom:3px solid var(--fucsia); padding-bottom:12px; }
+  .cab img{ height:38px; }
+  .cab h1{ margin:0; font-size:clamp(22px,3vw,30px); font-weight:900; color:var(--marino); }
+  .cab p{ margin:2px 0 0; color:var(--gris); font-size:16px; }
+  .cab .der{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+  .tarjeta{ background:#fff; border:1px solid var(--linea); border-radius:16px; padding:16px 18px; margin-top:16px; }
+  .entrar{ max-width:420px; margin:40px auto; text-align:center; }
+  .entrar input{ width:100%; box-sizing:border-box; font-size:19px; padding:11px 12px; border:2px solid var(--linea); border-radius:12px; margin:12px 0 6px; }
+  .err{ color:#A4161A; font-weight:700; min-height:22px; }
+  .filtros{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; }
+  .filtros label{ display:flex; flex-direction:column; gap:4px; font-size:13px; font-weight:800; color:var(--gris); text-transform:uppercase; letter-spacing:.04em; }
+  .filtros input, .filtros select{ font-size:15px; padding:8px 10px; border:2px solid var(--linea); border-radius:10px; background:#fff; color:var(--tinta); min-width:150px; }
+  .filtros .chk{ flex-direction:row; align-items:center; text-transform:none; letter-spacing:0; font-size:15px; }
+  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:14px; }
+  .kpi{ border-radius:14px; padding:12px 14px; color:#fff; }
+  .kpi span{ display:block; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; opacity:.9; }
+  .kpi b{ display:block; font-size:32px; line-height:1.15; }
+  .graf{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr)); gap:14px; margin-top:14px; }
+  .graf svg{ width:100%; max-width:640px; height:auto; display:block; margin:0 auto; }
+  .tabla{ overflow:auto; margin-top:14px; border:1px solid var(--linea); border-radius:14px; background:#fff; }
+  table{ width:100%; border-collapse:collapse; font-size:14px; }
+  th{ background:var(--marino); color:#fff; text-align:left; padding:8px; position:sticky; top:0; z-index:1; white-space:nowrap; }
+  td{ padding:6px 8px; border-bottom:1px solid #EEF1F7; vertical-align:middle; }
+  tr.oculta td{ opacity:.45; }
+  td input.ed, td textarea.ed{ width:100%; box-sizing:border-box; font-size:14px; padding:5px 7px; border:1px solid transparent; border-radius:8px; background:transparent; color:var(--tinta); }
+  td input.ed, td textarea.ed{ border-bottom:1px dashed #C9D2E6; }
+  td input.ed:hover, td textarea.ed:hover{ border-color:var(--linea); background:#fff; }
+  td input.ed:focus, td textarea.ed:focus{ outline:none; border-color:var(--marino); background:#fff; }
+  td textarea.ed{ resize:vertical; min-height:30px; }
+  .mini{ font:inherit; font-size:13px; font-weight:800; border:1px solid var(--linea); background:#fff; border-radius:8px; padding:4px 8px; cursor:pointer; white-space:nowrap; }
+  .mini:hover{ border-color:var(--marino); }
+  .etq{ display:inline-block; font-size:11px; font-weight:900; border-radius:99px; padding:1px 7px; background:var(--humo); color:var(--gris); }
+  .det{ background:#F8FAFE; }
+  .det table{ font-size:13px; }
+  .det th{ background:#26357A; position:static; }
+  .det tr.quitado td{ opacity:.4; text-decoration:line-through; }
+  .estado{ font-size:14px; color:var(--gris); }
+  .estado.ok{ color:#0F6B45; } .estado.mal{ color:#A4161A; }
+  .bar{ display:inline-block; width:70px; height:8px; background:#EEF2FA; border-radius:99px; overflow:hidden; vertical-align:middle; margin-right:6px; }
+  .bar i{ display:block; height:100%; border-radius:99px; }
+  .vacio{ color:#8A8A92; padding:20px; text-align:center; }
+  @media (max-width:760px){ .filtros input, .filtros select{ min-width:0; width:100%; } .filtros label{ flex:1 1 140px; } }
+</style>
+</head>
+<body>
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="pensamiento-logico.html" id="volver">Volver al curso</a>
+  <span class="o-crumb"><a href="pensamiento-logico.html">Pensamiento L&oacute;gico</a> / <b>Modo administrador</b></span>
+</div>
+
+<div class="o-content"><div class="o-wrap"><div class="ad">
+  <div class="cab">
+    <img src="marca/certus-azul.png" alt="Certus">
+    <div><h1>&#128737;&#65039; Modo administrador</h1><p>Sesiones de Pensamiento L&oacute;gico: docentes, estudiantes y participaci&oacute;n</p></div>
+    <div class="der" id="acc" hidden>
+      <button class="o-btn" id="btnAct" type="button">&#8635; Actualizar</button>
+      <button class="o-btn o-btn-primary" id="btnXls" type="button">&#11015; Descargar Excel</button>
+      <button class="o-btn" id="btnSalir" type="button">Salir</button>
+    </div>
+  </div>
+
+  <div class="tarjeta entrar" id="puerta">
+    <h2 style="margin:0;color:var(--marino)">Entrar como ADMIN</h2>
+    <input id="clave" type="password" placeholder="Clave de administrador" autocomplete="off">
+    <div class="err" id="err"></div>
+    <button class="o-btn o-btn-primary" id="entrar" type="button" style="width:100%;font-size:17px;padding:11px">Entrar</button>
+  </div>
+
+  <div id="panel" hidden>
+    <div class="tarjeta">
+      <div class="filtros">
+        <label>Sesi&oacute;n del curso<select id="fSes"><option value="">Todas</option></select></label>
+        <label>Docente<select id="fDoc"><option value="">Todos</option></select></label>
+        <label>Desde<input type="date" id="fDesde"></label>
+        <label>Hasta<input type="date" id="fHasta"></label>
+        <label>Buscar<input id="fTxt" placeholder="c&oacute;digo, secci&oacute;n, alumno&hellip;"></label>
+        <label class="chk"><input type="checkbox" id="fOcultas"> Ver ocultas</label>
+        <label class="chk"><input type="checkbox" id="fVacias"> Ver sesiones sin estudiantes</label>
+      </div>
+      <p class="estado" id="estado">Cargando&hellip;</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="graf" id="graf"></div>
+    <div class="tabla" id="tabla"></div>
+    <p class="estado" style="margin-top:10px">Haz clic en cualquier dato con l&iacute;nea punteada para editarlo: <b>docente</b>, <b>secci&oacute;n</b>, <b>observaciones</b> y, en el detalle, el <b>nombre de cada estudiante</b>. Los cambios se guardan solos en la base. &laquo;Ocultar&raquo; saca la sesi&oacute;n del reporte sin borrarla.</p>
+  </div>
+</div></div></div>
+
+<script src="aula.js?v=20261101c"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+var CLAVE='JDURAN', EDIT='PLADMIN';   /* las ediciones del administrador viven en la sala PLADMIN */
+if(/[?&]piloto=1(&|$)/.test(location.search)) $('volver').href='pensamiento-logico-piloto.html';
+
+/* las sesiones del curso: prefijo de sala -> nombre */
+var SES={
+  PL2:'Semana 1 · Parte 2', PLS3:'Semana 2 · Parte 1', PLS4:'Semana 2 · Parte 2', PLC2:'Semana 2 · Parte 3', PLR2:'Semana 2 · Reforzamiento',
+  PLS5:'Semana 3 · Parte 1', PLS5D:'Semana 3 · Parte 1 (demo)', PLS6:'Semana 3 · Parte 2', PLS7:'Semana 4 · Parte 1', PLS8:'Semana 4 · Parte 2',
+  PLS9:'Semana 5 · Parte 1', PLS10:'Semana 5 · Parte 2', PLS11:'Semana 6 · Parte 1', PLS12:'Semana 6 · Parte 2', PLS13:'Semana 7 · Parte 1',
+  PLS14:'Semana 7 · Parte 2', PLS15:'Semana 8 · Parte 1', PLS16:'Semana 8 · Parte 2'
+};
+var ORDEN=Object.keys(SES);
+function nomSes(p){ return SES[p] || p; }
+
+/* ---------- entrar ---------- */
+function entra(){
+  if($('clave').value.trim().toUpperCase()!==CLAVE){ $('err').textContent='Clave incorrecta.'; $('clave').value=''; $('clave').focus(); return; }
+  try{ sessionStorage.setItem('pl_admin','1'); }catch(e){}
+  abre();
+}
+function abre(){ $('puerta').hidden=true; $('panel').hidden=false; $('acc').hidden=false; trae(); }
+$('entrar').addEventListener('click', entra);
+$('clave').addEventListener('keydown', function(e){ if(e.key==='Enter') entra(); });
+$('btnSalir').addEventListener('click', function(){ try{ sessionStorage.removeItem('pl_admin'); }catch(x){} location.reload(); });
+try{ if(sessionStorage.getItem('pl_admin')==='1') abre(); }catch(e){}
+
+/* ---------- datos ---------- */
+var SESIONES=[], EDS={}, abiertos={};
+function d2(n){ return (n<10?'0':'')+n; }
+function diaDe(t){ var d=new Date(t); return d.getFullYear()+'-'+d2(d.getMonth()+1)+'-'+d2(d.getDate()); }
+function hora(t){ var d=new Date(t); return d2(d.getHours())+':'+d2(d.getMinutes()); }
+function fechaBonita(dia){ var p=dia.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function trae(){
+  $('estado').className='estado'; $('estado').textContent='Leyendo la base de datos…';
+  Aula.leeSalas('PL*').then(function(rows){
+    EDS={};
+    rows.filter(function(r){ return r.sala===EDIT; }).forEach(function(r){ EDS[r.alumno]=r.estado||{}; });
+    SESIONES=arma(rows.filter(function(r){ return r.sala!==EDIT; }));
+    $('estado').className='estado ok';
+    $('estado').textContent='Leídas '+rows.length+' filas · '+SESIONES.length+' sesiones · '+new Date().toLocaleTimeString('es-PE');
+    llenaFiltros(); pinta();
+  }).catch(function(e){ $('estado').className='estado mal'; $('estado').textContent='No se pudo leer la base ('+e+').'; });
+}
+/* arma las sesiones: por sesión del curso y código; se separan cuando pasan más de 6 horas sin actividad.
+   Los grupos de 1 o 2 alumnos que vuelven después (a repasar) se suman a la clase anterior del mismo código. */
+function arma(rows){
+  var cod={}, regs=[];
+  rows.forEach(function(f){
+    var i=f.sala.indexOf('-'); if(i<0) return;
+    var pre=f.sala.slice(0,i), resto=f.sala.slice(i+1);
+    if(resto==='REG'){ if(f.estado && f.estado.docente) regs.push({ pre:pre, f:f }); return; }
+    var m=/^([^-]+)(-(ABIERTA|BATUTA|RECURSO))?$/.exec(resto); if(!m || m[3]==='RECURSO') return;
+    var k=pre+'|'+m[1], c=cod[k]||(cod[k]={ pre:pre, code:m[1], al:[], docente:'', tDoc:0 });
+    var e=f.estado||{}, t=new Date(f.actualizado).getTime();
+    if(m[3]==='ABIERTA'){ if(e.docente){ c.docente=e.docente; c.tDoc=t; } return; }
+    if(m[3] || e.renombrado) return;
+    var G=e.G||{}, ok=+e.ok||0, tot=+e.total||0;
+    c.al.push({ n:f.alumno, t:t, p: tot ? Math.min(1, ok/tot) : 0, ok:ok, tot:tot, lamina:e.lamina||'', titulo:e.titulo||'', nf:(G.fallos||[]).length });
+  });
+  var out=[];
+  Object.keys(cod).forEach(function(k){
+    var c=cod[k]; if(!c.al.length) return;
+    c.al.sort(function(a,b){ return a.t-b.t; });
+    var gr=[], g=null;
+    c.al.forEach(function(a){
+      if(!g || a.t-g.fin>6*3600*1000){ g={ ini:a.t, fin:a.t, al:[] }; gr.push(g); }
+      g.al.push(a); g.fin=a.t;
+    });
+    /* los repasos posteriores (1 o 2 alumnos) vuelven a la clase anterior */
+    for(var j=gr.length-1;j>0;j--){
+      if(gr[j].al.length<=2){ gr[j-1].al=gr[j-1].al.concat(gr[j].al); gr[j-1].fin=Math.max(gr[j-1].fin, gr[j].fin); gr.splice(j,1); }
+    }
+    /* y un grupo chico antes de la clase (una prueba del docente) se suma a la clase siguiente */
+    if(gr.length>1 && gr[0].al.length<=2){ gr[1].al=gr[0].al.concat(gr[1].al); gr[1].ini=gr[0].ini; gr.shift(); }
+    gr.forEach(function(x){
+      var dia=diaDe(x.ini), al={};
+      x.al.forEach(function(a){ var p=al[a.n]; if(!p || a.t>p.t) al[a.n]=a; });
+      var s={ key:c.pre+'|'+c.code+'|'+dia, pre:c.pre, code:c.code, dia:dia, ini:x.ini, fin:x.fin, alumnos:al, docente:'' };
+      if(c.docente && Math.abs(c.tDoc-x.ini) < 24*3600*1000) s.docente=c.docente;
+      out.push(s);
+    });
+  });
+  /* las sesiones registradas por la demo traen el detalle exacto: reemplazan a la armada del mismo código y día */
+  regs.forEach(function(x){
+    var e=x.f.estado, dia=diaDe(e.inicio), k=x.pre+'|'+e.pin+'|'+dia, s=null;
+    out.forEach(function(o){ if(o.key===k) s=o; });
+    if(!s){ s={ key:k, pre:x.pre, code:e.pin, dia:dia }; out.push(s); }
+    s.ini=e.inicio; s.fin=e.fin; s.docente=e.docente; s.reg=e; s.alumnos={};
+    (e.alumnos||[]).forEach(function(a){ s.alumnos[a.n]={ n:a.n, p:a.p, nf:a.nf||0, lamina:'', titulo:'' }; });
+  });
+  return out.sort(function(a,b){ return b.ini-a.ini; });
+}
+/* la sesión con las ediciones del administrador aplicadas */
+function vista(s){
+  var ed=EDS[s.key]||{}, ea=ed.alumnos||{};
+  var al=Object.keys(s.alumnos).map(function(n){
+    var a=s.alumnos[n], x=ea[n]||{};
+    return { orig:n, n:x.n||n, p:a.p, nf:a.nf, lamina:a.lamina, titulo:a.titulo, quitado:!!x.quitar };
+  }).sort(function(a,b){ return a.n.localeCompare(b.n); });
+  var vivos=al.filter(function(a){ return !a.quitado; });
+  return { s:s, docente: ed.docente!==undefined ? ed.docente : (s.docente||''), seccion:ed.seccion||'', obs:ed.obs||'', oculta:!!ed.oculta,
+           alumnos:al, n:vivos.length, prom: vivos.length ? vivos.reduce(function(t,a){ return t+a.p; },0)/vivos.length : 0,
+           fallos: vivos.reduce(function(t,a){ return t+(a.nf||0); },0), sesion:nomSes(s.pre) };
+}
+var tGuarda={};
+function guardaEd(key, cambio){
+  var ed=EDS[key]||{}; for(var k in cambio) ed[k]=cambio[k]; EDS[key]=ed;
+  clearTimeout(tGuarda[key]);
+  $('estado').className='estado'; $('estado').textContent='Guardando…';
+  tGuarda[key]=setTimeout(function(){
+    Aula.guardaFila(EDIT, key, ed).then(function(){ $('estado').className='estado ok'; $('estado').textContent='Cambios guardados · '+new Date().toLocaleTimeString('es-PE'); })
+      .catch(function(e){ $('estado').className='estado mal'; $('estado').textContent='No se pudo guardar ('+e+'). Vuelve a intentarlo.'; });
+  }, 500);
+}
+
+/* ---------- filtros ---------- */
+function llenaFiltros(){
+  var ps={}, ds={};
+  SESIONES.forEach(function(s){ ps[s.pre]=1; var v=vista(s); if(v.docente) ds[v.docente]=1; });
+  var sv=$('fSes').value, dv=$('fDoc').value;
+  $('fSes').innerHTML='<option value="">Todas</option>'+Object.keys(ps).sort(function(a,b){ return (ORDEN.indexOf(a)+99*(ORDEN.indexOf(a)<0))-(ORDEN.indexOf(b)+99*(ORDEN.indexOf(b)<0)); })
+    .map(function(p){ return '<option value="'+esc(p)+'">'+esc(nomSes(p))+' ('+esc(p)+')</option>'; }).join('');
+  $('fDoc').innerHTML='<option value="">Todos</option><option value="__sin">Sin nombre</option>'+Object.keys(ds).sort().map(function(d){ return '<option>'+esc(d)+'</option>'; }).join('');
+  $('fSes').value=sv; $('fDoc').value=dv;
+}
+['fSes','fDoc','fDesde','fHasta','fOcultas','fVacias'].forEach(function(id){ $(id).addEventListener('change', pinta); });
+$('fTxt').addEventListener('input', pinta);
+function filtradas(){
+  var fs=$('fSes').value, fd=$('fDoc').value, de=$('fDesde').value, ha=$('fHasta').value, q=$('fTxt').value.trim().toLowerCase();
+  return SESIONES.map(vista).filter(function(v){
+    if(v.oculta && !$('fOcultas').checked) return false;
+    if(!v.alumnos.length && !$('fVacias').checked) return false;
+    if(fs && v.s.pre!==fs) return false;
+    if(fd==='__sin' && v.docente) return false;
+    if(fd && fd!=='__sin' && v.docente!==fd) return false;
+    if(de && v.s.dia<de) return false;
+    if(ha && v.s.dia>ha) return false;
+    if(q && (v.s.code+' '+v.seccion+' '+v.obs+' '+v.docente+' '+v.alumnos.map(function(a){ return a.n; }).join(' ')).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+
+/* ---------- gráficos ---------- */
+function tono(p){ return p>=0.8 ? '#0F6B45' : (p>=0.5 ? '#C98A00' : (p>0 ? '#A4161A' : '#B9C2D8')); }
+function barras(datos, titulo, max, color){
+  var W=600, fila=32, H=Math.max(130, 56+datos.length*fila), x0=200, ancho=W-x0-70, b='';
+  datos.forEach(function(x,i){
+    var y=48+i*fila, w=max ? Math.max(2, ancho*x.v/max) : 2;
+    b+='<text x="'+(x0-10)+'" y="'+(y+16)+'" font-size="14" text-anchor="end" fill="#0B1B3F">'+esc(x.t.length>26?x.t.slice(0,25)+'…':x.t)+'</text>'+
+       '<rect x="'+x0+'" y="'+(y+3)+'" width="'+ancho+'" height="18" rx="9" fill="#EEF2FA"/>'+
+       '<rect x="'+x0+'" y="'+(y+3)+'" width="'+w.toFixed(1)+'" height="18" rx="9" fill="'+(x.c||color)+'"/>'+
+       '<text x="'+(x0+ancho+8)+'" y="'+(y+17)+'" font-size="14" font-weight="800" fill="#0B1B3F">'+esc(x.l||x.v)+'</text>';
+  });
+  if(!datos.length) b+='<text x="18" y="70" font-size="15" fill="#8A8A92">Sin datos</text>';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" font-family="Nunito,Segoe UI,Arial,sans-serif">'+
+    '<rect width="'+W+'" height="'+H+'" rx="14" fill="#fff" stroke="#E3E8F4" stroke-width="2"/>'+
+    '<text x="18" y="30" font-size="17" font-weight="800" fill="#071767">'+esc(titulo)+'</text>'+b+'</svg>';
+}
+
+/* ---------- pintar ---------- */
+function pinta(){
+  var V=filtradas(), docs={}, sesP={}, totAl=0;
+  V.forEach(function(v){ var d=v.docente||'Sin nombre'; docs[d]=(docs[d]||0)+1; sesP[v.sesion]=(sesP[v.sesion]||0)+1; totAl+=v.n; });
+  var prom=V.length ? V.reduce(function(t,v){ return t+v.prom; },0)/V.length : 0;
+  $('kpis').innerHTML=
+    '<div class="kpi" style="background:#071767"><span>Sesiones</span><b>'+V.length+'</b></div>'+
+    '<div class="kpi" style="background:#C600A3"><span>Docentes</span><b>'+Object.keys(docs).filter(function(d){ return d!=='Sin nombre'; }).length+'</b></div>'+
+    '<div class="kpi" style="background:#0E8F95"><span>Estudiantes atendidos</span><b>'+totAl+'</b></div>'+
+    '<div class="kpi" style="background:#FC0045"><span>Participaci&oacute;n promedio</span><b>'+Math.round(prom*100)+'%</b></div>';
+  var dk=Object.keys(docs).sort(function(a,b){ return docs[b]-docs[a]; }).slice(0,15);
+  var sk=Object.keys(sesP).sort(function(a,b){ return sesP[b]-sesP[a]; });
+  $('graf').innerHTML='<div>'+barras(dk.map(function(d){ return { t:d, v:docs[d] }; }), 'Sesiones por docente', Math.max(1, docs[dk[0]]||1), '#071767')+'</div>'+
+                      '<div>'+barras(sk.map(function(d){ return { t:d, v:sesP[d] }; }), 'Sesiones por sesión del curso', Math.max(1, sesP[sk[0]]||1), '#C600A3')+'</div>';
+  if(!V.length){ $('tabla').innerHTML='<p class="vacio">No hay sesiones con esos filtros.</p>'; return; }
+  var h='<table><thead><tr><th>Fecha</th><th>Sesi&oacute;n del curso</th><th>C&oacute;digo</th><th style="min-width:290px">Docente</th><th style="min-width:110px">Secci&oacute;n</th>'+
+        '<th>Estudiantes</th><th>Participaci&oacute;n</th><th style="min-width:200px">Observaciones</th><th></th></tr></thead><tbody>';
+  V.forEach(function(v){
+    var s=v.s, k=esc(s.key);
+    h+='<tr class="'+(v.oculta?'oculta':'')+'"><td>'+fechaBonita(s.dia)+'<br><small>'+hora(s.ini)+'–'+(diaDe(s.fin)!==s.dia ? fechaBonita(diaDe(s.fin)).slice(0,5)+' ' : '')+hora(s.fin)+'</small></td>'+
+       '<td>'+esc(v.sesion)+(s.reg?'':' <span class="etq" title="Armada con las respuestas guardadas en la sala">reconstruida</span>')+'</td><td>'+esc(s.code)+'</td>'+
+       '<td><input class="ed" data-k="'+k+'" data-f="docente" value="'+esc(v.docente)+'" placeholder="Sin nombre"></td>'+
+       '<td><input class="ed" data-k="'+k+'" data-f="seccion" value="'+esc(v.seccion)+'" placeholder="&mdash;"></td>'+
+       '<td>'+v.n+'</td><td><span class="bar"><i style="width:'+Math.round(v.prom*100)+'%;background:'+tono(v.prom)+'"></i></span><b style="color:'+tono(v.prom)+'">'+Math.round(v.prom*100)+'%</b></td>'+
+       '<td><textarea class="ed" rows="1" data-k="'+k+'" data-f="obs" placeholder="&mdash;">'+esc(v.obs)+'</textarea></td>'+
+       '<td><button class="mini" data-ver="'+k+'">'+(abiertos[s.key]?'&#9650; Cerrar':'&#9660; Detalle')+'</button> '+
+       '<button class="mini" data-oc="'+k+'">'+(v.oculta?'Mostrar':'Ocultar')+'</button></td></tr>';
+    if(abiertos[s.key]){
+      h+='<tr class="det"><td colspan="9"><table><thead><tr><th>Estudiante</th><th>Avance</th><th>Va en</th><th>Fallos</th><th></th></tr></thead><tbody>'+
+         (v.alumnos.length ? v.alumnos.map(function(a){
+           return '<tr class="'+(a.quitado?'quitado':'')+'"><td><input class="ed" data-k="'+k+'" data-al="'+esc(a.orig)+'" value="'+esc(a.n)+'"></td>'+
+                  '<td><b style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</b></td><td>'+esc(a.lamina)+(a.titulo?' · '+esc(a.titulo):'')+'</td><td>'+(a.nf||0)+'</td>'+
+                  '<td><button class="mini" data-q="'+k+'" data-al="'+esc(a.orig)+'">'+(a.quitado?'Volver a contar':'Quitar')+'</button></td></tr>';
+         }).join('') : '<tr><td colspan="5" class="vacio">Esta sesi&oacute;n no tuvo estudiantes.</td></tr>')+'</tbody></table></td></tr>';
+    }
+  });
+  $('tabla').innerHTML=h+'</tbody></table>';
+  qq('input.ed[data-f], textarea.ed[data-f]', $('tabla')).forEach(function(x){
+    x.addEventListener('change', function(){ var c={}; c[x.dataset.f]=x.value.trim(); guardaEd(x.dataset.k, c); if(x.dataset.f==='docente') setTimeout(function(){ llenaFiltros(); pinta(); }, 0); });
+  });
+  qq('input.ed[data-al]', $('tabla')).forEach(function(x){
+    x.addEventListener('change', function(){
+      var ed=EDS[x.dataset.k]||{}, ea=ed.alumnos||{}, a=ea[x.dataset.al]||{};
+      var nv=x.value.trim(); if(!nv || nv===x.dataset.al) delete a.n; else a.n=nv;
+      ea[x.dataset.al]=a; guardaEd(x.dataset.k, { alumnos:ea });
+    });
+  });
+  qq('button[data-q]', $('tabla')).forEach(function(b){ b.addEventListener('click', function(){
+    var ed=EDS[b.dataset.q]||{}, ea=ed.alumnos||{}, a=ea[b.dataset.al]||{};
+    a.quitar=a.quitar?0:1; ea[b.dataset.al]=a; guardaEd(b.dataset.q, { alumnos:ea }); pinta(); }); });
+  qq('button[data-ver]', $('tabla')).forEach(function(b){ b.addEventListener('click', function(){ abiertos[b.dataset.ver]=!abiertos[b.dataset.ver]; pinta(); }); });
+  qq('button[data-oc]', $('tabla')).forEach(function(b){ b.addEventListener('click', function(){
+    var v=!(EDS[b.dataset.oc]||{}).oculta; guardaEd(b.dataset.oc, { oculta:v?1:0 }); pinta(); }); });
+}
+$('btnAct').addEventListener('click', trae);
+
+/* ---------- Excel ---------- */
+var XLS=['https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js','https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js'], cargaX=null;
+function cargaXls(){
+  if(window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if(cargaX) return cargaX;
+  cargaX=new Promise(function(ok, no){ var n=0;
+    (function prueba(){ if(n>=XLS.length){ cargaX=null; no('exceljs'); return; }
+      var sc=document.createElement('script'); sc.src=XLS[n++]; sc.onload=function(){ window.ExcelJS ? ok(window.ExcelJS) : prueba(); }; sc.onerror=prueba; document.head.appendChild(sc); })(); });
+  return cargaX;
+}
+$('btnXls').addEventListener('click', function(){
+  var V=filtradas(); if(!V.length){ $('estado').textContent='No hay sesiones para descargar.'; return; }
+  $('estado').className='estado'; $('estado').textContent='Preparando el Excel…';
+  cargaXls().then(function(X){
+    var wb=new X.Workbook(), B={ style:'thin', color:{ argb:'FFD5DDEF' } }, caja={ top:B, left:B, bottom:B, right:B };
+    function hoja(nombre, titulo, cols, anchos){
+      var ws=wb.addWorksheet(nombre, { views:[{ state:'frozen', ySplit:3 }] });
+      ws.mergeCells(1,1,1,cols.length); var c=ws.getCell(1,1); c.value=titulo;
+      c.font={ bold:true, size:15, color:{ argb:'FFFFFFFF' } }; c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; ws.getRow(1).height=26;
+      ws.mergeCells(2,1,2,cols.length); ws.getCell(2,1).value='Pensamiento Lógico · generado el '+new Date().toLocaleString('es-PE'); ws.getCell(2,1).font={ italic:true, color:{ argb:'FF55607F' } };
+      var r=ws.addRow(cols); r.eachCell(function(x){ x.font={ bold:true, color:{ argb:'FFFFFFFF' } }; x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; x.border=caja; x.alignment={ wrapText:true, vertical:'middle' }; });
+      anchos.forEach(function(w,j){ ws.getColumn(j+1).width=w; });
+      return function(vals, pct){ var f=ws.addRow(vals); f.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ wrapText:true, vertical:'top' }; });
+        (pct||[]).forEach(function(j){ f.getCell(j).numFmt='0%'; }); return f; };
+    }
+    var f1=hoja('Sesiones','Sesiones de Pensamiento Lógico',['Fecha','Inicio','Fin','Sesión del curso','Código','Docente','Sección','Estudiantes','Participación','Observaciones','Origen','Oculta'],[12,8,8,26,9,32,12,12,13,40,16,8]);
+    V.forEach(function(v){ f1([fechaBonita(v.s.dia), hora(v.s.ini), hora(v.s.fin), v.sesion, v.s.code, v.docente||'Sin nombre', v.seccion, v.n, v.prom, v.obs, v.s.reg?'Registro':'Reconstruida', v.oculta?'Sí':''], [9]); });
+    var f2=hoja('Estudiantes','Estudiantes por sesión',['Fecha','Sesión del curso','Código','Docente','Estudiante','Avance','Fallos','Contado'],[12,26,9,32,34,10,8,9]);
+    V.forEach(function(v){ v.alumnos.forEach(function(a){ f2([fechaBonita(v.s.dia), v.sesion, v.s.code, v.docente||'Sin nombre', a.n, a.p, a.nf||0, a.quitado?'No':'Sí'], [6]); }); });
+    var por={}; V.forEach(function(v){ var d=v.docente||'Sin nombre', x=por[d]||(por[d]={ s:0, al:0, p:0, ses:{} }); x.s++; x.al+=v.n; x.p+=v.prom; x.ses[v.sesion]=1; });
+    var f3=hoja('Por docente','Resumen por docente',['Docente','Sesiones','Estudiantes atendidos','Participación promedio','Sesiones del curso usadas'],[34,10,14,14,60]);
+    Object.keys(por).sort(function(a,b){ return por[b].s-por[a].s; }).forEach(function(d){ var x=por[d]; f3([d, x.s, x.al, x.p/x.s, Object.keys(x.ses).join(', ')], [4]); });
+    return wb.xlsx.writeBuffer();
+  }).then(function(buf){
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+    a.download='pensamiento-logico-sesiones-'+diaDe(Date.now())+'.xlsx'; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    $('estado').className='estado ok'; $('estado').textContent='Excel listo.';
+  }).catch(function(e){ $('estado').className='estado mal'; $('estado').textContent='No se pudo armar el Excel ('+e+').'; });
+});
+})();
+</script>
+</body>
+</html>

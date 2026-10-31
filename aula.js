@@ -708,6 +708,24 @@ function guardaRegistro(id, est){
                            estado:est||{}, actualizado:new Date().toISOString() }])
   }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
 }
+/* lectura y escritura libres (no dependen de una sala): las usa la página de administración.
+   patron usa * como comodín, por ejemplo 'PL*'. Lee de 1000 en 1000 hasta traer todo. */
+function leeSalas(patron){
+  var todo=[];
+  function pagina(desde){
+    return fetch(TABLA+'?select=sala,alumno,estado,actualizado&sala=like.'+encodeURIComponent(patron)+
+                 '&order=id.asc&limit=1000&offset='+desde, { headers:hdr() })
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(rows){ todo=todo.concat(rows||[]); return (rows && rows.length===1000) ? pagina(desde+1000) : todo; });
+  }
+  return pagina(0);
+}
+function guardaFila(salaX, alumno, est){
+  return fetch(TABLA+'?on_conflict=sala,alumno', {
+    method:'POST', headers:hdr({ Prefer:'resolution=merge-duplicates,return=minimal' }),
+    body:JSON.stringify([{ sala:String(salaX), alumno:String(alumno).slice(0,120), caso:'', estado:est||{}, actualizado:new Date().toISOString() }])
+  }).then(function(r){ return r.ok ? true : Promise.reject(r.status); });
+}
 /* todas las filas de esta clase (todas sus salas), para reconstruir sesiones antiguas */
 function leeTodo(){
   return fetch(TABLA+'?select=sala,alumno,estado,actualizado&sala=like.'+encodeURIComponent(cfg.sala+'-*')+
@@ -1756,6 +1774,8 @@ window.Aula={
   /* histórico de sesiones (para la vista de administración) */
   guardaRegistro:function(id, est){ return guardaRegistro(id, est); },
   leeRegistros:function(){ return leeRegistros(); },
-  leeTodo:function(){ return leeTodo(); }
+  leeTodo:function(){ return leeTodo(); },
+  leeSalas:function(p){ return leeSalas(p); },
+  guardaFila:function(s1, a1, e1){ return guardaFila(s1, a1, e1); }
 };
 })();

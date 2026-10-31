@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-31-s5demo-n">
+<meta name="version" content="2026-10-31-s5demo-o">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1317,7 +1317,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261101b"></script>
+<script src="aula.js?v=20261101c"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script src="bbb-chat.js?v=20261031"></script>
@@ -4786,7 +4786,8 @@ $('btnChat').addEventListener('click', abreChat);
   var b=document.createElement('button');
   b.type='button'; b.className='o-btn'; b.id='btnAdmin'; b.innerHTML='&#128737;&#65039; Entrar como ADMIN';
   b.style.marginTop='10px';
-  b.addEventListener('click', pideAdmin);
+  /* el modo administrador tiene su propia página, con todas las sesiones del curso */
+  b.addEventListener('click', function(){ location.href='pl-admin.html'+(/[?&]piloto=1(&|$)/.test(location.search)?'?piloto=1':''); });
   $('puerta').appendChild(b);
 })();
 $('btnChat2').addEventListener('click', abreChat);
