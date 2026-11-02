@@ -171,6 +171,25 @@
 .pr .excelbox .tx span{ display:block; font-size:calc(var(--u)*2.4); color:var(--tinta);
                         line-height:1.4; margin-top:calc(var(--u)*.4); }
 .pr .pulso{ animation:pulso 1.9s ease-in-out infinite; transform-origin:center; }
+.pr .hazlo{ display:flex; align-items:center; gap:calc(var(--u)*2.4); flex-wrap:wrap;
+            border:3px solid var(--rojo); border-radius:15px; background:#FFF4F4;
+            padding:calc(var(--u)*1.3) calc(var(--u)*2); }
+.pr .hazlo .ti{ flex:1; min-width:calc(var(--u)*30); }
+.pr .hazlo .ti b{ display:block; font-size:calc(var(--u)*3.2); color:var(--rojo); line-height:1.15;
+                  text-transform:uppercase; letter-spacing:-.3px; }
+.pr .hazlo .ti span{ display:block; font-size:calc(var(--u)*2.3); color:var(--tinta);
+                     margin-top:calc(var(--u)*.3); }
+.pr .hazlo .emps{ display:flex; gap:calc(var(--u)*1.4); flex-wrap:wrap; }
+.pr .emp{ display:flex; align-items:center; gap:calc(var(--u)*1.2); cursor:pointer;
+          border:3px solid var(--linea); background:#fff; border-radius:12px;
+          padding:calc(var(--u)*.8) calc(var(--u)*1.6); font:inherit; text-align:left;
+          transition:all .18s ease; }
+.pr .emp svg{ width:calc(var(--u)*5.2); height:calc(var(--u)*5.2); flex:none; }
+.pr .emp .tx b{ display:block; font-size:calc(var(--u)*2.3); color:var(--tinta); line-height:1.2; }
+.pr .emp .tx span{ display:block; font-size:calc(var(--u)*1.9); color:var(--gris); }
+.pr .emp:hover{ border-color:var(--rojo); transform:translateY(-2px);
+                box-shadow:0 6px 18px rgba(227,30,36,.18); }
+.pr .emp.act{ border-color:var(--rojo); background:#FFF4F4; }
 @keyframes pulso{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.08); } }
 .pr .lati{ animation:lati 2.4s ease-in-out infinite; }
 @keyframes lati{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-6px); } }
@@ -209,8 +228,8 @@
 .pr .cubo .vl{ font-size:calc(var(--u)*5.4); color:var(--tinta); line-height:1.05; }
 .pr .cubo.m0 .vl{ color:var(--rojo); } .pr .cubo.mm .vl{ color:var(--verde); }
 .pr .cubo .de{ font-size:calc(var(--u)*2.3); color:var(--gris); line-height:1.4; }
-.pr .cubos .cubo{ gap:calc(var(--u)*1.1); }
-.pr .cubo .dib{ width:calc(var(--u)*13); height:calc(var(--u)*13); align-self:flex-start; }
+.pr .cubos .cubo{ gap:calc(var(--u)*.9); padding:calc(var(--u)*1.6) calc(var(--u)*2.1); }
+.pr .cubo .dib{ width:calc(var(--u)*11); height:calc(var(--u)*11); align-self:flex-start; }
 .pr .cubo .lin{ display:flex; justify-content:space-between; gap:calc(var(--u)*1.4);
                 font-size:calc(var(--u)*2.4); color:var(--tinta); align-items:center; }
 .pr .cubo .lin b{ font-variant-numeric:tabular-nums; }
@@ -458,12 +477,41 @@ DIB.cajaCA='<svg viewBox="0 0 40 40"><path d="M6 16h7l13-8v24l-13-8H6z" fill="#E
 DIB.cajaGO='<svg viewBox="0 0 40 40"><path d="M6 18 20 7l14 11v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z" fill="#FFF" stroke="#505050" stroke-width="3"/><rect x="16" y="24" width="8" height="12" fill="#505050" opacity=".3"/></svg>';
 
 /* ================= datos de los dos equipos ================= */
-var CASOS={
- charito:'https://docs.google.com/spreadsheets/d/17QEp2WWnDgajCf9mn3lEj2InGq41-RREqGb-wjFvZ0M/edit',
- tablon:'https://docs.google.com/spreadsheets/d/12XK89C-XuUBarrTTnHhzoUoT7jh0G8X62AmWpzjkwwc/edit'
+var HOJAS={
+ charito:{ base:'https://docs.google.com/spreadsheets/d/17QEp2WWnDgajCf9mn3lEj2InGq41-RREqGb-wjFvZ0M/edit',
+           s11:'#gid=212683406', s12:'#gid=1724159980' },
+ tablon:{  base:'https://docs.google.com/spreadsheets/d/12XK89C-XuUBarrTTnHhzoUoT7jh0G8X62AmWpzjkwwc/edit',
+           s11:'#gid=676526862', s12:'#gid=1366410286' }
 };
-function abreCaso(k){
-  window.open(CASOS[k],'caso_'+k,'noopener,width=1280,height=820,scrollbars=yes,resizable=yes');
+function abreHoja(emp,hoja){
+  var h=HOJAS[emp]; if(!h) return;
+  window.open(h.base+(h[hoja]||''),'hoja_'+emp+'_'+hoja,
+    'noopener,width=1280,height=820,scrollbars=yes,resizable=yes');
+}
+function abreCaso(emp){ abreHoja(emp,'s12'); }
+
+/* emblemas de las dos empresas */
+var EMB={
+charito:'<svg viewBox="0 0 80 80" aria-hidden="true">'+
+ '<circle cx="40" cy="40" r="38" fill="#E31E24"/>'+
+ '<path d="M27 30h26l-5 30a6 6 0 0 1-6 5h-4a6 6 0 0 1-6-5z" fill="#FFF"/>'+
+ '<circle cx="33" cy="25" r="9" fill="#FFF"/><circle cx="47" cy="24" r="8" fill="#FFD9DB"/>'+
+ '<circle cx="40" cy="18" r="7" fill="#FFF"/></svg>',
+tablon:'<svg viewBox="0 0 80 80" aria-hidden="true">'+
+ '<circle cx="40" cy="40" r="38" fill="#505050"/>'+
+ '<path d="M41 13c5 9 1 14 5 19 3-2 4-6 4-6 5 7 7 13 7 18a17 17 0 0 1-34 0c0-11 12-21 18-31z" fill="#E31E24"/>'+
+ '<path d="M40 30c2 5-1 8 2 11 2-1 2-3 2-3 3 4 4 7 4 10a8 8 0 0 1-16 0c0-6 6-12 8-18z" fill="#FFD9DB"/>'+
+ '<g stroke="#FFF" stroke-width="5" stroke-linecap="round"><path d="M19 61h42"/><path d="M25 69h30"/></g></svg>'
+};
+function botonEmp(emp,hoja){
+  return '<button class="emp'+(emp===eq?' act':'')+'" type="button" data-emp="'+emp+'" data-hoja="'+hoja+'">'+
+    EMB[emp]+'<span class="tx"><b>'+esc(EQ[emp].nombre)+'</b><span>Abrir su hoja</span></span></button>';
+}
+function HAZLO(que,hoja,donde,i){
+  return '<div class="hazlo"'+ap(i)+'>'+
+    '<span class="ti"><b>Ahora hazlo tú en tu hoja de cálculo</b>'+
+      '<span>'+que+' · pestaña «'+donde+'»</span></span>'+
+    '<span class="emps">'+botonEmp('charito',hoja)+botonEmp('tablon',hoja)+'</span></div>';
 }
 
 var EQ={
@@ -547,93 +595,90 @@ function MODELO(tx,i){
 /* ================= las diapositivas ================= */
 var D=[
 
-{ et:'Portada', t:'Dónde está tu informe hoy', ho:'10:45 - 10:50',
+{ et:'Empezamos', t:'Tres cosas que vas a calcular hoy', ho:'10:45 - 10:50',
   h:function(){ return ''+
    '<div class="tapa"'+ap(0,'zoom')+'>'+
      '<span class="lado">'+
-       '<h2 class="tl">Plan de medios, márgenes y costo unitario</h2>'+
-       '<p class="su">Semana 12 · Lunes · '+esc(E().nombre)+'</p>'+
-       '<span class="chips"><span class="chip">Tabla 16</span><span class="chip">Tabla 12</span>'+
-       '<span class="chip">Tabla A5</span></span>'+
+       '<h2 class="tl">¿Cuánto cuesta tu campaña y cuánto te deja cada venta?</h2>'+
+       '<p class="su">Semana 12 · Lunes · Matemáticas Aplicadas</p>'+
+       '<span class="chips"><span class="chip">1. El costo de la campaña</span>'+
+       '<span class="chip">2. Los márgenes</span>'+
+       '<span class="chip">3. El costo de una unidad</span></span>'+
      '</span>'+ DIB.tienda +
    '</div>'+
-   GLOBO('tj-docente-presenta.webp','Hoy cerramos tres tablas',
-    'Al final de la clase tu informe tiene el <b>plan de medios</b> completo, los <b>tres márgenes</b> de tu marca y el <b>costo de una unidad</b> del '+esc(E().producto)+'.',1); } },
+   GLOBO('tj-docente-presenta.webp','Cómo trabajamos hoy',
+    'Primero lo explicamos con un ejemplo resuelto en la pizarra. Después, en cada tema, abres tu hoja de cálculo y lo haces con los números de tu equipo.',1); } },
 
-{ et:'Mapa', t:'Qué falta del informe', ho:'10:50 - 10:55',
-  h:function(){
-    var fs=[
-      ['2.5.2','Tabla 11 · Estado de Resultados','listo','#1C6E4E','&#10003;'],
-      ['3.1.3','Tabla 16 · Plan de medios','HOY','#E31E24','&#9654;'],
-      ['2.5.3','Tabla 12 · Márgenes de utilidad','HOY','#E31E24','&#9654;'],
-      ['A.2','Tabla A5 · Costo unitario','HOY','#E31E24','&#9654;'],
-      ['3.2','Tablas 17, 18 y 19','jueves','#505050','&#8943;']
-    ];
-    var h='<h2 class="tl"'+ap(0)+'>Tres tablas hoy, el resto ya camina</h2>';
-    h+='<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr><th>Punto</th><th>Tabla</th><th>Cuándo</th></tr></thead><tbody>';
-    fs.forEach(function(f){
-      h+='<tr'+(f[2]==='HOY'?' class="res"':'')+'><td><b>'+esc(f[0])+'</b></td><td>'+esc(f[1])+'</td>'+
-         '<td style="color:'+f[3]+';font-weight:800">'+f[4]+' '+esc(f[2])+'</td></tr>';
-    });
-    h+='</tbody></table></div>';
-    h+='<p class="clave"'+ap(2)+'>La Tabla 16 va primero: de ella salen la <b>inversión del Mes 0</b> y el <b>gasto mensual</b> que necesita el flujo de caja. Sin ella no hay Tabla 18.</p>';
-    return h; } },
-
-{ et:'Tabla 16', t:'Cómo se llena una fila del plan de medios', ho:'10:55 - 11:00',
+{ et:'Explicación', t:'Qué es el plan de medios y cómo se calcula', ho:'10:50 - 11:00',
   h:function(){ return ''+
    '<div class="fila2">'+
      '<span class="izq">'+
-       '<h2 class="tl"'+ap(0)+'>Una fila, cinco datos</h2>'+
-       '<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr>'+
-         '<th>Canal</th><th>Pieza</th><th>Frecuencia</th><th class="n">Meses</th>'+
+       '<h2 class="tl"'+ap(0)+'>Cada anuncio que vas a pagar, en una fila</h2>'+
+       '<p class="teo"'+ap(1)+'>Una campaña se paga en piezas: anuncios, fotos, volantes. De cada una anotamos <b>cuánto cuesta</b> y <b>cuántos meses se paga</b>.</p>'+
+       '<div class="tabenv"'+ap(2)+'><table class="t"><thead><tr>'+
+         '<th>Canal</th><th>Frecuencia</th><th class="n">Meses</th>'+
          '<th class="n">Costo</th><th class="n">Costo total</th></tr></thead><tbody>'+
-         '<tr><td>Facebook Ads</td><td>Video</td><td>Mensual</td>'+
-           '<td class="n">3</td><td class="n">450.00</td><td class="n"><b>1,350.00</b></td></tr>'+
-         '<tr><td>Sesión de fotos</td><td>20 fotos</td><td>Una vez</td>'+
-           '<td class="n">1</td><td class="n">600.00</td><td class="n"><b>600.00</b></td></tr>'+
+         '<tr><td>Facebook Ads</td><td>Mensual</td><td class="n">3</td>'+
+           '<td class="n">450.00</td><td class="n"><b>1,350.00</b></td></tr>'+
+         '<tr><td>Sesión de fotos</td><td>Una vez</td><td class="n">1</td>'+
+           '<td class="n">600.00</td><td class="n"><b>600.00</b></td></tr>'+
+         '<tr class="res"><td colspan="4">Total de la campaña</td><td class="n">1,950.00</td></tr>'+
        '</tbody></table></div>'+
-       '<div class="form"'+ap(2)+'>Costo total = Costo × Meses<small>Si es <b>mensual</b>, el costo es el de un mes. Si es <b>«Una vez»</b>, los meses son 1.</small></div>'+
      '</span>'+
      '<span class="der"'+ap(3,'zoom')+'>'+DIB.megafono+'</span>'+
    '</div>'+
-   '<p class="clave"'+ap(4)+'>Todos los costos van <b>sin IGV</b>. Si te cotizan S/ 531 con IGV, escribes 531 ÷ 1.18 = <b>S/ 450</b>.</p>'; } },
+   '<div class="form"'+ap(4)+'>Costo total = Costo × Meses'+
+     '<small>Los costos van <b>sin IGV</b>: si te cotizan S/ 531 con IGV, anotas 531 ÷ 1.18 = <b>S/ 450</b>.</small></div>'; } },
 
-{ et:'Tabla 16', t:'Tu plan de medios', ho:'11:00 - 11:25',
+{ et:'Hazlo tú', t:'El plan de medios de tu campaña', ho:'11:00 - 11:25',
   h:function(){ return ''+
-   '<h2 class="tl"'+ap(0)+'>Tabla 16 · Plan de medios de la campaña</h2>'+
-   EXCEL('Abre tu archivo del proyecto','Llena aquí con tu equipo y cópialo a la hoja «Sem 11 ER y campaña», Tabla 16.',1)+
-   '<div class="barra"'+ap(2)+'>'+
+   HAZLO('Tabla 16 · Plan de medios','s11','Sem 11 ER y campaña',0)+
+   '<div class="barra"'+ap(1)+'>'+
      '<button class="bt pri" data-ac="t16add" type="button">+ Agregar canal</button>'+
      '<button class="bt" data-ac="t16ej" type="button">Volver al ejemplo</button>'+
-     '<span class="avisoej">Las 4 filas son un ejemplo: cámbialas por tus canales.</span>'+
+     '<span class="avisoej">Cambia estas filas por los canales que eligió tu equipo.</span>'+
    '</div>'+
-   '<div class="tabenv crece"'+ap(3)+'><table class="t" id="t16"></table></div>'+
-   '<div class="tot"'+ap(4)+'><span class="lb">Total inversión de la campaña</span>'+
+   '<div class="tabenv crece"'+ap(2)+'><table class="t" id="t16"></table></div>'+
+   '<div class="tot"'+ap(3)+'><span class="lb">Total inversión de la campaña</span>'+
      '<span class="vl num" id="t16tot">S/ 0.00</span></div>'; },
   go:function(){ pintaT16(); } },
 
-{ et:'Resumen', t:'Lo que necesita el flujo de caja', ho:'11:25 - 11:35',
+{ et:'Explicación', t:'Lo que se paga una vez y lo que se paga cada mes', ho:'11:25 - 11:30',
   h:function(){ return ''+
-   '<h2 class="tl"'+ap(0)+'>El plan de medios se parte en dos</h2>'+
+   '<h2 class="tl"'+ap(0)+'>El mismo total, separado en dos</h2>'+
+   '<p class="teo"'+ap(1)+'>Las fotos se pagan <b>antes</b> de empezar: son del Mes 0. Los anuncios se pagan <b>cada mes</b> mientras dura la campaña. El flujo de caja los necesita separados.</p>'+
+   '<div class="cubos">'+
+     '<div class="cubo m0"'+ap(2,'zoom')+'>'+DIB.bolsa+
+       '<span class="pg">Mes 0 · una sola vez</span><span class="vl">S/ 600.00</span>'+
+       '<span class="de">La sesión de fotos del ejemplo.</span></div>'+
+     '<div class="cubo mm"'+ap(3,'zoom')+'>'+DIB.meses+
+       '<span class="pg">Meses 1, 2 y 3 · cada mes</span><span class="vl">S/ 450.00</span>'+
+       '<span class="de">Los anuncios del ejemplo.</span></div>'+
+   '</div>'+
+   MODELO('La inversión inicial de la campaña asciende a <b>S/ 600.00</b>, correspondiente a los pagos que se realizan una sola vez antes de iniciarla, mientras que los gastos de la campaña ascienden a <b>S/ 450.00</b> mensuales durante los 3 meses que dura.',4); } },
+
+{ et:'Hazlo tú', t:'Separa tu campaña en Mes 0 y meses siguientes', ho:'11:30 - 11:35',
+  h:function(){ return ''+
+   HAZLO('Resumen del plan de medios','s11','Sem 11 ER y campaña',0)+
    '<div class="cubos">'+
      '<div class="cubo m0"'+ap(1,'zoom')+'>'+DIB.bolsa+
-       '<span class="pg">Mes 0 · antes de empezar</span>'+
+       '<span class="pg">Mes 0 · una sola vez</span>'+
        '<span class="vl num" id="rm0">S/ 0.00</span>'+
-       '<span class="de">Inversión inicial: lo que se paga <b>una sola vez</b>.</span></div>'+
+       '<span class="de">Tu inversión inicial.</span></div>'+
      '<div class="cubo mm"'+ap(2,'zoom')+'>'+DIB.meses+
-       '<span class="pg">Meses 1, 2 y 3 · cada mes</span>'+
+       '<span class="pg">Cada mes de campaña</span>'+
        '<span class="vl num" id="rmm">S/ 0.00</span>'+
-       '<span class="de">Gastos de la campaña: se repiten <b>todos los meses</b>.</span></div>'+
+       '<span class="de">Tu gasto mensual.</span></div>'+
    '</div>'+
    '<p class="teo"'+ap(3)+'>Comprobación: <b id="rcom">—</b></p>'+
    MODELO('<span id="mod5"></span>',4); },
   go:function(){ pintaResumen(); } },
 
-{ et:'Márgenes', t:'Qué dice cada margen', ho:'11:35 - 11:40',
+{ et:'Explicación', t:'Qué dice cada margen de utilidad', ho:'11:35 - 11:40',
   h:function(){ var e=E().er; return ''+
    '<div class="fila2">'+
      '<span class="izq">'+
-       '<h2 class="tl"'+ap(0)+'>De S/ 100 vendidos, ¿cuánto queda?</h2>'+
+       '<h2 class="tl"'+ap(0)+'>De cada S/ 100 que vendes, ¿cuánto te queda?</h2>'+
        '<div class="casc"'+ap(1)+'>'+
          fila('Ventas netas', e.ventas, e.ventas, '#505050')+
          fila('Utilidad bruta', e.ub, e.ventas, '#1C6E4E')+
@@ -643,25 +688,24 @@ var D=[
      '</span>'+
      '<span class="der"'+ap(2,'zoom')+'>'+DIB.balanza+'</span>'+
    '</div>'+
-   '<p class="teo"'+ap(3)+'><b>Bruto</b>: ya se pagaron los insumos. <b>Operativo</b>: además el alquiler, los sueldos y la publicidad. <b>Neto</b>: también los intereses y el impuesto a la renta.</p>'+
+   '<p class="teo"'+ap(3)+'><b>Bruto</b>: ya pagaste los insumos. <b>Operativo</b>: además el alquiler, los sueldos y la publicidad. <b>Neto</b>: también los intereses y el impuesto a la renta.</p>'+
    '<div class="form"'+ap(4)+'>Margen = Utilidad ÷ Ventas netas × 100</div>'; },
   go:function(){ setTimeout(function(){
       Array.prototype.forEach.call(document.querySelectorAll('#lam .relleno'),function(r){
         r.style.width=r.getAttribute('data-w')+'%'; }); },80); } },
 
-{ et:'Tabla 12', t:'Los tres márgenes de tu marca', ho:'11:40 - 11:55',
+{ et:'Hazlo tú', t:'Los tres márgenes de tu marca', ho:'11:40 - 11:55',
   h:function(){ return ''+
-   '<h2 class="tl"'+ap(0)+'>Tabla 12 · Márgenes de '+esc(E().nombre)+', 2025</h2>'+
+   HAZLO('Tabla 12 · Márgenes de utilidad','s12','Sem 12 Márgenes y costo',0)+
    '<div class="tabenv"'+ap(1)+'><table class="t" id="t12"></table></div>'+
    '<div class="barra"'+ap(2)+'>'+
      '<button class="bt pri" data-ac="t12ver" type="button">Comprobar</button>'+
      '<button class="bt" data-ac="t12sol" type="button">Ver respuesta</button>'+
-     '<button class="bt xl" data-ac="caso" type="button">Abrir el caso</button>'+
      '<span id="t12msg" style="font-size:calc(var(--u)*2.5);font-weight:700"></span></div>'+
    MODELO('<span id="mod7"></span>',3); },
   go:function(){ pintaT12(); modelo7(); } },
 
-{ et:'Costo unitario', t:'Qué entra al costo de una unidad', ho:'11:55 - 12:00',
+{ et:'Explicación', t:'Qué entra al costo de una unidad', ho:'11:55 - 12:00',
   h:function(){ return ''+
    '<h2 class="tl"'+ap(0)+'>Toca una tarjeta y después su caja</h2>'+
    '<div class="fichas" id="fichas"'+ap(1)+'></div>'+
@@ -673,28 +717,27 @@ var D=[
    '</div>'; },
   go:function(){ pintaClas(); } },
 
-{ et:'Tabla A5', t:'El costo de una unidad de tu producto', ho:'12:00 - 12:25',
+{ et:'Hazlo tú', t:'El costo de una unidad de tu producto', ho:'12:00 - 12:25',
   h:function(){ return ''+
-   '<h2 class="tl"'+ap(0)+'>Tabla A5 · Costo unitario del '+esc(E().producto)+'</h2>'+
-   EXCEL('Abre tu archivo del proyecto','Escribe tu receta real y cópiala a la hoja «Sem 12 Márgenes y costo», Tabla A5.',1).replace('excelbox','excelbox fino')+
-   '<div class="barra"'+ap(2)+'>'+
+   HAZLO('Tabla A5 · Costo unitario','s12','Sem 12 Márgenes y costo',0)+
+   '<div class="barra"'+ap(1)+'>'+
      '<button class="bt pri" data-ac="a5add" type="button">+ Agregar insumo</button>'+
-     '<button class="bt" data-ac="a5rest" type="button">Volver al ejemplo</button></div>'+
-   '<div class="tabenv crece"'+ap(3)+'><table class="t" id="ta5"></table></div>'+
-   '<div class="dos"'+ap(4,'zoom')+'>'+ tarjeta('m0','n1','1')+tarjeta('mm','n2','2') +'</div>'+
-   MODELO('<span id="mod9"></span>',5); },
+     '<button class="bt" data-ac="a5rest" type="button">Volver al ejemplo</button>'+
+     '<span class="avisoej">Escribe la receta real de tu producto.</span></div>'+
+   '<div class="tabenv crece"'+ap(2)+'><table class="t" id="ta5"></table></div>'+
+   '<div class="dos"'+ap(3,'zoom')+'>'+ tarjeta('m0','n1','1')+tarjeta('mm','n2','2') +'</div>'; },
   go:function(){ pintaA5(); } },
 
-{ et:'Cierre', t:'Lo que te llevas', ho:'12:25 - 12:30',
+{ et:'Cierre', t:'Para cerrar', ho:'12:25 - 12:30',
   h:function(){ return ''+
-   GLOBO('tj-docente-puntero.webp','Queda listo',
-    'Tu informe ya tiene la <b>Tabla 16</b> con su resumen, la <b>Tabla 12</b> con los tres márgenes y la <b>Tabla A5</b> con el costo de una unidad.',0)+
+   GLOBO('tj-docente-puntero.webp','Lo que calculaste hoy',
+    'Cuánto cuesta tu campaña y cómo se reparte, cuánto deja tu marca de cada S/ 100 vendidos y cuánto cuesta producir una unidad.',0)+
    '<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr><th>Para el jueves trae…</th><th>De dónde sale</th></tr></thead><tbody>'+
      '<tr><td>Unidades vendidas en 2025 de cada presentación</td><td>Registro de ventas del negocio</td></tr>'+
      '<tr><td>Índice estacional de los 3 meses de campaña</td><td>En qué meses vende más</td></tr>'+
      '<tr class="res"><td>Aumento esperado por la campaña</td><td>Lo estima el equipo y lo sustenta</td></tr>'+
    '</tbody></table></div>'+
-   '<p class="clave"'+ap(2)+'>El jueves proyectamos cuánto se vende de más con la campaña (Tablas A6 y 17). El <b>margen unitario</b> de hoy convierte esas unidades en soles.</p>'; } }
+   '<p class="clave"'+ap(2)+'>El jueves calculamos cuánto se vende de más gracias a la campaña. El <b>margen unitario</b> de hoy es lo que convierte esas unidades en soles.</p>'; } }
 ];
 
 function fila(nb,v,base,color){
@@ -705,9 +748,9 @@ function fila(nb,v,base,color){
 }
 function tarjeta(cl,idn,k){
   return '<div class="cubo '+cl+'"><span class="pg" id="'+idn+'">Presentación '+k+'</span>'+
-    '<span class="lin">Costo unitario <b id="cu'+k+'">—</b></span>'+
-    '<span class="lin">Precio de carta <input class="ce n" data-a="k'+k+'" inputmode="decimal"></span>'+
+    '<span class="lin">Precio de carta (con IGV) <input class="ce n" data-a="k'+k+'" inputmode="decimal"></span>'+
     '<span class="lin">Precio sin IGV (÷ 1.18) <b id="si'+k+'">—</b></span>'+
+    '<span class="lin">(–) Costo unitario <b id="cu'+k+'">—</b></span>'+
     '<span class="lin mgu">Margen unitario <b class="vl num" id="mu'+k+'">S/ 0.00</b></span></div>';
 }
 
@@ -961,7 +1004,7 @@ document.addEventListener('fullscreenchange',function(){
 
 /* ================= eventos ================= */
 $('lam').addEventListener('click',function(ev){
-  var b=ev.target.closest?ev.target.closest('[data-ac],[data-fi],[data-cj]'):null;
+  var b=ev.target.closest?ev.target.closest('[data-ac],[data-fi],[data-cj],[data-emp]'):null;
   if(!b) return;
   var ac=b.getAttribute('data-ac');
   if(ac==='t16add'){ S.medios.push({canal:'',pieza:'',frec:'mes',dur:3,costo:0}); guarda(); pintaT16(); }
@@ -974,6 +1017,7 @@ $('lam').addEventListener('click',function(ev){
                           S.carta1=E().carta1; S.carta2=E().carta2; guarda(); pintaA5(); }
   else if(ac==='a5del'){ S.ins.splice(num(b.getAttribute('data-n')),1); guarda(); pintaA5(); }
   else if(ac==='caso'){ abreCaso(eq); }
+  else if(b.hasAttribute('data-emp')){ abreHoja(b.getAttribute('data-emp'), b.getAttribute('data-hoja')); }
   else if(ac==='copiar'){
     var p=b.closest('.modelo').querySelector('[data-txt]');
     var tx=p?p.textContent:'';
