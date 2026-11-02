@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matem&aacute;ticas Aplicadas - Semana 12 &middot; Lunes &middot; Proyecto</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="version" content="2026-11-02-mat_s12l_proy_v1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+.pr{
+  --rojo:#E31E24; --gris:#505050; --tinta:#2B2B2E; --verde:#1C6E4E; --ambar:#9A5B07;
+  --humo:#F4F4F6; --linea:#DCDCE0; --papel:#FFFFFF; --rosa:#FFD9DB;
+  max-width:1180px; margin:0 auto;
+  font-family:'Nunito','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+.pr button, .pr input, .pr select, .pr table{ font-family:inherit; }
+.pr [hidden]{ display:none !important; }
+
+/* ---------- cabecera de marca ---------- */
+.pr .marca{ display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+            border-bottom:3px solid var(--rojo); padding-bottom:14px; }
+.pr .marca .lgc{ flex:none; height:40px; width:auto; display:block; }
+@media (max-width:560px){ .pr .marca .lgc{ height:30px; } }
+.pr .marca .tx{ flex:1; min-width:230px; }
+.pr .marca .tx h1{ margin:0; font-size:clamp(21px,3vw,30px); font-weight:800;
+                   color:var(--tinta); letter-spacing:-.4px; line-height:1.2; }
+.pr .marca .tx p{ margin:4px 0 0; font-size:17px; color:var(--gris); }
+.pr .marca .tx p .sem{ color:var(--rojo); font-weight:700; }
+.pr .marca .bts{ display:flex; gap:8px; flex-wrap:wrap; }
+
+/* ---------- elegir equipo ---------- */
+.pr .equipos{ display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+              margin-top:14px; padding:12px 15px; border:2px dashed var(--linea);
+              border-left:5px solid var(--rojo); border-radius:12px; background:var(--humo); }
+.pr .equipos b{ font-size:17px; color:var(--tinta); }
+.pr .equipos button{ font:inherit; font-size:16px; font-weight:800; cursor:pointer;
+                     border:2px solid var(--linea); background:#fff; color:var(--gris);
+                     border-radius:99px; padding:7px 16px; transition:all .18s ease; }
+.pr .equipos button:hover{ border-color:var(--rojo); color:var(--rojo); }
+.pr .equipos button.on{ background:var(--rojo); border-color:var(--rojo); color:#fff;
+                        box-shadow:0 4px 14px rgba(227,30,36,.3); }
+
+/* ---------- escenario ---------- */
+.pr .esc{ margin-top:16px; border:1px solid var(--linea); border-radius:14px; overflow:hidden;
+          background:var(--papel); display:flex; flex-direction:column; min-height:70vh; }
+@media (min-width:820px){
+  .pr .esc{ aspect-ratio:16/9; min-height:0; max-height:calc(100vh - 120px); }
+}
+.pr .esc.full{ position:fixed; inset:0; z-index:9999; border-radius:0; margin:0; max-width:none;
+               aspect-ratio:auto; max-height:none; min-height:0; border:0; }
+.ca-btn{ z-index:10000 !important; } .ca-p{ z-index:10001 !important; }
+
+.pr .cab{ background:var(--gris); color:#fff; padding:10px 16px; display:flex;
+          align-items:center; gap:11px; flex:none; }
+.pr .cab .et{ font-size:13px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+              background:var(--rojo); border-radius:4px; padding:4px 9px; flex:none; }
+.pr .cab .t{ font-size:19px; font-weight:700; flex:1; min-width:0; line-height:1.3; }
+.pr .cab .ho{ font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; flex:none;
+              background:rgba(255,255,255,.16); border-radius:99px; padding:4px 11px; }
+@media (max-width:720px){ .pr .cab .ho{ display:none; } }
+.pr .cab .cu{ font-size:15px; font-variant-numeric:tabular-nums; opacity:.85; flex:none; }
+.pr .cab .lgb{ flex:none; height:24px; width:auto; display:block; opacity:.95; }
+.pr .cab button{ flex:none; font:inherit; font-size:17px; line-height:1; cursor:pointer;
+                 background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.34);
+                 border-radius:7px; padding:7px 10px; }
+.pr .cab button:hover{ background:var(--rojo); border-color:transparent; }
+
+/* ---------- lámina ---------- */
+.pr .lam{ flex:1; min-height:0; overflow:auto; padding:22px 26px;
+          display:flex; flex-direction:column; gap:14px; }
+@media (max-width:620px){ .pr .lam{ padding:16px 14px; } }
+
+/* motion graphics: entrada escalonada */
+.pr [data-ap]{ opacity:0; transform:translateY(16px); }
+.pr .lam.go [data-ap]{ animation:apar .5s cubic-bezier(.22,1,.36,1) forwards;
+                       animation-delay:calc(var(--i,0) * .09s); }
+@keyframes apar{ to{ opacity:1; transform:none; } }
+.pr .lam.go [data-ap="zoom"]{ animation-name:apzoom; }
+@keyframes apzoom{ from{ opacity:0; transform:scale(.9); } to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce){
+  .pr [data-ap]{ opacity:1 !important; transform:none !important; animation:none !important; }
+}
+
+.pr h2.tl{ margin:0; font-size:clamp(22px,2.6vw,30px); font-weight:900; color:var(--tinta);
+           line-height:1.2; letter-spacing:-.4px; }
+.pr p.su{ margin:0; font-size:19px; color:var(--gris); line-height:1.5; }
+.pr .teo{ font-size:19px; line-height:1.6; color:var(--tinta); margin:0;
+          border-left:5px solid var(--rojo); background:var(--humo);
+          border-radius:0 11px 11px 0; padding:12px 16px; }
+.pr .clave{ font-size:18px; line-height:1.55; color:#6B3A00; background:#FFF7E6;
+            border:2px solid #F3D79B; border-radius:11px; padding:11px 15px; margin:0; }
+.pr .form{ font-size:21px; font-weight:800; color:var(--tinta); background:#fff;
+           border:2px solid var(--rojo); border-radius:12px; padding:13px 17px; text-align:center; }
+.pr .form small{ display:block; font-size:15px; font-weight:600; color:var(--gris); margin-top:5px; }
+
+/* portada */
+.pr .tapa{ flex:1; display:flex; flex-direction:column; justify-content:center; gap:13px;
+           background:linear-gradient(135deg,#FFF 0%, #FFF4F4 100%);
+           border-radius:14px; padding:20px 28px; }
+.pr .tapa h2{ font-size:clamp(25px,3.8vw,42px); margin:0; }
+.pr .tapa .chips{ display:flex; gap:9px; flex-wrap:wrap; }
+.pr .chip{ font-size:16px; font-weight:800; color:var(--rojo); background:#fff;
+           border:2px solid var(--rosa); border-radius:99px; padding:6px 15px; }
+
+/* persona con globo */
+.pr .perso{ display:flex; align-items:flex-end; gap:14px; }
+.pr .perso img{ flex:none; width:clamp(78px,11vw,124px); height:auto; }
+.pr .globo{ flex:1; background:#fff; border:2px solid var(--linea); border-radius:14px;
+            padding:13px 17px; font-size:19px; line-height:1.55; color:var(--tinta);
+            position:relative; box-shadow:0 5px 16px rgba(0,0,0,.06); }
+.pr .globo .et{ display:block; font-size:13px; font-weight:800; letter-spacing:.08em;
+                text-transform:uppercase; color:var(--rojo); margin-bottom:4px; }
+
+/* tablas */
+.pr table.t{ width:100%; border-collapse:collapse; font-size:17px; background:#fff; }
+.pr table.t th{ background:var(--gris); color:#fff; font-weight:800; text-align:left;
+                padding:9px 11px; font-size:15px; }
+.pr table.t td{ border-bottom:1px solid var(--linea); padding:8px 11px; color:var(--tinta); }
+.pr table.t tr.res td{ background:#FFF4F4; font-weight:800; border-top:2px solid var(--rojo); }
+.pr table.t td.n, .pr table.t th.n{ text-align:right; font-variant-numeric:tabular-nums; }
+.pr .tabenv{ overflow:auto; border:1px solid var(--linea); border-radius:12px; }
+.pr .nota{ font-size:14px; color:var(--gris); margin:0; font-style:italic; }
+.pr table.t.chica th{ padding:7px 9px; font-size:14px; }
+.pr table.t.chica td{ padding:4px 9px; font-size:15px; }
+.pr table.t.chica input.ce{ font-size:15px; padding:4px 7px; }
+.pr .tabenv.crece{ flex:1; min-height:84px; }
+.pr .cubo .lin{ display:flex; justify-content:space-between; gap:10px; font-size:16px;
+                color:var(--tinta); align-items:center; }
+.pr .cubo .lin b{ font-variant-numeric:tabular-nums; }
+.pr .cubo .lin input.ce{ width:104px; }
+.pr .dos .cubo{ padding:11px 14px; gap:4px; }
+.pr .dos .cubo .vl{ font-size:clamp(22px,2.6vw,30px); line-height:1.1; }
+.pr .dos .cubo .de{ font-size:14px; }
+.pr .dos .cubo .lin{ font-size:15px; }
+.pr .dos .cubo .lin input.ce{ width:92px; padding:3px 7px; font-size:15px; }
+
+/* entradas */
+.pr input.ce, .pr select.ce{ font:inherit; font-size:16px; width:100%; box-sizing:border-box;
+       border:2px solid var(--linea); border-radius:8px; padding:6px 9px; color:var(--tinta);
+       background:#fff; }
+.pr input.ce:focus, .pr select.ce:focus{ outline:none; border-color:var(--rojo); }
+.pr input.ce.n{ text-align:right; font-variant-numeric:tabular-nums; }
+.pr input.ce.ok{ border-color:var(--verde); background:#EDF8F3; }
+.pr input.ce.mal{ border-color:var(--rojo); background:#FFF1F1; }
+.pr .bt{ font:inherit; font-size:16px; font-weight:800; cursor:pointer; border-radius:9px;
+         padding:8px 15px; border:2px solid var(--linea); background:#fff; color:var(--tinta); }
+.pr .bt:hover{ border-color:var(--gris); background:var(--humo); }
+.pr .bt.pri{ background:var(--rojo); border-color:var(--rojo); color:#fff; }
+.pr .bt.pri:hover{ background:#C4171C; }
+.pr .barra{ display:flex; gap:9px; flex-wrap:wrap; align-items:center; }
+
+/* número animado */
+.pr .num{ font-variant-numeric:tabular-nums; font-weight:900; }
+.pr .tot{ display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+          border:2px solid var(--rojo); border-radius:12px; padding:11px 17px; background:#FFF4F4; }
+.pr .tot .lb{ font-size:17px; font-weight:800; color:var(--tinta); }
+.pr .tot .vl{ font-size:clamp(24px,3vw,34px); color:var(--rojo); }
+
+/* dos cubetas del resumen */
+.pr .cubos{ display:flex; gap:16px; flex-wrap:wrap; }
+.pr .cubo{ flex:1 1 230px; border:2px solid var(--linea); border-radius:14px; padding:15px 18px;
+           background:#fff; display:flex; flex-direction:column; gap:7px; }
+.pr .cubo.m0{ border-color:var(--rojo); background:#FFF4F4; }
+.pr .cubo.mm{ border-color:var(--verde); background:#EDF8F3; }
+.pr .cubo .pg{ font-size:13px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+               color:var(--gris); }
+.pr .cubo .vl{ font-size:clamp(26px,3.4vw,38px); color:var(--tinta); }
+.pr .cubo.m0 .vl{ color:var(--rojo); } .pr .cubo.mm .vl{ color:var(--verde); }
+.pr .cubo .de{ font-size:15px; color:var(--gris); line-height:1.45; }
+
+/* cascada de márgenes */
+.pr .casc{ display:flex; flex-direction:column; gap:9px; }
+.pr .casc .fl{ display:flex; align-items:center; gap:12px; }
+.pr .casc .nb{ flex:0 0 190px; font-size:17px; font-weight:700; color:var(--tinta); }
+@media (max-width:620px){ .pr .casc .nb{ flex-basis:120px; font-size:15px; } }
+.pr .casc .pista{ flex:1; height:30px; background:var(--humo); border-radius:7px; overflow:hidden; }
+.pr .casc .relleno{ height:100%; width:0; border-radius:7px; transition:width 1s cubic-bezier(.22,1,.36,1); }
+.pr .casc .vl{ flex:0 0 118px; text-align:right; font-size:18px; font-weight:800;
+               color:var(--tinta); font-variant-numeric:tabular-nums; }
+
+/* clasificador */
+.pr .clz{ display:flex; gap:14px; flex-wrap:wrap; }
+.pr .fichas{ display:flex; gap:8px; flex-wrap:wrap; }
+.pr .fi{ font-size:16px; font-weight:700; border:2px solid var(--linea); background:#fff;
+         border-radius:99px; padding:7px 14px; cursor:pointer; color:var(--tinta);
+         transition:all .2s ease; }
+.pr .fi:hover{ border-color:var(--gris); }
+.pr .fi.sel{ border-color:var(--rojo); box-shadow:0 0 0 4px rgba(227,30,36,.14); }
+.pr .fi.ok{ border-color:var(--verde); background:#EDF8F3; color:var(--verde); cursor:default; }
+.pr .fi.mal{ animation:tiembla .35s; border-color:var(--rojo); background:#FFF1F1; }
+@keyframes tiembla{ 25%{ transform:translateX(-5px); } 75%{ transform:translateX(5px); } }
+.pr .cajas{ display:flex; gap:12px; flex-wrap:wrap; }
+.pr .caja{ flex:1 1 180px; border:2px dashed var(--linea); border-radius:12px; padding:11px 13px;
+           background:var(--humo); min-height:84px; }
+.pr .caja h4{ margin:0 0 7px; font-size:16px; font-weight:800; color:var(--gris); }
+.pr .caja.act{ border-color:var(--rojo); background:#fff; }
+
+/* avance y navegación */
+.pr .avance{ flex:none; display:flex; align-items:center; gap:12px; padding:8px 16px;
+             border-top:1px solid var(--linea); background:var(--humo); }
+.pr .riel{ flex:1; height:7px; background:var(--linea); border-radius:99px; overflow:hidden; }
+.pr .riel i{ display:block; height:100%; width:0; background:var(--rojo); border-radius:99px;
+             transition:width .4s ease; }
+.pr .avance b{ font-size:14px; color:var(--gris); font-variant-numeric:tabular-nums; }
+.pr .nav{ flex:none; display:flex; align-items:center; gap:10px; justify-content:space-between;
+          padding:11px 16px; border-top:1px solid var(--linea); background:#fff; }
+.pr .pts{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; flex:1; }
+.pr .pts i{ width:9px; height:9px; border-radius:50%; background:var(--linea); cursor:pointer;
+            display:block; transition:all .2s ease; }
+.pr .pts i.on{ background:var(--rojo); transform:scale(1.4); }
+.pr .dos{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media (max-width:760px){ .pr .dos{ grid-template-columns:1fr; } }
+.pr .ok{ color:var(--verde); font-weight:800; }
+.pr .avisoej{ font-size:14px; color:var(--ambar); font-weight:700; margin:0; }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="matematicas-aplicadas.html">Matem&aacute;ticas Aplicadas</a></span> / <b>Semana 12 &middot; Lunes &middot; Proyecto</b></span>
+  <div class="o-cp-right"><span class="o-count">02/11/2026 &middot; 10:45 - 12:30</span></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+<div class="o-sheet">
+<div class="pr">
+
+  <div class="marca">
+    <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
+    <span class="tx">
+      <h1>Plan de medios, m&aacute;rgenes y costo unitario</h1>
+      <p><span class="sem">Semana 12 &middot; Lunes</span> - Matem&aacute;ticas Aplicadas - Tablas 16, 12 y A5 del informe</p>
+    </span>
+    <span class="bts">
+      <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
+    </span>
+  </div>
+
+  <div class="equipos">
+    <b>Equipo:</b>
+    <button type="button" data-eq="charito">Queso Helado Charito</button>
+    <button type="button" data-eq="tablon">El Tabl&oacute;n</button>
+    <span class="o-count" id="rotEq"></span>
+  </div>
+
+  <div class="esc" id="esc">
+    <div class="cab">
+      <span class="et" id="eti">Portada</span>
+      <span class="t" id="tit">&mdash;</span>
+      <span class="ho" id="ho"></span>
+      <span class="cu" id="cu">1 / 1</span>
+      <img class="lgb" src="marca/logo-tj.png" alt="Thomas Jefferson">
+      <button id="btnFull2" type="button" title="Pantalla completa" aria-label="Pantalla completa">&#9974;</button>
+    </div>
+    <div class="lam" id="lam"></div>
+    <div class="avance">
+      <span class="riel"><i id="riel"></i></span>
+      <b id="marcador">1 de 1</b>
+    </div>
+    <div class="nav">
+      <button class="o-btn o-btn-secondary" id="ant" type="button">&lsaquo; Anterior</button>
+      <span class="pts" id="pts"></span>
+      <button class="o-btn o-btn-primary" id="sig" type="button">Siguiente &rsaquo;</button>
+    </div>
+  </div>
+
+  <p class="o-nota" style="margin-top:14px;font-size:14px;color:#505050">
+    Diapositivas de conducci&oacute;n: las maneja el docente o un estudiante al frente. Las flechas &larr; y &rarr;
+    del teclado cambian de l&aacute;mina. Los montos de ejemplo son referenciales; cada equipo escribe los suyos.
+  </p>
+
+  <div class="o-acciones centrado o-mb" style="margin-top:18px">
+    <a class="o-btn o-btn-primary" href="matematicas-aplicadas.html">Volver al curso</a>
+    <a class="o-btn" href="https://docs.google.com/spreadsheets/d/17QEp2WWnDgajCf9mn3lEj2InGq41-RREqGb-wjFvZ0M/edit" target="_blank" rel="noopener">&#128202; Tablas Charito</a>
+    <a class="o-btn" href="https://docs.google.com/spreadsheets/d/12XK89C-XuUBarrTTnHhzoUoT7jh0G8X62AmWpzjkwwc/edit" target="_blank" rel="noopener">&#128202; Tablas El Tabl&oacute;n</a>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+
+<script src="calculadora.js"></script>
+<script>
+(function(){
+'use strict';
+var $=function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                        .replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmt(n,d){ d=(d===undefined)?2:d;
+  if(!isFinite(n)) return '-';
+  var s=Math.abs(n).toFixed(d), p=s.split('.');
+  p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return (n<0?'-':'')+p.join('.'); }
+function num(v){ var x=parseFloat(String(v).replace(/,/g,'')); return isFinite(x)?x:0; }
+
+/* ================= datos de los dos equipos ================= */
+var EQ={
+charito:{
+  nombre:'Queso Helado Charito', corto:'Charito', producto:'queso helado arequipeño',
+  er:{ ventas:1237232, cv:518000, ub:719232, ga:210000, gv:265000, uo:244232, un:164499.06 },
+  carta1:9.50, pres1:'Copa personal', carta2:18.00, pres2:'Litro para llevar',
+  insumos:[
+    { i:'Leche fresca',           u:'litro', p:4.50,  c1:0.200, c2:0.600 },
+    { i:'Leche evaporada',        u:'lata',  p:3.80,  c1:0.150, c2:0.450 },
+    { i:'Azúcar rubia',      u:'kg',    p:4.20,  c1:0.040, c2:0.120 },
+    { i:'Canela molida',          u:'kg',    p:60.00, c1:0.002, c2:0.006 },
+    { i:'Coco rallado',           u:'kg',    p:22.00, c1:0.010, c2:0.030 },
+    { i:'Vaso con cuchara',       u:'unidad',p:0.35,  c1:1,     c2:0 },
+    { i:'Envase de litro',        u:'unidad',p:1.20,  c1:0,     c2:1 }
+  ]},
+tablon:{
+  nombre:'El Tablón', corto:'El Tablón', producto:'pollo a la leña',
+  er:{ ventas:2037351, cv:902000, ub:1135351, ga:356000, gv:468000, uo:311351, un:190456.46 },
+  carta1:24.90, pres1:'1/4 de pollo', carta2:89.00, pres2:'Pollo entero',
+  insumos:[
+    { i:'Pollo',                  u:'kg',    p:9.80,  c1:0.500, c2:2.000 },
+    { i:'Papas',                  u:'kg',    p:2.60,  c1:0.250, c2:1.000 },
+    { i:'Marinado y especias',    u:'kg',    p:28.00, c1:0.020, c2:0.080 },
+    { i:'Leña / carbón',u:'kg',    p:1.90,  c1:0.300, c2:1.200 },
+    { i:'Ensalada',               u:'kg',    p:3.40,  c1:0.120, c2:0.480 },
+    { i:'Cremas y ají',      u:'kg',    p:12.00, c1:0.030, c2:0.120 },
+    { i:'Envase y cubiertos',     u:'unidad',p:0.90,  c1:1,     c2:1 }
+  ]}
+};
+var eq='charito';
+function E(){ return EQ[eq]; }
+
+/* medios de ejemplo: los mismos para los dos equipos */
+function mediosEjemplo(){ return [
+  { canal:'Facebook e Instagram Ads', pieza:'Video y carrusel', frec:'mes', dur:3, costo:450 },
+  { canal:'Sesión de fotos',     pieza:'20 fotos del producto', frec:'una', dur:1, costo:600 },
+  { canal:'Volantes',                 pieza:'2,000 volantes A5', frec:'una', dur:1, costo:350 },
+  { canal:'Influencer local',         pieza:'2 reels al mes', frec:'mes', dur:3, costo:300 }
+]; }
+
+/* ================= estado guardado ================= */
+var S={};
+function clave(){ return 'mat_s12l_proy_'+eq; }
+function vacio(){ return { medios:[], ins:null, carta1:null, carta2:null, mg:{} }; }
+function carga(){
+  S=vacio();
+  try{ var r=localStorage.getItem(clave()); if(r){ var o=JSON.parse(r); if(o&&typeof o==='object') S=o; } }catch(e){}
+  if(!S.medios) S.medios=[];
+  if(!S.mg) S.mg={};
+  if(!S.ins){ S.ins=E().insumos.map(function(x){ return {i:x.i,u:x.u,p:x.p,c1:x.c1,c2:x.c2}; }); }
+  if(S.carta1==null) S.carta1=E().carta1;
+  if(S.carta2==null) S.carta2=E().carta2;
+}
+function guarda(){ try{ localStorage.setItem(clave(), JSON.stringify(S)); }catch(e){} }
+
+/* ================= cálculos ================= */
+function totMedios(){ var t=0; S.medios.forEach(function(m){ t+=num(m.costo)*num(m.dur); }); return t; }
+function mes0(){ var t=0; S.medios.forEach(function(m){ if(m.frec==='una') t+=num(m.costo)*num(m.dur); }); return t; }
+function porMes(){ var t=0; S.medios.forEach(function(m){ if(m.frec==='mes') t+=num(m.costo); }); return t; }
+function costoU(k){ var t=0; S.ins.forEach(function(x){ t+=num(x.p)*num(k===1?x.c1:x.c2); }); return t; }
+function sinIGV(k){ return num(k===1?S.carta1:S.carta2)/1.18; }
+
+/* ================= fragmentos ================= */
+function GLOBO(img,et,tx,i){
+  return '<div class="perso" data-ap style="--i:'+(i||0)+'"><img src="personajes/'+img+'" alt="" loading="lazy">'+
+         '<div class="globo"><span class="et">'+esc(et)+'</span>'+tx+'</div></div>';
+}
+function ap(i,extra){ return ' data-ap'+(extra?'="'+extra+'"':'')+' style="--i:'+i+'"'; }
+
+/* ================= las diapositivas ================= */
+var D=[
+
+{ et:'Portada', t:'Dónde está tu informe hoy', ho:'10:45 - 10:50',
+  h:function(){ return ''+
+   '<div class="tapa"'+ap(0,'zoom')+'>'+
+     '<h2 class="tl">Plan de medios, márgenes y costo unitario</h2>'+
+     '<p class="su">Semana 12 &middot; Lunes &middot; '+esc(E().nombre)+'</p>'+
+     '<div class="chips">'+
+       '<span class="chip">Tabla 16</span><span class="chip">Tabla 12</span>'+
+       '<span class="chip">Tabla A5</span><span class="chip">Informe</span></div>'+
+   '</div>'+
+   GLOBO('tj-docente-presenta.webp','Hoy cerramos tres tablas',
+    'Al final de la clase tu informe tiene el <b>plan de medios</b> completo, los <b>tres márgenes</b> de tu marca y el <b>costo de una unidad</b> del '+esc(E().producto)+'.',1); } },
+
+{ et:'Mapa', t:'Qué falta del informe', ho:'10:50 - 10:55',
+  h:function(){
+    var fs=[
+      ['2.5.2','Tabla 11 - Estado de Resultados','listo','Lo hicimos la semana pasada'],
+      ['3.1.3','Tabla 16 - Plan de medios','hoy','Quedó pendiente: se llena hoy'],
+      ['2.5.3','Tabla 12 - Márgenes de utilidad','hoy','Sale de la Tabla 11'],
+      ['A.2','Tabla A5 - Costo unitario','hoy','Con la receta de tu producto'],
+      ['3.2','Tablas 17, 18 y 19','después','Jueves y la próxima semana']
+    ];
+    var col={listo:'#1C6E4E','hoy':'#E31E24','después':'#505050'};
+    var ic={listo:'&#10003;','hoy':'&#9654;','después':'&#8943;'};
+    var h='<h2 class="tl"'+ap(0)+'>Cuatro puntos cerrados, tres hoy</h2>';
+    h+='<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr><th>Punto</th><th>Tabla</th><th>Estado</th><th>Nota</th></tr></thead><tbody>';
+    fs.forEach(function(f,n){
+      h+='<tr'+(f[2]==='hoy'?' class="res"':'')+'><td><b>'+esc(f[0])+'</b></td><td>'+esc(f[1])+'</td>'+
+         '<td style="color:'+col[f[2]]+';font-weight:800">'+ic[f[2]]+' '+esc(f[2])+'</td><td>'+esc(f[3])+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    h+='<p class="clave"'+ap(2)+'>La Tabla 16 va primero: de ella salen la <b>inversión del Mes 0</b> y el <b>gasto mensual</b> que necesita el flujo de caja de la próxima semana. Sin ella no hay Tabla 18.</p>';
+    return h; } },
+
+{ et:'Tabla 16', t:'Cómo se llena una fila del plan de medios', ho:'10:55 - 11:00',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>Una fila, cinco datos</h2>'+
+   '<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr>'+
+     '<th>Canal / medio</th><th>Formato o pieza</th><th>Frecuencia</th><th class="n">Duración</th>'+
+     '<th class="n">Costo (S/)</th><th class="n">Costo total (S/)</th></tr></thead><tbody>'+
+     '<tr><td>Facebook e Instagram Ads</td><td>Video y carrusel</td><td>Mensual</td>'+
+       '<td class="n">3</td><td class="n">450.00</td><td class="n"><b>1,350.00</b></td></tr>'+
+     '<tr><td>Sesión de fotos</td><td>20 fotos del producto</td><td>Una vez</td>'+
+       '<td class="n">1</td><td class="n">600.00</td><td class="n"><b>600.00</b></td></tr>'+
+   '</tbody></table></div>'+
+   '<div class="form"'+ap(2)+'>Costo total = Costo &times; Duración<small>Si el pago es <b>mensual</b>, el costo es el de un mes. Si es <b>«Una vez»</b>, la duración es 1.</small></div>'+
+   '<p class="clave"'+ap(3)+'>Todos los costos van <b>sin IGV</b>. Lo que te cobran con IGV se divide entre 1.18 antes de escribirlo aquí.</p>'; } },
+
+{ et:'Tabla 16', t:'Tu plan de medios', ho:'11:00 - 11:25',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>Tabla 16 &middot; Plan de medios de la campaña</h2>'+
+   '<div class="barra"'+ap(1)+'>'+
+     '<button class="bt pri" data-ac="t16add" type="button">+ Agregar canal</button>'+
+     '<button class="bt" data-ac="t16ej" type="button">Cargar ejemplo</button>'+
+     '<button class="bt" data-ac="t16bo" type="button">Vaciar</button>'+
+     '<span class="avisoej">Lo que escribas se guarda en este equipo.</span>'+
+   '</div>'+
+   '<div class="tabenv"'+ap(2)+'><table class="t" id="t16"></table></div>'+
+   '<div class="tot"'+ap(3)+'><span class="lb">Total inversión de la campaña</span>'+
+     '<span class="vl num" id="t16tot">S/ 0.00</span></div>'; },
+  go:function(){ pintaT16(); } },
+
+{ et:'Resumen', t:'Lo que necesita el flujo de caja', ho:'11:25 - 11:35',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>El plan de medios se parte en dos</h2>'+
+   '<div class="cubos">'+
+     '<div class="cubo m0"'+ap(1,'zoom')+'><span class="pg">Mes 0 &middot; antes de empezar</span>'+
+       '<span class="vl num" id="rm0">S/ 0.00</span>'+
+       '<span class="de">Inversión inicial: todo lo que se paga <b>una sola vez</b> (fotos, diseño, material impreso).</span></div>'+
+     '<div class="cubo mm"'+ap(2,'zoom')+'><span class="pg">Meses 1, 2 y 3 &middot; cada mes</span>'+
+       '<span class="vl num" id="rmm">S/ 0.00</span>'+
+       '<span class="de">Gastos de la campaña: lo que se paga <b>todos los meses</b> mientras dura la campaña.</span></div>'+
+   '</div>'+
+   '<div class="tabenv"'+ap(3)+'><table class="t"><tbody>'+
+     '<tr><td>Total de la Tabla 16</td><td class="n" id="rtot">-</td></tr>'+
+     '<tr><td>Comprobación: Mes 0 + (gasto mensual &times; meses de campaña)</td><td class="n" id="rcom">-</td></tr>'+
+   '</tbody></table></div>'+
+   '<p class="clave"'+ap(4)+'>Estos dos números se copian al texto del informe, debajo de la Tabla 16, y la próxima semana entran en las filas <b>«Inversión inicial»</b> y <b>«Gastos de la campaña»</b> de la Tabla 18.</p>'; },
+  go:function(){ pintaResumen(); } },
+
+{ et:'Márgenes', t:'Qué dice cada margen', ho:'11:35 - 11:40',
+  h:function(){ var e=E().er; return ''+
+   '<h2 class="tl"'+ap(0)+'>De S/ 100 vendidos, &iquest;cuánto queda?</h2>'+
+   '<div class="casc"'+ap(1)+'>'+
+     fila('Ventas netas', e.ventas, e.ventas, '#505050')+
+     fila('Utilidad bruta', e.ub, e.ventas, '#1C6E4E')+
+     fila('Utilidad operativa', e.uo, e.ventas, '#9A5B07')+
+     fila('Utilidad neta', e.un, e.ventas, '#E31E24')+
+   '</div>'+
+   '<p class="teo"'+ap(2)+'><b>Bruto</b>: después de pagar los insumos. <b>Operativo</b>: además se pagaron alquiler, sueldos y publicidad. <b>Neto</b>: ya se pagaron también los intereses y el impuesto a la renta.</p>'+
+   '<div class="form"'+ap(3)+'>Margen = Utilidad &divide; Ventas netas &times; 100</div>'; },
+  go:function(){ setTimeout(function(){
+      Array.prototype.forEach.call(document.querySelectorAll('#lam .relleno'),function(r){
+        r.style.width=r.getAttribute('data-w')+'%'; }); },60); } },
+
+{ et:'Tabla 12', t:'Los tres márgenes de tu marca', ho:'11:40 - 11:55',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>Tabla 12 &middot; Márgenes de utilidad de '+esc(E().nombre)+', 2025</h2>'+
+   '<div class="tabenv"'+ap(1)+'><table class="t" id="t12"></table></div>'+
+   '<div class="barra"'+ap(2)+'>'+
+     '<button class="bt pri" data-ac="t12ver" type="button">Comprobar</button>'+
+     '<button class="bt" data-ac="t12sol" type="button">Ver respuesta</button>'+
+     '<span id="t12msg" style="font-size:17px;font-weight:700"></span></div>'+
+   '<p class="nota"'+ap(3)+'>Nota. Elaboración propia con base en la Tabla 11.</p>'; },
+  go:function(){ pintaT12(); } },
+
+{ et:'Costo unitario', t:'Qué entra al costo de una unidad', ho:'11:55 - 12:00',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>Toca una tarjeta y después su caja</h2>'+
+   '<div class="fichas" id="fichas"'+ap(1)+'></div>'+
+   '<div class="cajas" id="cajas"'+ap(2)+'></div>'+
+   '<div class="form"'+ap(3)+'>Precio sin IGV = precio de carta &divide; 1.18<small>Restar 18 % da otro número y está mal.</small></div>'; },
+  go:function(){ pintaClas(); } },
+
+{ et:'Tabla A5', t:'El costo de una unidad de tu producto', ho:'12:00 - 12:25',
+  h:function(){ return ''+
+   '<h2 class="tl"'+ap(0)+'>Tabla A5 &middot; Costo unitario del '+esc(E().producto)+'</h2>'+
+   '<div class="barra"'+ap(1)+'>'+
+     '<button class="bt pri" data-ac="a5add" type="button">+ Agregar insumo</button>'+
+     '<button class="bt" data-ac="a5rest" type="button">Volver al ejemplo</button>'+
+     '<span class="avisoej">Receta de ejemplo: cámbiala por la de tu equipo.</span></div>'+
+   '<div class="tabenv crece"'+ap(3)+'><table class="t chica" id="ta5"></table></div>'+
+   '<div class="dos"'+ap(4)+'>'+
+     tarjeta('m0','n1','1')+tarjeta('mm','n2','2')+
+   '</div>'; },
+  go:function(){ pintaA5(); } },
+
+{ et:'Cierre', t:'Lo que te llevas', ho:'12:25 - 12:30',
+  h:function(){ return ''+
+   GLOBO('tj-docente-puntero.webp','Lo que queda listo',
+    'Tu informe ya tiene la <b>Tabla 16</b> con su resumen, la <b>Tabla 12</b> con los tres márgenes y la <b>Tabla A5</b> con el costo de una unidad.',0)+
+   '<div class="tabenv"'+ap(1)+'><table class="t"><thead><tr><th>Para el jueves</th><th>De dónde sale</th></tr></thead><tbody>'+
+     '<tr><td>Unidades vendidas en 2025 de cada presentación</td><td>Registro de ventas del negocio</td></tr>'+
+     '<tr><td>Índice estacional de los 3 meses de campaña</td><td>En qué meses vende más</td></tr>'+
+     '<tr class="res"><td>Aumento esperado por la campaña</td><td>Lo estima el equipo y lo sustenta</td></tr>'+
+   '</tbody></table></div>'+
+   '<p class="clave"'+ap(2)+'>El jueves proyectamos cuánto se vende de más con la campaña (Tablas A6 y 17). El <b>margen unitario</b> de hoy es la pieza que convierte esas unidades en soles.</p>'; } }
+];
+
+function tarjeta(cl,idn,k){
+  return '<div class="cubo '+cl+'"><span class="pg" id="'+idn+'">Presentación '+k+'</span>'+
+    '<span class="lin">Costo unitario <b id="cu'+k+'">-</b></span>'+
+    '<span class="lin">Precio de carta (con IGV) <input class="ce n" data-a="k'+k+'" inputmode="decimal"></span>'+
+    '<span class="lin">Precio sin IGV (/ 1.18) <b id="si'+k+'">-</b></span>'+
+    '<span class="vl num" id="mu'+k+'">S/ 0.00</span><span class="de">Margen unitario</span></div>';
+}
+function fila(nb,v,base,color){
+  var p=base? (v/base*100) : 0;
+  return '<div class="fl"><span class="nb">'+esc(nb)+'</span>'+
+    '<span class="pista"><i class="relleno" data-w="'+p.toFixed(2)+'" style="background:'+color+'"></i></span>'+
+    '<span class="vl">'+p.toFixed(2)+' %</span></div>';
+}
+
+/* ================= números que suben ================= */
+function anima(el,val,pre){
+  if(!el) return;
+  var red=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var de=num(el.getAttribute('data-v')), t0=null, dur=650;
+  el.setAttribute('data-v',val);
+  if(red||de===val){ el.textContent=(pre||'')+fmt(val); return; }
+  function paso(t){
+    if(t0===null) t0=t;
+    var k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
+    el.textContent=(pre||'')+fmt(de+(val-de)*e);
+    if(k<1) requestAnimationFrame(paso);
+  }
+  requestAnimationFrame(paso);
+}
+
+/* ================= Tabla 16 ================= */
+function pintaT16(){
+  var t=$('t16'); if(!t) return;
+  var h='<thead><tr><th>Canal / medio</th><th>Formato o pieza</th><th>Frecuencia</th>'+
+        '<th class="n" style="width:92px">Duración</th><th class="n" style="width:108px">Costo (S/)</th>'+
+        '<th class="n" style="width:118px">Costo total</th><th style="width:38px"></th></tr></thead><tbody>';
+  if(!S.medios.length){
+    h+='<tr><td colspan="7" style="text-align:center;color:#505050;padding:18px">'+
+       'Aún no hay canales. Pulsa <b>Agregar canal</b> o <b>Cargar ejemplo</b>.</td></tr>';
+  }
+  S.medios.forEach(function(m,n){
+    h+='<tr>'+
+      '<td><input class="ce" data-m="canal" data-n="'+n+'" value="'+esc(m.canal)+'" placeholder="Facebook Ads"></td>'+
+      '<td><input class="ce" data-m="pieza" data-n="'+n+'" value="'+esc(m.pieza)+'" placeholder="Video, volante..."></td>'+
+      '<td><select class="ce" data-m="frec" data-n="'+n+'">'+
+        '<option value="mes"'+(m.frec==='mes'?' selected':'')+'>Mensual</option>'+
+        '<option value="una"'+(m.frec==='una'?' selected':'')+'>Una vez</option></select></td>'+
+      '<td><input class="ce n" data-m="dur" data-n="'+n+'" value="'+esc(m.dur)+'" inputmode="decimal"></td>'+
+      '<td><input class="ce n" data-m="costo" data-n="'+n+'" value="'+esc(m.costo)+'" inputmode="decimal"></td>'+
+      '<td class="n"><b>'+fmt(num(m.costo)*num(m.dur))+'</b></td>'+
+      '<td><button class="bt" data-ac="t16del" data-n="'+n+'" title="Quitar" style="padding:4px 9px">&#10005;</button></td></tr>';
+  });
+  h+='</tbody>';
+  t.innerHTML=h;
+  anima($('t16tot'), totMedios(), 'S/ ');
+}
+
+/* ================= resumen ================= */
+function pintaResumen(){
+  anima($('rm0'), mes0(), 'S/ ');
+  anima($('rmm'), porMes(), 'S/ ');
+  var tt=$('rtot'), cc=$('rcom');
+  if(tt) tt.textContent='S/ '+fmt(totMedios());
+  if(cc){
+    var meses=0;
+    S.medios.forEach(function(m){ if(m.frec==='mes') meses=Math.max(meses,num(m.dur)); });
+    cc.innerHTML='S/ '+fmt(mes0()+porMes()*meses)+
+      ' <span style="font-size:14px;color:#505050">('+fmt(mes0(),2)+' + '+fmt(porMes(),2)+' &times; '+meses+')</span>';
+  }
+}
+
+/* ================= Tabla 12 ================= */
+var MG=[
+  { k:'b', nb:'Margen bruto',     f:'Utilidad bruta / Ventas netas &times; 100',     u:'ub' },
+  { k:'o', nb:'Margen operativo', f:'Utilidad operativa / Ventas netas &times; 100', u:'uo' },
+  { k:'n', nb:'Margen neto',      f:'Utilidad neta / Ventas netas &times; 100',      u:'un' }
+];
+function espera(k){ var e=E().er; var m=MG.filter(function(x){ return x.k===k; })[0];
+                    return e[m.u]/e.ventas*100; }
+function pintaT12(){
+  var t=$('t12'); if(!t) return;
+  var e=E().er;
+  var h='<thead><tr><th>Margen</th><th>Fórmula</th><th class="n">Cálculo</th>'+
+        '<th class="n" style="width:128px">Resultado (%)</th></tr></thead><tbody>';
+  MG.forEach(function(m){
+    h+='<tr><td><b>'+esc(m.nb)+'</b></td><td style="font-size:15px">'+m.f+'</td>'+
+       '<td class="n" style="font-size:15px">'+fmt(e[m.u])+' / '+fmt(e.ventas)+'</td>'+
+       '<td><input class="ce n" data-mg="'+m.k+'" value="'+esc(S.mg[m.k]||'')+'" inputmode="decimal" placeholder="0.00"></td></tr>';
+  });
+  h+='</tbody>';
+  t.innerHTML=h;
+}
+function revisaT12(mostrar){
+  var ok=0, msg=$('t12msg');
+  MG.forEach(function(m){
+    var c=document.querySelector('#t12 input[data-mg="'+m.k+'"]'); if(!c) return;
+    var sp=espera(m.k);
+    if(mostrar){ c.value=sp.toFixed(2); S.mg[m.k]=c.value; }
+    var v=num(c.value);
+    c.classList.remove('ok','mal');
+    if(c.value===''){ return; }
+    if(Math.abs(v-sp)<=0.05){ c.classList.add('ok'); ok++; } else { c.classList.add('mal'); }
+  });
+  guarda();
+  if(msg){
+    if(ok===3){ msg.innerHTML='<span class="ok">&#10003; Los tres márgenes están bien. '+
+      'Se leen así: de cada S/ 100 vendidos quedan S/ '+espera('b').toFixed(2)+' tras los insumos, '+
+      'S/ '+espera('o').toFixed(2)+' tras los gastos del negocio y S/ '+espera('n').toFixed(2)+' al final.</span>'; }
+    else { msg.innerHTML='<span style="color:#9A5B07">'+ok+' de 3 correctos. Divide y multiplica por 100.</span>'; }
+  }
+}
+
+/* ================= clasificador ================= */
+var FI=[
+  { t:'Leche / pollo del plato', g:'CU' }, { t:'Envase y cubiertos', g:'CU' },
+  { t:'Especias y cremas', g:'CU' },       { t:'Sesión de fotos', g:'CA' },
+  { t:'Facebook Ads', g:'CA' },            { t:'Volantes de la campaña', g:'CA' },
+  { t:'Alquiler del local', g:'GO' },      { t:'Sueldo de la cajera', g:'GO' },
+  { t:'Limpieza del local', g:'GO' }
+];
+var CJ=[ { g:'CU', t:'Costo unitario (Tabla A5)' },
+         { g:'CA', t:'Plan de medios (Tabla 16)' },
+         { g:'GO', t:'Gasto operativo (Tabla 11)' } ];
+var sel=null, puestas={};
+function pintaClas(){
+  var f=$('fichas'), c=$('cajas'); if(!f||!c) return;
+  puestas={}; sel=null;
+  f.innerHTML=FI.map(function(x,n){
+    return '<button class="fi" type="button" data-fi="'+n+'">'+esc(x.t)+'</button>'; }).join('');
+  c.innerHTML=CJ.map(function(x){
+    return '<div class="caja" data-cj="'+x.g+'"><h4>'+esc(x.t)+'</h4><div class="dentro"></div></div>'; }).join('');
+}
+function clicFicha(n){
+  var b=document.querySelector('#fichas .fi[data-fi="'+n+'"]');
+  if(!b||b.classList.contains('ok')) return;
+  Array.prototype.forEach.call(document.querySelectorAll('#fichas .fi'),function(x){ x.classList.remove('sel'); });
+  b.classList.add('sel'); sel=n;
+  Array.prototype.forEach.call(document.querySelectorAll('#cajas .caja'),function(x){ x.classList.add('act'); });
+}
+function clicCaja(g){
+  if(sel===null) return;
+  var b=document.querySelector('#fichas .fi[data-fi="'+sel+'"]');
+  if(FI[sel].g===g){
+    var d=document.querySelector('#cajas .caja[data-cj="'+g+'"] .dentro');
+    b.classList.remove('sel','mal'); b.classList.add('ok');
+    if(d) d.appendChild(b);
+    puestas[sel]=1; sel=null;
+    Array.prototype.forEach.call(document.querySelectorAll('#cajas .caja'),function(x){ x.classList.remove('act'); });
+  } else {
+    b.classList.add('mal');
+    setTimeout(function(){ b.classList.remove('mal'); },380);
+  }
+}
+
+/* ================= Tabla A5 ================= */
+function pintaA5(){
+  var t=$('ta5'); if(!t) return;
+  var e=E();
+  var h='<thead><tr><th>Insumo</th><th style="width:86px">Unidad</th><th class="n" style="width:98px">Precio</th>'+
+        '<th class="n" style="width:92px">Cant. 1</th><th class="n" style="width:98px">Costo 1</th>'+
+        '<th class="n" style="width:92px">Cant. 2</th><th class="n" style="width:98px">Costo 2</th>'+
+        '<th style="width:38px"></th></tr></thead><tbody>';
+  S.ins.forEach(function(x,n){
+    h+='<tr>'+
+      '<td><input class="ce" data-a="i" data-n="'+n+'" value="'+esc(x.i)+'"></td>'+
+      '<td><input class="ce" data-a="u" data-n="'+n+'" value="'+esc(x.u)+'"></td>'+
+      '<td><input class="ce n" data-a="p" data-n="'+n+'" value="'+esc(x.p)+'" inputmode="decimal"></td>'+
+      '<td><input class="ce n" data-a="c1" data-n="'+n+'" value="'+esc(x.c1)+'" inputmode="decimal"></td>'+
+      '<td class="n">'+fmt(num(x.p)*num(x.c1))+'</td>'+
+      '<td><input class="ce n" data-a="c2" data-n="'+n+'" value="'+esc(x.c2)+'" inputmode="decimal"></td>'+
+      '<td class="n">'+fmt(num(x.p)*num(x.c2))+'</td>'+
+      '<td><button class="bt" data-ac="a5del" data-n="'+n+'" style="padding:4px 9px">&#10005;</button></td></tr>';
+  });
+  h+='<tr class="res"><td colspan="4">Costo unitario</td><td class="n">'+fmt(costoU(1))+'</td>'+
+     '<td></td><td class="n">'+fmt(costoU(2))+'</td><td></td></tr>';
+  h+='</tbody>';
+  t.innerHTML=h;
+  var n1=$('n1'), n2=$('n2');
+  if(n1) n1.textContent=e.pres1; if(n2) n2.textContent=e.pres2;
+  var k1=document.querySelector('[data-a="k1"]'), k2=document.querySelector('[data-a="k2"]');
+  if(k1) k1.value=S.carta1; if(k2) k2.value=S.carta2;
+  refrescaA5();
+}
+
+/* ================= motor de diapositivas ================= */
+var i=0;
+function pinta(){
+  var d=D[i], lam=$('lam');
+  $('eti').textContent=d.et; $('tit').textContent=d.t; $('ho').textContent=d.ho;
+  $('cu').textContent=(i+1)+' / '+D.length;
+  $('marcador').textContent=(i+1)+' de '+D.length;
+  $('riel').style.width=((i+1)/D.length*100)+'%';
+  lam.classList.remove('go');
+  lam.innerHTML=d.h();
+  lam.scrollTop=0;
+  Array.prototype.forEach.call(lam.querySelectorAll('[data-ap]'),function(x,n){
+    if(!x.style.getPropertyValue('--i')) x.style.setProperty('--i',n);
+  });
+  void lam.offsetWidth;
+  lam.classList.add('go');
+  if(d.go) d.go();
+  $('ant').disabled=(i===0); $('sig').disabled=(i===D.length-1);
+  Array.prototype.forEach.call($('pts').children,function(p,n){
+    p.className=(n===i?'on':''); });
+}
+function va(n){ if(n<0||n>=D.length) return; i=n; pinta(); }
+
+$('pts').innerHTML=D.map(function(){ return '<i></i>'; }).join('');
+Array.prototype.forEach.call($('pts').children,function(p,n){
+  p.addEventListener('click',function(){ va(n); }); });
+$('ant').addEventListener('click',function(){ va(i-1); });
+$('sig').addEventListener('click',function(){ va(i+1); });
+document.addEventListener('keydown',function(ev){
+  var t=ev.target&&ev.target.tagName;
+  if(t==='INPUT'||t==='SELECT'||t==='TEXTAREA') return;
+  if(ev.key==='ArrowRight'||ev.key===' '){ ev.preventDefault(); va(i+1); }
+  if(ev.key==='ArrowLeft'){ ev.preventDefault(); va(i-1); }
+});
+
+/* pantalla completa */
+function full(){
+  var e=$('esc');
+  if(!document.fullscreenElement){
+    e.classList.add('full');
+    if(e.requestFullscreen) e.requestFullscreen()['catch'](function(){});
+  } else {
+    if(document.exitFullscreen) document.exitFullscreen();
+  }
+}
+$('btnFull').addEventListener('click',full);
+$('btnFull2').addEventListener('click',full);
+document.addEventListener('fullscreenchange',function(){
+  if(!document.fullscreenElement) $('esc').classList.remove('full');
+});
+
+/* ================= eventos de las láminas ================= */
+$('lam').addEventListener('click',function(ev){
+  var b=ev.target.closest?ev.target.closest('[data-ac],[data-fi],[data-cj]'):null;
+  if(!b) return;
+  var ac=b.getAttribute('data-ac');
+  if(ac==='t16add'){ S.medios.push({canal:'',pieza:'',frec:'mes',dur:3,costo:0}); guarda(); pintaT16(); }
+  else if(ac==='t16ej'){ S.medios=mediosEjemplo(); guarda(); pintaT16(); }
+  else if(ac==='t16bo'){ S.medios=[]; guarda(); pintaT16(); }
+  else if(ac==='t16del'){ S.medios.splice(num(b.getAttribute('data-n')),1); guarda(); pintaT16(); }
+  else if(ac==='t12ver'){ revisaT12(false); }
+  else if(ac==='t12sol'){ revisaT12(true); }
+  else if(ac==='a5add'){ S.ins.push({i:'',u:'',p:0,c1:0,c2:0}); guarda(); pintaA5(); }
+  else if(ac==='a5rest'){ S.ins=E().insumos.map(function(x){ return {i:x.i,u:x.u,p:x.p,c1:x.c1,c2:x.c2}; });
+                          S.carta1=E().carta1; S.carta2=E().carta2; guarda(); pintaA5(); }
+  else if(ac==='a5del'){ S.ins.splice(num(b.getAttribute('data-n')),1); guarda(); pintaA5(); }
+  else if(b.hasAttribute('data-fi')){ clicFicha(num(b.getAttribute('data-fi'))); }
+  else if(b.hasAttribute('data-cj')){ clicCaja(b.getAttribute('data-cj')); }
+});
+$('lam').addEventListener('input',function(ev){
+  var c=ev.target;
+  if(c.hasAttribute('data-m')){
+    var n=num(c.getAttribute('data-n')), k=c.getAttribute('data-m');
+    S.medios[n][k]=(k==='dur'||k==='costo')?c.value:c.value;
+    guarda();
+    var tr=c.closest('tr'); if(tr){ var ce=tr.children[5];
+      if(ce) ce.innerHTML='<b>'+fmt(num(S.medios[n].costo)*num(S.medios[n].dur))+'</b>'; }
+    anima($('t16tot'), totMedios(), 'S/ ');
+  } else if(c.hasAttribute('data-a')){
+    var a=c.getAttribute('data-a');
+    if(a==='k1'){ S.carta1=c.value; } else if(a==='k2'){ S.carta2=c.value; }
+    else { S.ins[num(c.getAttribute('data-n'))][a]=c.value; }
+    guarda(); refrescaA5();
+  } else if(c.hasAttribute('data-mg')){
+    S.mg[c.getAttribute('data-mg')]=c.value; guarda();
+    c.classList.remove('ok','mal');
+  }
+});
+/* recalcula la A5 sin volver a dibujar, para no perder el foco */
+function refrescaA5(){
+  var t=$('ta5'); if(!t) return;
+  var cu=t.querySelectorAll('tbody tr');
+  S.ins.forEach(function(x,n){
+    var tr=cu[n]; if(!tr) return;
+    tr.children[4].textContent=fmt(num(x.p)*num(x.c1));
+    tr.children[6].textContent=fmt(num(x.p)*num(x.c2));
+  });
+  var b=S.ins.length;
+  if(cu[b]){ cu[b].children[1].textContent=fmt(costoU(1)); cu[b].children[3].textContent=fmt(costoU(2)); }
+  [1,2].forEach(function(k){
+    var c=$('cu'+k), si=$('si'+k);
+    if(c) c.textContent='S/ '+fmt(costoU(k));
+    if(si) si.textContent='S/ '+fmt(sinIGV(k));
+    anima($('mu'+k), sinIGV(k)-costoU(k), 'S/ ');
+  });
+}
+
+/* ================= equipo ================= */
+function ponEquipo(k){
+  eq=k; carga();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-eq]'),function(b){
+    b.classList.toggle('on', b.getAttribute('data-eq')===k); });
+  $('rotEq').textContent=E().nombre+' - '+E().producto;
+  try{ localStorage.setItem('mat_s12l_proy_eq',k); }catch(e){}
+  pinta();
+}
+Array.prototype.forEach.call(document.querySelectorAll('[data-eq]'),function(b){
+  b.addEventListener('click',function(){ ponEquipo(b.getAttribute('data-eq')); });
+});
+
+var guardado='charito';
+try{ var g=localStorage.getItem('mat_s12l_proy_eq'); if(g&&EQ[g]) guardado=g; }catch(e){}
+ponEquipo(guardado);
+
+})();
+</script>
+</body>
+</html>
