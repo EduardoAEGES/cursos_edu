@@ -1019,9 +1019,10 @@ function cargaExcelJS(){
 }
 /* los alumnos de la sala, con su avance ya calculado */
 function traeFilasReporte(){
-  var desde=new Date(Date.now()-24*3600*1000).toISOString();   /* todo el día, no solo el muro */
+  /* todo lo que la sala guardó, sin límite de horas: el reporte se descarga cada vez que se vuelve a entrar
+     a la misma sala, aunque la computadora anterior se haya apagado */
   return fetch(TABLA+'?select=alumno,caso,estado,actualizado&sala=eq.'+encodeURIComponent(cfg.sala+'-'+sala)+
-        '&actualizado=gte.'+desde+'&order=alumno.asc&limit=300', { headers:hdr() })
+        '&order=alumno.asc&limit=2000', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){ return sinRenombrados(quitaSacados(rows||[])); });
 }
@@ -1035,17 +1036,35 @@ function nivel(p){
 function datosReporte(rows){
   var acts=null;
   try{ acts=cfg.actividades ? cfg.actividades() : null; }catch(e){ acts=null; }
-  var alumnos=rows.map(function(g){
+  /* si la sesión envía sus preguntas, el reporte se calcula por pregunta, no por diapositiva */
+  /* primero se ajusta cada estado (la página puede agregar sus preguntas) y después se decide */
+  var ests=rows.map(function(g){
     var e=g.estado||{};
     if(cfg.ajusta){ try{ e=cfg.ajusta(e, g.alumno)||e; }catch(x){} }
-    var ok=+e.ok||0, tot=+e.total||0;
+    return e;
+  });
+  var conPreg=ests.some(function(e){ return Array.isArray(e.preg) && e.preg.length; });
+  var alumnos=rows.map(function(g, idx){
+    var e=ests[idx];
+    var ok=+e.ok||0, tot=+e.total||0, rej=e.rejilla||[];
+    if(conPreg && Array.isArray(e.preg)){
+      ok=e.preg.filter(function(x){ return x.ok; }).length; tot=e.preg.length;
+      rej=e.preg.map(function(x,j){ return { b:j, n:x.ok?1:0, t:1 }; });
+    }
     return { nombre:g.alumno, dni:g.caso||'', lamina:e.lamina||'', titulo:e.titulo||'',
-             ok:ok, total:tot, pct:(tot ? ok/tot : 0), cambio:fechaLocal(g.actualizado), rej:e.rejilla||[] };
+             ok:ok, total:tot, pct:(tot ? ok/tot : 0), cambio:fechaLocal(g.actualizado), rej:rej };
   });
   var nAct=acts ? acts.length : 0;
   alumnos.forEach(function(a){ nAct=Math.max(nAct, a.rej.length); });
   var columnas=[];
-  for(var j=0;j<nAct;j++) columnas.push(acts && acts[j] ? acts[j] : { et:'A'+(j+1), t:'Actividad '+(j+1), max:0 });
+  if(conPreg){
+    /* una columna por pregunta: P1, P2… con la actividad y el texto de la pregunta */
+    var larga=ests.map(function(e){ return e.preg || []; })
+                  .reduce(function(m,p){ return p.length>m.length ? p : m; }, []);
+    larga.forEach(function(x,j){ columnas.push({ et:'P'+(j+1), t:x.e+' · '+x.q, max:1 }); });
+    nAct=columnas.length;
+  }
+  for(var j=columnas.length;j<nAct;j++) columnas.push(acts && acts[j] ? acts[j] : { et:'A'+(j+1), t:'Actividad '+(j+1), max:0 });
   var celda=function(a,j){
     var r=null; a.rej.forEach(function(x){ if(x.b===j) r=x; });
     return r ? { n:r.n||0, t:r.t||0, p:(r.t ? (r.n||0)/r.t : 0) } : null;

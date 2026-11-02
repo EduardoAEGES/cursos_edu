@@ -2686,11 +2686,46 @@ document.addEventListener('keydown', function(e){
 })();
 
 /* ================= el aula ================= */
+/* cada pregunta de la sesión, con su actividad y si ya la resolvió: el reporte cuenta por pregunta */
+function preguntasDe(){
+  var out=[];
+  function corta(t){ t=String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); return t.length>90 ? t.slice(0,87)+'…' : t; }
+  CLAVES.forEach(function(k,n){
+    var A=ACT[k], g=G[k]||{}, e=etiActividad(n);
+    if(!A) return;
+    function add(q, ok){ out.push({ e:e, q:corta(q), ok:ok?1:0 }); }
+    if(A.tipo==='quiz' || A.tipo==='cal' || A.tipo==='sel' || A.tipo==='opi'){
+      A.lista.forEach(function(p,j){ add(p.q, g[j]!==undefined); });
+    }
+    else if(A.tipo==='par'){
+      A.huecos.forEach(function(x){ add(x.q, g[x.id]!==undefined); });
+    }
+    else if(A.tipo==='arma'){
+      A.huecos.forEach(function(x){ add(x.rot, g[x.id]!==undefined); });
+    }
+    else if(A.tipo==='arr' || A.tipo==='cuadro'){
+      A.fichas.forEach(function(f){ if(!f.fijo) add(f.t, g[f.id]!==undefined); });
+    }
+    else if(A.tipo==='tabla'){
+      A.filas.forEach(function(fi,r){ fi.forEach(function(c,j){
+        if(c.e!==undefined || c.ops){
+          var lin=(fi[0] && fi[0].t) ? String(fi[0].t).replace(/<[^>]+>/g,'') : (r+1);
+          add(lin+' · '+(A.cols[j]||''), g[r+'-'+j]!==undefined);
+        }
+      }); });
+    }
+    else if(A.tipo==='cruz'){
+      A.palabras.forEach(function(w){ add(w.pista, g[w.p]!==undefined); });
+    }
+  });
+  return out;
+}
 function resumenAula(){
   var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
           idx:i, G:{ mal:G.mal },
           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
   CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+  r.preg=preguntasDe();   /* el reporte cuenta por pregunta */
   return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */

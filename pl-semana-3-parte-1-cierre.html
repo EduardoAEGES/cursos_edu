@@ -3446,10 +3446,25 @@ function cuenta(GG){
   return { ok:Math.round(ok*10)/10, total:tot, rejB:rejB, rejP:rejP };
 }
 /* para el reporte del aula: cada alumno se mide sobre lo que el docente eligió */
+/* cada pregunta de la sesión, con su actividad y si ya la respondió: el reporte cuenta por pregunta */
+function preguntasDe(GG){
+  var out=[], Gx=GG||{};
+  function add(e, q, ok){ out.push({ e:e, q:corta(String(q||'').replace(/<[^>]+>/g,''), 90), ok:ok?1:0 }); }
+  clavesVis().forEach(function(k){
+    var A=ACT[k], g=Gx[k]||{}, e=etiActividad(CLAVES.indexOf(k));
+    if(!A) return;
+    if(A.tipo==='quiz'){ A.lista.forEach(function(p,j){ add(e, p.q, g[j]!==undefined); }); }
+    else if(A.tipo==='par'){ A.huecos.forEach(function(x){ add(e, x.q, g[x.id]!==undefined); }); }
+    else if(A.tipo==='cruz'){ A.palabras.forEach(function(w){ add(e, w.pista, g[w.p]!==undefined); }); }
+    else if(A.tipo==='tab' || A.tipo==='con'){ add(e, A.q, hechasEn(Gx, k)>0); }
+  });
+  return out;
+}
 function ajustaReporte(e){
   var c=cuenta((e||{}).G||{}), o={}, x;
   for(x in e) o[x]=e[x];
   o.ok=c.ok; o.total=c.total; o.rejilla=c.rejP;
+  o.preg=preguntasDe((e||{}).G||{});   /* el reporte cuenta por pregunta, no por actividad */
   return o;
 }
 /* para las ventanitas del muro: igual, pero con el índice de cada actividad */
