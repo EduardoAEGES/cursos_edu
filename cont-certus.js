@@ -31,15 +31,15 @@ var R={
     ['r','Una <b>S.A.C.</b> nunca puede estar en el Nuevo RUS.'],
     ['r','Elementos 1 a 3: <b>activo</b> · 4: <b>pasivo</b> · 5: <b>patrimonio</b> · 6: <b>gastos</b> · 7: <b>ingresos</b>.']],
   'cont-s3':[
-    ['r','La <b>guía de remisión</b> sustenta el traslado; no es comprobante de pago.'],
-    ['r','Venta: <b>12</b> al Debe, <b>40</b> y <b>70</b> al Haber.'],
-    ['r','Compra: <b>60</b> y <b>40</b> al Debe, <b>42</b> al Haber. Luego el destino: <b>20</b> contra <b>61</b>.'],
-    ['r','Equivalentes de efectivo: inversiones que vencen en <b>tres meses o menos</b>.']],
+    ['r','Sin <b>comprobante válido</b> no hay gasto sustentado. El vale y la planilla de movilidad son documentos internos.'],
+    ['r','<b>Factura</b>: a quien tiene RUC, da crédito fiscal. <b>Boleta</b>: consumidor final.'],
+    ['r','Arqueo: efectivo + documentos + vales = <b>total justificado</b>, frente al fondo.'],
+    ['r','Total justificado menor al fondo: <b>faltante</b>. Mayor: <b>sobrante</b>.']],
   'cont-s4':[
-    ['r','Sobrante o faltante = efectivo + documentos válidos − <b>fondo fijo</b>.'],
-    ['r','Un gasto sin comprobante <b>no sustenta</b> el arqueo.'],
-    ['r','Lo que está en el banco y no en el libro <b>se registra en el libro</b>.'],
-    ['r','Lo que está en el libro y no en el banco se explica como <b>partida conciliatoria</b>.']],
+    ['r','El banco lo ve <b>al revés</b>: un abono del banco es un ingreso para la empresa.'],
+    ['r','Depósitos y cheques <b>en tránsito</b> se ajustan en el saldo del banco.'],
+    ['r','Abonos y cargos <b>no registrados</b> se ajustan en el saldo de libros.'],
+    ['r','Libro Caja: <b>formato 1.1</b>. Libro Bancos: <b>formato 1.2</b>.']],
   'cont-s5':[
     ['r','Saldo <b>vencido</b>: ya pasó su fecha de pago. Saldo <b>por vencer</b>: todavía no.'],
     ['r','La <b>letra de cambio</b> la acepta el deudor; el <b>pagaré</b> lo emite el deudor.'],
