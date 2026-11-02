@@ -3580,7 +3580,7 @@ function abreElige(){
   var v=dialogo('<div class="dm-h"><b>Actividades de hoy</b><span id="dmCuenta" class="dvacio"></span>'+
       '<button type="button" class="x" data-cierra>&#10005;</button></div>'+
     '<p class="dm-p">Marca las que usar&aacute;s. Los alumnos solo ver&aacute;n esas, y el avance y el reporte se calculan <b>en proporci&oacute;n a las elegidas</b>.</p>'+
-    '<div class="dm-grupo">Conectemos (antes de empezar)</div>'+CON.map(it).join('')+
+    (CON.length ? '<div class="dm-grupo">Conectemos (antes de empezar)</div>'+CON.map(it).join('') : '')+
     '<div class="dm-grupo">Actividades de reflexi&oacute;n / cierre</div>'+CLAVES.filter(function(k){ return ACT[k].tipo!=='con'; }).map(it).join('')+
     '<div class="dm-b"><button type="button" class="o-btn" id="dmTodas">Marcar todas</button>'+
       '<button type="button" class="o-btn" data-cierra>Cancelar</button>'+
@@ -4450,11 +4450,11 @@ function pintaDash(){
         return '<li><span>'+esc(a.n)+(a.nf?' <small class="dvacio">&middot; '+a.nf+' fallos</small>':'')+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span>'+
                '<button type="button" data-ver="'+esc(a.n)+'">Ver</button></li>';
       }).join('')+'</ul>' : '<p class="dvacio">'+(n?'Todos van por encima del 50 %.':'Todav&iacute;a no hay alumnos.')+'</p>';
-  h+='</div><div class="dbox"><h4>Conectemos: respuestas en la pizarra</h4><ul class="dlista">'+
+  h+='</div>'+(CON.length ? '<div class="dbox"><h4>Conectemos: respuestas en la pizarra</h4><ul class="dlista">'+
      (CON.filter(function(k){ return d.ks.indexOf(k)>=0; }).map(function(k){
        var c=(PIZ[k]||[]).length;
        return '<li><span>'+esc(ACT[k].titulo)+'</span><span class="v">'+c+' de '+n+'</span></li>';
-     }).join('') || '<li class="dvacio">Hoy no se eligió ning&uacute;n Conectemos.</li>')+'</ul></div>'+
+     }).join('') || '<li class="dvacio">Hoy no se eligió ning&uacute;n Conectemos.</li>')+'</ul></div>' : '')+
      '<div class="dbox"><h4>Ranking de participaci&oacute;n</h4>';
   var top=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,8);
   h+= top.length ? '<ul class="dlista">'+top.map(function(a,j){

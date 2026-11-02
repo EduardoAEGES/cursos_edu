@@ -124,7 +124,7 @@ var R={
 };
 var archivo=(location.pathname.split('/').pop()||'').replace(/\.html?$/,'');
 /* la versión demo de una sesión usa los recordatorios de la sesión original */
-var propios=R[archivo] || R[archivo.replace(/-demo$/,'')] || LOGICA;
+var propios=R[archivo] || R[archivo.replace(/-(demo|cierre)$/,'')] || LOGICA;
 var ICONOS=['foco','libreta','lapiz','lista','barras','crece','pantalla','pastel','reloj','laptop',
             'celular','cuaderno','tarjeta','billetes','porcentaje','linea','flecha','globo','nube','formulario'];
 var PERSONAJES=['profe-idea','tutor-explica','alumno-senala','profe-presenta','tutor-bien'];
