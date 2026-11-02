@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Portada NAF SUNAT Certus</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1600px;height:400px;overflow:hidden;background:#071767}
+body{font-family:"Inter Display","Inter",sans-serif;position:relative}
+.bg{position:absolute;inset:0;background:
+ radial-gradient(ellipse 60% 120% at 78% 50%,#2a55d8 0%,rgba(42,85,216,0) 70%),
+ linear-gradient(100deg,#050f4a 0%,#071767 38%,#14339c 70%,#0b2178 100%)}
+svg.ondas{position:absolute;inset:0}
+.texto{position:absolute;left:70px;top:44px;width:820px}
+.chip{display:inline-block;background:#FC0045;color:#fff;font-weight:800;font-style:italic;font-size:26px;padding:6px 22px;border-radius:30px;transform:rotate(-3deg);box-shadow:0 4px 14px rgba(252,0,69,.45)}
+h1{color:#fff;font-weight:900;font-style:italic;line-height:.98;margin-top:14px;letter-spacing:-1px;text-shadow:0 4px 18px rgba(0,0,0,.35)}
+h1 .l1{font-size:58px;display:block}
+h1 .l2{font-size:84px;display:block;color:#5fd3ff;text-transform:uppercase;letter-spacing:-2px}
+h1 .l3{font-size:46px;display:block;margin-top:2px}
+h1 .l3 b{color:#FC0045;background:#fff;padding:0 14px;border-radius:10px;font-weight:900;margin-left:6px;text-shadow:none}
+.pie{display:inline-block;margin-top:20px;background:#fff;color:#071767;font-weight:800;font-style:italic;font-size:25px;padding:8px 26px;border-radius:30px;transform:rotate(-2deg);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.pie span{color:#FC0045}
+.logo{position:absolute;right:42px;top:30px;background:#fff;border-radius:40px;padding:12px 26px;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.logo img{height:40px;display:block}
+.p{position:absolute;bottom:0;filter:drop-shadow(0 8px 18px rgba(0,0,0,.4))}
+.p1{right:540px;height:345px}
+.p2{right:150px;height:360px}
+.ic{position:absolute;width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 0 0 6px rgba(95,211,255,.25),0 0 28px rgba(95,211,255,.7)}
+.ic img{width:50px;height:50px;object-fit:contain}
+.i1{left:975px;top:105px;width:70px;height:70px}.i2{right:62px;top:160px;width:70px;height:70px}.i3{left:1105px;top:40px;width:66px;height:66px}.i4{left:735px;top:200px;width:64px;height:64px}
+</style></head><body>
+<div class="bg"></div>
+<svg class="ondas" viewBox="0 0 1600 400" preserveAspectRatio="none">
+ <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#5fd3ff" stop-opacity=".0"/><stop offset=".5" stop-color="#5fd3ff" stop-opacity=".55"/><stop offset="1" stop-color="#5fd3ff" stop-opacity=".1"/></linearGradient></defs>
+ <path d="M0 330 C300 250 520 400 820 320 S1300 180 1600 260" fill="none" stroke="url(#g)" stroke-width="3"/>
+ <path d="M0 355 C320 280 540 420 850 345 S1320 215 1600 290" fill="none" stroke="url(#g)" stroke-width="2"/>
+ <path d="M0 400 L0 372 C300 320 560 420 860 370 S1300 290 1600 330 L1600 400Z" fill="#FC0045" opacity=".9"/>
+ <path d="M0 400 L0 386 C320 345 580 425 880 390 S1320 330 1600 360 L1600 400Z" fill="#050f4a"/>
+ <g fill="#fff" opacity=".07"><rect x="1000" y="170" width="34" height="160"/><rect x="1046" y="120" width="34" height="210"/><rect x="1092" y="80" width="34" height="250"/><rect x="1500" y="200" width="30" height="130"/><rect x="1540" y="150" width="30" height="180"/></g>
+ <polyline points="960,300 1040,250 1110,270 1200,190 1290,210 1380,120 1460,140 1560,60" fill="none" stroke="#5fd3ff" stroke-width="4" opacity=".55"/>
+ <polygon points="1560,60 1538,62 1552,80" fill="#5fd3ff" opacity=".7"/>
+</svg>
+<div class="texto">
+ <span class="chip">Formulario de inscripción</span>
+ <h1><span class="l1">Núcleo de Apoyo</span><span class="l2">Fiscal</span><span class="l3">NAF <b>SUNAT – CERTUS</b></span></h1>
+ <span class="pie">Orientación tributaria gratuita <span>|</span> ¡Te ayudamos!</span>
+</div>
+<div class="ic i1"><img src="../marca/iconos/porcentaje.png"></div>
+<div class="ic i3"><img src="../marca/iconos/formulario.png"></div>
+<div class="ic i2"><img src="../marca/iconos/billetes.png"></div>
+<img class="p p1" src="../personajes/profe-presenta.webp">
+<img class="p p2" src="../personajes/tutor-explica.webp">
+<div class="logo"><img src="../marca/certus-azul.png"></div>
+</body></html>
