@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-26-cont_s4_v1">
+<meta name="version" content="2026-11-02-cont4p-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -802,49 +802,7 @@
   .c4 .oo{ font-size:15px; color:var(--tinta); } .c4 .ln.con .oo{ font-weight:800; }
   [data-act=s4] .preg{ font-size:19px !important; margin:6px 0 4px !important; } [data-act=s4] .ops{ display:grid; grid-template-columns:repeat(3,1fr); gap:6px; } [data-act=s4] .ops button{ padding:8px 10px !important; font-size:16px !important; } [data-act=s4] .pq{ margin:2px 0 4px; font-size:15px; }
   [data-act=s4] .cajas{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px; } [data-act=s4] .caja .z{ min-height:60px; } [data-act=s4] .banco .ficha{ font-size:16px; padding:6px 10px; }
-  .dos-d{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; }
-  /* en una lámina partida en dos, las derivaciones se apilan para no montarse */
-  .teo2 .teo .dos-d{ grid-template-columns:minmax(0,1fr); gap:12px; }
-  /* ---------- pantalla de un alumno dentro de la ventana del docente ---------- */
-  .apvivo{ display:flex; flex-direction:column; max-width:none; margin:0; border:2px solid var(--linea);
-           border-radius:14px; overflow:hidden; background:#fff; max-height:min(64vh,620px); }
-  .apvivo .lam{ flex:0 1 auto; min-height:0; pointer-events:none; user-select:none; }
-  .apvivo .lam button, .apvivo .lam select, .apvivo .lam input{ cursor:default; }
-  /* ---------- constructor de la contrapositiva ---------- */
-  .cns{ display:flex; flex-direction:column; gap:11px; min-width:0; }
-  .cns .regla{ border:2px solid var(--linea); border-left:5px solid var(--marino); border-radius:0 11px 11px 0;
-               background:#F7F9FE; padding:9px 13px; font-size:18px; line-height:1.45; color:var(--tinta); }
-  .cns .regla .ff{ font-size:21px; font-weight:800; color:var(--marino); white-space:nowrap; }
-  .cns .fila{ display:flex; align-items:stretch; gap:9px; min-width:0; }
-  .cns .ranura{ flex:1 1 0; min-width:0; overflow:visible; border:2px dashed var(--linea); border-radius:12px;
-                background:#fff; padding:8px 11px; display:flex; flex-direction:column; gap:7px; }
-  .cns .ranura.encima{ border-color:var(--celeste); background:#F1F9FF; }
-  .cns .ranura.ok{ border-style:solid; border-color:var(--verde); background:#EAF7F7; }
-  .cns .ranura .rot{ font-size:12px; font-weight:900; letter-spacing:.06em; text-transform:uppercase; color:#8A93AC; }
-  .cns .ranura .pz{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; min-height:34px; }
-  .cns .ranura .vv{ font-size:25px; font-weight:800; color:var(--tinta); line-height:1.1; }
-  .cns.frases .ranura .vv{ font-size:17px; font-weight:700; line-height:1.35; }
-  .cns .ranura .tt{ font-size:16px; color:#55607F; line-height:1.35; }
-  .cns .ranura .tt b{ color:var(--marino); }
-  .cns .ranura .vacio{ font-size:16px; color:#8A8A92; }
-  .cns .neg{ font:inherit; font-size:15px; font-weight:900; line-height:1; cursor:pointer; flex:none;
-             border:2px solid var(--fucsia); color:var(--fucsia); background:#fff; border-radius:99px; padding:5px 12px; }
-  .cns .neg.on{ background:var(--fucsia); color:#fff; }
-  .cns .quita{ font:inherit; font-size:14px; line-height:1; cursor:pointer; flex:none; border:1px solid var(--linea);
-               background:#fff; color:#8A8A92; border-radius:99px; padding:5px 9px; }
-  .cns .fle{ align-self:center; flex:none; font-size:26px; font-weight:800; color:#B9C2D8; }
-  .cns .eco{ border-left:5px solid var(--celeste); background:#F1F9FF; border-radius:0 11px 11px 0;
-             padding:10px 14px; font-size:19px; line-height:1.5; color:var(--tinta); }
-  .cns .eco .ff{ font-size:23px; font-weight:800; color:var(--marino); }
-  .cns .eco.ok{ border-left-color:var(--verde); background:#EAF7F7; }
-  .cns .pista{ font-size:16px; line-height:1.4; color:#8A6A00; background:#FFFBEA;
-               border:1px solid #F0DFA0; border-radius:9px; padding:7px 11px; }
-  /* apiladas (pantalla angosta o media lámina) cada casilla toma su propio alto */
-  @media (max-width:700px){ .cns .fila{ flex-direction:column; }
-    .cns .ranura{ flex:0 0 auto; } .cns .fle{ transform:rotate(90deg); } }
-  .duo .cns .fila{ flex-direction:column; }
-  .duo .cns .ranura{ flex:0 0 auto; }
-  .duo .cns .fle{ transform:rotate(90deg); align-self:flex-start; margin-left:18px; } .dos-d h4{ margin:0 0 4px; font-size:20px; color:var(--marino); }
+  .dos-d{ display:grid; grid-template-columns:1fr 1fr; gap:18px; } .dos-d h4{ margin:0 0 4px; font-size:20px; color:var(--marino); }
   .leyenda{ font-size:16px; margin:0 0 4px; color:#55607F; }
   .duo table.hoja2{ font-size:15px; } .duo table.hoja2 select.cel{ width:100% !important; font-size:15px; }
   .props{ display:grid; gap:4px; margin:10px 0; padding:10px 14px; background:#fff; border:2px solid var(--linea); border-radius:10px; font-size:20px; }
@@ -866,8 +824,384 @@
     #impreso .resuelto h5{ margin:0 0 8px; font-size:18px; color:#0E7C66; text-transform:uppercase; letter-spacing:.05em; }
   }
   .enunciado{ font-size:21px; line-height:1.55; background:#fff; border:2px solid var(--linea); border-radius:10px; padding:12px 16px; margin:0 0 10px; }
+
+  /* ---------- piezas de las sesiones por partes ---------- */
+  .portada{ text-align:center; padding:18px 10px 6px; }
+  .portada .pt-logo{ height:44px; width:auto; display:block; margin:0 auto 14px; }
+  .portada .pt-sem{ display:inline-block; background:var(--celeste); color:var(--marino); font-weight:900;
+                    font-size:clamp(20px,2.6vw,27px); border-radius:99px; padding:8px 28px; }
+  .portada h2{ font-size:clamp(28px,4vw,44px); line-height:1.15; color:var(--marino); margin:16px 0 4px; font-weight:900; }
+  .portada .pt-ses{ margin:0 0 16px; font-size:19px; color:#55607F; font-weight:700; }
+  .portada .pt-dos{ display:grid; gap:14px; text-align:left; max-width:980px; margin:0 auto; }
+  @media (min-width:860px){ .portada .pt-dos{ grid-template-columns:1fr 1fr; } }
+  .portada .pt-logro{ background:var(--fucsia); color:#fff; border-radius:16px; padding:14px 18px; font-size:20px; line-height:1.5; }
+  .portada .pt-logro b{ display:block; font-size:15px; letter-spacing:.08em; text-transform:uppercase; opacity:.9; margin-bottom:4px; }
+  .portada .pt-agenda{ background:var(--humo); border:2px solid var(--linea); border-radius:16px; padding:14px 18px; font-size:20px; line-height:1.5; }
+  .portada .pt-agenda b{ display:block; font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--fucsia); margin-bottom:4px; }
+  .portada .pt-agenda ol{ margin:0; padding-left:24px; }
+  .fml{ font-size:clamp(20px,2.4vw,25px); font-weight:800; color:var(--marino); background:#EEF6FF;
+        border:2px dashed var(--celeste); border-radius:12px; padding:10px 16px; text-align:center; margin:10px 0; line-height:1.5; }
+  .fml small{ display:block; font-size:16px; font-weight:600; color:#55607F; }
+  .resol{ background:#fff; border:2px solid #0E7C66; border-radius:12px; padding:10px 16px; margin:10px 0; font-size:20px; line-height:1.6; }
+  .resol h5{ margin:0 0 4px; font-size:15px; color:#0E7C66; text-transform:uppercase; letter-spacing:.06em; }
+  .resol ol{ margin:0; padding-left:24px; } .resol li{ margin:2px 0; }
+  .resol .ok{ color:#0E7C66; font-weight:900; }
+  .grafico{ display:block; width:100%; max-width:560px; height:auto; margin:8px auto; background:#fff;
+            border:2px solid var(--linea); border-radius:12px; }
+  .chk{ list-style:none; padding:0; margin:8px 0; font-size:20px; line-height:1.55; }
+  .chk li{ padding:8px 12px 8px 44px; position:relative; background:#fff; border:2px solid var(--linea);
+           border-radius:10px; margin:6px 0; }
+
+  /* ---------- fases de la sesion ---------- */
+  .fase{ display:inline-flex; align-items:center; gap:10px; margin:0 0 12px;
+         font-size:15px; font-weight:900; letter-spacing:.09em; text-transform:uppercase; }
+  .fase i{ font-style:normal; display:inline-flex; align-items:center; justify-content:center;
+           width:28px; height:28px; border-radius:50%; background:var(--fucsia); color:#fff; font-size:15px; }
+  .fase span{ background:var(--fucsia); color:#fff; border-radius:99px; padding:6px 16px; }
+  .fase.f2 i, .fase.f2 span{ background:var(--marino); }
+  .fase.f3 i, .fase.f3 span{ background:var(--aqua); }
+  .fase.f4 i, .fase.f4 span{ background:#55607F; }
+  .inter{ display:inline-block; margin-left:8px; background:var(--celeste); color:var(--marino);
+          border-radius:99px; padding:4px 12px; font-size:13px; font-weight:900;
+          letter-spacing:.06em; text-transform:uppercase; vertical-align:middle; }
+  .chk li::before{ content:'\2713'; position:absolute; left:14px; top:7px; color:#fff; background:var(--aqua);
+                   width:22px; height:22px; border-radius:6px; font-size:15px; text-align:center; line-height:22px; }
+  /* ---------- pantalla de un alumno dentro de la ventana del docente ---------- */
+  .apvivo{ display:flex; flex-direction:column; max-width:none; margin:0; border:2px solid var(--linea);
+           border-radius:14px; overflow:hidden; background:#fff; max-height:min(64vh,620px); }
+  .apvivo .lam{ flex:0 1 auto; min-height:0; pointer-events:none; user-select:none; }
+  .apvivo .lam button, .apvivo .lam select, .apvivo .lam input{ cursor:default; }
 </style>
-<link rel="stylesheet" href="cont-certus.css?v=20261026c">
+<link rel="stylesheet" href="cont-certus.css?v=20261102">
+<link rel="stylesheet" href="pl-movil.css?v=20261027">
+<script src="pl-movil.js?v=20261027"></script>
+<style>
+  /* ================= sesión demo: sala en el título, pizarra de stickers, diálogos y dashboard ================= */
+  .cab .salaTit{ flex:none; font:inherit; font-size:15px; font-weight:900; cursor:pointer; line-height:1;
+                 background:#FFD166; color:var(--marino); border:0; border-radius:99px; padding:7px 12px;
+                 letter-spacing:.02em; white-space:nowrap; }
+  .cab .salaTit:hover{ background:#fff; }
+  .portada .pt-sala{ display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 14px; }
+  .portada .pt-sala:empty{ display:none; }
+  .pt-sala .cod{ background:var(--marino); color:#fff; border-radius:16px; padding:8px 18px; font-size:20px; font-weight:800; }
+  .pt-sala .cod b{ font-size:34px; letter-spacing:.12em; margin-left:6px; color:#FFD166; }
+  .pt-sala button, .pt-yo button{ font:inherit; font-weight:800; font-size:16px; border:2px solid var(--marino); background:#fff;
+                 color:var(--marino); border-radius:12px; padding:9px 14px; cursor:pointer; }
+  .pt-sala button:hover, .pt-yo button:hover{ background:var(--marino); color:#fff; }
+  .portada .pt-yo{ margin-top:14px; font-size:18px; color:#55607F; display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; }
+  .portada .pt-yo:empty{ display:none; }
+  .portada .pt-yo b{ color:var(--marino); }
+
+  /* ---- Conectemos: formulario + pizarra ---- */
+  .cgrid{ display:grid; gap:14px; grid-template-columns:minmax(0,5fr) minmax(0,7fr); align-items:start; }
+  .cq{ font-size:21px; font-weight:800; color:var(--marino); line-height:1.4; margin:0 0 12px; }
+  .cform textarea{ width:100%; box-sizing:border-box; font:inherit; font-size:18px; border:2px solid var(--linea);
+                   border-radius:12px; padding:10px 12px; min-height:92px; resize:vertical; }
+  .cform textarea:focus{ outline:none; border-color:var(--marino); }
+  .cops{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px; }
+  .cops.g2{ display:grid; grid-template-columns:1fr 1fr; }
+  .cops.esc5{ display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+  .cops.esc5 button{ text-align:center; font-size:15px; padding:8px 4px; line-height:1.25; }
+  .cops.esc5 button .emo{ display:block; font-size:30px; line-height:1.1; }
+  .cops button{ font:inherit; font-size:17px; font-weight:800; border:2px solid var(--linea); background:#fff; color:var(--tinta);
+                border-radius:12px; padding:10px 14px; cursor:pointer; text-align:left; }
+  .cops button:hover{ border-color:var(--marino); }
+  .cops button.on{ background:var(--marino); color:#fff; border-color:var(--marino); }
+  .cenv{ display:flex; gap:10px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+  .cenv .o-btn{ font-size:17px; }
+  .cenv small{ color:#55607F; font-size:16px; }
+  .cyo{ margin-top:10px; font-size:16px; color:#0F6B45; font-weight:700; }
+  .piz{ background:#F7F9FE; background-image:radial-gradient(#D5DDEF 1.2px, transparent 1.2px); background-size:18px 18px;
+        border:3px solid var(--marino); border-radius:16px; padding:10px 12px 12px; min-height:240px; }
+  .piz-h{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; }
+  .piz-h b{ font-size:17px; color:var(--marino); }
+  .piz-h .n{ background:var(--fucsia); color:#fff; border-radius:99px; padding:2px 10px; font-size:14px; font-weight:900; }
+  .piz-h button{ margin-left:auto; font:inherit; font-size:14px; font-weight:800; border:1px solid var(--linea); background:#fff;
+                 color:var(--marino); border-radius:99px; padding:4px 10px; cursor:pointer; }
+  .piz-c{ max-height:min(46vh,430px); overflow:auto; }
+  .esc.full .piz-c{ max-height:58vh; }
+  .notas{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; padding:4px; }
+  .nota{ position:relative; background:#FFF3A3; border-radius:4px 4px 14px 4px; padding:10px 10px 8px; font-size:17px; line-height:1.35;
+         color:#2B2B2B; box-shadow:0 3px 8px rgba(7,23,103,.16); transform:rotate(-1.5deg); word-wrap:break-word; overflow-wrap:anywhere;
+         animation:pega .35s ease-out; }
+  .nota:nth-child(3n+2){ transform:rotate(1.2deg); }
+  .nota:nth-child(4n+3){ transform:rotate(-.6deg); }
+  .nota.k1{ background:#FFD6E5; } .nota.k2{ background:#CFF4FF; } .nota.k3{ background:#D7F7E8; } .nota.k4{ background:#EBDDFF; }
+  .nota.mia{ outline:3px solid var(--fucsia); }
+  .nota small{ display:block; margin-top:6px; font-size:13px; font-weight:800; color:#55607F; }
+  .nota .x{ position:absolute; top:2px; right:4px; border:0; background:transparent; font-size:15px; cursor:pointer; color:#8A8A92; }
+  .nota .x:hover{ color:var(--fucsia); }
+  .nota .lado{ display:inline-block; font-size:12px; font-weight:900; border-radius:99px; padding:1px 8px; margin-bottom:4px; background:rgba(255,255,255,.7); }
+  @keyframes pega{ from{ opacity:0; transform:scale(.7) rotate(-6deg); } to{ opacity:1; } }
+  .deb{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .deb > div{ background:rgba(255,255,255,.65); border-radius:12px; padding:6px; }
+  .deb h5{ margin:2px 4px 8px; font-size:17px; color:#fff; border-radius:99px; padding:4px 12px; display:inline-block; }
+  .deb .a h5{ background:var(--aqua); } .deb .b h5{ background:var(--fucsia); }
+  .deb .notas{ grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); }
+  .barras{ display:flex; flex-direction:column; gap:9px; padding:4px 2px; }
+  .barra{ display:grid; grid-template-columns:minmax(120px,38%) 1fr auto; gap:10px; align-items:center; font-size:17px; font-weight:700; }
+  .barra .riel2{ height:24px; background:#E3E8F4; border-radius:99px; overflow:hidden; }
+  .barra .riel2 i{ display:block; height:100%; background:var(--marino); border-radius:99px; transition:width .5s; }
+  .barra.top .riel2 i{ background:var(--fucsia); }
+  .barra.mia span:first-child{ color:var(--fucsia); }
+  .barra b{ font-size:16px; color:var(--marino); min-width:70px; text-align:right; }
+  .piz-vacio{ color:#55607F; font-size:17px; padding:30px 10px; text-align:center; }
+  .piz-pie{ font-size:14px; color:#55607F; margin-top:8px; }
+
+  /* ---- diálogos propios (enlace y QR, nombre, actividades, dashboard) ---- */
+  .dm-velo{ position:fixed; inset:0; z-index:10020; background:rgba(7,23,103,.45); display:flex; align-items:center;
+            justify-content:center; padding:16px; font-family:'Nunito','Inter',system-ui,sans-serif; }
+  .dm-caja{ background:#fff; border-radius:18px; box-shadow:0 20px 60px rgba(7,23,103,.35); width:min(560px,100%);
+            max-height:calc(100vh - 32px); overflow:auto; padding:18px 20px; color:var(--tinta,#0B1B3F); }
+  .dm-caja.ancha{ width:min(1100px,100%); }
+  .dm-h{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .dm-h b{ font-size:22px; color:#071767; }
+  .dm-h .x{ margin-left:auto; font:inherit; font-weight:800; border:1px solid #D5DDEF; background:#fff; border-radius:10px; padding:6px 12px; cursor:pointer; }
+  .dm-p{ font-size:17px; color:#55607F; margin:0 0 12px; line-height:1.5; }
+  .dm-cod{ text-align:center; font-size:18px; color:#55607F; font-weight:700; }
+  .dm-cod b{ display:block; font-size:54px; letter-spacing:.14em; color:#071767; line-height:1.1; }
+  .dm-qr{ display:flex; justify-content:center; margin:12px 0; min-height:60px; }
+  .dm-qr img, .dm-qr canvas{ width:230px !important; height:230px !important; padding:10px; background:#fff; border:2px solid #D5DDEF; border-radius:14px; }
+  .dm-link{ display:flex; gap:8px; }
+  .dm-link input{ flex:1; min-width:0; font:inherit; font-size:15px; border:2px solid #D5DDEF; border-radius:10px; padding:9px 10px; }
+  .dm-b{ display:flex; gap:8px; justify-content:flex-end; flex-wrap:wrap; margin-top:14px; }
+  .dm-in{ width:100%; box-sizing:border-box; font:inherit; font-size:19px; border:2px solid #D5DDEF; border-radius:12px; padding:11px 12px; }
+  .dm-in:focus{ outline:none; border-color:#071767; }
+  .dm-err{ color:#A4161A; font-weight:700; min-height:20px; margin:6px 0 0; font-size:15px; }
+  .dm-grupo{ margin:12px 0 4px; font-size:14px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:#FC0045; }
+  .dm-it{ display:flex; gap:10px; align-items:center; padding:9px 10px; border:2px solid #E3E8F4; border-radius:12px; margin-bottom:6px; cursor:pointer; font-size:17px; }
+  .dm-it:has(input:checked){ border-color:#071767; background:#F1F5FD; }
+  .dm-it input{ width:20px; height:20px; accent-color:#071767; }
+  .dm-it small{ color:#55607F; margin-left:auto; font-size:14px; white-space:nowrap; }
+
+  /* ---- BigBlueButton y ADMIN ---- */
+  .bbbh{ margin:16px 0 4px; font-size:18px; color:#071767; border-top:2px solid #E3E8F4; padding-top:12px; }
+  .tarde{ color:#C98A00; font-weight:800; }
+  .admdet{ display:grid; grid-template-columns:1fr 1fr; gap:14px; font-size:14px; }
+  .admdet ul{ margin:4px 0; padding-left:18px; }
+  html.movil .admdet{ grid-template-columns:minmax(0,1fr); }
+
+  /* ---- tablero colaborativo ---- */
+  .tgrid{ display:grid; gap:14px; grid-template-columns:minmax(0,4fr) minmax(0,8fr); align-items:start; }
+  .tcol{ display:flex; gap:8px; margin-top:8px; }
+  .tcol button{ width:30px; height:30px; border-radius:8px; border:2px solid rgba(7,23,103,.15); cursor:pointer; }
+  .tcol button.on{ border:3px solid #071767; transform:scale(1.1); }
+  .nota .nb{ float:right; margin:-4px -4px 0 6px; }
+  .nota .nb button{ border:0; background:rgba(255,255,255,.7); border-radius:6px; cursor:pointer; font-size:14px; padding:1px 3px; margin-left:2px; }
+  .notas.tab .nota.k0{ background:#FFF3A3; }
+  html.movil .tgrid{ grid-template-columns:minmax(0,1fr); }
+  @media (max-width:860px){ .tgrid{ grid-template-columns:minmax(0,1fr); } }
+
+  /* ---- evidencia de fallos ---- */
+  .tf{ overflow:auto; max-height:300px; }
+  .tf table{ width:100%; border-collapse:collapse; font-size:14px; }
+  .tf th{ background:#071767; color:#fff; text-align:left; padding:5px 7px; position:sticky; top:0; font-size:13px; }
+  .tf td{ padding:5px 7px; border-bottom:1px solid #F1F3F7; vertical-align:top; }
+  .tf td.m{ color:#A4161A; font-weight:800; } .tf td.b{ color:#0F6B45; font-weight:800; }
+  .cie2{ display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:14px; align-items:start; margin-top:10px; }
+  .cie2 .dbox{ background:#fff; margin:0; }
+  .cie2 [data-misfallos]:empty{ display:none; }
+  html.movil .cie2{ grid-template-columns:minmax(0,1fr); }
+  .esc .lam .tf table{ font-size:15px; }
+  .tf.rp td, .tf.rp th{ text-align:center; } .tf.rp td:first-child, .tf.rp th:first-child{ text-align:left; }
+  .esc .lam .mf{ background:#fff; margin:0; }
+  .esc .lam .mf .tf{ max-height:none; }
+
+  /* ---- chat de BigBlueButton ---- */
+  .tf.ch{ max-height:none; }
+  .tf.ch th[data-ord]{ cursor:pointer; user-select:none; }
+  .tf.ch tr.chf{ cursor:pointer; } .tf.ch tr.chf:hover td{ background:#F6F8FD; }
+  .chbar{ display:inline-block; width:110px; height:10px; background:#EEF2FA; border-radius:99px; overflow:hidden; vertical-align:middle; margin-right:8px; }
+  .chbar i{ display:block; height:100%; background:#0E8F95; border-radius:99px; }
+  .tf.ch button{ font:inherit; font-size:13px; border:1px solid #D5DDEF; background:#fff; border-radius:8px; padding:2px 7px; cursor:pointer; }
+  .chmsg{ display:grid; grid-template-columns:auto auto minmax(0,1fr) auto auto; gap:8px; align-items:center; padding:4px 0; border-bottom:1px dashed #E3E8F4; }
+  .chmsg time{ color:#55607F; font-size:13px; } .chmsg small{ color:#8A8A92; font-size:12px; }
+  .chmsg.si button[data-tg]{ background:#DCFCE7; color:#166534; border-color:#86EFAC; font-weight:800; }
+  .chmsg.no button[data-tg]{ background:#FEE2E2; color:#991B1B; border-color:#FCA5A5; font-weight:800; }
+  .chmsg.no span{ color:#8A8A92; text-decoration:line-through; }
+  .chvuelve{ font:inherit; font-size:13px; border:1px solid #D5DDEF; background:#fff; border-radius:99px; padding:2px 8px; cursor:pointer; }
+  .chaj{ margin-top:12px; } .chaj summary{ cursor:pointer; font-weight:800; color:#071767; }
+  html.movil .chmsg{ grid-template-columns:minmax(0,1fr); }
+
+  /* ---- dashboard del docente ---- */
+  .dgraf{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:14px; margin-bottom:14px; align-items:start; }
+  .dgraf .dg svg{ width:100%; max-width:640px; height:auto; display:block; margin:0 auto; }
+  .kpis{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+  .kpi{ background:#F1F5FD; border-radius:14px; padding:12px 14px; }
+  .kpi span{ display:block; font-size:14px; font-weight:800; color:#55607F; text-transform:uppercase; letter-spacing:.05em; }
+  .kpi b{ display:block; font-size:32px; color:#071767; line-height:1.15; }
+  .kpi small{ font-size:14px; color:#55607F; }
+  .kpi.f b{ color:#FC0045; }
+  .dgrid{ display:grid; grid-template-columns:minmax(0,3fr) minmax(0,2fr); gap:14px; }
+  .dbox{ border:2px solid #E3E8F4; border-radius:14px; padding:12px 14px; margin-bottom:14px; }
+  .dbox h4{ margin:0 0 10px; font-size:17px; color:#071767; }
+  .dfila{ display:grid; grid-template-columns:minmax(0,1fr) 120px 92px; gap:10px; align-items:center; font-size:15px; padding:5px 0; border-bottom:1px solid #F1F3F7; }
+  .dfila:last-child{ border-bottom:0; }
+  .dfila .riel2{ height:14px; background:#E3E8F4; border-radius:99px; overflow:hidden; }
+  .dfila .riel2 i{ display:block; height:100%; border-radius:99px; }
+  .dfila b{ text-align:right; font-size:14px; }
+  .dlista{ margin:0; padding:0; list-style:none; font-size:15px; }
+  .dlista li{ display:flex; gap:8px; align-items:center; padding:6px 0; border-bottom:1px solid #F1F3F7; }
+  .dlista li:last-child{ border-bottom:0; }
+  .dlista .v{ margin-left:auto; font-weight:800; white-space:nowrap; }
+  .dlista button{ font:inherit; font-size:13px; font-weight:800; border:1px solid #D5DDEF; background:#fff; border-radius:8px; padding:3px 8px; cursor:pointer; }
+  .dvacio{ color:#8A8A92; font-size:15px; }
+
+  /* la sesión más ancha y el título sin apretarse antes de maximizar */
+  .ai{ max-width:1480px; }
+  html:not(.movil) .esc:not(.full) .cab{ flex-wrap:wrap; row-gap:6px; }
+  html:not(.movil) .esc .cab .t{ flex:1 1 320px; min-width:260px; }
+  /* sin música ni botones que no se usan; la zona de la sala ocupa poco */
+  #aulaGrande, #aulaRefresca, #aulaMus{ display:none !important; }
+  .puerta.dentro{ padding:8px 12px; margin-top:10px; border-style:solid; }
+  .puerta.dentro h2{ display:none; }
+  .puerta.dentro .aula-filas{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; }
+  .puerta.dentro .aula-fila{ align-items:center; gap:8px; }
+  .puerta.dentro .o-btn{ padding:5px 10px; font-size:14px; }
+  .puerta.dentro .aula-rol{ font-size:12px; }
+  .pt-agenda [data-agenda] p{ margin:4px 0 2px; }
+  .pt-agenda [data-agenda] ul{ margin:0 0 4px; padding-left:22px; columns:2; column-gap:18px; font-size:.9em; }
+  .pt-agenda b.sub{ display:inline; font-size:inherit; letter-spacing:0; text-transform:none; color:var(--marino); margin:0; }
+  /* en la demo solo va la actividad: sin tarjetas de «Tip» ni «Recuerda» */
+  .relleno{ display:none !important; }
+
+  /* ---- contexto de la clasificación (con animación) ---- */
+  .ctx{ display:grid; grid-template-columns:minmax(0,1fr) 230px; gap:14px; align-items:center; background:#fff;
+        border:2px solid var(--linea); border-left:6px solid var(--aqua); border-radius:14px; padding:10px 14px; margin-bottom:12px; }
+  .ctx-tx{ font-size:18px; line-height:1.45; }
+  .ctx-tx small{ display:block; margin-top:4px; font-size:16px; color:#55607F; }
+  .emp-fila{ display:flex; gap:4px; font-size:30px; justify-content:center; }
+  .emp-fila span{ animation:salta 1.6s ease-in-out infinite; }
+  .emp-fila span:nth-child(2){ animation-delay:.2s; } .emp-fila span:nth-child(3){ animation-delay:.4s; } .emp-fila span:nth-child(4){ animation-delay:.6s; }
+  .emp-bar{ display:grid; gap:5px; margin-top:6px; }
+  .emp-bar i{ display:block; font-style:normal; font-size:13px; font-weight:900; color:#fff; border-radius:99px; padding:3px 10px; white-space:nowrap; }
+  .emp-bar .bf{ background:var(--marino); width:60%; }
+  .emp-bar .bv{ background:var(--fucsia); animation:crece 3.2s ease-in-out infinite; }
+  @keyframes salta{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-8px) rotate(-8deg); } }
+  .emp-bar .bv{ min-width:86px; }
+  @keyframes crece{ 0%{ width:22%; } 60%,100%{ width:100%; } }
+
+  /* ---- leyenda de las letras ---- */
+  .ley{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 10px; }
+  .ley-t{ font-weight:900; color:var(--fucsia); font-size:16px; text-transform:uppercase; letter-spacing:.05em; }
+  .ley span:not(.ley-t){ background:#fff; border:2px solid var(--linea); border-radius:99px; padding:5px 12px; font-size:17px; }
+  .ley b{ color:var(--marino); margin-right:4px; }
+
+  /* ---- gráfica interactiva ---- */
+  .graf{ background:#fff; border:2px solid var(--linea); border-radius:14px; padding:8px 10px; }
+  .g-svg{ width:100%; height:auto; max-height:46vh; display:block; }
+  .g-grid{ stroke:#E3E8F4; stroke-width:1; } .g-eje{ stroke:#071767; stroke-width:2.5; }
+  .g-tx{ font-size:12px; fill:#55607F; } .g-et{ font-size:14px; font-weight:800; fill:#071767; }
+  .g-et.i{ fill:#0E8F95; } .g-et.ct{ fill:#C600A3; }
+  .g-i{ stroke:#0E8F95; stroke-width:4; stroke-linecap:round; } .g-ct{ stroke:#C600A3; stroke-width:4; stroke-linecap:round; }
+  .dibuja{ stroke-dasharray:520; stroke-dashoffset:520; animation:traza 1.6s ease-out forwards; }
+  .dibuja.d2{ animation-delay:.5s; }
+  @keyframes traza{ to{ stroke-dashoffset:0; } }
+  .g-eq{ fill:#FC0045; stroke:#fff; stroke-width:2; }
+  .g-eq-onda{ fill:none; stroke:#FC0045; stroke-width:3; transform-box:fill-box; transform-origin:center; animation:onda 1.8s ease-out infinite; }
+  @keyframes onda{ from{ transform:scale(1); opacity:.9; } to{ transform:scale(3.2); opacity:0; } }
+  .g-q{ stroke:#071767; stroke-width:2; stroke-dasharray:5 5; }
+  .g-pi{ fill:#0E8F95; stroke:#fff; stroke-width:2; } .g-pc{ fill:#C600A3; stroke:#fff; stroke-width:2; }
+  .g-zona{ stroke-width:10; stroke-linecap:round; opacity:.55; stroke:#B9C2D8; }
+  .g-zona.gana{ stroke:#16A34A; } .g-zona.pierde{ stroke:#DC2626; }
+  .g-ctl{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:16px; font-weight:700; color:#55607F; margin-top:4px; }
+  .g-ctl b{ color:var(--marino); min-width:70px; }
+  .g-ctl input{ flex:1; min-width:150px; accent-color:#FC0045; height:26px; }
+  .g-lee{ display:flex; flex-wrap:wrap; gap:6px; margin-top:6px; }
+  .g-lee span{ border-radius:99px; padding:4px 10px; font-weight:800; font-size:16px; background:#F1F5FD; }
+  .g-lee .i{ color:#0E8F95; } .g-lee .ct{ color:#C600A3; }
+  .g-lee .u.gana{ background:#DCFCE7; color:#166534; } .g-lee .u.pierde{ background:#FEE2E2; color:#991B1B; } .g-lee .u.cero{ background:#FFF1CC; color:#8A5A00; }
+
+  /* ---- portada en 3D ---- */
+  .pt-3d{ position:relative; height:78px; perspective:700px; margin:0 auto 6px; width:260px; }
+  .moneda{ position:absolute; left:50%; top:4px; width:70px; height:70px; margin-left:-35px; transform-style:preserve-3d;
+           animation:gira 5s linear infinite; }
+  .moneda .cara{ position:absolute; inset:0; border-radius:50%; display:flex; align-items:center; justify-content:center;
+                 font-size:28px; font-weight:900; color:#8A5A00; backface-visibility:hidden;
+                 background:radial-gradient(circle at 35% 30%, #FFF3B0, #FFC94D 55%, #E0A100); box-shadow:inset 0 0 0 6px #F5B700, 0 10px 18px rgba(7,23,103,.25); }
+  .moneda .atras{ transform:rotateY(180deg); }
+  @keyframes gira{ from{ transform:rotateY(0) rotateX(12deg); } to{ transform:rotateY(360deg) rotateX(12deg); } }
+  .flota{ position:absolute; width:44px; height:44px; animation:flota 3.4s ease-in-out infinite; }
+  .flota.f1{ left:6px; top:28px; } .flota.f2{ right:10px; top:6px; animation-delay:.8s; } .flota.f3{ right:44px; top:52px; animation-delay:1.6s; }
+  @keyframes flota{ 0%,100%{ transform:translateY(0) rotate(-6deg); } 50%{ transform:translateY(-12px) rotate(6deg); } }
+
+  /* ---- personajes que se mueven y stickers con relieve ---- */
+  .cqf{ display:flex; gap:10px; align-items:flex-start; }
+  .cpj{ width:64px; height:64px; object-fit:contain; flex:none; animation:flota 3s ease-in-out infinite; }
+  .perso img{ animation:flota 3.6s ease-in-out infinite; }
+  .notas{ perspective:600px; }
+  .nota{ transition:transform .25s; }
+  .nota:hover{ transform:rotateX(8deg) rotateY(-10deg) scale(1.05); z-index:2; }
+  .nota.doc{ background:#071767; color:#fff; } .nota.doc small{ color:#FFD166; }
+  @media (prefers-reduced-motion:reduce){
+    .moneda, .flota, .cpj, .perso img, .emp-fila span, .emp-bar .bv, .g-eq-onda, .nota{ animation:none !important; }
+    .dibuja{ animation:none; stroke-dashoffset:0; }
+  }
+
+  /* ---- que cada actividad quepa en la lámina ---- */
+  @media (min-width:861px){
+    html:not(.movil) [data-act="r2"] .pares{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    html:not(.movil) [data-act="r2"] .pares .par{ margin:0; }
+    html:not(.movil) [data-act="r1"] .ops{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+    html:not(.movil) [data-act="r1"] .ops button{ margin:0; padding:9px 12px; }
+    html:not(.movil) [data-act="r1"] .preg{ margin:8px 0 6px; }
+    html:not(.movil) [data-act="r3"] .tarea > .c{ display:grid; grid-template-columns:auto minmax(0,1fr); gap:24px; align-items:start; }
+    html:not(.movil) [data-act="r3"] .pistas{ grid-template-columns:minmax(0,1fr) !important; display:grid; gap:6px; margin-top:0; }
+    html:not(.movil) [data-act="r3"] .desliza{ display:none; }
+  }
+
+  @media (max-height:820px){
+    html:not(.movil) .esc .lam{ zoom:.8; }
+    .portada{ padding-top:4px; }
+    .portada .pt-logo{ height:34px; margin-bottom:8px; }
+    .portada h2{ font-size:34px; margin:8px 0 2px; }
+    .portada .pt-ses{ margin-bottom:10px; font-size:17px; }
+    .portada .pt-logro, .portada .pt-agenda{ font-size:17px; padding:10px 14px; }
+    .portada .pt-yo{ margin-top:8px; }
+    .esc .teo .grafico{ max-height:44vh; }
+    .cuad td{ width:33px; height:33px; }
+    .cuad input{ font-size:18px; }
+    .chk li{ padding-top:5px; padding-bottom:5px; }
+    .perso img{ max-height:150px; }
+    .cajas .caja{ min-height:0; }
+    [data-act="r4"] .preg{ font-size:18px; }
+  }
+
+  /* ---- «Avisar al docente» en el celular: botón redondo como el de la calculadora ---- */
+  html.movil .aula-av{ left:auto; right:10px; bottom:120px; }   /* encima de la calculadora (44 px, a 66 px del borde) */
+  html.movil .aula-av .av-fab{ width:44px; height:44px; padding:0; border-radius:50%; font-size:0; line-height:0;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 18px rgba(7,23,103,.35); }
+  html.movil .aula-av .av-fab::before{ content:'\1F64B'; font-size:22px; line-height:1; }
+  html.movil .aula-av .av-fab.ok::before{ content:'\1F44C'; }
+  html.movil .aula-av .av-fab.duda::before{ content:'\270B'; }
+  html.movil .aula-av .av-pan{ left:auto; right:0; bottom:52px; }
+  @media (max-height:560px){ html.movil .aula-av{ bottom:94px; } }
+  html.movil .ctx-anim{ display:none; }
+  /* mientras se arrastra una ficha, los botones flotantes no estorban */
+  html.arrastra .aula-av, html.arrastra .ca-btn{ opacity:.15; pointer-events:none !important; }
+
+  /* ---- en el celular ---- */
+  html.movil .cgrid, html.movil .dgrid{ grid-template-columns:minmax(0,1fr); }
+  html.movil .ctx{ grid-template-columns:minmax(0,1fr); }
+  html.movil .pt-agenda [data-agenda] ul{ columns:1; }
+  html.movil .cops.g2{ grid-template-columns:minmax(0,1fr); }
+  html.movil .notas{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  html.movil .deb{ grid-template-columns:minmax(0,1fr); }
+  html.movil .barra{ grid-template-columns:minmax(0,1fr) auto; }
+  html.movil .barra > span:first-child{ grid-column:1; grid-row:1; text-align:left; }
+  html.movil .barra > b{ grid-column:2; grid-row:1; }
+  html.movil .barra .riel2{ grid-column:1 / -1; grid-row:2; }
+  html.movil .piz-c{ max-height:none; overflow:visible; }
+  html.movil .esc .cab .salaTit{ font-size:13px; padding:5px 8px; }
+  html.movil .esc .cab .salaTit .lb{ display:none; }
+  html.movil .dm-velo{ align-items:flex-end; padding:0; }
+  html.movil .dm-caja{ border-radius:18px 18px 0 0; max-height:92vh; padding:16px 14px; }
+  html.movil .dm-cod b{ font-size:44px; }
+  html.movil .dfila{ grid-template-columns:minmax(0,1fr) 70px 70px; }
+  html.movil .pt-sala .cod b{ font-size:28px; }
+  @media (max-width:860px){ .cgrid{ grid-template-columns:minmax(0,1fr); } .dgrid{ grid-template-columns:minmax(0,1fr); } }
+</style>
+<style>/* Contabilidad: opciones en fila para que cada lámina entre sin scroll */[data-act] .ops{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px!important;margin:4px 0!important}[data-act] .ops button{margin:0!important;padding:9px 14px!important}[data-act] .preg{margin:10px 0 4px!important}[data-act] .cruz .cuad td{width:34px;height:34px}.c:has(> .cruz){display:grid!important;grid-template-columns:auto 1fr;gap:26px;align-items:start}.c:has(> .cruz) .pistas{grid-template-columns:1fr!important;margin-top:0!important}.c:has(> .cruz) .pistas ol{font-size:18px;line-height:1.45}[data-act] .pares{gap:6px!important;margin-top:8px!important}[data-act] .par{padding:6px 10px!important;gap:6px!important}[data-act] .par .q{font-size:19px!important;line-height:1.35!important}[data-act] .par .hueco{min-height:40px!important}[data-act] .banco{gap:6px!important}[data-act] .banco .ficha{padding:6px 12px!important}[data-act] table.hoja2 td,[data-act] table.hoja2 th{padding:4px 9px!important;font-size:18px}[data-act] table.hoja2 .cel{height:36px!important;padding:2px 8px!important;font-size:18px!important}[data-act] table.hoja2 small.pre{display:block;font-size:13.5px;line-height:1.2;margin-top:1px}[data-act] table.hoja2 select.cel{max-width:100%}[data-act] .cajas{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;gap:8px!important;margin-top:8px!important}[data-act] .caja .z{min-height:64px!important;padding:8px!important}[data-act] .caja > h5{padding:6px 12px!important;font-size:17px!important}</style>
 </head>
 <body>
 
@@ -896,13 +1230,17 @@
   <div class="marca">
     <img class="lgc" src="marca/certus-azul.png" alt="Certus">
     <span class="tx">
-      <h1>Exposici&oacute;n de la evidencia AA2</h1>
-      <p><span class="sem">Semana 4</span> - Contabilidad - Arqueo y conciliaci&oacute;n: exposici&oacute;n y preguntas</p>
+      <h1>Conciliación bancaria y Libro Caja y Bancos</h1>
+      <p><span class="sem">Semana 4</span> - Contabilidad - Conciliación bancaria y Libro Caja y Bancos</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
       <button class="o-btn" id="btnFull" type="button">&#9114; Pantalla completa</button>
-      <button class="o-btn" id="btnPDF" type="button"
+      <button class="o-btn" id="btnLink" type="button" hidden>&#128279; Enlace y QR</button>
+      <button class="o-btn" id="btnDash" type="button" hidden>&#128202; Dashboard</button>
+      <button class="o-btn o-btn-primary" id="btnRepo" type="button" hidden>&#11015; Descargar reporte</button>
+      <button class="o-btn" id="btnChat" type="button" hidden>&#127909; BigBlueButton</button>
+      <button class="o-btn" id="btnPDF" type="button" hidden
               title="Descarga la teor&iacute;a de las diapositivas en PDF, sin las actividades">
         &#11015; Descargar diapositivas</button>
     </span>
@@ -910,7 +1248,8 @@
 
   <div class="puerta" id="puerta">
     <h2>Entra a la sala</h2>
-    <p><b>Docente:</b> activa <b>Entrar como docente</b>, escribe tu clave y <b>crea el c&oacute;digo de 4 d&iacute;gitos</b> de esta sesi&oacute;n; dicta ese c&oacute;digo a tu clase.<br>
+    <p>Sesi&oacute;n interactiva: <b>teor&iacute;a breve y actividades</b> para practicar en clase y participar en vivo.<br>
+       <b>Docente:</b> activa <b>Entrar como docente</b>, escribe tu clave y <b>crea el c&oacute;digo de 4 d&iacute;gitos</b>; el c&oacute;digo sale en el t&iacute;tulo de cada diapositiva y con <b>Enlace y QR</b> lo compartes.<br>
        <b>Alumno:</b> escribe tu nombre y el <b>c&oacute;digo de la sesi&oacute;n</b> para que se guarde tu avance y lo vea tu docente. Sin c&oacute;digo, pulsa <b>Practicar sin c&oacute;digo</b>: puedes navegar y probar todo, pero tus respuestas son temporales.</p>
     <div id="aula"></div>
   </div>
@@ -920,8 +1259,12 @@
       <div class="cab">
         <span class="et" id="eti">Portada</span>
         <span class="t" id="tit">&mdash;</span>
+        <button class="salaTit" id="salaTit" type="button" hidden title="Ver el enlace y el QR de la sala"></button>
         <span class="cu" id="cu">1 / 1</span>
-        <button class="bts" id="btnElige" type="button" hidden title="Elegir qué diapositivas se presentan hoy">&#9776; <span class="tx" id="txElige">Diapositivas</span></button>
+        <button class="bts" id="btnElige" type="button" hidden title="Elegir qué actividades se usan hoy">&#9776; <span class="tx" id="txElige">Actividades</span></button>
+        <button class="bts" id="btnDash2" type="button" hidden title="Dashboard de la clase">&#128202; <span class="tx">Dashboard</span></button>
+        <button class="bts" id="btnRepo2" type="button" hidden title="Descargar el reporte de participación en Excel">&#11015; <span class="tx">Reporte</span></button>
+        <button class="bts" id="btnChat2" type="button" hidden title="Asistencia y participación en BigBlueButton">&#127909; <span class="tx">BBB</span></button>
         <button class="btm" id="btnBatuta" type="button" hidden aria-pressed="false">
           <span class="bola"></span><span class="tx" id="txBatuta">Modo libre</span></button>
         <span class="pil" id="pilModo" hidden>&#127919; <span class="tx">Al ritmo del docente</span></span>
@@ -951,7 +1294,7 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Casos de los lineamientos de evaluaci&oacute;n de la UD Contabilidad. Montos en soles.</p>
+  <p class="aviso" style="margin-top:16px">Semana 4 de Contabilidad: conciliaci&oacute;n bancaria, Libro Caja y Bancos y el caso del AA2.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="contabilidad.html">Volver al curso</a>
@@ -975,10 +1318,10 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="cont-dibujos.js?v=20261026c"></script>
 <script src="aula.js?v=20261101c"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
+<script src="bbb-chat.js?v=20261031"></script>
 <script>
 (function(){
 'use strict';
@@ -1169,7 +1512,7 @@ function HojaFx(leeCelda){
 
 /* ================= sonido ================= */
 var son=true, ac=null;
-try{ son = localStorage.getItem('cont_son')!=='0'; }catch(e){}
+try{ son = localStorage.getItem('ct7_son')!=='0'; }catch(e){}
 function nota(f,ini,dur,vol,tipo){
   if(!son) return;
   try{
@@ -1183,80 +1526,55 @@ function nota(f,ini,dur,vol,tipo){
   }catch(e){}
 }
 function bien(){ nota(660,0,.12,.05,'triangle'); nota(880,.09,.16,.05,'triangle'); }
-var FALLO=['sonidos/SONIDO_FALLO.mp3','sonidos/sonido_fallo.mp3','sonidos/sonido_fallo.wav'];
-var fallo=new Audio(), falloI=0;
-fallo.preload='auto'; fallo.volume=0.7;
-fallo.addEventListener('error', function(){
-  falloI++; if(falloI<FALLO.length) fallo.src=FALLO[falloI]; else fallo=null; });
-fallo.src=FALLO[0];
+/* sonido de error: dos notas graves y cortas, como un «no» */
 function mal(){
   if(!son) return;
-  if(!fallo){ nota(200,0,.18,.05,'square'); return; }
-  try{ fallo.currentTime=0; var p=fallo.play();
-       if(p && p.catch) p.catch(function(){ nota(200,0,.18,.05,'square'); });
-  }catch(e){ nota(200,0,.18,.05,'square'); }
+  nota(311,0,.11,.06,'square'); nota(208,.12,.24,.06,'square');
 }
 function fanfarria(){ [523,659,784,1047].forEach(function(f,n){ nota(f,n*0.1,.26,.06,'triangle'); }); }
 function pintaSon(){ var b=$('btnSon');
   b.textContent = son ? '🔊 Sonido' : '🔇 Sin sonido';
   b.setAttribute('aria-pressed', son?'true':'false'); }
 $('btnSon').addEventListener('click', function(){
-  son=!son; try{ localStorage.setItem('cont_son', son?'1':'0'); }catch(e){}
+  son=!son; try{ localStorage.setItem('ct7_son', son?'1':'0'); }catch(e){}
   pintaSon(); if(son) bien(); });
 pintaSon();
 
 /* ================= las actividades ================= */
 var ACT={
-c0:{tipo:'quiz', titulo:'Conectemos: repaso relámpago',
- lista:[
-  {q:'Efectivo S/ 1,500 + documentos válidos S/ 1,600 con un fondo de S/ 3,200. ¿Qué resulta?', ops:['Faltante de S/ 100','Sobrante de S/ 100','Cuadra'], ok:0, pq:'3,100 − 3,200 = −100: falta dinero.'},
-  {q:'Un cargo bancario que la empresa no registró se…', ops:['Registra en el Libro Bancos','Deja como partida conciliatoria'], ok:0, pq:'Lo que el banco ya hizo y la empresa no anotó se registra en el libro.'},
-  {q:'Un cheque girado que aún no se cobra, ¿dónde aparece?', ops:['Solo en el libro','Solo en el banco'], ok:0, pq:'Es partida conciliatoria: cheque en circulación.'} ]},
-pr:{tipo:'quiz', titulo:'Las preguntas que hará el docente',
- lista:[
-  {q:'«¿Por qué la movilidad sin sustento no la consideraron en el arqueo?»', ops:['Porque sin comprobante no sustenta el gasto','Porque es poco dinero'], ok:0, pq:'Sin comprobante no hay evidencia; se trata como diferencia.'},
-  {q:'«¿Cómo saben que la conciliación está bien?»', ops:['El saldo del banco conciliado es igual al saldo del libro ajustado','Porque el banco nunca se equivoca'], ok:0, pq:'Los dos caminos tienen que llegar al mismo saldo.'},
-  {q:'«¿Qué control interno proponen?»', ops:['Arqueos sorpresa, conciliación mensual y aprobación de salidas, explicando para qué sirve cada uno','Tener más dinero en caja'], ok:0, pq:'La rúbrica premia explicar más de dos medidas con su importancia.'},
-  {q:'«¿Qué libros contables usa la empresa?»', ops:['Libro Caja y Bancos, Registro de Compras y Ventas, Diario y Mayor','Solo el estado de cuenta'], ok:0, pq:'El estado de cuenta es del banco; el libro es de la empresa.'} ]},
-aut:{tipo:'opi', titulo:'Lista de control antes de exponer',
- lista:[
-  {q:'¿El arqueo dice si hay sobrante o faltante y por cuánto?', ops:['Sí','No'], com:['Bien.','Agrégalo: es lo primero que se califica.']},
-  {q:'¿Hay una conciliación por cada cuenta bancaria?', ops:['Sí, las dos','Solo una'], com:['Bien.','Falta la otra cuenta: cada banco se concilia por separado.']},
-  {q:'¿Cada integrante puede explicar cualquier parte?', ops:['Sí','Todavía no'], com:['Listos para la ronda de preguntas.','Repartan 5 minutos para repasar juntos.']} ]}
+b1:{"tipo": "quiz", "corto": "Quiz de entrada", "titulo": "Quiz de entrada: arqueo de caja", "lista": [{"q": "¿Qué se compara en un arqueo de caja?", "ops": ["Las ventas con las compras", "El total justificado con el fondo asignado", "El banco con los libros"], "ok": 1, "pq": "Efectivo + documentos + vales frente al fondo."}, {"q": "Si el total justificado es menor al fondo, hay…", "ops": ["Faltante", "Sobrante"], "ok": 0, "pq": "Falta dinero o sustento."}, {"q": "¿Quién debe hacer el arqueo inopinado?", "ops": ["El responsable del fondo", "Una persona independiente"], "ok": 1, "pq": "Así el control es imparcial."}, {"q": "¿Qué cuenta del PCGE agrupa caja y bancos?", "ops": ["10", "12", "40"], "ok": 0, "pq": "Cuenta 10 Efectivo y equivalentes de efectivo."}]},
+b2:{"tipo": "tab", "corto": "Conectemos", "titulo": "Piensa en tu equipo", "q": "¿Por qué mi banco dice una cifra y mis libros otra? Pega tu idea.", "ph": "Escribe tu post-it (máx. 140 letras)"},
+b3:{"tipo": "tabla", "corto": "Al revés", "titulo": "¿En qué lado va?", "cols": ["Operación", "En el Libro Bancos (empresa)", "En el estado de cuenta (banco)"], "tipos": ["t", "t", "t"], "filas": [[{"t": "Un cliente deposita S/ 5,000"}, {"ops": ["Debe", "Haber"], "ok": 0, "pq": "Para la empresa entra dinero: Debe."}, {"ops": ["Debe", "Haber"], "ok": 1, "pq": "Para el banco es un abono: Haber."}], [{"t": "Se paga a un proveedor S/ 2,000"}, {"ops": ["Debe", "Haber"], "ok": 1, "pq": "Sale dinero: Haber."}, {"ops": ["Debe", "Haber"], "ok": 0, "pq": "Para el banco es un cargo: Debe."}], [{"t": "El banco cobra una comisión de S/ 45"}, {"ops": ["Debe", "Haber"], "ok": 1, "pq": "Disminuye el dinero: Haber."}, {"ops": ["Debe", "Haber"], "ok": 0, "pq": "Cargo: Debe."}]]},
+b4:{"tipo": "arr", "corto": "Partidas", "titulo": "¿Dónde se ajusta cada partida?", "fichas": [{"id": "x1", "t": "Depósito en tránsito", "g": "BM"}, {"id": "x2", "t": "Cheque girado que el proveedor no cobra", "g": "BN"}, {"id": "x3", "t": "Cobranza abonada por el banco y no registrada", "g": "LM"}, {"id": "x4", "t": "Comisión cargada por el banco y no registrada", "g": "LN"}, {"id": "x5", "t": "Intereses abonados por el banco", "g": "LM"}, {"id": "x6", "t": "Cheque en tránsito", "g": "BN"}], "cajas": [{"id": "BM", "t": "Saldo del banco (+)"}, {"id": "BN", "t": "Saldo del banco (-)"}, {"id": "LM", "t": "Saldo de libros (+)"}, {"id": "LN", "t": "Saldo de libros (-)"}], "fin": "<p class=\"pq\">Lo que la empresa ya registró y el banco no, se ajusta en el banco. Lo que el banco registró y la empresa no, en libros.</p>"},
+b5:{"tipo": "tabla", "corto": "Textil J&P", "titulo": "Conciliación de Textil J&P al 31 de enero", "cols": ["Partida", "Lado", "Importe (S/)"], "tipos": ["t", "t", "n"], "filas": [[{"t": "Saldo según banco (180,000 + 5,000 + 3,000)"}, {"t": "Banco"}, {"e": 188000, "tol": 0.5, "ph": "0", "pq": "El banco ya sumó los dos abonos."}], [{"t": "Cheque de otro banco depositado, se cobra el 03/02"}, {"ops": ["Banco (+)", "Banco (-)", "Libros (+)"], "ok": 0, "pq": "Es un depósito en tránsito: se suma al banco."}, {"e": 6000, "tol": 0.5, "ph": "0", "pq": "6,000."}], [{"t": "<b>Saldo conciliado del banco</b>"}, {"t": ""}, {"e": 194000, "tol": 0.5, "ph": "0", "pq": "188,000 + 6,000 = 194,000."}], [{"t": "Saldo según libros (180,000 + 6,000)"}, {"t": "Libros"}, {"e": 186000, "tol": 0.5, "ph": "0", "pq": "La empresa registró el cheque depositado."}], [{"t": "Abono no identificado"}, {"ops": ["Banco (+)", "Libros (+)", "Libros (-)"], "ok": 1, "pq": "El banco abonó y la empresa no lo registró."}, {"e": 5000, "tol": 0.5, "ph": "0", "pq": "5,000."}], [{"t": "Traspaso no identificado"}, {"ops": ["Banco (-)", "Libros (+)", "Libros (-)"], "ok": 1, "pq": "Otro abono que falta en libros."}, {"e": 3000, "tol": 0.5, "ph": "0", "pq": "3,000."}], [{"t": "<b>Saldo conciliado de libros</b>"}, {"t": ""}, {"e": 194000, "tol": 0.5, "ph": "0", "pq": "186,000 + 5,000 + 3,000 = 194,000. Iguales: concilia."}]]},
+b6:{"tipo": "quiz", "corto": "Libro Caja y Bancos", "titulo": "Libro Caja y Bancos", "lista": [{"q": "El Libro Caja detalla…", "ops": ["Los movimientos del efectivo", "Las ventas al crédito", "Las planillas"], "ok": 0, "pq": "Formato 1.1: movimientos del efectivo."}, {"q": "El Libro Bancos es el formato…", "ops": ["1.1", "1.2", "5.1"], "ok": 1, "pq": "Formato 1.2: movimientos de una cuenta corriente."}, {"q": "Lo llevan quienes tienen ingresos anuales mayores a 1,700 UIT. Con UIT de S/ 5,500, eso es…", "ops": ["S/ 935,000", "S/ 9,350,000", "S/ 93,500"], "ok": 1, "pq": "1,700 x 5,500 = 9,350,000."}]},
+b7:{"tipo": "tabla", "corto": "Libro Caja", "titulo": "Completa el Libro Caja de ABC SAC (mayo)", "cols": ["Fecha", "Descripción", "Deudor", "Acreedor"], "tipos": ["t", "t", "n", "n"], "filas": [[{"t": "1-May"}, {"t": "Saldo inicial de caja"}, {"t": "15,300"}, {"t": ""}], [{"t": "6-May"}, {"t": "Pago factura 001-230, compra de mercadería"}, {"t": ""}, {"t": "1,250"}], [{"t": "15-May"}, {"t": "Cobro de factura 001-418"}, {"t": "1,950"}, {"t": ""}], [{"t": "31-May"}, {"t": "Pago de viáticos a un trabajador"}, {"t": ""}, {"t": "900"}], [{"t": ""}, {"t": "<b>Subtotales</b>"}, {"e": 17250, "tol": 0.5, "ph": "0", "pq": "15,300 + 1,950 = 17,250."}, {"e": 2150, "tol": 0.5, "ph": "0", "pq": "1,250 + 900 = 2,150."}], [{"t": ""}, {"t": "<b>Saldo al cierre de mayo</b>"}, {"e": 15100, "tol": 0.5, "ph": "0", "pq": "17,250 - 2,150 = 15,100."}, {"t": ""}]]},
+b8:{"tipo": "quiz", "corto": "Libro Bancos", "titulo": "Libro Bancos de R&R SAC (abril)", "lista": [{"q": "Saldo inicial 545,000; paga a MELMAC 80,500; recibe de WHORT 15,000; paga remuneraciones 180,000. ¿Saldo final?", "ops": ["S/ 299,500", "S/ 330,500", "S/ 820,500"], "ok": 0, "pq": "545,000 - 80,500 + 15,000 - 180,000 = 299,500."}, {"q": "El depósito del cliente va en la columna…", "ops": ["Deudor", "Acreedor"], "ok": 0, "pq": "Entra dinero: deudor."}]},
+b9:{"tipo": "tabla", "corto": "Caso AA2", "titulo": "Conciliación de Comercial Andina SAC al 31 de marzo", "cols": ["Partida", "Lado", "Importe (S/)"], "tipos": ["t", "t", "n"], "filas": [[{"t": "Saldo según estado de cuenta del BCP"}, {"t": "Banco"}, {"t": "40,000"}], [{"t": "(a) Cheque de otro banco depositado el 31/03"}, {"ops": ["Banco (+)", "Banco (-)", "Libros (+)", "Libros (-)"], "ok": 0, "pq": "Depósito en tránsito."}, {"e": 6000, "tol": 0.5, "ph": "0", "pq": "6,000."}], [{"t": "(b) Cheque N.º 1051 no cobrado"}, {"ops": ["Banco (+)", "Banco (-)", "Libros (+)", "Libros (-)"], "ok": 1, "pq": "Cheque en tránsito."}, {"e": 4500, "tol": 0.5, "ph": "0", "pq": "4,500."}], [{"t": "<b>Saldo conciliado del banco</b>"}, {"t": ""}, {"e": 41500, "tol": 0.5, "ph": "0", "pq": "40,000 + 6,000 - 4,500 = 41,500."}], [{"t": "Saldo según Libro Bancos"}, {"t": "Libros"}, {"t": "38,545"}], [{"t": "(c) Comisión cargada y no registrada"}, {"ops": ["Banco (+)", "Banco (-)", "Libros (+)", "Libros (-)"], "ok": 3, "pq": "Cargo no registrado."}, {"e": 45, "tol": 0.5, "ph": "0", "pq": "45."}], [{"t": "(d) Cobranza abonada y no registrada"}, {"ops": ["Banco (+)", "Banco (-)", "Libros (+)", "Libros (-)"], "ok": 2, "pq": "Abono no registrado."}, {"e": 3000, "tol": 0.5, "ph": "0", "pq": "3,000."}], [{"t": "<b>Saldo conciliado de libros</b>"}, {"t": ""}, {"e": 41500, "tol": 0.5, "ph": "0", "pq": "38,545 + 3,000 - 45 = 41,500. Concilia."}]]},
+b10:{"tipo": "cruz", "corto": "Crucigrama", "titulo": "Crucigrama de la semana", "filas": 11, "cols": 16, "palabras": [{"p": "CONCILIACION", "r": 10, "c": 2, "dir": "H", "pista": "Control que compara el Libro Bancos con el estado de cuenta"}, {"p": "TRANSITO", "r": 3, "c": 3, "dir": "V", "pista": "Depósito o cheque que el banco aún no procesa"}, {"p": "COMISION", "r": 8, "c": 0, "dir": "H", "pista": "Cargo del banco que la empresa suele olvidar registrar"}, {"p": "EXTRACTO", "r": 3, "c": 1, "dir": "H", "pista": "Otro nombre del estado de cuenta"}, {"p": "CHEQUE", "r": 1, "c": 1, "dir": "V", "pista": "Título que se gira para pagar a un proveedor"}, {"p": "BANCOS", "r": 0, "c": 6, "dir": "V", "pista": "Libro con formato 1.2"}, {"p": "ABONO", "r": 1, "c": 8, "dir": "V", "pista": "Para el banco, un ingreso en la cuenta"}, {"p": "CARGO", "r": 6, "c": 12, "dir": "V", "pista": "Para el banco, una salida de la cuenta"}, {"p": "SALDO", "r": 7, "c": 11, "dir": "H", "pista": "Lo que queda al final del mes"}]},
+b11:{"tipo": "tab", "corto": "Reflexión", "titulo": "Ideas principales de hoy", "q": "En una frase: ¿qué aprendiste hoy y qué fue lo más difícil? ¿Por qué?", "ph": "Escribe tu post-it (máx. 140 letras)"}
 };
 
 /* ================= las diapositivas ================= */
 var D=[
-
-{ et:"Conectemos",
-  t:"Hoy se expone la AA2",
-  claves:["c0"],
-  h:TAPA('Hoy se expone la AA2','Semana 4 · Exposición del caso Belén S.A.C.',['3 a 5 minutos','Preguntas del docente'])+
-GLOBO('pres','Cómo va la sesión','Un repaso de cinco minutos y la ronda de preguntas de práctica antes de exponer.') },
-
-{ et:"Exponer",
-  t:"Cómo exponer en 5 minutos",
-  claves:["pr"],
-  lado:1,
-  h:'<ul class="pasos"><li><b>El problema:</b> qué necesita saber Belén S.A.C.</li><li><b>El arqueo:</b> cuánto sobra o falta y por qué.</li>'+
-'<li><b>La conciliación:</b> partidas de cada banco y saldo conciliado.</li><li><b>El saldo final</b> de efectivo y equivalentes.</li><li><b>Recomendaciones</b> de control interno.</li></ul>'+
-'<div class="clave">Las cifras van en la diapositiva; nadie lee el informe en voz alta.</div>' },
-
-{ et:"Revisar",
-  t:"Lista de control antes de exponer",
-  claves:["aut"],
-  h:'' },
-
-{ et:"Cierre",
-  t:"Lo que viene",
-  h:GLOBO('ok','La próxima semana: AA3','Cobranzas y pagos: cartera de clientes, saldos por vencer, títulos valores y los asientos de ventas, cobranzas, compras y pagos. El caso de la AA3 se termina en esa sesión.') }
+{"et": "Portada", "t": "Semana 4: Conciliación bancaria, Libro Caja y Bancos y sustento del AA2", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><div class=\"pt-3d\" aria-hidden=\"true\"><div class=\"moneda\"><b class=\"cara\">S/</b><b class=\"cara atras\">&#9733;</b></div><img class=\"flota f1\" src=\"marca/iconos/lapiz.png\" alt=\"\"><img class=\"flota f2\" src=\"marca/iconos/foco.png\" alt=\"\"><img class=\"flota f3\" src=\"marca/iconos/lista.png\" alt=\"\"></div><span class=\"pt-sem\">Semana 4</span><h2>Conciliaci&oacute;n bancaria y Libro Caja y Bancos</h2><p class=\"pt-ses\">Contabilidad &middot; Sustento del AA2</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>Logro de la sesi&oacute;n</b>Concilia el saldo del banco con el de sus libros y registra el Libro Caja y Bancos.</div><div class=\"pt-agenda\"><b>Hoy haremos</b><div data-agenda></div></div></div><div class=\"pt-yo\" data-yo></div></div>"},
+{"et": "Conectemos", "t": "Quiz de entrada: arqueo de caja", "claves": ["b1"]},
+{"et": "Conectemos", "t": "¿Por qué mi banco dice una cifra y mis libros otra?", "claves": ["b2"], "lado": 1, "h": "<div class=\"perso\"><img src=\"personajes/profe-presenta.webp\" alt=\"\" loading=\"lazy\"><div class=\"globo\"><span class=\"et\">Piensa en tu equipo</span><b>1.</b> ¿Qu&eacute; es un estado de cuenta bancario?<br><br><b>2.</b> ¿Qu&eacute; suceder&iacute;a si una empresa no controla el dinero que tiene en bancos?<br><br>Lo respondemos hoy.</div></div>"},
+{"et": "Conciliación", "t": "8.1 Cuentas corrientes y estado de cuenta", "claves": ["b3"], "lado": 1, "h": "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th></th><th>Libro Bancos (la empresa)</th><th>Estado de cuenta (el banco)</th></tr></thead><tbody><tr><td>Ingreso de dinero</td><td>Debe</td><td>Haber (abono)</td></tr><tr><td>Salida de dinero</td><td>Haber</td><td>Debe (cargo)</td></tr><tr><td>Qui&eacute;n lo lleva</td><td>La empresa</td><td>El banco</td></tr></tbody></table></div><div class=\"clave\">El banco lo ve <b>al rev&eacute;s</b>: un abono del banco es un ingreso para la empresa.</div>"},
+{"et": "Partidas", "t": "Partidas conciliatorias", "claves": ["b4"], "lado": 1, "h": "<p class=\"teo-def\">La <b>conciliaci&oacute;n bancaria</b> compara el Libro Bancos con el extracto del banco para hallar el saldo real. Se hace cada mes.</p><div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Partida</th><th>Qu&eacute; es</th><th>Se ajusta en</th></tr></thead><tbody><tr><td>Dep&oacute;sito en tr&aacute;nsito</td><td>Registrado en libros; el banco a&uacute;n no lo abona</td><td>Banco (+)</td></tr><tr><td>Cheque en tr&aacute;nsito</td><td>Girado; el beneficiario a&uacute;n no lo cobra</td><td>Banco (-)</td></tr><tr><td>Abono no registrado</td><td>El banco abon&oacute;; la empresa no lo registr&oacute;</td><td>Libros (+)</td></tr><tr><td>Cargo no registrado</td><td>Comisi&oacute;n o pago que la empresa no registr&oacute;</td><td>Libros (-)</td></tr></tbody></table></div>"},
+{"et": "Conciliar", "t": "Actividad 2: conciliación de Textil J&P", "claves": ["b5"], "lado": 1, "h": "<div class=\"dos-d\"><div><h4>Lado banco</h4><p class=\"sub\">Saldo del estado de cuenta (+) dep&oacute;sitos en tr&aacute;nsito (-) cheques en tr&aacute;nsito</p></div><div><h4>Lado libros</h4><p class=\"sub\">Saldo del Libro Bancos (+) abonos no registrados (-) cargos no registrados</p></div></div><div class=\"form\">Saldo conciliado del banco = Saldo conciliado de libros</div><p class=\"teo-def\" style=\"font-size:19px\">Textil J&amp;P abre su cuenta el 02/01 con <b>S/ 180,000</b>. En enero: (a) abono no identificado de S/ 5,000; (b) cheque de otro banco por S/ 6,000 que se cobra el 03/02; (c) traspaso no identificado de S/ 3,000.</p>"},
+{"et": "Libros", "t": "10. Libro Caja y Bancos", "claves": ["b6"], "lado": 1, "h": "<div class=\"dos-d\"><div><h4>Libro Caja (1.1)</h4><p class=\"sub\">Detalla los movimientos del efectivo en un periodo.</p></div><div><h4>Libro Bancos (1.2)</h4><p class=\"sub\">Detalla los movimientos de una cuenta corriente.</p></div></div><ol class=\"pasos\"><li>Se llenan cada mes y empiezan con el saldo inicial.</li><li>Cada operaci&oacute;n lleva n&uacute;mero correlativo y fecha.</li><li>Descripci&oacute;n, n&uacute;mero de documento, cuenta y monto.</li><li>En Bancos: cuenta corriente, medio de pago y raz&oacute;n social.</li><li>Termina con el saldo final.</li></ol>"},
+{"et": "Libros", "t": "Ejemplos: Libro Caja y Libro Bancos", "claves": ["b7", "b8"], "h": ""},
+{"et": "Caso AA2", "t": "Caso AA2: conciliación de Comercial Andina SAC", "claves": ["b9"], "lado": 1, "h": "<p class=\"teo-def\" style=\"font-size:19px\">Al 31 de marzo, el estado de cuenta del BCP muestra <b>S/ 40,000</b> y el Libro Bancos <b>S/ 38,545</b>.</p><ul class=\"pasos\" style=\"font-size:19px\"><li>(a) Cheque de otro banco depositado el 31/03 por S/ 6,000, a&uacute;n no abonado.</li><li>(b) Cheque N.&ordm; 1051 por S/ 4,500 no cobrado.</li><li>(c) Comisi&oacute;n de S/ 45 cargada y no registrada.</li><li>(d) Cobranza de S/ 3,000 abonada y no registrada.</li></ul><div class=\"clave\">Las partidas del lado banco no se contabilizan: se regularizan cuando el banco las procesa.</div>"},
+{"et": "Reflexionemos", "t": "Crucigrama: conciliación y Libro Caja y Bancos", "claves": ["b10"]},
+{"et": "Reflexionemos", "t": "Ideas principales de hoy", "claves": ["b11"], "lado": 1, "h": "<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Idea</th><th>En corto</th></tr></thead><tbody><tr><td>Efectivo</td><td>Participa en casi todos los registros de la empresa.</td></tr><tr><td>Conciliaci&oacute;n</td><td>Muestra la liquidez real y las operaciones en tr&aacute;nsito.</td></tr><tr><td>Libros</td><td>El Libro Caja y Bancos deja el detalle cronol&oacute;gico del efectivo.</td></tr></tbody></table></div><div class=\"clave\"><b>Tarea:</b> subir al campus el informe (GrupoN.docx), los anexos (GrupoN.xlsx) y la presentaci&oacute;n (GrupoN.pptx).</div>"}
 ];
 
 /* ================= estado ================= */
-var LS='cont_s4_v1';
+var LS='cont_s4p_v1';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "pr", "aut"];
-function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
+var CLAVES=["b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11"];
+function vacio(){ var g={ visto:{}, mal:{}, hoja:{}, fallos:[] };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
 function cargaG(){
@@ -1291,9 +1609,9 @@ function fusiona(d){
 function cuantas(k){
   var A=ACT[k];
   if(A.tipo==='par')  return A.huecos.length;
-  if(A.tipo==='arma') return A.huecos.length;
   if(A.tipo==='arr')  return A.fichas.length;
   if(A.tipo==='cruz') return A.palabras.length;
+  if(A.tipo==='con' || A.tipo==='tab') return 1;
   if(A.tipo==='cuadro') return A.fichas.filter(function(f){ return !f.fijo; }).length;
   if(A.tipo==='tabla'){
     var n=0;
@@ -1307,11 +1625,12 @@ function cuantas(k){
   }
   return A.lista.length;
 }
-function hechas(k){ return Object.keys(G[k]||{}).length; }
+function hechas(k){ return hechasEn(G, k); }
 function lista(k){ return hechas(k)>=cuantas(k); }
-function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=hechas(k); }); return s; }
-function totalMax(){ var s=0; clavesVis().forEach(function(k){ s+=cuantas(k); }); return s; }
+function totalOk(){ var s=0; clavesVis().forEach(function(k){ s+=Math.min(1, hechas(k)/cuantas(k)); }); return Math.round(s*10)/10; }
+function totalMax(){ return clavesVis().length; }
 var i=0;
+try{ var i0=parseInt(sessionStorage.getItem(LS+'_i'),10); if(i0>0 && i0<D.length) i=i0; }catch(e){}
 
 /* ================= arrastre ================= */
 var elegida=null;
@@ -1377,7 +1696,7 @@ function sacude(el){ if(!el) return; el.classList.add('temblor');
 /* ================= vistas ================= */
 function cabTarea(k){
   var A=ACT[k];
-  var sol = (!soyDocente() || A.tipo==='opi') ? '' :
+  var sol = (!soyDocente() || A.tipo==='opi' || A.tipo==='con' || A.tipo==='tab') ? '' :
     '<button type="button" class="solu" data-sol="'+k+'">'+
     (lista(k)?'Borrar Respuestas':'Resolver Todo')+'</button>';
   return '<div class="tarea'+(lista(k)?' ok':'')+'"><h4><span>'+esc(A.titulo)+' - '+
@@ -1399,7 +1718,7 @@ function resuelveUno(k, n){
     var p=String(n).split('-'), c=A.filas[+p[0]][+p[1]];
     G[k][n] = c.ops ? c.ok : 1;
   }
-  else if(A.tipo==='par' || A.tipo==='cruz' || A.tipo==='arma'){ G[k][n]=1; }
+  else if(A.tipo==='par' || A.tipo==='cruz'){ G[k][n]=1; }
   else if(A.tipo==='quiz'){ G[k][+n]=A.lista[+n].ok; }
   else{ G[k][+n]=1; }
 }
@@ -1413,8 +1732,9 @@ function resuelve(k){
       else if(c.ops) G[k][r+'-'+j]=c.ok;
     }); });
   }
-  else if(A.tipo==='par' || A.tipo==='arma') A.huecos.forEach(function(x){ G[k][x.id]=1; });
+  else if(A.tipo==='par')  A.huecos.forEach(function(x){ G[k][x.id]=1; });
   else if(A.tipo==='cruz') A.palabras.forEach(function(w){ G[k][w.p]=1; });
+  else if(A.tipo==='con' || A.tipo==='tab') return;
   else if(A.tipo==='opi') A.lista.forEach(function(x,n){ G[k][n]=0; });
   else if(A.tipo==='quiz') A.lista.forEach(function(x,n){ G[k][n]=x.ok; });
   else                     A.lista.forEach(function(x,n){ G[k][n]=1; });
@@ -1889,77 +2209,11 @@ function vTabla(k){
   return h+'</div></div>';
 }
 
-/* ---- constructor: arrastra las piezas y agrega la negación ---- */
-/* mientras no esté resuelta, la pieza puesta vive aquí; al acertar pasa a G */
-var ARMA={};
-function armaEstado(k, n){
-  var A=ACT[k], x=A.huecos[n], g=G[k]||{};
-  if(g[x.id]!==undefined){
-    var ok=A.ok[n];
-    return { v:ok.replace('~',''), n:(ok.charAt(0)==='~'?1:0), listo:true };
-  }
-  var e=ARMA[k+'|'+x.id];
-  return { v:(e?e.v:null), n:(e&&e.n?1:0), listo:false };
-}
-function armaOcupa(k, letra){
-  return ACT[k].huecos.some(function(x,n){ return armaEstado(k,n).v===letra; });
-}
-function armaTexto(k, v, neg){ var w=ACT[k].vars[v]; return neg ? w.no : w.si; }
-function armaRevisa(k, zona, n){
-  var A=ACT[k], e=ARMA[k+'|'+zona]||{v:null,n:0};
-  if(e.v && ((e.n?'~':'')+e.v)===A.ok[n]){
-    G[k][zona]=1; delete ARMA[k+'|'+zona]; graba();
-    if(lista(k)) fanfarria(); else bien();
-  }
-  pinta(true);
-}
-function vArma(k){
-  var A=ACT[k];
-  var h=cabTarea(k)+'<div class="cns'+(A.modo==='frases'?' frases':'')+'">'+
-        '<div class="regla"><b>Regla:</b> '+A.regla.t+' <span class="ff">'+esc(A.regla.f)+'</span></div>';
-  var libres=A.fichas.filter(function(x){ return !armaOcupa(k, x.id); });
-  h+='<div class="banco">'+(libres.length ? libres.map(function(x){
-       return '<button type="button" class="ficha" data-f="'+x.id+'">'+esc(x.t)+'</button>'; }).join('')
-     : '<span style="color:#8A8A92;font-size:15px">No queda ninguna ficha.</span>')+'</div><div class="fila">';
-  A.huecos.forEach(function(x,n){
-    if(n) h+='<span class="fle">&rarr;</span>';
-    var e=armaEstado(k,n), pr='', sec='';
-    if(e.v){
-      var sim=(e.n?'~':'')+e.v, txt=armaTexto(k, e.v, e.n);
-      pr  = esc(A.modo==='frases' ? txt : sim);
-      sec = A.modo==='frases' ? '<b>'+esc(sim)+'</b>' : esc(txt);
-    }
-    h+='<div class="caja ranura'+(e.listo?' ok':'')+'" data-z="'+x.id+'">'+
-       '<span class="rot">'+esc(x.rot)+(e.listo?' &#10003;':'')+'</span><span class="pz">'+
-       (e.v ? '<span class="vv">'+pr+'</span>'+
-              (e.listo ? '' :
-               '<button type="button" class="neg'+(e.n?' on':'')+'" data-neg="'+k+'" data-nz="'+x.id+
-               '" title="Niega esta parte">'+(A.modo==='frases'?'no':'~')+'</button>'+
-               '<button type="button" class="quita" data-qu="'+k+'" data-nz="'+x.id+
-               '" aria-label="Quitar la pieza">&#10005;</button>')
-           : '<span class="vacio">suelta aquí</span> '+btnR(k, x.id))+
-       '</span>'+(e.v ? '<span class="tt">'+sec+'</span>' : '')+'</div>';
-  });
-  h+='</div>';
-  var a=armaEstado(k,0), b=armaEstado(k,1), todo=lista(k);
-  if(a.v && b.v){
-    h+='<div class="eco'+(todo?' ok':'')+'"><span class="ff">'+
-       esc((a.n?'~':'')+a.v+' → '+(b.n?'~':'')+b.v)+'</span><br>Si '+
-       esc(armaTexto(k,a.v,a.n))+', entonces '+esc(armaTexto(k,b.v,b.n))+'.</div>';
-    if(!todo) h+='<p class="pista">'+esc(A.pista)+'</p>';
-  }else{
-    h+='<p class="pista">'+esc(A.guia)+'</p>';
-  }
-  if(todo && A.fin) h+=A.fin;
-  return h+'</div></div></div>';
-}
-
 function vista(k){
   var t=ACT[k].tipo;
-  return t==='arma' ? vArma(k)
-       : t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
+  return t==='arr' ? vArr(k) : t==='par' ? vPar(k) : t==='cruz' ? vCruz(k)
        : t==='sel' ? vSel(k) : t==='hoja' ? vHoja(k) : t==='cal' ? vCal(k)
-       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : vQuiz(k);
+       : t==='cuadro' ? vCuadro(k) : t==='tabla' ? vTabla(k) : t==='opi' ? vOpi(k) : t==='con' ? vCon(k) : t==='tab' ? vTab(k) : vQuiz(k);
 }
 
 /* ================= dibujo ================= */
@@ -1977,6 +2231,7 @@ function pinta(quieto){
   /* al responder dentro de la misma diapositiva no se pierde el sitio */
   var alto = quieto ? $('lam').scrollTop : 0;
   G.visto[i]=1; graba();
+  try{ sessionStorage.setItem(LS+'_i', String(i)); }catch(e){}
   $('eti').textContent=s.et;
   $('tit').textContent=s.t;
   $('cu').textContent=(posVis(i)+1)+' / '+vis().length;
@@ -1987,7 +2242,7 @@ function pinta(quieto){
   $('sig').disabled=(posVis(i)>=vis().length-1);
   var ok=totalOk(), mx=totalMax();
   $('riel').style.width=Math.round(ok/mx*100)+'%';
-  $('marcador').textContent=ok+' de '+mx;
+  $('marcador').textContent=(mx ? Math.round(ok/mx*100) : 0)+' % · '+clavesVis().filter(lista).length+' de '+mx+' actividades';
   $('rotulo').textContent='Diapositiva '+(posVis(i)+1)+' de '+vis().length;
   $('pts').innerHTML=vis().map(function(n){ var x=D[n];
     var cl = n===i ? 'on' : (clavesDe(x).length && clavesDe(x).every(lista) ? 'hecho' : (G.visto[n]?'visto':''));
@@ -2003,6 +2258,7 @@ function pinta(quieto){
   cablea();
   if($('rutaVia')) pintaRuta();
   pintaModo();
+  pintaExtras();
 }
 
 var yaCruz={};
@@ -2021,7 +2277,7 @@ function cableaUna(k, lam){
       var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
       if(!f || !zona) return;
       if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   if(A.tipo==='cuadro'){
@@ -2029,35 +2285,7 @@ function cableaUna(k, lam){
       var f=null; A.fichas.forEach(function(x){ if(x.id===fid) f=x; });
       if(!f || !zona) return;
       if(f.g===zona){ G[k][fid]=zona; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
-    });
-  }
-  if(A.tipo==='arma'){
-    montaArrastre(lam, function(fid, zona, el){
-      if(!zona) return;
-      var n=-1; A.huecos.forEach(function(x,j){ if(x.id===zona) n=j; });
-      if(n<0 || (G[k]||{})[zona]!==undefined) return;
-      if(A.ok[n].replace('~','')!==fid){ mal(); sacude(el); return; }
-      var prev=ARMA[k+'|'+zona]||{v:null,n:0};
-      /* si la ficha estaba en la otra ranura, se muda */
-      A.huecos.forEach(function(x){
-        var o=ARMA[k+'|'+x.id];
-        if(o && o.v===fid && x.id!==zona) delete ARMA[k+'|'+x.id];
-      });
-      ARMA[k+'|'+zona]={ v:fid, n:prev.n };
-      armaRevisa(k, zona, n);
-    });
-    qq('#lam button[data-neg]', lam).forEach(function(b){
-      b.addEventListener('click', function(){
-        var z=b.dataset.nz, e=ARMA[k+'|'+z];
-        if(!e) return;
-        e.n = e.n ? 0 : 1;
-        var n=-1; A.huecos.forEach(function(x,j){ if(x.id===z) n=j; });
-        armaRevisa(k, z, n);
-      });
-    });
-    qq('#lam button[data-qu]', lam).forEach(function(b){
-      b.addEventListener('click', function(){ delete ARMA[k+'|'+b.dataset.nz]; pinta(true); });
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   if(A.tipo==='par'){
@@ -2065,14 +2293,14 @@ function cableaUna(k, lam){
       var caja=lam.querySelector('.par[data-z="'+zona+'"]');
       if(!caja) return;
       if(caja.dataset.ok===fid){ G[k][fid]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(el); }
+      else{ falla(k, fid, zona); mal(); sacude(el); }
     });
   }
   qq('#lam button[data-q]', lam).forEach(function(b){
     b.addEventListener('click', function(){
       var cl=b.dataset.q, n=+b.dataset.k, j=+b.dataset.j, p=ACT[cl].lista[n];
       if(j===p.ok){ G[cl][n]=j; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
-      else{ G.mal[cl+'|'+n+'|'+j]=1; graba(); mal();
+      else{ G.mal[cl+'|'+n+'|'+j]=1; falla(cl, n, j); mal();
             b.classList.add('mala','temblor'); b.disabled=true;
             setTimeout(function(){ b.classList.remove('temblor'); }, 450); }
     });
@@ -2089,7 +2317,7 @@ function cableaUna(k, lam){
       if(sl.value==='') return;
       var cl=sl.dataset.s, n=+sl.dataset.n, p=ACT[cl].lista[n];
       if(+sl.value===p.ok){ G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true); }
-      else{ mal(); sacude(sl.closest('.linea'));
+      else{ falla(cl, n, +sl.value); mal(); sacude(sl.closest('.linea'));
             sl.classList.add('mal'); sl.value='';
             setTimeout(function(){ sl.classList.remove('mal'); }, 900); }
     });
@@ -2106,12 +2334,12 @@ function cableaUna(k, lam){
       if(Math.abs(v-p.e) <= (p.tol===undefined ? 0.05 : p.tol)){
         G[cl][n]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
       }else{
-        mal(); x.classList.add('mal','temblor');
+        falla(cl, n, x.value.trim()); mal(); x.classList.add('mal','temblor');
         setTimeout(function(){ x.classList.remove('temblor'); }, 450);
       }
     }
     x.addEventListener('change', revisa);
-    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); x.blur(); } });
     x.addEventListener('input', function(){ x.classList.remove('mal'); });
   });
 
@@ -2128,12 +2356,12 @@ function cableaUna(k, lam){
       if(Math.abs(v-c.e) <= (c.tol===undefined ? 0.05 : c.tol)){
         G[cl][id]=1; graba(); if(lista(cl)) fanfarria(); else bien(); pinta(true);
       }else{
-        mal(); x.classList.add('mal','temblor');
+        falla(cl, id, x.value.trim()); mal(); x.classList.add('mal','temblor');
         setTimeout(function(){ x.classList.remove('temblor'); }, 450);
       }
     }
     x.addEventListener('change', revisa);
-    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); revisa(); } });
+    x.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); x.blur(); } });
     x.addEventListener('input', function(){ x.classList.remove('mal'); });
   });
   qq('#lam select[data-ts]', lam).forEach(function(sl){
@@ -2150,6 +2378,8 @@ function cableaUna(k, lam){
 
   if(A.tipo==='hoja') cableaHoja(k, A, lam);
   if(A.tipo==='cruz') cableaCruz(k, A, lam);
+  if(A.tipo==='con') { cableaCon(k, lam); qq('.piz', lam).forEach(cableaPiz); }
+  if(A.tipo==='tab') { cableaTab(k, lam); qq('.piz', lam).forEach(cableaPiz); }
 
   /* el docente resuelve un ítem suelto, o la actividad entera */
   qq('#lam button[data-vr]', lam).forEach(function(b){
@@ -2384,6 +2614,7 @@ function cableaCruz(k, A, lam){
     yaCruz[w.p]=s;
     if(s===w.p){ G[k][w.p]=1; graba(); if(lista(k)) fanfarria(); else bien(); pinta(true); }
     else{
+      falla(k, w.p, s);
       mal();
       for(var j=0;j<w.p.length;j++){
         var td=lam.querySelector('.cuad td[data-r="'+(w.r+(w.dir==='V'?j:0))+'"][data-c="'+(w.c+(w.dir==='H'?j:0))+'"]');
@@ -2534,14 +2765,12 @@ function aplicaSel(a){
   elegida=null; pinta(); difunde();
   sopla(SEL ? 'Se presentan '+SEL.length+' de '+D.length+' diapositivas' : 'Se presentan todas las diapositivas');
 }
-$('btnElige').addEventListener('click', function(){
-  if(window.Aula && Aula.eligeDiapositivas) Aula.eligeDiapositivas();
-});
+$('btnElige').addEventListener('click', abreElige);
 
 /* ================= modo de clase ================= */
 /* guiado: todos van en la diapositiva del docente - libre: cada uno avanza solo */
 var modoClase='libre';
-try{ if(localStorage.getItem('cont_s4_v1_modo')==='guiado') modoClase='guiado'; }catch(e){}
+try{ if(localStorage.getItem('pl_pls5c_modo')==='guiado') modoClase='guiado'; }catch(e){}
 
 var replica=false;   /* true mientras se dibuja la pantalla de un alumno en la ventana del docente */
 function soyDocente(){ return !replica && !!(window.Aula && Aula.esDocente); }
@@ -2577,19 +2806,19 @@ function pintaModo(){
   $('ant').disabled = preso || (posVis(i)<=0);
   $('sig').disabled = preso || (posVis(i)>=vis().length-1);
   $('btnElige').hidden=!doc;
-  $('txElige').textContent = SEL ? SEL.length+' de '+D.length : 'Diapositivas';
+  $('txElige').textContent = SEL ? clavesVis().length+' de '+CLAVES.length : 'Actividades';
   qq('#pts button').forEach(function(x){ x.disabled=preso; });
 }
 
 /* el docente publica dónde está la clase */
 function difunde(){
   if(!soyDocente() || !window.Aula || !Aula.dirige) return;
-  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i, sel:SEL } : { modo:'libre', sel:SEL });
+  Aula.dirige(modoClase==='guiado' ? { modo:'guiado', lamina:i, sel:SEL, piz:PIZ } : { modo:'libre', sel:SEL, piz:PIZ });
 }
 function cambiaModo(){
   if(!soyDocente()) return;
   modoClase = (modoClase==='guiado') ? 'libre' : 'guiado';
-  try{ localStorage.setItem('cont_s4_v1_modo', modoClase); }catch(e){}
+  try{ localStorage.setItem('pl_pls5c_modo', modoClase); }catch(e){}
   pintaModo(); difunde();
   sopla(modoClase==='guiado'
         ? 'Modo guiado - La clase va contigo, diapositiva '+(i+1)
@@ -2599,6 +2828,8 @@ $('btnBatuta').addEventListener('click', cambiaModo);
 /* el alumno recibe la orden del docente */
 function recibeBatuta(d){
   var antes=modoClase, selAntes=JSON.stringify(SEL);
+  var p=(d && d.piz && typeof d.piz==='object') ? d.piz : {}, ps=JSON.stringify(p);
+  if(!soyDocente() && ps!==pizSello){ pizSello=ps; PIZ=p; pintaPiz(); }
   if(!soyDocente()) SEL=limpiaSel(d && d.sel);
   var cambioSel=(selAntes!==JSON.stringify(SEL));
   modoClase = (d && d.modo==='guiado') ? 'guiado' : 'libre';
@@ -2764,13 +2995,15 @@ document.addEventListener('keydown', function(e){
 function resumenAula(){
   var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
           idx:i, G:{ mal:G.mal },
-          rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
-  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+          rejilla:cuenta(G).rejB };
+  CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });
+  r.G.fallos=(G.fallos||[]).slice(-80);   /* la evidencia de fallos viaja al docente */   /* para repintar su pantalla en la del docente */
   return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
 function etiActividad(n){
   var k=CLAVES[n];
+  if(k && ACT[k].corto) return ACT[k].corto;
   for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return D[j].et;
   return 'A'+(n+1);
 }
@@ -2785,12 +3018,13 @@ function diapoDe(n){
 }
 
 function ventanaAula(e){
+  e=ajustaVista(e);
   var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var h='<div class="vmini">'+
         '<div class="lin"><span>Va en la diapositiva</span><b>'+esc(e.lamina||'—')+'</b></div>'+
         '<div class="vtit">'+esc(e.titulo||'—')+'</div>'+
         '<div class="vbar"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="lin"><span>Respuestas correctas</span><b>'+ok+' de '+tot+'</b></div>'+
+        '<div class="lin"><span>Avance</span><b>'+pct+' %</b></div>'+
         '<div class="rej">';
   (e.rejilla||[]).forEach(function(r){
     var cl = (r.t && r.n>=r.t) ? ' full' : (r.n ? ' algo' : '');
@@ -2804,21 +3038,21 @@ function ventanaAula(e){
 function replicaAlumno(e){
   var n=(typeof e.idx==='number') ? e.idx : -1;
   if(n<0 || n>=D.length || !e.G) return '';
-  var gDoc=G, actualesARMA=ARMA;
-  var h='';
+  var gDoc=G, h='';
   try{
     G=vacio();
     for(var k in e.G) if(G[k]!==undefined && e.G[k] && typeof e.G[k]==='object') G[k]=e.G[k];
-    ARMA={}; replica=true;
+    replica=true;
     h=htmlLamina(D[n]);
   }catch(x){ h=''; }
-  finally{ G=gDoc; ARMA=actualesARMA; replica=false; }
+  finally{ G=gDoc; replica=false; }
   if(!h) return '';
   return '<div class="ai apvivo"><div class="cab"><span class="et">'+esc(D[n].et)+'</span>'+
          '<span class="t">'+esc(D[n].t)+'</span><span class="cu">'+(n+1)+' / '+D.length+'</span></div>'+
          '<div class="lam">'+h+'</div></div>';
 }
 function pantalla(e, alumno, cont){
+  e=ajustaVista(e);
   var ok=e.ok||0, tot=e.total||0, pct = tot ? Math.round(ok/tot*100) : 0;
   var aqui = parseInt(String(e.lamina||'').split('/')[0], 10) || 0;
   var h='<div class="apdet">'+
@@ -2826,7 +3060,7 @@ function pantalla(e, alumno, cont){
       '<span class="dato">Alumno<b>'+esc(alumno||'—')+'</b></span>'+
       '<span class="dato">Está en<b>Diapositiva '+esc(e.lamina||'—')+'</b></span>'+
       '<span class="dato">Diapositiva<b>'+esc(e.titulo||'—')+'</b></span>'+
-      '<span class="dato">Avance<b>'+ok+' de '+tot+' - '+pct+' %</b></span>'+
+      '<span class="dato">Avance<b>'+pct+' %</b></span>'+
     '</div>'+
     '<div class="apbar"><i style="width:'+pct+'%"></i></div>'+
     replicaAlumno(e)+
@@ -2845,7 +3079,9 @@ function pantalla(e, alumno, cont){
        '<td class="n">'+(lleno?'Completa':(r.n?p+' %':'Sin empezar'))+'</td>'+
        '</tr>';
   });
+  var fa=((e.G||{}).fallos||[]).slice().reverse();
   h+='</tbody></table>'+
+     '<div class="dbox" style="margin-top:12px"><h4>&#128221; Evidencia de fallos &middot; '+fa.length+'</h4>'+tablaFallos(fa, false)+'</div>'+
      '<div class="apacc"><button type="button" class="o-btn o-btn-secondary" id="apSaca">'+
      '&#10005; Sacar de la sala a '+esc(alumno||'')+'</button></div>'+
      '</div>';
@@ -2855,10 +3091,1725 @@ function pantalla(e, alumno, cont){
     if(window.Aula && Aula.saca) Aula.saca(alumno);
   });
 }
+/* ================= sesión demo: Conectemos con pizarra de stickers ================= */
+var CON=CLAVES.filter(function(k){ return ACT[k].tipo==='con'; });
+/* todo lo que va a la pizarra compartida: Conectemos y el tablero colaborativo */
+var PIZK=CLAVES.filter(function(k){ return ACT[k].tipo==='con' || ACT[k].tipo==='tab'; });
+var TED={};   /* el post-it que el alumno está editando en cada tablero */
+var PIZ={};            /* lo que hay en la pizarra: { anon:0|1, c1:[{n,t,v,h}], ... } */
+var pizSello='';
+var ELV={};            /* lado u opción marcada antes de enviar (debate y opinión) */
+function conHecha(A, g){
+  g=g||{};
+  if(A.tipo==='tab') return !!(g.notas && g.notas.length);
+  if(A.modo==='abierta') return !!g.t;
+  if(A.modo==='debate')  return g.v!==undefined && !!g.t;
+  return g.v!==undefined;
+}
+function hechasEn(GG, k){
+  var A=ACT[k], g=(GG||{})[k]||{};
+  if(A.tipo==='con' || A.tipo==='tab') return conHecha(A, g) ? 1 : 0;
+  return Math.min(Object.keys(g).length, cuantas(k));
+}
+function miNombre(){ return (window.Aula && Aula.yo) || 'Tú'; }
+function color(n){ var s=0, t=String(n||''); for(var j=0;j<t.length;j++) s=(s*31+t.charCodeAt(j))%9973; return s%5; }
+function ocultosKey(){ return LS+'_oc_'+((window.Aula && Aula.sala)||'x'); }
+function leeOcultos(){ try{ return JSON.parse(localStorage.getItem(ocultosKey())||'{}')||{}; }catch(e){ return {}; } }
+function anonKey(){ return LS+'_anon'; }
+function leeAnon(){ try{ return localStorage.getItem(anonKey())==='1'; }catch(e){ return false; } }
+
+/* el docente arma la pizarra con lo que publica cada alumno */
+function calculaPiz(){
+  var p={ anon: leeAnon() ? 1 : 0 }, oc=leeOcultos();
+  PIZK.forEach(function(k){ p[k]=[]; });
+  function notas(k, n, g, doc){
+    (g.notas||[]).slice(0,12).forEach(function(x){
+      var t=String(x.t||'').slice(0,140);
+      if(!t || oc[k+'|'+n+'|'+t]) return;
+      p[k].push({ n:n, t:t, c:+x.c||0, id:x.id, h:+x.h||0, doc:doc?1:undefined });
+    });
+  }
+  ((window.Aula && Aula.filas) || []).forEach(function(f){
+    var GG=(f.estado||{}).G||{};
+    PIZK.forEach(function(k){
+      var g=GG[k];
+      if(ACT[k].tipo==='tab'){ if(g) notas(k, f.alumno, g); return; }
+      if(!g || (g.t===undefined && g.v===undefined)) return;
+      var t=String(g.t||'').slice(0,140);
+      if(oc[k+'|'+f.alumno+'|'+t]) return;
+      p[k].push({ n:f.alumno, t:t, v:(typeof g.v==='number' ? g.v : undefined), h:+g.h||0 });
+    });
+  });
+  /* lo que responde el propio docente también va a la pizarra */
+  if(soyDocente()) PIZK.forEach(function(k){
+    var g=G[k];
+    if(ACT[k].tipo==='tab'){ if(g) notas(k, (window.Aula && Aula.yo) || 'Docente', g, 1); return; }
+    if(!g || (g.t===undefined && g.v===undefined)) return;
+    var t=String(g.t||'').slice(0,140), n=(window.Aula && Aula.yo) || 'Docente';
+    if(oc[k+'|'+n+'|'+t]) return;
+    p[k].push({ n:n, t:t, v:(typeof g.v==='number' ? g.v : undefined), h:+g.h||0, doc:1 });
+  });
+  PIZK.forEach(function(k){ p[k].sort(function(a,b){ return a.h-b.h; }); });
+  return p;
+}
+/* lo de la pizarra más mi propia respuesta, por si todavía no llegó de vuelta */
+function itemsDe(k){
+  var arr=(PIZ[k]||[]).slice(), g=G[k]||{};
+  if(ACT[k].tipo==='tab'){
+    if(replica || soyDocente()) return arr;
+    var yo0=miNombre();
+    return arr.filter(function(x){ return x.n!==yo0; })
+      .concat((g.notas||[]).map(function(x){ return { n:yo0, t:x.t, c:x.c, id:x.id, h:x.h, mia:1 }; }))
+      .sort(function(a,b){ return a.h-b.h; });
+  }
+  if(!replica && !soyDocente() && (g.t || g.v!==undefined)){
+    var yo=miNombre(), puesto=false;
+    arr=arr.map(function(x){ if(x.n===yo){ puesto=true; return { n:yo, t:g.t||'', v:g.v, h:g.h, mia:1 }; } return x; });
+    if(!puesto) arr.push({ n:yo, t:g.t||'', v:g.v, h:g.h||Date.now(), mia:1 });
+  }
+  return arr;
+}
+function notaHtml(k, x, extra){
+  var anon=!!PIZ.anon, doc=soyDocente();
+  var quien = x.mia ? 'Tú' : (x.doc ? '👩‍🏫 '+x.n : (anon ? '' : x.n));
+  var col = x.c!==undefined && ACT[k].tipo==='tab' ? x.c : (extra===undefined ? color(x.n) : extra);
+  return '<div class="nota k'+col+(x.mia?' mia':'')+(x.doc?' doc':'')+'">'+
+         (doc ? '<button type="button" class="x" title="Quitar de la pizarra" data-oc="'+esc(k+'|'+x.n+'|'+(x.t||''))+'">&#10005;</button>' : '')+
+         (x.mia && ACT[k].tipo==='tab' ? '<span class="nb"><button type="button" data-ted="'+esc(x.id)+'" data-k="'+k+'" title="Editar">&#9999;&#65039;</button>'+
+            '<button type="button" data-tdel="'+esc(x.id)+'" data-k="'+k+'" title="Borrar">&#128465;</button></span>' : '')+
+         esc(x.t||'')+(quien ? '<small>'+esc(quien)+'</small>' : '')+'</div>';
+}
+function barrasHtml(ops, items, mia){
+  var cnt=ops.map(function(){ return 0; }), tot=0;
+  items.forEach(function(x){ if(typeof x.v==='number' && x.v>=0 && x.v<ops.length){ cnt[x.v]++; tot++; } });
+  var mx=Math.max.apply(null, cnt);
+  return '<div class="barras">'+ops.map(function(o,j){
+    var p= tot ? Math.round(cnt[j]/tot*100) : 0;
+    return '<div class="barra'+(mx && cnt[j]===mx?' top':'')+(mia===j?' mia':'')+'"><span>'+esc(o)+(mia===j?' &#10003;':'')+'</span>'+
+           '<span class="riel2"><i style="width:'+p+'%"></i></span><b>'+cnt[j]+' &middot; '+p+'%</b></div>';
+  }).join('')+'</div>';
+}
+function pizHtml(k){
+  var A=ACT[k], items=itemsDe(k), g=G[k]||{}, h='', doc=soyDocente();
+  var barras=(A.modo==='poll' || A.modo==='opinion');
+  h+='<div class="piz-h"><b>'+(barras?'&#128202; Resultados de la clase':'&#128204; Pizarra de la clase')+'</b><span class="n">'+items.length+
+     (barras ? (items.length===1?' voto':' votos') : (items.length===1?' respuesta':' respuestas'))+'</span>'+
+     (doc && !barras ? '<button type="button" data-anon="1">'+(PIZ.anon?'&#128100; Nombres: no':'&#128100; Nombres: s&iacute;')+'</button>' : '')+'</div>';
+  h+='<div class="piz-c">';
+  if(!items.length && !barras){
+    h+='<div class="piz-vacio">'+(enSala() ? 'Todav&iacute;a no hay respuestas. &iexcl;S&eacute; el primero!'
+                                         : 'La pizarra se llena cuando entras a la sala con el c&oacute;digo de tu docente.')+'</div>';
+  }else if(A.tipo==='tab'){
+    h+='<div class="notas tab">'+items.map(function(x){ return notaHtml(k, x); }).join('')+'</div>';
+  }else if(A.modo==='debate'){
+    h+='<div class="deb">'+A.ops.map(function(o,j){
+      var de=items.filter(function(x){ return x.v===j; });
+      return '<div class="'+(j?'b':'a')+'"><h5>'+esc(o)+' &middot; '+de.length+'</h5><div class="notas">'+
+             de.map(function(x){ return notaHtml(k, x, j?1:2); }).join('')+'</div></div>';
+    }).join('')+'</div>';
+  }else if(A.modo==='poll' || A.modo==='opinion'){
+    /* encuesta y opinión: solo el gráfico de barras, sin textos */
+    h+=barrasHtml(A.ops, items, doc?undefined:g.v);
+  }else{
+    h+='<div class="notas">'+items.map(function(x){ return notaHtml(k, x); }).join('')+'</div>';
+  }
+  h+='</div>';
+  if(!enSala() && !doc) h+='<p class="piz-pie">Est&aacute;s practicando: solo t&uacute; ves tu sticker.</p>';
+  return h;
+}
+function vCon(k){
+  var A=ACT[k], g=G[k]||{}, h=cabTarea(k);
+  var marcado = ELV[k]!==undefined ? ELV[k] : g.v;
+  var PJ={ abierta:'tutor-explica', debate:'alumno-senala', poll:'profe-idea', opinion:'profe-presenta' };
+  h+='<div class="cgrid"><div class="cform"><div class="cqf"><img class="cpj" src="personajes/'+PJ[A.modo]+'.webp" alt="" aria-hidden="true"><p class="cq">'+esc(A.q)+'</p></div>';
+  if(A.ops){
+    h+='<div class="cops '+(A.modo==='opinion'?'esc5':(A.modo==='poll'?'g2':''))+'">'+A.ops.map(function(o,j){
+      return '<button type="button" data-cv="'+k+'" data-j="'+j+'" class="'+(marcado===j?'on':'')+'">'+
+             (A.modo==='opinion' ? '<span class="emo">'+esc(o.split(' ')[0])+'</span>'+esc(o.split(' ').slice(1).join(' ')) : esc(o))+'</button>';
+    }).join('')+'</div>';
+  }
+  if(A.modo==='abierta' || A.modo==='debate'){
+    h+='<textarea data-ct="'+k+'" maxlength="140" placeholder="'+esc(A.ph||'Escribe aquí')+'">'+esc(g.t||'')+'</textarea>'+
+       '<div class="cenv"><button type="button" class="o-btn o-btn-primary" data-cs="'+k+'">'+
+       (conHecha(A,g) ? '&#8635; Cambiar mi sticker' : '&#128204; Pegar en la pizarra')+'</button><small data-cc="'+k+'">'+
+       String(g.t||'').length+' / 140</small></div>';
+  }
+  if(conHecha(A,g)) h+='<p class="cyo">&#10003; Tu respuesta ya est&aacute; en la pizarra. Puedes cambiarla cuando quieras.</p>';
+  h+='</div><div class="piz" id="piz_'+k+'">'+pizHtml(k)+'</div></div>';
+  return h+'</div></div>';
+}
+/* ---- tablero colaborativo: cada alumno pega, edita y borra sus post-its ---- */
+var TCOL={};
+var COLNOTA=['#FFF3A3','#FFD6E5','#CFF4FF','#D7F7E8','#EBDDFF'];
+function vTab(k){
+  var A=ACT[k], g=G[k]||{}, mis=(g.notas||[]).length, c=TCOL[k]||0;
+  var h=cabTarea(k);
+  h+='<div class="tgrid"><div class="cform"><p class="cq">'+esc(A.q)+'</p>'+
+     '<textarea data-tt="'+k+'" maxlength="140" placeholder="'+esc(A.ph||'Escribe tu post-it')+'"></textarea>'+
+     '<div class="tcol" data-k="'+k+'">'+COLNOTA.map(function(x,i){
+       return '<button type="button" data-c="'+i+'" class="'+(i===c?'on':'')+'" style="background:'+x+'" aria-label="Color '+(i+1)+'"></button>'; }).join('')+'</div>'+
+     '<div class="cenv"><button type="button" class="o-btn o-btn-primary" data-ts="'+k+'">'+(TED[k]?'&#128190; Guardar cambio':'&#10133; Pegar post-it')+'</button>'+
+     '<small>'+mis+(mis===1?' post-it tuyo':' post-its tuyos')+'</small></div></div>'+
+     '<div class="piz" id="piz_'+k+'">'+pizHtml(k)+'</div></div>';
+  return h+'</div></div>';
+}
+function cableaTab(k, lam){
+  var ta=lam.querySelector('textarea[data-tt="'+k+'"]'), bt=lam.querySelector('button[data-ts="'+k+'"]');
+  if(TED[k] && ta){ ((G[k]||{}).notas||[]).forEach(function(x){ if(x.id===TED[k]) ta.value=x.t; }); }
+  qq('.tcol[data-k="'+k+'"] button', lam).forEach(function(b){
+    b.addEventListener('click', function(){ TCOL[k]=+b.dataset.c;
+      qq('.tcol[data-k="'+k+'"] button', lam).forEach(function(x){ x.classList.toggle('on', x===b); }); });
+  });
+  function guarda(){
+    var t=ta.value.trim().replace(/\s+/g,' ').slice(0,140);
+    if(!t){ mal(); sopla('Escribe algo en tu post-it'); ta.focus(); return; }
+    var g=G[k]||{}; g.notas=(g.notas||[]).slice();
+    if(TED[k]){
+      g.notas.forEach(function(x){ if(x.id===TED[k]){ x.t=t; x.c=TCOL[k]||0; } });
+      delete TED[k]; sopla('Post-it actualizado');
+    }else{
+      if(g.notas.length>=10){ mal(); sopla('Puedes tener hasta 10 post-its'); return; }
+      g.notas.push({ id:String(Date.now().toString(36))+Math.floor(Math.random()*1000), t:t, c:TCOL[k]||0, h:Date.now() });
+      sopla(enSala() ? '¡Tu post-it está en el tablero!' : 'Listo. Entra con el código para que lo vea la clase');
+    }
+    G[k]=g; graba(); bien(); pinta(true);
+    if(soyDocente()) refrescaPiz(true);
+  }
+  if(bt) bt.addEventListener('click', guarda);
+  if(ta) ta.addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); guarda(); } });
+}
+/* solo se repinta la pizarra: lo que el alumno está escribiendo no se pierde */
+function pintaPiz(){
+  PIZK.forEach(function(k){
+    var c=$('piz_'+k);
+    if(c){ c.innerHTML=pizHtml(k); cableaPiz(c); }
+  });
+}
+function cableaPiz(c){
+  qq('button[data-ted]', c).forEach(function(b){
+    b.addEventListener('click', function(){
+      var k=b.dataset.k, n=null; ((G[k]||{}).notas||[]).forEach(function(x){ if(x.id===b.dataset.ted) n=x; });
+      if(!n) return;
+      TED[k]=n.id;
+      var ta=$('lam').querySelector('textarea[data-tt="'+k+'"]'), bt=$('lam').querySelector('button[data-ts="'+k+'"]');
+      if(ta){ ta.value=n.t; ta.focus(); }
+      if(bt) bt.innerHTML='&#128190; Guardar cambio';
+      TCOL[k]=n.c||0; qq('#lam .tcol[data-k="'+k+'"] button').forEach(function(x){ x.classList.toggle('on', +x.dataset.c===TCOL[k]); });
+    });
+  });
+  qq('button[data-tdel]', c).forEach(function(b){
+    b.addEventListener('click', function(){
+      var k=b.dataset.k, g=G[k]||{};
+      g.notas=(g.notas||[]).filter(function(x){ return x.id!==b.dataset.tdel; });
+      G[k]=g; if(TED[k]===b.dataset.tdel) delete TED[k];
+      graba(); pinta(true); if(soyDocente()) refrescaPiz(true);
+      sopla('Post-it borrado');
+    });
+  });
+  qq('button[data-oc]', c).forEach(function(b){
+    b.addEventListener('click', function(){
+      if(!soyDocente()) return;
+      var oc=leeOcultos(); oc[b.dataset.oc]=1;
+      try{ localStorage.setItem(ocultosKey(), JSON.stringify(oc)); }catch(e){}
+      refrescaPiz(true);
+    });
+  });
+  qq('button[data-anon]', c).forEach(function(b){
+    b.addEventListener('click', function(){
+      if(!soyDocente()) return;
+      try{ localStorage.setItem(anonKey(), leeAnon() ? '0' : '1'); }catch(e){}
+      refrescaPiz(true);
+      sopla(leeAnon() ? 'La pizarra ya no muestra los nombres' : 'La pizarra muestra los nombres');
+    });
+  });
+}
+function cableaCon(k, lam){
+  var A=ACT[k];
+  qq('button[data-cv]', lam).forEach(function(b){
+    b.addEventListener('click', function(){
+      var j=+b.dataset.j;
+      if(A.modo==='poll' || A.modo==='opinion'){
+        G[k]={ v:j, h:Date.now() }; graba(); bien(); pinta(true);
+        if(soyDocente()) refrescaPiz(true);
+        sopla('¡Tu voto está en la pizarra!');
+        return;
+      }
+      ELV[k]=j;
+      qq('button[data-cv]', lam).forEach(function(x){ x.classList.toggle('on', +x.dataset.j===j); });
+      if(A.modo==='opinion' && !(G[k]||{}).t){
+        /* la opinión se puede enviar sin texto: con solo marcar ya cuenta */
+        var ta=lam.querySelector('textarea[data-ct]');
+        if(ta && !ta.value.trim()) envia();
+      }
+    });
+  });
+  var ta=lam.querySelector('textarea[data-ct]'), cc=lam.querySelector('[data-cc]');
+  if(ta){
+    ta.addEventListener('keydown', function(e){
+      e.stopPropagation();
+      if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); envia(); }
+    });
+    ta.addEventListener('input', function(){ if(cc) cc.textContent=ta.value.length+' / 140'; });
+  }
+  var bs=lam.querySelector('button[data-cs]');
+  if(bs) bs.addEventListener('click', envia);
+  function envia(){
+    var t=ta ? ta.value.trim().replace(/\s+/g,' ').slice(0,140) : '';
+    var v = ELV[k]!==undefined ? ELV[k] : (G[k]||{}).v;
+    if(A.modo==='abierta' && !t){ mal(); sopla('Escribe tu respuesta antes de pegarla'); if(ta) ta.focus(); return; }
+    if(A.modo==='debate' && v===undefined){ mal(); sopla('Primero elige: '+A.ops.join(' o ')); return; }
+    if(A.modo==='debate' && !t){ mal(); sopla('Escribe tu argumento en una línea'); if(ta) ta.focus(); return; }
+    if(A.modo==='opinion' && v===undefined){ mal(); sopla('Marca qué tan de acuerdo estás'); return; }
+    var o={ h:Date.now() }; if(t) o.t=t; if(v!==undefined) o.v=v;
+    G[k]=o; delete ELV[k];
+    graba(); bien(); pinta(true);
+    sopla(enSala() ? '¡Tu sticker está en la pizarra!' : 'Listo. Entra con el código para que lo vea la clase');
+    if(soyDocente()) refrescaPiz(true);
+  }
+}
+/* el docente revisa la sala cada 3 s: pizarra y tablero al día */
+var tDif=null;
+function refrescaPiz(forzar){
+  if(!soyDocente() || !enSala()) return;
+  var p=calculaPiz(), s=JSON.stringify(p);
+  if(!forzar && s===pizSello) return;
+  pizSello=s; PIZ=p; pintaPiz();
+  clearTimeout(tDif); tDif=setTimeout(difunde, 500);
+}
+setInterval(function(){
+  if(!soyDocente() || !enSala()) return;
+  refrescaPiz(false);
+  if(dashVivo()) pintaDash();
+}, 3000);
+
+/* ================= evidencia de fallos ================= */
+/* cada respuesta equivocada queda guardada: actividad, ítem, lo que respondió y cuándo */
+function falla(k, item, resp){
+  if(replica || !ACT[k]) return;
+  if(!G.fallos) G.fallos=[];
+  G.fallos.push({ k:k, i:String(item), r:String(resp==null?'':resp).slice(0,60), h:Date.now() });
+  if(G.fallos.length>120) G.fallos=G.fallos.slice(-120);
+  graba();
+}
+/* el fallo en palabras: qué se preguntó, qué respondió y cuál era la respuesta */
+function descFallo(f){
+  var A=ACT[f.k], d={ act:(A && (A.corto||f.k)) || f.k, q:'', dio:f.r, ok:'' };
+  if(!A) return d;
+  function ficha(id){ var t=id; (A.fichas||[]).forEach(function(x){ if(x.id===id) t=x.t; }); return t; }
+  if(A.tipo==='quiz' || A.tipo==='sel'){
+    var p=A.lista[+f.i]||{}; d.q=p.q||''; d.dio=(p.ops||[])[+f.r]; d.ok=(p.ops||[])[p.ok];
+  }else if(A.tipo==='arr' || A.tipo==='cuadro'){
+    var fi=null; A.fichas.forEach(function(x){ if(x.id===f.i) fi=x; });
+    function caja(id){ var t=id; A.cajas.forEach(function(c){ if(c.id===id) t=c.t; }); return t; }
+    d.q='¿Dónde va «'+(fi?fi.t:f.i)+'»?'; d.dio=caja(f.r); d.ok=fi?caja(fi.g):'';
+  }else if(A.tipo==='par'){
+    var n=parseInt(String(f.r).replace(/\D/g,''),10), hu=A.huecos[n]||{}, bu=null;
+    A.huecos.forEach(function(x){ if(x.id===f.i) bu=x; });
+    d.q='¿Con qué va «'+ficha(f.i)+'»?'; d.dio=hu.q||f.r; d.ok=bu?bu.q:'';
+  }else if(A.tipo==='cal'){
+    var c=A.lista[+f.i]||{}; d.q=c.q||''; d.ok=(c.e!==undefined ? FX.fmt(c.e) : '')+(c.u?' '+c.u:'');
+  }else if(A.tipo==='cruz'){
+    var w=null; A.palabras.forEach(function(x){ if(x.p===f.i) w=x; });
+    d.q='Crucigrama: '+(w?w.pista:''); d.ok=f.i;
+  }
+  return d;
+}
+function hora(h){ var t=new Date(h); if(isNaN(t)) return ''; function d2(n){ return (n<10?'0':'')+n; }
+  return d2(t.getHours())+':'+d2(t.getMinutes())+':'+d2(t.getSeconds()); }
+function tablaFallos(lista, conAlumno){
+  if(!lista.length) return '<p class="dvacio">Sin fallos registrados.</p>';
+  return '<div class="tf"><table><thead><tr><th>Hora</th>'+(conAlumno?'<th>Alumno</th>':'')+'<th>Actividad</th><th>Pregunta</th><th>Respondió</th><th>Correcta</th></tr></thead><tbody>'+
+    lista.map(function(f){ var d=descFallo(f);
+      return '<tr><td>'+hora(f.h)+'</td>'+(conAlumno?'<td>'+esc(f.al||'')+'</td>':'')+'<td>'+esc(d.act)+'</td><td>'+esc(d.q)+'</td>'+
+             '<td class="m">'+esc(d.dio==null?'':d.dio)+'</td><td class="b">'+esc(d.ok==null?'':d.ok)+'</td></tr>';
+    }).join('')+'</tbody></table></div>';
+}
+/* todos los fallos de la sala, del más reciente al más antiguo */
+function fallosSala(){
+  var t=[];
+  ((window.Aula && Aula.filas) || []).forEach(function(f){
+    (((f.estado||{}).G||{}).fallos||[]).forEach(function(x){ var o={}; for(var y in x) o[y]=x[y]; o.al=f.alumno; t.push(o); });
+  });
+  var ks=clavesVis();
+  return t.filter(function(x){ return ks.indexOf(x.k)>=0; }).sort(function(a,b){ return b.h-a.h; });
+}
+function csvFallos(){
+  function c(v){ v=(v===undefined||v===null)?'':String(v); return /[",;\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  var filas=[['Fecha y hora','Alumno','Actividad','Pregunta','Respondió','Respuesta correcta']];
+  fallosSala().slice().reverse().forEach(function(f){
+    var d=descFallo(f), t=new Date(f.h);
+    filas.push([t.toLocaleDateString('es-PE')+' '+hora(f.h), f.al, ACT[f.k].titulo, d.q, d.dio, d.ok]);
+  });
+  var txt='\ufeff'+filas.map(function(r){ return r.map(c).join(','); }).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt], { type:'text/csv;charset=utf-8' }));
+  a.download='evidencia-fallos-'+((window.Aula && Aula.sala)||'sala')+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+/* ================= el avance, contado solo con las actividades elegidas ================= */
+function cuenta(GG){
+  var ok=0, tot=0, rejB=[], rejP=[];
+  clavesVis().forEach(function(k,n){
+    var h=hechasEn(GG,k), t=cuantas(k);
+    ok+=Math.min(1, h/t); tot+=1;   /* cada actividad vale 1 punto */
+    rejB.push({ b:CLAVES.indexOf(k), n:h, t:t });
+    rejP.push({ b:n, n:h, t:t });
+  });
+  return { ok:Math.round(ok*10)/10, total:tot, rejB:rejB, rejP:rejP };
+}
+/* para el reporte del aula: cada alumno se mide sobre lo que el docente eligió */
+/* cada pregunta de la sesión, con su actividad y si ya la respondió: el reporte cuenta por pregunta */
+function preguntasDe(GG){
+  var out=[], Gx=GG||{};
+  function add(e, q, ok){ out.push({ e:e, q:corta(String(q||'').replace(/<[^>]+>/g,''), 90), ok:ok?1:0 }); }
+  clavesVis().forEach(function(k){
+    var A=ACT[k], g=Gx[k]||{}, e=etiActividad(CLAVES.indexOf(k));
+    if(!A) return;
+    if(A.tipo==='quiz'){ A.lista.forEach(function(p,j){ add(e, p.q, g[j]!==undefined); }); }
+    else if(A.tipo==='par'){ A.huecos.forEach(function(x){ add(e, x.q, g[x.id]!==undefined); }); }
+    else if(A.tipo==='cruz'){ A.palabras.forEach(function(w){ add(e, w.pista, g[w.p]!==undefined); }); }
+    else if(A.tipo==='tab' || A.tipo==='con'){ add(e, A.q, hechasEn(Gx, k)>0); }
+  });
+  return out;
+}
+function ajustaReporte(e){
+  var c=cuenta((e||{}).G||{}), o={}, x;
+  for(x in e) o[x]=e[x];
+  o.ok=c.ok; o.total=c.total; o.rejilla=c.rejP;
+  o.preg=preguntasDe((e||{}).G||{});   /* el reporte cuenta por pregunta, no por actividad */
+  return o;
+}
+/* para las ventanitas del muro: igual, pero con el índice de cada actividad */
+function ajustaVista(e){
+  var c=cuenta((e||{}).G||{}), o={}, x;
+  for(x in e) o[x]=e[x];
+  o.ok=c.ok; o.total=c.total; o.rejilla=c.rejB;
+  return o;
+}
+function actividadesReporte(){
+  return clavesVis().map(function(k){ return { et:ACT[k].corto||k, t:ACT[k].titulo, max:1 }; });
+}
+
+/* ================= diálogos ================= */
+function dialogo(html, ancha){
+  cierraDialogo();
+  var v=document.createElement('div');
+  v.className='dm-velo'; v.id='dmVelo';
+  v.innerHTML='<div class="dm-caja'+(ancha?' ancha':'')+'" role="dialog" aria-modal="true">'+html+'</div>';
+  document.body.appendChild(v);
+  v.addEventListener('click', function(e){ if(e.target===v) cierraDialogo(); });
+  qq('[data-cierra]', v).forEach(function(b){ b.addEventListener('click', cierraDialogo); });
+  return v;
+}
+function cierraDialogo(){ var v=$('dmVelo'); if(v) v.remove(); dashAbierto=false; }
+document.addEventListener('keydown', function(e){ if(e.key==='Escape' && $('dmVelo')) cierraDialogo(); }, true);
+
+/* ---- enlace vigente y código QR ---- */
+function enlaceSala(){
+  var c=window.Aula && Aula.sala, u=location.href.split('#')[0].split('?')[0], q=[];
+  if(/[?&]piloto=1(&|$)/.test(location.search)) q.push('piloto=1');
+  if(c) q.push('sala='+encodeURIComponent(c));
+  return u+(q.length ? '?'+q.join('&') : '');
+}
+var qrCarga=null;
+function cargaQR(){
+  if(window.QRCode) return Promise.resolve(window.QRCode);
+  if(qrCarga) return qrCarga;
+  qrCarga=new Promise(function(ok, no){
+    var sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'; sc.async=true;
+    sc.onload=function(){ window.QRCode ? ok(window.QRCode) : no('qr'); };
+    sc.onerror=function(){ qrCarga=null; no('qr'); };
+    document.head.appendChild(sc);
+  });
+  return qrCarga;
+}
+function copia(txt, aviso){
+  function viejo(){
+    var t=document.createElement('textarea'); t.value=txt; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); sopla(aviso); }catch(e){ sopla('Selecciona el texto y cópialo'); }
+    t.remove();
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText)
+    navigator.clipboard.writeText(txt).then(function(){ sopla(aviso); }, viejo);
+  else viejo();
+}
+function abreEnlace(){
+  var c=window.Aula && Aula.sala, url=enlaceSala();
+  var v=dialogo('<div class="dm-h"><b>Entra a la sala</b><button type="button" class="x" data-cierra>Cerrar &#10005;</button></div>'+
+    (c ? '<div class="dm-cod">C&oacute;digo de la sala<b>'+esc(c)+'</b></div>'
+       : '<p class="dm-p">Todav&iacute;a no hay sala abierta: el docente entra primero y crea el c&oacute;digo.</p>')+
+    '<div class="dm-qr" id="dmQr"><span class="dvacio">Generando el c&oacute;digo QR&hellip;</span></div>'+
+    '<p class="dm-p" style="text-align:center">Escanea con la c&aacute;mara del celular o abre este enlace:</p>'+
+    '<div class="dm-link"><input id="dmUrl" readonly value="'+esc(url)+'" aria-label="Enlace de la sala">'+
+      '<button type="button" class="o-btn o-btn-primary" id="dmCopia">&#128203; Copiar enlace</button></div>'+
+    '<div class="dm-b">'+(c ? '<button type="button" class="o-btn" id="dmCopiaCod">Copiar solo el c&oacute;digo</button>' : '')+
+      (navigator.share ? '<button type="button" class="o-btn" id="dmComparte">Compartir&hellip;</button>' : '')+'</div>');
+  $('dmCopia').addEventListener('click', function(){ copia(url, 'Enlace copiado'); });
+  $('dmUrl').addEventListener('focus', function(){ this.select(); });
+  if($('dmCopiaCod')) $('dmCopiaCod').addEventListener('click', function(){ copia(String(c), 'Código '+c+' copiado'); });
+  if($('dmComparte')) $('dmComparte').addEventListener('click', function(){
+    navigator.share({ title:document.title, text:'Entra a la sala '+(c||'')+' de Contabilidad', url:url }).catch(function(){});
+  });
+  cargaQR().then(function(Q){
+    var box=$('dmQr'); if(!box || !v.parentNode) return;
+    box.innerHTML='';
+    new Q(box, { text:url, width:460, height:460, colorDark:'#071767', colorLight:'#ffffff', correctLevel:Q.CorrectLevel.M });
+  }).catch(function(){
+    var box=$('dmQr'); if(box) box.innerHTML='<span class="dvacio">No se pudo cargar el QR. Comparte el enlace.</span>';
+  });
+}
+
+/* ---- cambiar mi nombre ---- */
+function abreNombre(){
+  if(!window.Aula || !(Aula.enSala)){ sopla('Primero entra a la sala'); return; }
+  var actual=Aula.yo||'';
+  dialogo('<div class="dm-h"><b>Cambiar mi nombre</b><button type="button" class="x" data-cierra>&#10005;</button></div>'+
+    '<p class="dm-p">As&iacute; te ver&aacute; el docente en la sala, en la pizarra y en el reporte.</p>'+
+    '<input class="dm-in" id="dmNom" maxlength="60" autocomplete="off" placeholder="Nombre y apellido" value="'+esc(/^Participante \d+$/.test(actual)?'':actual)+'">'+
+    '<p class="dm-err" id="dmErr"></p>'+
+    '<div class="dm-b"><button type="button" class="o-btn" data-cierra>Cancelar</button>'+
+    '<button type="button" class="o-btn o-btn-primary" id="dmGuarda">Guardar</button></div>');
+  var inp=$('dmNom');
+  setTimeout(function(){ inp.focus(); }, 30);
+  function guarda(){
+    var n=inp.value.trim().replace(/\s+/g,' ');
+    if(n.length<2){ $('dmErr').textContent='Escribe al menos dos letras.'; inp.focus(); return; }
+    var otros=(Aula.participantes||[]).filter(function(x){ return x!==actual; });
+    if(otros.indexOf(n)>=0){ $('dmErr').textContent='Ya hay alguien con ese nombre en la sala. Agrega tu apellido.'; return; }
+    Aula.renombra(n).then(function(){
+      cierraDialogo(); sopla('Ahora te llamas '+n); pinta(true); pintaExtras();
+    }, function(){ $('dmErr').textContent='No se pudo cambiar el nombre. Vuelve a intentarlo.'; });
+  }
+  inp.addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key==='Enter') guarda(); });
+  $('dmGuarda').addEventListener('click', guarda);
+}
+
+/* ---- el docente elige las actividades de hoy ---- */
+function diapoDeClave(k){ for(var j=0;j<D.length;j++) if(clavesDe(D[j]).indexOf(k)>=0) return j; return -1; }
+function abreElige(){
+  if(!soyDocente()) return;
+  var on=clavesVis();
+  function it(k){
+    var A=ACT[k];
+    return '<label class="dm-it"><input type="checkbox" data-k="'+k+'"'+(on.indexOf(k)>=0?' checked':'')+'>'+
+           '<span>'+esc(A.titulo)+'</span></label>';
+  }
+  var v=dialogo('<div class="dm-h"><b>Actividades de hoy</b><span id="dmCuenta" class="dvacio"></span>'+
+      '<button type="button" class="x" data-cierra>&#10005;</button></div>'+
+    '<p class="dm-p">Marca las que usar&aacute;s. Los alumnos solo ver&aacute;n esas, y el avance y el reporte se calculan <b>en proporci&oacute;n a las elegidas</b>.</p>'+
+    (CON.length ? '<div class="dm-grupo">Conectemos (antes de empezar)</div>'+CON.map(it).join('') : '')+
+    '<div class="dm-grupo">Actividades</div>'+CLAVES.filter(function(k){ return ACT[k].tipo!=='con'; }).map(it).join('')+
+    '<div class="dm-b"><button type="button" class="o-btn" id="dmTodas">Marcar todas</button>'+
+      '<button type="button" class="o-btn" data-cierra>Cancelar</button>'+
+      '<button type="button" class="o-btn o-btn-primary" id="dmAplica">Aplicar</button></div>');
+  function marcadas(){ return qq('input[data-k]', v).filter(function(c){ return c.checked; }).map(function(c){ return c.dataset.k; }); }
+  function cuentaSel(){
+    $('dmCuenta').textContent=marcadas().length+' de '+CLAVES.length;
+  }
+  v.addEventListener('change', cuentaSel); cuentaSel();
+  $('dmTodas').addEventListener('click', function(){ qq('input[data-k]', v).forEach(function(c){ c.checked=true; }); cuentaSel(); });
+  $('dmAplica').addEventListener('click', function(){
+    var m=marcadas();
+    if(!m.length){ $('dmCuenta').textContent='Marca al menos una'; return; }
+    /* la portada y el cierre van siempre; de lo demás, solo las diapositivas de lo elegido */
+    var idx=[];
+    D.forEach(function(s,n){
+      var ks=clavesDe(s);
+      if(!ks.length || ks.some(function(k){ return m.indexOf(k)>=0; })) idx.push(n);
+    });
+    cierraDialogo();
+    aplicaSel(idx);
+    sopla(m.length===CLAVES.length ? 'Se usan todas las actividades' : 'Hoy se usan '+m.length+' de '+CLAVES.length+' actividades');
+  });
+}
+
+/* ================= participación en el chat de BigBlueButton ================= */
+/* El docente copia el chat en BigBlueButton (menú ⋮ del chat → Copiar) y lo pega aquí.
+   Todo queda en su navegador: nada se envía a la base ni a otro servidor. */
+var CH=null;   /* { mensajes:[{autor,hora,texto}], manual:{clave:true|false}, fuera:{persona:1}, exclusion:[...], minimo:1, anon:0 } */
+function chKey(){ return LS+'_bbb_'+((window.Aula && Aula.sala)||'x'); }
+function chLee(){
+  if(CH && CH._k===chKey()) return CH;
+  var d=null; try{ d=JSON.parse(localStorage.getItem(chKey())||'null'); }catch(e){}
+  CH=d && typeof d==='object' ? d : {};
+  CH.mensajes=CH.mensajes||[]; CH.manual=CH.manual||{}; CH.fuera=CH.fuera||{};
+  CH.exclusion=CH.exclusion||BBBChat.EXCLUSION.slice(); CH.minimo=CH.minimo||1;
+  CH._k=chKey();
+  return CH;
+}
+function chGraba(){ try{ var o={}; for(var k in CH) if(k!=='_k') o[k]=CH[k]; localStorage.setItem(chKey(), JSON.stringify(o)); }catch(e){} }
+/* los mensajes con su marca (automática o la que puso el docente) */
+function chMensajes(){
+  var c=chLee();
+  return BBBChat.analiza(c.mensajes, { exclusion:c.exclusion, minimo:c.minimo }).map(function(m){
+    if(c.manual[m.clave]!==undefined){ m.auto=m.valido; m.valido=!!c.manual[m.clave]; m.motivo='Marcado a mano'; }
+    return m;
+  });
+}
+/* resumen por persona, de mayor a menor participación */
+function chResumen(){
+  var c=chLee(), por={};
+  chMensajes().forEach(function(m){
+    var p=por[m.persona];
+    if(!p) p=por[m.persona]={ persona:m.persona, nombre:m.autor, validas:0, total:0, primero:m.hora, ultimo:m.hora, msgs:[] };
+    p.total++; if(m.valido) p.validas++; p.ultimo=m.hora; p.msgs.push(m);
+  });
+  /* el docente de la sala no cuenta como alumno, salvo que lo vuelvan a incluir */
+  var doc=BBBChat.clavePersona((window.Aula && Aula.yo) || '');
+  return Object.keys(por).map(function(k){ var p=por[k]; p.fuera = c.fuera[k]!==undefined ? !!c.fuera[k] : (k===doc); return p; })
+    .sort(function(a,b){ return (a.fuera-b.fuera) || (b.validas-a.validas) || a.nombre.localeCompare(b.nombre); });
+}
+var chOrden={ col:'validas', asc:false }, chAbierto={};
+function chNombre(p, i){ return chLee().anon ? 'Estudiante '+(i+1) : p.nombre; }
+function pintaChat(){
+  var box=$('dmChat'); if(!box) return;
+  var c=chLee(), res=chResumen(), al=res.filter(function(p){ return !p.fuera; });
+  var mx=Math.max(1, Math.max.apply(null, al.map(function(p){ return p.validas; }).concat([0])));
+  var tot=al.reduce(function(s,p){ return s+p.validas; },0);
+  al.sort(function(a,b){
+    var x=a[chOrden.col], y=b[chOrden.col], r = typeof x==='string' ? x.localeCompare(y) : x-y;
+    return chOrden.asc ? r : -r;
+  });
+  function th(col, t){ return '<th data-ord="'+col+'">'+t+(chOrden.col===col ? (chOrden.asc?' &#9650;':' &#9660;') : '')+'</th>'; }
+  var h='<div class="kpis">'+
+    '<div class="kpi"><span>Mensajes le&iacute;dos</span><b>'+c.mensajes.length+'</b></div>'+
+    '<div class="kpi"><span>Intervenciones v&aacute;lidas</span><b>'+tot+'</b><small>sin saludos ni cortes&iacute;a</small></div>'+
+    '<div class="kpi"><span>Participaron</span><b>'+al.filter(function(p){ return p.validas>0; }).length+'</b><small>de '+al.length+' en el chat</small></div>'+
+    '</div>';
+  if(!c.mensajes.length) h+='<p class="dvacio">Todav&iacute;a no hay chat. Pega arriba lo que copiaste de BigBlueButton.</p>';
+  else{
+    h+='<div class="tf ch"><table><thead><tr><th>N.&ordm;</th>'+th('nombre','Estudiante')+th('validas','Intervenciones v&aacute;lidas')+
+       th('total','Mensajes')+th('primero','Primer mensaje')+th('ultimo','&Uacute;ltimo mensaje')+'<th></th></tr></thead><tbody>';
+    al.forEach(function(p,i){
+      h+='<tr class="chf" data-p="'+esc(p.persona)+'"><td>'+(i+1)+'</td><td><b>'+esc(chNombre(p,i))+'</b> <small class="dvacio">'+(chAbierto[p.persona]?'&#9650;':'&#9660;')+' ver mensajes</small></td>'+
+         '<td><span class="chbar"><i style="width:'+Math.round(p.validas/mx*100)+'%"></i></span><b>'+p.validas+'</b></td>'+
+         '<td>'+p.total+'</td><td>'+esc(p.primero)+'</td><td>'+esc(p.ultimo)+'</td>'+
+         '<td><button type="button" data-fuera="'+esc(p.persona)+'" title="No contar a esta persona (docente o invitado)">&#128683;</button></td></tr>';
+      if(chAbierto[p.persona]){
+        h+='<tr class="chm"><td></td><td colspan="6">'+p.msgs.map(function(m){
+          return '<div class="chmsg '+(m.valido?'si':'no')+'"><button type="button" data-tg="'+esc(m.clave)+'" title="Cambiar">'+
+                 (m.valido?'&#10003; V&aacute;lida':'&#10007; No cuenta')+'</button><time>'+esc(m.hora)+'</time><span>'+esc(m.texto)+'</span>'+
+                 '<small>'+esc(m.motivo)+'</small>'+
+                 '<button type="button" class="ex" data-ex="'+esc(m.texto)+'" title="Agregar este texto a la lista de exclusi&oacute;n">+ excluir</button></div>';
+        }).join('')+'</td></tr>';
+      }
+    });
+    h+='</tbody></table></div>';
+    var fuera=res.filter(function(p){ return p.fuera; });
+    if(fuera.length) h+='<p class="dvacio" style="margin-top:8px">No cuentan: '+fuera.map(function(p){
+      return '<button type="button" class="chvuelve" data-fuera="'+esc(p.persona)+'">'+esc(p.nombre)+' &#8634;</button>'; }).join(' ')+'</p>';
+  }
+  box.innerHTML=h;
+  qq('th[data-ord]', box).forEach(function(t){ t.addEventListener('click', function(){
+    var col=t.dataset.ord; chOrden = chOrden.col===col ? { col:col, asc:!chOrden.asc } : { col:col, asc:col==='nombre' || col==='primero' }; pintaChat(); }); });
+  qq('tr.chf', box).forEach(function(tr){ tr.addEventListener('click', function(e){
+    if(e.target.closest('button')) return;
+    chAbierto[tr.dataset.p]=!chAbierto[tr.dataset.p]; pintaChat(); }); });
+  qq('button[data-fuera]', box).forEach(function(b){ b.addEventListener('click', function(){
+    var k=b.dataset.fuera, ahora=false; chResumen().forEach(function(p){ if(p.persona===k) ahora=p.fuera; });
+    c.fuera[k]=ahora?0:1; chGraba(); pintaChat(); }); });
+  qq('button[data-tg]', box).forEach(function(b){ b.addEventListener('click', function(){
+    var m=null; chMensajes().forEach(function(x){ if(x.clave===b.dataset.tg) m=x; });
+    if(!m) return;
+    var nuevo=!m.valido, auto=(m.auto!==undefined ? m.auto : m.valido);
+    if(nuevo===auto) delete c.manual[m.clave]; else c.manual[m.clave]=nuevo;
+    chGraba(); pintaChat(); }); });
+  qq('button[data-ex]', box).forEach(function(b){ b.addEventListener('click', function(){
+    var f=BBBChat.normaliza(b.dataset.ex);
+    if(!f){ sopla('Ese mensaje no tiene texto que excluir'); return; }
+    if(c.exclusion.indexOf(f)<0) c.exclusion.push(f);
+    chGraba(); if($('chExcl')) $('chExcl').value=c.exclusion.join('\n'); pintaChat();
+    sopla('«'+f+'» ya no cuenta como intervención'); }); });
+}
+function abreChat(){
+  if(!soyDocente()) return;
+  var c=chLee();
+  dialogo('<div class="dm-h"><b>&#127909; BigBlueButton: asistencia y participaci&oacute;n</b>'+
+      '<button type="button" class="x" data-cierra>Cerrar &#10005;</button></div>'+
+    '<div class="dm-b" style="justify-content:flex-start;margin-top:0"><button type="button" class="o-btn o-btn-primary" id="asXls">&#11015; Excel de asistencia e intervenciones</button>'+
+      '<button type="button" class="o-btn" id="chAnon">'+(c.anon?'&#128100; Mostrar nombres':'&#128100; Ocultar nombres')+'</button>'+
+      '<button type="button" class="o-btn" id="chBorra">&#128465; Borrar datos de esta sesi&oacute;n</button></div>'+
+    '<h4 class="bbbh">1. Asistencia y permanencia</h4>'+
+    '<p class="dm-p">En BigBlueButton abre el <b>Panel de an&aacute;lisis del aprendizaje</b>, pulsa <b>Ctrl + P</b> y elige <b>Guardar como PDF</b>. Adjunta ese PDF aqu&iacute;.</p>'+
+    '<div class="dm-b" style="justify-content:flex-start;margin-top:0"><label class="o-btn" style="cursor:pointer">&#128206; Adjuntar PDF del panel<input type="file" id="asPdf" accept=".pdf,application/pdf" hidden></label>'+
+      '<span class="dvacio">Asisti&oacute; con <input type="number" id="asUmb" min="10" max="100" value="'+(c.umbral||70)+'" style="width:58px"> % de permanencia &middot; tarde despu&eacute;s de <input type="number" id="asTol" min="0" max="120" value="'+(c.tolera||15)+'" style="width:52px"> min</span></div>'+
+    '<div id="dmAsis"></div>'+
+    '<h4 class="bbbh">2. Participaci&oacute;n en el chat</h4>'+
+    '<p class="dm-p">En BigBlueButton abre el men&uacute; del chat (&#8942;), pulsa <b>Copiar</b> y pega aqu&iacute;. Puedes pegar varias veces: no se duplica nada. Todo se guarda solo en este navegador.</p>'+
+    '<textarea class="dm-in" id="chTxt" rows="4" placeholder="Pega aqu&iacute; el chat copiado de BigBlueButton"></textarea>'+
+    '<div class="dm-b" style="justify-content:flex-start"><button type="button" class="o-btn o-btn-primary" id="chPega">&#128203; Analizar el chat</button>'+
+      '<label class="o-btn" style="cursor:pointer">&#128194; Abrir archivo .txt<input type="file" id="chArch" accept=".txt,text/plain" hidden></label>'+
+      '<button type="button" class="o-btn" id="chCsv">&#11015; Exportar CSV</button></div>'+
+    '<div id="dmChat"></div>'+
+    '<details class="chaj"><summary>Ajustes: qu&eacute; no cuenta como intervenci&oacute;n</summary>'+
+      '<p class="dm-p">Una frase por l&iacute;nea. Se comparan sin tildes ni may&uacute;sculas. Un mensaje cuenta si, al quitar estas frases, le quedan al menos '+
+      '<input type="number" id="chMin" min="1" max="5" value="'+c.minimo+'" style="width:56px"> palabras con contenido. Una letra o un n&uacute;mero solo (A, C, 1700) cuenta como respuesta.</p>'+
+      '<textarea class="dm-in" id="chExcl" rows="6">'+esc(c.exclusion.join('\n'))+'</textarea>'+
+      '<div class="dm-b"><button type="button" class="o-btn" id="chRest">Restaurar la lista</button><button type="button" class="o-btn o-btn-primary" id="chGuardaEx">Guardar ajustes</button></div>'+
+    '</details>', true);
+  function carga(t){
+    var nuevos=BBBChat.lee(t);
+    if(!nuevos.length){ sopla('No se encontraron mensajes. Copia el chat desde el menú ⋮ de BigBlueButton.'); return; }
+    var antes=c.mensajes.length;
+    c.mensajes=BBBChat.une(c.mensajes, nuevos); chGraba(); $('chTxt').value=''; setTimeout(pintaAsis, 0);
+    sopla('Leídos '+nuevos.length+' mensajes ('+(c.mensajes.length-antes)+' nuevos) a las '+new Date().toLocaleTimeString('es-PE'));
+    pintaChat();
+  }
+  $('chPega').addEventListener('click', function(){ carga($('chTxt').value); });
+  $('chTxt').addEventListener('keydown', function(e){ e.stopPropagation(); });
+  $('chTxt').addEventListener('paste', function(){ setTimeout(function(){ carga($('chTxt').value); }, 0); });
+  $('chArch').addEventListener('change', function(){
+    var f=this.files && this.files[0]; if(!f) return;
+    var r=new FileReader(); r.onload=function(){ carga(String(r.result||'')); }; r.readAsText(f);
+  });
+  $('chAnon').addEventListener('click', function(){ c.anon=c.anon?0:1; chGraba(); this.innerHTML=c.anon?'&#128100; Mostrar nombres':'&#128100; Ocultar nombres'; pintaChat(); pintaAsis(); });
+  $('asXls').addEventListener('click', excelAsistencia);
+  $('asPdf').addEventListener('change', function(){ var f=this.files && this.files[0]; if(f) cargaPdfPanel(f); this.value=''; });
+  ['asUmb','asTol'].forEach(function(id){
+    $(id).addEventListener('keydown', function(e){ e.stopPropagation(); });
+    $(id).addEventListener('change', function(){
+      c.umbral=Math.max(10, Math.min(100, parseInt($('asUmb').value,10)||70));
+      c.tolera=Math.max(0, Math.min(120, parseInt($('asTol').value,10)||0));
+      chGraba(); pintaAsis(); });
+  });
+  $('chCsv').addEventListener('click', csvChat);
+  $('chBorra').addEventListener('click', function(){
+    if(!window.confirm('¿Borrar el chat analizado y las correcciones de esta sesión? No afecta a BigBlueButton.')) return;
+    try{ localStorage.removeItem(chKey()); }catch(e){} CH=null; c=chLee(); pintaChat(); pintaAsis(); sopla('Datos de BigBlueButton borrados');
+  });
+  ['chExcl','chMin'].forEach(function(id){ $(id).addEventListener('keydown', function(e){ e.stopPropagation(); }); });
+  $('chGuardaEx').addEventListener('click', function(){
+    c.exclusion=$('chExcl').value.split('\n').map(function(x){ return BBBChat.normaliza(x); }).filter(Boolean);
+    c.minimo=Math.max(1, Math.min(5, parseInt($('chMin').value,10)||1));
+    chGraba(); pintaChat(); sopla('Ajustes guardados');
+  });
+  $('chRest').addEventListener('click', function(){ $('chExcl').value=BBBChat.EXCLUSION.join('\n'); });
+  pintaChat(); pintaAsis();
+}
+function csvChat(){
+  function c(v){ v=(v===undefined||v===null)?'':String(v); return /[",;\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  var filas=[['N.º','Estudiante','Intervenciones válidas','Mensajes','Primer mensaje','Último mensaje']];
+  chResumen().filter(function(p){ return !p.fuera; }).forEach(function(p,i){ filas.push([i+1, p.nombre, p.validas, p.total, p.primero, p.ultimo]); });
+  var txt='﻿'+filas.map(function(r){ return r.map(c).join(','); }).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt], { type:'text/csv;charset=utf-8' }));
+  a.download='participacion-chat-'+((window.Aula && Aula.sala)||'sala')+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+/* ================= asistencia y permanencia desde el PDF del panel de BigBlueButton ================= */
+/* El docente imprime en PDF el «Panel de análisis del aprendizaje» y lo adjunta aquí.
+   Se lee en este navegador con pdf.js; no se envía a ningún servidor. */
+var PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/', pdfCarga=null;
+function cargaPdfJs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(pdfCarga) return pdfCarga;
+  pdfCarga=new Promise(function(ok, no){
+    var sc=document.createElement('script'); sc.src=PDFJS+'pdf.min.js'; sc.async=true;
+    sc.onload=function(){
+      if(!window.pdfjsLib){ no('pdfjs'); return; }
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js';
+      ok(window.pdfjsLib);
+    };
+    sc.onerror=function(){ pdfCarga=null; no('pdfjs'); };
+    document.head.appendChild(sc);
+  });
+  return pdfCarga;
+}
+var MESES={ ene:0, feb:1, mar:2, abr:3, may:4, jun:5, jul:6, ago:7, sep:8, set:8, oct:9, nov:10, dic:11,
+            jan:0, apr:3, aug:7, dec:11 };
+var MESL={ enero:0, febrero:1, marzo:2, abril:3, mayo:4, junio:5, julio:6, agosto:7, septiembre:8, setiembre:8, octubre:9, noviembre:10, diciembre:11 };
+function segDe(hms){ var p=String(hms).split(':').map(Number); return p[0]*3600+p[1]*60+(p[2]||0); }
+function hms(s){ s=Math.max(0, Math.round(s)); function d2(n){ return (n<10?'0':'')+n; }
+  return d2(Math.floor(s/3600))+':'+d2(Math.floor(s%3600/60))+':'+d2(s%60); }
+function horaCorta(ms){ if(ms==null) return ''; var d=new Date(ms); function d2(n){ return (n<10?'0':'')+n; } return d2(d.getHours())+':'+d2(d.getMinutes())+':'+d2(d.getSeconds()); }
+
+/* lee las líneas del PDF con su posición y arma una fila por usuario */
+function leePanelPdf(buf){
+  return cargaPdfJs().then(function(pdfjs){ return pdfjs.getDocument({ data:buf }).promise; }).then(function(doc){
+    var pags=[];
+    for(var n=1;n<=doc.numPages;n++) pags.push(doc.getPage(n).then(function(pg){ return pg.getTextContent(); }));
+    return Promise.all(pags);
+  }).then(function(conts){
+    var items=[];
+    conts.forEach(function(tc, pi){
+      tc.items.forEach(function(it){ var s=String(it.str||'').trim(); if(s) items.push({ p:pi, x:it.transform[4], y:it.transform[5], s:s }); });
+    });
+    return armaPanel(items);
+  });
+}
+function armaPanel(items){
+  var todo=items.map(function(i){ return i.s; }).join(' ');
+  var mf=/(\d{1,2}) de (\w+) de (\d{4})/.exec(todo), anio=mf ? +mf[3] : new Date().getFullYear();
+  var md=/Duraci[oó]n\s*:\s*(\d{1,2}:\d{2}:\d{2})/.exec(todo);
+  var mt=/(Panel de an[aá]lisis del aprendizaje)\s+(.+?)\s+\d+\s+N[uú]mero total/i.exec(todo);
+  /* columnas: la de usuario, la de tiempo en línea y la de conversación */
+  var xU=null, xL=null, xC=null;
+  items.forEach(function(i){
+    if(xU===null && /^USUARIO$/i.test(i.s)) xU=i.x;
+    if(xL===null && /^(L[IÍ]NEA|TIEMPO EN)$/i.test(i.s)) xL=i.x;
+    if(xC===null && /^CONVERSACI[OÓ]N$/i.test(i.s)) xC=i.x;
+  });
+  if(xU===null) return { error:'No se encontró la tabla «Vista general» del panel.' };
+  if(xL===null) xL=xU+300; if(xC===null) xC=xL+150;
+  /* orden de lectura: página, de arriba abajo, de izquierda a derecha */
+  items.sort(function(a,b){ return (a.p-b.p) || (Math.abs(a.y-b.y)>2 ? b.y-a.y : a.x-b.x); });
+  var filas=[], cur=null, dentro=false;
+  var NOMBRE_NO=/BigBlueButton|Panel de an|[ÚU]ltima actualizaci|Descargar datos|https?:|N[uú]mero total|Puntuaci|Vista general|Cronolog|Encuestas|Cuestionarios|^\d{1,2}\/\d{1,2}\/\d{2}/i;
+  items.forEach(function(i){
+    if(/^USUARIO$/i.test(i.s)){ dentro=true; return; }
+    if(!dentro) return;
+    var m=/^(\d{1,2})\s+([a-záéíóú]{3,4})\.?,?\s+(\d{1,2}):(\d{2}):(\d{2})$/i.exec(i.s);
+    if(m && cur){
+      var mes=MESES[m[2].toLowerCase().slice(0,3)];
+      cur.marcas.push(new Date(anio, mes===undefined?0:mes, +m[1], +m[3], +m[4], +m[5]).getTime());
+      return;
+    }
+    if(/^\d{1,3}:\d{2}:\d{2}$/.test(i.s) && cur){
+      if(Math.abs(i.x-xC) < Math.abs(i.x-xL)) cur.habla+=segDe(i.s); else cur.linea+=segDe(i.s);
+      return;
+    }
+    if(i.x>=xU-4 && i.x<xL-30 && /\s/.test(i.s) && !/\d/.test(i.s) && /[A-Za-zÁÉÍÓÚÑáéíóúñ]{2}/.test(i.s) && !NOMBRE_NO.test(i.s) && i.s.length<=70){
+      cur={ nombre:i.s.replace(/\s+/g,' '), marcas:[], linea:0, habla:0 };
+      filas.push(cur);
+    }
+  });
+  filas=filas.filter(function(f){ return f.marcas.length; });
+  /* el nombre de la clase: lo que va después del título del panel */
+  var tit='', ip=-1;
+  items.forEach(function(i,n){ if(ip<0 && /^Panel de an[aá]lisis del aprendizaje$/i.test(i.s)) ip=n; });
+  for(var q=ip+1; ip>=0 && q<items.length && q<ip+8; q++){
+    var s=items[q].s;
+    if(!/[A-Za-zÁÉÍÓÚáéíóú]{3}/.test(s) || /^\d|Finalizado|En curso|Duraci|de \w+ de \d{4}/i.test(s)) continue;
+    tit=s; break;
+  }
+  var mtt=/Panel de an[aá]lisis del aprendizaje - (.+?)(\s+https?:|$)/i.exec(todo);
+  if(mtt && (!tit || /Panel/.test(tit))) tit=mtt[1];
+  return { filas:filas, duracion: md ? segDe(md[1]) : 0, titulo: tit,
+           fecha: mf ? new Date(anio, MESL[mf[2].toLowerCase()]||0, +mf[1]).getTime() : null };
+}
+/* une las filas de una misma persona y calcula su permanencia real (sin contar dos veces los traslapes) */
+function calculaAsistencia(panel, op){
+  op=op||{};
+  var umbral=(op.umbral||70)/100, tolera=(op.tolera||15)*60000, por={};
+  var todas=[], fin=0, ini=Infinity;
+  panel.filas.forEach(function(f){ f.marcas.forEach(function(t){ if(t<ini) ini=t; if(t>fin) fin=t; }); });
+  if(panel.duracion && isFinite(ini)) fin=Math.max(fin, ini+panel.duracion*1000);
+  panel.filas.forEach(function(f){
+    var k=BBBChat.clavePersona(f.nombre), p=por[k];
+    if(!p) p=por[k]={ persona:k, nombre:f.nombre, tramos:[], linea:0, habla:0, filas:0 };
+    p.filas++; p.linea+=f.linea; p.habla+=f.habla;
+    for(var j=0;j<f.marcas.length;j+=2){
+      var a=f.marcas[j], b=f.marcas[j+1];
+      p.tramos.push({ ingreso:a, salida:(b===undefined ? null : b) });
+    }
+  });
+  var dur=Math.max(1, (fin-ini)/1000);
+  return Object.keys(por).map(function(k){
+    var p=por[k];
+    var iv=p.tramos.map(function(t){ return [t.ingreso, t.salida===null ? fin : t.salida]; })
+                   .filter(function(x){ return x[1]>=x[0]; }).sort(function(a,b){ return a[0]-b[0]; });
+    var tot=0, a=null, b=null;
+    iv.forEach(function(x){
+      if(a===null){ a=x[0]; b=x[1]; return; }
+      if(x[0]<=b){ if(x[1]>b) b=x[1]; } else { tot+=b-a; a=x[0]; b=x[1]; }
+    });
+    if(a!==null) tot+=b-a;
+    p.efectivo=tot/1000;
+    p.permanencia=Math.min(1, p.efectivo/dur);
+    p.primer=iv.length ? iv[0][0] : null;
+    var abiertos=p.tramos.some(function(t){ return t.salida===null; });
+    p.ultima=abiertos ? null : (iv.length ? Math.max.apply(null, iv.map(function(x){ return x[1]; })) : null);
+    p.ingresos=p.tramos.length;
+    p.retraso=p.primer!==null ? Math.max(0, (p.primer-ini)/60000) : 0;
+    p.asistencia = p.permanencia>=umbral ? 'Asistió' : 'Permanencia parcial';
+    p.tarde = p.primer!==null && (p.primer-ini)>tolera;
+    return p;
+  }).sort(function(x,y){ return y.efectivo-x.efectivo || x.nombre.localeCompare(y.nombre); })
+    .map(function(p){ p.sesion={ inicio:ini, fin:fin, duracion:dur }; return p; });
+}
+/* ¿es la misma persona en el chat y en el panel? mismas palabras, o todas las del nombre corto dentro del largo */
+function mismaPersona(a, b){
+  if(a===b) return true;
+  var x=a.split(' '), y=b.split(' '), c=x.length<=y.length ? x : y, l=x.length<=y.length ? y : x;
+  return c.length>=2 && c.every(function(w){ return l.indexOf(w)>=0; });
+}
+
+/* ---- asistencia: tabla en pantalla ---- */
+function asisDatos(){
+  var c=chLee();
+  if(!c.panel || !c.panel.filas || !c.panel.filas.length) return [];
+  var lista=calculaAsistencia(c.panel, { umbral:c.umbral||70, tolera:c.tolera||15 });
+  var chat=c.mensajes.length ? chResumen() : [];
+  var doc=BBBChat.clavePersona((window.Aula && Aula.yo) || '');
+  lista.forEach(function(p){
+    /* no cuentan: el docente de la sala, o quien habló más del 25 % de la clase (el que dicta) */
+    p.fuera = c.fuera[p.persona]!==undefined ? !!c.fuera[p.persona]
+            : (p.persona===doc || (doc && mismaPersona(p.persona, doc)) || p.habla >= 0.25*p.sesion.duracion);
+    var ch=null; chat.forEach(function(x){ if(!ch && mismaPersona(x.persona, p.persona)) ch=x; });
+    p.validas=ch ? ch.validas : 0; p.mensajes=ch ? ch.total : 0;
+  });
+  return lista;
+}
+function pintaAsis(){
+  var box=$('dmAsis'); if(!box) return;
+  var c=chLee(), L=asisDatos(), al=L.filter(function(p){ return !p.fuera; });
+  if(!L.length){ box.innerHTML='<p class="dvacio">Todav&iacute;a no hay PDF del panel. Adj&uacute;ntalo arriba.</p>'; return; }
+  var s=L[0].sesion, asis=al.filter(function(p){ return p.asistencia==='Asistió'; }).length;
+  var prom=al.length ? al.reduce(function(t,p){ return t+p.permanencia; },0)/al.length : 0;
+  var h='<p class="dm-p" style="margin:6px 0">'+esc(c.panel.titulo||'Clase')+' &middot; '+horaCorta(s.inicio)+' a '+horaCorta(s.fin)+' &middot; duraci&oacute;n '+hms(s.duracion)+'</p>'+
+    '<div class="kpis">'+
+    '<div class="kpi"><span>Estudiantes</span><b>'+al.length+'</b></div>'+
+    '<div class="kpi"><span>Asistieron</span><b>'+asis+'</b><small>con '+(c.umbral||70)+' % o m&aacute;s</small></div>'+
+    '<div class="kpi f"><span>Permanencia parcial</span><b>'+(al.length-asis)+'</b></div>'+
+    '<div class="kpi"><span>Permanencia promedio</span><b>'+Math.round(prom*100)+'%</b></div>'+
+    '<div class="kpi f"><span>Llegaron tarde</span><b>'+al.filter(function(p){ return p.tarde; }).length+'</b><small>m&aacute;s de '+(c.tolera||15)+' min</small></div>'+
+    '</div><div class="tf ch"><table><thead><tr><th>N.&ordm;</th><th>Estudiante</th><th>Asistencia</th><th>Permanencia</th><th>Tiempo efectivo</th>'+
+    '<th>Primer ingreso</th><th>&Uacute;ltima salida</th><th>Ingresos</th><th>Intervenciones</th><th></th></tr></thead><tbody>'+
+    al.map(function(p,i){
+      return '<tr><td>'+(i+1)+'</td><td><b>'+esc(c.anon?'Estudiante '+(i+1):p.nombre)+'</b>'+(p.tarde?' <small class="tarde">lleg&oacute; tarde</small>':'')+'</td>'+
+        '<td style="color:'+(p.asistencia==='Asistió'?'#0F6B45':'#A4161A')+';font-weight:800">'+p.asistencia+'</td>'+
+        '<td><span class="chbar"><i style="width:'+Math.round(p.permanencia*100)+'%;background:'+tono(p.permanencia)+'"></i></span>'+Math.round(p.permanencia*100)+'%</td>'+
+        '<td>'+hms(p.efectivo)+'</td><td>'+horaCorta(p.primer)+'</td><td>'+(p.ultima?horaCorta(p.ultima):'En l&iacute;nea')+'</td>'+
+        '<td>'+p.ingresos+'</td><td>'+p.validas+'</td>'+
+        '<td><button type="button" data-afuera="'+esc(p.persona)+'" title="No contar (docente o invitado)">&#128683;</button></td></tr>';
+    }).join('')+'</tbody></table></div>';
+  var fuera=L.filter(function(p){ return p.fuera; });
+  if(fuera.length) h+='<p class="dvacio" style="margin-top:8px">No cuentan: '+fuera.map(function(p){
+    return '<button type="button" class="chvuelve" data-afuera="'+esc(p.persona)+'">'+esc(p.nombre)+' &#8634;</button>'; }).join(' ')+'</p>';
+  box.innerHTML=h;
+  qq('button[data-afuera]', box).forEach(function(b){ b.addEventListener('click', function(){
+    var k=b.dataset.afuera, ahora=false; L.forEach(function(p){ if(p.persona===k) ahora=p.fuera; });
+    c.fuera[k]=ahora?0:1; chGraba(); pintaAsis(); pintaChat(); }); });
+}
+function cargaPdfPanel(file){
+  var box=$('dmAsis'); if(box) box.innerHTML='<p class="dvacio">Leyendo el PDF&hellip;</p>';
+  var r=new FileReader();
+  r.onload=function(){
+    leePanelPdf(new Uint8Array(r.result)).then(function(panel){
+      if(panel.error || !panel.filas.length){ if(box) box.innerHTML='<p class="dvacio">'+esc(panel.error||'No se encontraron usuarios en el PDF. ¿Es el «Panel de análisis del aprendizaje» impreso como PDF?')+'</p>'; return; }
+      var c=chLee(); c.panel=panel; chGraba(); pintaAsis();
+      sopla('PDF leído: '+panel.filas.length+' filas del panel');
+    }).catch(function(e){ if(box) box.innerHTML='<p class="dvacio">No se pudo leer el PDF ('+esc(String(e))+'). Revisa tu conexión e int&eacute;ntalo de nuevo.</p>'; });
+  };
+  r.readAsArrayBuffer(file);
+}
+
+/* ---- Excel aparte: asistencia, permanencia, métricas e intervenciones ---- */
+var XLS_URLS=['https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js','https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js'], xlsCarga=null;
+function cargaXls(){
+  if(window.ExcelJS) return Promise.resolve(window.ExcelJS);
+  if(xlsCarga) return xlsCarga;
+  xlsCarga=new Promise(function(ok, no){
+    var n=0;
+    (function prueba(){
+      if(n>=XLS_URLS.length){ xlsCarga=null; no('exceljs'); return; }
+      var sc=document.createElement('script'); sc.src=XLS_URLS[n++]; sc.async=true;
+      sc.onload=function(){ window.ExcelJS ? ok(window.ExcelJS) : prueba(); };
+      sc.onerror=prueba; document.head.appendChild(sc);
+    })();
+  });
+  return xlsCarga;
+}
+/* ayudas para dar formato a las hojas */
+function xlsHerr(ws){
+  var B={ style:'thin', color:{ argb:'FFD5DDEF' } }, caja={ top:B, left:B, bottom:B, right:B };
+  return {
+    tit:function(txt, sub, ncol){
+      ws.mergeCells(1,1,1,ncol); var c=ws.getCell(1,1); c.value=txt;
+      c.font={ bold:true, size:15, color:{ argb:'FFFFFFFF' } }; c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } };
+      ws.getRow(1).height=26; ws.mergeCells(2,1,2,ncol); ws.getCell(2,1).value=sub; ws.getCell(2,1).font={ italic:true, color:{ argb:'FF55607F' } };
+    },
+    cab:function(vals){ var r=ws.addRow(vals); r.eachCell(function(c){ c.font={ bold:true, color:{ argb:'FFFFFFFF' } }; c.border=caja;
+      c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; c.alignment={ wrapText:true, vertical:'middle' }; }); return r; },
+    fila:function(vals){ var r=ws.addRow(vals); r.eachCell({ includeEmpty:true }, function(c){ c.border=caja; c.alignment={ vertical:'top', wrapText:true }; }); return r; }
+  };
+}
+function excelAsistencia(){
+  var c=chLee(), L=asisDatos().filter(function(p){ return !p.fuera; }), chat=c.mensajes.length ? chResumen().filter(function(p){ return !p.fuera; }) : [];
+  if(!L.length && !chat.length){ sopla('Primero adjunta el PDF del panel o pega el chat'); return; }
+  sopla('Preparando el Excel de asistencia…');
+  cargaXls().then(function(X){
+    var wb=new X.Workbook(); wb.creator='Repositorio de Eduardo'; wb.created=new Date();
+    var s=L.length ? L[0].sesion : null, sub=(c.panel && c.panel.titulo ? c.panel.titulo+' · ' : '')+
+      (s ? new Date(s.inicio).toLocaleDateString('es-PE')+' · '+horaCorta(s.inicio)+' a '+horaCorta(s.fin)+' · duración '+hms(s.duracion) : 'Solo chat');
+    var espera=[];
+    /* 1. asistencia y permanencia */
+    if(L.length){
+      var wa=wb.addWorksheet('Asistencia y permanencia', { views:[{ state:'frozen', ySplit:3 }] }), ha=xlsHerr(wa);
+      ha.tit('Asistencia y permanencia (BigBlueButton)', sub, 11);
+      ha.cab(['N.º','Estudiante','Asistencia','% Permanencia','Tiempo efectivo','Primer ingreso','Última salida','Ingresos','Llegó tarde','Retraso (min)','Tiempo de conversación']);
+      L.forEach(function(p,i){
+        var r=ha.fila([i+1, p.nombre, p.asistencia, p.permanencia, hms(p.efectivo), horaCorta(p.primer), p.ultima?horaCorta(p.ultima):'En línea',
+                       p.ingresos, p.tarde?'Sí':'No', Math.round(p.retraso), hms(p.habla)]);
+        r.getCell(4).numFmt='0%'; r.getCell(4).font={ bold:true, color:{ argb:'FF'+tono(p.permanencia).slice(1) } };
+        r.getCell(3).font={ bold:true, color:{ argb: p.asistencia==='Asistió' ? 'FF0F6B45' : 'FFA4161A' } };
+      });
+      [6,36,18,14,14,13,13,10,11,12,14].forEach(function(w,j){ wa.getColumn(j+1).width=w; });
+      /* 2. tramos de conexión */
+      var wt=wb.addWorksheet('Tramos de conexión', { views:[{ state:'frozen', ySplit:3 }] }), ht=xlsHerr(wt);
+      ht.tit('Tramos de ingreso y salida', sub, 4);
+      ht.cab(['Estudiante','Ingreso','Salida','Duración']);
+      L.forEach(function(p){ p.tramos.slice().sort(function(a,b){ return a.ingreso-b.ingreso; }).forEach(function(t){
+        var fin=t.salida===null ? s.fin : t.salida;
+        ht.fila([p.nombre, horaCorta(t.ingreso), t.salida===null?'En línea':horaCorta(t.salida), hms((fin-t.ingreso)/1000)]); }); });
+      [36,13,13,13].forEach(function(w,j){ wt.getColumn(j+1).width=w; });
+    }
+    /* 3. métricas importantes con gráficos */
+    var wm=wb.addWorksheet('Métricas', { views:[{ showGridLines:false }] }), hm=xlsHerr(wm);
+    for(var cc=1;cc<=12;cc++) wm.getColumn(cc).width=13.5;
+    hm.tit('Métricas de la clase', sub, 12);
+    var nAs=L.filter(function(p){ return p.asistencia==='Asistió'; }).length;
+    var prom=L.length ? L.reduce(function(t,p){ return t+p.permanencia; },0)/L.length : 0;
+    var tv=chat.reduce(function(t,p){ return t+p.validas; },0), part=chat.filter(function(p){ return p.validas>0; }).length;
+    var tarj=[['Estudiantes', L.length||chat.length, 'FF071767'], ['Asistieron', nAs+' de '+L.length, 'FF0F6B45'], ['Permanencia', Math.round(prom*100)+'%', 'FF0E8F95'],
+              ['Llegaron tarde', L.filter(function(p){ return p.tarde; }).length, 'FFC98A00'], ['Intervenciones', tv, 'FFC600A3'], ['Participaron', part+' de '+(chat.length||L.length), 'FFFC0045']];
+    wm.getRow(4).height=22; wm.getRow(5).height=40;
+    tarj.forEach(function(t,i){
+      var c1=1+i*2; wm.mergeCells(4,c1,4,c1+1); wm.mergeCells(5,c1,5,c1+1);
+      var a1=wm.getCell(4,c1), a2=wm.getCell(5,c1); a1.value=t[0]; a2.value=t[1];
+      [a1,a2].forEach(function(x){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:t[2] } }; x.alignment={ horizontal:'center', vertical:'middle' }; });
+      a1.font={ bold:true, size:10, color:{ argb:'FFFFFFFF' } }; a2.font={ bold:true, size:22, color:{ argb:'FFFFFFFF' } };
+    });
+    var graf=[], W=560;
+    if(L.length){
+      graf.push({ svg:svgDona([{ t:'Asistieron', c:'#0F6B45', v:nAs }, { t:'Permanencia parcial', c:'#D64545', v:L.length-nAs }], 'Asistencia', W, 300), h:300 });
+      var g1=svgBarrasH(L.slice(0,25).map(function(p){ return { t:p.nombre, v:p.permanencia, c:tono(p.permanencia), lbl:Math.round(p.permanencia*100)+'%' }; }), 'Permanencia por estudiante', W, 1);
+      graf.push({ svg:g1.svg, h:g1.h });
+    }
+    if(chat.length){
+      var cs=chat.slice().sort(function(a,b){ return b.validas-a.validas; }).slice(0,25);
+      var g2=svgBarrasH(cs.map(function(p){ return { t:p.nombre, v:p.validas, c:'#C600A3', lbl:String(p.validas) }; }), 'Intervenciones válidas en el chat', W, Math.max(1, cs[0].validas));
+      graf.push({ svg:g2.svg, h:g2.h });
+    }
+    var fg=7;
+    for(var gi=0; gi<graf.length; gi+=2){
+      var hmax=Math.max(graf[gi].h, graf[gi+1] ? graf[gi+1].h : 0);
+      (function(g, col, row){ espera.push(pngDe(g.svg, W, g.h).then(function(png){ if(!png) return;
+        var id=wb.addImage({ base64:png, extension:'png' }); wm.addImage(id, { tl:{ col:col, row:row }, ext:{ width:W, height:g.h } }); })); })(graf[gi], 0, fg);
+      if(graf[gi+1]) (function(g, col, row){ espera.push(pngDe(g.svg, W, g.h).then(function(png){ if(!png) return;
+        var id=wb.addImage({ base64:png, extension:'png' }); wm.addImage(id, { tl:{ col:col, row:row }, ext:{ width:W, height:g.h } }); })); })(graf[gi+1], 6, fg);
+      fg+=Math.ceil(hmax/20)+1;
+    }
+    var rr=fg+1;
+    function linea(a, b){ var r=wm.getRow(rr++); wm.mergeCells(r.number,1,r.number,6); wm.mergeCells(r.number,7,r.number,9);
+      r.getCell(1).value=a; r.getCell(7).value=b; r.getCell(7).font={ bold:true }; }
+    var t0=wm.getRow(rr++); t0.getCell(1).value='Indicadores'; t0.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } };
+    if(L.length){
+      linea('Duración de la sesión', hms(s.duracion));
+      linea('Permanencia promedio', Math.round(prom*100)+'%');
+      linea('Tiempo efectivo promedio', hms(L.reduce(function(t,p){ return t+p.efectivo; },0)/L.length));
+      linea('Reconexiones promedio por estudiante', (L.reduce(function(t,p){ return t+p.ingresos; },0)/L.length).toFixed(1));
+      linea('Asistieron ('+(c.umbral||70)+' % o más)', nAs+' de '+L.length);
+      linea('Llegaron tarde (más de '+(c.tolera||15)+' min)', L.filter(function(p){ return p.tarde; }).length);
+    }
+    if(chat.length){
+      linea('Mensajes en el chat', c.mensajes.length);
+      linea('Intervenciones válidas', tv);
+      linea('Promedio de intervenciones por estudiante', (tv/Math.max(1,chat.length)).toFixed(1));
+      linea('Estudiantes que participaron en el chat', part+' de '+chat.length);
+    }
+    /* 4. intervenciones */
+    if(chat.length){
+      var wi=wb.addWorksheet('Intervenciones', { views:[{ state:'frozen', ySplit:3 }] }), hi=xlsHerr(wi);
+      hi.tit('Intervenciones en el chat', sub, 6);
+      hi.cab(['N.º','Estudiante','Intervenciones válidas','Mensajes','Primer mensaje','Último mensaje']);
+      chat.forEach(function(p,i){ hi.fila([i+1, p.nombre, p.validas, p.total, p.primero, p.ultimo]); });
+      [6,36,20,12,15,15].forEach(function(w,j){ wi.getColumn(j+1).width=w; });
+      var wx=wb.addWorksheet('Mensajes del chat', { views:[{ state:'frozen', ySplit:3 }] }), hx=xlsHerr(wx);
+      hx.tit('Mensajes del chat y su clasificación', sub, 5);
+      hx.cab(['Hora','Autor','Mensaje','¿Cuenta?','Motivo']);
+      chMensajes().forEach(function(m){ var r=hx.fila([m.hora, m.autor, m.texto, m.valido?'Sí':'No', m.motivo]);
+        r.getCell(4).font={ bold:true, color:{ argb: m.valido ? 'FF0F6B45' : 'FFA4161A' } }; });
+      [10,34,60,10,30].forEach(function(w,j){ wx.getColumn(j+1).width=w; });
+    }
+    return Promise.all(espera).then(function(){ return wb.xlsx.writeBuffer(); });
+  }).then(function(buf){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+    a.download='asistencia-bbb-'+((window.Aula && Aula.sala)||'sala')+'-'+new Date().toISOString().slice(0,10)+'.xlsx';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    sopla('Excel de asistencia listo');
+  }).catch(function(e){ sopla('No se pudo armar el Excel ('+e+')'); });
+}
+
+/* ================= histórico de sesiones (para el ADMIN) ================= */
+function claveInicio(){ return LS+'_ini_'+((window.Aula && Aula.sala)||'x'); }
+function inicioSesion(){
+  var t=0; try{ t=+localStorage.getItem(claveInicio())||0; }catch(e){}
+  if(!t || Date.now()-t>12*3600*1000){ t=Date.now(); try{ localStorage.setItem(claveInicio(), String(t)); }catch(e){} }
+  return t;
+}
+var ultimoReg='';
+function registraSesion(){
+  if(!soyDocente() || !enSala() || !Aula.guardaRegistro) return;
+  var d=datosDash(); if(!d.al.length) return;   /* sin alumnos no se registra */
+  var ini=inicioSesion(), f=new Date(ini);
+  function d2(n){ return (n<10?'0':'')+n; }
+  var id=f.getFullYear()+'-'+d2(f.getMonth()+1)+'-'+d2(f.getDate())+' '+d2(f.getHours())+':'+d2(f.getMinutes())+' · '+Aula.sala;
+  var prom=d.al.reduce(function(s,a){ return s+a.p; },0)/d.al.length;
+  var est={ docente:(Aula.yo||'Docente'), pin:Aula.sala, inicio:ini, fin:Date.now(), pagina:document.title,
+    actividades:d.ks.map(function(k){ return ACT[k].titulo; }), nAlumnos:d.al.length, promedio:prom,
+    completaron:d.al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length, fallos:d.fallos.length,
+    porAct:d.porAct.map(function(x){ return { t:ACT[x.k].titulo, p:Math.round(x.p*1000)/1000, comp:x.comp, emp:x.emp }; }),
+    alumnos:d.al.slice(0,120).map(function(a){ return { n:a.n, p:Math.round(a.p*1000)/1000, nf:a.nf||0 }; }) };
+  var s=JSON.stringify(est); if(s===ultimoReg) return;
+  Aula.guardaRegistro(id, est).then(function(){ ultimoReg=s; }).catch(function(){});
+}
+setInterval(registraSesion, 60000);
+
+var ADMIN='JDURAN', regs=[], regFiltro='';
+function pideAdmin(){
+  dialogo('<div class="dm-h"><b>&#128737;&#65039; Entrar como ADMIN</b><button type="button" class="x" data-cierra>&#10005;</button></div>'+
+    '<p class="dm-p">Ver el hist&oacute;rico de sesiones: docente, actividades y n&uacute;mero de estudiantes.</p>'+
+    '<input class="dm-in" id="admClave" type="password" placeholder="Clave de administrador" autocomplete="off">'+
+    '<p class="dm-err" id="admErr"></p><div class="dm-b"><button type="button" class="o-btn" data-cierra>Cancelar</button>'+
+    '<button type="button" class="o-btn o-btn-primary" id="admEntra">Entrar</button></div>');
+  var inp=$('admClave'); setTimeout(function(){ inp.focus(); }, 30);
+  function entra(){
+    if(inp.value.trim().toUpperCase()!==ADMIN){ $('admErr').textContent='Clave incorrecta.'; inp.value=''; inp.focus(); return; }
+    cierraDialogo(); abreAdmin();
+  }
+  inp.addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key==='Enter') entra(); });
+  $('admEntra').addEventListener('click', entra);
+}
+function abreAdmin(){
+  dialogo('<div class="dm-h"><b>&#128737;&#65039; Hist&oacute;rico de sesiones</b><span class="dvacio">'+esc(document.title.replace(/^Contabilidad - /,''))+'</span>'+
+    '<button type="button" class="x" data-cierra>Cerrar &#10005;</button></div>'+
+    '<div class="dm-b" style="justify-content:flex-start;margin-top:0"><input class="dm-in" id="admBusca" placeholder="Buscar por docente o c&oacute;digo" style="max-width:340px;font-size:16px;padding:8px 10px">'+
+    '<button type="button" class="o-btn" id="admAct">&#8635; Actualizar</button><button type="button" class="o-btn o-btn-primary" id="admXls">&#11015; Descargar Excel</button></div>'+
+    '<div id="dmAdm"><p class="dvacio">Cargando&hellip;</p></div>', true);
+  $('admBusca').addEventListener('keydown', function(e){ e.stopPropagation(); });
+  $('admBusca').addEventListener('input', function(){ regFiltro=this.value; pintaAdmin(); });
+  $('admAct').addEventListener('click', traeAdmin);
+  $('admXls').addEventListener('click', excelAdmin);
+  traeAdmin();
+}
+/* títulos de la versión anterior de la sesión (antes de dejar 4 actividades de cierre) */
+var ACT_ANT={};
+/* sesiones sin registro (versión anterior): se arman con las filas de cada código de sala, por código y día */
+function reconstruye(filas, reg){
+  var por={};
+  (filas||[]).forEach(function(f){
+    var m=/^[^-]+-(\d{4})(-(ABIERTA|BATUTA))?$/.exec(f.sala); if(!m) return;
+    var pin=m[1], t=new Date(f.actualizado).getTime(), k=pin+'|'+new Date(t).toDateString();
+    var s=por[k]; if(!s) s=por[k]={ pin:pin, ini:t, fin:t, docente:'', alumnos:{}, claves:{} };
+    if(t<s.ini) s.ini=t; if(t>s.fin) s.fin=t;
+    var e=f.estado||{};
+    if(m[3]==='ABIERTA'){ if(e.docente) s.docente=e.docente; return; }
+    if(m[3] || e.renombrado) return;
+    var G0=e.G||{}, ant=!!G0.r5;
+    Object.keys(G0).filter(function(x){ return /^[cr]\d$/.test(x) && G0[x] && Object.keys(G0[x]).length; })
+      .forEach(function(x){ s.claves[x]= ant && ACT_ANT[x] ? ACT_ANT[x] : (ACT[x] ? ACT[x].titulo : x); });
+    var p;
+    if(ant) p=(+e.total||0) ? (+e.ok||0)/(+e.total) : 0;
+    else { var c=cuenta(G0); p=c.total ? c.ok/c.total : 0; }
+    s.alumnos[f.alumno]={ n:f.alumno, p:Math.round(p*1000)/1000, nf:(G0.fallos||[]).length };
+  });
+  /* las que ya tienen registro (mismo código y mismo día) no se repiten */
+  var hay={};
+  reg.forEach(function(r){ hay[(r.estado.pin||'')+'|'+new Date(r.estado.inicio).toDateString()]=1; });
+  return Object.keys(por).filter(function(k){ return !hay[k] && Object.keys(por[k].alumnos).length; }).map(function(k){
+    var s=por[k], al=Object.keys(s.alumnos).map(function(n){ return s.alumnos[n]; }), cl=Object.keys(s.claves).sort();
+    return { alumno:'ant-'+k, actualizado:new Date(s.fin).toISOString(), estado:{
+      docente:s.docente || 'Sin nombre (versión anterior)', pin:s.pin, inicio:s.ini, fin:s.fin, reconstruida:1,
+      actividades:cl.map(function(x){ return s.claves[x]; }), nAlumnos:al.length,
+      promedio:al.reduce(function(t,a){ return t+a.p; },0)/al.length,
+      fallos:al.reduce(function(t,a){ return t+a.nf; },0),
+      porAct:cl.map(function(x){ return { t:s.claves[x], p:0, comp:0, emp:al.length }; }),
+      alumnos:al } };
+  });
+}
+function traeAdmin(){
+  if(!window.Aula || !Aula.leeRegistros) return;
+  Promise.all([ Aula.leeRegistros(), Aula.leeTodo ? Aula.leeTodo().catch(function(){ return []; }) : Promise.resolve([]) ])
+  .then(function(res){
+    var reg=(res[0]||[]).filter(function(r){ return r.estado && r.estado.docente; });
+    regs=reg.concat(reconstruye(res[1], reg)).sort(function(a,b){ return (b.estado.inicio||0)-(a.estado.inicio||0); });
+    pintaAdmin();
+  })
+    .catch(function(e){ var b=$('dmAdm'); if(b) b.innerHTML='<p class="dvacio">No se pudo leer el hist&oacute;rico ('+esc(String(e))+').</p>'; });
+}
+function regsFiltrados(){
+  var q=BBBChat.normaliza(regFiltro);
+  return regs.filter(function(r){ return !q || BBBChat.normaliza(r.estado.docente+' '+r.estado.pin+' '+r.alumno).indexOf(q)>=0; });
+}
+function fechaHora(ms){ var d=new Date(ms); return isNaN(d) ? '' : d.toLocaleDateString('es-PE')+' '+horaCorta(ms).slice(0,5); }
+var admAbierto={};
+function pintaAdmin(){
+  var box=$('dmAdm'); if(!box) return;
+  var R=regsFiltrados(), docs={};
+  R.forEach(function(r){ docs[r.estado.docente]=(docs[r.estado.docente]||0)+1; });
+  var totAl=R.reduce(function(s,r){ return s+(r.estado.nAlumnos||0); },0);
+  var prom=R.length ? R.reduce(function(s,r){ return s+(r.estado.promedio||0); },0)/R.length : 0;
+  var h='<div class="kpis"><div class="kpi"><span>Sesiones</span><b>'+R.length+'</b></div>'+
+    '<div class="kpi"><span>Docentes</span><b>'+Object.keys(docs).length+'</b></div>'+
+    '<div class="kpi"><span>Estudiantes atendidos</span><b>'+totAl+'</b><small>suma de todas las sesiones</small></div>'+
+    '<div class="kpi"><span>Participaci&oacute;n promedio</span><b>'+Math.round(prom*100)+'%</b></div></div>';
+  if(Object.keys(docs).length){
+    var b=svgBarrasH(Object.keys(docs).sort(function(a,c){ return docs[c]-docs[a]; }).slice(0,15).map(function(n){ return { t:n, v:docs[n], c:'#071767', lbl:String(docs[n]) }; }),
+                     'Sesiones por docente', 560, Math.max.apply(null, Object.keys(docs).map(function(n){ return docs[n]; })));
+    h+='<div class="dgraf"><div class="dg">'+b.svg+'</div></div>';
+  }
+  h+= R.length ? '<div class="tf ch"><table><thead><tr><th>Fecha</th><th>Docente</th><th>C&oacute;digo</th><th>Estudiantes</th><th>Actividades</th><th>Participaci&oacute;n</th><th>Fallos</th></tr></thead><tbody>'+
+    R.map(function(r,i){
+      var e=r.estado, ab=admAbierto[r.alumno];
+      var fila='<tr class="chf" data-r="'+esc(r.alumno)+'"><td>'+fechaHora(e.inicio)+' &ndash; '+horaCorta(e.fin).slice(0,5)+'</td><td><b>'+esc(e.docente)+'</b>'+(e.reconstruida?' <small class="dvacio">reconstruida</small>':'')+'</td><td>'+esc(e.pin||'')+'</td>'+
+        '<td>'+(e.nAlumnos||0)+'</td><td>'+(e.actividades||[]).length+' <small class="dvacio">'+(ab?'&#9650;':'&#9660;')+' ver</small></td>'+
+        '<td style="color:'+tono(e.promedio||0)+';font-weight:800">'+Math.round((e.promedio||0)*100)+'%</td><td>'+(e.fallos||0)+'</td></tr>';
+      if(ab) fila+='<tr class="chm"><td colspan="7"><div class="admdet"><div><b>Actividades '+(e.reconstruida?'con respuestas':'realizadas')+'</b><ul>'+(e.porAct||[]).map(function(x){
+          return '<li>'+esc(x.t)+(e.reconstruida ? '' : ' &mdash; <b style="color:'+tono(x.p)+'">'+Math.round(x.p*100)+'%</b> &middot; completaron '+x.comp+' de '+(e.nAlumnos||0))+'</li>'; }).join('')+'</ul>'+
+          (e.reconstruida?'<p class="dvacio">Sesi&oacute;n de la versi&oacute;n anterior: se arm&oacute; con las respuestas guardadas en la sala.</p>':'')+'</div>'+
+        '<div><b>Estudiantes</b><ul>'+(e.alumnos||[]).map(function(a){ return '<li>'+esc(a.n)+' &mdash; '+Math.round(a.p*100)+'%'+(a.nf?' &middot; '+a.nf+' fallos':'')+'</li>'; }).join('')+'</ul></div></div></td></tr>';
+      return fila;
+    }).join('')+'</tbody></table></div>' : '<p class="dvacio">No hay sesiones registradas'+(regFiltro?' con ese filtro':'')+'. Se registran solas cuando un docente da clase con estudiantes en la sala.</p>';
+  box.innerHTML=h;
+  qq('tr.chf', box).forEach(function(tr){ tr.addEventListener('click', function(){ admAbierto[tr.dataset.r]=!admAbierto[tr.dataset.r]; pintaAdmin(); }); });
+}
+function excelAdmin(){
+  var R=regsFiltrados(); if(!R.length){ sopla('No hay sesiones para descargar'); return; }
+  cargaXls().then(function(X){
+    var wb=new X.Workbook(), ws=wb.addWorksheet('Sesiones', { views:[{ state:'frozen', ySplit:3 }] }), h=xlsHerr(ws);
+    h.tit('Histórico de sesiones · '+document.title.replace(/^Contabilidad - /,''), 'Generado el '+new Date().toLocaleString('es-PE'), 9);
+    h.cab(['Fecha','Inicio','Fin','Docente','Código','Estudiantes','Actividades','Participación promedio','Origen']);
+    R.forEach(function(r){ var e=r.estado, f=h.fila([new Date(e.inicio).toLocaleDateString('es-PE'), horaCorta(e.inicio), horaCorta(e.fin), e.docente, e.pin, e.nAlumnos||0,
+      (e.actividades||[]).join('\n'), e.promedio||0, e.reconstruida?'Reconstruida (versión anterior)':'Registro']); f.getCell(8).numFmt='0%'; });
+    [12,10,10,36,10,12,60,14,24].forEach(function(w,j){ ws.getColumn(j+1).width=w; });
+    var wd=wb.addWorksheet('Detalle por estudiante', { views:[{ state:'frozen', ySplit:3 }] }), hd=xlsHerr(wd);
+    hd.tit('Estudiantes por sesión', '', 5);
+    hd.cab(['Fecha','Docente','Código','Estudiante','Participación']);
+    R.forEach(function(r){ var e=r.estado; (e.alumnos||[]).forEach(function(a){ var f=hd.fila([new Date(e.inicio).toLocaleDateString('es-PE'), e.docente, e.pin, a.n, a.p]); f.getCell(5).numFmt='0%'; }); });
+    [12,36,10,36,14].forEach(function(w,j){ wd.getColumn(j+1).width=w; });
+    return wb.xlsx.writeBuffer();
+  }).then(function(buf){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+    a.download='historico-sesiones-'+new Date().toISOString().slice(0,10)+'.xlsx';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }).catch(function(e){ sopla('No se pudo armar el Excel ('+e+')'); });
+}
+
+/* ================= gráficos del dashboard (SVG: sirven en pantalla y, como imagen, en el Excel) ================= */
+var NIVELES=[ { t:'Completó', c:'#0F6B45', ok:function(p){ return p>=1; } },
+              { t:'Avanzado', c:'#22A06B', ok:function(p){ return p>=0.8 && p<1; } },
+              { t:'En proceso', c:'#E0A100', ok:function(p){ return p>=0.5 && p<0.8; } },
+              { t:'Inicio', c:'#D64545', ok:function(p){ return p>0 && p<0.5; } },
+              { t:'Sin empezar', c:'#B9C2D8', ok:function(p){ return !p; } } ];
+var FUENTE='font-family="Segoe UI,Arial,Helvetica,sans-serif"';
+function corta(t, n){ t=String(t||''); return t.length>n ? t.slice(0,n-1)+'…' : t; }
+function svgCaja(W, H, titulo, cuerpo){
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" '+FUENTE+'>'+
+    '<rect width="'+W+'" height="'+H+'" rx="14" fill="#ffffff" stroke="#E3E8F4" stroke-width="2"/>'+
+    '<text x="18" y="30" font-size="17" font-weight="800" fill="#071767">'+esc(titulo)+'</text>'+cuerpo+'</svg>';
+}
+function svgDona(datos, titulo, W, H){
+  var tot=datos.reduce(function(s,x){ return s+x.v; },0), cx=150, cy=H/2+14, R=92, r0=56, ang=-Math.PI/2, b='';
+  function pt(a, rr){ return (cx+rr*Math.cos(a)).toFixed(1)+' '+(cy+rr*Math.sin(a)).toFixed(1); }
+  if(!tot) b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="#E3E8F4" stroke-width="'+(R-r0)+'"/>';
+  datos.forEach(function(x){
+    if(!x.v) return;
+    var a2=ang+(x.v/tot)*Math.PI*2-(x.v===tot?0.0001:0), g=(a2-ang)>Math.PI?1:0;
+    b+='<path d="M'+pt(ang,R)+' A'+R+' '+R+' 0 '+g+' 1 '+pt(a2,R)+' L'+pt(a2,r0)+' A'+r0+' '+r0+' 0 '+g+' 0 '+pt(ang,r0)+' Z" fill="'+x.c+'"/>';
+    ang=a2;
+  });
+  b+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="30" font-weight="900" fill="#071767">'+tot+'</text>'+
+     '<text x="'+cx+'" y="'+(cy+24)+'" text-anchor="middle" font-size="12" fill="#55607F">alumnos</text>';
+  datos.forEach(function(x,i){
+    var y=70+i*36;
+    b+='<rect x="280" y="'+(y-13)+'" width="16" height="16" rx="4" fill="'+x.c+'"/>'+
+       '<text x="304" y="'+y+'" font-size="15" fill="#0B1B3F">'+esc(x.t)+'</text>'+
+       '<text x="'+(W-20)+'" y="'+y+'" font-size="15" font-weight="800" text-anchor="end" fill="#0B1B3F">'+x.v+
+       (tot?' · '+Math.round(x.v/tot*100)+'%':'')+'</text>';
+  });
+  return svgCaja(W, H, titulo, b);
+}
+/* barras horizontales: datos [{t, v, c, lbl}] con v entre 0 y max */
+function svgBarrasH(datos, titulo, W, max){
+  var fila=34, H=Math.max(140, 56+datos.length*fila+10), x0=190, ancho=W-x0-80, b='';
+  if(!datos.length) b+='<text x="18" y="70" font-size="15" fill="#8A8A92">Sin datos todavía</text>';
+  datos.forEach(function(x,i){
+    var y=50+i*fila, w=max ? Math.max(2, ancho*Math.min(1, x.v/max)) : 2;
+    b+='<text x="'+(x0-10)+'" y="'+(y+17)+'" font-size="14" text-anchor="end" fill="#0B1B3F">'+esc(corta(x.t, 24))+'</text>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+ancho+'" height="18" rx="9" fill="#EEF2FA"/>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+w.toFixed(1)+'" height="18" rx="9" fill="'+x.c+'"/>'+
+       '<text x="'+(x0+ancho+8)+'" y="'+(y+18)+'" font-size="14" font-weight="800" fill="'+x.c+'">'+esc(x.lbl)+'</text>';
+  });
+  return { svg:svgCaja(W, H, titulo, b), h:H };
+}
+/* columnas: datos [{t, v}] */
+function svgColumnas(datos, titulo, W, H, color){
+  var mx=Math.max(1, Math.max.apply(null, datos.map(function(x){ return x.v; }).concat([0]))), base=H-46, alto=base-64, b='';
+  var paso=datos.length ? (W-60)/datos.length : 1, ancho=Math.min(56, paso*0.6);
+  b+='<line x1="30" y1="'+base+'" x2="'+(W-20)+'" y2="'+base+'" stroke="#C9D2E6" stroke-width="2"/>';
+  if(!datos.length) b+='<text x="18" y="70" font-size="15" fill="#8A8A92">Sin datos todavía</text>';
+  datos.forEach(function(x,i){
+    var h=alto*x.v/mx, cx=40+paso*i+paso/2;
+    b+='<rect x="'+(cx-ancho/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+ancho.toFixed(1)+'" height="'+Math.max(h,1).toFixed(1)+'" rx="6" fill="'+(x.c||color)+'"/>'+
+       '<text x="'+cx.toFixed(1)+'" y="'+(base-h-8).toFixed(1)+'" text-anchor="middle" font-size="15" font-weight="800" fill="#0B1B3F">'+x.v+'</text>'+
+       '<text x="'+cx.toFixed(1)+'" y="'+(base+20)+'" text-anchor="middle" font-size="13" fill="#55607F">'+esc(corta(x.t, 14))+'</text>';
+  });
+  return svgCaja(W, H, titulo, b);
+}
+/* todos los gráficos del tablero, solo con lo que el docente eligió */
+function graficosDash(d){
+  var al=d.al, W=560, g=[];
+  g.push({ t:'niveles', svg:svgDona(NIVELES.map(function(nv){
+    return { t:nv.t, c:nv.c, v:al.filter(function(a){ return nv.ok(a.p); }).length };
+  }), 'Niveles de la clase', W, 300), h:300 });
+  var b1=svgBarrasH(d.porAct.map(function(x){
+    return { t:ACT[x.k].corto||x.k, v:x.p, c:tono(x.p), lbl:Math.round(x.p*100)+'%' };
+  }), 'Avance promedio por actividad', W, 1);
+  g.push({ t:'actividades', svg:b1.svg, h:b1.h });
+  var ref=d.ks.filter(function(k){ return ACT[k].tipo!=='con' && ACT[k].tipo!=='tab'; });
+  g.push({ t:'fallos', svg:svgColumnas(ref.map(function(k){
+    return { t:ACT[k].corto||k, v:d.fallos.filter(function(f){ return f.k===k; }).length };
+  }), 'Fallos por actividad', W, 300, '#FC0045'), h:300 });
+  var ord=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,20);
+  var b2=svgBarrasH(ord.map(function(a){ return { t:a.n, v:a.p, c:tono(a.p), lbl:Math.round(a.p*100)+'%' }; }),
+                    'Avance por alumno'+(al.length>20?' (los 20 primeros)':''), W, 1);
+  g.push({ t:'alumnos', svg:b2.svg, h:b2.h });
+  var chr=chLee().mensajes.length ? chResumen().filter(function(p){ return !p.fuera; }).slice(0,20) : [];
+  if(chr.length){
+    var mxc=Math.max(1, chr[0].validas);
+    var b4=svgBarrasH(chr.map(function(p,i){ return { t:chNombre(p,i), v:p.validas, c:'#0E8F95', lbl:String(p.validas) }; }),
+                      'Intervenciones válidas en el chat de BigBlueButton', W, mxc);
+    g.push({ t:'chat', svg:b4.svg, h:b4.h });
+  }
+  d.ks.forEach(function(k){
+    var A=ACT[k];
+    if(A.tipo!=='con' || (A.modo!=='poll' && A.modo!=='opinion')) return;
+    var it=PIZ[k]||[], tot=it.length;
+    var b3=svgBarrasH(A.ops.map(function(o,j){
+      var n=it.filter(function(x){ return x.v===j; }).length;
+      return { t:o.replace(/^[^\wÁÉÍÓÚáéíóúÑñ]+\s*/,''), v:n, c:'#071767', lbl:n+(tot?' · '+Math.round(n/tot*100)+'%':'') };
+    }), A.titulo, W, Math.max(1, tot));
+    g.push({ t:k, svg:b3.svg, h:b3.h });
+  });
+  return g;
+}
+/* un SVG convertido en PNG (para el Excel) */
+function pngDe(svg, W, H){
+  return new Promise(function(ok){
+    var img=new Image(), esc2=2;
+    img.onload=function(){
+      try{
+        var c=document.createElement('canvas'); c.width=W*esc2; c.height=H*esc2;
+        var x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height);
+        x.drawImage(img, 0, 0, c.width, c.height);
+        ok(c.toDataURL('image/png'));
+      }catch(e){ ok(null); }
+    };
+    img.onerror=function(){ ok(null); };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+}
+
+/* ================= dashboard del docente ================= */
+var dashAbierto=false;
+function dashVivo(){ return dashAbierto && !!$('dmDash'); }
+function tono(p){ return p>=1 ? '#0F6B45' : (p>=0.8 ? '#1C7C54' : (p>=0.5 ? '#C98A00' : (p>0 ? '#A4161A' : '#B9C2D8'))); }
+function datosDash(){
+  var filas=(window.Aula && Aula.filas) || [], ks=clavesVis();
+  var al=filas.map(function(f){
+    var e=f.estado||{}, c=cuenta(e.G||{});
+    return { n:f.alumno, ok:c.ok, tot:c.total, p:c.total ? c.ok/c.total : 0, G:e.G||{}, mano:e.mano, act:f.actualizado };
+  });
+  var porAct=ks.map(function(k){
+    var t=cuantas(k), suma=0, comp=0, emp=0;
+    al.forEach(function(a){ var h=hechasEn(a.G,k); suma+=h/t; if(h>=t) comp++; if(h>0) emp++; });
+    return { k:k, p: al.length ? suma/al.length : 0, comp:comp, emp:emp };
+  });
+  /* las preguntas en que más se equivocan: alumnos distintos con al menos un fallo */
+  var err={}, todos=fallosSala();
+  todos.forEach(function(f){
+    var id=f.k+'|'+f.i;
+    if(!err[id]) err[id]={ k:f.k, f:f, al:{}, n:0, veces:0 };
+    err[id].veces++;
+    if(!err[id].al[f.al]){ err[id].al[f.al]=1; err[id].n++; }
+  });
+  var errores=Object.keys(err).map(function(id){ var e=err[id]; return { k:e.k, q:descFallo(e.f).q, n:e.n, veces:e.veces }; })
+    .sort(function(a,b){ return b.n-a.n || b.veces-a.veces; }).slice(0,6);
+  al.forEach(function(a){ a.nf=todos.filter(function(f){ return f.al===a.n; }).length; });
+  return { al:al, porAct:porAct, errores:errores, ks:ks, fallos:todos };
+}
+function pintaDash(){
+  var box=$('dmDash'); if(!box) return;
+  var d=datosDash(), al=d.al, n=al.length;
+  var prom = n ? al.reduce(function(s,a){ return s+a.p; },0)/n : 0;
+  var comp=al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length;
+  var nada=al.filter(function(a){ return !a.ok; }).length;
+  var conVis=CON.filter(function(k){ return d.ks.indexOf(k)>=0; });
+  var conUno=al.filter(function(a){ return conVis.some(function(k){ return hechasEn(a.G,k)>0; }); }).length;
+  var manos=al.filter(function(a){ return a.mano==='duda'; });
+  var h='<div class="kpis">'+
+    '<div class="kpi"><span>En la sala</span><b>'+n+'</b><small>'+(n===1?'participante':'participantes')+'</small></div>'+
+    '<div class="kpi"><span>Participaci&oacute;n</span><b>'+Math.round(prom*100)+'%</b><small>promedio sobre lo elegido</small></div>'+
+    '<div class="kpi"><span>Completaron todo</span><b>'+comp+'</b><small>de '+n+'</small></div>'+
+    '<div class="kpi f"><span>Sin empezar</span><b>'+nada+'</b><small>de '+n+'</small></div>'+
+    (conVis.length ? '<div class="kpi"><span>Conectemos</span><b>'+conUno+'</b><small>respondieron al menos una</small></div>' : '')+
+    (chLee().mensajes.length ? '<div class="kpi"><span>Chat BigBlueButton</span><b>'+chResumen().filter(function(p){ return !p.fuera; }).reduce(function(s,p){ return s+p.validas; },0)+'</b><small>intervenciones v&aacute;lidas</small></div>' : '')+
+    '<div class="kpi f"><span>Manos levantadas</span><b>'+manos.length+'</b><small>'+(manos.length?esc(manos.map(function(a){ return a.n; }).slice(0,3).join(', ')):'nadie por ahora')+'</small></div>'+
+    '</div><div class="dgraf">'+graficosDash(d).map(function(x){ return '<div class="dg">'+x.svg+'</div>'; }).join('')+'</div>'+
+    '<div class="dgrid"><div>'+
+    '<div class="dbox"><h4>Preguntas con m&aacute;s errores</h4>'+
+    (d.errores.length ? '<ul class="dlista">'+d.errores.map(function(e){
+      return '<li><span>'+esc(ACT[e.k].corto)+': '+esc(e.q)+'</span><span class="v">'+e.n+(e.n===1?' alumno':' alumnos')+' &middot; '+e.veces+'&times;</span></li>';
+    }).join('')+'</ul>' : '<p class="dvacio">Nadie se ha equivocado todav&iacute;a.</p>')+'</div>'+
+    '<div class="dbox"><h4>&#128221; Evidencia de fallos &middot; '+d.fallos.length+' en total</h4>'+tablaFallos(d.fallos.slice(0,12), true)+
+    (d.fallos.length>12 ? '<p class="dvacio">Y '+(d.fallos.length-12)+' m&aacute;s en el CSV de evidencia.</p>' : '')+'</div>'+
+    '</div><div>'+
+    '<div class="dbox"><h4>Necesitan apoyo (menos de 50 %)</h4>';
+  var bajos=al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; }).slice(0,10);
+  h+= bajos.length ? '<ul class="dlista">'+bajos.map(function(a){
+        return '<li><span>'+esc(a.n)+(a.nf?' <small class="dvacio">&middot; '+a.nf+' fallos</small>':'')+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span>'+
+               '<button type="button" data-ver="'+esc(a.n)+'">Ver</button></li>';
+      }).join('')+'</ul>' : '<p class="dvacio">'+(n?'Todos van por encima del 50 %.':'Todav&iacute;a no hay alumnos.')+'</p>';
+  h+='</div>'+(CON.length ? '<div class="dbox"><h4>Conectemos: respuestas en la pizarra</h4><ul class="dlista">'+
+     (CON.filter(function(k){ return d.ks.indexOf(k)>=0; }).map(function(k){
+       var c=(PIZ[k]||[]).length;
+       return '<li><span>'+esc(ACT[k].titulo)+'</span><span class="v">'+c+' de '+n+'</span></li>';
+     }).join('') || '<li class="dvacio">Hoy no se eligió ning&uacute;n Conectemos.</li>')+'</ul></div>' : '')+
+     '<div class="dbox"><h4>Ranking de participaci&oacute;n</h4>';
+  var top=al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); }).slice(0,8);
+  h+= top.length ? '<ul class="dlista">'+top.map(function(a,j){
+        return '<li><span>'+(j+1)+'. '+esc(a.n)+'</span><span class="v" style="color:'+tono(a.p)+'">'+Math.round(a.p*100)+'%</span></li>';
+      }).join('')+'</ul>' : '<p class="dvacio">Sin datos todav&iacute;a.</p>';
+  h+='</div></div></div>';
+  /* el reporte de participación, aquí mismo */
+  h+='<div class="dbox"><h4>&#128203; Reporte de participaci&oacute;n (1 punto por actividad elegida)</h4>'+
+     (n ? '<div class="tf rp"><table><thead><tr><th>Alumno</th>'+d.ks.map(function(k){ return '<th>'+esc(ACT[k].corto||k)+'</th>'; }).join('')+
+          '<th>Puntos</th><th>Avance</th><th>Fallos</th></tr></thead><tbody>'+
+          al.slice().sort(function(a,b){ return a.n.localeCompare(b.n); }).map(function(a){
+            return '<tr><td><b>'+esc(a.n)+'</b></td>'+d.ks.map(function(k){
+              var p=Math.min(1, hechasEn(a.G,k)/cuantas(k));
+              return '<td style="color:'+tono(p)+';font-weight:800">'+Math.round(p*100)+'%</td>';
+            }).join('')+'<td>'+a.ok+' / '+a.tot+'</td><td style="color:'+tono(a.p)+';font-weight:900">'+Math.round(a.p*100)+'%</td><td>'+(a.nf||0)+'</td></tr>';
+          }).join('')+'</tbody></table></div>'
+        : '<p class="dvacio">Todav&iacute;a no hay alumnos en la sala.</p>')+
+     '<p class="dvacio" id="dmRepTx" style="margin:6px 0 0">El Excel trae el reporte, esta hoja de dashboard, la evidencia de fallos y la pizarra.</p></div>';
+  var txv=$('dmRepTx') && $('dmRepTx').textContent;
+  box.innerHTML=h;
+  if(txv && $('dmRepTx')) $('dmRepTx').textContent=txv;
+  qq('button[data-ver]', box).forEach(function(b){
+    b.addEventListener('click', function(){ var nm=b.dataset.ver; cierraDialogo(); if(Aula.verPantalla) Aula.verPantalla(nm); });
+  });
+}
+function csvPizarra(){
+  function c(v){ v=(v===undefined||v===null)?'':String(v); return /[",;\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+  var filas=[['Actividad','Alumno','Opción','Respuesta']];
+  CON.forEach(function(k){
+    var A=ACT[k];
+    ((window.Aula && Aula.filas) || []).forEach(function(f){
+      var g=((f.estado||{}).G||{})[k];
+      if(!g || (g.t===undefined && g.v===undefined)) return;
+      filas.push([A.titulo, f.alumno, (A.ops && typeof g.v==='number') ? A.ops[g.v] : '', g.t||'']);
+    });
+  });
+  var txt='﻿'+filas.map(function(r){ return r.map(c).join(','); }).join('\r\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([txt], { type:'text/csv;charset=utf-8' }));
+  a.download='pizarra-conectemos-'+((window.Aula && Aula.sala)||'sala')+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+/* el Excel del reporte lleva también el dashboard, la evidencia de fallos y la pizarra */
+function excelExtra(wb){
+  var d=datosDash(), al=d.al, n=al.length, BORDE={ style:'thin', color:{ argb:'FFD5DDEF' } };
+  var caja={ top:BORDE, left:BORDE, bottom:BORDE, right:BORDE };
+  function arg(c){ return 'FF'+c.replace('#','').toUpperCase(); }
+  function tit(ws, txt, ncol){
+    ws.mergeCells(1,1,1,ncol);
+    var c=ws.getCell(1,1); c.value=txt; c.font={ bold:true, size:15, color:{ argb:'FFFFFFFF' } };
+    c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; c.alignment={ vertical:'middle' };
+    ws.getRow(1).height=26;
+    ws.mergeCells(2,1,2,ncol);
+    ws.getCell(2,1).value='Sala '+((window.Aula && Aula.sala)||'')+' · '+new Date().toLocaleString('es-PE');
+    ws.getCell(2,1).font={ italic:true, color:{ argb:'FF55607F' } };
+  }
+  function sec(ws, txt){ var r=ws.addRow([]); r=ws.addRow([txt]); r.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } }; }
+  function cab(ws, vals){
+    var r=ws.addRow(vals);
+    r.eachCell(function(c){ c.font={ bold:true, color:{ argb:'FFFFFFFF' } }; c.border=caja;
+      c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; c.alignment={ wrapText:true, vertical:'middle' }; });
+  }
+  function fila(ws, vals, pctCol, p){
+    var r=ws.addRow(vals);
+    r.eachCell({ includeEmpty:true }, function(c){ c.border=caja; c.alignment={ wrapText:true, vertical:'top' }; });
+    if(pctCol){ var c=r.getCell(pctCol); c.numFmt='0%'; c.font={ bold:true, color:{ argb:arg(tono(p)) } }; }
+    return r;
+  }
+  /* ---- Dashboard: tarjetas, gráficos y tablas ---- */
+  var ws=wb.addWorksheet('Dashboard', { views:[{ showGridLines:false }] });
+  for(var cc=1; cc<=12; cc++) ws.getColumn(cc).width=13.5;
+  tit(ws, 'Dashboard de la clase · '+document.title.replace(/^Contabilidad - /,''), 12);
+  var prom = n ? al.reduce(function(s,a){ return s+a.p; },0)/n : 0;
+  var conVis=CON.filter(function(k){ return d.ks.indexOf(k)>=0; });
+  var tarjetas=[
+    ['En la sala', n, 'FF071767'],
+    ['Participación', Math.round(prom*100)+'%', 'FF0E8F95'],
+    ['Completaron', al.filter(function(a){ return a.tot && a.ok>=a.tot; }).length+' de '+n, 'FF0F6B45'],
+    ['Sin empezar', al.filter(function(a){ return !a.ok; }).length+' de '+n, 'FF8A8A92'],
+    ['Fallos', d.fallos.length, 'FFFC0045'],
+    ['Actividades', d.ks.length+' de '+CLAVES.length, 'FFC600A3']
+  ];
+  ws.getRow(4).height=22; ws.getRow(5).height=40;
+  tarjetas.forEach(function(t,i){
+    var c1=1+i*2;
+    ws.mergeCells(4,c1,4,c1+1); ws.mergeCells(5,c1,5,c1+1);
+    var a1=ws.getCell(4,c1), a2=ws.getCell(5,c1);
+    a1.value=t[0]; a2.value=t[1];
+    [a1,a2].forEach(function(x){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:t[2] } }; x.alignment={ horizontal:'center', vertical:'middle' }; });
+    a1.font={ bold:true, size:10, color:{ argb:'FFFFFFFF' } };
+    a2.font={ bold:true, size:22, color:{ argb:'FFFFFFFF' } };
+  });
+  /* zona de gráficos: dos por fila; las imágenes se agregan al final */
+  var graf=graficosDash(d), filaG=7, puestos=[];
+  for(var gi=0; gi<graf.length; gi+=2){
+    var hmax=Math.max(graf[gi].h, graf[gi+1] ? graf[gi+1].h : 0);
+    puestos.push({ g:graf[gi], col:0, row:filaG });
+    if(graf[gi+1]) puestos.push({ g:graf[gi+1], col:6, row:filaG });
+    filaG += Math.ceil(hmax/20)+1;
+  }
+  var rr=filaG+1;   /* siguiente fila libre, debajo de los gráficos */
+  /* tablas: el texto ocupa varias columnas unidas */
+  function tabla(titulo, cols, filas){
+    rr++;
+    var tr=ws.getRow(rr++); tr.getCell(1).value=titulo; tr.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } };
+    function pon(vals, esCab, pctIdx, p){
+      var row=ws.getRow(rr++), c=1;
+      cols.forEach(function(span, i){
+        var cel=row.getCell(c); cel.value=vals[i];
+        if(span>1) ws.mergeCells(row.number, c, row.number, c+span-1);
+        for(var k=0;k<span;k++){
+          var x=row.getCell(c+k); x.border=caja; x.alignment={ wrapText:true, vertical:'middle' };
+          if(esCab){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; x.font={ bold:true, color:{ argb:'FFFFFFFF' } }; }
+        }
+        if(i===pctIdx){ cel.numFmt='0%'; cel.font={ bold:true, color:{ argb:arg(tono(p)) } }; }
+        c+=span;
+      });
+    }
+    pon(filas.cab, true);
+    if(!filas.datos.length) pon(cols.map(function(x,i){ return i ? '' : filas.vacio; }));
+    filas.datos.forEach(function(f){ pon(f.v, false, f.pi, f.p); });
+  }
+  tabla('Avance por actividad (solo las elegidas)', [6,2,2,2], { cab:['Actividad','Promedio','Completaron','Empezaron'], vacio:'—',
+    datos:d.porAct.map(function(x){ return { v:[ACT[x.k].titulo, x.p, x.comp+' de '+n, x.emp+' de '+n], pi:1, p:x.p }; }) });
+  tabla('Preguntas con más errores', [2,6,2,2], { cab:['Actividad','Pregunta','Alumnos','Veces'], vacio:'Sin errores registrados',
+    datos:d.errores.map(function(e){ return { v:[ACT[e.k].corto, e.q, e.n, e.veces] }; }) });
+  tabla('Necesitan apoyo (menos de 50 %)', [6,3,3], { cab:['Alumno','Avance','Fallos'], vacio:'Todos sobre el 50 %',
+    datos:al.filter(function(a){ return a.p<0.5; }).sort(function(a,b){ return a.p-b.p; })
+            .map(function(a){ return { v:[a.n, a.p, a.nf||0], pi:1, p:a.p }; }) });
+  tabla('Ranking de participación', [2,7,3], { cab:['Puesto','Alumno','Avance'], vacio:'Sin alumnos',
+    datos:al.slice().sort(function(a,b){ return b.p-a.p || a.n.localeCompare(b.n); })
+            .map(function(a,i){ return { v:[i+1, a.n, a.p], pi:2, p:a.p }; }) });
+  if(conVis.length) tabla('Conectemos: respuestas en la pizarra', [8,4], { cab:['Actividad','Respuestas'], vacio:'',
+    datos:conVis.map(function(k){ return { v:[ACT[k].titulo, (PIZ[k]||[]).length+' de '+n] }; }) });
+  var espera=Promise.all(puestos.map(function(p){
+    return pngDe(p.g.svg, 560, p.g.h).then(function(png){
+      if(!png) return;
+      var id=wb.addImage({ base64:png, extension:'png' });
+      ws.addImage(id, { tl:{ col:p.col, row:p.row }, ext:{ width:560, height:p.g.h } });
+    });
+  }));
+  /* ---- Evidencia de fallos ---- */
+  var wf=wb.addWorksheet('Evidencia de fallos', { views:[{ state:'frozen', ySplit:3 }] });
+  tit(wf, 'Evidencia de fallos', 6);
+  cab(wf, ['Hora','Alumno','Actividad','Pregunta','Respondió','Respuesta correcta']);
+  d.fallos.slice().reverse().forEach(function(f){
+    var x=descFallo(f), r=fila(wf, [new Date(f.h).toLocaleString('es-PE'), f.al, ACT[f.k].titulo, x.q, x.dio, x.ok]);
+    r.getCell(5).font={ bold:true, color:{ argb:'FFA4161A' } }; r.getCell(6).font={ bold:true, color:{ argb:'FF0F6B45' } };
+  });
+  [20,24,40,50,22,22].forEach(function(w,j){ wf.getColumn(j+1).width=w; });
+  /* ---- Pizarra ---- */
+  var wp=wb.addWorksheet('Pizarra Conectemos', { views:[{ state:'frozen', ySplit:3 }] });
+  tit(wp, 'Respuestas de Conectemos', 4);
+  cab(wp, ['Actividad','Alumno','Opción','Respuesta']);
+  PIZK.filter(function(k){ return d.ks.indexOf(k)>=0; }).forEach(function(k){
+    var A=ACT[k];
+    (PIZ[k]||[]).forEach(function(x){ fila(wp, [A.titulo, x.n, (A.ops && typeof x.v==='number') ? A.ops[x.v] : '', x.t||'']); });
+  });
+  [34,26,24,60].forEach(function(w,j){ wp.getColumn(j+1).width=w; });
+  /* ---- Chat de BigBlueButton ---- */
+  if(chLee().mensajes.length){
+    var wc=wb.addWorksheet('Chat BigBlueButton', { views:[{ state:'frozen', ySplit:3 }] });
+    tit(wc, 'Participación en el chat de BigBlueButton', 6);
+    cab(wc, ['N.º','Estudiante','Intervenciones válidas','Mensajes','Primer mensaje','Último mensaje']);
+    chResumen().filter(function(p){ return !p.fuera; }).forEach(function(p,i){ fila(wc, [i+1, p.nombre, p.validas, p.total, p.primero, p.ultimo]); });
+    [7,40,20,12,16,16].forEach(function(w,j){ wc.getColumn(j+1).width=w; });
+    var wm=wb.addWorksheet('Chat mensajes', { views:[{ state:'frozen', ySplit:3 }] });
+    tit(wm, 'Mensajes del chat y su clasificación', 5);
+    cab(wm, ['Hora','Autor','Mensaje','¿Cuenta?','Motivo']);
+    chMensajes().forEach(function(m){
+      var rw=fila(wm, [m.hora, m.autor, m.texto, m.valido?'Sí':'No', m.motivo]);
+      rw.getCell(4).font={ bold:true, color:{ argb: m.valido ? 'FF0F6B45' : 'FFA4161A' } };
+    });
+    [10,34,60,10,30].forEach(function(w,j){ wm.getColumn(j+1).width=w; });
+  }
+  return espera;
+}
+function abreDash(){
+  if(!soyDocente()) return;
+  dialogo('<div class="dm-h"><b>&#128202; Dashboard de la clase</b><span class="dvacio">Sala '+esc((Aula.sala)||'')+' &middot; se actualiza cada 3 s</span>'+
+    '<button type="button" class="x" data-cierra>Cerrar &#10005;</button></div>'+
+    '<div id="dmDash"></div>'+
+    '<div class="dm-b"><button type="button" class="o-btn" id="dmFal">&#11015; Evidencia de fallos (CSV)</button>'+
+    '<button type="button" class="o-btn" id="dmCsv">&#11015; Respuestas de la pizarra (CSV)</button>'+
+    '<button type="button" class="o-btn" id="dmPdf">&#128202; Reporte para imprimir</button>'+
+    '<button type="button" class="o-btn o-btn-primary" id="dmXls">&#11015; Reporte de participaci&oacute;n (Excel)</button></div>', true);
+  dashAbierto=true;
+  $('dmCsv').addEventListener('click', csvPizarra);
+  $('dmFal').addEventListener('click', csvFallos);
+  $('dmPdf').addEventListener('click', function(){ var b=$('aulaRepoVer'); if(b) b.click(); });
+  $('dmXls').addEventListener('click', function(){
+    var b=$('aulaRepoBtn'); if(!b) return;
+    b.click(); sopla('Preparando el reporte de participación…');
+    /* el estado de la descarga se ve aquí, en el dashboard */
+    var n=0, t=setInterval(function(){
+      var x=$('aulaRepoTx'), y=$('dmRepTx');
+      if(x && y) y.textContent=x.textContent;
+      if(++n>40 || !y) clearInterval(t);
+    }, 400);
+  });
+  pintaDash();
+}
+
+/* ================= botones y datos de la sala en pantalla ================= */
+function pintaExtras(){
+  var dentro=enSala(), doc=soyDocente(), c=window.Aula && Aula.sala;
+  var st=$('salaTit');
+  st.hidden=!(dentro && c);
+  if(c) st.innerHTML='&#128273;<span class="lb"> Sala</span> '+esc(c);
+  $('btnLink').hidden=!(dentro && c);
+  $('btnDash').hidden=!doc;
+  $('btnDash2').hidden=!doc;
+  $('btnRepo').hidden=!doc;
+  $('btnRepo2').hidden=!doc;
+  $('btnChat').hidden=!doc;
+  $('btnChat2').hidden=!doc;
+  if($('btnAdmin')) $('btnAdmin').hidden=dentro;
+  var bn=$('btnNombre');
+  if(bn) bn.hidden=!dentro;
+  if($('notaEnlace')) $('notaEnlace').hidden=dentro;
+  decora();
+}
+/* ---- la gráfica de don Pedro: se dibuja sola y se explora con el deslizador ---- */
+function grafHtml(){
+  var X=function(q){ return 46+q*2.4; }, Y=function(v){ return 300-v*0.4; };
+  var h='<div class="graf"><svg viewBox="0 0 500 340" class="g-svg" role="img" aria-label="Gráfica de ingreso y costo total de don Pedro">';
+  for(var q=30;q<=180;q+=30) h+='<line x1="'+X(q)+'" y1="'+Y(0)+'" x2="'+X(q)+'" y2="'+Y(650)+'" class="g-grid"/><text x="'+X(q)+'" y="318" class="g-tx" text-anchor="middle">'+q+'</text>';
+  for(var v=100;v<=600;v+=100) h+='<line x1="'+X(0)+'" y1="'+Y(v)+'" x2="'+X(180)+'" y2="'+Y(v)+'" class="g-grid"/><text x="40" y="'+(Y(v)+4)+'" class="g-tx" text-anchor="end">'+v+'</text>';
+  h+='<path id="gZona" class="g-zona" d=""/>'+
+     '<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(185)+'" y2="'+Y(0)+'" class="g-eje"/><line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(0)+'" y2="'+Y(660)+'" class="g-eje"/>'+
+     '<text x="'+X(180)+'" y="'+(Y(0)-8)+'" class="g-et" text-anchor="end">empanadas (q)</text><text x="'+(X(0)+8)+'" y="'+Y(640)+'" class="g-et">soles</text>'+
+     '<line x1="'+X(0)+'" y1="'+Y(180)+'" x2="'+X(180)+'" y2="'+Y(450)+'" class="g-ct dibuja"/>'+
+     '<line x1="'+X(0)+'" y1="'+Y(0)+'" x2="'+X(180)+'" y2="'+Y(630)+'" class="g-i dibuja d2"/>'+
+     '<text x="'+X(176)+'" y="'+(Y(630)+18)+'" class="g-et i" text-anchor="end">Ingreso</text>'+
+     '<text x="'+X(176)+'" y="'+(Y(450)+22)+'" class="g-et ct" text-anchor="end">Costo total</text>'+
+     '<circle cx="'+X(90)+'" cy="'+Y(315)+'" r="7" class="g-eq"/><circle cx="'+X(90)+'" cy="'+Y(315)+'" r="7" class="g-eq-onda"/>'+
+     '<line id="gQ" class="g-q" y1="'+Y(0)+'" y2="'+Y(650)+'"/><circle id="gPi" r="6" class="g-pi"/><circle id="gPc" r="6" class="g-pc"/>'+
+     '</svg><label class="g-ctl">Mueve la cantidad: <b id="gQv">q = 120</b><input type="range" id="gRng" min="0" max="180" step="5" value="120" aria-label="Cantidad de empanadas"></label>'+
+     '<div class="g-lee" id="gLee"></div></div>';
+  return h;
+}
+function cableaGraf(box){
+  var X=function(q){ return 46+q*2.4; }, Y=function(v){ return 300-v*0.4; };
+  var r=box.querySelector('#gRng');
+  function fmt(n){ return (n<0?'−':'')+'S/ '+Math.abs(n).toLocaleString('es-PE'); }
+  function pon(){
+    var q=+r.value, I=3.5*q, CT=180+1.5*q, U=I-CT;
+    box.querySelector('#gQv').textContent='q = '+q;
+    var l=box.querySelector('#gQ'); l.setAttribute('x1',X(q)); l.setAttribute('x2',X(q));
+    var pi=box.querySelector('#gPi'); pi.setAttribute('cx',X(q)); pi.setAttribute('cy',Y(I));
+    var pc=box.querySelector('#gPc'); pc.setAttribute('cx',X(q)); pc.setAttribute('cy',Y(CT));
+    var z=box.querySelector('#gZona');
+    z.setAttribute('d','M'+X(q)+' '+Y(I)+' L'+X(q)+' '+Y(CT));
+    z.setAttribute('class','g-zona '+(U>0?'gana':(U<0?'pierde':'')));
+    box.querySelector('#gLee').innerHTML='<span class="i">I = '+fmt(I)+'</span><span class="ct">CT = '+fmt(CT)+'</span>'+
+      '<span class="u '+(U>0?'gana':(U<0?'pierde':'cero'))+'">U = '+fmt(U)+(U>0?' &#128512; gana':(U<0?' &#128543; pierde':' &#9878;&#65039; equilibrio'))+'</span>';
+  }
+  r.addEventListener('input', pon);
+  r.addEventListener('keydown', function(e){ e.stopPropagation(); });
+  pon();
+}
+/* la portada muestra el código grande y quién soy */
+function decora(){
+  qq('#lam [data-graf]').forEach(function(el){
+    if(el.dataset.listo) return;
+    el.dataset.listo='1'; el.innerHTML=grafHtml(); cableaGraf(el);
+  });
+  qq('#lam [data-sala]').forEach(function(el){
+    var c=window.Aula && Aula.sala;
+    el.innerHTML = c ? '<span class="cod">C&oacute;digo de la sala <b>'+esc(c)+'</b></span>'+
+                       '<button type="button" data-ab="link">&#128279; Enlace y QR para entrar</button>' : '';
+  });
+  qq('#lam [data-yo]').forEach(function(el){
+    if(!enSala()){ el.innerHTML=''; return; }
+    el.innerHTML='Est&aacute;s como <b>'+esc(Aula.yo||'')+'</b><button type="button" data-ab="nom">&#9999;&#65039; Cambiar mi nombre</button>';
+  });
+  qq('#lam [data-agenda]').forEach(function(el){
+    var ks=clavesVis(), con=ks.filter(function(k){ return ACT[k].tipo==='con'; }), ref=ks.filter(function(k){ return ACT[k].tipo!=='con'; });
+    function li(k){ return '<li>'+esc(ACT[k].titulo.replace(/^Actividad de reflexión \/ cierre \d+ · /,''))+'</li>'; }
+    el.innerHTML=(con.length ? '<p><b class="sub">Conectemos</b> &mdash; tus respuestas salen como stickers en la pizarra</p><ul>'+con.map(li).join('')+'</ul>' : '')+
+                 (ref.length ? '<p><b class="sub">Actividades de hoy</b></p><ul>'+ref.map(li).join('')+'</ul>' : '');
+  });
+  qq('#lam [data-misfallos]').forEach(function(el){
+    if(soyDocente() && !replica){   /* el docente ve la de toda la clase */
+      var fs=enSala() ? fallosSala() : [];
+      el.innerHTML='<div class="dbox mf"><h4>&#128221; Evidencia de fallos de la clase: '+fs.length+'</h4>'+tablaFallos(fs.slice(0,40), true)+'</div>';
+      return;
+    }
+    var ks=clavesVis(), mis=(G.fallos||[]).filter(function(f){ return ks.indexOf(f.k)>=0; }).slice().reverse();
+    el.innerHTML='<div class="dbox mf"><h4>&#128221; Mis errores en esta sesi&oacute;n: '+mis.length+(mis.length===1?' error':' errores')+'</h4>'+
+      (mis.length ? '<p class="dvacio" style="margin:0 0 6px">Revisa en qu&eacute; te equivocaste y cu&aacute;l era la respuesta. Tambi&eacute;n la ve tu docente.</p>'+tablaFallos(mis.slice(0,40), false)
+                  : '<p class="dvacio">&iexcl;Sin errores registrados! &#127881;</p>')+'</div>';
+  });
+  qq('#lam [data-ab]').forEach(function(b){
+    b.addEventListener('click', function(){ if(b.dataset.ab==='link') abreEnlace(); else abreNombre(); });
+  });
+}
+/* al arrastrar una ficha, los botones flotantes se apartan para poder soltarla debajo */
+(function(){
+  var raiz=document.documentElement;
+  document.addEventListener('pointermove', function(){
+    raiz.classList.toggle('arrastra', !!document.querySelector('.fantasma'));
+  }, { passive:true });
+  ['pointerup','pointercancel'].forEach(function(t){
+    document.addEventListener(t, function(){ setTimeout(function(){ raiz.classList.remove('arrastra'); }, 0); }, { passive:true });
+  });
+})();
+$('salaTit').addEventListener('click', abreEnlace);
+$('btnLink').addEventListener('click', abreEnlace);
+$('btnDash').addEventListener('click', abreDash);
+$('btnDash2').addEventListener('click', abreDash);
+/* descargar el reporte (Excel con el dashboard, la evidencia de fallos y la pizarra) */
+function bajaReporte(){
+  registraSesion();
+  var b=$('aulaRepoBtn');
+  if(!b){ sopla('Entra como docente para descargar el reporte'); return; }
+  b.click(); sopla('Preparando el reporte de participación…');
+  var n=0, t=setInterval(function(){
+    var x=$('aulaRepoTx');
+    if(x && /^Listo|No se pudo|Todavía no hay/.test(x.textContent)){ sopla(x.textContent); clearInterval(t); }
+    if(++n>40) clearInterval(t);
+  }, 400);
+}
+$('btnRepo').addEventListener('click', bajaReporte);
+$('btnRepo2').addEventListener('click', bajaReporte);
+$('btnChat').addEventListener('click', abreChat);
+
+$('btnChat2').addEventListener('click', abreChat);
+
+
 var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'CONT4', codigo:'CONT', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
-    pantalla:pantalla, musica:true, batuta:recibeBatuta,
+  Aula.iniciar({ sala:'CONT4P', codigo:'CONT', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, ventana:ventanaAula,
+    actividades:actividadesReporte, ajusta:ajustaReporte, excelExtra:excelExtra, tituloReporte:'Reporte de participación · Contabilidad · Semana 4: Conciliación bancaria y Libro Caja y Bancos',
+    pantalla:pantalla, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
       if(doc){ if(SEL===null) leeSel(); } else if(!Aula.enSala){ SEL=null; }   /* alumno sin sala: se ven todas */
@@ -2868,6 +4819,7 @@ if(window.Aula){
       var pp=$('puerta').querySelector('p');
       if(textoPuerta===null) textoPuerta=pp.innerHTML;
       $('puerta').querySelector('h2').textContent = prac ? 'Modo práctica' : (dentro ? 'Estás dentro' : 'Entra a la sala');
+      $('puerta').classList.toggle('dentro', !!Aula.enSala);
       if(prac){
         pp.innerHTML='Estás practicando: <b>tus respuestas son temporales</b> y no se guardan ni las ve el docente. '+
                      'Para guardar tu avance, pulsa <b>Salir</b> y entra con el código de tu docente.';
@@ -2877,17 +4829,41 @@ if(window.Aula){
       if(!doc) modoClase='libre';   /* solo la batuta del docente puede atar al alumno */
       if(prac){ G=vacio(); yaCruz={}; i=0; }
       else if(dentro){ cargaG(); yaCruz={}; }
+      if(!doc){ PIZ={}; pizSello=''; }
       if(dentro){ pinta(); setTimeout(enfoca, 120); }
-      pintaModo();
-      if(doc) difunde();
+      pintaModo(); pintaExtras();
+      if(doc){ refrescaPiz(true); difunde(); }
     } });
+  /* cualquiera, con nombre o sin él, puede corregirlo sin salir de la sala */
+  (function(){
+    var fila=$('aulaDentro'), sal=$('aulaSalir');
+    if(fila && sal && !$('btnNombre')){
+      var b=document.createElement('button');
+      b.className='o-btn'; b.id='btnNombre'; b.type='button'; b.hidden=true;
+      b.innerHTML='&#9999;&#65039; Cambiar mi nombre';
+      b.addEventListener('click', abreNombre);
+      fila.insertBefore(b, sal);
+    }
+    /* quien abre el enlace o el QR ya trae el código de la sala */
+    var m=/[?&]sala=(\d{4})(&|$)/.exec(location.search);
+    if(m && $('aulaSala')) setTimeout(function(){
+      if(Aula.enSala) return;
+      $('aulaSala').value=m[1];
+      var pp=$('puerta').querySelector('p');
+      var nota=document.createElement('p');
+      nota.className='aviso'; nota.id='notaEnlace'; nota.style.cssText='margin:0 0 10px;font-size:17px;color:#0F6B45;font-weight:700';
+      nota.innerHTML='&#10003; Llegaste con el enlace de la sala <b>'+esc(m[1])+'</b>. Escribe tu nombre (o d&eacute;jalo en blanco) y pulsa <b>Entrar a la sala</b>.';
+      pp.parentNode.insertBefore(nota, $('aula'));
+      if($('aulaNombre')) $('aulaNombre').focus();
+    }, 60);
+  })();
 }else{
   $('mazo').hidden=false;
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
   aviso:'Se borrarán tus respuestas de esta sesión.',
-  hecho:function(){ G=vacio(); yaCruz={}; i=0; pinta();
+  hecho:function(){ var ev=G.fallos||[]; G=vacio(); G.fallos=ev; yaCruz={}; i=0; pinta();   /* la evidencia de fallos no se borra */
                     if(window.Aula && Aula.guardaFicha) Aula.guardaFicha(); }
 });
 
@@ -2896,13 +4872,27 @@ pinta();
 /* si se publica una versión nueva, la pestaña abierta se recarga sola */
 (function(){
   var mia=(document.querySelector('meta[name="version"]')||{}).content;
+  function avisaVersion(){
+    if(document.getElementById('nuevaVersion')) return;
+    var d=document.createElement('div'); d.id='nuevaVersion'; d.setAttribute('role','status');
+    d.style.cssText='position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:10005;background:#071767;color:#fff;'+
+      'font:700 15px Nunito,Inter,system-ui,sans-serif;padding:9px 12px 9px 16px;border-radius:12px;display:flex;gap:10px;'+
+      'align-items:center;box-shadow:0 8px 24px rgba(7,23,103,.35);max-width:calc(100vw - 24px)';
+    d.innerHTML='Hay una versión nueva de esta sesión.<button type="button" style="font:inherit;font-weight:800;border:0;'+
+      'border-radius:8px;padding:6px 12px;background:#FC0045;color:#fff;cursor:pointer">Actualizar</button>';
+    d.querySelector('button').addEventListener('click', function(){ location.reload(); });
+    document.body.appendChild(d);
+  }
   function revisa(){
     if(!window.fetch) return;
     fetch(location.pathname+'?nc='+Date.now(), { cache:'no-store' })
       .then(function(r){ return r.ok ? r.text() : ''; })
       .then(function(t){
         var m=/<meta name="version" content="([^"]+)"/.exec(t);
-        if(m && mia && m[1]!==mia) location.reload();
+        if(m && mia && m[1]!==mia){
+          /* con la clase en curso no se recarga sola: se avisa y cada uno actualiza cuando quiera */
+          if(window.Aula && (Aula.enSala || Aula.enPractica)) avisaVersion(); else location.reload();
+        }
       }).catch(function(){});
   }
   setInterval(revisa, 60000);
@@ -2911,6 +4901,6 @@ pinta();
 })();
 </script>
 
-<script src="cont-certus.js?v=20261026c"></script>
+<script src="cont-certus.js?v=20261102"></script>
 </body>
 </html>
