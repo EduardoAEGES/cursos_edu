@@ -67,6 +67,12 @@
        Aula.filas da las filas de la sala que ve el docente.
        Aula.guardaRegistro(id, datos) y Aula.leeRegistros(): histórico de sesiones en cfg.sala-REG.
 
+   Historial del docente (automático): mientras el docente está en la sala con
+       alumnos, cada minuto se guarda la sesión en cfg.sala-HIS (código de sala +
+       hora de inicio) con el avance por pregunta de cada alumno. El botón
+       «Sesiones pasadas» (o Aula.historial()) lista esas clases, y las de antes
+       armadas con lo que quedó en cada sala, para ver o bajar su reporte.
+
    Opcional: musica: true
        Al entrar como docente suena de fondo, a volumen bajo y solo en su
        equipo, una pista al azar de la carpeta sonidos/ del repositorio
@@ -572,7 +578,7 @@ function trae(){
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
       fallos=0; gente=sinRenombrados(quitaSacados(rows||[]));
-      if(docente) detectaAvisos(gente);
+      if(docente){ detectaAvisos(gente); guardaHistorial(false); }
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
       pintaMuro();
@@ -930,10 +936,12 @@ function pintaReporte(){
     b.className='aula-repo'; b.id='aulaRepo';
     b.innerHTML='<button class="o-btn o-btn-primary" id="aulaRepoBtn" type="button">⬇ Descargar Excel</button>'+
                 '<button class="o-btn" id="aulaRepoVer" type="button">📊 Ver reporte para imprimir</button>'+
+                '<button class="o-btn" id="aulaRepoHis" type="button">🗂 Sesiones pasadas</button>'+
                 '<span class="aula-repo-tx" id="aulaRepoTx">Avance de cada alumno con porcentajes y colores, en Excel o en PDF.</span>';
     m.parentNode.insertBefore(b, m);
     $('aulaRepoBtn').addEventListener('click', descargaReporte);
     $('aulaRepoVer').addEventListener('click', verReporte);
+    $('aulaRepoHis').addEventListener('click', abreHistorial);
   }
   b.hidden=!(docente && sala);
 }
@@ -1033,7 +1041,7 @@ function nivel(p){
   if(p>0)    return { t:'Inicio',      f:'FDE2E4', c:'A4161A' };
   return            { t:'Sin empezar', f:'F1F3F7', c:'6B7591' };
 }
-function datosReporte(rows){
+function datosReporte(rows, otraSala){
   var acts=null;
   try{ acts=cfg.actividades ? cfg.actividades() : null; }catch(e){ acts=null; }
   /* si la sesión envía sus preguntas, el reporte se calcula por pregunta, no por diapositiva */
@@ -1061,10 +1069,19 @@ function datosReporte(rows){
     /* una columna por pregunta: P1, P2… con la actividad y el texto de la pregunta */
     var larga=ests.map(function(e){ return e.preg || []; })
                   .reduce(function(m,p){ return p.length>m.length ? p : m; }, []);
-    larga.forEach(function(x,j){ columnas.push({ et:'P'+(j+1), t:x.e+' · '+x.q, max:1 }); });
+    larga.forEach(function(x,j){ columnas.push({ et:'P'+(j+1), t:x.e+' · '+x.q, e:x.e, q:x.q, max:1 }); });
     nAct=columnas.length;
   }
   for(var j=columnas.length;j<nAct;j++) columnas.push(acts && acts[j] ? acts[j] : { et:'A'+(j+1), t:'Actividad '+(j+1), max:0 });
+  return completaDatos({
+    titulo: cfg.tituloReporte || document.title || 'Reporte del aula',
+    sala: otraSala || sala, docente: leeLocal('docente_nombre') || '',
+    alumnos: alumnos, columnas: columnas, conPreg: conPreg
+  });
+}
+/* indicadores, celdas y promedios: sirven igual para la sala de hoy y para una sesión guardada */
+function completaDatos(d){
+  var alumnos=d.alumnos, columnas=d.columnas;
   var celda=function(a,j){
     var r=null; a.rej.forEach(function(x){ if(x.b===j) r=x; });
     return r ? { n:r.n||0, t:r.t||0, p:(r.t ? (r.n||0)/r.t : 0) } : null;
@@ -1075,20 +1092,23 @@ function datosReporte(rows){
     var p=vals.length ? vals.reduce(function(s,v){ return s+v.p; },0)/vals.length : 0;
     return { p:p, completos:vals.filter(function(v){ return v.t && v.n>=v.t; }).length };
   });
-  return {
-    titulo: cfg.tituloReporte || document.title || 'Reporte del aula',
-    sala: sala, docente: leeLocal('docente_nombre') || '',
-    fecha: fechaLocal(new Date().toISOString()),
-    conAvance: alumnos.some(function(a){ return a.total>0; }),
-    alumnos: alumnos, columnas: columnas, celda: celda, porAct: porAct, promedio: prom,
-    completaron: alumnos.filter(function(a){ return a.total && a.ok>=a.total; }).length,
-    enProceso: alumnos.filter(function(a){ return a.ok>0 && a.ok<a.total; }).length,
-    sinEmpezar: alumnos.filter(function(a){ return !a.ok; }).length,
-    hayDni: alumnos.some(function(a){ return a.dni; })
-  };
+  d.fecha=fechaLocal(new Date().toISOString());
+  d.conAvance=alumnos.some(function(a){ return a.total>0; });
+  d.celda=celda; d.porAct=porAct; d.promedio=prom;
+  d.completaron=alumnos.filter(function(a){ return a.total && a.ok>=a.total; }).length;
+  d.enProceso=alumnos.filter(function(a){ return a.ok>0 && a.ok<a.total; }).length;
+  d.sinEmpezar=alumnos.filter(function(a){ return !a.ok; }).length;
+  d.hayDni=alumnos.some(function(a){ return a.dni; });
+  return d;
+}
+/* las filas de la tabla simple (páginas sin avance medido) */
+function filasSimples(d, rows){ return d.resumen || armaReporte(rows||[]).resumen; }
+/* el subtítulo de los reportes: sala, docente, clase y fecha */
+function subReporte(d){
+  return 'Sala '+d.sala+(d.docente ? '  ·  Docente: '+d.docente : '')+(d.clase ? '  ·  Clase: '+d.clase : '')+'  ·  Generado: '+d.fecha;
 }
 /* --- el Excel con colores, porcentajes y tres hojas --- */
-function excelPro(X, d, rowsCrudas){
+function excelPro(X, d, rowsCrudas, sinExtra){
   var wb=new X.Workbook();
   wb.creator='Repositorio de Eduardo'; wb.created=new Date();
   var MAR='FF071767', FUC='FFFC0045', BORDE={ style:'thin', color:{ argb:'FFD5DDEF' } };
@@ -1118,11 +1138,11 @@ function excelPro(X, d, rowsCrudas){
     c.font={ bold:true, color:{ argb:'FF'+nv.c } };
     if(!conTexto){ c.numFmt='0%'; c.alignment={ horizontal:'center' }; }
   }
-  var sub='Sala '+d.sala+(d.docente ? '  ·  Docente: '+d.docente : '')+'  ·  Generado: '+d.fecha;
+  var sub=subReporte(d);
 
   if(!d.conAvance){
     /* páginas sin avance medido: la tabla de siempre, con formato */
-    var filas=armaReporte(rowsCrudas).resumen, cols=[];
+    var filas=filasSimples(d, rowsCrudas), cols=[];
     filas.forEach(function(f){ for(var k in f) if(cols.indexOf(k)<0) cols.push(k); });
     var wg=wb.addWorksheet('Resumen', { views:[{ state:'frozen', ySplit:4 }] });
     titulo(wg, cols.length, sub);
@@ -1171,10 +1191,10 @@ function excelPro(X, d, rowsCrudas){
   var anchos={ 'N°':5, 'Alumno':30, 'DNI':11, 'Diapositiva actual':42, 'Correctas':11, 'Total':9, '% Avance':11, 'Nivel':13, 'Último cambio':17 };
   cabs.forEach(function(k,j){ ws.getColumn(j+1).width=anchos[k]||14; });
 
-  /* hoja 2: avance por actividad */
-  var wa=wb.addWorksheet('Por actividad', { views:[{ state:'frozen', xSplit:1, ySplit:4 }] });
+  /* hoja 2: avance por pregunta (o por actividad, si la página no envía sus preguntas) */
+  var wa=wb.addWorksheet(d.conPreg ? 'Por pregunta' : 'Por actividad', { views:[{ state:'frozen', xSplit:1, ySplit:4 }] });
   titulo(wa, d.columnas.length+2, sub);
-  wa.getRow(4).values=['Alumno'].concat(d.columnas.map(function(c,j){ return (j+1)+'. '+c.et; })).concat(['% Total']);
+  wa.getRow(4).values=['Alumno'].concat(d.columnas.map(function(c,j){ return d.conPreg ? c.et : (j+1)+'. '+c.et; })).concat(['% Total']);
   cabecera(wa.getRow(4)); wa.getRow(4).height=48;
   d.columnas.forEach(function(c,j){ wa.getCell(4,j+2).note=c.t; wa.getColumn(j+2).width=13; });
   wa.getColumn(1).width=30; wa.getColumn(d.columnas.length+2).width=11;
@@ -1193,20 +1213,51 @@ function excelPro(X, d, rowsCrudas){
     pinta(c, c.value);
   });
 
-  /* hoja 3: qué es cada actividad */
-  var wd=wb.addWorksheet('Actividades', { views:[{ state:'frozen', ySplit:4 }] });
-  titulo(wd, 6, sub);
-  wd.getRow(4).values=['N°','Diapositiva','Actividad','Puntos','Promedio del aula','Completaron'];
-  cabecera(wd.getRow(4));
-  d.columnas.forEach(function(c,j){
-    var r=wd.addRow([j+1, c.et, c.t, c.max||'', d.porAct[j].p, d.porAct[j].completos+' de '+d.alumnos.length]);
-    r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'middle', wrapText:true }; });
-    pinta(r.getCell(5), d.porAct[j].p);
-  });
-  [5,22,50,9,17,14].forEach(function(w,j){ wd.getColumn(j+1).width=w; });
-  /* la página puede agregar sus propias hojas (por ejemplo, su dashboard) */
+  /* hoja 3: qué es cada pregunta (o cada actividad) */
+  if(d.conPreg){
+    var wq=wb.addWorksheet('Preguntas', { views:[{ state:'frozen', ySplit:4 }] });
+    titulo(wq, 6, sub);
+    wq.getRow(4).values=['N°','Pregunta','Actividad','Enunciado','Acertaron (% del aula)','Acertaron'];
+    cabecera(wq.getRow(4));
+    d.columnas.forEach(function(c,j){
+      var r=wq.addRow([j+1, c.et, c.e||'', c.q||c.t, d.porAct[j].p, d.porAct[j].completos+' de '+d.alumnos.length]);
+      r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'middle', wrapText:true }; });
+      pinta(r.getCell(5), d.porAct[j].p);
+    });
+    [5,9,30,60,14,13].forEach(function(w,j){ wq.getColumn(j+1).width=w; });
+    /* hoja 4: el detalle, una fila por alumno y pregunta (sirve para filtrar y para tablas dinámicas) */
+    var wt=wb.addWorksheet('Detalle', { views:[{ state:'frozen', ySplit:4 }] });
+    var cabT=['Alumno'].concat(d.hayDni?['DNI']:[]).concat(['N°','Pregunta','Actividad','Enunciado','Resultado']);
+    titulo(wt, cabT.length, sub);
+    wt.getRow(4).values=cabT; cabecera(wt.getRow(4));
+    d.alumnos.forEach(function(a){
+      d.columnas.forEach(function(c,j){
+        var v=d.celda(a,j), ok=v && v.t && v.n>=v.t;
+        var r=wt.addRow([a.nombre].concat(d.hayDni?[a.dni]:[]).concat([j+1, c.et, c.e||'', c.q||c.t, v ? (ok?'Correcta':'Pendiente') : 'No la tuvo']));
+        r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'top', wrapText:true }; });
+        var cr=r.getCell(cabT.length);
+        cr.font={ bold:true, color:{ argb: ok ? 'FF0F6B45' : (v ? 'FFA4161A' : 'FF6B7591') } };
+        cr.fill={ type:'pattern', pattern:'solid', fgColor:{ argb: ok ? 'FFD8F3E6' : (v ? 'FFFDE2E4' : 'FFF1F3F7') } };
+      });
+    });
+    wt.autoFilter={ from:{ row:4, column:1 }, to:{ row:4, column:cabT.length } };
+    cabT.forEach(function(k,j){ wt.getColumn(j+1).width={ 'Alumno':30, 'DNI':11, 'N°':6, 'Pregunta':9, 'Actividad':30, 'Enunciado':60, 'Resultado':12 }[k]||14; });
+  } else {
+    var wd=wb.addWorksheet('Actividades', { views:[{ state:'frozen', ySplit:4 }] });
+    titulo(wd, 6, sub);
+    wd.getRow(4).values=['N°','Diapositiva','Actividad','Puntos','Promedio del aula','Completaron'];
+    cabecera(wd.getRow(4));
+    d.columnas.forEach(function(c,j){
+      var r=wd.addRow([j+1, c.et, c.t, c.max||'', d.porAct[j].p, d.porAct[j].completos+' de '+d.alumnos.length]);
+      r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'middle', wrapText:true }; });
+      pinta(r.getCell(5), d.porAct[j].p);
+    });
+    [5,22,50,9,17,14].forEach(function(w,j){ wd.getColumn(j+1).width=w; });
+  }
+  /* la página puede agregar sus propias hojas (por ejemplo, su dashboard); no en una sesión pasada,
+     porque el dashboard de la página muestra la sala de ahora */
   /* puede devolver una promesa (por ejemplo, mientras dibuja gráficos): se espera antes de guardar */
-  if(cfg.excelExtra){ try{ wb.__extra=cfg.excelExtra(wb, d); }catch(e){} }
+  if(cfg.excelExtra && !sinExtra){ try{ wb.__extra=cfg.excelExtra(wb, d); }catch(e){} }
   return wb;
 }
 function descargaReporte(){
@@ -1214,6 +1265,7 @@ function descargaReporte(){
   var btn=$('aulaRepoBtn'), tx=$('aulaRepoTx');
   btn.disabled=true; tx.textContent='Preparando el reporte…';
   var nombre='reporte-'+String(cfg.sala).toLowerCase()+'-'+sala.toLowerCase()+'-'+fechaLocal(new Date().toISOString()).slice(0,10);
+  guardaHistorial(true);
   traeFilasReporte()
     .then(function(rows){
       if(!rows.length){ tx.textContent='Todavía no hay alumnos en la sala '+sala+' para el reporte.'; return; }
@@ -1285,10 +1337,10 @@ function htmlReporte(d, rows){
     '*{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{break-inside:avoid}}'+
     '@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}'+
     '</style></head><body><div class="hoja"><div class="acc"><button onclick="window.print()">🖨 Imprimir o guardar en PDF</button></div>'+
-    '<header><h1>'+esc(d.titulo)+'</h1><p>Sala '+esc(d.sala)+(d.docente?' · Docente: '+esc(d.docente):'')+' · Generado: '+esc(d.fecha)+'</p></header><div class="cuerpo">';
-  if(!rows.length) return h+'<p>Todavía no hay alumnos en la sala '+esc(d.sala)+'.</p></div></div></body></html>';
+    '<header><h1>'+esc(d.titulo)+'</h1><p>'+esc(subReporte(d).replace(/  ·  /g,' · '))+'</p></header><div class="cuerpo">';
+  if(!d.alumnos.length) return h+'<p>Todavía no hay alumnos en la sala '+esc(d.sala)+'.</p></div></div></body></html>';
   if(!d.conAvance){
-    var filas=armaReporte(rows).resumen, cols=[];
+    var filas=filasSimples(d, rows), cols=[];
     filas.forEach(function(f){ for(var k in f) if(cols.indexOf(k)<0) cols.push(k); });
     h+='<table><thead><tr>'+cols.map(function(k){ return '<th>'+esc(k)+'</th>'; }).join('')+'</tr></thead><tbody>'+
        filas.map(function(f){ return '<tr>'+cols.map(function(k){ return '<td>'+esc(f[k]===undefined?'':String(f[k]))+'</td>'; }).join('')+'</tr>'; }).join('')+
@@ -1313,15 +1365,15 @@ function htmlReporte(d, rows){
   h+='</tbody><tfoot><tr><td></td><td>Promedio del aula</td>'+(d.hayDni?'<td></td>':'')+'<td></td><td></td><td style="white-space:nowrap">'+
      barra(d.promedio)+'</td><td>'+chip(d.promedio)+'</td><td></td></tr></tfoot></table>';
   if(d.columnas.length){
-    h+='<h2>Avance por actividad</h2><div class="scroll"><table class="mat"><thead><tr><th>Alumno</th>'+
-       d.columnas.map(function(c,j){ return '<th title="'+esc(c.t)+'">'+(j+1)+'<br>'+esc(c.et)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
+    h+='<h2>'+(d.conPreg?'Detalle por pregunta':'Avance por actividad')+'</h2><div class="scroll"><table class="mat"><thead><tr><th>Alumno</th>'+
+       d.columnas.map(function(c,j){ return '<th title="'+esc(c.t)+'">'+(d.conPreg ? '' : (j+1)+'<br>')+esc(c.et)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
     d.alumnos.forEach(function(a){
       h+='<tr><td><b>'+esc(a.nombre)+'</b></td>';
       d.columnas.forEach(function(c,j){
         var v=d.celda(a,j);
         if(!v){ h+='<td class="p">—</td>'; return; }
         var n2=nivel(v.p);
-        h+='<td class="p" style="background:'+hx(n2.f)+';color:'+hx(n2.c)+'">'+v.n+'/'+v.t+'</td>';
+        h+='<td class="p" style="background:'+hx(n2.f)+';color:'+hx(n2.c)+'">'+(d.conPreg ? (v.n>=v.t?'✓':'—') : v.n+'/'+v.t)+'</td>';
       });
       var nt=nivel(a.pct);
       h+='<td class="p" style="background:'+hx(nt.f)+';color:'+hx(nt.c)+'">'+Math.round(a.pct*100)+'%</td></tr>';
@@ -1332,11 +1384,266 @@ function htmlReporte(d, rows){
     h+='<div class="ley">'+['Completó','Avanzado','En proceso','Inicio','Sin empezar'].map(function(t,k){
          var p=[1,0.85,0.6,0.2,0][k], n4=nivel(p);
          return '<span class="chip" style="background:'+hx(n4.f)+';color:'+hx(n4.c)+'">'+t+(k===1?' (80–99%)':k===2?' (50–79%)':k===3?' (1–49%)':'')+'</span>'; }).join('')+'</div>';
+    if(d.conPreg){
+      h+='<h2>Preguntas</h2><table><thead><tr><th>N°</th><th>Actividad</th><th>Pregunta</th><th>Acertaron</th><th>Alumnos</th></tr></thead><tbody>'+
+         d.columnas.map(function(c,j){ return '<tr><td>'+esc(c.et)+'</td><td>'+esc(c.e||'')+'</td><td>'+esc(c.q||c.t)+'</td><td style="white-space:nowrap">'+
+           barra(d.porAct[j].p)+'</td><td>'+d.porAct[j].completos+' de '+d.alumnos.length+'</td></tr>'; }).join('')+'</tbody></table>';
+    } else
     h+='<h2>Actividades</h2><table><thead><tr><th>N°</th><th>Diapositiva</th><th>Actividad</th><th>Promedio del aula</th><th>Completaron</th></tr></thead><tbody>'+
        d.columnas.map(function(c,j){ return '<tr><td>'+(j+1)+'</td><td>'+esc(c.et)+'</td><td>'+esc(c.t)+'</td><td style="white-space:nowrap">'+
          barra(d.porAct[j].p)+'</td><td>'+d.porAct[j].completos+' de '+d.alumnos.length+'</td></tr>'; }).join('')+'</tbody></table>';
   }
-  return h+'</div><footer>Repositorio de Eduardo · El porcentaje se calcula sobre las actividades de las diapositivas presentadas.</footer></div></body></html>';
+  return h+'</div><footer>Repositorio de Eduardo · '+(d.conPreg ? 'El porcentaje se calcula sobre las preguntas: correctas entre el total de preguntas de las actividades elegidas.' : 'El porcentaje se calcula sobre las actividades de las diapositivas presentadas.')+'</footer></div></body></html>';
+}
+
+
+/* =====================================================================
+   historial de sesiones para el docente
+   Cada clase queda guardada sola en la sala cfg.sala-HIS: una fila por
+   sesión (código de sala + hora de inicio) con el avance por pregunta de
+   cada alumno. Aunque la próxima clase use el mismo código y los alumnos
+   vuelvan a entrar, el reporte de la clase anterior no se pierde.
+   Las clases de antes de este historial se arman con lo que quedó en
+   cada sala (salen como «reconstruida»).
+   ===================================================================== */
+var tHis=0, selloHis='', previoHis={};
+function salaHis(){ return cfg.sala+'-HIS'; }
+function claveHisIni(){ return 'his_ini_'+cfg.sala+'-'+sala; }
+/* la clase empieza cuando el docente entra; si pasan 4 horas sin guardar, es otra clase */
+function inicioHis(){
+  var t=+leeLocal(claveHisIni())||0, u=+leeLocal(claveHisIni()+'_u')||0, ahora=Date.now();
+  if(!t || ahora-u>4*3600*1000){ t=ahora; guardaLocal(claveHisIni(), String(t)); }
+  guardaLocal(claveHisIni()+'_u', String(ahora));
+  return t;
+}
+function idHis(ini){ return sala+' · '+fechaLocal(new Date(ini).toISOString()); }
+/* lo que se guarda: el reporte ya calculado, compacto */
+function instantanea(rows, ini){
+  var d=datosReporte(rows);
+  return { v:1, titulo:d.titulo, sala:d.sala, docente:d.docente, inicio:ini, fin:Date.now(), conPreg:d.conPreg?1:0,
+    columnas:d.columnas.map(function(c){ var o={ et:c.et, t:c.t, max:c.max||0 }; if(c.e) o.e=c.e; if(c.q) o.q=c.q; return o; }),
+    alumnos:d.alumnos.map(function(a){ return { n:a.nombre, d:a.dni, l:String(a.lamina), ti:a.titulo, ok:a.ok, t:a.total, c:a.cambio,
+      r:a.rej.map(function(x){ return [x.b, x.n||0, x.t||0]; }) }; }),
+    resumen: d.conAvance ? null : armaReporte(rows).resumen.slice(0,300),
+    nAlumnos:d.alumnos.length, promedio:Math.round(d.promedio*1000)/1000 };
+}
+/* al volver a abrir una sesión guardada, sus datos quedan como los del reporte de hoy */
+function desdeInstantanea(s){
+  var d=completaDatos({ titulo:s.titulo||cfg.tituloReporte||document.title, sala:s.sala||'', docente:s.docente||'', conPreg:!!s.conPreg,
+    columnas:(s.columnas||[]).slice(),
+    alumnos:(s.alumnos||[]).map(function(a){ return { nombre:a.n, dni:a.d||'', lamina:a.l||'', titulo:a.ti||'', ok:+a.ok||0, total:+a.t||0,
+      pct:(+a.t ? (+a.ok||0)/(+a.t) : 0), cambio:a.c||'', rej:(a.r||[]).map(function(x){ return { b:x[0], n:x[1], t:x[2] }; }) }; })
+      .sort(function(a,b){ return a.nombre.localeCompare(b.nombre); }) });
+  if(s.resumen) d.resumen=s.resumen;
+  d.clase=claseDe(s.inicio, s.fin);
+  return d;
+}
+function claseDe(ini, fin){
+  var a=fechaLocal(new Date(ini).toISOString()), b=fechaLocal(new Date(fin||ini).toISOString());
+  return a+' – '+(b.slice(0,10)===a.slice(0,10) ? b.slice(11) : b);
+}
+/* se guarda sola cada minuto mientras el docente está en la sala con alumnos */
+function guardaHistorial(forzar){
+  if(!docente || !sala || !gente.length || !cfg || !cfg.sala) return Promise.resolve(false);
+  if(!forzar && Date.now()-tHis<60000) return Promise.resolve(false);
+  tHis=Date.now();
+  var ini=inicioHis(), id=idHis(ini), snap;
+  try{ snap=instantanea(gente, ini); }catch(e){ return Promise.resolve(false); }
+  /* quien ya no aparece en la sala (más de 3 horas sin moverse) sigue en el reporte de su clase */
+  var ant=previoHis[id];
+  var trae=ant ? Promise.resolve(ant) :
+    fetch(TABLA+'?select=estado&sala=eq.'+encodeURIComponent(salaHis())+'&alumno=eq.'+encodeURIComponent(id)+'&limit=1', { headers:hdr() })
+      .then(function(r){ return r.ok ? r.json() : []; }).then(function(rows){ return (rows && rows[0] && rows[0].estado) || null; })
+      .catch(function(){ return null; });
+  return trae.then(function(prev){
+    if(prev && prev.alumnos){
+      var hay={}; snap.alumnos.forEach(function(a){ hay[a.n]=1; });
+      prev.alumnos.forEach(function(a){ if(!hay[a.n]) snap.alumnos.push(a); });
+      snap.nAlumnos=snap.alumnos.length;
+      snap.promedio=snap.alumnos.length ? Math.round(snap.alumnos.reduce(function(t,a){ return t+(+a.t ? a.ok/a.t : 0); },0)/snap.alumnos.length*1000)/1000 : 0;
+    }
+    previoHis[id]=snap;
+    var sello=JSON.stringify(snap.alumnos)+'|'+snap.docente;
+    if(sello===selloHis) return true;
+    return guardaFila(salaHis(), id, snap).then(function(){ selloHis=sello; return true; });
+  }).catch(function(){ return false; });
+}
+/* las sesiones guardadas de esta página */
+function leeHistorial(){
+  return fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(salaHis())+
+               '&order=actualizado.desc&limit=500', { headers:hdr() })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); });
+}
+/* las salas de esta página, para las clases que no tienen sesión guardada */
+function leeSalasClase(){
+  var todo=[];
+  function pagina(desde){
+    return fetch(TABLA+'?select=sala,alumno,caso,estado,actualizado&sala=like.'+encodeURIComponent(cfg.sala+'-*')+
+                 '&sala=neq.'+encodeURIComponent(salaHis())+'&sala=neq.'+encodeURIComponent(cfg.sala+'-REG')+
+                 '&order=actualizado.asc&limit=1000&offset='+desde, { headers:hdr() })
+      .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function(rows){ todo=todo.concat(rows||[]); return (rows && rows.length===1000 && desde<9000) ? pagina(desde+1000) : todo; });
+  }
+  return pagina(0);
+}
+/* arma la lista: sesiones guardadas + clases reconstruidas (código de sala y día, separadas por 6 h sin actividad) */
+function armaHistorial(his, filas){
+  var out=[], hay={};
+  (his||[]).forEach(function(r){
+    var e=r.estado||{}; if(!e.alumnos) return;
+    out.push({ id:'h:'+r.alumno, guardada:1, s:e, sala:e.sala||'', docente:e.docente||'', ini:+e.inicio||new Date(r.actualizado).getTime(),
+               fin:+e.fin||new Date(r.actualizado).getTime(), n:e.nAlumnos||e.alumnos.length, p:+e.promedio||0 });
+  });
+  var pre=cfg.sala+'-', por={}, doc={};
+  (filas||[]).forEach(function(f){
+    if(f.sala.indexOf(pre)!==0) return;
+    var m=/^([^-]+)(-(ABIERTA|BATUTA))?$/.exec(f.sala.slice(pre.length)); if(!m) return;
+    var e=f.estado||{}, t=new Date(f.actualizado).getTime();
+    if(m[3]==='ABIERTA'){ if(e.docente) (doc[m[1]]=doc[m[1]]||[]).push({ t:t, n:e.docente }); return; }
+    if(m[3] || e.renombrado) return;
+    (por[m[1]]=por[m[1]]||[]).push(f);
+  });
+  Object.keys(por).forEach(function(c){
+    var gr=[], g=null;
+    por[c].sort(function(a,b){ return new Date(a.actualizado)-new Date(b.actualizado); }).forEach(function(f){
+      var t=new Date(f.actualizado).getTime();
+      if(!g || t-g.fin>6*3600*1000){ g={ ini:t, fin:t, rows:[] }; gr.push(g); }
+      g.rows.push(f); g.fin=t;
+    });
+    gr.forEach(function(x){
+      /* si ya hay una sesión guardada de ese código en esas horas, no se repite */
+      var dup=out.some(function(o){ return o.guardada && o.sala===c && o.ini-3*3600*1000<=x.fin && x.ini<=o.fin+3*3600*1000; });
+      if(dup) return;
+      var dn=''; (doc[c]||[]).forEach(function(d){ if(Math.abs(d.t-x.ini)<24*3600*1000 || (d.t>=x.ini && d.t<=x.fin)) dn=d.n; });
+      out.push({ id:'r:'+c+':'+x.ini, rows:x.rows, sala:c, docente:dn, ini:x.ini, fin:x.fin, n:x.rows.length, p:null });
+    });
+  });
+  return out.sort(function(a,b){ return b.ini-a.ini; });
+}
+function datosDeEntrada(x){
+  if(x.guardada) return desdeInstantanea(x.s);
+  var d=datosReporte(x.rows, x.sala);
+  d.docente=x.docente||''; d.clase=claseDe(x.ini, x.fin);
+  return d;
+}
+var HIS=[], hisSolo=true;
+function normaNom(t){ return String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim(); }
+function estiloHis(){
+  if($('aulaHisCss')) return;
+  var st=document.createElement('style'); st.id='aulaHisCss';
+  st.textContent='.aula-his{position:fixed;inset:0;z-index:10080;background:rgba(7,23,103,.45);display:flex;align-items:center;justify-content:center;padding:14px;font-family:inherit}'+
+    '.aula-his[hidden]{display:none!important}.ah-caja{background:#fff;border-radius:16px;width:min(1100px,100%);max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(7,23,103,.35);color:#0B1B3F}'+
+    '.ah-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:#071767;color:#fff;border-bottom:4px solid #FC0045}'+
+    '.ah-h b{font-size:18px}.ah-h span{font-size:13px;opacity:.85;flex:1}.ah-h button{font:inherit;font-weight:800;background:#fff;color:#071767;border:0;border-radius:9px;padding:6px 12px;cursor:pointer}'+
+    '.ah-f{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid #E3E8F3;font-size:14px}'+
+    '.ah-f input[type=search]{font:inherit;font-size:15px;padding:7px 10px;border:2px solid #D5DDEF;border-radius:10px;min-width:220px;flex:1;max-width:340px}'+
+    '.ah-f label{display:flex;gap:6px;align-items:center;font-weight:700;cursor:pointer}.ah-tx{color:#55607F;font-size:13px}'+
+    '.ah-l{overflow:auto;padding:0 16px 14px}.ah-l table{width:100%;border-collapse:collapse;font-size:14px}'+
+    '.ah-l th{position:sticky;top:0;background:#F1F5FD;color:#071767;text-align:left;padding:9px 8px;font-size:12px;text-transform:uppercase;letter-spacing:.04em}'+
+    '.ah-l td{padding:8px;border-bottom:1px solid #EEF1F7;vertical-align:middle}.ah-l td.b{white-space:nowrap;text-align:right}'+
+    '.ah-l td.b button{font:inherit;font-size:13px;font-weight:800;border:1px solid #D5DDEF;background:#fff;color:#071767;border-radius:8px;padding:5px 9px;cursor:pointer;margin-left:4px}'+
+    '.ah-l td.b button.p{background:#071767;color:#fff;border-color:#071767}.ah-l td.b button:disabled{opacity:.5;cursor:wait}'+
+    '.ah-etq{display:inline-block;font-size:11px;font-weight:800;border-radius:99px;padding:1px 7px;background:#FFF1CC;color:#8A5A00;margin-left:4px}'+
+    '.ah-hoy{background:#D8F3E6;color:#0F6B45}.ah-v{color:#8A93AC;padding:24px;text-align:center}'+
+    '@media(max-width:700px){.ah-l thead{display:none}.ah-l tr{display:block;border-bottom:1px solid #E3E8F3;padding:6px 0}.ah-l td{display:inline-block;border:0;padding:3px 6px}.ah-l td.b{display:block;text-align:left}}';
+  document.head.appendChild(st);
+}
+function abreHistorial(){
+  if(!docente) return;
+  estiloHis();
+  var v=$('aulaHis');
+  if(!v){
+    v=document.createElement('div'); v.className='aula-his'; v.id='aulaHis';
+    v.innerHTML='<div class="ah-caja" role="dialog" aria-modal="true" aria-label="Sesiones pasadas">'+
+      '<div class="ah-h"><b>🗂 Sesiones pasadas</b><span>'+esc(cfg.tituloReporte||document.title)+'</span><button type="button" id="aulaHisX">Cerrar ✕</button></div>'+
+      '<div class="ah-f"><input type="search" id="aulaHisQ" placeholder="Buscar por fecha, código, docente o alumno">'+
+      '<label><input type="checkbox" id="aulaHisMias"> Solo mis sesiones</label>'+
+      '<button class="o-btn" type="button" id="aulaHisAct">↻ Actualizar</button><span class="ah-tx" id="aulaHisTx"></span></div>'+
+      '<div class="ah-l" id="aulaHisL"></div></div>';
+    document.body.appendChild(v);
+    v.addEventListener('click', function(e){ if(e.target===v) cierraHistorial(); });
+    v.addEventListener('keydown', function(e){ e.stopPropagation(); if(e.key==='Escape') cierraHistorial(); });
+    $('aulaHisX').addEventListener('click', cierraHistorial);
+    $('aulaHisAct').addEventListener('click', cargaHistorial);
+    $('aulaHisQ').addEventListener('input', pintaHistorial);
+    $('aulaHisMias').addEventListener('change', function(){ hisSolo=this.checked; pintaHistorial(); });
+  }
+  $('aulaHisMias').checked = hisSolo && !!leeLocal('docente_nombre');
+  v.hidden=false;
+  cargaHistorial();
+}
+function cierraHistorial(){ var v=$('aulaHis'); if(v) v.hidden=true; }
+function cargaHistorial(){
+  $('aulaHisTx').textContent='Leyendo las sesiones guardadas…';
+  $('aulaHisL').innerHTML='<p class="ah-v">Cargando…</p>';
+  guardaHistorial(true).then(function(){
+    return Promise.all([ leeHistorial(), leeSalasClase().catch(function(){ return []; }) ]);
+  }).then(function(r){
+    HIS=armaHistorial(r[0], r[1]);
+    $('aulaHisTx').textContent=HIS.length+(HIS.length===1?' sesión':' sesiones')+' · '+new Date().toLocaleTimeString();
+    pintaHistorial();
+  }).catch(function(e){
+    $('aulaHisTx').textContent='';
+    $('aulaHisL').innerHTML='<p class="ah-v">No se pudo leer el historial ('+esc(String(e))+'). Vuelve a intentarlo.</p>';
+  });
+}
+function hisVisibles(){
+  var q=normaNom($('aulaHisQ').value), yoN=normaNom(leeLocal('docente_nombre')), mias=$('aulaHisMias').checked && yoN;
+  return HIS.filter(function(x){
+    if(mias && normaNom(x.docente)!==yoN) return false;
+    if(!q) return true;
+    var txt=fechaLocal(new Date(x.ini).toISOString())+' '+x.sala+' '+x.docente+' '+
+      (x.guardada ? (x.s.alumnos||[]).map(function(a){ return a.n; }).join(' ') : x.rows.map(function(f){ return f.alumno; }).join(' '));
+    return normaNom(txt).indexOf(q)>=0;
+  });
+}
+function pintaHistorial(){
+  var L=$('aulaHisL'); if(!L) return;
+  var V=hisVisibles(), hoyId=sala ? 'h:'+idHis(+leeLocal(claveHisIni())||0) : '';
+  if(!V.length){
+    L.innerHTML='<p class="ah-v">'+(HIS.length ? 'No hay sesiones con ese filtro.'+($('aulaHisMias').checked?' Desmarca «Solo mis sesiones» para ver las de otros docentes.':'')
+      : 'Todavía no hay sesiones guardadas. Cada clase se guarda sola mientras estás en la sala con alumnos.')+'</p>';
+    return;
+  }
+  L.innerHTML='<table><thead><tr><th>Clase</th><th>Código</th><th>Docente</th><th>Alumnos</th><th>Avance</th><th></th></tr></thead><tbody>'+
+    V.map(function(x, i){
+      var p=x.p, nv=p===null ? null : nivel(p);
+      return '<tr><td><b>'+esc(claseDe(x.ini, x.fin))+'</b>'+(x.id===hoyId?'<span class="ah-etq ah-hoy">en curso</span>':'')+
+        (x.guardada?'':'<span class="ah-etq" title="Armada con lo que quedó guardado en la sala">reconstruida</span>')+'</td>'+
+        '<td>'+esc(x.sala)+'</td><td>'+esc(x.docente||'—')+'</td><td>'+x.n+'</td>'+
+        '<td>'+(nv ? '<b style="color:#'+nv.c+'">'+Math.round(p*100)+'%</b>' : '<span class="ah-tx">al abrir</span>')+'</td>'+
+        '<td class="b"><button type="button" data-hv="'+i+'">📊 Ver / PDF</button><button type="button" class="p" data-hx="'+i+'">⬇ Excel</button></td></tr>';
+    }).join('')+'</tbody></table>';
+  Array.prototype.forEach.call(L.querySelectorAll('button[data-hv]'), function(b){
+    b.addEventListener('click', function(){ verPasada(V[+b.getAttribute('data-hv')]); });
+  });
+  Array.prototype.forEach.call(L.querySelectorAll('button[data-hx]'), function(b){
+    b.addEventListener('click', function(){ excelPasada(V[+b.getAttribute('data-hx')], b); });
+  });
+}
+function nombreArchivo(x){
+  var f=fechaLocal(new Date(x.ini).toISOString()).replace(' ','-').replace(':','h');
+  return 'reporte-'+String(cfg.sala).toLowerCase()+'-'+String(x.sala).toLowerCase()+'-'+f;
+}
+function verPasada(x){
+  var w=window.open('', '_blank');
+  if(!w){ $('aulaHisTx').textContent='El navegador bloqueó la ventana. Permite ventanas emergentes y vuelve a intentarlo.'; return; }
+  try{
+    var d=datosDeEntrada(x);
+    w.document.open(); w.document.write(htmlReporte(d, x.rows||[])); w.document.close();
+  }catch(e){ w.document.write('<p style="font:16px system-ui;padding:24px">No se pudo armar el reporte ('+esc(String(e))+').</p>'); }
+}
+function excelPasada(x, btn){
+  if(btn) btn.disabled=true;
+  $('aulaHisTx').textContent='Preparando el Excel…';
+  cargaExcelJS().then(function(X){
+    var libro=excelPro(X, datosDeEntrada(x), x.rows||[], true);
+    return libro.xlsx.writeBuffer();
+  }).then(function(buf){
+    bajaArchivo(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), nombreArchivo(x)+'.xlsx');
+    $('aulaHisTx').textContent='Listo: '+nombreArchivo(x)+'.xlsx';
+  }).catch(function(e){ $('aulaHisTx').textContent='No se pudo armar el Excel ('+e+'). Vuelve a intentarlo.'; })
+    .then(function(){ if(btn) btn.disabled=false; });
 }
 
 /* ================= manito, mensajes y avisos al docente ================= */
@@ -1793,6 +2100,9 @@ window.Aula={
   /* histórico de sesiones (para la vista de administración) */
   guardaRegistro:function(id, est){ return guardaRegistro(id, est); },
   leeRegistros:function(){ return leeRegistros(); },
+  /* sesiones pasadas: cada clase queda guardada con su reporte por pregunta */
+  historial:function(){ abreHistorial(); },
+  guardaHistorial:function(){ return guardaHistorial(true); },
   leeTodo:function(){ return leeTodo(); },
   leeSalas:function(p){ return leeSalas(p); },
   guardaFila:function(s1, a1, e1){ return guardaFila(s1, a1, e1); }

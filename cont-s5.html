@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-26-cont_s5_v1">
+<meta name="version" content="2026-11-03-reporte-por-pregunta">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -976,7 +976,7 @@
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
 <script src="cont-dibujos.js?v=20261026c"></script>
-<script src="aula.js?v=20261101c"></script>
+<script src="aula.js?v=20261103a"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -2849,11 +2849,40 @@ document.addEventListener('keydown', function(e){
 })();
 
 /* ================= el aula ================= */
+/* cada pregunta de la sesión, con su actividad y si ya la resolvió: el reporte cuenta por pregunta, no por diapositiva */
+function preguntasDe(GG){
+  var out=[], Gx=GG||{};
+  function limpia(t){ t=String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(); return t.length>90 ? t.slice(0,87)+'…' : t; }
+  clavesVis().forEach(function(k){
+    var A=ACT[k], g=Gx[k]||{}, e=etiActividad(CLAVES.indexOf(k));
+    if(!A) return;
+    function add(q, ok){ out.push({ e:e, q:limpia(q), ok:ok?1:0 }); }
+    if(A.tipo==='quiz' || A.tipo==='cal' || A.tipo==='sel' || A.tipo==='opi'){ A.lista.forEach(function(p,j){ add(p.q, g[j]!==undefined); }); }
+    else if(A.tipo==='par' || A.tipo==='arma'){ A.huecos.forEach(function(x){ add(x.q||x.rot, g[x.id]!==undefined); }); }
+    else if(A.tipo==='arr' || A.tipo==='cuadro'){ A.fichas.forEach(function(f){ if(!f.fijo) add(f.t, g[f.id]!==undefined); }); }
+    else if(A.tipo==='tabla'){
+      A.filas.forEach(function(fi,r){ fi.forEach(function(c,j){
+        if(c.e===undefined && !c.ops) return;
+        add(((fi[0] && fi[0].t) || ('Fila '+(r+1)))+' · '+((A.cols||[])[j]||''), g[r+'-'+j]!==undefined);
+      }); });
+    }
+    else if(A.tipo==='hoja'){
+      var cab=A.filas[0]||[];
+      A.filas.forEach(function(fi,r){ fi.forEach(function(c,j){
+        if(c.e===undefined) return;
+        add(A.titulo+' · '+((fi[0] && fi[0].x) || ('Fila '+(r+1)))+' · '+((cab[j] && cab[j].x) || ''), g[LET(j)+(r+1)]!==undefined);
+      }); });
+    }
+    else if(A.tipo==='cruz'){ A.palabras.forEach(function(w){ add(w.pista, g[w.p]!==undefined); }); }
+  });
+  return out;
+}
 function resumenAula(){
   var r={ lamina:(i+1)+' / '+D.length, titulo:D[i].t, ok:totalOk(), total:totalMax(),
           idx:i, G:{ mal:G.mal },
           rejilla:CLAVES.map(function(k,n){ return {b:n, n:hechas(k), t:cuantas(k)}; }) };
   CLAVES.forEach(function(k){ r.G[k]=G[k]||{}; });   /* para repintar su pantalla en la del docente */
+  r.preg=preguntasDe(G);   /* el reporte cuenta por pregunta */
   return r;
 }
 /* nombre corto y nombre largo de cada actividad, para que el docente sepa qué mira */
@@ -2945,7 +2974,7 @@ function pantalla(e, alumno, cont){
 }
 var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'CONT5', codigo:'CONT', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
+  Aula.iniciar({ ajusta:function(e){ var o={}, x; for(x in e) o[x]=e[x]; if(e && e.G) o.preg=preguntasDe(e.G); return o; }, sala:'CONT5', codigo:'CONT', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;

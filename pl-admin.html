@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pensamiento L&oacute;gico - Modo administrador</title>
 <meta name="robots" content="noindex">
-<meta name="version" content="2026-11-01-admin-a">
+<meta name="version" content="2026-11-03-reporte-por-pregunta">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
@@ -109,7 +109,7 @@
   </div>
 </div></div></div>
 
-<script src="aula.js?v=20261101c"></script>
+<script src="aula.js?v=20261103a"></script>
 <script>
 (function(){
 'use strict';
@@ -167,6 +167,7 @@ function arma(rows){
     var i=f.sala.indexOf('-'); if(i<0) return;
     var pre=f.sala.slice(0,i), resto=f.sala.slice(i+1);
     if(resto==='REG'){ if(f.estado && f.estado.docente) regs.push({ pre:pre, f:f }); return; }
+    if(resto==='HIS') return;   /* el historial del docente: no son alumnos */
     var m=/^([^-]+)(-(ABIERTA|BATUTA|RECURSO))?$/.exec(resto); if(!m || m[3]==='RECURSO') return;
     var k=pre+'|'+m[1], c=cod[k]||(cod[k]={ pre:pre, code:m[1], al:[], docente:'', tDoc:0 });
     var e=f.estado||{}, t=new Date(f.actualizado).getTime();
