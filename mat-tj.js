@@ -1,5 +1,5 @@
 /* ============================================================
-   mat-tj.js — Matemáticas Aplicadas con el diseño Thomas Jefferson.
+   mat-tj.js — cursos de Thomas Jefferson (Matemáticas Aplicadas y Costos y Presupuestos).
    Es la misma idea de pl-certus.js, sin el pie del equipo de Certus:
    cuando una lámina deja espacio vacío, lo llena con una tarjeta de
    «Recuerda» del tema de la sesión, con íconos y personajes TJ.
@@ -120,7 +120,32 @@ var R={
   'ic-s15-miercoles':[
     ['r','Margen de error = <b>1.96 × √(p × q ÷ n)</b>.'],
     ['r','Resultado = <b>dato</b>. Conclusión = <b>qué significa</b>. Recomendación = <b>qué hacer</b>.'],
-    ['r','El título del gráfico <b>dice la conclusión</b>.']]
+    ['r','El título del gráfico <b>dice la conclusión</b>.']],
+  'cyp-s12-1':[
+    ['r','El beneficio de una acción es el <b>margen</b> de las unidades adicionales, no la venta.'],
+    ['r','ICB = beneficio ÷ costo. Si es <b>1 o más</b>, la acción se mantiene.'],
+    ['r','Un ICB menor que 1 dice: <b>revisar o eliminar</b> la acción.']],
+  'cyp-s12-2':[
+    ['r','Ventas netas = unidades × precio <b>sin IGV</b>.'],
+    ['r','Costo de ventas = unidades vendidas × <b>costo unitario total</b>.'],
+    ['r','Régimen MYPE: <b>10 %</b> hasta 15 UIT (S/ 82,500) y <b>29.5 %</b> sobre el exceso.'],
+    ['r','Gasto del año = gasto del mes × <b>12</b>.']],
+  'cyp-s13-1':[
+    ['r','Inversión = activos fijos + intangibles + <b>capital de trabajo</b>.'],
+    ['r','A la nueva línea solo se le cargan los costos fijos <b>nuevos</b>.'],
+    ['r','Margen de seguridad = (demanda − equilibrio) ÷ <b>demanda</b>.']],
+  'cyp-s13-2':[
+    ['r','La utilidad por margen de contribución y la del Estado de Resultados deben dar <b>casi lo mismo</b>.'],
+    ['r','Fijos + variables tienen que sumar <b>100 %</b>.'],
+    ['r','La inversión debe ser <b>menor</b> que la utilidad neta para financiarla con recursos propios.']],
+  'cyp-s14-1':[
+    ['r','% de la mezcla = ventas del producto ÷ <b>total de ventas</b>.'],
+    ['r','Margen ponderado = suma de (% de la mezcla × <b>margen</b>).'],
+    ['r','En el gráfico, el equilibrio está donde se cruzan <b>ingresos y costo total</b>.']],
+  'cyp-s14-2':[
+    ['r','Margen bruto, operativo y neto se leen como <b>«de cada S/ 100 vendidos…»</b>.'],
+    ['r','La utilidad neta del año pasa al <b>patrimonio</b>.'],
+    ['r','Activo = <b>pasivo + patrimonio</b>.']]
 };
 var archivo=(location.pathname.split('/').pop()||'').replace(/\.html?$/,'');
 var propios=R[archivo] || MATE;

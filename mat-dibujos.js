@@ -102,15 +102,16 @@ window.PROY=function(dib, titulo, texto, d){
 /* personajes Thomas Jefferson y globo de diálogo */
 var PJ={ pres:'personajes/tj-docente-presenta.webp', idea:'personajes/tj-docente-puntero.webp',
          full:'personajes/tj-alumna-sorpresa.webp', bien:'personajes/tj-alumno-senala.webp',
-         alum:'personajes/tj-alumno-sentado.webp' };
+         alum:'personajes/tj-alumno-sentado.webp',
+         tutor:'personajes/tj-docente-puntero.webp', ok:'personajes/tj-alumno-senala.webp' };
 window.PJ=PJ;
 window.GLOBO=function(img, et, txt){
   return '<div class="perso"><img src="'+(PJ[img]||img)+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+et+'</span>'+txt+'</div></div>';
 };
-window.TAPA=function(titulo, bajada, vias){
+window.TAPA=function(titulo, bajada, vias, curso){
   return '<div class="tapa"><div class="fil"><img src="marca/logo-tj.png" alt="Thomas Jefferson" class="tj-logo">'+
-         '<span>Instituto de Diseño y Comunicación · Matemáticas Aplicadas</span></div>'+
+         '<span>Instituto de Diseño y Comunicación · '+(curso||'Matemáticas Aplicadas')+'</span></div>'+
          '<h2>'+titulo+'</h2><p>'+bajada+'</p>'+
          (vias ? '<div class="via">'+vias.map(function(v){ return '<b>'+v+'</b>'; }).join('')+'</div>' : '')+'</div>';
 };
