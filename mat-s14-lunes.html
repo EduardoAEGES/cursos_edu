@@ -1217,9 +1217,9 @@ c0:{tipo:'opi', titulo:'Conectemos: ¿hoy o después?',
 
 fa:{tipo:'cal', titulo:'Trae cada flujo a hoy',
  lista:[
-  {q:'Con una tasa de 2 % mensual, ¿cuál es el factor del Mes 1?', f:'1 ÷ (1 + 0.02)¹', e:0.980392, tol:0.000005, ph:'0.980392', pq:'1 ÷ 1.02 = 0.980392'},
-  {q:'El flujo del Mes 1 es S/ 150. ¿Cuál es su valor actual?', f:'flujo × factor', e:147.06, tol:0.03, ph:'147.06', u:'S/', pq:'150 × 0.980392 = 147.06'},
-  {q:'Los valores actuales son −500, 147.06, 211.46 y 207.31. ¿Cuál es el VAN?', f:'suma de los valores actuales', e:65.83, tol:0.05, ph:'65.83', u:'S/', pq:'−500 + 147.06 + 211.46 + 207.31 = 65.83'} ]},
+  {q:'Con una tasa de 2 % mensual, ¿cuál es el factor del Mes 1?', f:'1 ÷ (1 + 0.02)¹', e:0.980392, tol:0.000005, ph:'0.000000', pq:'1 ÷ 1.02 = 0.980392'},
+  {q:'El flujo del Mes 1 es S/ 150. ¿Cuál es su valor actual?', f:'flujo × factor', e:147.06, tol:0.03, ph:'0.00', u:'S/', pq:'150 × 0.980392 = 147.06'},
+  {q:'Los valores actuales son −500, 147.06, 211.46 y 207.31. ¿Cuál es el VAN?', f:'suma de los valores actuales', e:65.83, tol:0.05, ph:'0.00', u:'S/', pq:'−500 + 147.06 + 211.46 + 207.31 = 65.83'} ]},
 
 cr:{tipo:'par', titulo:'Une cada indicador con su criterio',
  fichas:[{id:'v',t:'Mayor que cero'},{id:'t',t:'Mayor que la tasa de descuento'},{id:'b',t:'Mayor que 1'},{id:'p',t:'Dentro de la duración de la campaña'}],

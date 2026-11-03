@@ -1220,9 +1220,9 @@ c0:{tipo:'opi', titulo:'Conectemos: ¿cuánto cuesta una torta?',
 
 cu:{tipo:'cal', titulo:'Calcula rápido',
  lista:[
-  {q:'Leche fresca: S/ 4.50 por litro y la copa usa 0.2 litros. ¿Cuánto cuesta?', f:'precio × cantidad', e:0.90, tol:0.01, ph:'0.90', u:'S/', pq:'4.50 × 0.2 = 0.90'},
-  {q:'Canela: S/ 60.00 por kg y la copa usa 0.002 kg. ¿Cuánto cuesta?', f:'precio × cantidad', e:0.12, tol:0.005, ph:'0.12', u:'S/', pq:'60 × 0.002 = 0.12'},
-  {q:'La copa se vende a S/ 9.50 con IGV. ¿Cuál es su precio sin IGV?', f:'precio ÷ 1.18', e:8.05, tol:0.01, ph:'8.05', u:'S/', pq:'9.50 ÷ 1.18 = 8.05'} ]},
+  {q:'Leche fresca: S/ 4.50 por litro y la copa usa 0.2 litros. ¿Cuánto cuesta?', f:'precio × cantidad', e:0.90, tol:0.01, ph:'0.00', u:'S/', pq:'4.50 × 0.2 = 0.90'},
+  {q:'Canela: S/ 60.00 por kg y la copa usa 0.002 kg. ¿Cuánto cuesta?', f:'precio × cantidad', e:0.12, tol:0.005, ph:'0.00', u:'S/', pq:'60 × 0.002 = 0.12'},
+  {q:'La copa se vende a S/ 9.50 con IGV. ¿Cuál es su precio sin IGV?', f:'precio ÷ 1.18', e:8.05, tol:0.01, ph:'0.00', u:'S/', pq:'9.50 ÷ 1.18 = 8.05'} ]},
 
 cl:{tipo:'arr', titulo:'¿Qué tipo de costo es?',
  fichas:[{id:'a',t:'Leche fresca de la copa',g:'CV'},{id:'b',t:'Vaso descartable con cuchara',g:'CV'},{id:'c',t:'Coco rallado y canela',g:'CV'},
@@ -1236,10 +1236,10 @@ xl:{tipo:'hoja', titulo:'Prueba rápida en Excel',
  cols:[{w:230},{w:110},{w:110},{w:140}],
  filas:[
   [{x:'Insumo'},{x:'Precio'},{x:'Cantidad'},{x:'Costo'}],
-  [{x:'Leche evaporada'},{n:9},{n:0.1},{e:0.90,f:true,ph:'=B2*C2'}],
-  [{x:'Yema de huevo'},{n:0.5},{n:1},{e:0.50,f:true,ph:'=B3*C3'}],
-  [{x:'Vaso con cuchara'},{n:0.35},{n:1},{e:0.35,f:true,ph:'=B4*C4'}],
-  [{x:'Total'},{x:''},{x:''},{e:1.75,f:true,ph:'=SUMA(D2:D4)'}] ],
+  [{x:'Leche evaporada'},{n:9},{n:0.1},{e:0.90,f:true,ph:'=…'}],
+  [{x:'Yema de huevo'},{n:0.5},{n:1},{e:0.50,f:true,ph:'=…'}],
+  [{x:'Vaso con cuchara'},{n:0.35},{n:1},{e:0.35,f:true,ph:'=…'}],
+  [{x:'Total'},{x:''},{x:''},{e:1.75,f:true,ph:'=…'}] ],
  fin:'<p class="pq">0.90 + 0.50 + 0.35 = 1.75. En la copa completa se suman los siete insumos.</p>'},
 
 mg:{tipo:'quiz', titulo:'¿Qué dice cada margen?',

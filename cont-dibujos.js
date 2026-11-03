@@ -1,7 +1,7 @@
 /* ============================================================
    cont-dibujos.js — Contabilidad, sesiones 2 a 8 (diseño Certus).
    Va ANTES del script de la página, porque las diapositivas lo usan:
-     TAPA(titulo, bajada, etiquetas)      portada de la sesión
+     TAPA(titulo, bajada, etiquetas, curso)  portada de la sesión
      GLOBO(personaje, etiqueta, texto)     personaje Certus con globo
      CASO(dibujo, etiqueta, titulo, texto, datos)   tarjeta de caso con dibujo
      EVID(entrega, califica)               qué se entrega y cómo se califica
@@ -95,9 +95,9 @@ window.GLOBO=function(img, et, txt){
   return '<div class="perso"><img src="'+(PJ[img]||img)+'" alt="" loading="lazy">'+
          '<div class="globo"><span class="et">'+et+'</span>'+txt+'</div></div>';
 };
-window.TAPA=function(titulo, bajada, vias){
+window.TAPA=function(titulo, bajada, vias, curso){
   return '<div class="tapa"><div class="fil"><img class="cl" src="marca/certus-blanco.png" alt="Certus">'+
-         '<span>Contabilidad · Segundo ciclo</span></div><h2>'+titulo+'</h2><p>'+bajada+'</p>'+
+         '<span>'+(curso||'Contabilidad · Segundo ciclo')+'</span></div><h2>'+titulo+'</h2><p>'+bajada+'</p>'+
          (vias ? '<div class="via">'+vias.map(function(v){ return '<b>'+v+'</b>'; }).join('')+'</div>' : '')+'</div>';
 };
 function datos(d){

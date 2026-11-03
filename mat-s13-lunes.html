@@ -1217,9 +1217,9 @@ c0:{tipo:'opi', titulo:'Conectemos: ¿por qué en mayo se venden más tortas?',
 
 pr:{tipo:'cal', titulo:'Proyecta las ventas',
  lista:[
-  {q:'Promedio: 200 bolsas al mes. Índice de mayo: 1.20. ¿Cuántas se venden sin campaña?', f:'promedio × índice', e:240, tol:0.5, ph:'240', u:'bolsas', pq:'200 × 1.20 = 240'},
-  {q:'Con la campaña se espera 25 % más. ¿Cuántas con campaña?', f:'sin campaña × (1 + aumento)', e:300, tol:0.5, ph:'300', u:'bolsas', pq:'240 × 1.25 = 300'},
-  {q:'¿Cuántas bolsas adicionales genera la campaña ese mes?', f:'con campaña − sin campaña', e:60, tol:0.5, ph:'60', u:'bolsas', pq:'300 − 240 = 60. Solo estas van al flujo.'} ]},
+  {q:'Promedio: 200 bolsas al mes. Índice de mayo: 1.20. ¿Cuántas se venden sin campaña?', f:'promedio × índice', e:240, tol:0.5, ph:'0', u:'bolsas', pq:'200 × 1.20 = 240'},
+  {q:'Con la campaña se espera 25 % más. ¿Cuántas con campaña?', f:'sin campaña × (1 + aumento)', e:300, tol:0.5, ph:'0', u:'bolsas', pq:'240 × 1.25 = 300'},
+  {q:'¿Cuántas bolsas adicionales genera la campaña ese mes?', f:'con campaña − sin campaña', e:60, tol:0.5, ph:'0', u:'bolsas', pq:'300 − 240 = 60. Solo estas van al flujo.'} ]},
 
 fl:{tipo:'par', titulo:'¿En qué fila del flujo va?',
  fichas:[{id:'a',t:'Unidades adicionales × precio sin IGV'},{id:'b',t:'Unidades adicionales × costo unitario'},
@@ -1240,8 +1240,8 @@ dg:{tipo:'quiz', titulo:'Lee el flujo',
 
 rm:{tipo:'cal', titulo:'Recargo o margen',
  lista:[
-  {q:'Una caja de bombones cuesta S/ 12 y se vende a S/ 30. ¿Cuál es el recargo sobre el costo?', f:'ganancia ÷ costo × 100', e:150, tol:0.5, ph:'150', u:'%', pq:'18 ÷ 12 × 100 = 150 %'},
-  {q:'¿Y el margen sobre el precio?', f:'ganancia ÷ precio × 100', e:60, tol:0.5, ph:'60', u:'%', pq:'18 ÷ 30 × 100 = 60 %'} ]},
+  {q:'Una caja de bombones cuesta S/ 12 y se vende a S/ 30. ¿Cuál es el recargo sobre el costo?', f:'ganancia ÷ costo × 100', e:150, tol:0.5, ph:'0', u:'%', pq:'18 ÷ 12 × 100 = 150 %'},
+  {q:'¿Y el margen sobre el precio?', f:'ganancia ÷ precio × 100', e:60, tol:0.5, ph:'0', u:'%', pq:'18 ÷ 30 × 100 = 60 %'} ]},
 
 sal:{tipo:'quiz', titulo:'Para cerrar',
  lista:[
