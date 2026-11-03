@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-10-27-ic_s12-martes_v1-a">
+<meta name="version" content="2026-11-03-ic_s12-martes_v2-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -402,6 +402,8 @@
   .form small{ display:block; font-size:18px; font-weight:500; opacity:.78; margin-top:6px;
                letter-spacing:0; }
   .form .v{ color:#FF8A82; }
+  /* el texto en negrita hereda el blanco de la caja, no el color de la página */
+  .form b, .form small b{ color:inherit; }
 
   .av{ border:2px dashed var(--linea); border-left:5px solid var(--gris); background:var(--humo);
        border-radius:4px 10px 10px 4px; padding:14px 18px; font-size:21px; line-height:1.6;
@@ -974,7 +976,7 @@
 </style>
 <link rel="stylesheet" href="mat-tj.css?v=20261026a">
 </head>
-<body>
+<body class="ic-grande">
 
 <div class="o-navbar">
   <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
@@ -1002,7 +1004,7 @@
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
       <h1>Estudio de usos y actitudes (U&amp;A)</h1>
-      <p><span class="sem">Semana 12 &middot; Martes</span> - Investigaci&oacute;n Cuantitativa - Quién consume, cuánto y por qué</p>
+      <p><span class="sem">Semana 12 &middot; Martes</span> - Investigaci&oacute;n Cuantitativa - Usos, actitudes y perfil del consumidor</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -1080,8 +1082,8 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="ic-tj.js?v=20261028b"></script>
-<script src="aula.js?v=20261103b"></script>
+<script src="ic-tj.js?v=20261103c"></script>
+<script src="aula.js?v=20261103c"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1345,115 +1347,205 @@ pintaSon();
 var ACT={
  "c0": {
   "tipo": "opi",
-  "titulo": "Conectemos: ¿qué preguntarías?",
+  "titulo": "Conectemos: ¿por dónde empieza?",
   "lista": [
    {
-    "q": "Quinua Fresh quiere conocer a su consumidor. ¿Qué preguntarías primero?",
+    "q": "Tu equipo ya eligió su producto. ¿Con qué pregunta abre el cuestionario?",
     "ops": [
-     "Cuánto pagaría",
-     "Cada cuánto y dónde la toma",
-     "Qué logo prefiere"
+     "¿Cuánto pagaría por el producto?",
+     "¿Ha consumido la categoría en los últimos 3 meses?",
+     "¿Qué edad tiene?"
     ],
     "com": [
-     "Útil, pero eso es de una prueba de precio.",
-     "Esa es la base de un U&A: los hábitos de uso.",
-     "Eso es de una prueba de diseño, no de U&A."
+     "El precio va mucho después, y solo tiene sentido si la persona consume la categoría.",
+     "Esa es la pregunta filtro: deja pasar solo a quien interesa para el estudio.",
+     "El perfil va al final del cuestionario, después de usos y actitudes."
     ]
    }
   ]
  },
- "ua": {
+ "mo": {
   "tipo": "arr",
-  "titulo": "¿Uso, actitud o perfil?",
+  "titulo": "Arma la matriz: ¿a qué dimensión va cada indicador?",
   "cajas": [
-   {
-    "id": "u",
-    "t": "Uso"
-   },
-   {
-    "id": "a",
-    "t": "Actitud"
-   },
    {
     "id": "p",
     "t": "Perfil"
+   },
+   {
+    "id": "u",
+    "t": "Usos y hábitos"
+   },
+   {
+    "id": "a",
+    "t": "Actitudes"
    }
   ],
   "fichas": [
    {
     "id": "f1",
-    "t": "¿Cada cuánto la tomas?",
-    "g": "u"
-   },
-   {
-    "id": "f2",
-    "t": "¿Dónde la compras?",
-    "g": "u"
-   },
-   {
-    "id": "f3",
-    "t": "¿Qué tan saludable te parece?",
-    "g": "a"
-   },
-   {
-    "id": "f4",
-    "t": "¿Por qué la eliges en vez de una gaseosa?",
-    "g": "a"
-   },
-   {
-    "id": "f5",
     "t": "Edad",
     "g": "p"
    },
    {
-    "id": "f6",
-    "t": "Distrito donde vive",
+    "id": "f2",
+    "t": "NSE (ficha APEIM)",
     "g": "p"
-   }
-  ],
-  "fin": "<p class=\"pq\">El U&amp;A cruza las tres: <b>quién</b> (perfil) <b>hace qué</b> (uso) y <b>por qué</b> (actitud).</p>"
- },
- "cx": {
-  "tipo": "cal",
-  "titulo": "Lee la tabla cruzada",
-  "lista": [
-   {
-    "q": "% de mujeres que consume a diario",
-    "f": "22 ÷ 110 × 100",
-    "e": 20,
-    "tol": 0.1,
-    "ph": "0",
-    "u": "%",
-    "pq": "22 ÷ 110 = 20 %"
    },
    {
-    "q": "% de varones que consume a diario",
-    "f": "9 ÷ 90 × 100",
+    "id": "f3",
+    "t": "Rol en la compra del hogar",
+    "g": "p"
+   },
+   {
+    "id": "f4",
+    "t": "Frecuencia de consumo",
+    "g": "u"
+   },
+   {
+    "id": "f5",
+    "t": "Lugar de compra",
+    "g": "u"
+   },
+   {
+    "id": "f6",
+    "t": "Gasto mensual en la categoría",
+    "g": "u"
+   },
+   {
+    "id": "f7",
+    "t": "Creencia: «es nutritiva»",
+    "g": "a"
+   },
+   {
+    "id": "f8",
+    "t": "Agrado por el sabor",
+    "g": "a"
+   },
+   {
+    "id": "f9",
+    "t": "Barreras para consumir más",
+    "g": "a"
+   }
+  ],
+  "fin": "<p class=\"pq\">Tres indicadores por dimensión llenan las nueve filas de la <b>matriz de operacionalización</b> del proyecto: dimensión, indicador, pregunta, escala y opciones de respuesta.</p>"
+ },
+ "es": {
+  "tipo": "sel",
+  "titulo": "Ponle su escala a cada pregunta",
+  "lista": [
+   {
+    "q": "¿Dónde compra quinua? (mercado / súper / bodega / online)",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 0,
+    "pq": "Nominal: categorías sin orden. Se calculan frecuencias y %."
+   },
+   {
+    "q": "¿Con qué frecuencia consume quinua? (diario … mensual)",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 1,
+    "pq": "Ordinal: las categorías van de más a menos. Se calculan %, % acumulado y moda."
+   },
+   {
+    "q": "¿Cuánto gasta al mes en quinua? S/ ____",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 3,
+    "pq": "Razón: es un monto con cero real. Se calcula promedio, mínimo y máximo."
+   },
+   {
+    "q": "«La quinua es nutritiva» (1 en desacuerdo … 5 de acuerdo)",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 2,
+    "pq": "Likert de 5 puntos. Se calcula el promedio y el top two boxes (4 + 5)."
+   },
+   {
+    "q": "¿Qué edad tiene? (18–25 / 26–35 / 36–45 / 46–55)",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 1,
+    "pq": "Ordinal: los rangos tienen orden. Si se pregunta «¿cuántos años tiene?» sería razón."
+   },
+   {
+    "q": "¿Quién compra los alimentos en su hogar?",
+    "ops": [
+     "Nominal",
+     "Ordinal",
+     "Likert 1 a 5",
+     "Razón"
+    ],
+    "ok": 0,
+    "pq": "Nominal: categorías sin orden."
+   }
+  ],
+  "fin": "<p class=\"pq\">La escala se decide <b>antes</b> de redactar las opciones de respuesta: ella manda qué se podrá calcular después.</p>"
+ },
+ "fr": {
+  "tipo": "cal",
+  "titulo": "Completa la tabla de frecuencias",
+  "intro": "Resultados de la pregunta de frecuencia: diario 20, semanal 76, quincenal 54 y mensual 50 casos.",
+  "lista": [
+   {
+    "q": "Base del estudio (total de casos)",
+    "f": "20 + 76 + 54 + 50",
+    "e": 200,
+    "tol": 0,
+    "ph": "0",
+    "u": "casos",
+    "pq": "La base es 200. En el Excel la da =SUMA(B36:B39) y es el total de toda la columna %."
+   },
+   {
+    "q": "% que consume a diario",
+    "f": "20 ÷ 200 × 100",
     "e": 10,
     "tol": 0.1,
     "ph": "0",
     "u": "%",
-    "pq": "9 ÷ 90 = 10 %"
+    "pq": "10 %. La fórmula del Excel es =B36/$B$40: la base va fija con $."
    },
    {
-    "q": "Heavy users entre las mujeres (diario + semanal)",
-    "f": "(22 + 44) ÷ 110 × 100",
-    "e": 60,
+    "q": "% que consume cada semana",
+    "f": "76 ÷ 200 × 100",
+    "e": 38,
     "tol": 0.1,
     "ph": "0",
     "u": "%",
-    "pq": "66 ÷ 110 = 60 %"
+    "pq": "38 %. Es la opción más frecuente: la moda de la tabla."
    },
    {
-    "q": "De quienes consumen a diario, ¿qué % son mujeres?",
-    "f": "Ahora el total es la fila «Diario»",
-    "e": 70.97,
+    "q": "% que consume al menos una vez por semana",
+    "f": "(20 + 76) ÷ 200 × 100",
+    "e": 48,
     "tol": 0.1,
-    "ph": "0.0",
+    "ph": "0",
     "u": "%",
-    "pq": "22 ÷ 31 = 71.0 %. Es un % de fila: responde otra pregunta que el % de columna."
+    "pq": "48 %. Diario y semanal se suman porque la escala es ordinal."
    }
-  ]
+  ],
+  "fin": "<p class=\"pq\">Con ese 48 % se redacta la <b>lectura</b> de la tabla: «casi la mitad consume quinua al menos una vez por semana».</p>"
  },
  "cr": {
   "tipo": "cruz",
@@ -1463,35 +1555,35 @@ var ACT={
   "palabras": [
    {
     "p": "FRECUENCIA",
-    "pista": "Cada cuánto se consume",
+    "pista": "Indicador que mide cada cuánto se consume",
     "r": 3,
     "c": 0,
     "dir": "H"
    },
    {
     "p": "PERFIL",
-    "pista": "Quién es el consumidor: sexo, edad, distrito",
+    "pista": "Dimensión que describe quién es el consumidor",
     "r": 0,
     "c": 0,
     "dir": "V"
    },
    {
     "p": "ACTITUD",
-    "pista": "Lo que piensa y siente sobre el producto",
+    "pista": "Lo que el consumidor cree, siente y haría",
     "r": 0,
     "c": 8,
     "dir": "V"
    },
    {
     "p": "HEAVY",
-    "pista": "… user: el que consume más seguido",
+    "pista": "… user: el que consume con más frecuencia",
     "r": 2,
     "c": 2,
     "dir": "V"
    },
    {
     "p": "COLUMNA",
-    "pista": "Porcentaje que compara grupos de distinto tamaño",
+    "pista": "Opciones de respuesta de una pregunta cerrada, en la matriz",
     "r": 0,
     "c": 4,
     "dir": "V"
@@ -1523,78 +1615,78 @@ var ACT={
    },
    {
     "p": "DISTRITO",
-    "pista": "Variable geográfica del perfil",
+    "pista": "Indicador geográfico del perfil",
     "r": 7,
     "c": 0,
     "dir": "H"
    },
    {
     "p": "CONSUMO",
-    "pista": "Lo que mide un estudio de uso",
+    "pista": "Lo que mide la dimensión de usos",
     "r": 1,
     "c": 3,
     "dir": "D"
    },
    {
     "p": "EDAD",
-    "pista": "Variable demográfica en rangos",
+    "pista": "Indicador del perfil que se pregunta en rangos",
     "r": 2,
     "c": 3,
     "dir": "D"
    },
    {
     "p": "SEXO",
-    "pista": "Mujer o varón en la tabla cruzada",
+    "pista": "Indicador del perfil de escala nominal",
     "r": 0,
     "c": 3,
     "dir": "D"
    },
    {
     "p": "MARCA",
-    "pista": "La que el consumidor elige",
+    "pista": "La que el consumidor compra con más frecuencia",
     "r": 0,
     "c": 7,
     "dir": "V"
    }
   ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> Antes de leer una tabla cruzada pregunta: <b>¿sobre qué total está el porcentaje?</b></p>"
+  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> toda pregunta del cuestionario nace de un <b>indicador</b>, y todo indicador pertenece a una <b>dimensión</b>.</p>"
  },
  "fin": {
   "tipo": "quiz",
   "titulo": "Reto final",
   "lista": [
    {
-    "q": "Un informe dice: «el 40 % de los varones consume mensualmente, así que los varones son el público principal». ¿Qué falla?",
+    "q": "¿Cuál de estas preguntas está mal redactada?",
     "ops": [
-     "Debió usar el % de fila, no el de columna",
-     "El 40 % está mal: 36 ÷ 200 da 18 %",
-     "Nada: 40 % es el mayor porcentaje de los varones",
-     "Confunde frecuencia con importancia: consumen menos seguido"
-    ],
-    "ok": 3,
-    "pq": "«Mensual» es una frecuencia baja. El público principal es el que consume más seguido."
-   },
-   {
-    "q": "18–24 años: 45 heavy users de 80. 25–35 años: 57 de 120. ¿Qué grupo es más «heavy»?",
-    "ops": [
-     "18–24: el 56 % es heavy frente al 47.5 %",
-     "No se puede comparar porque los grupos son de distinto tamaño",
-     "Son iguales",
-     "25–35, porque tiene más heavy users (57)"
-    ],
-    "ok": 0,
-    "pq": "45 ÷ 80 = 56.3 % y 57 ÷ 120 = 47.5 %. Con grupos distintos se comparan porcentajes, no cantidades."
-   },
-   {
-    "q": "Para comparar mujeres (110) y varones (90), ¿qué porcentaje se usa?",
-    "ops": [
-     "% por fila",
-     "% por columna, dentro de cada sexo",
-     "Las cantidades",
-     "% del total general (sobre 200)"
+     "¿Dónde compra quinua normalmente?",
+     "¿Le gusta el sabor y el precio de la quinua?",
+     "¿Con qué frecuencia consume quinua?",
+     "¿Cuánto gasta al mes en quinua?"
     ],
     "ok": 1,
-    "pq": "El % de columna pone a cada sexo sobre su propio total: así sí se pueden comparar."
+    "pq": "Son dos preguntas en una: quien responde no sabe a cuál contesta. Se separan en dos ítems."
+   },
+   {
+    "q": "«¿Cuántas veces por semana consume quinua? 1 a 3 / 3 a 5 / 5 a más». ¿Qué falla?",
+    "ops": [
+     "Las opciones se cruzan: el 3 y el 5 caen en dos categorías",
+     "Nada: cubre todos los casos",
+     "Le falta la escala Likert",
+     "Debería ser una pregunta abierta"
+    ],
+    "ok": 0,
+    "pq": "Las opciones tienen que ser excluyentes: 1 a 2 / 3 a 4 / 5 a más."
+   },
+   {
+    "q": "La frecuencia dio diario 10 %, semanal 38 %, quincenal 27 % y mensual 25 %. ¿Cuál es la lectura?",
+    "ops": [
+     "El consumo es bajo: solo el 10 % consume a diario",
+     "Casi la mitad (48 %) consume quinua al menos una vez por semana",
+     "La mayoría consume quincenalmente",
+     "No se puede leer sin comparar con otra marca"
+    ],
+    "ok": 1,
+    "pq": "En una escala ordinal los niveles se acumulan: 10 % + 38 % = 48 %."
    }
   ]
  }
@@ -1604,45 +1696,119 @@ var ACT={
 var D=[
 
 { et:"Conectemos",
-  t:"Conocer al consumidor",
+  t:"¿Por dónde empieza el cuestionario?",
   claves:["c0"],
-  h:TAPA('Conocer al consumidor','Semana 12 · Estudio de usos y actitudes',null,'pres','Quinua Fresh ya sabe que su bebida gusta. Ahora quiere saber <b>quién</b> la toma, <b>cada cuánto</b> y <b>por qué</b>.') },
+  h:TAPA('Usos, actitudes y perfil del consumidor','Semana 12 &middot; Sesi&oacute;n 1 &middot; Estudio de usos y actitudes (U&amp;A)',null,'pres','Quinua Fresh quiere lanzar una bebida de quinua lista para tomar. Antes de dise&ntilde;arla necesita saber <b>qui&eacute;n</b> consume quinua, <b>c&oacute;mo</b> la consume y <b>qu&eacute; opina</b> de ella.') },
 
 { et:"U&A",
-  t:"Qué mide un estudio U&A",
-  claves:["ua"],
-  h:'<p class="teo-def">Un <b>estudio U&amp;A</b> responde <b>quién</b> consume (perfil), <b>qué, cuánto y dónde</b> (uso) y <b>por qué</b> (actitud). <b>Heavy user:</b> consume a diario o cada semana.</p>' },
-
-{ et:"Cruce",
-  t:"Frecuencia de uso por sexo",
-  claves:["cx"],
+  t:"Qué responde un estudio de usos y actitudes",
+  claves:["mo"],
   lado:1,
-  h:TABLA(['Frecuencia','Mujer','Varón','Total'],[['Diario','22','9','31'],['Semanal','44','27','71'],['Mensual','33','36','69'],['Rara vez','11','18','29'],['*Total','110','90','200']],'Base: 200 jóvenes de Lima. Datos simulados.')+
-'<div class="form">% de columna = celda ÷ total de la columna × 100</div>' },
+  h:'<p class="teo-def">Un <b>estudio U&amp;A</b> describe <b>c&oacute;mo se consume una categor&iacute;a</b> y <b>qu&eacute; piensa el consumidor</b> de ella. Es el primer estudio de una marca y responde cinco preguntas.</p>'+
+TABLA(['Pregunta que responde','Dimensión'],[
+ ['¿Quién consume?','Perfil'],
+ ['¿Qué y cuánto consume?','Usos'],
+ ['¿Dónde y cuándo compra?','Hábitos'],
+ ['¿Por qué lo elige o no?','Motivos y barreras'],
+ ['¿Qué piensa y siente?','Actitudes']],'Las tres dimensiones de la matriz: perfil, usos y hábitos, actitudes.') },
+
+{ et:"Matriz",
+  t:"De la variable a la pregunta",
+  claves:["es"],
+  lado:1,
+  h:'<p class="teo-def"><b>Operacionalizar</b> es bajar un concepto hasta una pregunta que se pueda contar o promediar.</p>'+
+TABLA(['Paso','Qué es','Ejemplo del caso'],[
+ ['1. Variable','Concepto amplio que se quiere medir','Consumo de quinua'],
+ ['2. Dimensión','Una parte o aspecto de la variable','Usos y hábitos'],
+ ['3. Indicador','Dato observable que se cuenta o se mide','Frecuencia de consumo'],
+ ['4. Pregunta','Cómo se le pide al encuestado','¿Con qué frecuencia consume quinua?'],
+ ['5. Escala','Nivel de medición y opciones','Ordinal: diario … mensual']],'Si no se puede contar, sacar un % o un promedio, todavía no es un indicador.') },
+
+{ et:"Escalas",
+  t:"Qué se calcula con cada escala",
+  h:'<div class="dos">'+
+'<div class="fc rj"><h4>Las cuatro escalas del cuestionario</h4><div class="c">'+
+TABLA(['Escala','Qué mide','Ejemplo del caso','Qué se calcula'],[
+ ['Nominal','Categorías sin orden','Lugar de compra','Frecuencias y %'],
+ ['Ordinal','Categorías con orden','Frecuencia de consumo','%, % acumulado, moda'],
+ ['Intervalo (Likert)','Puntajes con distancias iguales','Acuerdo de 1 a 5','Promedio y top two boxes'],
+ ['Razón','Números con cero real','Gasto mensual en S/','Promedio, mínimo, máximo']])+
+'</div></div>'+
+'<div class="fc"><h4>La escala Likert de 5 puntos</h4><div class="c">'+
+TABLA(['Punto','Significado','Se usa en'],[
+ ['1','Totalmente en desacuerdo','Creencias'],
+ ['2','En desacuerdo','Creencias'],
+ ['3','Ni de acuerdo ni en desacuerdo','Punto neutro'],
+ ['4','De acuerdo','Entra al top two boxes'],
+ ['5','Totalmente de acuerdo','Entra al top two boxes']])+
+'<p class="hint">La misma escala de 5 puntos sirve para el agrado (me disgusta mucho &hellip; me gusta mucho) y para la intenci&oacute;n (definitivamente no &hellip; definitivamente s&iacute;).</p>'+
+'</div></div></div>' },
+
+{ et:"Matriz",
+  t:"La matriz completa del caso",
+  h:TABLA(['Dimensión','Indicador','Pregunta','Escala'],[['Perfil','Edad','¿Qué edad tiene?','Ordinal'],['Perfil','NSE','Ficha APEIM','Ordinal'],['Perfil','Rol en la compra','¿Quién compra los alimentos en su hogar?','Nominal'],['Usos y hábitos','Frecuencia','¿Con qué frecuencia consume quinua?','Ordinal'],['Usos y hábitos','Lugar de compra','¿Dónde compra quinua normalmente?','Nominal'],['Usos y hábitos','Gasto mensual','¿Cuánto gasta al mes en quinua?','Razón'],['Actitudes','Creencias','«La quinua es nutritiva»','Likert 1 a 5'],['Actitudes','Agrado','¿Cuánto le gusta el sabor de la quinua?','Likert 1 a 5'],['Actitudes','Barreras','¿Qué le impide consumir más quinua?','Nominal múltiple']],'El orden de la matriz no es el orden del cuestionario: el perfil se redacta primero, pero se pregunta al final. Caso y datos ficticios.') },
+
+{ et:"Frecuencias",
+  t:"Del dato a la tabla de frecuencias",
+  claves:["fr"],
+  lado:1,
+  h:TABLA(['Frecuencia de consumo','Casos','%'],[
+ ['Diario','20','?'],
+ ['Semanal','76','?'],
+ ['Quincenal','54','?'],
+ ['Mensual','50','?'],
+ ['*Total','?','100 %']],'Base: personas que consumieron quinua en los últimos 3 meses. Datos ficticios.')+
+'<div class="form">% = casos &divide; base &times; 100<small>En la hoja: <b>=B36/$B$40</b> y el total con <b>=SUMA(B36:B39)</b></small></div>' },
+
+{ et:"Cuestionario",
+  t:"Cómo se ordena y cómo se redacta",
+  h:'<div class="dos">'+
+'<div class="fc"><h4>Orden del cuestionario U&amp;A</h4><div class="c"><ol class="pasos">'+
+'<li><b>Presentaci&oacute;n:</b> qui&eacute;n pregunta, para qu&eacute; y cu&aacute;nto dura.</li>'+
+'<li><b>Filtro:</b> ¿consume la categor&iacute;a? ¿est&aacute; en el rango de edad?</li>'+
+'<li><b>Usos y h&aacute;bitos:</b> de lo general a lo espec&iacute;fico.</li>'+
+'<li><b>Actitudes:</b> creencias, agrado, motivos y barreras.</li>'+
+'<li><b>Perfil:</b> datos personales al final.</li>'+
+'<li><b>Cierre:</b> agradecimiento.</li>'+
+'</ol></div></div>'+
+'<div class="fc rj"><h4>Errores que invalidan una pregunta</h4><div class="c">'+
+TABLA(['Error','Ejemplo'],[
+ ['Dos preguntas en una','¿Le gusta el sabor y el precio?'],
+ ['Opciones que se cruzan','1 a 3 veces / 3 a 5 veces'],
+ ['Pregunta que induce','¿No cree que la quinua es saludable?'],
+ ['Faltan opciones','Sin «Otro» ni «No sabe»'],
+ ['Opciones sin la escala declarada','Likert sin sus cinco puntos']])+
+'</div></div></div>' },
 
 { et:"Crucigrama",
   t:"Crucigrama del U&A",
   claves:["cr"],
   h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>FRECUENCIA</b></td><td>Cada cuánto se consume</td></tr><tr><td><b>PERFIL</b></td><td>Quién es el consumidor: sexo, edad, distrito</td></tr><tr><td><b>ACTITUD</b></td><td>Lo que piensa y siente sobre el producto</td></tr><tr><td><b>HEAVY</b></td><td>… user: el que consume más seguido</td></tr><tr><td><b>COLUMNA</b></td><td>Porcentaje que compara grupos de distinto tamaño</td></tr></tbody></table></div>" },
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>FRECUENCIA</b></td><td>Indicador que mide cada cuánto se consume</td></tr><tr><td><b>PERFIL</b></td><td>Dimensión que describe quién es el consumidor</td></tr><tr><td><b>ACTITUD</b></td><td>Lo que el consumidor cree, siente y haría</td></tr><tr><td><b>HEAVY</b></td><td>… user: el que consume con más frecuencia</td></tr><tr><td><b>COLUMNA</b></td><td>Opciones de respuesta de una pregunta cerrada, en la matriz</td></tr></tbody></table></div>" },
 
 { et:"Sopa",
   t:"Sopa de letras",
   claves:["sp"],
   h:'',
-  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>HABITO</b></td><td>Lo que el consumidor hace de forma repetida</td></tr><tr><td><b>DISTRITO</b></td><td>Variable geográfica del perfil</td></tr><tr><td><b>CONSUMO</b></td><td>Lo que mide un estudio de uso</td></tr><tr><td><b>EDAD</b></td><td>Variable demográfica en rangos</td></tr><tr><td><b>SEXO</b></td><td>Mujer o varón en la tabla cruzada</td></tr><tr><td><b>MARCA</b></td><td>La que el consumidor elige</td></tr></tbody></table></div>" },
+  pdf:"<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>HABITO</b></td><td>Lo que el consumidor hace de forma repetida</td></tr><tr><td><b>DISTRITO</b></td><td>Indicador geográfico del perfil</td></tr><tr><td><b>CONSUMO</b></td><td>Lo que mide la dimensión de usos</td></tr><tr><td><b>EDAD</b></td><td>Indicador del perfil que se pregunta en rangos</td></tr><tr><td><b>SEXO</b></td><td>Indicador del perfil de escala nominal</td></tr><tr><td><b>MARCA</b></td><td>La que el consumidor compra con más frecuencia</td></tr></tbody></table></div>" },
 
 { et:"Reto",
-  t:"Reto final",
+  t:"Del dato al resultado",
   claves:["fin"],
-  h:'',
-  pdf:"<ol class=\"pasos\"><li><b>Un informe dice: «el 40 % de los varones consume mensualmente, así que los varones son el público principal». ¿Qué falla?</b><br>Respuesta: Confunde frecuencia con importancia: consumen menos seguido. <i>«Mensual» es una frecuencia baja. El público principal es el que consume más seguido.</i></li><li><b>18–24 años: 45 heavy users de 80. 25–35 años: 57 de 120. ¿Qué grupo es más «heavy»?</b><br>Respuesta: 18–24: el 56 % es heavy frente al 47.5 %. <i>45 ÷ 80 = 56.3 % y 57 ÷ 120 = 47.5 %. Con grupos distintos se comparan porcentajes, no cantidades.</i></li><li><b>Para comparar mujeres (110) y varones (90), ¿qué porcentaje se usa?</b><br>Respuesta: % por columna, dentro de cada sexo. <i>El % de columna pone a cada sexo sobre su propio total: así sí se pueden comparar.</i></li></ol><div class=\"clave\"><b>Para cerrar:</b> Antes de leer una tabla cruzada pregunta: <b>¿sobre qué total está el porcentaje?</b></div>" }
+  lado:1,
+  h:'<p class="teo-def">Cada indicador termina en una tabla o en un n&uacute;mero, y cada n&uacute;mero se cierra con una <b>lectura</b>: qu&eacute; dice el dato y qu&eacute; implica para la marca.</p>'+
+TABLA(['Indicador','Resultado','Lectura'],[
+ ['Frecuencia','Semanal 38 % · diario 10 %','Casi la mitad consume al menos una vez por semana'],
+ ['«Es nutritiva»','Promedio 4,5 de 5','La categoría se valora como alimento'],
+ ['«Es fácil de preparar»','Promedio 3,1 de 5','Preparar la quinua cuesta: ahí hay una barrera'],
+ ['Perfil','Mujer de 26 a 45, NSE B y C','La comunicación va a quien decide la compra']],'Dato, lectura e implicancia: sin la lectura, la tabla es solo un número. Datos ficticios.'),
+  pdf:"<ol class=\"pasos\"><li><b>¿Cuál de estas preguntas está mal redactada?</b><br>Respuesta: ¿Le gusta el sabor y el precio de la quinua? <i>Son dos preguntas en una.</i></li><li><b>«1 a 3 / 3 a 5 / 5 a más»: ¿qué falla?</b><br>Respuesta: las opciones se cruzan. <i>Tienen que ser excluyentes: 1 a 2 / 3 a 4 / 5 a más.</i></li><li><b>Diario 10 %, semanal 38 %, quincenal 27 %, mensual 25 %: ¿cuál es la lectura?</b><br>Respuesta: casi la mitad (48 %) consume al menos una vez por semana. <i>En escala ordinal los niveles se acumulan.</i></li></ol><div class=\"clave\"><b>Para cerrar:</b> dato, lectura e implicancia. Sin lectura, la tabla es solo un número.</div>" }
 ];
 
 /* ================= estado ================= */
-var LS='ic_s12-martes_v1';
+var LS='ic_s12-martes_v2';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "ua", "cx", "cr", "sp", "fin"];
+var CLAVES=["c0", "mo", "es", "fr", "cr", "sp", "fin"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -3364,7 +3530,7 @@ function pantalla(e, alumno, cont){
 }
 var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'IC12M', codigo:'INV', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
+  Aula.iniciar({ sala:'IC12MB', codigo:'INV', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
@@ -3418,6 +3584,6 @@ pinta();
 })();
 </script>
 
-<script src="mat-tj.js?v=20261028b"></script>
+<script src="mat-tj.js?v=20261103c"></script>
 </body>
 </html>
