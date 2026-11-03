@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-11-03-reporte-por-pregunta">
+<meta name="version" content="2026-11-03-reporte-observacion">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1317,7 +1317,7 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261103a"></script>
+<script src="aula.js?v=20261103b"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script src="bbb-chat.js?v=20261031"></script>
@@ -3456,23 +3456,25 @@ function cuenta(GG){
 /* para el reporte del aula: cada alumno se mide sobre lo que el docente eligió */
 /* cada pregunta de la sesión, con su actividad y si ya la resolvió: el reporte y el dashboard cuentan por pregunta */
 function preguntasDe(GG){
-  var out=[], Gx=GG||{};
+  var out=[], Gx=GG||{}, malas={};
+  /* las respuestas equivocadas que quedaron en la evidencia de fallos: actividad | ítem */
+  (Gx.fallos||[]).forEach(function(f){ malas[f.k+'|'+f.i]=1; });
   function limpia(t){ return corta(String(t||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim(), 90); }
   clavesVis().forEach(function(k){
     var A=ACT[k], g=Gx[k]||{}, e=etiActividad(CLAVES.indexOf(k));
     if(!A) return;
-    function add(q, ok){ out.push({ e:e, k:k, q:limpia(q), ok:ok?1:0 }); }
-    if(A.tipo==='quiz' || A.tipo==='sel' || A.tipo==='cal' || A.tipo==='opi'){ A.lista.forEach(function(p,j){ add(p.q, g[j]!==undefined); }); }
-    else if(A.tipo==='par' || A.tipo==='arma'){ A.huecos.forEach(function(x){ add(x.q||x.rot, g[x.id]!==undefined); }); }
-    else if(A.tipo==='arr' || A.tipo==='cuadro'){ A.fichas.forEach(function(f){ if(!f.fijo) add(f.t, g[f.id]!==undefined); }); }
+    function add(q, ok, id){ var o={ e:e, k:k, q:limpia(q), ok:ok?1:0 }; if(id!==undefined && malas[k+'|'+id]) o.mal=1; out.push(o); }
+    if(A.tipo==='quiz' || A.tipo==='sel' || A.tipo==='cal' || A.tipo==='opi'){ A.lista.forEach(function(p,j){ add(p.q, g[j]!==undefined, j); }); }
+    else if(A.tipo==='par' || A.tipo==='arma'){ A.huecos.forEach(function(x){ add(x.q||x.rot, g[x.id]!==undefined, x.id); }); }
+    else if(A.tipo==='arr' || A.tipo==='cuadro'){ A.fichas.forEach(function(f){ if(!f.fijo) add(f.t, g[f.id]!==undefined, f.id); }); }
     else if(A.tipo==='tabla'){
       A.filas.forEach(function(fi,r){ fi.forEach(function(c,j){
         if(c.e===undefined && !c.ops) return;
         var lin=(fi[0] && (fi[0].t || fi[0].x)) || ('Fila '+(r+1)), col=(A.cols||[])[j];
-        add(lin+' · '+(col && typeof col==='object' ? (col.t||'') : (col||'')), g[r+'-'+j]!==undefined);
+        add(lin+' · '+(col && typeof col==='object' ? (col.t||'') : (col||'')), g[r+'-'+j]!==undefined, r+'-'+j);
       }); });
     }
-    else if(A.tipo==='cruz'){ A.palabras.forEach(function(w){ add(w.pista, g[w.p]!==undefined); }); }
+    else if(A.tipo==='cruz'){ A.palabras.forEach(function(w){ add(w.pista, g[w.p]!==undefined, w.p); }); }
     else if(A.tipo==='tab' || A.tipo==='con'){ add(A.q || A.titulo, hechasEn(Gx, k)>0); }
   });
   return out;
@@ -4318,7 +4320,9 @@ function svgDona(datos, titulo, W, H){
   if(!tot) b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="#E3E8F4" stroke-width="'+(R-r0)+'"/>';
   datos.forEach(function(x){
     if(!x.v) return;
-    var a2=ang+(x.v/tot)*Math.PI*2-(x.v===tot?0.0001:0), g=(a2-ang)>Math.PI?1:0;
+    /* una sola categoría con todo: se dibuja el anillo completo (un arco de 360° no se ve) */
+    if(x.v===tot){ b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="'+x.c+'" stroke-width="'+(R-r0)+'"/>'; return; }
+    var a2=ang+(x.v/tot)*Math.PI*2, g=(a2-ang)>Math.PI?1:0;
     b+='<path d="M'+pt(ang,R)+' A'+R+' '+R+' 0 '+g+' 1 '+pt(a2,R)+' L'+pt(a2,r0)+' A'+r0+' '+r0+' 0 '+g+' 0 '+pt(ang,r0)+' Z" fill="'+x.c+'"/>';
     ang=a2;
   });
@@ -4493,13 +4497,17 @@ function pintaDash(){
   /* el reporte de participación, aquí mismo */
   h+='<div class="dbox"><h4>&#128203; Reporte de participaci&oacute;n por pregunta &middot; '+d.preg.length+' preguntas</h4>'+
      (n ? '<div class="tf rp"><table><thead><tr><th>Alumno</th>'+d.preg.map(function(x,j){ return '<th title="'+esc(x.e+' · '+x.q)+'">P'+(j+1)+'</th>'; }).join('')+
-          '<th>Correctas</th><th>Avance</th><th>Fallos</th></tr></thead><tbody>'+
+          '<th>Correctas</th><th>Avance</th><th>Fallos</th><th>Observaci&oacute;n</th></tr></thead><tbody>'+
           al.slice().sort(function(a,b){ return a.n.localeCompare(b.n); }).map(function(a){
             return '<tr><td><b>'+esc(a.n)+'</b></td>'+a.pr.map(function(x){
-              return x.ok ? '<td style="color:#0F6B45;font-weight:900">&#10003;</td>' : '<td style="color:#B9C2D8">&middot;</td>';
-            }).join('')+'<td>'+a.ok+' / '+a.tot+'</td><td style="color:'+tono(a.p)+';font-weight:900">'+Math.round(a.p*100)+'%</td><td>'+(a.nf||0)+'</td></tr>';
+              return x.ok ? '<td style="color:'+(x.mal?'#C98A00':'#0F6B45')+';font-weight:900" title="'+(x.mal?'Correcta tras un error':'Correcta')+'">&#10003;</td>'
+                   : (x.mal ? '<td style="color:#A4161A;background:#FDE2E4;font-weight:900" title="Respondi&oacute; err&oacute;neamente">&#10007;</td>'
+                            : '<td style="color:#B9C2D8" title="No realiz&oacute;">&mdash;</td>');
+            }).join('')+'<td>'+a.ok+' / '+a.tot+'</td><td style="color:'+tono(a.p)+';font-weight:900">'+Math.round(a.p*100)+'%</td><td>'+(a.nf||0)+'</td>'+
+            '<td style="text-align:left;min-width:240px;font-size:13px">'+esc(Aula.observacion ? Aula.observacion(a.pr) : '')+'</td></tr>';
           }).join('')+'</tbody><tfoot><tr><td><b>Acertaron</b></td>'+d.preg.map(function(x){
-            return '<td style="color:'+tono(x.p)+';font-weight:900;border-top:2px solid #071767">'+Math.round(x.p*100)+'%</td>'; }).join('')+'<td></td><td></td><td></td></tr></tfoot></table></div>'+
+            return '<td style="color:'+tono(x.p)+';font-weight:900;border-top:2px solid #071767">'+Math.round(x.p*100)+'%</td>'; }).join('')+'<td></td><td></td><td></td><td></td></tr></tfoot></table></div>'+
+          '<p class="dvacio" style="margin:4px 0 0">&#10003; correcta (amarilla: tras un error) &middot; &#10007; respondi&oacute; err&oacute;neamente &middot; &mdash; no realiz&oacute;</p>'+
           '<h4 style="margin-top:12px">Qu&eacute; es cada pregunta</h4><div class="tf"><table><thead><tr><th>N.&ordm;</th><th>Actividad</th><th>Pregunta</th><th>Acertaron</th></tr></thead><tbody>'+
           d.preg.map(function(x,j){ return '<tr><td>P'+(j+1)+'</td><td>'+esc(x.e)+'</td><td>'+esc(x.q)+'</td><td style="color:'+tono(x.p)+';font-weight:800;white-space:nowrap">'+
             x.n+' de '+n+' &middot; '+Math.round(x.p*100)+'%</td></tr>'; }).join('')+'</tbody></table></div>'

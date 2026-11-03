@@ -1057,7 +1057,7 @@ function datosReporte(rows, otraSala){
     var ok=+e.ok||0, tot=+e.total||0, rej=e.rejilla||[];
     if(conPreg && Array.isArray(e.preg)){
       ok=e.preg.filter(function(x){ return x.ok; }).length; tot=e.preg.length;
-      rej=e.preg.map(function(x,j){ return { b:j, n:x.ok?1:0, t:1 }; });
+      rej=e.preg.map(function(x,j){ return { b:j, n:x.ok?1:0, t:1, m:x.mal?1:0 }; });
     }
     return { nombre:g.alumno, dni:g.caso||'', lamina:e.lamina||'', titulo:e.titulo||'',
              ok:ok, total:tot, pct:(tot ? ok/tot : 0), cambio:fechaLocal(g.actualizado), rej:rej };
@@ -1084,8 +1084,9 @@ function completaDatos(d){
   var alumnos=d.alumnos, columnas=d.columnas;
   var celda=function(a,j){
     var r=null; a.rej.forEach(function(x){ if(x.b===j) r=x; });
-    return r ? { n:r.n||0, t:r.t||0, p:(r.t ? (r.n||0)/r.t : 0) } : null;
+    return r ? { n:r.n||0, t:r.t||0, p:(r.t ? (r.n||0)/r.t : 0), m:r.m?1:0 } : null;
   };
+  alumnos.forEach(function(a){ a.obs=observacion(d.conPreg, columnas, function(j){ return celda(a,j); }); });
   var prom=alumnos.length ? alumnos.reduce(function(s,a){ return s+a.pct; },0)/alumnos.length : 0;
   var porAct=columnas.map(function(c,j){
     var vals=alumnos.map(function(a){ return celda(a,j); }).filter(Boolean);
@@ -1100,6 +1101,45 @@ function completaDatos(d){
   d.sinEmpezar=alumnos.filter(function(a){ return !a.ok; }).length;
   d.hayDni=alumnos.some(function(a){ return a.dni; });
   return d;
+}
+/* estado de una pregunta: correcta, correcta tras un error, errónea o no realizada */
+function estadoPreg(v){
+  if(!v) return 'nt';
+  if(v.t && v.n>=v.t) return v.m ? 'ce' : 'ok';
+  return v.m ? 'mal' : (v.n>0 ? 'inc' : 'no');
+}
+var ESTADO={ ok:{ t:'Correcta', s:'✓', f:'D8F3E6', c:'0F6B45' }, ce:{ t:'Correcta tras un error', s:'✓', f:'FFF1CC', c:'8A5A00' },
+             mal:{ t:'Respondió erróneamente', s:'✗', f:'FDE2E4', c:'A4161A' }, inc:{ t:'Incompleta', s:'½', f:'FFF1CC', c:'8A5A00' },
+             no:{ t:'No realizó', s:'—', f:'F1F3F7', c:'6B7591' }, nt:{ t:'No la tuvo', s:'', f:'FFFFFF', c:'6B7591' } };
+/* la observación del docente, armada sola: qué hizo bien, qué no hizo y en qué se equivocó */
+function observacion(conPreg, columnas, celdaDe){
+  var acts=[], por={}, corr=[];
+  columnas.forEach(function(c,j){
+    var v=celdaDe(j), st=estadoPreg(v); if(st==='nt') return;
+    var nom=conPreg ? (c.e||'Actividad') : c.et;
+    if(!por[nom]){ por[nom]={ n:nom, tot:0, no:[], mal:[], inc:[] }; acts.push(por[nom]); }
+    var x=por[nom]; x.tot++;
+    if(st==='no') x.no.push(c.et); else if(st==='mal') x.mal.push(c.et); else if(st==='inc') x.inc.push(c.et);
+    else if(st==='ce') corr.push(c.et);
+  });
+  if(!acts.length) return '';
+  var noHizo=[], dejo=[], mal=[], inc=[];
+  acts.forEach(function(x){
+    if(x.no.length===x.tot) noHizo.push(x.n);
+    else if(x.no.length) dejo.push(x.n+(conPreg ? ' ('+x.no.join(', ')+')' : ''));
+    if(x.mal.length) mal.push(x.n+(conPreg ? ' ('+x.mal.join(', ')+')' : ''));
+    if(x.inc.length) inc.push(x.n);
+  });
+  if(!noHizo.length && !dejo.length && !mal.length && !inc.length)
+    return 'Hizo todo correctamente.'+(corr.length ? ' Corrigió después de equivocarse en '+corr.join(', ')+'.' : '');
+  if(noHizo.length===acts.length) return 'No realizó ninguna actividad.';
+  var t=[];
+  if(mal.length) t.push('Respondió erróneamente en '+mal.join('; ')+'.');
+  if(noHizo.length) t.push('No realizó '+noHizo.join(', ')+'.');
+  if(dejo.length) t.push('Dejó sin responder '+dejo.join('; ')+'.');
+  if(inc.length) t.push('Dejó incompleta '+inc.join(', ')+'.');
+  if(corr.length) t.push('Corrigió después de equivocarse en '+corr.join(', ')+'.');
+  return t.join(' ');
 }
 /* las filas de la tabla simple (páginas sin avance medido) */
 function filasSimples(d, rows){ return d.resumen || armaReporte(rows||[]).resumen; }
@@ -1157,7 +1197,7 @@ function excelPro(X, d, rowsCrudas, sinExtra){
   }
 
   /* hoja 1: resumen */
-  var cabs=['N°','Alumno'].concat(d.hayDni?['DNI']:[]).concat(['Diapositiva actual','Correctas','Total','% Avance','Nivel','Último cambio']);
+  var cabs=['N°','Alumno'].concat(d.hayDni?['DNI']:[]).concat(['Diapositiva actual','Correctas','Total','% Avance','Nivel','Observación','Último cambio']);
   var ws=wb.addWorksheet('Resumen', { views:[{ state:'frozen', ySplit:10 }] });
   titulo(ws, cabs.length, sub);
   /* indicadores del aula, uno por fila, encima de la tabla */
@@ -1174,7 +1214,7 @@ function excelPro(X, d, rowsCrudas, sinExtra){
   });
   ws.getRow(10).values=cabs; cabecera(ws.getRow(10));
   d.alumnos.forEach(function(a,i){
-    var vals=[i+1, a.nombre].concat(d.hayDni?[a.dni]:[]).concat([a.lamina+(a.titulo ? ' — '+a.titulo : ''), a.ok, a.total, a.pct, nivel(a.pct).t, a.cambio]);
+    var vals=[i+1, a.nombre].concat(d.hayDni?[a.dni]:[]).concat([a.lamina+(a.titulo ? ' — '+a.titulo : ''), a.ok, a.total, a.pct, nivel(a.pct).t, a.obs, a.cambio]);
     var r=ws.addRow(vals);
     r.eachCell({ includeEmpty:true }, function(c){
       c.border=caja; c.alignment={ vertical:'middle', wrapText:true };
@@ -1182,13 +1222,17 @@ function excelPro(X, d, rowsCrudas, sinExtra){
     });
     var cp=r.getCell(cabs.indexOf('% Avance')+1), cn=r.getCell(cabs.indexOf('Nivel')+1);
     pinta(cp, a.pct); pinta(cn, a.pct, true); cn.alignment={ horizontal:'center' };
+    /* la observación también como comentario en el nombre del alumno */
+    if(a.obs){ r.getCell(2).note={ texts:[{ font:{ bold:true, size:10 }, text:a.nombre+'\n' }, { font:{ size:10 }, text:a.obs }] };
+      var co=r.getCell(cabs.indexOf('Observación')+1);
+      co.font={ bold:true, color:{ argb: /^Hizo todo/.test(a.obs) ? 'FF0F6B45' : (/erróneamente/.test(a.obs) ? 'FFA4161A' : 'FF8A5A00') } }; }
     r.getCell(1).alignment={ horizontal:'center' };
   });
-  var pie=ws.addRow(['', 'Promedio del aula'].concat(d.hayDni?['']:[]).concat(['', '', '', d.promedio, nivel(d.promedio).t, '']));
+  var pie=ws.addRow(['', 'Promedio del aula'].concat(d.hayDni?['']:[]).concat(['', '', '', d.promedio, nivel(d.promedio).t, '', '']));
   pie.eachCell({ includeEmpty:true }, function(c){ c.font={ bold:true }; c.border={ top:{ style:'medium', color:{ argb:MAR } } }; });
   pinta(pie.getCell(cabs.indexOf('% Avance')+1), d.promedio);
   ws.autoFilter={ from:{ row:10, column:1 }, to:{ row:10, column:cabs.length } };
-  var anchos={ 'N°':5, 'Alumno':30, 'DNI':11, 'Diapositiva actual':42, 'Correctas':11, 'Total':9, '% Avance':11, 'Nivel':13, 'Último cambio':17 };
+  var anchos={ 'N°':5, 'Alumno':30, 'DNI':11, 'Diapositiva actual':34, 'Correctas':11, 'Total':9, '% Avance':11, 'Nivel':13, 'Observación':60, 'Último cambio':17 };
   cabs.forEach(function(k,j){ ws.getColumn(j+1).width=anchos[k]||14; });
 
   /* hoja 2: avance por pregunta (o por actividad, si la página no envía sus preguntas) */
@@ -1199,6 +1243,20 @@ function excelPro(X, d, rowsCrudas, sinExtra){
   d.columnas.forEach(function(c,j){ wa.getCell(4,j+2).note=c.t; wa.getColumn(j+2).width=13; });
   wa.getColumn(1).width=30; wa.getColumn(d.columnas.length+2).width=11;
   d.alumnos.forEach(function(a){
+    if(d.conPreg){
+      /* por pregunta: ✓ correcta, ✗ errónea, — no realizada */
+      var rp=wa.addRow([a.nombre].concat(d.columnas.map(function(c,j){ return ESTADO[estadoPreg(d.celda(a,j))].s; })).concat([a.pct]));
+      rp.eachCell({ includeEmpty:true }, function(c,k){
+        c.border=caja;
+        if(k===1){ if(a.obs) c.note=a.obs; return; }
+        if(k===d.columnas.length+2){ pinta(c, a.pct); return; }
+        var es=ESTADO[estadoPreg(d.celda(a,k-2))];
+        c.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF'+es.f } };
+        c.font={ bold:true, size:12, color:{ argb:'FF'+es.c } }; c.alignment={ horizontal:'center' };
+        if(es.t!=='Correcta' && es.t!=='No la tuvo') c.note=es.t;
+      });
+      return;
+    }
     var r=wa.addRow([a.nombre].concat(d.columnas.map(function(c,j){ var v=d.celda(a,j); return v ? v.p : ''; })).concat([a.pct]));
     r.eachCell({ includeEmpty:true }, function(c,k){
       c.border=caja;
@@ -1206,6 +1264,7 @@ function excelPro(X, d, rowsCrudas, sinExtra){
       if(c.value!=='') pinta(c, c.value);
     });
   });
+  if(d.conPreg){ var ly=wa.addRow([]); ly=wa.addRow(['Leyenda: ✓ correcta (amarillo: tras un error) · ✗ respondió erróneamente · — no realizó']); ly.getCell(1).font={ italic:true, color:{ argb:'FF55607F' } }; }
   var pa=wa.addRow(['Promedio del aula'].concat(d.porAct.map(function(x){ return x.p; })).concat([d.promedio]));
   pa.eachCell({ includeEmpty:true }, function(c,k){
     c.border={ top:{ style:'medium', color:{ argb:MAR } } };
@@ -1232,16 +1291,16 @@ function excelPro(X, d, rowsCrudas, sinExtra){
     wt.getRow(4).values=cabT; cabecera(wt.getRow(4));
     d.alumnos.forEach(function(a){
       d.columnas.forEach(function(c,j){
-        var v=d.celda(a,j), ok=v && v.t && v.n>=v.t;
-        var r=wt.addRow([a.nombre].concat(d.hayDni?[a.dni]:[]).concat([j+1, c.et, c.e||'', c.q||c.t, v ? (ok?'Correcta':'Pendiente') : 'No la tuvo']));
+        var es=ESTADO[estadoPreg(d.celda(a,j))];
+        var r=wt.addRow([a.nombre].concat(d.hayDni?[a.dni]:[]).concat([j+1, c.et, c.e||'', c.q||c.t, es.t]));
         r.eachCell({ includeEmpty:true }, function(x){ x.border=caja; x.alignment={ vertical:'top', wrapText:true }; });
         var cr=r.getCell(cabT.length);
-        cr.font={ bold:true, color:{ argb: ok ? 'FF0F6B45' : (v ? 'FFA4161A' : 'FF6B7591') } };
-        cr.fill={ type:'pattern', pattern:'solid', fgColor:{ argb: ok ? 'FFD8F3E6' : (v ? 'FFFDE2E4' : 'FFF1F3F7') } };
+        cr.font={ bold:true, color:{ argb:'FF'+es.c } };
+        cr.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF'+es.f } };
       });
     });
     wt.autoFilter={ from:{ row:4, column:1 }, to:{ row:4, column:cabT.length } };
-    cabT.forEach(function(k,j){ wt.getColumn(j+1).width={ 'Alumno':30, 'DNI':11, 'N°':6, 'Pregunta':9, 'Actividad':30, 'Enunciado':60, 'Resultado':12 }[k]||14; });
+    cabT.forEach(function(k,j){ wt.getColumn(j+1).width={ 'Alumno':30, 'DNI':11, 'N°':6, 'Pregunta':9, 'Actividad':30, 'Enunciado':60, 'Resultado':24 }[k]||14; });
   } else {
     var wd=wb.addWorksheet('Actividades', { views:[{ state:'frozen', ySplit:4 }] });
     titulo(wd, 6, sub);
@@ -1258,7 +1317,168 @@ function excelPro(X, d, rowsCrudas, sinExtra){
      porque el dashboard de la página muestra la sala de ahora */
   /* puede devolver una promesa (por ejemplo, mientras dibuja gráficos): se espera antes de guardar */
   if(cfg.excelExtra && !sinExtra){ try{ wb.__extra=cfg.excelExtra(wb, d); }catch(e){} }
+  else { try{ wb.__extra=dashboardExcel(wb, d, titulo, cabecera, caja, sub); }catch(e){} }
   return wb;
+}
+/* ===== hoja «Dashboard» armada con los datos del reporte =====
+   La usan las sesiones pasadas (guardadas o reconstruidas) y las páginas sin dashboard propio:
+   todo sale de d (alumnos, preguntas y sus estados), así que nunca queda vacía si hubo alumnos. */
+function svgCajaR(W, H, tit, cuerpo){
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" font-family="Segoe UI,Arial,Helvetica,sans-serif">'+
+    '<rect width="'+W+'" height="'+H+'" rx="14" fill="#ffffff" stroke="#E3E8F4" stroke-width="2"/>'+
+    '<text x="18" y="30" font-size="17" font-weight="800" fill="#071767">'+esc(tit)+'</text>'+cuerpo+'</svg>';
+}
+function cortaR(t, n){ t=String(t||''); return t.length>n ? t.slice(0,n-1)+'…' : t; }
+function svgDonaR(datos, tit, W, H){
+  var tot=datos.reduce(function(s,x){ return s+x.v; },0), cx=150, cy=H/2+14, R=92, r0=56, ang=-Math.PI/2, b='';
+  function pt(a, rr){ return (cx+rr*Math.cos(a)).toFixed(1)+' '+(cy+rr*Math.sin(a)).toFixed(1); }
+  if(!tot) b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="#E3E8F4" stroke-width="'+(R-r0)+'"/>';
+  datos.forEach(function(x){
+    if(!x.v) return;
+    /* una sola categoría con todo: se dibuja el anillo completo (un arco de 360° no se ve) */
+    if(x.v===tot){ b+='<circle cx="'+cx+'" cy="'+cy+'" r="'+((R+r0)/2)+'" fill="none" stroke="'+x.c+'" stroke-width="'+(R-r0)+'"/>'; return; }
+    var a2=ang+(x.v/tot)*Math.PI*2, g=(a2-ang)>Math.PI?1:0;
+    b+='<path d="M'+pt(ang,R)+' A'+R+' '+R+' 0 '+g+' 1 '+pt(a2,R)+' L'+pt(a2,r0)+' A'+r0+' '+r0+' 0 '+g+' 0 '+pt(ang,r0)+' Z" fill="'+x.c+'"/>';
+    ang=a2;
+  });
+  b+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="30" font-weight="900" fill="#071767">'+tot+'</text>'+
+     '<text x="'+cx+'" y="'+(cy+24)+'" text-anchor="middle" font-size="12" fill="#55607F">'+esc(datos.unidad||'alumnos')+'</text>';
+  datos.forEach(function(x,i){
+    var y=70+i*36;
+    b+='<rect x="280" y="'+(y-13)+'" width="16" height="16" rx="4" fill="'+x.c+'"/><text x="304" y="'+y+'" font-size="15" fill="#0B1B3F">'+esc(x.t)+'</text>'+
+       '<text x="'+(W-20)+'" y="'+y+'" font-size="15" font-weight="800" text-anchor="end" fill="#0B1B3F">'+x.v+(tot?' · '+Math.round(x.v/tot*100)+'%':'')+'</text>';
+  });
+  return svgCajaR(W, H, tit, b);
+}
+function svgBarrasR(datos, tit, W, max){
+  var fila=30, H=Math.max(130, 56+datos.length*fila+10), x0=200, ancho=W-x0-80, b='';
+  datos.forEach(function(x,i){
+    var y=48+i*fila, w=max ? Math.max(2, ancho*Math.min(1, x.v/max)) : 2;
+    b+='<text x="'+(x0-10)+'" y="'+(y+16)+'" font-size="13" text-anchor="end" fill="#0B1B3F">'+esc(cortaR(x.t, 27))+'</text>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+ancho+'" height="16" rx="8" fill="#EEF2FA"/>'+
+       '<rect x="'+x0+'" y="'+(y+4)+'" width="'+w.toFixed(1)+'" height="16" rx="8" fill="'+x.c+'"/>'+
+       '<text x="'+(x0+ancho+8)+'" y="'+(y+17)+'" font-size="13" font-weight="800" fill="'+x.c+'">'+esc(x.l)+'</text>';
+  });
+  return { svg:svgCajaR(W, H, tit, b), h:H };
+}
+function tonoR(p){ return p>=1 ? '#0F6B45' : (p>=0.8 ? '#1C7C54' : (p>=0.5 ? '#C98A00' : (p>0 ? '#A4161A' : '#B9C2D8'))); }
+function pngR(svg, W, H){
+  return new Promise(function(ok){
+    var img=new Image();
+    img.onload=function(){ try{ var c=document.createElement('canvas'); c.width=W*2; c.height=H*2; var x=c.getContext('2d');
+      x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(img,0,0,c.width,c.height); ok(c.toDataURL('image/png')); }catch(e){ ok(null); } };
+    img.onerror=function(){ ok(null); };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  });
+}
+/* los números del dashboard, a partir de los datos del reporte */
+function numerosDash(d){
+  var al=d.alumnos, n=al.length, cols=d.columnas;
+  var niv=[['Completó','#0F6B45',function(p){ return p>=1; }],['Avanzado','#22A06B',function(p){ return p>=0.8 && p<1; }],
+           ['En proceso','#E0A100',function(p){ return p>=0.5 && p<0.8; }],['Inicio','#D64545',function(p){ return p>0 && p<0.5; }],
+           ['Sin empezar','#B9C2D8',function(p){ return !p; }]].map(function(x){ return { t:x[0], c:x[1], v:al.filter(function(a){ return x[2](a.pct); }).length }; });
+  var cuenta={ ok:0, ce:0, mal:0, inc:0, no:0 };
+  var porCol=cols.map(function(c,j){
+    var x={ c:c, j:j, ok:0, mal:0, no:0, tuvo:0 };
+    al.forEach(function(a){ var st=estadoPreg(d.celda(a,j)); if(st==='nt') return; x.tuvo++; cuenta[st]++;
+      if(st==='ok' || st==='ce') x.ok++; if(st==='mal' || st==='ce') x.mal++; if(st==='no') x.no++; });
+    x.p=x.tuvo ? x.ok/x.tuvo : 0; return x;
+  });
+  /* por actividad: se juntan sus preguntas */
+  var acts=[], pa={};
+  porCol.forEach(function(x){ var k=d.conPreg ? (x.c.e||'Actividad') : x.c.et;
+    if(!pa[k]){ pa[k]={ t:k, ok:0, tuvo:0, mal:0, no:0 }; acts.push(pa[k]); }
+    pa[k].ok+=x.ok; pa[k].tuvo+=x.tuvo; pa[k].mal+=x.mal; pa[k].no+=x.no; });
+  acts.forEach(function(x){ x.p=x.tuvo ? x.ok/x.tuvo : 0; });
+  return { n:n, niv:niv, cuenta:cuenta, porCol:porCol, acts:acts,
+    errores:porCol.filter(function(x){ return x.mal; }).sort(function(a,b){ return b.mal-a.mal; }).slice(0,10),
+    apoyo:al.filter(function(a){ return a.pct<0.5; }).sort(function(a,b){ return a.pct-b.pct; }),
+    ranking:al.slice().sort(function(a,b){ return b.pct-a.pct || a.nombre.localeCompare(b.nombre); }) };
+}
+function dashboardExcel(wb, d, titulo, cabecera, caja, sub){
+  if(!d.conAvance || !d.alumnos.length) return null;
+  var N=numerosDash(d), al=d.alumnos, n=al.length;
+  var ws=wb.addWorksheet('Dashboard', { views:[{ showGridLines:false }] });
+  for(var cc=1; cc<=12; cc++) ws.getColumn(cc).width=13.5;
+  titulo(ws, 12, sub);
+  ws.getCell(1,1).value='Dashboard de la clase · '+d.titulo;
+  var tarjetas=[['Alumnos', n, 'FF071767'], ['Avance promedio', Math.round(d.promedio*100)+'%', 'FF0E8F95'],
+    ['Completaron', d.completaron+' de '+n, 'FF0F6B45'], ['Sin empezar', d.sinEmpezar+' de '+n, 'FF8A8A92'],
+    ['Respuestas erróneas', N.cuenta.mal+N.cuenta.ce, 'FFFC0045'], [d.conPreg?'Preguntas':'Actividades', d.columnas.length, 'FFC600A3']];
+  ws.getRow(4).height=22; ws.getRow(5).height=40;
+  tarjetas.forEach(function(t,i){
+    var c1=1+i*2; ws.mergeCells(4,c1,4,c1+1); ws.mergeCells(5,c1,5,c1+1);
+    var a1=ws.getCell(4,c1), a2=ws.getCell(5,c1); a1.value=t[0]; a2.value=t[1];
+    [a1,a2].forEach(function(x){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:t[2] } }; x.alignment={ horizontal:'center', vertical:'middle' }; });
+    a1.font={ bold:true, size:10, color:{ argb:'FFFFFFFF' } }; a2.font={ bold:true, size:22, color:{ argb:'FFFFFFFF' } };
+  });
+  /* gráficos */
+  var W=560, graf=[];
+  graf.push({ svg:svgDonaR(N.niv, 'Niveles de la clase', W, 300), h:300 });
+  if(d.conPreg){
+    var est=[{ t:'Correctas', c:'#0F6B45', v:N.cuenta.ok }, { t:'Correctas tras un error', c:'#E0A100', v:N.cuenta.ce },
+             { t:'Erróneas', c:'#D64545', v:N.cuenta.mal }, { t:'No realizadas', c:'#B9C2D8', v:N.cuenta.no }];
+    est.unidad='respuestas';
+    graf.push({ svg:svgDonaR(est, 'Respuestas de toda la clase', W, 300), h:300 });
+  }
+  var g1=svgBarrasR(N.acts.map(function(x){ return { t:x.t, v:x.p, c:tonoR(x.p), l:Math.round(x.p*100)+'%' }; }), 'Aciertos por actividad', W, 1);
+  graf.push({ svg:g1.svg, h:g1.h });
+  var g2=svgBarrasR(N.ranking.slice(0,25).map(function(a){ return { t:a.nombre, v:a.pct, c:tonoR(a.pct), l:Math.round(a.pct*100)+'%' }; }),
+                    'Avance por alumno'+(n>25?' (los 25 primeros)':''), W, 1);
+  graf.push({ svg:g2.svg, h:g2.h });
+  if(d.conPreg){
+    var g3=svgBarrasR(N.porCol.map(function(x){ return { t:x.c.et+' · '+(x.c.q||x.c.t), v:x.p, c:tonoR(x.p), l:Math.round(x.p*100)+'%' }; }), 'Aciertos por pregunta', W, 1);
+    graf.push({ svg:g3.svg, h:g3.h });
+    if(N.errores.length){
+      var mx=N.errores[0].mal;
+      var g4=svgBarrasR(N.errores.map(function(x){ return { t:x.c.et+' · '+(x.c.q||x.c.t), v:x.mal, c:'#FC0045', l:x.mal+(x.mal===1?' alumno':' alumnos') }; }), 'Preguntas con más errores', W, mx);
+      graf.push({ svg:g4.svg, h:g4.h });
+    }
+  }
+  var fila=7, puestos=[];
+  for(var gi=0; gi<graf.length; gi+=2){
+    var hm=Math.max(graf[gi].h, graf[gi+1] ? graf[gi+1].h : 0);
+    puestos.push({ g:graf[gi], col:0, row:fila }); if(graf[gi+1]) puestos.push({ g:graf[gi+1], col:6, row:fila });
+    fila+=Math.ceil(hm/20)+1;
+  }
+  var rr=fila+1;
+  function tabla(tit, spans, cab, datos, vacio){
+    rr++;
+    var tr=ws.getRow(rr++); tr.getCell(1).value=tit; tr.getCell(1).font={ bold:true, size:13, color:{ argb:'FFFC0045' } };
+    function pon(vals, esCab, pi, p, colorTxt){
+      var row=ws.getRow(rr++), c=1;
+      spans.forEach(function(sp,i){
+        var cel=row.getCell(c); cel.value=vals[i];
+        if(sp>1) ws.mergeCells(row.number, c, row.number, c+sp-1);
+        for(var k=0;k<sp;k++){ var x=row.getCell(c+k); x.border=caja; x.alignment={ wrapText:true, vertical:'middle' };
+          if(esCab){ x.fill={ type:'pattern', pattern:'solid', fgColor:{ argb:'FF071767' } }; x.font={ bold:true, color:{ argb:'FFFFFFFF' } }; } }
+        if(i===pi){ cel.numFmt='0%'; cel.font={ bold:true, color:{ argb:'FF'+tonoR(p).slice(1) } }; }
+        c+=sp;
+      });
+      if(!esCab){ var lineas=Math.max.apply(null, vals.map(function(v,i){ return Math.ceil(String(v==null?'':v).length/(spans[i]*12)); })); if(lineas>1) row.height=15*lineas; }
+    }
+    pon(cab, true);
+    if(!datos.length) pon(spans.map(function(x,i){ return i ? '' : vacio; }));
+    datos.forEach(function(f){ pon(f.v, false, f.pi, f.p); });
+  }
+  tabla('Aciertos por actividad', [6,2,2,2], ['Actividad','Aciertos','Erróneas','No realizadas'],
+    N.acts.map(function(x){ return { v:[x.t, x.p, x.mal, x.no], pi:1, p:x.p }; }), '—');
+  if(d.conPreg){
+    tabla('Aciertos por pregunta', [1,3,6,2], ['N.º','Actividad','Pregunta','Acertaron'],
+      N.porCol.map(function(x){ return { v:[x.c.et, x.c.e||'', x.c.q||x.c.t, x.p], pi:3, p:x.p }; }), '—');
+    tabla('Preguntas con más errores', [1,3,6,2], ['N.º','Actividad','Pregunta','Alumnos'],
+      N.errores.map(function(x){ return { v:[x.c.et, x.c.e||'', x.c.q||x.c.t, x.mal] }; }), 'Nadie respondió erróneamente.');
+  }
+  tabla('Necesitan apoyo (menos de 50 %)', [3,2,7], ['Alumno','Avance','Observación'],
+    N.apoyo.map(function(a){ return { v:[a.nombre, a.pct, a.obs], pi:1, p:a.pct }; }), 'Todos sobre el 50 %.');
+  tabla('Ranking y observaciones', [1,3,2,6], ['Puesto','Alumno','Avance','Observación'],
+    N.ranking.map(function(a,i){ return { v:[i+1, a.nombre, a.pct, a.obs], pi:2, p:a.pct }; }), '—');
+  return Promise.all(puestos.map(function(p){
+    return pngR(p.g.svg, W, p.g.h).then(function(png){
+      if(!png) return; var id=wb.addImage({ base64:png, extension:'png' });
+      ws.addImage(id, { tl:{ col:p.col, row:p.row }, ext:{ width:W, height:p.g.h } });
+    });
+  }));
 }
 function descargaReporte(){
   if(!docente || !sala) return;
@@ -1324,9 +1544,10 @@ function htmlReporte(d, rows){
     'letter-spacing:.06em;text-transform:uppercase;color:#6B7591}.kpi b{font-size:26px}'+
     'h2{font-size:17px;margin:26px 0 10px;color:#071767}table{width:100%;border-collapse:collapse;font-size:13.5px}'+
     'th{background:#071767;color:#fff;text-align:left;padding:9px 10px;font-size:12px;letter-spacing:.03em}'+
-    'td{border-bottom:1px solid #E3E8F3;padding:8px 10px;vertical-align:middle}tr:nth-child(even) td{background:#F8FAFE}'+
+    'td{border-bottom:1px solid #E3E8F3;padding:8px 10px;vertical-align:middle}td.obs{font-size:12.5px;min-width:220px;color:#33405F}tr:nth-child(even) td{background:#F8FAFE}'+
     '.bar{display:inline-block;width:110px;height:9px;border-radius:99px;background:#E8ECF4;overflow:hidden;vertical-align:middle;margin-right:8px}'+
     '.bar i{display:block;height:100%;border-radius:99px}.chip{display:inline-block;border-radius:99px;padding:3px 10px;font-size:12px;font-weight:800}'+
+    '.dash{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:12px}.dash svg{width:100%;height:auto;display:block}.dash>div{break-inside:avoid}'+
     '.scroll{overflow-x:auto}.mat{font-size:12px}.mat td.p{text-align:center;font-weight:800;font-size:11.5px;padding:7px 3px}'+
     '.mat th{text-align:center;font-size:10px;padding:7px 3px;line-height:1.25}.mat th:first-child,.mat td:first-child{text-align:left;min-width:120px}'+
     'tfoot td{font-weight:800;border-top:2px solid #071767;background:#fff!important}'+
@@ -1354,16 +1575,27 @@ function htmlReporte(d, rows){
      '<div class="kpi"><small>Completaron</small><b style="color:#0F6B45">'+d.completaron+'</b></div>'+
      '<div class="kpi"><small>En proceso</small><b style="color:#8A5A00">'+d.enProceso+'</b></div>'+
      '<div class="kpi"><small>Sin empezar</small><b style="color:#6B7591">'+d.sinEmpezar+'</b></div></div>';
+  /* el dashboard, armado con los mismos datos del reporte */
+  try{
+    var N=numerosDash(d), gs=[svgDonaR(N.niv, 'Niveles de la clase', 560, 300)];
+    if(d.conPreg){ var est=[{ t:'Correctas', c:'#0F6B45', v:N.cuenta.ok }, { t:'Correctas tras un error', c:'#E0A100', v:N.cuenta.ce },
+      { t:'Erróneas', c:'#D64545', v:N.cuenta.mal }, { t:'No realizadas', c:'#B9C2D8', v:N.cuenta.no }]; est.unidad='respuestas';
+      gs.push(svgDonaR(est, 'Respuestas de toda la clase', 560, 300)); }
+    gs.push(svgBarrasR(N.acts.map(function(x){ return { t:x.t, v:x.p, c:tonoR(x.p), l:Math.round(x.p*100)+'%' }; }), 'Aciertos por actividad', 560, 1).svg);
+    if(N.errores.length) gs.push(svgBarrasR(N.errores.map(function(x){ return { t:x.c.et+' · '+(x.c.q||x.c.t), v:x.mal, c:'#FC0045', l:x.mal+(x.mal===1?' alumno':' alumnos') }; }),
+      'Preguntas con más errores', 560, N.errores[0].mal).svg);
+    h+='<h2>Dashboard</h2><div class="dash">'+gs.map(function(g){ return '<div>'+g.replace(/ width="\d+" height="\d+"/,'')+'</div>'; }).join('')+'</div>';
+  }catch(e){}
   h+='<h2>Avance por alumno</h2><table><thead><tr><th>N°</th><th>Alumno</th>'+(d.hayDni?'<th>DNI</th>':'')+
-     '<th>Va en</th><th>Correctas</th><th>% Avance</th><th>Nivel</th><th>Último cambio</th></tr></thead><tbody>';
+     '<th>Va en</th><th>Correctas</th><th>% Avance</th><th>Nivel</th><th>Observación</th><th>Último cambio</th></tr></thead><tbody>';
   d.alumnos.forEach(function(a,i){
     h+='<tr><td>'+(i+1)+'</td><td><b>'+esc(a.nombre)+'</b></td>'+(d.hayDni?'<td>'+esc(a.dni)+'</td>':'')+
        '<td>'+esc(a.lamina)+(a.titulo?'<br><small style="color:#6B7591">'+esc(a.titulo)+'</small>':'')+'</td>'+
        '<td>'+a.ok+' de '+a.total+'</td><td style="white-space:nowrap">'+barra(a.pct)+'</td><td>'+chip(a.pct)+'</td>'+
-       '<td>'+esc(a.cambio)+'</td></tr>';
+       '<td class="obs">'+esc(a.obs||'')+'</td><td>'+esc(a.cambio)+'</td></tr>';
   });
   h+='</tbody><tfoot><tr><td></td><td>Promedio del aula</td>'+(d.hayDni?'<td></td>':'')+'<td></td><td></td><td style="white-space:nowrap">'+
-     barra(d.promedio)+'</td><td>'+chip(d.promedio)+'</td><td></td></tr></tfoot></table>';
+     barra(d.promedio)+'</td><td>'+chip(d.promedio)+'</td><td></td><td></td></tr></tfoot></table>';
   if(d.columnas.length){
     h+='<h2>'+(d.conPreg?'Detalle por pregunta':'Avance por actividad')+'</h2><div class="scroll"><table class="mat"><thead><tr><th>Alumno</th>'+
        d.columnas.map(function(c,j){ return '<th title="'+esc(c.t)+'">'+(d.conPreg ? '' : (j+1)+'<br>')+esc(c.et)+'</th>'; }).join('')+'<th>Total</th></tr></thead><tbody>';
@@ -1372,8 +1604,10 @@ function htmlReporte(d, rows){
       d.columnas.forEach(function(c,j){
         var v=d.celda(a,j);
         if(!v){ h+='<td class="p">—</td>'; return; }
+        if(d.conPreg){ var es=ESTADO[estadoPreg(v)];
+          h+='<td class="p" title="'+esc(es.t)+'" style="background:'+hx(es.f)+';color:'+hx(es.c)+'">'+es.s+'</td>'; return; }
         var n2=nivel(v.p);
-        h+='<td class="p" style="background:'+hx(n2.f)+';color:'+hx(n2.c)+'">'+(d.conPreg ? (v.n>=v.t?'✓':'—') : v.n+'/'+v.t)+'</td>';
+        h+='<td class="p" style="background:'+hx(n2.f)+';color:'+hx(n2.c)+'">'+v.n+'/'+v.t+'</td>';
       });
       var nt=nivel(a.pct);
       h+='<td class="p" style="background:'+hx(nt.f)+';color:'+hx(nt.c)+'">'+Math.round(a.pct*100)+'%</td></tr>';
@@ -1381,6 +1615,8 @@ function htmlReporte(d, rows){
     h+='</tbody><tfoot><tr><td>Promedio del aula</td>'+d.porAct.map(function(x){
          var n3=nivel(x.p); return '<td class="p" style="color:'+hx(n3.c)+'">'+Math.round(x.p*100)+'%</td>'; }).join('')+
        '<td class="p" style="color:'+hx(nv.c)+'">'+Math.round(d.promedio*100)+'%</td></tr></tfoot></table></div>';
+    if(d.conPreg) h+='<div class="ley">'+['ok','ce','mal','no'].map(function(k){ var es=ESTADO[k];
+         return '<span class="chip" style="background:'+hx(es.f)+';color:'+hx(es.c)+'">'+es.s+' '+es.t+'</span>'; }).join('')+'</div>';
     h+='<div class="ley">'+['Completó','Avanzado','En proceso','Inicio','Sin empezar'].map(function(t,k){
          var p=[1,0.85,0.6,0.2,0][k], n4=nivel(p);
          return '<span class="chip" style="background:'+hx(n4.f)+';color:'+hx(n4.c)+'">'+t+(k===1?' (80–99%)':k===2?' (50–79%)':k===3?' (1–49%)':'')+'</span>'; }).join('')+'</div>';
@@ -1423,7 +1659,7 @@ function instantanea(rows, ini){
   return { v:1, titulo:d.titulo, sala:d.sala, docente:d.docente, inicio:ini, fin:Date.now(), conPreg:d.conPreg?1:0,
     columnas:d.columnas.map(function(c){ var o={ et:c.et, t:c.t, max:c.max||0 }; if(c.e) o.e=c.e; if(c.q) o.q=c.q; return o; }),
     alumnos:d.alumnos.map(function(a){ return { n:a.nombre, d:a.dni, l:String(a.lamina), ti:a.titulo, ok:a.ok, t:a.total, c:a.cambio,
-      r:a.rej.map(function(x){ return [x.b, x.n||0, x.t||0]; }) }; }),
+      r:a.rej.map(function(x){ return x.m ? [x.b, x.n||0, x.t||0, 1] : [x.b, x.n||0, x.t||0]; }) }; }),
     resumen: d.conAvance ? null : armaReporte(rows).resumen.slice(0,300),
     nAlumnos:d.alumnos.length, promedio:Math.round(d.promedio*1000)/1000 };
 }
@@ -1432,7 +1668,7 @@ function desdeInstantanea(s){
   var d=completaDatos({ titulo:s.titulo||cfg.tituloReporte||document.title, sala:s.sala||'', docente:s.docente||'', conPreg:!!s.conPreg,
     columnas:(s.columnas||[]).slice(),
     alumnos:(s.alumnos||[]).map(function(a){ return { nombre:a.n, dni:a.d||'', lamina:a.l||'', titulo:a.ti||'', ok:+a.ok||0, total:+a.t||0,
-      pct:(+a.t ? (+a.ok||0)/(+a.t) : 0), cambio:a.c||'', rej:(a.r||[]).map(function(x){ return { b:x[0], n:x[1], t:x[2] }; }) }; })
+      pct:(+a.t ? (+a.ok||0)/(+a.t) : 0), cambio:a.c||'', rej:(a.r||[]).map(function(x){ return { b:x[0], n:x[1], t:x[2], m:x[3]?1:0 }; }) }; })
       .sort(function(a,b){ return a.nombre.localeCompare(b.nombre); }) });
   if(s.resumen) d.resumen=s.resumen;
   d.clase=claseDe(s.inicio, s.fin);
@@ -1638,7 +1874,7 @@ function excelPasada(x, btn){
   $('aulaHisTx').textContent='Preparando el Excel…';
   cargaExcelJS().then(function(X){
     var libro=excelPro(X, datosDeEntrada(x), x.rows||[], true);
-    return libro.xlsx.writeBuffer();
+    return Promise.resolve(libro.__extra).catch(function(){}).then(function(){ return libro.xlsx.writeBuffer(); });
   }).then(function(buf){
     bajaArchivo(new Blob([buf], { type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), nombreArchivo(x)+'.xlsx');
     $('aulaHisTx').textContent='Listo: '+nombreArchivo(x)+'.xlsx';
@@ -2102,6 +2338,9 @@ window.Aula={
   leeRegistros:function(){ return leeRegistros(); },
   /* sesiones pasadas: cada clase queda guardada con su reporte por pregunta */
   historial:function(){ abreHistorial(); },
+  /* la observación de un alumno a partir de sus preguntas [{e, q, ok, mal}] */
+  observacion:function(pr){ pr=pr||[]; return observacion(true, pr.map(function(x,j){ return { et:'P'+(j+1), e:x.e }; }),
+    function(j){ return { n:pr[j].ok?1:0, t:1, m:pr[j].mal?1:0 }; }); },
   guardaHistorial:function(){ return guardaHistorial(true); },
   leeTodo:function(){ return leeTodo(); },
   leeSalas:function(p){ return leeSalas(p); },
