@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-11-04-ic_s12-miercoles_v3-a">
+<meta name="version" content="2026-11-04-ic_s12-miercoles_v4-a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1019,6 +1019,68 @@
   .bar-f .d{ text-align:right; font-weight:800; font-variant-numeric:tabular-nums; }
   .bar-f .d.gr{ color:var(--rojo); font-size:20px; }
   .fuentes{ font-size:14px; color:#6B6B70; margin:8px 0 0; line-height:1.4; }
+  /* ---------- gráficos animados ---------- */
+  @keyframes subeY{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+  @keyframes subeX{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+  @keyframes aparece{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  .gcol{ display:flex; align-items:flex-end; justify-content:space-around; gap:14px; height:300px;
+         background:#fff; border:2px dashed var(--linea); border-radius:12px; padding:14px 16px 10px; margin:10px 0; }
+  .gcol .c{ flex:1; display:flex; flex-direction:column; align-items:center; height:100%; min-width:0; }
+  .gcol .pie{ flex:1; width:100%; max-width:110px; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; }
+  .gcol .pie b{ font-size:26px; font-weight:900; color:var(--rojo); margin-bottom:4px;
+                opacity:0; animation:aparece .5s ease-out forwards; animation-delay:calc(var(--d) + .7s); }
+  .gcol .pie i{ display:block; width:100%; background:var(--rojo); border-radius:10px 10px 0 0;
+                transform-origin:bottom; animation:subeY .9s cubic-bezier(.2,.8,.3,1) both; animation-delay:var(--d); }
+  .gcol .c.gris .pie i{ background:#9AA0A6; } .gcol .c.gris .pie b{ color:#505050; }
+  .gcol .c > span{ font-size:18px; font-weight:700; text-align:center; margin-top:6px; line-height:1.25; }
+  .gdob{ background:#fff; border:2px dashed var(--linea); border-radius:12px; padding:12px 16px; }
+  .gdob .ley{ display:flex; gap:20px; font-size:17px; margin-bottom:6px; color:#44506F; font-weight:700; }
+  .gdob .ley i{ display:inline-block; width:16px; height:16px; border-radius:4px; background:var(--rojo); margin-right:6px; vertical-align:-2px; }
+  .gdob .ley i.o{ background:#9AA0A6; }
+  .gdob .fl{ display:grid; grid-template-columns:8.2em minmax(0,1fr) auto; gap:12px; align-items:center;
+             padding:9px 0; border-top:1px solid var(--linea); opacity:0; animation:aparece .4s ease-out forwards; animation-delay:var(--d); }
+  .gdob .fl:nth-child(2){ border-top:0; }
+  .teo .gdob .fl{ grid-template-columns:minmax(0,1fr) auto; row-gap:4px; }
+  .teo .gdob .q{ grid-column:1 / -1; }
+  .gdob .q{ font-size:19px; font-weight:700; }
+  .gdob .bb{ display:flex; flex-direction:column; gap:5px; }
+  .gdob .bb > span{ display:flex; align-items:center; gap:8px; }
+  .gdob .bb i{ display:block; height:20px; border-radius:10px; background:var(--rojo); transform-origin:left;
+               animation:subeX .9s cubic-bezier(.2,.8,.3,1) both; animation-delay:calc(var(--d) + .2s); }
+  .gdob .bb i.o{ background:#9AA0A6; }
+  .gdob .bb em{ font-style:normal; font-size:17px; font-weight:800; white-space:nowrap; }
+  .gdob .bb i{ max-width:calc(100% - 70px); }
+  .gdob .dif{ text-align:right; font-weight:800; font-size:18px; color:#6B6B70; white-space:nowrap; }
+  .gdob .dif.gr{ color:var(--rojo); font-size:20px; }
+  .defgrande{ display:flex; align-items:center; gap:18px; background:#FFF4F7; border:2px solid var(--rojo);
+              border-radius:14px; padding:14px 20px; margin-bottom:14px; }
+  .defgrande .ico{ font-size:52px; line-height:1; }
+  .defgrande p{ margin:0; font-size:26px; line-height:1.4; }
+  .cuatro{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+  .cuatro.tres{ grid-template-columns:repeat(3,minmax(0,1fr)); margin-bottom:12px; }
+  .cuatro > div{ background:#fff; border:2px dashed var(--linea); border-radius:12px; padding:14px; text-align:center;
+                 opacity:0; animation:aparece .5s ease-out forwards; animation-delay:var(--d); }
+  .cuatro .e{ display:block; font-size:44px; line-height:1.1; margin-bottom:4px; }
+  .cuatro b{ display:block; font-size:22px; color:var(--rojo); }
+  .cuatro small{ display:block; font-size:17px; font-weight:700; color:#505050; }
+  .cuatro p{ margin:6px 0; font-size:19px; }
+  .cuatro i{ display:block; font-size:17px; color:#44506F; background:var(--humo); border-radius:8px; padding:6px 8px; }
+  .perfil4{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 14px; }
+  .perfil4 div{ display:flex; align-items:center; gap:12px; background:var(--humo); border-radius:12px; padding:12px 14px;
+                font-size:21px; font-weight:800; opacity:0; animation:aparece .5s ease-out forwards; animation-delay:var(--d); }
+  .perfil4 span{ font-size:34px; }
+  .xl-grande{ display:flex; align-items:center; justify-content:center; gap:48px; min-height:420px; flex-wrap:wrap; }
+  .xl-grande .logo{ width:260px; height:260px; border-radius:36px; background:#217346; display:flex; align-items:center; justify-content:center;
+                    box-shadow:0 18px 40px rgba(33,115,70,.35); animation:aparece .6s ease-out both; }
+  .xl-grande .logo span{ color:#fff; font-size:170px; font-weight:900; line-height:1; font-family:'Segoe UI',Arial,sans-serif; }
+  .xl-grande .txt h3{ margin:0 0 8px; font-size:40px; color:#217346; }
+  .xl-grande .txt p{ margin:0 0 18px; font-size:22px; }
+  .xl-grande .xl-btn{ font-size:22px; padding:12px 24px; background:#217346; border-color:#217346; color:#fff; margin-right:10px; }
+  .xl-grande .xl-btn.sol{ background:#fff; color:#217346; }
+  /* al responder dentro de la misma lámina no se repiten las animaciones */
+  .lam.quieto *, #impreso *{ animation:none !important; opacity:1 !important; transform:none !important; }
+  @media (max-width:760px){ .cuatro, .cuatro.tres{ grid-template-columns:1fr 1fr; } .gcol{ height:240px; } }
+  @media (prefers-reduced-motion:reduce){ .lam *{ animation:none !important; opacity:1 !important; transform:none !important; } }
 </style>
 <link rel="stylesheet" href="mat-tj.css?v=20261026a">
 </head>
@@ -1049,8 +1111,8 @@
   <div class="marca">
     <img class="lgc" src="marca/logo-tj.png" alt="Thomas Jefferson &middot; Instituto de Dise&ntilde;o y Comunicaci&oacute;n">
     <span class="tx">
-      <h1>Contraste entre segmentos y perfil del consumidor</h1>
-      <p><span class="sem">Semana 12 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - Contraste entre segmentos y perfil</p>
+      <h1>Segmentar y comparar grupos</h1>
+      <p><span class="sem">Semana 12 &middot; Miércoles</span> - Investigaci&oacute;n Cuantitativa - Segmentar y comparar grupos</p>
     </span>
     <span class="bts">
       <button class="o-btn" id="btnSon" type="button" aria-pressed="true">&#128266; Sonido</button>
@@ -1104,7 +1166,7 @@
     </div>
   </div>
 
-  <p class="aviso" style="margin-top:16px">Quinua Fresh, sus competidores y sus encuestas son un caso de clase simulado, no un estudio real.</p>
+  <p class="aviso" style="margin-top:16px">Quinua Fresh, FitZone y los dem&aacute;s ejemplos son casos de clase simulados, no estudios reales.</p>
 
   <div class="o-acciones centrado o-mb" style="margin-top:18px">
     <a class="o-btn o-btn-primary" href="investigacion-cuantitativa.html">Volver al curso</a>
@@ -1128,8 +1190,8 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="ic-tj.js?v=20261103c"></script>
-<script src="aula.js?v=20261103c"></script>
+<script src="ic-tj.js?v=20261104a"></script>
+<script src="aula.js?v=20261104a"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
 <script>
@@ -1393,412 +1455,253 @@ pintaSon();
 var ACT={
  "c0": {
   "tipo": "opi",
-  "titulo": "Conectemos: ¿qué harías con este dato?",
+  "titulo": "Vota: ¿qué harías?",
   "lista": [
    {
-    "q": "El total de la muestra dice: 48 % consume quinua al menos una vez por semana. ¿Qué haces antes de concluir?",
+    "q": "Un gimnasio lee: «40 % de los socios va de noche». ¿Qué haces antes de decidir los horarios?",
     "ops": [
-     "Lo informo tal cual: es el resultado de la muestra",
-     "Separo la muestra en grupos y comparo",
-     "Vuelvo a encuestar con más casos"
+     "Decido con ese 40 %",
+     "Separo a los socios en grupos y comparo",
+     "Pregunto a más socios"
     ],
     "com": [
-     "Un total es un promedio de personas muy distintas: puede esconder diferencias grandes.",
-     "Eso es segmentar: el total se abre en grupos y aparecen las diferencias que escondía.",
-     "La base alcanza. Lo que falta no son más casos, sino abrir el total por grupos."
-    ]
-   },
-   {
-    "q": "Si tuvieras que separar a los 200 encuestados en dos grupos, ¿con qué pregunta lo harías?",
-    "ops": [
-     "Edad o sexo",
-     "Con qué frecuencia consume quinua",
-     "En qué distrito vive",
-     "Por qué consume quinua"
-    ],
-    "com": [
-     "Demográfica: fácil de medir, pero no siempre explica la compra.",
-     "Conductual: es la que usa Quinua Fresh. Separa a quien ya compra seguido de quien casi no compra.",
-     "Geográfica: sirve si la marca no llega a todas las zonas.",
-     "Actitudinal: explica el porqué; suele ser la más útil para el mensaje."
+     "Cuidado: el 40 % mezcla a jóvenes y adultos. Mira el gráfico: los jóvenes van mucho más de noche.",
+     "¡Eso es segmentar! Al separar por edad aparece la diferencia que el total escondía.",
+     "No faltan personas: falta separarlas en grupos. Mira el gráfico de la izquierda."
     ]
    }
   ]
  },
- "rc": {
+ "tv": {
   "tipo": "arr",
-  "titulo": "Recodifica: ¿frecuente u ocasional?",
+  "titulo": "Arrastra cada dato a su tipo de variable",
   "cajas": [
-   { "id": "f", "t": "Consumidor frecuente" },
-   { "id": "o", "t": "Consumidor ocasional" }
+   { "id": "d", "t": "👤 Demográfica: quién es" },
+   { "id": "g", "t": "📍 Geográfica: dónde vive" },
+   { "id": "c", "t": "🛒 Conductual: qué hace" },
+   { "id": "a", "t": "💭 Actitudinal: qué piensa" }
   ],
   "fichas": [
-   { "id": "r1", "t": "Diario", "g": "f" },
-   { "id": "r2", "t": "Semanal", "g": "f" },
-   { "id": "r3", "t": "2 o 3 veces por semana", "g": "f" },
-   { "id": "r4", "t": "Quincenal", "g": "o" },
-   { "id": "r5", "t": "Mensual", "g": "o" },
-   { "id": "r6", "t": "Una vez al mes", "g": "o" }
+   { "id": "v1", "t": "Tiene 22 años", "g": "d" },
+   { "id": "v2", "t": "Es mujer", "g": "d" },
+   { "id": "v3", "t": "Vive en Cayma", "g": "g" },
+   { "id": "v4", "t": "Vive en zona sur", "g": "g" },
+   { "id": "v5", "t": "Va al cine cada semana", "g": "c" },
+   { "id": "v6", "t": "Pide delivery por app", "g": "c" },
+   { "id": "v7", "t": "Le importa comer sano", "g": "a" },
+   { "id": "v8", "t": "Cree que el café es caro", "g": "a" }
   ],
-  "fin": "<p class=\"pq\">Recodificar es agrupar las respuestas originales en dos o tres segmentos con nombre claro. Ahora lo hacemos con la fórmula, en la Práctica Excel 1.</p>"
+  "fin": "<p class=\"pq\">¡Bien! Las variables de <b>qué hace</b> y <b>qué piensa</b> son las que más explican por qué alguien compra.</p>"
  },
- "x1": {
-  "tipo": "hoja",
-  "titulo": "Práctica Excel 1: recodifica y cuenta",
-  "intro": "Seis encuestados de la base. Escribe la fórmula en C2 y C3 (las demás filas ya la tienen copiada) y cuenta cada segmento en C9 y C10.",
-  "cols": [ { "w": 70 }, { "w": 170 }, { "w": 190 } ],
-  "filas": [
-   [ { "x": "ID" }, { "x": "Frecuencia" }, { "x": "Segmento" } ],
-   [ { "x": "1" }, { "x": "Semanal" }, { "e": "Frecuente", "f": true, "ph": "=SI(O(…" } ],
-   [ { "x": "2" }, { "x": "Mensual" }, { "e": "Ocasional", "f": true, "ph": "=SI(O(…" } ],
-   [ { "x": "3" }, { "x": "Diario" }, { "form": "=SI(O(B4=\"Diario\";B4=\"Semanal\");\"Frecuente\";\"Ocasional\")" } ],
-   [ { "x": "4" }, { "x": "Quincenal" }, { "form": "=SI(O(B5=\"Diario\";B5=\"Semanal\");\"Frecuente\";\"Ocasional\")" } ],
-   [ { "x": "5" }, { "x": "Semanal" }, { "form": "=SI(O(B6=\"Diario\";B6=\"Semanal\");\"Frecuente\";\"Ocasional\")" } ],
-   [ { "x": "6" }, { "x": "Mensual" }, { "form": "=SI(O(B7=\"Diario\";B7=\"Semanal\");\"Frecuente\";\"Ocasional\")" } ],
-   [ { "x": "" }, { "x": "" }, { "x": "" } ],
-   [ { "x": "Base" }, { "x": "Frecuente" }, { "e": 3, "f": true, "ph": "=CONTAR.SI(…" } ],
-   [ { "x": "Base" }, { "x": "Ocasional" }, { "e": 3, "f": true, "ph": "=CONTAR.SI(…" } ]
-  ],
-  "ayuda": "C2: <b>=SI(O(B2=\"Diario\";B2=\"Semanal\");\"Frecuente\";\"Ocasional\")</b> · C9: <b>=CONTAR.SI(C2:C7;\"Frecuente\")</b>",
-  "fin": "<p class=\"pq\">Lo mismo en la base completa da <b>96 frecuentes</b> y <b>104 ocasionales</b>. Los dos grupos pasan de 30 casos: se pueden comparar.</p>"
- },
- "tc": {
-  "tipo": "cal",
-  "titulo": "Arma la tabla cruzada",
-  "intro": "Lugar de compra por segmento, en casos (base de Quinua Fresh). Frecuente: mercado 53, supermercado 24, bodega 12, online 7. Ocasional: mercado 39, supermercado 44, bodega 16, online 5.",
-  "lista": [
-   { "q": "Base del segmento frecuente", "f": "53 + 24 + 12 + 7", "e": 96, "tol": 0, "ph": "0", "u": "casos",
-     "pq": "96 casos. Cada columna se porcentúa sobre su propia base." },
-   { "q": "Base del segmento ocasional", "f": "39 + 44 + 16 + 5", "e": 104, "tol": 0, "ph": "0", "u": "casos",
-     "pq": "104 casos. Las dos bases pasan de 30: la comparación se sostiene." },
-   { "q": "% de frecuentes que compra en mercado", "f": "53 ÷ 96 × 100", "e": 55.2, "tol": 0.4, "ph": "0.0", "u": "%",
-     "pq": "55 %. En la tabla dinámica sale con «% del total de columnas»." },
-   { "q": "% de ocasionales que compra en mercado", "f": "39 ÷ 104 × 100", "e": 37.5, "tol": 0.4, "ph": "0.0", "u": "%",
-     "pq": "38 %. Se divide sobre 104, no sobre el total de 200." },
-   { "q": "Diferencia en el mercado, en puntos", "f": "55 − 38", "e": 17, "tol": 1, "ph": "0", "u": "puntos",
-     "pq": "17 puntos. Pasa de 10: merece comentarse." },
-   { "q": "% de ocasionales que compra en supermercado", "f": "44 ÷ 104 × 100", "e": 42.3, "tol": 0.4, "ph": "0.0", "u": "%",
-     "pq": "42 % frente al 25 % de los frecuentes: 17 puntos de diferencia al revés." }
-  ],
-  "fin": "<p class=\"pq\">Lectura: <b>el consumidor frecuente compra más en mercado; el ocasional prefiere el supermercado.</b> Es la Tabla 5 del informe.</p>"
- },
- "pr": {
-  "tipo": "cal",
-  "titulo": "Compara los promedios de actitud",
-  "intro": "Promedios de 1 a 5 que salen con PROMEDIO.SI. Frecuente: nutritiva 4,7 · fácil de preparar 3,8 · cara 3,4 · sabor 4,4. Ocasional: nutritiva 4,3 · fácil de preparar 2,5 · cara 4,1 · sabor 3,2.",
-  "lista": [
-   { "q": "Diferencia en «La quinua es nutritiva»", "f": "4,7 − 4,3", "e": 0.4, "tol": 0.05, "ph": "0.0", "u": "puntos",
-     "pq": "0,4. Los dos segmentos creen lo mismo: no es una diferencia que explique nada." },
-   { "q": "Diferencia en «Es fácil de preparar»", "f": "3,8 − 2,5", "e": 1.3, "tol": 0.05, "ph": "0.0", "u": "puntos",
-     "pq": "1,3. La mayor brecha de la tabla: preparar la quinua es la barrera del ocasional." },
-   { "q": "Cuánto más alto es «Es cara» en el ocasional", "f": "4,1 − 3,4", "e": 0.7, "tol": 0.05, "ph": "0.0", "u": "puntos",
-     "pq": "0,7 a favor del ocasional: le parece más cara." },
-   { "q": "Diferencia en «Me gusta el sabor»", "f": "4,4 − 3,2", "e": 1.2, "tol": 0.05, "ph": "0.0", "u": "puntos",
-     "pq": "1,2. El ocasional no solo compra menos: también disfruta menos la categoría." }
-  ],
-  "fin": "<p class=\"pq\">El ocasional cree que la quinua es nutritiva, pero le parece <b>difícil de preparar</b> y <b>cara</b>. Es la Tabla 6 del informe.</p>"
- },
- "pj": {
-  "tipo": "opi",
-  "titulo": "¿Cómo va tu bloque S12 / Sesión 2?",
+ "lc": {
+  "tipo": "quiz",
+  "titulo": "Lee el gráfico de Quinua Fresh",
   "lista": [
    {
-    "q": "Marca hasta dónde llegaste en tu pestaña de Papeles de Trabajo.",
+    "q": "¿Dónde compra más el consumidor frecuente?",
+    "ops": [ "Mercado", "Supermercado", "Bodega", "Online" ],
+    "ok": 0,
+    "pq": "Mercado: 55 % de los frecuentes."
+   },
+   {
+    "q": "¿En qué lugar los dos grupos casi no se diferencian?",
+    "ops": [ "Mercado", "Supermercado", "Bodega" ],
+    "ok": 2,
+    "pq": "Bodega: 13 % y 15 %. Solo 2 puntos: no vale la pena comentarlo."
+   },
+   {
+    "q": "¿Qué frase resume bien el gráfico?",
     "ops": [
-     "1. Elegí la variable y mis dos segmentos",
-     "2. Tengo la tabla cruzada con % por columna",
-     "3. Tengo los promedios por segmento",
-     "4. Escribí el perfil y la lectura"
+     "Todos compran igual",
+     "El frecuente prefiere el mercado y el ocasional el supermercado",
+     "Nadie compra online"
     ],
-    "com": [
-     "Sigue con la tabla cruzada: elige una pregunta de usos o hábitos para las filas.",
-     "Revisa que cada columna sume 100 % y que la base esté a la vista.",
-     "Ahora el perfil: quién es, qué hace, qué piensa y qué necesita cada segmento.",
-     "Lista para el informe: tu lectura va en las secciones 4.2 y 4.3."
-    ]
+    "ok": 1,
+    "pq": "Esa es la lectura: una frase con la diferencia más grande."
    }
   ]
+ },
+ "dg": {
+  "tipo": "arr",
+  "titulo": "¿Diferencia grande o pequeña?",
+  "cajas": [
+   { "id": "g", "t": "🔥 Grande: 10 puntos o más" },
+   { "id": "p", "t": "😐 Pequeña: menos de 10" }
+  ],
+  "fichas": [
+   { "id": "d1", "t": "Gimnasio · van de noche: jóvenes 58 % · adultos 20 %", "g": "g" },
+   { "id": "d2", "t": "Cine · van el fin de semana: 45 % · 41 %", "g": "p" },
+   { "id": "d3", "t": "Delivery · piden por app: 70 % · 52 %", "g": "g" },
+   { "id": "d4", "t": "Cafetería · piden café frío: 33 % · 28 %", "g": "p" },
+   { "id": "d5", "t": "Streaming · ven series a diario: 62 % · 30 %", "g": "g" },
+   { "id": "d6", "t": "Súper · pagan con tarjeta: 50 % · 46 %", "g": "p" }
+  ],
+  "fin": "<p class=\"pq\">Las diferencias <b>grandes</b> son las que se cuentan en el informe. Las pequeñas se dejan pasar.</p>"
+ },
+ "pf": {
+  "tipo": "arr",
+  "titulo": "Arma el perfil: ¿frecuente u ocasional?",
+  "cajas": [
+   { "id": "f", "t": "⭐ Consumidor frecuente" },
+   { "id": "o", "t": "🌙 Consumidor ocasional" }
+  ],
+  "fichas": [
+   { "id": "p1", "t": "Consume quinua cada semana", "g": "f" },
+   { "id": "p2", "t": "Compra en el mercado", "g": "f" },
+   { "id": "p3", "t": "Le encanta el sabor", "g": "f" },
+   { "id": "p4", "t": "Consume una vez al mes", "g": "o" },
+   { "id": "p5", "t": "Le parece difícil de preparar", "g": "o" },
+   { "id": "p6", "t": "Necesita algo listo para tomar", "g": "o" }
+  ],
+  "fin": "<p class=\"pq\">Con este perfil la marca sabe qué ofrecer: al ocasional, una <b>bebida lista para tomar</b>.</p>"
  },
  "fin": {
   "tipo": "quiz",
   "titulo": "Reto final",
   "lista": [
    {
-    "q": "En la tabla cruzada, ¿sobre qué total se calcula cada porcentaje?",
-    "ops": [ "Sobre el total general de 200 casos", "Sobre la base de su propia columna", "Sobre la fila del lugar de compra", "Sobre el segmento más grande" ],
+    "q": "¿Qué es segmentar?",
+    "ops": [ "Encuestar a más personas", "Separar a los encuestados en grupos para compararlos", "Borrar las respuestas raras" ],
     "ok": 1,
-    "pq": "% por columna: cada segmento se divide entre su propia base. Así los grupos de distinto tamaño se pueden comparar."
+    "pq": "Segmentar es separar en grupos parecidos y comparar."
    },
    {
-    "q": "Un segmento quedó con 18 casos y muestra 20 puntos de diferencia. ¿Qué se hace?",
-    "ops": [ "Se informa como el hallazgo principal", "Se junta con otro grupo o se advierte que la base es muy pequeña", "Se multiplica por el total", "Se descarta toda la tabla" ],
+    "q": "Un cine: 45 % de jóvenes y 41 % de adultos van el fin de semana. ¿Es una diferencia grande?",
+    "ops": [ "Sí, es grande", "No, son solo 4 puntos" ],
     "ok": 1,
-    "pq": "Con menos de 30 casos la diferencia puede deberse al azar. Se recodifica en menos grupos o se advierte la base."
+    "pq": "4 puntos es poco: los dos grupos se comportan casi igual."
    },
    {
-    "q": "Mercado: 55 % de frecuentes y 38 % de ocasionales. ¿Cómo se escribe?",
-    "ops": [ "Los frecuentes compran 17 % más en mercado", "Los frecuentes compran 17 puntos más en mercado que los ocasionales", "El mercado creció 17 %", "El mercado es el 46 % del total" ],
-    "ok": 1,
-    "pq": "La resta de dos porcentajes se dice en puntos porcentuales, no en por ciento."
+    "q": "En la tabla cruzada, cada grupo suma…",
+    "ops": [ "100 %", "50 %", "Lo que salga" ],
+    "ok": 0,
+    "pq": "Cada grupo es su propio 100 %. Así se comparan grupos de distinto tamaño."
    },
    {
-    "q": "¿Qué fórmula da el promedio de «es fácil de preparar» solo de los frecuentes?",
-    "ops": [ "=PROMEDIO(K2:K201)", "=PROMEDIO.SI(F2:F201;\"Frecuente\";I2:I201)", "=CONTAR.SI(F2:F201;\"Frecuente\")", "=SUMA(I2:I201)/200" ],
-    "ok": 1,
-    "pq": "PROMEDIO.SI(rango del criterio; criterio; rango a promediar). PROMEDIO solo daría el total."
+    "q": "«Le parece difícil de preparar» es una variable…",
+    "ops": [ "Demográfica", "Geográfica", "Actitudinal" ],
+    "ok": 2,
+    "pq": "Es lo que la persona piensa: actitudinal."
    }
   ]
- },
- "cr": {
-  "tipo": "cruz",
-  "titulo": "Crucigrama de segmentos",
-  "filas": 9,
-  "cols": 8,
-  "palabras": [
-   { "p": "SEGMENTO", "pista": "Grupo de consumidores parecidos entre sí", "r": 4, "c": 0, "dir": "H" },
-   { "p": "BASE", "pista": "Total sobre el que se calcula cada columna", "r": 2, "c": 0, "dir": "V" },
-   { "p": "BODEGA", "pista": "Lugar de compra que aparece en la tabla cruzada", "r": 0, "c": 2, "dir": "V" },
-   { "p": "PERFIL", "pista": "Retrato del consumidor típico de un segmento", "r": 3, "c": 4, "dir": "V" },
-   { "p": "PUNTOS", "pista": "Unidad de la resta entre dos porcentajes", "r": 1, "c": 6, "dir": "V" }
-  ]
- },
- "sp": {
-  "tipo": "sopa",
-  "titulo": "Sopa de letras de segmentos",
-  "grilla": [
-   "NJFRECUENTE",
-   "VITVECDCLOC",
-   "DMOLVOTRPCR",
-   "BTACNNVBLAU",
-   "CGUHHTTOCSZ",
-   "SRDBTRDDLIA",
-   "VTUAPAVELOD",
-   "JFGSBSIGCNA",
-   "EBCENTIAHAU",
-   "OUIPRECLVLR",
-   "ULGHAIDHMFL"
-  ],
-  "palabras": [
-   { "p": "CONTRASTE", "pista": "Comparar dos segmentos entre sí", "r": 1, "c": 5, "dir": "V" },
-   { "p": "OCASIONAL", "pista": "Segmento que consume quincenal o mensualmente", "r": 1, "c": 9, "dir": "V" },
-   { "p": "FRECUENTE", "pista": "Segmento que consume diario o cada semana", "r": 0, "c": 2, "dir": "H" },
-   { "p": "CRUZADA", "pista": "Tabla que cruza el segmento con otra pregunta", "r": 1, "c": 10, "dir": "V" },
-   { "p": "BODEGA", "pista": "Lugar de compra de la tabla cruzada", "r": 3, "c": 7, "dir": "V" },
-   { "p": "BASE", "pista": "Total sobre el que se calcula cada columna", "r": 5, "c": 3, "dir": "V" }
-  ],
-  "fin": "<p class=\"pq cierre-sp\">&#127942; <b>Para cerrar:</b> el segmento <b>más grande</b> no siempre es el <b>más valioso</b>. Lo decide la diferencia entre columnas, no el tamaño.</p>"
  }
 };
 
 /* ================= las diapositivas ================= */
-var PDF_CR="<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>SEGMENTO</b></td><td>Grupo de consumidores parecidos entre sí</td></tr><tr><td><b>BASE</b></td><td>Total sobre el que se calcula cada columna</td></tr><tr><td><b>BODEGA</b></td><td>Lugar de compra que aparece en la tabla cruzada</td></tr><tr><td><b>PERFIL</b></td><td>Retrato del consumidor típico de un segmento</td></tr><tr><td><b>PUNTOS</b></td><td>Unidad de la resta entre dos porcentajes</td></tr></tbody></table></div>";
-var PDF_SP="<div class=\"tabenv\"><table class=\"t chica\"><thead><tr><th>Término</th><th>Significado</th></tr></thead><tbody><tr><td><b>CONTRASTE</b></td><td>Comparar dos segmentos entre sí</td></tr><tr><td><b>OCASIONAL</b></td><td>Segmento que consume quincenal o mensualmente</td></tr><tr><td><b>FRECUENTE</b></td><td>Segmento que consume diario o cada semana</td></tr><tr><td><b>CRUZADA</b></td><td>Tabla que cruza el segmento con otra pregunta</td></tr><tr><td><b>BODEGA</b></td><td>Lugar de compra de la tabla cruzada</td></tr><tr><td><b>BASE</b></td><td>Total sobre el que se calcula cada columna</td></tr></tbody></table></div>";
-var PDF_FIN="<ol class=\"pasos\"><li><b>¿Sobre qué total se calcula cada porcentaje de la tabla cruzada?</b><br>Respuesta: sobre la base de su propia columna. <i>Así se comparan grupos de distinto tamaño.</i></li><li><b>Un segmento quedó con 18 casos y 20 puntos de diferencia.</b><br>Respuesta: se junta con otro grupo o se advierte que la base es muy pequeña. <i>Con menos de 30 casos la diferencia puede deberse al azar.</i></li><li><b>Mercado: 55 % de frecuentes y 38 % de ocasionales.</b><br>Respuesta: 17 puntos más, no 17 %. <i>La resta de dos porcentajes se dice en puntos porcentuales.</i></li></ol><div class=\"clave\"><b>Para cerrar:</b> dato, lectura e implicancia. El segmento más grande no siempre es el más valioso.</div>";
-/* fila de la ruta de hoy: hora, tipo, bloque y diapositivas (igual que el plan de clase) */
-function RB(h, tp, txt, d){
-  var nom={ini:'Holgura',teo:'Teoría',excel:'Práctica Excel',juego:'Juego',proy:'Proyecto',cierre:'Cierre'}[tp];
-  return '<div class="rb"><span class="h">'+h+'</span><span class="chip '+tp+'">'+nom+'</span>'+
-         '<span class="tx">'+txt+(d?' <i>· diap. '+d+'</i>':'')+'</span></div>';
+var PDF_FIN="<ol class=\"pasos\"><li><b>¿Qué es segmentar?</b> Separar a los encuestados en grupos para compararlos.</li><li><b>Cine 45 % vs 41 %:</b> diferencia pequeña (4 puntos).</li><li><b>En la tabla cruzada</b> cada grupo suma 100 %.</li><li><b>«Difícil de preparar»</b> es una variable actitudinal.</li></ol>";
+var XLS='ic-s12-miercoles-practica.xlsx', XLS_SOL='ic-s12-miercoles-practica-SOLUCION.xlsx';
+
+/* gráfico de columnas animado: [[etiqueta, valor, clase], ...] (valor en %) */
+function COLS(datos, tope){
+  tope=tope||100;
+  return '<div class="gcol">'+datos.map(function(x,n){
+    return '<div class="c'+(x[2]?' '+x[2]:'')+'" style="--d:'+(n*0.25)+'s">'+
+           '<div class="pie"><b>'+x[1]+' %</b><i style="height:'+(x[1]/tope*100)+'%"></i></div>'+
+           '<span>'+x[0]+'</span></div>';
+  }).join('')+'</div>';
 }
-var XLS='ic-s12-miercoles-practica.xlsx';
-function XLCAB(txt){
-  return '<div class="xl-cab"><span class="ic">X</span><span>'+txt+'</span>'+
-         '<a class="o-btn o-btn-primary" href="'+XLS+'" download>&#11015; Excel de práctica</a></div>';
-}
-function BAR(fr, a, b){
-  var d=(a-b), s=(d>0?'+':'')+d.toFixed(1).replace('.',',');
-  return '<div class="bar-f"><span class="q">'+fr+'</span><span class="bb">'+
-         '<span><i style="width:'+(a/5*100)+'%"></i><em>'+String(a).replace('.',',')+'</em></span>'+
-         '<span><i class="o" style="width:'+(b/5*100)+'%"></i><em>'+String(b).replace('.',',')+'</em></span></span>'+
-         '<span class="d'+(Math.abs(d)>=1?' gr':'')+'">'+s+'</span></div>';
+/* barras dobles animadas: filas [etiqueta, a, b], valores en % */
+function DOBLE(nA, nB, filas, tope, suf){
+  tope=tope||100; suf=(suf===undefined?' %':suf);
+  function num(v){ return String(v).replace('.',','); }
+  return '<div class="gdob"><div class="ley"><span><i></i>'+nA+'</span><span><i class="o"></i>'+nB+'</span></div>'+
+    filas.map(function(f,n){
+      var d=Math.abs(f[1]-f[2]), gr=(suf===' %' ? d>=10 : d>=1);
+      return '<div class="fl" style="--d:'+(n*0.3)+'s"><span class="q">'+f[0]+'</span><span class="bb">'+
+        '<span><i style="width:'+(f[1]/tope*100)+'%"></i><em>'+num(f[1])+suf+'</em></span>'+
+        '<span><i class="o" style="width:'+(f[2]/tope*100)+'%"></i><em>'+num(f[2])+suf+'</em></span></span>'+
+        '<span class="dif'+(gr?' gr':'')+'">'+(gr?'🔥 ':'')+num(Math.round(d*10)/10)+(suf===' %'?' pts':'')+'</span></div>';
+    }).join('')+'</div>';
 }
 
 var D=[
 
 { et:"Inicio", tp:"ini",
-  t:"Ruta de hoy · 15:15 a 16:45",
-  h:TAPA('Contraste entre segmentos y perfil','Semana 12 &middot; Sesi&oacute;n 2 &middot; Estudio de usos y actitudes (U&amp;A)',null,null,
-    'Hoy abrimos el total en grupos para saber <b>a qui&eacute;n</b> le habla Quinua Fresh. Lo que hagas queda en tu bloque S12/S2 de Papeles de Trabajo y en las secciones 4.2 y 4.3 de tu informe.')+
-  '<div class="ruta-hoy">'+
-   RB('15:15','ini','Entrar a la sala y abrir el Excel de práctica','1')+
-   RB('15:20','juego','Conectemos: ¿qué harías con este dato?','2')+
-   RB('15:27','teo','Por qué segmentar y con qué variables','3–4')+
-   RB('15:37','juego','Arrastra: ¿frecuente u ocasional?','5')+
-   RB('15:42','excel','Práctica 1: recodificar y contar bases','6')+
-   RB('15:52','teo','La tabla cruzada y cómo se lee','7–8')+
-   RB('16:00','excel','Práctica 2: tabla dinámica lugar × segmento','9')+
-   RB('16:12','teo','Promedios por segmento y perfil','10–11')+
-   RB('16:17','excel','Práctica 3: PROMEDIO.SI por segmento','12')+
-   RB('16:25','proy','Mi proyecto: bloque S12 / Sesión 2','13')+
-   RB('16:37','juego','Reto final (crucigrama y sopa si sobra tiempo)','14–16')+
-   RB('16:42','cierre','Cierre y tarea','17')+
+  t:"Segmentar y comparar grupos",
+  h:TAPA('Segmentar y comparar grupos','Investigaci&oacute;n Cuantitativa &middot; Estudio de usos y actitudes',
+    null,'pres',
+    'Un total mezcla a personas muy distintas. Hoy aprendemos a <b>separarlas en grupos</b> y ver en qu&eacute; se diferencian.')+
+  '<div class="cuatro tres">'+
+   '<div style="--d:.2s"><span class="e">&#9986;&#65039;</span><b>1. Segmentar</b><p>Separar en grupos</p><i>Gimnasio, cine, delivery</i></div>'+
+   '<div style="--d:.5s"><span class="e">&#128202;</span><b>2. Comparar</b><p>Tabla cruzada y gr&aacute;ficos</p><i>&iquest;D&oacute;nde est&aacute; la diferencia?</i></div>'+
+   '<div style="--d:.8s"><span class="e">&#129489;</span><b>3. Perfil</b><p>Qui&eacute;n es cada grupo</p><i>Quinua Fresh</i></div>'+
   '</div>' },
 
 { et:"Conectemos", tp:"juego",
-  t:"¿Quién consume más de verdad?",
+  t:"El total esconde la respuesta",
   claves:["c0"],
   lado:1,
-  h:GLOBO('pres','Profe Ana','Quinua Fresh ya tiene su tabla de frecuencias: <b>48 %</b> consume quinua cada semana. Antes de decidir a qui&eacute;n le habla su bebida, vota desde tu celular.')+
-    '<div class="big"><b>48 %</b><span>consume quinua al menos una vez por semana<br>Base: 200 encuestados</span></div>' },
+  h:'<p class="teo-def">Gimnasio <b>FitZone</b>: socios que van de noche.</p>'+
+    COLS([['Todos',40,'gris'],['18 a 25 a&ntilde;os',58,''],['26 a 40 a&ntilde;os',35,''],['41 a m&aacute;s',20,'']],70)+
+    '<div class="clave">El <b>40 %</b> parec&iacute;a parejo, pero los <b>j&oacute;venes</b> van mucho m&aacute;s de noche.</div>' },
 
-{ et:"Segmentar", tp:"teo",
-  t:"Por qué el total esconde la respuesta",
-  h:'<p class="teo-def"><b>Segmentar</b> es dividir la muestra en grupos que se parecen entre s&iacute; por dentro y se diferencian de los dem&aacute;s. El total es un promedio de personas muy distintas: <b>esconde</b> esas diferencias.</p>'+
-'<div class="dos">'+
-'<div class="fc"><h4>El total de la muestra</h4><div class="c">'+
-TABLA(['Indicador','Resultado'],[['Consumo semanal de quinua','48 %'],['Base (n)','200']])+
-'<p class="hint">Parece un consumo medio y parejo.</p></div></div>'+
-'<div class="fc rj"><h4>El mismo dato, por edad</h4><div class="c">'+
-TABLA(['Grupo de edad','Consumo semanal'],[['18 a 25 años','30 %'],['26 a 45 años','58 %'],['46 a más','52 %']])+
-'<p class="hint">Los j&oacute;venes consumen mucho menos: el 48 % no dejaba verlo.</p></div></div>'+
+{ et:"Teoría", tp:"teo",
+  t:"¿Qué es segmentar?",
+  h:'<div class="defgrande"><span class="ico">&#9986;&#65039;</span><p><b>Segmentar</b> es separar a los encuestados en <b>grupos parecidos</b> para <b>compararlos</b>.</p></div>'+
+'<div class="cuatro">'+
+ '<div style="--d:0s"><span class="e">&#128100;</span><b>Demogr&aacute;fica</b><small>&iquest;Qui&eacute;n es?</small><p>Edad, sexo</p><i>Cine: j&oacute;venes vs. adultos</i></div>'+
+ '<div style="--d:.2s"><span class="e">&#128205;</span><b>Geogr&aacute;fica</b><small>&iquest;D&oacute;nde vive?</small><p>Distrito, zona</p><i>Delivery: norte vs. sur</i></div>'+
+ '<div style="--d:.4s"><span class="e">&#128722;</span><b>Conductual</b><small>&iquest;Qu&eacute; hace?</small><p>Cu&aacute;nto compra, d&oacute;nde</p><i>Quinua Fresh: frecuente vs. ocasional</i></div>'+
+ '<div style="--d:.6s"><span class="e">&#128173;</span><b>Actitudinal</b><small>&iquest;Qu&eacute; piensa?</small><p>Gustos, motivos</p><i>Cafeter&iacute;a: busca precio vs. busca calidad</i></div>'+
 '</div>'+
-'<div class="clave">Con el total le hablar&iacute;amos a todos igual. Con la tabla por edad sabemos que el reto est&aacute; en el joven de 18 a 25 a&ntilde;os: <b>la decisi&oacute;n de marketing cambia</b>.</div>' },
+'<div class="clave">Cada grupo necesita <b>al menos 30 personas</b> para poder compararlo.</div>' },
 
-{ et:"Segmentar", tp:"teo",
-  t:"Con qué variable se segmenta y qué hace útil a un segmento",
-  h:TABLA(['Tipo de variable','Variable','Pregunta de origen','Segmentos'],[
- ['Demográfica','Edad, sexo, NSE','¿Qué edad tiene? / ficha APEIM','18–25 / 26–45 / 46+'],
- ['Geográfica','Zona de residencia','¿En qué distrito vive?','Norte / centro / sur'],
- ['Conductual','Frecuencia de consumo, lugar de compra','¿Con qué frecuencia consume quinua?','Frecuente / ocasional'],
- ['Actitudinal','Motivo principal','¿Por qué consume quinua?','Salud / sabor / precio']],
- 'Cada variable sale de una pregunta del cuestionario. Las conductuales y actitudinales explican el porqué de la compra.')+
-'<p class="teo-def" style="margin-top:4px">Un segmento sirve para decidir si cumple <b>cinco criterios</b> (Kotler y Keller):</p>'+
-'<div class="crit">'+
- '<div><b>Medible</b>Se puede contar con una pregunta: 96 frecuentes.</div>'+
- '<div><b>Sustancial</b>Es lo bastante grande para que valga la pena: más de 30 casos.</div>'+
- '<div><b>Accesible</b>La marca puede llegarle: mercado o supermercado.</div>'+
- '<div><b>Diferenciable</b>Responde distinto al otro grupo: 17 puntos en mercado.</div>'+
- '<div><b>Accionable</b>Se le puede ofrecer algo concreto: una bebida lista para tomar.</div>'+
-'</div>' },
+{ et:"Práctica", tp:"juego",
+  t:"Clasifica las variables",
+  claves:["tv"],
+  h:'' },
 
-{ et:"Recodificar", tp:"juego",
-  t:"Cómo se forman los segmentos",
-  claves:["rc"],
-  lado:1,
-  h:'<ol class="pasos">'+
-'<li><b>Elige la variable</b> que tenga relaci&oacute;n con el problema de investigaci&oacute;n.</li>'+
-'<li><b>Recodifica:</b> agrupa las respuestas originales. Diario y semanal &rarr; frecuente; quincenal y mensual &rarr; ocasional.</li>'+
-'<li><b>Revisa el tama&ntilde;o:</b> cada grupo necesita al menos <b>30 casos</b>; si no llega, se junta con el m&aacute;s cercano.</li>'+
-'<li><b>Nombra el segmento</b> con palabras claras: «consumidor frecuente», no «grupo 1».</li>'+
-'</ol>'+
-'<p class="hint">La recodificaci&oacute;n va en una <b>columna nueva</b>, al costado de la respuesta original: nunca se borra el dato que dio el encuestado.</p>' },
-
-{ et:"Práctica Excel 1", tp:"excel",
-  t:"Recodificar y contar las bases",
-  claves:["x1"],
-  lado:1,
-  h:XLCAB('Hoja <b>Base</b>, columna F, y hoja <b>P1 Segmentos</b>')+
-'<ol class="pasos">'+
-'<li>En <b>Base!F2</b> escribe la f&oacute;rmula y haz <b>doble clic</b> en el cuadrito de la esquina para copiarla hasta la fila 201.</li>'+
-'<li>En <b>P1 Segmentos</b> cuenta cada grupo con <b>CONTAR.SI</b>.</li>'+
-'<li>Revisa la columna <b>¿Cuadra?</b> y que cada grupo pase de 30 casos.</li>'+
-'</ol>'+
-'<div class="form">=SI(O(E2="Diario";<wbr>E2="Semanal");<wbr>"Frecuente";<wbr>"Ocasional")<small>En P1 Segmentos: =CONTAR.SI(Base!$F$2:$F$201;A5)</small></div>'+
-'<div class="esperado">Resultado esperado: <b>96 frecuentes</b> y <b>104 ocasionales</b> (Tabla B3 del informe).</div>',
-  pdf:'<p class="hint">Mini hoja: C2 = Frecuente, C3 = Ocasional, C9 = 3 y C10 = 3.</p>' },
-
-{ et:"Tabla cruzada", tp:"teo",
-  t:"La tabla cruzada y hacia dónde se calcula el porcentaje",
-  h:'<p class="teo-def">La <b>tabla cruzada</b> cruza dos preguntas a la vez: el <b>segmento</b> (la variable que explica) va en las <b>columnas</b> y la variable que se describe, en las <b>filas</b>.</p>'+
-'<div class="dos">'+
-'<div class="fc rj"><h4>Bien: % por columna (cada segmento suma 100 %)</h4><div class="c">'+
-TABLA(['Lugar de compra','Frecuente','Ocasional','Total'],[
- ['Mercado','55 %','38 %','46 %'],['Supermercado','25 %','42 %','34 %'],['Bodega','13 %','15 %','14 %'],['Online','7 %','5 %','6 %'],
- ['*Total','100 %','100 %','100 %'],['*Base (n)','96','104','200']])+
-'<p class="hint">Responde: <b>¿d&oacute;nde compra cada segmento?</b></p></div></div>'+
-'<div class="fc"><h4>Otra pregunta: % por fila</h4><div class="c">'+
-TABLA(['Lugar de compra','Frecuente','Ocasional','Base'],[
- ['Mercado','58 %','42 %','92'],['Supermercado','35 %','65 %','68']])+
-'<p class="hint">Responde: <b>¿qui&eacute;nes compran en el mercado?</b> Sirve para hablar del canal, no para comparar segmentos de distinto tama&ntilde;o.</p>'+
-'<div class="esperado" style="border-color:#B4530B;background:#FFF5EC">Error frecuente: leer «58 % de los frecuentes compra en mercado». Lo correcto es <b>55 %</b>: ese dato est&aacute; en la tabla por columna.</div></div></div>'+
-'</div>'+
-'<div class="clave">Regla (Malhotra): el porcentaje se calcula <b>en la direcci&oacute;n de la variable que explica</b>. Si el segmento est&aacute; en columnas, % por columna, y siempre con la <b>base (n)</b> debajo.</div>' },
-
-{ et:"Lectura", tp:"teo",
-  t:"Cómo se lee una tabla cruzada",
-  h:'<div class="dos">'+
-'<div class="fc rj"><h4>Los tres pasos</h4><div class="c"><ol class="pasos">'+
-'<li><b>Compara en horizontal:</b> una fila, los dos segmentos. Mercado: 55 % de frecuentes frente a 38 % de ocasionales.</li>'+
-'<li><b>Busca diferencias grandes:</b> de 10 puntos o m&aacute;s. En mercado hay 17 puntos.</li>'+
-'<li><b>Escribe la lectura</b> en una frase: «el consumidor frecuente compra m&aacute;s en mercado; el ocasional prefiere el supermercado».</li>'+
-'</ol></div></div>'+
-'<div class="fc"><h4>Cuidados al leer</h4><div class="c">'+
-TABLA(['Cuidado','Qué significa'],[
- ['Puntos, no por ciento','55 % menos 38 % son 17 puntos porcentuales'],
- ['Bases menores de 30','La diferencia puede deberse al azar: se junta con otro grupo o se advierte'],
- ['Relación no es causa','La tabla muestra que van juntos, no que uno cause al otro'],
- ['¿Es significativa?','La ji-cuadrada de la semana 11 dice si la relación es real']])+
-'</div></div></div>'+
-'<div class="clave">La regla de los <b>10 puntos</b> es una gu&iacute;a de aula para decidir qu&eacute; comentar; la prueba estad&iacute;stica la confirma.</div>' },
-
-{ et:"Práctica Excel 2", tp:"excel",
-  t:"Tabla dinámica: lugar de compra × segmento",
-  claves:["tc"],
-  lado:1,
-  h:XLCAB('Hoja <b>P2 Tabla cruzada</b>')+
-'<ol class="pasos">'+
-'<li>Clic en la hoja <b>Base</b> &gt; <b>Insertar &gt; Tabla din&aacute;mica</b> &gt; Nueva hoja.</li>'+
-'<li><b>Segmento</b> a Columnas, <b>Lugar de compra</b> a Filas, <b>ID</b> a Valores (Cuenta).</li>'+
-'<li>Clic derecho en un valor &gt; <b>Mostrar valores como &gt; % del total de columnas</b>.</li>'+
-'<li>Copia los % a la hoja P2 y mira la <b>diferencia</b> y la columna <b>¿Cuadra?</b></li>'+
-'</ol>'+
-'<div class="form">=CONTAR.SI.CONJUNTO(Base!$G$2:$G$201;<wbr>$A6;<wbr>Base!$F$2:$F$201;<wbr>B$5)/B$11<small>Opci&oacute;n sin tabla din&aacute;mica: en B6, y se arrastra a la derecha y hacia abajo</small></div>',
-  pdf:'<p class="hint">Base 96 y 104 · Mercado 55,2 % y 37,5 % · 17 puntos · Supermercado ocasional 42,3 %.</p>' },
-
-{ et:"Promedios", tp:"teo",
-  t:"Comparar promedios entre segmentos",
-  h:'<p class="teo-def">Las frases de actitud (Likert 1 a 5) se comparan con el <b>promedio de cada segmento</b>. La diferencia que orienta la estrategia es la <b>m&aacute;s grande</b>, no la nota m&aacute;s alta.</p>'+
-'<div class="bars"><div class="ley"><span><i></i>Frecuente (n = 96)</span><span><i class="o"></i>Ocasional (n = 104)</span><span><b>Diferencia</b></span></div>'+
-BAR('La quinua es nutritiva',4.7,4.3)+BAR('La quinua es fácil de preparar',3.8,2.5)+BAR('La quinua es cara',3.4,4.1)+BAR('Me gusta el sabor de la quinua',4.4,3.2)+
-'</div>'+
-'<div class="clave">Lectura: el ocasional cree que la quinua es nutritiva, pero le parece <b>dif&iacute;cil de preparar</b> (1,3 puntos menos) y <b>cara</b>. Esas son las barreras que la bebida tiene que resolver.</div>' },
-
-{ et:"Perfil", tp:"teo",
-  t:"El perfil de cada segmento",
-  h:'<p class="teo-def">El perfil describe cada segmento en cuatro l&iacute;neas: <b>qui&eacute;n es</b>, <b>qu&eacute; hace</b>, <b>qu&eacute; piensa</b> y <b>qu&eacute; necesita</b>. Cada l&iacute;nea sale de una tabla, no de una impresi&oacute;n.</p>'+
-'<div class="dos">'+
-'<div class="fc rj"><h4>Consumidor frecuente (n = 96)</h4><div class="c"><ul class="pasos">'+
-'<li><b>Qui&eacute;n:</b> 66 % mujeres; 77 % de NSE B o C.</li>'+
-'<li><b>Qu&eacute; hace:</b> consume cada semana y compra en mercado (55 %).</li>'+
-'<li><b>Qu&eacute; piensa:</b> nutritiva (4,7), le gusta el sabor (4,4); su barrera es el precio (38 %).</li>'+
-'<li><b>Qu&eacute; necesita:</b> seguir comprando a buen precio.</li>'+
-'</ul></div></div>'+
-'<div class="fc"><h4>Consumidor ocasional (n = 104)</h4><div class="c"><ul class="pasos">'+
-'<li><b>Qui&eacute;n:</b> parecido: 59 % mujeres; 73 % de NSE B o C.</li>'+
-'<li><b>Qu&eacute; hace:</b> consume una o dos veces al mes y compra en supermercado (42 %).</li>'+
-'<li><b>Qu&eacute; piensa:</b> dif&iacute;cil de preparar (2,5) y cara (4,1); su barrera es el tiempo (44 %).</li>'+
-'<li><b>Qu&eacute; necesita:</b> algo pr&aacute;ctico y listo para tomar.</li>'+
-'</ul></div></div></div>'+
-'<div class="clave">Por edad y NSE los dos grupos casi no se diferencian: los separa <b>lo que hacen y lo que piensan</b>. ¿A cu&aacute;l le conviene hablarle Quinua Fresh con su bebida?</div>' },
-
-{ et:"Práctica Excel 3", tp:"excel",
-  t:"PROMEDIO.SI por segmento",
-  claves:["pr"],
-  lado:1,
-  h:XLCAB('Hoja <b>P3 Promedios</b>')+
-'<ol class="pasos">'+
-'<li>Escribe la f&oacute;rmula en <b>B6</b> (frecuente, «es nutritiva»).</li>'+
-'<li>Arr&aacute;strala a la derecha hasta <b>E6</b> y luego hacia abajo a la fila 7 (ocasional).</li>'+
-'<li>La <b>diferencia</b> y la marca de 1 punto o m&aacute;s se calculan solas.</li>'+
-'</ol>'+
-'<div class="form">=PROMEDIO.SI(Base!$F$2:$F$201;<wbr>$A6;<wbr>Base!H$2:H$201)<small>rango del criterio ; criterio (el segmento de la fila) ; rango que se promedia</small></div>'+
-'<div class="esperado">Esperado: 4,7 / 4,3 · 3,8 / 2,5 · 3,4 / 4,1 · 4,4 / 3,2 (Tabla 6 del informe).</div>',
-  pdf:'<p class="hint">Diferencias: 0,4 · 1,3 · 0,7 · 1,2.</p>' },
-
-{ et:"Proyecto", tp:"proy",
-  t:"Mi proyecto: bloque S12 / Sesión 2",
-  claves:["pj"],
-  h:'<p class="teo-def">Ahora lo mismo con <b>tu</b> estudio, en tu pesta&ntilde;a de <b>Papeles de Trabajo</b> (modelo: pesta&ntilde;a Ejemplo 1 Quinua Fresh).</p>'+
-'<div class="dos"><div>'+
-TABLA(['Bloque','Qué completas','Va al informe'],[
- ['1. Segmentos','Variable y dos segmentos con su base','Tabla B3'],
- ['2. Tabla cruzada','Casos y % por columna de una pregunta de usos','4.2 · Tabla 5 · Gráfico 3'],
- ['3. Promedios','3 o 4 frases de actitud por segmento','4.3 · Tabla 6 · Gráfico 4'],
- ['4. Perfil','Cuatro líneas por segmento','4.2 y 4.3']])+
+{ et:"Teoría", tp:"teo",
+  t:"La tabla cruzada: comparar dos grupos",
+  h:'<div class="dos-d">'+
+'<div><p class="teo-def">La <b>tabla cruzada</b> pone los grupos lado a lado. <b>Cada grupo suma 100 %</b>, as&iacute; se comparan aunque sean de distinto tama&ntilde;o.</p>'+
+TABLA(['App de delivery: ¿cómo pide?','Jóvenes','Adultos'],[
+ ['Por app','70 %','52 %'],['Por WhatsApp','20 %','30 %'],['Por llamada','10 %','18 %'],['*Total','100 %','100 %']])+
 '</div><div>'+
-'<div class="form" style="text-align:left;margin-top:14px">Dato &rarr; lectura &rarr; implicancia<small>«Mercado: 55 % vs. 38 %» &rarr; «el frecuente compra en mercado y el ocasional en supermercado» &rarr; «el lanzamiento entra por supermercado»</small></div>'+
-'<div class="esperado"><b>Antes de cerrar revisa:</b> base de cada segmento a la vista · cada columna suma 100 % · diferencias de 10 puntos o m&aacute;s marcadas · sin celdas combinadas.</div>'+
+DOBLE('J&oacute;venes','Adultos',[['Por app',70,52],['Por WhatsApp',20,30],['Por llamada',10,18]],80)+
+'</div></div>'+
+'<div class="clave">Se lee <b>en horizontal</b>: 70 % frente a 52 % son <b>18 puntos</b> de diferencia. Si la diferencia es de <b>10 puntos o m&aacute;s</b>, vale la pena contarla. &#128293;</div>' },
+
+{ et:"Práctica", tp:"juego",
+  t:"Lee el gráfico",
+  claves:["lc"],
+  lado:1,
+  h:'<p class="teo-def"><b>Quinua Fresh:</b> &iquest;d&oacute;nde compra cada grupo?</p>'+
+    DOBLE('Frecuente','Ocasional',[['Mercado',55,38],['Supermercado',25,42],['Bodega',13,15],['Online',7,5]],60) },
+
+{ et:"Práctica", tp:"juego",
+  t:"¿Diferencia grande o pequeña?",
+  claves:["dg"],
+  h:'<p class="teo-def" style="margin-bottom:6px">Resta los dos porcentajes. <b>10 puntos o m&aacute;s</b> = diferencia grande.</p>' },
+
+{ et:"Práctica Excel", tp:"excel",
+  t:"Ahora en Excel",
+  h:'<div class="xl-grande">'+
+'<div class="logo"><span>X</span></div>'+
+'<div class="txt"><h3>Pr&aacute;ctica en Excel</h3>'+
+'<p>Descarga el archivo y sigue las indicaciones de cada hoja.</p>'+
+'<a class="o-btn o-btn-primary xl-btn" href="'+XLS+'" download>&#11015; Descargar Excel</a>'+
+'<a class="o-btn xl-btn sol solo-doc" href="'+XLS_SOL+'" download hidden>&#128273; Soluci&oacute;n (docente)</a>'+
 '</div></div>' },
+
+{ et:"Teoría", tp:"teo",
+  t:"Comparar lo que piensa cada grupo",
+  h:'<p class="teo-def">Las frases de opini&oacute;n (de <b>1 a 5</b>) se comparan con el <b>promedio de cada grupo</b>. Lo importante es la <b>diferencia m&aacute;s grande</b>.</p>'+
+DOBLE('Frecuente','Ocasional',[['Es nutritiva',4.7,4.3],['Es f&aacute;cil de preparar',3.8,2.5],['Es cara',3.4,4.1],['Me gusta el sabor',4.4,3.2]],5,'')+
+'<div class="clave">Los dos creen que es nutritiva. Pero al ocasional le parece <b>dif&iacute;cil de preparar</b>: ah&iacute; est&aacute; la oportunidad. &#128161;</div>' },
+
+{ et:"Perfil", tp:"juego",
+  t:"El perfil de cada grupo",
+  claves:["pf"],
+  lado:1,
+  h:'<p class="teo-def">El <b>perfil</b> describe a cada grupo con cuatro preguntas:</p>'+
+'<div class="perfil4">'+
+ '<div style="--d:0s"><span>&#128100;</span>&iquest;Qui&eacute;n es?</div>'+
+ '<div style="--d:.2s"><span>&#128722;</span>&iquest;Qu&eacute; hace?</div>'+
+ '<div style="--d:.4s"><span>&#128173;</span>&iquest;Qu&eacute; piensa?</div>'+
+ '<div style="--d:.6s"><span>&#127873;</span>&iquest;Qu&eacute; necesita?</div>'+
+'</div>'+
+GLOBO('idea','Profe','Cada l&iacute;nea del perfil sale de un dato de la tabla, no de una impresi&oacute;n.') },
 
 { et:"Reto", tp:"juego",
   t:"Reto final",
@@ -1806,40 +1709,22 @@ TABLA(['Bloque','Qué completas','Va al informe'],[
   h:'',
   pdf:PDF_FIN },
 
-{ et:"Crucigrama", tp:"juego",
-  t:"Crucigrama de segmentos",
-  claves:["cr"],
-  h:'',
-  pdf:PDF_CR },
-
-{ et:"Sopa", tp:"juego",
-  t:"Sopa de letras",
-  claves:["sp"],
-  h:'',
-  pdf:PDF_SP },
-
 { et:"Cierre", tp:"cierre",
-  t:"Lo que nos llevamos y la tarea",
-  h:'<div class="dos">'+
-'<div class="fc rj"><h4>Tres ideas de hoy</h4><div class="c"><ol class="pasos">'+
-'<li>El total esconde diferencias: se abre en <b>segmentos</b> de 30 casos o m&aacute;s.</li>'+
-'<li>En la tabla cruzada el % va <b>por columna</b> y la diferencia se dice en <b>puntos</b>.</li>'+
-'<li>La <b>diferencia m&aacute;s grande</b> de los promedios dice qu&eacute; barrera resolver.</li>'+
-'</ol></div></div>'+
-'<div class="fc"><h4>Tarea para el martes (semana 13)</h4><div class="c"><ul class="pasos">'+
-'<li>Terminar el bloque S12/S2 de tu pesta&ntilde;a.</li>'+
-'<li>Escribir la lectura de 4.2 y 4.3 de tu informe.</li>'+
-'<li>Traer la idea de tu producto nuevo: insight, beneficio y precio para la <b>tarjeta de concepto</b>.</li>'+
-'</ul></div></div></div>'+
-GLOBO('bien','Diego Datos','¿Cu&aacute;l fue la diferencia m&aacute;s grande en tu proyecto? Esa es tu primera l&iacute;nea del informe.')+
-'<p class="fuentes">Fuentes: Kotler, P. y Keller, K. (2016). <i>Direcci&oacute;n de marketing</i>. Pearson · Malhotra, N. (2008). <i>Investigaci&oacute;n de mercados</i>. Pearson · Soporte de Microsoft: tablas din&aacute;micas y «Mostrar valores como». Datos de Quinua Fresh ficticios.</p>' }
+  t:"Lo que nos llevamos",
+  h:'<div class="cuatro tres">'+
+ '<div style="--d:0s"><span class="e">&#9986;&#65039;</span><b>Segmentar</b><p>El total esconde diferencias: s&eacute;paralo en grupos.</p></div>'+
+ '<div style="--d:.2s"><span class="e">&#128202;</span><b>Comparar</b><p>Cada grupo suma 100 %. Busca 10 puntos o m&aacute;s.</p></div>'+
+ '<div style="--d:.4s"><span class="e">&#129489;</span><b>Perfil</b><p>Qui&eacute;n es, qu&eacute; hace, qu&eacute; piensa y qu&eacute; necesita.</p></div>'+
+'</div>'+
+GLOBO('bien','Para tu proyecto','Haz lo mismo con tus datos: separa en dos grupos y busca la <b>diferencia m&aacute;s grande</b>.')+
+'<p class="fuentes">Fuentes: Kotler, P. y Keller, K. (2016). <i>Direcci&oacute;n de marketing</i>. Pearson · Malhotra, N. (2008). <i>Investigaci&oacute;n de mercados</i>. Pearson. Todos los datos son ficticios, de clase.</p>' }
 ];
 
 
 /* ================= estado ================= */
-var LS='ic_s12-miercoles_v3';
+var LS='ic_s12-miercoles_v4';
 /* en el mismo orden en que aparecen las diapositivas */
-var CLAVES=["c0", "rc", "x1", "tc", "pr", "pj", "fin", "cr", "sp"];
+var CLAVES=["c0", "tv", "lc", "dg", "pf", "fin"];
 function vacio(){ var g={ visto:{}, mal:{}, hoja:{} };
                   CLAVES.forEach(function(k){ g[k]={}; }); return g; }
 var G=vacio();
@@ -2684,7 +2569,9 @@ function pinta(quieto){
   $('tit').textContent=s.t;
   $('cu').textContent=(posVis(i)+1)+' / '+vis().length;
   var h=htmlLamina(s);
+  $('lam').classList.toggle('quieto', !!quieto);
   $('lam').innerHTML=h;
+  qq('.solo-doc', $('lam')).forEach(function(e){ e.hidden=!soyDocente(); });
   $('lam').scrollTop=alto;
   $('ant').disabled=(posVis(i)<=0);
   $('sig').disabled=(posVis(i)>=vis().length-1);
@@ -3562,7 +3449,7 @@ function pantalla(e, alumno, cont){
 }
 var textoPuerta=null;
 if(window.Aula){
-  Aula.iniciar({ sala:'IC12XC', codigo:'INV', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
+  Aula.iniciar({ sala:'IC12XD', codigo:'INV', simple:true, pin:true, resumen:resumenAula, diapos:function(){ return D.map(function(x,n){ return { n:n, et:x.et, t:x.t }; }); }, seleccion:function(){ return SEL; }, alElegir:aplicaSel, actividades:function(){ return CLAVES.map(function(k,n){ return { et:etiActividad(n), t:tituloActividad(n), max:cuantas(k) }; }); }, ventana:ventanaAula,
     pantalla:pantalla, musica:true, batuta:recibeBatuta,
     alModo:function(doc){
       $('hojaMuro').hidden=!doc;
@@ -3616,6 +3503,6 @@ pinta();
 })();
 </script>
 
-<script src="mat-tj.js?v=20261103c"></script>
+<script src="mat-tj.js?v=20261104a"></script>
 </body>
 </html>

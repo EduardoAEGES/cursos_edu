@@ -95,9 +95,9 @@ var R={
     ['r','Para comparar grupos de distinto tamaño usa el <b>% de columna</b>.'],
     ['r','<b>Heavy user</b>: consume a diario o cada semana.']],
   'ic-s12-miercoles':[
-    ['r','<b>Índice</b> = % en heavy ÷ % en la base × 100. Más de 100: sobrerrepresentado.'],
-    ['r','60 % vs 40 % son <b>20 puntos porcentuales</b>, no 20 %.'],
-    ['r','Porcentajes de categorías: <b>ji-cuadrada</b>. Promedios: <b>prueba T</b>.']],
+    ['r','<b>Segmentar</b> = separar a los encuestados en grupos para compararlos.'],
+    ['r','En la tabla cruzada <b>cada grupo suma 100 %</b>.'],
+    ['r','Una diferencia de <b>10 puntos o más</b> vale la pena contarla.']],
   'ic-s13-martes':[
     ['r','<b>T2B</b> = (casilla 5 + casilla 4) ÷ total × 100.'],
     ['r','Se mejora primero lo que <b>importa mucho</b> y <b>gusta poco</b>.'],
