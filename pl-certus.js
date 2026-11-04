@@ -17,7 +17,8 @@ pie.className='pie-equipo';
 pie.innerHTML='<span>Elaborado por el equipo académico de <b>CERTUS</b>: Luis, Mirko y Eduardo</span>'+
               '<span class="pe-der">Pensamiento Lógico <i>·</i> certus.edu.pe</span>';
 var avance=esc.querySelector('.avance');
-esc.insertBefore(pie, avance || null);
+/* otros cursos Certus usan el mismo diseño sin el pie del equipo de Pensamiento Lógico */
+if(!window.CERTUS_SIN_PIE) esc.insertBefore(pie, avance || null);
 
 /* ---------- recordatorios de cada sesión ---------- */
 var COMUN=[
@@ -36,7 +37,17 @@ var LOGICA=[
   ['r','La justificación dice la ley y las líneas: <b>MTT, 1, 3</b> = modus tollens con las líneas (1) y (3).'],
   ['r','<b>p ∧ q</b> es verdadera solo si las dos son V. <b>p ∨ q</b> es falsa solo si las dos son F.']
 ];
+var COSTOS_S3=[
+  ['r','<b>MC = p − CVu</b>: lo que deja cada unidad para cubrir los costos fijos.'],
+  ['r','<b>PE u = CF ÷ MC</b>: las unidades que hay que vender para no ganar ni perder.'],
+  ['r','<b>PE S/ = PE u × p</b>: el mismo punto de equilibrio, expresado en soles.'],
+  ['r','En el punto de equilibrio la <b>utilidad es cero</b>: esa es la comprobación.'],
+  ['r','<b>Margen de seguridad</b> = (ventas reales − PE) ÷ ventas reales.'],
+  ['r','Si baja el precio, <b>el margen baja y el punto de equilibrio sube</b>.'],
+  ['r','Costo: interviene en lo que vendo. Gasto operativo: <b>sostiene la operación</b>.']
+];
 var R={
+  'costos-s3-punto-equilibrio': COSTOS_S3,
   'sesion-2-pensamiento-logico': LOGICA,
   'pl-semana-2-reforzamiento': LOGICA,
   'pl-semana-2-parte-1':[
