@@ -4,220 +4,144 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pautas AA1 · Avance 2 y 3</title>
-<meta name="version" content="2026-11-06-1">
+<meta name="version" content="2026-11-06-2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
 <style>
 /* ============================================================
    Pautas para el AA1 (avance 2 y 3) · Pensamiento Lógico · Certus
-   Presentación del docente: no hay sala ni ingreso de estudiantes.
+   Presentación del docente de 10 minutos: no hay sala ni ingreso de estudiantes.
+   Todo va en «em»: pl-aa1 ajusta el tamaño de letra de cada lámina para que
+   llene la pantalla sin desbordarse.
    ============================================================ */
 :root{
   --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
-  --tinta:#0B1B3F; --gris:#55607F; --linea:#D5DDEF; --humo:#F1F5FD; --papel:#FFFFFF;
-  --verde:#0E8F95; --ambar:#C97A00; --rojo:#D7263D;
-  --fondo:#E9EDF6;
+  --tinta:#0B1B3F; --gris:#55607F; --linea:#D5DDEF; --humo:#F1F5FD; --verde:#0E8F95;
 }
 *{ box-sizing:border-box; }
 html,body{ margin:0; height:100%; }
-body{ font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:var(--tinta); background:var(--fondo);
-  overflow:hidden; }
-button, input, select{ font-family:inherit; }
-button{ cursor:pointer; }
-[hidden]{ display:none !important; }
+body{ font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:var(--tinta); background:#E9EDF6; overflow:hidden; }
+button,input{ font-family:inherit; } button{ cursor:pointer; } [hidden]{ display:none !important; }
 
-/* ---------- marco de la presentación ---------- */
 .app{ height:100%; display:flex; flex-direction:column; }
-.barra{ flex:none; display:flex; align-items:center; gap:12px; padding:8px 18px; background:var(--marino); color:#fff;
-  border-bottom:4px solid var(--fucsia); }
+.barra{ flex:none; display:flex; align-items:center; gap:12px; padding:8px 18px; background:var(--marino); color:#fff; border-bottom:4px solid var(--fucsia); }
 .barra img{ height:30px; width:auto; background:#fff; border-radius:99px; padding:2px 8px; }
 .barra .tt{ flex:1; min-width:0; font-weight:800; font-size:17px; line-height:1.2; }
 .barra .tt small{ display:block; font-weight:700; font-size:12.5px; opacity:.8; letter-spacing:.04em; text-transform:uppercase; }
 .barra .cu{ font-weight:800; font-variant-numeric:tabular-nums; opacity:.9; }
-.barra .btn{ background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:9px;
-  padding:7px 11px; font-weight:800; font-size:14px; }
-.barra .btn:hover{ background:var(--fucsia); border-color:transparent; }
-.barra .btn.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+.barra .btn{ background:rgba(255,255,255,.14); color:#fff; border:1px solid rgba(255,255,255,.35); border-radius:9px; padding:7px 11px; font-weight:800; font-size:14px; }
+.barra .btn:hover{ background:var(--fucsia); border-color:transparent; } .barra .btn.on{ background:var(--celeste); color:var(--marino); border-color:transparent; }
+.barra .cron{ font-variant-numeric:tabular-nums; }
+.barra .cron.pasado{ background:var(--fucsia); border-color:transparent; }
 
 .escena{ flex:1; min-height:0; position:relative; perspective:1600px; overflow:hidden;
-  background:
-    radial-gradient(900px 500px at 105% -10%, rgba(32,211,255,.22), transparent 60%),
-    radial-gradient(700px 420px at -10% 110%, rgba(198,0,163,.14), transparent 60%),
-    linear-gradient(160deg,#F7F8FC 0%, #E6ECF8 100%); }
-.lam{ position:absolute; inset:0; padding:22px clamp(16px,3vw,44px) 22px; overflow:auto; transform-style:preserve-3d;
-  backface-visibility:hidden; transition:transform .7s cubic-bezier(.2,.75,.2,1), opacity .7s; opacity:0;
-  transform:translateX(60%) rotateY(-55deg) translateZ(-200px); pointer-events:none; }
+  background: radial-gradient(900px 500px at 105% -10%, rgba(32,211,255,.22), transparent 60%),
+              radial-gradient(700px 420px at -10% 110%, rgba(198,0,163,.14), transparent 60%),
+              linear-gradient(160deg,#F7F8FC 0%,#E6ECF8 100%); }
+/* cada lámina: la letra se ajusta sola (JS) y todo lo demás va en em */
+.lam{ position:absolute; inset:0; padding:.7em 1.3em .8em; overflow:auto; display:flex; flex-direction:column; gap:.55em;
+  font-size:24px; line-height:1.35; backface-visibility:hidden; opacity:0; pointer-events:none;
+  transform:translateX(60%) rotateY(-55deg) translateZ(-200px); transition:transform .7s cubic-bezier(.2,.75,.2,1), opacity .7s; }
 .lam.on{ opacity:1; transform:none; pointer-events:auto; }
 .lam.atras{ transform:translateX(-60%) rotateY(55deg) translateZ(-200px); }
 @media (prefers-reduced-motion: reduce){ .lam{ transition:opacity .2s; transform:none !important; } }
+.centro{ justify-content:center; }
 
 .pie{ flex:none; display:flex; align-items:center; gap:12px; padding:8px 16px; background:#fff; border-top:1px solid var(--linea); }
-.pie .eq{ flex:1; min-width:0; font-size:12.5px; color:var(--gris); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pie .eq b{ color:var(--marino); }
+.pie .eq{ flex:1; min-width:0; font-size:12.5px; color:var(--gris); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .pie .eq b{ color:var(--marino); }
 .pie .pts{ display:flex; gap:6px; }
 .pie .pts button{ width:11px; height:11px; border-radius:50%; border:2px solid #B9C2D8; background:#fff; padding:0; }
-.pie .pts button.on{ background:var(--fucsia); border-color:var(--fucsia); transform:scale(1.3); }
-.pie .pts button.vis{ background:#B9C2D8; }
-.nav{ font-weight:800; font-size:15px; border-radius:10px; padding:9px 16px; border:2px solid var(--linea); background:#fff;
-  color:var(--tinta); }
-.nav.sig{ background:var(--marino); border-color:var(--marino); color:#fff; }
-.nav:hover{ border-color:var(--fucsia); }
-.nav:disabled{ opacity:.4; cursor:default; }
+.pie .pts button.on{ background:var(--fucsia); border-color:var(--fucsia); transform:scale(1.3); } .pie .pts button.vis{ background:#B9C2D8; }
+.nav{ font-weight:800; font-size:16px; border-radius:10px; padding:9px 18px; border:2px solid var(--linea); background:#fff; color:var(--tinta); }
+.nav.sig{ background:var(--marino); border-color:var(--marino); color:#fff; } .nav:hover{ border-color:var(--fucsia); } .nav:disabled{ opacity:.4; cursor:default; }
 
-/* ---------- piezas de las láminas ---------- */
-.et{ display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:13px; letter-spacing:.08em;
-  text-transform:uppercase; color:#fff; background:var(--fucsia); border-radius:99px; padding:5px 13px; }
-.et.azul{ background:var(--marino); } .et.aqua{ background:var(--aqua); }
-h1.tit{ margin:10px 0 6px; font-size:clamp(26px,3.4vw,40px); font-weight:900; line-height:1.15; color:var(--marino); }
-h2.tit{ margin:10px 0 6px; font-size:clamp(22px,2.7vw,32px); font-weight:900; line-height:1.2; color:var(--marino); }
-.sub{ margin:0 0 16px; font-size:clamp(16px,1.6vw,20px); color:var(--gris); font-weight:600; line-height:1.5; max-width:1050px; }
-.grid2{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:18px; align-items:start; }
-.grid3{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
-@media (max-width:900px){ .grid2, .grid3{ grid-template-columns:minmax(0,1fr); } }
-.card{ background:#fff; border:2px solid var(--linea); border-radius:16px; padding:16px 18px; box-shadow:0 10px 26px rgba(7,23,103,.07); }
-.card h3{ margin:0 0 8px; font-size:19px; color:var(--marino); }
-.card p{ margin:0 0 8px; font-size:16.5px; line-height:1.5; }
-.clave{ border-left:6px solid var(--fucsia); background:#FFF3F6; border-radius:0 14px 14px 0; padding:12px 16px; font-size:17px;
-  line-height:1.5; margin:12px 0; }
-.clave.azul{ border-color:var(--marino); background:#EEF2FC; }
-.clave.verde{ border-color:var(--verde); background:#E7F6F6; }
-.fml{ font-family:'Nunito',sans-serif; font-weight:900; font-size:clamp(18px,1.9vw,24px); color:var(--marino); background:#fff;
-  border:2px dashed var(--celeste); border-radius:12px; padding:10px 14px; margin:8px 0; text-align:center; }
-.fml small{ display:block; font-weight:700; font-size:14px; color:var(--gris); margin-top:4px; }
-.chip{ display:inline-block; border-radius:99px; padding:3px 11px; font-size:13px; font-weight:900; }
+/* ---------- piezas (todo en em) ---------- */
+.cab{ display:flex; align-items:center; gap:.6em; flex-wrap:wrap; }
+.et{ display:inline-flex; align-items:center; gap:.5em; font-weight:900; font-size:.56em; letter-spacing:.08em; text-transform:uppercase; color:#fff; background:var(--fucsia); border-radius:99px; padding:.35em .9em; }
+.min{ font-weight:900; font-size:.56em; color:var(--marino); background:#fff; border:2px solid var(--linea); border-radius:99px; padding:.3em .8em; }
+.tit{ margin:0; font-size:1.75em; font-weight:900; line-height:1.12; color:var(--marino); }
+.sub{ margin:0; font-size:.85em; color:var(--gris); font-weight:700; line-height:1.4; }
+.g2{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:.7em; align-items:stretch; }
+.g3{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.7em; }
+.relleno{ flex:1; min-height:0; }
+@media (max-width:900px){ .g2,.g3{ grid-template-columns:minmax(0,1fr); } }
+.card{ background:#fff; border:.1em solid var(--linea); border-radius:.7em; padding:.6em .85em; box-shadow:0 .4em 1em rgba(7,23,103,.07); }
+.card h3{ margin:0 0 .25em; font-size:1em; color:var(--marino); font-weight:900; }
+.card p{ margin:0 0 .25em; font-size:.85em; line-height:1.35; }
+.num{ display:inline-flex; width:1.5em; height:1.5em; border-radius:50%; background:var(--fucsia); color:#fff; align-items:center; justify-content:center; font-weight:900; margin-right:.4em; font-size:.9em; }
+.clave{ border-left:.28em solid var(--fucsia); background:#FFF3F6; border-radius:0 .7em .7em 0; padding:.45em .8em; font-size:.85em; line-height:1.38; }
+.clave.azul{ border-color:var(--marino); background:#EEF2FC; } .clave.verde{ border-color:var(--verde); background:#E7F6F6; }
+.fml{ font-weight:900; font-size:.95em; color:var(--marino); background:#fff; border:.1em dashed var(--celeste); border-radius:.6em; padding:.3em .6em; margin:.25em 0; text-align:center; }
+.chip{ display:inline-block; border-radius:99px; padding:.05em .6em; font-size:.72em; font-weight:900; white-space:nowrap; }
 .chip.f{ background:#E4E9FB; color:var(--marino); } .chip.v{ background:#FFE3EA; color:#B0002F; }
 .chip.p{ background:#DDF5F5; color:#086B70; } .chip.o{ background:#FBE5F6; color:#8A0071; }
-table.t{ width:100%; border-collapse:collapse; font-size:16px; background:#fff; border-radius:12px; overflow:hidden; }
-table.t th{ background:var(--marino); color:#fff; text-align:left; padding:9px 11px; font-size:14px; letter-spacing:.03em; }
-table.t td{ border-bottom:1px solid #E3E8F3; padding:8px 11px; }
-table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; font-weight:800; }
+table.t{ width:100%; border-collapse:collapse; font-size:.85em; background:#fff; border-radius:.6em; overflow:hidden; }
+table.t th{ background:var(--marino); color:#fff; text-align:left; padding:.4em .6em; font-size:.8em; }
+table.t td{ border-bottom:1px solid #E3E8F3; padding:.35em .6em; } table.t td.n{ text-align:right; font-weight:900; font-variant-numeric:tabular-nums; }
 
-/* ---------- la caja 3D de la portada ---------- */
-.portada{ display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,1fr); gap:30px; align-items:center; min-height:100%; }
+/* ---------- caja 3D de la portada ---------- */
+.portada{ flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); gap:1em; align-items:center; }
 @media (max-width:900px){ .portada{ grid-template-columns:minmax(0,1fr); } }
-.cubo-esc{ perspective:900px; display:flex; justify-content:center; padding:40px 0; }
-.cubo{ width:200px; height:200px; position:relative; transform-style:preserve-3d; animation:gira 14s linear infinite; }
-.cubo:hover{ animation-play-state:paused; }
+.cubo-esc{ perspective:900px; display:flex; justify-content:center; padding:.4em 0; }
+.cubo{ width:6.5em; height:6.5em; position:relative; transform-style:preserve-3d; animation:gira 14s linear infinite; } .cubo:hover{ animation-play-state:paused; }
 @keyframes gira{ from{ transform:rotateX(-22deg) rotateY(0); } to{ transform:rotateX(-22deg) rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce){ .cubo{ animation:none; transform:rotateX(-22deg) rotateY(-35deg); } }
-.cara{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-  border-radius:10px; color:#fff; font-weight:900; font-size:30px; text-align:center; border:3px solid rgba(255,255,255,.55);
-  box-shadow:inset 0 0 40px rgba(0,0,0,.18); }
-.cara small{ font-size:14px; font-weight:800; opacity:.9; }
-.c1{ background:linear-gradient(135deg,#C9A06A,#A97B45); transform:translateZ(100px); }
-.c2{ background:linear-gradient(135deg,#BD935D,#9C703C); transform:rotateY(90deg) translateZ(100px); }
-.c3{ background:linear-gradient(135deg,#C9A06A,#A97B45); transform:rotateY(180deg) translateZ(100px); }
-.c4{ background:linear-gradient(135deg,#B48956,#946836); transform:rotateY(-90deg) translateZ(100px); }
-.c5{ background:linear-gradient(135deg,#D8B381,#B88C55); transform:rotateX(90deg) translateZ(100px); }
-.c6{ background:#8E6533; transform:rotateX(-90deg) translateZ(100px); }
+.cara{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:.3em; color:#fff; font-weight:900; font-size:1.1em; text-align:center; border:.1em solid rgba(255,255,255,.55); box-shadow:inset 0 0 1.5em rgba(0,0,0,.18); }
+.cara small{ font-size:.5em; font-weight:800; opacity:.9; }
+.c1{ background:linear-gradient(135deg,#C9A06A,#A97B45); transform:translateZ(3.25em); } .c2{ background:linear-gradient(135deg,#BD935D,#9C703C); transform:rotateY(90deg) translateZ(3.25em); }
+.c3{ background:linear-gradient(135deg,#C9A06A,#A97B45); transform:rotateY(180deg) translateZ(3.25em); } .c4{ background:linear-gradient(135deg,#B48956,#946836); transform:rotateY(-90deg) translateZ(3.25em); }
+.c5{ background:linear-gradient(135deg,#D8B381,#B88C55); transform:rotateX(90deg) translateZ(3.25em); } .c6{ background:#8E6533; transform:rotateX(-90deg) translateZ(3.25em); }
 .c5::before{ content:''; position:absolute; left:46%; top:0; bottom:0; width:8%; background:rgba(252,0,69,.75); }
-.sombra{ width:220px; height:30px; margin:-10px auto 0; background:radial-gradient(closest-side, rgba(7,23,103,.28), transparent); }
+.sombra{ width:7em; height:1em; margin:-.2em auto 0; background:radial-gradient(closest-side, rgba(7,23,103,.28), transparent); }
 
-/* ---------- tarjetas que giran ---------- */
-.flip{ perspective:1100px; min-height:190px; }
-.flip .in{ position:relative; width:100%; height:100%; min-height:190px; transition:transform .7s; transform-style:preserve-3d; }
-.flip.on .in{ transform:rotateY(180deg); }
-.flip .fr, .flip .bk{ position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; padding:16px 18px;
-  display:flex; flex-direction:column; justify-content:center; gap:8px; box-shadow:0 12px 28px rgba(7,23,103,.12); }
-.flip .fr{ background:linear-gradient(140deg,var(--marino),#1B3AA8); color:#fff; cursor:pointer; }
-.flip .fr .q{ font-size:19px; font-weight:900; line-height:1.3; }
-.flip .fr .h{ font-size:13px; font-weight:800; opacity:.8; letter-spacing:.05em; text-transform:uppercase; }
-.flip .bk{ background:#fff; border:2px solid var(--linea); transform:rotateY(180deg); font-size:16px; line-height:1.45; cursor:pointer; }
-.flip .bk b{ color:var(--marino); }
-.flip.mal .fr{ background:linear-gradient(140deg,#B0002F,var(--fucsia)); }
-
-/* ---------- cuadro de doble entrada interactivo ---------- */
-.banco{ display:flex; flex-wrap:wrap; gap:8px; padding:12px; background:#fff; border:2px dashed var(--linea); border-radius:14px; min-height:60px; }
-.ficha{ font-weight:800; font-size:15.5px; border:2px solid var(--marino); color:var(--marino); background:#fff; border-radius:10px;
-  padding:8px 12px; touch-action:none; user-select:none; }
-.ficha.sel{ background:var(--marino); color:#fff; transform:translateY(-2px); box-shadow:0 8px 16px rgba(7,23,103,.25); }
+/* ---------- cuadro de doble entrada ---------- */
+.banco{ display:flex; flex-wrap:wrap; gap:.4em; padding:.5em; background:#fff; border:.1em dashed var(--linea); border-radius:.6em; min-height:2.4em; }
+.ficha{ font-weight:800; font-size:.72em; border:.14em solid var(--marino); color:var(--marino); background:#fff; border-radius:.55em; padding:.35em .65em; touch-action:none; user-select:none; }
+.ficha.sel{ background:var(--marino); color:#fff; transform:translateY(-2px); box-shadow:0 .4em .8em rgba(7,23,103,.25); }
 .ficha.bien{ border-color:var(--verde); color:#075E62; background:#E7F6F6; cursor:default; }
 .ficha.temblor{ animation:temb .4s; border-color:var(--fucsia); }
 @keyframes temb{ 25%{ transform:translateX(-6px);} 50%{ transform:translateX(6px);} 75%{ transform:translateX(-3px);} }
-.doble{ display:grid; grid-template-columns:150px minmax(0,1fr) minmax(0,1fr); gap:8px; margin-top:12px; }
-.doble .cab{ background:var(--marino); color:#fff; font-weight:900; border-radius:10px; padding:10px; text-align:center; font-size:15px; }
-.doble .lat{ background:var(--fucsia); color:#fff; font-weight:900; border-radius:10px; padding:10px; display:flex; align-items:center;
-  justify-content:center; text-align:center; font-size:15px; }
-.doble .celda{ background:#fff; border:2px dashed #B9C2D8; border-radius:12px; min-height:96px; padding:8px; display:flex;
-  flex-wrap:wrap; gap:6px; align-content:flex-start; transition:background .2s, border-color .2s; }
-.doble .celda.encima{ background:#F1F9FF; border-color:var(--celeste); }
-.doble .vacia{ background:transparent; }
-@media (max-width:700px){ .doble{ grid-template-columns:90px minmax(0,1fr) minmax(0,1fr); } .doble .cab, .doble .lat{ font-size:12.5px; padding:6px; } .ficha{ font-size:13.5px; padding:6px 9px; } }
-.eco{ margin-top:10px; min-height:26px; font-weight:800; font-size:16px; }
-.eco.ok{ color:var(--verde); } .eco.no{ color:#B0002F; }
+.doble{ flex:1; min-height:0; display:grid; grid-template-columns:5.6em minmax(0,1fr) minmax(0,1fr); grid-template-rows:auto 1fr 1fr; gap:.35em; }
+.doble .hd{ background:var(--marino); color:#fff; font-weight:900; border-radius:.5em; padding:.3em; text-align:center; font-size:.78em; }
+.doble .lat{ background:var(--fucsia); color:#fff; font-weight:900; border-radius:.5em; padding:.3em; display:flex; align-items:center; justify-content:center; text-align:center; font-size:.72em; }
+.doble .celda{ background:#fff; border:.12em dashed #B9C2D8; border-radius:.6em; padding:.3em; display:flex; flex-wrap:wrap; gap:.3em; align-content:flex-start; }
+.eco{ min-height:1.3em; font-weight:800; font-size:.78em; } .eco.ok{ color:var(--verde); } .eco.no{ color:#B0002F; }
 
-/* ---------- datos del caso (editables) ---------- */
-.datos{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
-@media (max-width:900px){ .datos{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+/* ---------- pasos, gráfica, decisión ---------- */
+.pasos{ display:grid; gap:.3em; }
+.paso{ display:flex; gap:.5em; align-items:center; background:#fff; border:.1em solid var(--linea); border-radius:.6em; padding:.3em .6em; font-size:.9em; font-weight:800; color:var(--marino);
+  opacity:.15; transform:translateX(-.5em) rotateY(18deg); transition:opacity .45s, transform .45s; }
+.paso.ve{ opacity:1; transform:none; }
+.paso .n{ flex:none; width:1.4em; height:1.4em; border-radius:50%; background:var(--fucsia); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.8em; }
+.paso small{ display:block; font-size:.65em; color:var(--gris); font-weight:700; line-height:1.2; }
+.btn-p{ font-weight:900; font-size:.65em; border:0; border-radius:.6em; padding:.5em .9em; background:var(--fucsia); color:#fff; }
+.btn-p.sec{ background:#fff; color:var(--marino); border:.14em solid var(--linea); } .btn-p:disabled{ opacity:.45; }
+.grande{ font-size:1.7em; font-weight:900; color:var(--fucsia); text-align:center; line-height:1.1; }
+.graf-card{ display:flex; flex-direction:column; min-height:0; transition:transform .2s; padding:.4em .6em; }
+.graf{ flex:1; min-height:0; width:100%; display:block; }
+.graf .eje{ stroke:#8A93AC; stroke-width:1.5; } .graf .reja{ stroke:#E3E8F3; stroke-width:1; }
+.graf text{ font-family:'Nunito',sans-serif; font-size:14px; fill:var(--gris); font-weight:800; }
+.leyenda{ display:flex; gap:1em; flex-wrap:wrap; font-size:.7em; font-weight:800; }
+.leyenda i{ display:inline-block; width:1.5em; height:.28em; border-radius:2px; vertical-align:middle; margin-right:.4em; }
+.desliz{ display:flex; align-items:center; gap:.6em; font-weight:900; font-size:.9em; } .desliz input{ flex:1; accent-color:var(--fucsia); height:1.4em; }
+.lectura{ display:grid; gap:.3em; }
+.lectura div{ display:flex; justify-content:space-between; align-items:baseline; gap:.5em; background:#fff; border:.1em solid var(--linea); border-radius:.6em; padding:.25em .6em; font-size:.85em; font-weight:800; }
+.lectura b{ font-size:1.1em; color:var(--marino); white-space:nowrap; } .lectura .gana{ border-color:var(--verde); background:#E7F6F6; }
+.vered{ border-radius:.8em; padding:.6em .9em; color:#fff; background:linear-gradient(135deg,var(--marino),#1E43B8); box-shadow:0 .6em 1.4em rgba(7,23,103,.25); }
+.vered h3{ margin:0 0 .15em; font-size:1.1em; } .vered p{ margin:0; font-size:.82em; line-height:1.35; }
+.vered.b{ background:linear-gradient(135deg,#9C0038,var(--fucsia)); } .vered.igual{ background:linear-gradient(135deg,#0B6F74,var(--aqua)); }
+.check{ display:flex; flex-wrap:wrap; gap:.35em; }
+.check span{ font-size:.66em; font-weight:800; background:#E7F6F6; color:#075E62; border:.12em solid var(--verde); border-radius:99px; padding:.15em .7em; }
+@media (max-width:700px){ .barra .tt{ display:none; } .barra{ gap:8px; padding:7px 10px; } .barra img{ height:24px; } .barra .cu{ flex:1; text-align:right; }
+  .barra .btn{ font-size:13px; padding:6px 9px; } .pie .eq,.pie .pts{ display:none; } .nav{ flex:1; } }
+
+/* ---------- panel de datos ---------- */
 .dato{ background:#fff; border:2px solid var(--linea); border-radius:12px; padding:8px 10px; }
 .dato label{ display:block; font-size:12px; font-weight:900; letter-spacing:.05em; text-transform:uppercase; color:var(--gris); }
 .dato input{ width:100%; border:0; outline:0; font-size:20px; font-weight:900; color:var(--marino); background:transparent; padding:2px 0; }
 .dato.a{ border-color:#9BB0EE; } .dato.b{ border-color:#F5A3BC; }
-.aviso{ font-size:14px; color:var(--gris); font-weight:700; margin:6px 0 0; }
-.aviso b{ color:var(--fucsia); }
-
-/* ---------- pilas 3D (costo variable unitario y costo total) ---------- */
-.torre-esc{ perspective:900px; display:flex; justify-content:center; align-items:flex-end; gap:46px; padding:20px 10px 10px; min-height:260px; }
-.torre{ display:flex; flex-direction:column-reverse; align-items:center; transform:rotateX(14deg) rotateY(-24deg); transform-style:preserve-3d; }
-.bloque{ position:relative; width:120px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900;
-  font-size:14px; text-align:center; transform-style:preserve-3d; transition:height .5s; line-height:1.15; padding:2px 4px; }
-.bloque::before{ content:''; position:absolute; left:0; right:0; top:0; height:26px; transform-origin:top; transform:rotateX(90deg);
-  background:inherit; filter:brightness(1.25); }
-.bloque::after{ content:''; position:absolute; top:0; bottom:0; right:-26px; width:26px; transform-origin:left; transform:rotateY(90deg);
-  background:inherit; filter:brightness(.75); }
-.torre .nom{ margin-top:12px; font-weight:900; color:var(--marino); font-size:15px; text-align:center; }
-
-/* ---------- gráfica ---------- */
-.graf-card{ transition:transform .2s; transform-style:preserve-3d; }
-.graf{ width:100%; height:auto; display:block; }
-.graf .eje{ stroke:#8A93AC; stroke-width:1.5; }
-.graf .reja{ stroke:#E3E8F3; stroke-width:1; }
-.graf text{ font-family:'Nunito',sans-serif; font-size:12px; fill:var(--gris); font-weight:700; }
-.leyenda{ display:flex; gap:14px; flex-wrap:wrap; font-size:14px; font-weight:800; margin-top:6px; }
-.leyenda i{ display:inline-block; width:22px; height:4px; border-radius:2px; vertical-align:middle; margin-right:6px; }
-.desliz{ display:flex; align-items:center; gap:12px; margin-top:10px; font-weight:800; }
-.desliz input{ flex:1; accent-color:var(--fucsia); }
-.lectura{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:8px; }
-.lectura div{ background:var(--humo); border-radius:10px; padding:7px 9px; font-size:14px; font-weight:700; }
-.lectura b{ display:block; font-size:18px; color:var(--marino); }
-.gana{ outline:3px solid var(--verde); background:#E7F6F6 !important; }
-
-/* ---------- pasos que se descubren ---------- */
-.pasos{ display:grid; gap:8px; }
-.paso{ display:flex; gap:12px; align-items:center; background:#fff; border:2px solid var(--linea); border-radius:12px; padding:10px 14px;
-  font-size:clamp(16px,1.6vw,20px); font-weight:800; color:var(--marino); opacity:.18; transform:translateX(-14px) rotateY(18deg);
-  transition:.45s; }
-.paso.ve{ opacity:1; transform:none; }
-.paso .n{ flex:none; width:30px; height:30px; border-radius:50%; background:var(--fucsia); color:#fff; display:flex; align-items:center;
-  justify-content:center; font-size:15px; }
-.paso small{ display:block; font-size:14px; color:var(--gris); font-weight:700; }
-.btn-p{ font-weight:900; font-size:15px; border:0; border-radius:10px; padding:10px 16px; background:var(--fucsia); color:#fff; }
-.btn-p.sec{ background:#fff; color:var(--marino); border:2px solid var(--linea); }
-
-/* ---------- veredicto ---------- */
-.vered{ border-radius:18px; padding:18px 20px; color:#fff; background:linear-gradient(135deg,var(--marino),#1E43B8);
-  box-shadow:0 18px 40px rgba(7,23,103,.25); transform:rotateX(8deg); transform-origin:top; }
-.vered h3{ margin:0 0 6px; font-size:24px; }
-.vered p{ margin:0; font-size:17px; line-height:1.5; }
-.vered.b{ background:linear-gradient(135deg,#9C0038,var(--fucsia)); }
-.vered.igual{ background:linear-gradient(135deg,#0B6F74,var(--aqua)); }
-
-/* ---------- lista de verificación ---------- */
-.check{ display:grid; gap:8px; }
-.check label{ display:flex; gap:12px; align-items:flex-start; background:#fff; border:2px solid var(--linea); border-radius:12px;
-  padding:10px 14px; font-size:17px; line-height:1.4; cursor:pointer; transition:.2s; }
-.check input{ width:22px; height:22px; flex:none; accent-color:var(--verde); margin-top:2px; }
-.check label.ok{ border-color:var(--verde); background:#E7F6F6; }
-.barra-ok{ height:10px; border-radius:99px; background:#E3E8F3; overflow:hidden; margin:10px 0; }
-.barra-ok i{ display:block; height:100%; width:0; background:linear-gradient(90deg,var(--aqua),var(--verde)); transition:width .4s; }
-
-@media (max-width:700px){
-  .barra{ gap:8px; padding:7px 10px; } .barra .tt{ display:none; } .barra img{ height:24px; }
-  .barra .cu{ flex:1; text-align:right; } .barra .btn{ font-size:13px; padding:6px 9px; }
-  .pie .eq{ display:none; } .pie .pts{ display:none; } .nav{ flex:1; }
-  .lam{ padding:14px 14px 18px; }
-}
+.datos{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; } @media (max-width:900px){ .datos{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 </style>
 </head>
 <body>
@@ -225,233 +149,127 @@ table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; font-weight:8
   <div class="barra">
     <img src="marca/certus-azul.png" alt="Certus">
     <span class="tt"><small>Pensamiento Lógico · Proyecto AA1</small>Pautas para el avance 2 y 3</span>
-    <span class="cu" id="cu">1 / 1</span>
-    <button class="btn" id="btnDatos" type="button" title="Ver y cambiar los datos del caso">✎ Datos del caso</button>
+    <button class="btn cron" id="cron" type="button" title="Cronómetro de 10 minutos: toca para reiniciar">⏱ 0:00 / 10:00</button>
+    <span class="cu" id="cu">1 / 7</span>
+    <button class="btn" id="btnDatos" type="button" title="Cambiar los datos del caso">✎ Datos</button>
     <button class="btn" id="btnFull" type="button" title="Pantalla completa">⛶</button>
   </div>
 
   <div class="escena" id="escena">
 
-    <!-- 1. portada -->
-    <section class="lam" data-et="Portada">
+    <!-- 1. portada y lo que piden (1 min) -->
+    <section class="lam centro" data-et="Qué piden">
+      <div class="cab"><span class="et">Proyecto AA1 · Avance 2 y 3</span><span class="min">⏱ 1 min</span></div>
       <div class="portada">
-        <div>
-          <span class="et">Proyecto AA1 · Avance 2 y 3</span>
-          <h1 class="tit">¿Cuánto cuesta hacer una caja y cómo le pagamos al asesor?</h1>
-          <p class="sub">Pautas para clasificar los costos, armar los modelos de costo total, ingreso y utilidad, y elegir la forma de pago del asesor comercial con el punto de indiferencia.</p>
-          <div class="clave azul"><b>Cómo usar esta presentación:</b> trae los datos de tu caso. Con el botón <b>✎ Datos del caso</b> los cambias y todas las fórmulas, la gráfica y la decisión se recalculan solas.</div>
-          <p class="aviso">El ejemplo usa <b>datos ficticios</b> de un taller de cajas. Tu informe debe usar los datos de tu propio caso.</p>
+        <div style="display:flex;flex-direction:column;gap:.5em">
+          <h1 class="tit" style="font-size:2em">¿Cuánto cuesta hacer una caja y cómo le pagamos al asesor?</h1>
+          <div class="card"><h3><span class="num">1</span>Clasifica los costos</h3><p>Cuadro de doble entrada + 3 costos que sugieras para elaborar una caja.</p></div>
+          <div class="card"><h3><span class="num">2</span>Modelos matemáticos</h3><p>Costo total, ingreso y utilidad para cada forma de pago del asesor.</p></div>
+          <div class="card"><h3><span class="num">3</span>Decide</h3><p>¿Con cuántas cajas cuestan lo mismo? Con 90 cajas al mes, ¿qué opción conviene?</p></div>
         </div>
-        <div>
-          <div class="cubo-esc"><div class="cubo" title="Pasa el mouse para detenerla">
-            <div class="cara c1">CT<small>Costo total</small></div>
-            <div class="cara c2">I<small>Ingreso</small></div>
-            <div class="cara c3">U<small>Utilidad</small></div>
-            <div class="cara c4">q<small>cajas al mes</small></div>
-            <div class="cara c5"></div>
-            <div class="cara c6"></div>
-          </div></div>
-          <div class="sombra"></div>
-        </div>
+        <div><div class="cubo-esc"><div class="cubo">
+          <div class="cara c1">CT<small>Costo total</small></div><div class="cara c2">I<small>Ingreso</small></div>
+          <div class="cara c3">U<small>Utilidad</small></div><div class="cara c4">q<small>cajas</small></div>
+          <div class="cara c5"></div><div class="cara c6"></div></div></div><div class="sombra"></div></div>
       </div>
     </section>
 
-    <!-- 2. qué piden -->
-    <section class="lam" data-et="Qué piden">
-      <span class="et azul">Lo que pide el avance</span>
-      <h2 class="tit">Dos preguntas, cuatro entregables</h2>
-      <p class="sub">Toca cada tarjeta para ver qué tienes que entregar.</p>
-      <div class="grid2">
-        <div class="flip" tabindex="0"><div class="in">
-          <div class="fr"><span class="h">Pregunta 2 · parte 1</span><span class="q">Clasifica los costos y gastos del caso en un cuadro de doble entrada</span></div>
-          <div class="bk">Cada concepto va en una celda: <b>fijo o variable</b> (columnas) y <b>producción u operativo</b> (filas). Con su importe.</div>
-        </div></div>
-        <div class="flip" tabindex="0"><div class="in">
-          <div class="fr"><span class="h">Pregunta 2 · parte 2</span><span class="q">Sugiere otros costos importantes para elaborar una caja</span></div>
-          <div class="bk">Al menos <b>tres</b>, propios del rubro, con una <b>justificación</b> y su clasificación en el mismo cuadro.</div>
-        </div></div>
-        <div class="flip" tabindex="0"><div class="in">
-          <div class="fr"><span class="h">Pregunta 2 · parte 3</span><span class="q">Modelos de Costo Total, Ingreso y Utilidad para las dos formas de pago</span></div>
-          <div class="bk">Seis fórmulas: CT, I y U para la <b>opción A (sueldo fijo)</b> y para la <b>opción B (comisión)</b>, con <b>q</b> definida.</div>
-        </div></div>
-        <div class="flip" tabindex="0"><div class="in">
-          <div class="fr"><span class="h">Pregunta 3</span><span class="q">Punto de indiferencia y decisión con la venta estimada</span></div>
-          <div class="bk">Igualar los dos <b>costos totales</b>, resolver paso a paso, y decidir con las <b>90 cajas</b> estimadas, justificando con números.</div>
-        </div></div>
+    <!-- 2. clasificar (1 min) -->
+    <section class="lam centro" data-et="Clasificar">
+      <div class="cab"><span class="et">Pauta 1 · Clasificar</span><span class="min">⏱ 1 min</span></div>
+      <h2 class="tit">Hazle 2 preguntas a cada pago</h2>
+      <div class="g2">
+        <div class="card"><h3><span class="num">1</span>¿Cambia si hago más cajas?</h3>
+          <p><span class="chip v">Sí → Variable</span> cartón, pegamento, comisión por caja.</p>
+          <p><span class="chip f">No → Fijo</span> alquiler, sueldo fijo.</p></div>
+        <div class="card"><h3><span class="num">2</span>¿Interviene en fabricar la caja?</h3>
+          <p><span class="chip p">Sí → Producción</span> materiales, taller donde se arma.</p>
+          <p><span class="chip o">No → Operativo</span> asesor, publicidad, limpieza.</p></div>
       </div>
+      <div class="clave"><b>Truco:</b> el pago al asesor comercial es <b>operativo</b> en las dos opciones (vende, no fabrica). Solo cambia si es <b>fijo</b> (sueldo) o <b>variable</b> (comisión por caja).</div>
+      <div class="clave azul"><b>Ejemplo:</b> cartón de cada caja → <span class="chip v">Variable</span> <span class="chip p">Producción</span> · comisión por caja → <span class="chip v">Variable</span> <span class="chip o">Operativo</span> · alquiler del taller → <span class="chip f">Fijo</span> <span class="chip p">Producción</span></div>
     </section>
 
-    <!-- 3. pauta: dos preguntas para clasificar -->
-    <section class="lam" data-et="Pauta 1">
-      <span class="et">Pauta 1 · Clasificar</span>
-      <h2 class="tit">Hazle dos preguntas a cada pago</h2>
-      <div class="grid2">
-        <div class="card">
-          <h3>1. ¿Cambia si hago más cajas?</h3>
-          <p><span class="chip v">Sí → Variable</span> se paga por cada caja: cartón, pegamento, comisión por caja.</p>
-          <p><span class="chip f">No → Fijo</span> se paga igual cada mes, aunque no haga ninguna: alquiler, sueldo fijo.</p>
-        </div>
-        <div class="card">
-          <h3>2. ¿Interviene en hacer la caja?</h3>
-          <p><span class="chip p">Sí → Producción (costo)</span> sin él no hay caja: materiales, taller donde se arma.</p>
-          <p><span class="chip o">No → Operativo (gasto)</span> sostiene el negocio y la venta: asesor comercial, publicidad, limpieza.</p>
-        </div>
-      </div>
-      <div class="clave"><b>Truco:</b> el pago al asesor comercial es <b>operativo</b> en las dos opciones (vende, no fabrica). Lo que cambia es si es <b>fijo</b> (sueldo) o <b>variable</b> (comisión por caja).</div>
-      <p class="sub" style="margin-top:6px">Ponte a prueba: toca cada tarjeta y piensa la respuesta antes de girarla.</p>
-      <div class="grid3">
-        <div class="flip" tabindex="0"><div class="in"><div class="fr"><span class="h">¿Cómo lo clasificas?</span><span class="q">Cartón corrugado de cada caja</span></div>
-          <div class="bk"><span><span class="chip v">Variable</span> <span class="chip p">Producción</span></span>Cada caja necesita su cartón: si haces el doble de cajas, gastas el doble.</div></div></div>
-        <div class="flip" tabindex="0"><div class="in"><div class="fr"><span class="h">¿Cómo lo clasificas?</span><span class="q">Comisión del asesor por caja vendida</span></div>
-          <div class="bk"><span><span class="chip v">Variable</span> <span class="chip o">Operativo</span></span>Depende de cuántas cajas vende, pero no interviene en fabricarlas.</div></div></div>
-        <div class="flip" tabindex="0"><div class="in"><div class="fr"><span class="h">¿Cómo lo clasificas?</span><span class="q">Alquiler del taller</span></div>
-          <div class="bk"><span><span class="chip f">Fijo</span> <span class="chip p">Producción</span></span>Se paga igual cada mes y ahí se fabrican las cajas.</div></div></div>
-      </div>
-    </section>
-
-    <!-- 4. cuadro de doble entrada -->
+    <!-- 3. cuadro interactivo + costos sugeridos (2 min) -->
     <section class="lam" data-et="Cuadro">
-      <span class="et">Pauta 1 · Practica</span>
-      <h2 class="tit">Arma el cuadro de doble entrada</h2>
-      <p class="sub">Toca un concepto y luego la celda donde va (en computadora también puedes arrastrarlo).</p>
-      <div class="banco" id="banco"></div>
-      <div class="doble" id="doble">
-        <div class="vacia"></div><div class="cab">Fijo</div><div class="cab">Variable</div>
-        <div class="lat">Producción (costo)</div><div class="celda" data-c="fp"></div><div class="celda" data-c="vp"></div>
-        <div class="lat">Operativo (gasto)</div><div class="celda" data-c="fo"></div><div class="celda" data-c="vo"></div>
-      </div>
-      <div class="eco" id="ecoCuadro"></div>
-    </section>
-
-    <!-- 5. otros costos -->
-    <section class="lam" data-et="Otros costos">
-      <span class="et">Pauta 2 · Sugerir costos</span>
-      <h2 class="tit">Otros costos de elaborar una caja</h2>
-      <p class="sub">Elige al menos tres, explica <b>por qué</b> son importantes y ponlos en el cuadro. Toca cada tarjeta para ver un ejemplo de justificación.</p>
-      <div class="grid3" id="otros"></div>
-      <div class="clave azul"><b>Cómo se escribe la justificación:</b> «Sugerimos la <b>tinta de impresión</b> (variable, producción), porque cada caja lleva el logo del cliente impreso y su consumo crece con la cantidad de cajas.»</div>
-    </section>
-
-    <!-- 6. datos y costo variable unitario -->
-    <section class="lam" data-et="CVu">
-      <span class="et">Pauta 3 · Costo variable unitario</span>
-      <h2 class="tit">Primero, lo que cuesta una sola caja</h2>
-      <div class="grid2">
-        <div>
-          <div class="fml">CVu = materia prima + insumos por caja<small>todo lo que se gasta por cada caja que se fabrica</small></div>
-          <div class="fml" id="fCvu">—</div>
-          <div class="clave"><b>Ojo:</b> la comisión del asesor <b>no</b> entra en este CVu, porque es un gasto operativo. Se suma recién en la opción B.</div>
-          <p class="aviso">Cambia los importes con <b>✎ Datos del caso</b>: la torre crece o se achica.</p>
-        </div>
-        <div class="card">
-          <div class="torre-esc" id="torreCvu"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. modelos -->
-    <section class="lam" data-et="Modelos">
-      <span class="et">Pauta 4 · Modelos matemáticos</span>
-      <h2 class="tit">CT, I y U para cada forma de pago</h2>
-      <p class="sub" id="defQ">q = cantidad de cajas elaboradas y vendidas en el mes.</p>
-      <div class="grid2">
-        <div class="card" style="border-color:#9BB0EE">
-          <h3>Opción A · Sueldo fijo</h3>
-          <p class="aviso" style="margin-top:0">El sueldo es <b>fijo</b>: se suma al costo fijo.</p>
-          <div class="fml" id="fCtA">—</div><div class="fml" id="fIA">—</div><div class="fml" id="fUA">—</div>
-        </div>
-        <div class="card" style="border-color:#F5A3BC">
-          <h3>Opción B · Comisión por caja</h3>
-          <p class="aviso" style="margin-top:0">La comisión es <b>variable</b>: se suma al costo por caja.</p>
-          <div class="fml" id="fCtB">—</div><div class="fml" id="fIB">—</div><div class="fml" id="fUB">—</div>
-        </div>
-      </div>
-      <div class="clave verde"><b>Revisa tu modelo:</b> el ingreso es el mismo en las dos opciones (el precio no cambia). Lo que cambia es el costo total, por eso las dos rectas de costo tienen distinta pendiente.</div>
-    </section>
-
-    <!-- 8. punto de indiferencia paso a paso -->
-    <section class="lam" data-et="Indiferencia">
-      <span class="et">Pauta 5 · Punto de indiferencia</span>
-      <h2 class="tit">¿Con cuántas cajas las dos opciones cuestan lo mismo?</h2>
-      <div class="grid2">
-        <div>
-          <div class="pasos" id="pasos"></div>
-          <div style="display:flex; gap:8px; margin-top:10px">
-            <button class="btn-p" id="btnPaso" type="button">Siguiente paso ▸</button>
-            <button class="btn-p sec" id="btnTodos" type="button">Ver todo</button>
+      <div class="cab"><span class="et">Pauta 1 · Practica</span><span class="min">⏱ 2 min</span></div>
+      <div class="g2" style="flex:1;min-height:0">
+        <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+          <h2 class="tit" style="font-size:1.15em">Arma el cuadro: toca un concepto y su celda</h2>
+          <div class="banco" id="banco"></div>
+          <div class="doble" id="doble">
+            <div></div><div class="hd">Fijo</div><div class="hd">Variable</div>
+            <div class="lat">Producción (costo)</div><div class="celda" data-c="fp"></div><div class="celda" data-c="vp"></div>
+            <div class="lat">Operativo (gasto)</div><div class="celda" data-c="fo"></div><div class="celda" data-c="vo"></div>
           </div>
+          <div class="eco" id="ecoCuadro"></div>
         </div>
-        <div>
-          <div class="clave"><b>Se igualan los costos totales</b>, no las utilidades ni los ingresos: la pregunta es cuál forma de pago significa <b>menor gasto</b>.</div>
-          <div class="clave azul" id="interp">—</div>
-          <div class="clave verde"><b>Si sale decimal:</b> déjalo con dos decimales y explícalo. Por ejemplo, 82.5 cajas significa que desde la caja 83 cambia la opción que conviene.</div>
+        <div style="display:flex;flex-direction:column;gap:.4em;min-height:0">
+          <h2 class="tit" style="font-size:1.15em">Sugiere al menos 3 costos más</h2>
+          <div class="card"><h3>Tinta del logo <span class="chip v">Variable</span> <span class="chip p">Producción</span></h3><p>Cada caja impresa gasta tinta: crece con la cantidad.</p></div>
+          <div class="card"><h3>Mantenimiento de la cortadora <span class="chip f">Fijo</span> <span class="chip p">Producción</span></h3><p>Se paga cada mes para que corte bien, se hagan pocas o muchas.</p></div>
+          <div class="card"><h3>Embalaje y envío <span class="chip v">Variable</span> <span class="chip o">Operativo</span></h3><p>Se paga por pedido entregado: es parte de vender.</p></div>
+          <div class="clave azul"><b>Cómo se justifica:</b> «Sugerimos <b>X</b> (variable, producción) porque …»</div>
         </div>
       </div>
     </section>
 
-    <!-- 9. gráfica -->
+    <!-- 4. modelos (1,5 min) -->
+    <section class="lam centro" data-et="Modelos">
+      <div class="cab"><span class="et">Pauta 2 · Modelos</span><span class="min">⏱ 1,5 min</span></div>
+      <h2 class="tit">CT, I y U para cada forma de pago</h2>
+      <div class="fml" id="fCvu" style="font-size:1.1em">—</div>
+      <p class="sub">q = cantidad de cajas elaboradas y vendidas en el mes · la comisión <b>no</b> entra en el CVu.</p>
+      <div class="g2">
+        <div class="card" style="border-color:#9BB0EE"><h3>Opción A · Sueldo fijo <span class="chip f">sueldo = costo fijo</span></h3>
+          <div class="fml" id="fCtA">—</div><div class="fml" id="fIA">—</div><div class="fml" id="fUA">—</div></div>
+        <div class="card" style="border-color:#F5A3BC"><h3>Opción B · Comisión <span class="chip v">comisión = costo variable</span></h3>
+          <div class="fml" id="fCtB">—</div><div class="fml" id="fIB">—</div><div class="fml" id="fUB">—</div></div>
+      </div>
+      <div class="clave verde">El ingreso es igual en las dos opciones. Lo que cambia es el costo total: por eso las rectas de costo tienen distinta pendiente.</div>
+    </section>
+
+    <!-- 5. indiferencia (2 min) -->
+    <section class="lam centro" data-et="Indiferencia">
+      <div class="cab"><span class="et">Pauta 3 · Punto de indiferencia</span><span class="min">⏱ 2 min</span></div>
+      <h2 class="tit">¿Con cuántas cajas cuestan lo mismo?</h2>
+      <div class="g2">
+        <div><div class="pasos" id="pasos"></div>
+          <div style="display:flex;gap:.5em;margin-top:.5em"><button class="btn-p" id="btnPaso" type="button">Siguiente paso ▸</button><button class="btn-p sec" id="btnTodos" type="button">Ver todo</button></div></div>
+        <div style="display:flex;flex-direction:column;gap:.45em">
+          <div class="clave"><b>Se igualan los costos totales</b> (no los ingresos ni las utilidades): se busca el menor gasto.</div>
+          <div class="grande" id="gran">—</div>
+          <div class="clave azul" id="interp">—</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. gráfica (1 min) -->
     <section class="lam" data-et="Gráfica">
-      <span class="et">Pauta 5 · Visualízalo</span>
-      <h2 class="tit">Las dos rectas de costo se cruzan en el punto de indiferencia</h2>
-      <div class="grid2">
+      <div class="cab"><span class="et">Pauta 3 · Visualízalo</span><span class="min">⏱ 1 min</span><h2 class="tit" style="font-size:1.1em">Las rectas de costo se cruzan en el punto de indiferencia</h2></div>
+      <div class="g2 relleno" style="grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)">
         <div class="card graf-card" id="grafCard">
-          <svg class="graf" id="graf" viewBox="0 0 560 360" role="img" aria-label="Gráfica de costo total de las opciones A y B e ingreso"></svg>
+          <svg class="graf" id="graf" viewBox="0 0 560 360" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gráfica de costo total de las opciones A y B e ingreso"></svg>
           <div class="leyenda"><span><i style="background:#2847C9"></i>CT opción A</span><span><i style="background:#FC0045"></i>CT opción B</span><span><i style="background:#13A8AF"></i>Ingreso</span></div>
         </div>
-        <div>
+        <div style="display:flex;flex-direction:column;gap:.5em;justify-content:center">
           <div class="desliz"><span>q =</span><input type="range" id="slQ" min="0" max="200" step="1"><b id="vQ">0</b><span>cajas</span></div>
-          <div class="lectura">
-            <div id="lA">CT A<b>—</b></div><div id="lB">CT B<b>—</b></div><div id="lI">Ingreso<b>—</b></div>
-          </div>
-          <div class="clave" id="lQuien" style="margin-top:12px">—</div>
-          <p class="aviso">Mueve el control: a la izquierda del cruce gana una opción y a la derecha la otra.</p>
+          <div class="lectura"><div id="lA">CT A<b>—</b></div><div id="lB">CT B<b>—</b></div><div id="lI">Ingreso<b>—</b></div></div>
+          <div class="clave" id="lQuien">—</div>
+          <div class="clave azul">Mueve el control: a un lado del cruce conviene una opción y al otro lado, la otra.</div>
         </div>
       </div>
     </section>
 
-    <!-- 10. decisión -->
-    <section class="lam" data-et="Decisión">
-      <span class="et">Pauta 6 · Decidir y justificar</span>
-      <h2 class="tit" id="titDec">Con la venta estimada, ¿qué opción conviene?</h2>
-      <div class="grid2">
-        <div>
-          <table class="t" id="tDec"></table>
-          <div class="torre-esc" id="torreCt" style="min-height:230px"></div>
-        </div>
-        <div>
-          <div class="vered" id="vered"><h3>—</h3><p>—</p></div>
-          <div class="clave azul" style="margin-top:14px"><b>Plantilla para justificar:</b><br><span id="plantilla">—</span></div>
-        </div>
+    <!-- 7. decisión y lista (1,5 min) -->
+    <section class="lam centro" data-et="Decisión">
+      <div class="cab"><span class="et">Pauta 4 · Decidir y justificar</span><span class="min">⏱ 1,5 min</span></div>
+      <h2 class="tit" id="titDec">—</h2>
+      <div class="g2">
+        <div style="display:flex;flex-direction:column;gap:.45em"><table class="t" id="tDec"></table><div class="vered" id="vered"><h3>—</h3><p>—</p></div></div>
+        <div style="display:flex;flex-direction:column;gap:.45em"><div class="clave azul"><b>Plantilla para justificar:</b><br><span id="plantilla">—</span></div></div>
       </div>
-    </section>
-
-    <!-- 11. errores frecuentes -->
-    <section class="lam" data-et="Errores">
-      <span class="et">Antes de entregar</span>
-      <h2 class="tit">Cinco errores que restan puntos</h2>
-      <p class="sub">Toca cada error para ver cómo evitarlo.</p>
-      <div class="grid3">
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 1</span><span class="q">Sumar la comisión al costo fijo</span></div>
-          <div class="bk">La comisión depende de cuántas cajas se venden: va <b>junto al costo por caja</b>, multiplicada por q.</div></div></div>
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 2</span><span class="q">Igualar las utilidades o los ingresos</span></div>
-          <div class="bk">Para el punto de indiferencia se igualan los <b>costos totales</b>: CT<sub>A</sub>(q) = CT<sub>B</sub>(q).</div></div></div>
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 3</span><span class="q">No definir qué es q</span></div>
-          <div class="bk">Escribe siempre: «q es la cantidad de <b>cajas elaboradas y vendidas en el mes</b>».</div></div></div>
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 4</span><span class="q">Poner solo el resultado</span></div>
-          <div class="bk">Se califica el <b>procedimiento</b>: plantea la ecuación, pasa términos y despeja q línea por línea.</div></div></div>
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 5</span><span class="q">Decidir sin cifras</span></div>
-          <div class="bk">La decisión cita el <b>punto de indiferencia</b>, los <b>dos costos totales</b> con la venta estimada y la <b>diferencia</b> en soles.</div></div></div>
-        <div class="flip mal" tabindex="0"><div class="in"><div class="fr"><span class="h">Error 6</span><span class="q">Poner la comisión dentro del CVu de producción</span></div>
-          <div class="bk">El CVu de producción es solo materia prima e insumos. La comisión es un <b>gasto operativo variable</b>.</div></div></div>
-      </div>
-    </section>
-
-    <!-- 12. lista de verificación -->
-    <section class="lam" data-et="Checklist">
-      <span class="et aqua">Lista de verificación</span>
-      <h2 class="tit">¿Tu informe tiene todo esto?</h2>
-      <div class="barra-ok"><i id="barraOk"></i></div>
-      <div class="check" id="check"></div>
+      <div class="check"><span>✔ q definida</span><span>✔ 6 modelos</span><span>✔ ecuación paso a paso</span><span>✔ decisión con cifras</span><span>✔ 3 costos sugeridos</span><span>✔ anexos</span></div>
     </section>
 
   </div>
@@ -464,16 +282,14 @@ table.t td.n{ text-align:right; font-variant-numeric:tabular-nums; font-weight:8
   </div>
 </div>
 
-<!-- panel de datos del caso -->
 <div id="panel" hidden style="position:fixed; inset:0; z-index:50; background:rgba(11,27,63,.55); display:flex; align-items:center; justify-content:center; padding:16px">
-  <div class="card" style="width:min(900px,100%); max-height:90vh; overflow:auto">
-    <span class="et">Datos del caso</span>
-    <h2 class="tit" style="font-size:24px">Escribe los importes de tu caso</h2>
+  <div style="background:#fff; border-radius:16px; padding:18px; width:min(900px,100%); max-height:90vh; overflow:auto">
+    <h2 style="margin:0 0 4px; color:var(--marino); font-size:24px">Datos del caso</h2>
+    <p style="margin:0 0 12px; color:var(--gris); font-weight:700">Los valores iniciales son un <b>ejemplo ficticio</b>. Se guardan solo en este equipo.</p>
     <div class="datos" id="datos"></div>
-    <p class="aviso">Los valores iniciales son un <b>ejemplo ficticio</b>. Se guardan solo en este equipo.</p>
     <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:12px">
-      <button class="btn-p sec" id="btnEjemplo" type="button">Volver al ejemplo</button>
-      <button class="btn-p" id="btnCerrar" type="button">Listo</button>
+      <button class="btn-p sec" id="btnEjemplo" type="button" style="font-size:15px">Volver al ejemplo</button>
+      <button class="btn-p" id="btnCerrar" type="button" style="font-size:15px">Listo</button>
     </div>
   </div>
 </div>
@@ -486,40 +302,50 @@ function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorA
 
 /* ================= datos del caso (ejemplo ficticio) ================= */
 var CAMPOS=[
-  { k:'alq',  t:'Alquiler del taller (mes)',    c:'' },
-  { k:'mp',   t:'Materia prima por caja',        c:'' },
-  { k:'ins',  t:'Otros insumos por caja',        c:'' },
-  { k:'p',    t:'Precio de venta por caja',      c:'' },
-  { k:'suel', t:'Opción A: sueldo fijo (mes)',   c:'a' },
-  { k:'com',  t:'Opción B: comisión por caja',   c:'b' },
-  { k:'ve',   t:'Venta estimada (cajas/mes)',    c:'' }
+  { k:'alq',  t:'Alquiler del taller (mes)',  c:'' }, { k:'mp',  t:'Materia prima por caja', c:'' },
+  { k:'ins',  t:'Otros insumos por caja',     c:'' }, { k:'p',   t:'Precio de venta por caja', c:'' },
+  { k:'suel', t:'Opción A: sueldo fijo (mes)',c:'a' }, { k:'com', t:'Opción B: comisión por caja', c:'b' },
+  { k:'ve',   t:'Venta estimada (cajas/mes)', c:'' }
 ];
 var EJEMPLO={ alq:1800, mp:12, ins:6, p:75, suel:1200, com:15, ve:90 };
-var LSK='pl_aa1_av23_datos';
-var dat={};
+var LSK='pl_aa1_av23_datos', dat={};
 function carga(){ dat=JSON.parse(JSON.stringify(EJEMPLO));
   try{ var x=JSON.parse(localStorage.getItem(LSK)||'null'); if(x) for(var k in dat) if(typeof x[k]==='number' && isFinite(x[k])) dat[k]=x[k]; }catch(e){} }
 function guarda(){ try{ localStorage.setItem(LSK, JSON.stringify(dat)); }catch(e){} }
 carga();
-
-function s(n){ var v=Math.round(n*100)/100;
-  return 'S/ '+v.toLocaleString('en-US',{ minimumFractionDigits:2, maximumFractionDigits:2 }); }
+function s(n){ var v=Math.round(n*100)/100; return 'S/ '+v.toLocaleString('en-US',{ minimumFractionDigits:2, maximumFractionDigits:2 }); }
 function nm(n){ var v=Math.round(n*100)/100; return v.toLocaleString('en-US',{ maximumFractionDigits:2 }); }
-
 function calc(){
-  var cvu=dat.mp+dat.ins;
-  var cfA=dat.alq+dat.suel, cvA=cvu;
-  var cfB=dat.alq,          cvB=cvu+dat.com;
-  var qi = (cvB-cvA)!==0 ? (cfA-cfB)/(cvB-cvA) : null;
+  var cvu=dat.mp+dat.ins, cfA=dat.alq+dat.suel, cvA=cvu, cfB=dat.alq, cvB=cvu+dat.com;
+  var qi=(cvB-cvA)!==0 ? (cfA-cfB)/(cvB-cvA) : null;
   return { cvu:cvu, cfA:cfA, cvA:cvA, cfB:cfB, cvB:cvB, qi:qi,
     ctA:function(q){ return cfA+cvA*q; }, ctB:function(q){ return cfB+cvB*q; }, I:function(q){ return dat.p*q; } };
 }
 
-/* ================= navegación 3D ================= */
+/* ================= la letra se ajusta sola: llena la pantalla sin desbordarse ================= */
 var L=qq('.lam'), i=0;
-try{ var i0=parseInt(sessionStorage.getItem('pl_aa1_av23_i'),10); if(i0>=0 && i0<L.length) i=i0; }catch(e){}
-function ir(n){
+function fit(l){
+  var MX=48, MN=13, a=MN, b=MX;
+  l.style.fontSize=MX+'px';
+  if(l.scrollHeight<=l.clientHeight+1) return;
+  for(var k=0;k<10;k++){ var m=(a+b)/2; l.style.fontSize=m+'px'; if(l.scrollHeight<=l.clientHeight+1) a=m; else b=m; }
+  l.style.fontSize=a+'px';
+}
+function ajustaTodo(){ L.forEach(fit); }
+var tFit=null; function programaFit(){ clearTimeout(tFit); tFit=setTimeout(ajustaTodo, 60); }
+window.addEventListener('resize', programaFit);
+
+/* ================= navegación 3D y cronómetro ================= */
+var cron={ t0:0, seg:0, id:null };
+function pintaCron(){
+  var m=Math.floor(cron.seg/60), x=cron.seg%60, e=$('cron');
+  e.textContent='⏱ '+m+':'+(x<10?'0':'')+x+' / 10:00'; e.classList.toggle('pasado', cron.seg>600);
+}
+function arrancaCron(){ if(cron.id) return; cron.t0=Date.now()-cron.seg*1000; cron.id=setInterval(function(){ cron.seg=Math.floor((Date.now()-cron.t0)/1000); pintaCron(); }, 500); }
+$('cron').addEventListener('click', function(){ if(cron.id){ clearInterval(cron.id); cron.id=null; } cron.seg=0; pintaCron(); });
+function ir(n, usuario){
   if(n<0 || n>=L.length) return;
+  if(usuario) arrancaCron();
   L.forEach(function(l,k){ l.classList.toggle('on', k===n); l.classList.toggle('atras', k<n); });
   i=n; L[i].scrollTop=0;
   $('cu').textContent=(i+1)+' / '+L.length;
@@ -527,23 +353,22 @@ function ir(n){
   qq('#pts button').forEach(function(b,k){ b.classList.toggle('on', k===i); if(k<i) b.classList.add('vis'); });
   try{ sessionStorage.setItem('pl_aa1_av23_i', String(i)); }catch(e){}
 }
-$('pts').innerHTML=L.map(function(l,k){ return '<button type="button" aria-label="'+l.dataset.et+'" title="'+l.dataset.et+'"></button>'; }).join('');
-qq('#pts button').forEach(function(b,k){ b.addEventListener('click', function(){ ir(k); }); });
-$('ant').addEventListener('click', function(){ ir(i-1); });
-$('sig').addEventListener('click', function(){ ir(i+1); });
+$('pts').innerHTML=L.map(function(l){ return '<button type="button" aria-label="'+l.dataset.et+'" title="'+l.dataset.et+'"></button>'; }).join('');
+qq('#pts button').forEach(function(b,k){ b.addEventListener('click', function(){ ir(k,true); }); });
+$('ant').addEventListener('click', function(){ ir(i-1,true); });
+$('sig').addEventListener('click', function(){ ir(i+1,true); });
 document.addEventListener('keydown', function(e){
   if(e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
-  if(!$('panel').hidden) { if(e.key==='Escape') cierraPanel(); return; }
-  if(e.key==='ArrowRight' || e.key==='PageDown'){ e.preventDefault(); ir(i+1); }
-  if(e.key==='ArrowLeft'  || e.key==='PageUp'){ e.preventDefault(); ir(i-1); }
+  if(!$('panel').hidden){ if(e.key==='Escape') cierraPanel(); return; }
+  if(e.key==='ArrowRight' || e.key==='PageDown'){ e.preventDefault(); ir(i+1,true); }
+  if(e.key==='ArrowLeft'  || e.key==='PageUp'){ e.preventDefault(); ir(i-1,true); }
 });
-/* deslizar con el dedo */
 var x0=null;
 $('escena').addEventListener('touchstart', function(e){ x0=e.touches[0].clientX; }, { passive:true });
 $('escena').addEventListener('touchend', function(e){
   if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; x0=null;
-  if(e.target.closest && e.target.closest('.doble,.banco,input')) return;
-  if(Math.abs(dx)>70) ir(i+(dx<0?1:-1));
+  if(e.target.closest && e.target.closest('.doble,.banco,input,svg')) return;
+  if(Math.abs(dx)>70) ir(i+(dx<0?1:-1), true);
 }, { passive:true });
 $('btnFull').addEventListener('click', function(){
   var d=document.documentElement;
@@ -551,38 +376,26 @@ $('btnFull').addEventListener('click', function(){
   else if(document.exitFullscreen) document.exitFullscreen();
 });
 
-/* ================= tarjetas que giran ================= */
-function cableaFlips(r){
-  qq('.flip', r).forEach(function(f){
-    function g(){ f.classList.toggle('on'); }
-    f.addEventListener('click', g);
-    f.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); g(); } });
-  });
-}
-cableaFlips(document);
-
 /* ================= cuadro de doble entrada ================= */
 var FICHAS=[
-  { t:'Alquiler del taller',         c:'fp', por:'Se paga igual cada mes y ahí se fabrican las cajas.' },
-  { t:'Cartón por caja',             c:'vp', por:'Cada caja lleva su cartón: crece con la cantidad.' },
-  { t:'Pegamento y cinta por caja',  c:'vp', por:'Se gasta en cada caja que se arma.' },
-  { t:'Sueldo fijo del asesor',      c:'fo', por:'Se paga igual cada mes y el asesor vende, no fabrica.' },
-  { t:'Comisión por caja vendida',   c:'vo', por:'Depende de las cajas vendidas y es parte de la venta.' },
-  { t:'Publicidad en redes',         c:'fo', por:'Monto mensual fijo para vender, no para fabricar.' },
-  { t:'Tinta del logo por caja',     c:'vp', por:'Cada caja impresa consume tinta.' },
-  { t:'Delivery por pedido',         c:'vo', por:'Se paga por cada envío: es parte de vender y entregar.' }
+  { t:'Alquiler del taller',        c:'fp', por:'Se paga igual cada mes y ahí se fabrican las cajas.' },
+  { t:'Cartón por caja',            c:'vp', por:'Cada caja lleva su cartón: crece con la cantidad.' },
+  { t:'Sueldo fijo del asesor',     c:'fo', por:'Se paga igual cada mes y el asesor vende, no fabrica.' },
+  { t:'Comisión por caja vendida',  c:'vo', por:'Depende de las cajas vendidas y es parte de la venta.' },
+  { t:'Publicidad en redes',        c:'fo', por:'Monto mensual fijo para vender, no para fabricar.' },
+  { t:'Pegamento por caja',         c:'vp', por:'Se gasta en cada caja que se arma.' }
 ];
 var puestas={}, elegida=null;
 function pintaCuadro(){
   var libres=FICHAS.map(function(f,n){ return n; }).filter(function(n){ return !puestas[n]; });
   $('banco').innerHTML = libres.length ? libres.map(function(n){
     return '<button type="button" class="ficha'+(elegida===n?' sel':'')+'" data-f="'+n+'" draggable="true">'+FICHAS[n].t+'</button>'; }).join('')
-    : '<span style="font-weight:800;color:#0E8F95">¡Cuadro completo! 🎉</span>';
+    : '<span style="font-weight:900;color:#0E8F95;font-size:.8em">¡Cuadro completo! 🎉</span>';
   qq('#doble .celda').forEach(function(c){
     c.innerHTML=FICHAS.map(function(f,n){ return (puestas[n] && f.c===c.dataset.c) ? '<span class="ficha bien">'+f.t+'</span>' : ''; }).join('');
   });
   qq('#banco .ficha').forEach(function(b){
-    b.addEventListener('click', function(){ elegida = (elegida===+b.dataset.f) ? null : +b.dataset.f; pintaCuadro(); });
+    b.addEventListener('click', function(){ elegida=(elegida===+b.dataset.f) ? null : +b.dataset.f; pintaCuadro(); });
     b.addEventListener('dragstart', function(e){ elegida=+b.dataset.f; try{ e.dataTransfer.setData('text','f'); }catch(x){} });
   });
 }
@@ -591,8 +404,7 @@ function suelta(celda){
   var f=FICHAS[elegida], n=elegida;
   if(f.c===celda){ puestas[n]=1; elegida=null; $('ecoCuadro').className='eco ok'; $('ecoCuadro').textContent='✔ '+f.t+': '+f.por; }
   else{
-    $('ecoCuadro').className='eco no';
-    $('ecoCuadro').textContent='✘ Todavía no. Pregúntate: ¿cambia si hago más cajas? ¿interviene en fabricarla?';
+    $('ecoCuadro').className='eco no'; $('ecoCuadro').textContent='✘ Aún no: ¿cambia con las cajas? ¿interviene en fabricarla?';
     var b=document.querySelector('#banco .ficha[data-f="'+n+'"]'); if(b){ b.classList.add('temblor'); setTimeout(function(){ b.classList.remove('temblor'); }, 420); }
     return;
   }
@@ -600,178 +412,108 @@ function suelta(celda){
 }
 qq('#doble .celda').forEach(function(c){
   c.addEventListener('click', function(){ suelta(c.dataset.c); });
-  c.addEventListener('dragover', function(e){ e.preventDefault(); c.classList.add('encima'); });
-  c.addEventListener('dragleave', function(){ c.classList.remove('encima'); });
-  c.addEventListener('drop', function(e){ e.preventDefault(); c.classList.remove('encima'); suelta(c.dataset.c); });
+  c.addEventListener('dragover', function(e){ e.preventDefault(); });
+  c.addEventListener('drop', function(e){ e.preventDefault(); suelta(c.dataset.c); });
 });
 pintaCuadro();
-
-/* ================= otros costos sugeridos ================= */
-var OTROS=[
-  { t:'Tinta e impresión del logo', cl:['v','p'], j:'Cada caja personalizada lleva impresión: el gasto crece con la cantidad de cajas.' },
-  { t:'Mantenimiento de la cortadora', cl:['f','p'], j:'Se paga cada mes para que la máquina corte bien, se hagan pocas o muchas cajas.' },
-  { t:'Mano de obra por destajo', cl:['v','p'], j:'Si se paga al armador por caja terminada, el costo sube con la producción.' },
-  { t:'Energía eléctrica del taller', cl:['f','p'], j:'Las máquinas y la luz del taller intervienen en la producción; si se paga una tarifa estable, es fijo.' },
-  { t:'Embalaje y envío al cliente', cl:['v','o'], j:'Se paga por cada pedido entregado: es parte de vender, no de fabricar.' },
-  { t:'Internet y redes del negocio', cl:['f','o'], j:'Pago mensual fijo para atender pedidos y promocionar las cajas.' }
-];
-var CHIP={ f:'<span class="chip f">Fijo</span>', v:'<span class="chip v">Variable</span>', p:'<span class="chip p">Producción</span>', o:'<span class="chip o">Operativo</span>' };
-$('otros').innerHTML=OTROS.map(function(o){
-  return '<div class="flip" tabindex="0"><div class="in"><div class="fr"><span class="h">Costo sugerido</span><span class="q">'+o.t+'</span></div>'+
-    '<div class="bk"><span>'+CHIP[o.cl[0]]+' '+CHIP[o.cl[1]]+'</span>'+o.j+'</div></div></div>'; }).join('');
-cableaFlips($('otros'));
-
-/* ================= pilas 3D ================= */
-function torre(lista, alto, nombre){
-  var tot=lista.reduce(function(a,b){ return a+b.v; },0) || 1;
-  return '<div><div class="torre">'+lista.map(function(b){
-      var h=Math.max(30, Math.round(b.v/tot*alto));
-      return '<div class="bloque" style="height:'+h+'px;background:'+b.c+'">'+b.t+'<br>'+s(b.v)+'</div>'; }).join('')+
-    '</div><div class="nom">'+nombre+'</div></div>';
-}
 
 /* ================= fórmulas, pasos, gráfica y decisión ================= */
 var pasoN=0;
 function pinta(){
-  var c=calc();
-  /* CVu */
-  $('fCvu').innerHTML='CVu = '+s(dat.mp)+' + '+s(dat.ins)+' = <span style="color:#FC0045">'+s(c.cvu)+'</span>';
-  $('torreCvu').innerHTML=torre([{ t:'Materia prima', v:dat.mp, c:'#A97B45' }, { t:'Insumos', v:dat.ins, c:'#13A8AF' }], 200, 'Costo de una caja: '+s(c.cvu));
-  /* modelos */
-  var mA=dat.p-c.cvA, mB=dat.p-c.cvB;
+  var c=calc(), mA=dat.p-c.cvA, mB=dat.p-c.cvB;
+  $('fCvu').innerHTML='CVu = '+nm(dat.mp)+' + '+nm(dat.ins)+' = <span style="color:#FC0045">'+s(c.cvu)+'</span> por caja';
   $('fCtA').innerHTML='CT<sub>A</sub>(q) = ('+nm(dat.alq)+' + '+nm(dat.suel)+') + '+nm(c.cvA)+'q = '+nm(c.cfA)+' + '+nm(c.cvA)+'q';
   $('fIA').innerHTML ='I<sub>A</sub>(q) = '+nm(dat.p)+'q';
-  $('fUA').innerHTML ='U<sub>A</sub>(q) = '+nm(dat.p)+'q − ('+nm(c.cfA)+' + '+nm(c.cvA)+'q) = '+nm(mA)+'q − '+nm(c.cfA);
+  $('fUA').innerHTML ='U<sub>A</sub>(q) = '+nm(mA)+'q − '+nm(c.cfA);
   $('fCtB').innerHTML='CT<sub>B</sub>(q) = '+nm(dat.alq)+' + ('+nm(c.cvu)+' + '+nm(dat.com)+')q = '+nm(c.cfB)+' + '+nm(c.cvB)+'q';
   $('fIB').innerHTML ='I<sub>B</sub>(q) = '+nm(dat.p)+'q';
-  $('fUB').innerHTML ='U<sub>B</sub>(q) = '+nm(dat.p)+'q − ('+nm(c.cfB)+' + '+nm(c.cvB)+'q) = '+nm(mB)+'q − '+nm(c.cfB);
-  /* pasos */
+  $('fUB').innerHTML ='U<sub>B</sub>(q) = '+nm(mB)+'q − '+nm(c.cfB);
   var P;
-  if(c.qi===null){
-    P=[[ 'Las dos opciones tienen el mismo costo por caja', 'No hay punto de indiferencia: revisa la comisión.' ]];
-  }else{
-    P=[
-      [ nm(c.cfA)+' + '+nm(c.cvA)+'q = '+nm(c.cfB)+' + '+nm(c.cvB)+'q', 'Igualo los dos costos totales: CT_A(q) = CT_B(q)' ],
-      [ nm(c.cfA)+' − '+nm(c.cfB)+' = '+nm(c.cvB)+'q − '+nm(c.cvA)+'q', 'Paso los números a un lado y las q al otro' ],
-      [ nm(c.cfA-c.cfB)+' = '+nm(c.cvB-c.cvA)+'q', 'Resto en cada lado' ],
-      [ 'q = '+nm(c.cfA-c.cfB)+' ÷ '+nm(c.cvB-c.cvA)+' = '+nm(c.qi)+' cajas', 'Despejo q' ],
-      [ 'CT = '+s(c.ctA(c.qi))+' en las dos opciones', 'Compruebo reemplazando q en ambos costos totales' ]
-    ];
-  }
+  if(c.qi===null) P=[[ 'Las dos opciones cuestan lo mismo por caja', 'No hay punto de indiferencia: revisa la comisión.' ]];
+  else P=[
+    [ nm(c.cfA)+' + '+nm(c.cvA)+'q = '+nm(c.cfB)+' + '+nm(c.cvB)+'q', 'Igualo CT_A(q) = CT_B(q)' ],
+    [ nm(c.cfA-c.cfB)+' = '+nm(c.cvB-c.cvA)+'q', 'Paso las q a un lado y los números al otro' ],
+    [ 'q = '+nm(c.cfA-c.cfB)+' ÷ '+nm(c.cvB-c.cvA)+' = '+nm(c.qi)+' cajas', 'Despejo q' ],
+    [ 'CT = '+s(c.ctA(c.qi))+' en las dos', 'Compruebo reemplazando q en ambos costos' ]
+  ];
   $('pasos').innerHTML=P.map(function(p,k){ return '<div class="paso'+(k<pasoN?' ve':'')+'"><span class="n">'+(k+1)+'</span><span>'+p[0]+'<small>'+p[1]+'</small></span></div>'; }).join('');
   $('btnPaso').disabled = pasoN>=P.length;
-  if(c.qi===null) $('interp').innerHTML='Las dos rectas de costo son paralelas: siempre conviene la de menor costo fijo.';
-  else $('interp').innerHTML='<b>Interpretación:</b> con <b>'+nm(c.qi)+' cajas</b> las dos formas de pago cuestan lo mismo. '+
-    'Con <b>menos</b> cajas conviene la <b>comisión</b> (el asesor cobra solo lo que vende); con <b>más</b> cajas conviene el <b>sueldo fijo</b> (la comisión acumulada ya supera al sueldo).';
-  dibuja(c);
-  decide(c);
+  var resuelto = c.qi===null || pasoN>=3;   /* el resultado aparece cuando se despeja q */
+  $('gran').innerHTML = c.qi===null ? '—' : (resuelto ? 'q = '+nm(c.qi)+' cajas' : 'q = ?');
+  $('interp').style.visibility = resuelto ? 'visible' : 'hidden';
+  $('interp').innerHTML = c.qi===null ? 'Las rectas de costo son paralelas.' :
+    '<b>Con menos de '+nm(c.qi)+' cajas</b> conviene la <b>comisión</b>; <b>con más</b>, el <b>sueldo fijo</b>. Con '+nm(c.qi)+' cuestan lo mismo.';
+  dibuja(c); decide(c); programaFit();
 }
 $('btnPaso').addEventListener('click', function(){ pasoN++; pinta(); });
 $('btnTodos').addEventListener('click', function(){ pasoN=9; pinta(); });
 
-/* --- gráfica SVG --- */
 function dibuja(c){
   var qmax=Math.max(20, Math.ceil(Math.max(dat.ve, c.qi||0)*1.5/10)*10);
-  $('slQ').max=qmax; if(+$('slQ').value>qmax || !$('slQ').dataset.toc){ $('slQ').value=Math.min(qmax, Math.round(dat.ve)); }
-  var W=560, H=360, x0=58, y0=320, x1=540, y1=20;
-  var ymax=Math.max(c.ctA(qmax), c.ctB(qmax), c.I(qmax))*1.05 || 1;
+  $('slQ').max=qmax; if(+$('slQ').value>qmax || !$('slQ').dataset.toc) $('slQ').value=Math.min(qmax, Math.round(dat.ve));
+  var x0=62, y0=320, x1=545, y1=18, ymax=Math.max(c.ctA(qmax), c.ctB(qmax), c.I(qmax))*1.05 || 1;
   function X(q){ return x0+(x1-x0)*q/qmax; } function Y(v){ return y0-(y0-y1)*v/ymax; }
   var h='';
-  for(var k=0;k<=5;k++){ var v=ymax*k/5, y=Y(v); h+='<line class="reja" x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'"/><text x="'+(x0-6)+'" y="'+(y+4)+'" text-anchor="end">'+Math.round(v).toLocaleString('en-US')+'</text>'; }
-  for(var k2=0;k2<=5;k2++){ var q=qmax*k2/5, x=X(q); h+='<text x="'+x+'" y="'+(y0+18)+'" text-anchor="middle">'+Math.round(q)+'</text>'; }
+  for(var k=0;k<=4;k++){ var v=ymax*k/4, y=Y(v); h+='<line class="reja" x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'"/><text x="'+(x0-6)+'" y="'+(y+5)+'" text-anchor="end">'+Math.round(v).toLocaleString('en-US')+'</text>'; }
+  for(var k2=0;k2<=4;k2++){ var q=qmax*k2/4; h+='<text x="'+X(q)+'" y="'+(y0+22)+'" text-anchor="middle">'+Math.round(q)+'</text>'; }
   h+='<line class="eje" x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y0+'"/><line class="eje" x1="'+x0+'" y1="'+y0+'" x2="'+x0+'" y2="'+y1+'"/>';
-  h+='<text x="'+x1+'" y="'+(y0-6)+'" text-anchor="end">q (cajas)</text><text x="'+(x0+6)+'" y="'+(y1+10)+'">S/</text>';
+  h+='<text x="'+x1+'" y="'+(y0-8)+'" text-anchor="end">q (cajas)</text><text x="'+(x0+8)+'" y="'+(y1+12)+'">S/</text>';
   function linea(f,col,w){ return '<line x1="'+X(0)+'" y1="'+Y(f(0))+'" x2="'+X(qmax)+'" y2="'+Y(f(qmax))+'" stroke="'+col+'" stroke-width="'+w+'" stroke-linecap="round"/>'; }
-  h+=linea(c.I,'#13A8AF',3)+linea(c.ctA,'#2847C9',4)+linea(c.ctB,'#FC0045',4);
+  h+=linea(c.I,'#13A8AF',4)+linea(c.ctA,'#2847C9',5)+linea(c.ctB,'#FC0045',5);
   if(c.qi!==null && c.qi>0 && c.qi<=qmax){
     var xi=X(c.qi), yi=Y(c.ctA(c.qi));
-    h+='<line x1="'+xi+'" y1="'+yi+'" x2="'+xi+'" y2="'+y0+'" stroke="#071767" stroke-dasharray="5 4"/>'+
-       '<circle cx="'+xi+'" cy="'+yi+'" r="8" fill="#FFD166" stroke="#071767" stroke-width="2.5"/>'+
-       '<text x="'+(xi+10)+'" y="'+(yi-12)+'" style="fill:#071767;font-weight:900">Indiferencia: '+nm(c.qi)+'</text>';
+    h+='<line x1="'+xi+'" y1="'+yi+'" x2="'+xi+'" y2="'+y0+'" stroke="#071767" stroke-dasharray="5 4" stroke-width="2"/>'+
+       '<circle cx="'+xi+'" cy="'+yi+'" r="10" fill="#FFD166" stroke="#071767" stroke-width="3"/>'+
+       '<text x="'+xi+'" y="'+(yi-16)+'" text-anchor="middle" style="fill:#071767;font-weight:900;font-size:16px">'+nm(c.qi)+' cajas</text>';
   }
   var qs=+$('slQ').value, xs=X(qs);
-  h+='<line x1="'+xs+'" y1="'+y1+'" x2="'+xs+'" y2="'+y0+'" stroke="#C600A3" stroke-width="2"/>'+
-     '<circle cx="'+xs+'" cy="'+Y(c.ctA(qs))+'" r="5" fill="#2847C9"/><circle cx="'+xs+'" cy="'+Y(c.ctB(qs))+'" r="5" fill="#FC0045"/>';
-  $('graf').innerHTML=h;
-  $('vQ').textContent=qs;
+  h+='<line x1="'+xs+'" y1="'+y1+'" x2="'+xs+'" y2="'+y0+'" stroke="#C600A3" stroke-width="2.5"/>'+
+     '<circle cx="'+xs+'" cy="'+Y(c.ctA(qs))+'" r="6" fill="#2847C9"/><circle cx="'+xs+'" cy="'+Y(c.ctB(qs))+'" r="6" fill="#FC0045"/>';
+  $('graf').innerHTML=h; $('vQ').textContent=qs;
   var a=c.ctA(qs), b=c.ctB(qs);
   $('lA').innerHTML='CT A<b>'+s(a)+'</b>'; $('lB').innerHTML='CT B<b>'+s(b)+'</b>'; $('lI').innerHTML='Ingreso<b>'+s(c.I(qs))+'</b>';
   $('lA').classList.toggle('gana', a<b); $('lB').classList.toggle('gana', b<a);
-  $('lQuien').innerHTML = a<b ? 'Con <b>'+qs+'</b> cajas cuesta menos la <b>opción A (sueldo fijo)</b>: ahorra '+s(b-a)+'.'
-                       : (b<a ? 'Con <b>'+qs+'</b> cajas cuesta menos la <b>opción B (comisión)</b>: ahorra '+s(a-b)+'.'
-                              : 'Con <b>'+qs+'</b> cajas las dos opciones cuestan lo mismo.');
+  $('lQuien').innerHTML = a<b ? 'Con <b>'+qs+'</b> cajas cuesta menos la <b>opción A (sueldo)</b>: ahorra '+s(b-a)+'.'
+    : (b<a ? 'Con <b>'+qs+'</b> cajas cuesta menos la <b>opción B (comisión)</b>: ahorra '+s(a-b)+'.' : 'Con <b>'+qs+'</b> cajas cuestan lo mismo.');
 }
 $('slQ').addEventListener('input', function(){ $('slQ').dataset.toc='1'; dibuja(calc()); });
-/* la tarjeta de la gráfica se inclina con el mouse */
 $('grafCard').addEventListener('mousemove', function(e){
   var r=this.getBoundingClientRect(), dx=(e.clientX-r.left)/r.width-.5, dy=(e.clientY-r.top)/r.height-.5;
-  this.style.transform='perspective(900px) rotateY('+(dx*8)+'deg) rotateX('+(-dy*8)+'deg)';
+  this.style.transform='perspective(900px) rotateY('+(dx*7)+'deg) rotateX('+(-dy*7)+'deg)';
 });
 $('grafCard').addEventListener('mouseleave', function(){ this.style.transform=''; });
 
-/* --- decisión --- */
 function decide(c){
-  var q=dat.ve, a=c.ctA(q), b=c.ctB(q), uA=c.I(q)-a, uB=c.I(q)-b;
+  var q=dat.ve, a=c.ctA(q), b=c.ctB(q), uA=c.I(q)-a, uB=c.I(q)-b, dif=Math.abs(a-b);
   $('titDec').textContent='Con '+nm(q)+' cajas al mes, ¿qué opción conviene?';
-  $('tDec').innerHTML='<thead><tr><th>Con '+nm(q)+' cajas</th><th>Opción A · Sueldo</th><th>Opción B · Comisión</th></tr></thead><tbody>'+
+  $('tDec').innerHTML='<thead><tr><th>Con '+nm(q)+' cajas</th><th>A · Sueldo</th><th>B · Comisión</th></tr></thead><tbody>'+
     '<tr><td>Costo total</td><td class="n"'+(a<b?' style="color:#0E8F95"':'')+'>'+s(a)+'</td><td class="n"'+(b<a?' style="color:#0E8F95"':'')+'>'+s(b)+'</td></tr>'+
     '<tr><td>Ingreso</td><td class="n">'+s(c.I(q))+'</td><td class="n">'+s(c.I(q))+'</td></tr>'+
     '<tr><td>Utilidad</td><td class="n">'+s(uA)+'</td><td class="n">'+s(uB)+'</td></tr></tbody>';
-  /* las dos torres se escalan contra el mayor costo, para que se compare la altura */
-  var mx=Math.max(a,b)||1;
-  $('torreCt').innerHTML=
-    torre([{ t:'Fijo', v:c.cfA, c:'#2847C9' }, { t:'Variable', v:c.cvA*q, c:'#7E94E6' }], 190*Math.max(.25,a/mx), 'Opción A · '+s(a))+
-    torre([{ t:'Fijo', v:c.cfB, c:'#B0002F' }, { t:'Variable', v:c.cvB*q, c:'#FC6A8C' }], 190*Math.max(.25,b/mx), 'Opción B · '+s(b));
-  var v=$('vered'), dif=Math.abs(a-b);
+  var v=$('vered');
   if(c.qi===null){ v.className='vered igual'; v.innerHTML='<h3>Revisa los datos</h3><p>Sin comisión no hay punto de indiferencia.</p>'; }
-  else if(a<b){ v.className='vered'; v.innerHTML='<h3>Conviene la opción A · Sueldo fijo</h3><p>'+nm(q)+' cajas está <b>por encima</b> del punto de indiferencia ('+nm(c.qi)+' cajas): el sueldo cuesta '+s(dif)+' menos al mes.</p>'; }
-  else if(b<a){ v.className='vered b'; v.innerHTML='<h3>Conviene la opción B · Comisión</h3><p>'+nm(q)+' cajas está <b>por debajo</b> del punto de indiferencia ('+nm(c.qi)+' cajas): la comisión cuesta '+s(dif)+' menos al mes.</p>'; }
+  else if(a<b){ v.className='vered'; v.innerHTML='<h3>Conviene la opción A · Sueldo fijo</h3><p>'+nm(q)+' cajas está <b>por encima</b> de '+nm(c.qi)+': cuesta '+s(dif)+' menos al mes.</p>'; }
+  else if(b<a){ v.className='vered b'; v.innerHTML='<h3>Conviene la opción B · Comisión</h3><p>'+nm(q)+' cajas está <b>por debajo</b> de '+nm(c.qi)+': cuesta '+s(dif)+' menos al mes.</p>'; }
   else { v.className='vered igual'; v.innerHTML='<h3>Las dos cuestan lo mismo</h3><p>La venta estimada coincide con el punto de indiferencia.</p>'; }
-  var gan = a<b ? 'A (sueldo fijo)' : 'B (comisión)';
   $('plantilla').innerHTML = c.qi===null ? '—' :
-    '«El punto de indiferencia es de <b>'+nm(c.qi)+' cajas</b> al mes. Con la venta estimada de <b>'+nm(q)+' cajas</b>, el costo total de la opción A es <b>'+s(a)+'</b> y el de la opción B es <b>'+s(b)+'</b>. '+
-    'Por eso conviene la <b>opción '+gan+'</b>, que representa <b>'+s(dif)+'</b> menos de gasto al mes y una utilidad de <b>'+s(Math.max(uA,uB))+'</b>.»';
+    '«El punto de indiferencia es de <b>'+nm(c.qi)+' cajas</b>. Con la venta estimada de <b>'+nm(q)+' cajas</b>, el costo total de la opción A es <b>'+s(a)+'</b> y el de la B es <b>'+s(b)+'</b>. '+
+    'Conviene la <b>opción '+(a<b?'A (sueldo fijo)':'B (comisión)')+'</b>: <b>'+s(dif)+'</b> menos de gasto al mes.»';
 }
 
 /* ================= panel de datos ================= */
-$('datos').innerHTML=CAMPOS.map(function(f){
-  return '<div class="dato '+f.c+'"><label for="d_'+f.k+'">'+f.t+'</label><input id="d_'+f.k+'" type="number" step="any" min="0" inputmode="decimal"></div>'; }).join('');
+$('datos').innerHTML=CAMPOS.map(function(f){ return '<div class="dato '+f.c+'"><label for="d_'+f.k+'">'+f.t+'</label><input id="d_'+f.k+'" type="number" step="any" min="0" inputmode="decimal"></div>'; }).join('');
 function llenaPanel(){ CAMPOS.forEach(function(f){ $('d_'+f.k).value=dat[f.k]; }); }
-CAMPOS.forEach(function(f){
-  $('d_'+f.k).addEventListener('input', function(){ var v=parseFloat(this.value); if(isFinite(v) && v>=0){ dat[f.k]=v; guarda(); pinta(); } });
-});
+CAMPOS.forEach(function(f){ $('d_'+f.k).addEventListener('input', function(){ var v=parseFloat(this.value); if(isFinite(v) && v>=0){ dat[f.k]=v; guarda(); pinta(); } }); });
 function abrePanel(){ llenaPanel(); $('panel').hidden=false; $('btnDatos').classList.add('on'); setTimeout(function(){ $('d_alq').focus(); }, 30); }
 function cierraPanel(){ $('panel').hidden=true; $('btnDatos').classList.remove('on'); }
-$('btnDatos').addEventListener('click', abrePanel);
-$('btnCerrar').addEventListener('click', cierraPanel);
+$('btnDatos').addEventListener('click', abrePanel); $('btnCerrar').addEventListener('click', cierraPanel);
 $('panel').addEventListener('click', function(e){ if(e.target===$('panel')) cierraPanel(); });
 $('btnEjemplo').addEventListener('click', function(){ dat=JSON.parse(JSON.stringify(EJEMPLO)); guarda(); llenaPanel(); pinta(); });
 
-/* ================= lista de verificación ================= */
-var CHECK=[
-  'Cuadro de doble entrada con <b>todos</b> los conceptos del caso y su importe.',
-  'Al menos <b>tres costos sugeridos</b> propios de elaborar una caja, clasificados y justificados.',
-  'Costo variable unitario calculado: <b>CVu = materia prima + insumos</b>.',
-  '<b>q</b> definida: cantidad de cajas elaboradas y vendidas en el mes.',
-  'Seis modelos: <b>CT, I y U</b> para la opción A y para la opción B.',
-  'Ecuación <b>CT<sub>A</sub> = CT<sub>B</sub></b> resuelta paso a paso y comprobada.',
-  'Interpretación del punto de indiferencia: qué conviene por debajo y por encima.',
-  'Costos totales y utilidades de las dos opciones con la <b>venta estimada</b>.',
-  'Decisión justificada con cifras: punto de indiferencia, costos y diferencia en soles.'
-];
-var LSC='pl_aa1_av23_check', hechos={};
-try{ hechos=JSON.parse(localStorage.getItem(LSC)||'{}')||{}; }catch(e){ hechos={}; }
-function pintaCheck(){
-  $('check').innerHTML=CHECK.map(function(t,k){ return '<label class="'+(hechos[k]?'ok':'')+'"><input type="checkbox" data-k="'+k+'"'+(hechos[k]?' checked':'')+'><span>'+t+'</span></label>'; }).join('');
-  var n=Object.keys(hechos).filter(function(k){ return hechos[k]; }).length;
-  $('barraOk').style.width=Math.round(n/CHECK.length*100)+'%';
-  qq('#check input').forEach(function(x){ x.addEventListener('change', function(){
-    hechos[x.dataset.k]=x.checked; try{ localStorage.setItem(LSC, JSON.stringify(hechos)); }catch(e){} pintaCheck(); }); });
-}
-pintaCheck();
-
-pinta();
-ir(i);
+var i0=0; try{ i0=parseInt(sessionStorage.getItem('pl_aa1_av23_i'),10)||0; }catch(e){}
+pinta(); ir(Math.max(0, Math.min(L.length-1, i0)));
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(ajustaTodo);
+window.addEventListener('load', ajustaTodo);
 })();
 </script>
 </body>
