@@ -136,6 +136,20 @@ var TTL={ ok:60000, msg:60000, duda:120000 };
 var tSala=null, tEnvio=null, gente=[], fallos=0, grande=false, mirando=null;
 var recurso=null, selloRecurso='', tRecurso=null;
 var batuta=null, tBatuta=null, selloBatuta='';
+/* Consultas periódicas sin saturar Supabase:
+   - cada equipo arranca con un desfase al azar, para que no pregunten todos a la vez;
+   - con la pestaña oculta no se consulta (al volver se consulta en el acto);
+   - si la base falla, se espera cada vez más (5 s, 10 s, 20 s… hasta 1 minuto). */
+var frenoHasta=0, frenoN=0;
+function frena(){ frenoN=Math.min(frenoN+1, 4); frenoHasta=Date.now()+Math.min(60000, 5000*Math.pow(2, frenoN-1)); }
+function sigue(){ frenoN=0; frenoHasta=0; }
+function oculta(){ return typeof document!=='undefined' && document.hidden; }
+function cada(fn, ms){
+  return setInterval(function(){
+    if(oculta() || Date.now()<frenoHasta) return;
+    fn();
+  }, ms + Math.floor(Math.random()*ms*0.3));
+}
 var dni='', tFicha=null, buscando=false, modoAlta=false;
 var RPC=SUPA+'/rest/v1/rpc/';
 
@@ -550,7 +564,7 @@ function sale(){
 function arranca(){
   if(!docente) return;              /* el muro es solo del docente */
   trae();
-  if(!tSala) tSala=setInterval(trae, 3000);
+  if(!tSala) tSala=cada(trae, 5000);
 }
 
 /* ---------------- sincronización ---------------- */
@@ -577,7 +591,7 @@ function trae(){
         '&actualizado=gte.'+desde+'&order=alumno.asc&limit=80', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
-      fallos=0; gente=sinRenombrados(quitaSacados(rows||[]));
+      sigue(); fallos=0; gente=sinRenombrados(quitaSacados(rows||[]));
       if(docente){ detectaAvisos(gente); guardaHistorial(false); }
       estado('vivo', (docente?'Docente · ':'En vivo · ')+gente.length+
              (gente.length===1?' alumno':' alumnos')+' en la sala '+sala);
@@ -586,6 +600,7 @@ function trae(){
     .catch(falla);
 }
 function falla(e){
+  frena();
   fallos++;
   if(fallos<2) return;
   var m;
@@ -749,13 +764,14 @@ function oyeRecurso(){
         { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
+      sigue();
       var fila=rows && rows[0], e=(fila && fila.estado) || null;
       var sello=JSON.stringify(e);
       if(sello===selloRecurso) return;
       selloRecurso=sello; recurso=e;
       cfg.recurso(recurso);
     })
-    .catch(function(){});
+    .catch(frena);
 }
 function conBatuta(d){
   var o={}, k, src=d||{ modo:'libre' };
@@ -781,13 +797,13 @@ function escuchaRecurso(){
   if(!cfg.recurso) return;
   if(tRecurso){ clearInterval(tRecurso); tRecurso=null; }
   oyeRecurso();
-  tRecurso=setInterval(oyeRecurso, 8000);
+  tRecurso=cada(oyeRecurso, 10000);
 }
 function escucha(){
   if(!cfg.batuta) return;
   if(tBatuta){ clearInterval(tBatuta); tBatuta=null; }
   oye();
-  tBatuta=setInterval(oye, 3000);
+  tBatuta=cada(oye, 6000);
 }
 function oye(){
   if(!sala || docente || !cfg.batuta) return;
@@ -796,6 +812,7 @@ function oye(){
         '&actualizado=gte.'+desde+'&limit=1', { headers:hdr() })
     .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
     .then(function(rows){
+      sigue();
       var fila=rows && rows[0];
       if(!fila){ if(selloBatuta!==''){ selloBatuta=''; batuta=null; recibeFlags({}); cfg.batuta({modo:'libre'}); } return; }
       var sello=String(fila.actualizado)+'|'+JSON.stringify(fila.estado||{});
@@ -804,7 +821,7 @@ function oye(){
       recibeFlags(batuta);
       cfg.batuta(batuta);
     })
-    .catch(function(){});
+    .catch(frena);
 }
 
 /* ---------------- muro ---------------- */
@@ -2302,6 +2319,13 @@ window.Aula={
   iniciar:function(opciones){
     cfg=opciones;
     pintaControles(); pintaMuro();
+    /* al volver a la pestaña se pone al día de inmediato, sin esperar el siguiente turno */
+    document.addEventListener('visibilitychange', function(){
+      if(oculta() || !sala || Date.now()<frenoHasta) return;
+      if(tSala) trae();
+      if(tBatuta && !docente) oye();
+      if(tRecurso) oyeRecurso();
+    });
     /* en el equipo del docente se entra solo, sin DNI ni clave, aunque recargue */
     if(leeLocal(marcaDoc())==='1' && (!pin() || pinBueno(pinMio()))) setTimeout(function(){
       if(sala) return;
