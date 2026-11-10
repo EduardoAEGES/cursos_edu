@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="2026-11-10-plano-a">
+<title>Plano cartesiano - Pensamiento L&oacute;gico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  :root{ --marino:#071767; --fucsia:#FC0045; --teal:#13A8AF; --ambar:#D98A00; --verde:#1F9D55; --rojo:#E5484D;
+         --tinta:#0B1B3F; --gris:#5B6B8C; --linea:#D5DDEF; --humo:#F1F5FD; }
+  .pc-hero{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .pc-hero h1{ margin:0; font-size:26px; color:var(--marino); font-weight:800; }
+  .pc-hero p{ margin:2px 0 0; color:var(--gris); }
+  .app{ display:grid; grid-template-columns:minmax(310px,400px) minmax(0,1fr); gap:16px; align-items:start; margin-top:14px; }
+  .app.solo{ grid-template-columns:minmax(0,1fr); } .app.solo .panel{ display:none; }
+  @media (max-width:900px){ .app{ grid-template-columns:minmax(0,1fr); } }
+  .app:fullscreen{ background:#fff; overflow:auto; padding:14px; }
+
+  /* ---------- panel de datos ---------- */
+  .panel{ background:#fff; border:1px solid var(--linea); border-radius:16px; padding:14px; box-shadow:0 6px 18px rgba(7,23,103,.06); }
+  .panel h3{ margin:14px 0 6px; font-size:15px; color:var(--marino); font-weight:800; display:flex; align-items:center; gap:8px; }
+  .panel h3 i{ font-style:normal; width:24px; height:24px; border-radius:50%; background:var(--fucsia); color:#fff; display:grid; place-items:center; font-size:13px; flex:none; }
+  .panel h3:first-child{ margin-top:0; }
+  .sel{ width:100%; padding:10px 12px; border:2px solid var(--linea); border-radius:12px; font:700 15px Inter,sans-serif; color:var(--marino); background:#fff; }
+  .sit{ background:var(--humo); border-left:5px solid var(--fucsia); border-radius:10px; padding:10px 12px; margin-top:10px; font-size:14px; line-height:1.5; color:var(--tinta); }
+  .sit p{ margin:0 0 4px; } .sit ul{ margin:4px 0 0; padding-left:18px; } .sit li{ margin:2px 0; }
+  .area{ font-size:12.5px; color:var(--gris); margin-top:8px; }
+  .mrow{ display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin:6px 0; font-size:14.5px; color:var(--tinta); }
+  .mrow b{ min-width:92px; }
+  .in{ width:84px; padding:7px 9px; border:2px solid var(--linea); border-radius:9px; font:600 14px Inter,sans-serif; text-align:right; color:var(--tinta); background:#fff; }
+  .in.ok{ border-color:var(--verde); background:#EFF9F3; } .in.mal{ border-color:var(--rojo); background:#FFF3F3; }
+  .in.sol{ border-style:dashed; border-color:var(--marino); background:#EEF3FF; color:var(--marino); }
+  .in.ancho{ width:100%; text-align:left; }
+  .pq{ font-size:12.5px; color:var(--verde); margin:2px 0 8px 0; font-weight:600; }
+  .tabw{ overflow-x:auto; }
+  table.tb{ border-collapse:collapse; width:100%; font-size:13.5px; }
+  table.tb th, table.tb td{ border:1px solid var(--linea); padding:4px 5px; text-align:center; }
+  table.tb th{ background:var(--marino); color:#fff; font-weight:700; }
+  table.tb td.nom{ text-align:left; font-weight:700; white-space:nowrap; }
+  table.tb .in{ width:100%; min-width:62px; padding:5px 6px; }
+  table.cl td{ cursor:pointer; user-select:none; height:34px; }
+  table.cl td.on{ background:#E3EBFF; font-weight:800; color:var(--marino); }
+  table.cl td.bien{ background:#DDF3E6; color:var(--verde); } table.cl td.mal{ background:#FDE3E4; color:var(--rojo); } table.cl td.falta{ box-shadow:inset 0 0 0 2px var(--ambar); }
+  table.cl td.nom{ cursor:default; }
+  table.cl th{ font-size:11.5px; padding:4px 3px; line-height:1.15; } table.cl td{ padding:2px 3px; } table.cl td.nom{ white-space:normal; font-size:12.5px; width:112px; }
+  .btn{ border:2px solid var(--linea); background:#fff; color:var(--marino); border-radius:12px; padding:8px 12px; font:700 14px Inter,sans-serif; cursor:pointer; }
+  .btn:hover{ border-color:var(--marino); } .btn.pri{ background:var(--fucsia); border-color:var(--fucsia); color:#fff; } .btn.mar{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .btn.act{ background:var(--marino); border-color:var(--marino); color:#fff; }
+  .btn:focus-visible{ outline:3px solid var(--teal); outline-offset:2px; }
+  .btn.min{ padding:5px 9px; font-size:13px; }
+  .fila{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  textarea.in.ancho{ min-height:70px; font:500 14px Inter,sans-serif; resize:vertical; }
+  .sugerida{ background:#EFF9F3; border:2px solid var(--verde); border-radius:10px; padding:8px 10px; font-size:13.5px; margin-top:6px; color:var(--tinta); }
+  details.esc{ margin-top:10px; border:1px dashed var(--linea); border-radius:10px; padding:8px 10px; }
+  details.esc summary{ cursor:pointer; font-weight:700; color:var(--marino); font-size:14px; }
+  .ayuda{ font-size:14px; line-height:1.55; color:var(--tinta); } .ayuda li{ margin:4px 0; }
+
+  /* ---------- gráfico ---------- */
+  .grafico{ background:#fff; border:1px solid var(--linea); border-radius:16px; padding:12px; box-shadow:0 6px 18px rgba(7,23,103,.06); }
+  @media (min-width:901px){ .grafico{ position:sticky; top:10px; } .app:fullscreen .grafico{ position:static; } }
+  .barra{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+  .barra .sep{ width:1px; height:26px; background:var(--linea); margin:0 2px; }
+  .chip{ display:inline-flex; align-items:center; gap:7px; border:2px solid var(--linea); border-radius:99px; padding:5px 12px; background:#fff; font:700 13.5px Inter,sans-serif; color:var(--tinta); cursor:pointer; }
+  .chip i{ width:13px; height:13px; border-radius:50%; background:var(--c); flex:none; }
+  .chip small{ color:var(--gris); font-weight:600; }
+  .chip.on{ border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 22%,transparent); }
+  .tog{ display:inline-flex; align-items:center; gap:6px; font-size:13.5px; color:var(--tinta); cursor:pointer; font-weight:600; }
+  .tog input{ width:17px; height:17px; accent-color:var(--fucsia); }
+  svg#pl{ display:block; width:100%; height:auto; aspect-ratio:900/620; background:#fff; border-radius:12px; touch-action:none; user-select:none; }
+  svg#pl.t-punto, svg#pl.t-eq{ cursor:crosshair; } svg#pl.t-mover{ cursor:grab; } svg#pl.t-borrar{ cursor:not-allowed; }
+  .app.solo svg#pl, .app:fullscreen svg#pl{ max-height:calc(100vh - 190px); margin:0 auto; }
+  .estado{ display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; font-size:13.5px; color:var(--tinta); }
+  .estado b{ color:var(--marino); }
+  .info{ margin-top:8px; background:var(--humo); border:1px solid var(--linea); border-radius:10px; padding:8px 12px; font-size:14px; line-height:1.55; }
+  .info b{ color:var(--marino); } .info .eq{ display:block; }
+  .nota{ font-size:12.5px; color:var(--gris); margin-top:6px; }
+  .agr{ display:flex; align-items:center; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:13.5px; font-weight:600; color:var(--tinta); }
+  .agr .in{ width:78px; padding:6px 8px; }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="pensamiento-logico.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="pensamiento-logico.html">Pensamiento L&oacute;gico</a></span> / <b>Plano cartesiano</b></span>
+  <div class="o-cp-right"><button class="btn min" id="btnPant" type="button">&#9974; Pantalla completa</button></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+
+  <div class="o-sheet">
+    <div class="pc-hero">
+      <div class="o-hero" style="flex:1 1 320px;margin:0;padding:0;border:0">
+        <div class="ico">&#128200;</div>
+        <div class="txt">
+          <h1>Plano cartesiano</h1>
+          <p class="sub">Ubica puntos, traza rectas y resuelve casos de costo, ingreso y utilidad</p>
+        </div>
+      </div>
+      <span class="o-chip o-chip-ok">Herramienta</span>
+    </div>
+
+    <div class="app" id="app">
+      <aside class="panel" id="panel" aria-label="Datos del caso"></aside>
+
+      <section class="grafico" aria-label="Plano">
+        <div class="barra" id="barraSerie" role="group" aria-label="Serie activa"></div>
+        <div class="barra">
+          <button class="btn min act" data-tool="punto" type="button" title="Haz clic en el plano para colocar un punto">&#9679; Punto</button>
+          <button class="btn min" data-tool="mover" type="button" title="Arrastra un punto">&#10021; Mover</button>
+          <button class="btn min" data-tool="borrar" type="button" title="Haz clic en un punto para quitarlo">&#10005; Borrar</button>
+          <button class="btn min" data-tool="eq" type="button" title="Marca el punto de equilibrio o un cruce">&#9733; Marcar cruce</button>
+          <span class="sep"></span>
+          <button class="btn min" id="btnDeshacer" type="button">&#8630; Deshacer</button>
+          <button class="btn min" id="btnLimpiar" type="button">Limpiar gr&aacute;fico</button>
+          <button class="btn min" id="btnSolo" type="button">&#128470; Solo gr&aacute;fico</button>
+          <button class="btn min" id="btnPng" type="button">&#11015; Imagen</button>
+        </div>
+        <svg id="pl" class="t-punto" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plano cartesiano"><g id="dibujo"></g><g id="cursor"></g></svg>
+        <div class="barra" style="margin-top:8px">
+          <label class="tog"><input type="checkbox" id="chSnap" checked> Im&aacute;n a la cuadr&iacute;cula</label>
+          <label class="tog"><input type="checkbox" id="chCoord" checked> Mostrar coordenadas</label>
+          <label class="tog" id="lbAuto"><input type="checkbox" id="chAuto" checked> Corregir al colocar</label>
+          <span class="agr">Agregar punto: x <input class="in" id="agX" inputmode="decimal"> y <input class="in" id="agY" inputmode="decimal"> <button class="btn min" id="btnAgr" type="button">+ Agregar</button></span>
+        </div>
+        <div class="estado" id="estado"></div>
+        <div class="info" id="info"></div>
+      </section>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){ return document.getElementById(id); };
+function qq(s,r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ============================ colores y casos ============================ */
+var CL={ ct:'#FC0045', i:'#071767', b:'#13A8AF', n:'#D98A00', u:'#6B7BAA' };
+function S(id,nom,color,a,b,o){ var s={id:id,nom:nom,color:color,a:a,b:b,plot:1,tab:1,mod:1}; for(var k in (o||{})) s[k]=o[k]; return s; }
+function P(t,ans,pq,tol){ return {t:t,ans:ans,pq:pq,tol:tol||0.01}; }
+
+var CASOS=[
+{ id:'frutal', corto:'Ejemplo guiado: Juguería «Frutal»', titulo:'Juguería «Frutal»', area:'Costo, ingreso y punto de equilibrio',
+  xn:'q (jugos)', qs:[0,100,200,300], vista:{xmin:0,xmax:350,ymin:0,ymax:1600},
+  sit:'<p>Una juguería paga <b>S/ 600.00</b> de alquiler al mes y gasta <b>S/ 2.00</b> en insumos por cada jugo que prepara. Vende cada jugo a <b>S/ 5.00</b>.</p>',
+  series:[S('ct','CT',CL.ct,600,2), S('i','I',CL.i,0,5)],
+  zona:['ct','i'], cruces:[['ct','i','Equilibrio']],
+  preg:[ P('¿Cuántos jugos debe vender para no perder?',200,'q = CF ÷ (p − CVu) = 600 ÷ (5 − 2) = 200.'),
+         P('¿Cuántos soles ingresan y cuestan en ese punto?',1000,'I = 5 × 200 = 1,000 y CT = 600 + 2 × 200 = 1,000.'),
+         P('Si vende 300 jugos, ¿cuál es su utilidad (S/)?',300,'U = I − CT = 1,500 − 1,200 = 300.') ],
+  concl:'Antes de 200 jugos el costo está sobre el ingreso: hay pérdida. En 200 no gana ni pierde. Después de 200 el ingreso supera al costo: cada jugo extra deja S/ 3 de ganancia.' },
+
+{ id:'c1', corto:'Caso 1: Cuenta Clara', titulo:'Caso 1: «Cuenta Clara»', area:'Estudio contable: declaraciones mensuales',
+  xn:'q (clientes)', qs:[0,10,20,30,40], vista:{xmin:0,xmax:45,ymin:0,ymax:3500},
+  sit:'<p>Estudio contable en Arequipa que lleva la declaración mensual de pequeños negocios. Cada mes paga:</p><ul><li>Alquiler de la oficina: <b>S/ 1,000.00</b></li><li>Internet y teléfono: <b>S/ 200.00</b></li><li>Por cada cliente atendido gasta <b>S/ 20.00</b> en copias, útiles y movilidad.</li><li>Cobra <b>S/ 80.00</b> por cliente al mes (precio sin IGV).</li></ul><p><b>q</b> = clientes atendidos.</p>',
+  series:[S('ct','CT',CL.ct,1200,20), S('i','I',CL.i,0,80), S('u','U',CL.u,-1200,60,{plot:0})],
+  zona:['ct','i'], cruces:[['ct','i','Equilibrio']],
+  preg:[ P('¿Cuántos clientes necesita para no perder?',20,'CF = 1,000 + 200 = 1,200. q = 1,200 ÷ (80 − 20) = 20.'),
+         P('¿Cuántos soles ingresan en el equilibrio?',1600,'I = 80 × 20 = 1,600.'),
+         P('Si atiende 35 clientes, ¿cuál es su utilidad (S/)?',900,'U = 60 × 35 − 1,200 = 2,100 − 1,200 = 900.') ],
+  concl:'Con 35 clientes está por encima del equilibrio de 20: gana S/ 900 al mes. Desde el cliente 21 el estudio empieza a ganar S/ 60 por cada cliente.' },
+
+{ id:'c2', corto:'Caso 2: Dulce Hogar', titulo:'Caso 2: «Dulce Hogar»', area:'Pastelería: ¿qué local conviene?',
+  xn:'q (tortas)', qs:[0,25,50,75,100], vista:{xmin:0,xmax:120,ymin:0,ymax:4500},
+  sit:'<p>La pastelería vende tortas pequeñas. Cada torta cuesta <b>S/ 20.00</b> en insumos y se vende a <b>S/ 40.00</b>. Se evalúan dos locales:</p><ul><li><b>Local A</b> (avenida principal): alquiler de <b>S/ 1,500.00</b> al mes.</li><li><b>Local B</b> (calle lateral): alquiler de <b>S/ 900.00</b> al mes.</li><li>Se supone que venden lo mismo en ambos locales.</li></ul>',
+  series:[S('cta','CT local A',CL.ct,1500,20), S('ctb','CT local B',CL.b,900,20), S('i','I',CL.i,0,40)],
+  zona:['cta','i'], cruces:[['cta','i','Equilibrio A'],['ctb','i','Equilibrio B']],
+  preg:[ P('¿Cuántas tortas debe vender en el local A para no perder?',75,'q = 1,500 ÷ (40 − 20) = 75.'),
+         P('¿Cuántas tortas debe vender en el local B para no perder?',45,'q = 900 ÷ (40 − 20) = 45.'),
+         P('Con 100 tortas, ¿utilidad en el local A (S/)?',500,'U = 4,000 − 3,500 = 500.'),
+         P('Con 100 tortas, ¿utilidad en el local B (S/)?',1100,'U = 4,000 − 2,900 = 1,100.') ],
+  concl:'Conviene el local B: el precio y el costo por torta son iguales, pero el alquiler es S/ 600 menor. Con 100 tortas gana S/ 1,100 contra S/ 500 del local A, y llega al equilibrio con menos tortas (45 contra 75).' },
+
+{ id:'c3', corto:'Caso 3: Gráfica Norte', titulo:'Caso 3: «Gráfica Norte»', area:'Imprenta: sueldo fijo o comisión para el vendedor',
+  xn:'q (millares)', qs:[0,40,80,120,160], vista:{xmin:0,xmax:180,ymin:0,ymax:12000},
+  sit:'<p>Imprime volantes y vende por millares. Cada mes paga <b>S/ 1,500.00</b> de alquiler y <b>S/ 500.00</b> de luz e internet. Cada millar cuesta <b>S/ 30.00</b> en papel, tinta y planchas y se vende a <b>S/ 70.00</b> (sin IGV).</p><p>Para el asesor comercial evalúan:</p><ul><li><b>Opción 1:</b> sueldo fijo de <b>S/ 1,200.00</b> al mes.</li><li><b>Opción 2:</b> comisión de <b>S/ 12.00</b> por millar vendido.</li><li>Estiman vender <b>120 millares</b> al mes.</li></ul>',
+  series:[S('ct1','CT opción 1',CL.ct,3200,30), S('ct2','CT opción 2',CL.b,2000,42), S('i','I',CL.i,0,70)],
+  zona:['ct1','i'], cruces:[['ct1','ct2','Mismo costo'],['ct1','i','Equilibrio op. 1']],
+  preg:[ P('¿Con cuántos millares ambas opciones cuestan lo mismo?',100,'3,200 + 30q = 2,000 + 42q → 1,200 = 12q → q = 100.'),
+         P('Con 120 millares, ¿costo total de la opción 1 (S/)?',6800,'3,200 + 30 × 120 = 6,800.'),
+         P('Con 120 millares, ¿costo total de la opción 2 (S/)?',7040,'2,000 + 42 × 120 = 7,040.'),
+         P('¿Cuántos millares debe vender con la opción 1 para no perder?',80,'q = 3,200 ÷ (70 − 30) = 80.') ],
+  concl:'Con 120 millares conviene la opción 1 (sueldo fijo): cuesta S/ 6,800 contra S/ 7,040 de la comisión, y ahorra S/ 240. Desde 100 millares el sueldo fijo es más barato.' },
+
+{ id:'c4', corto:'Caso 4: Hilos del Sur', titulo:'Caso 4: «Hilos del Sur»', area:'Confecciones: clasificación de costos y meta de utilidad',
+  xn:'q (polos)', qs:[0,100,200,300], vista:{xmin:0,xmax:350,ymin:0,ymax:14000},
+  sit:'<p>Confecciona polos de algodón en Arequipa. Datos del mes:</p><ul><li>Por cada polo: tela <b>S/ 14.00</b>, hilos y etiquetas <b>S/ 3.00</b>, bolsa de empaque <b>S/ 1.00</b>.</li><li>Comisión de ventas: <b>S/ 2.00</b> por polo vendido.</li><li>Alquiler del taller: <b>S/ 1,700.00</b>. Sueldo del operario de corte y costura: <b>S/ 1,500.00</b>.</li><li>Publicidad en redes: <b>S/ 340.00</b>. Útiles de limpieza: <b>S/ 60.00</b>.</li><li>Precio de venta: <b>S/ 45.00</b> por polo (sin IGV).</li></ul>',
+  series:[S('ct','CT',CL.ct,3600,20), S('i','I',CL.i,0,45), S('u','U',CL.u,-3600,25,{plot:0,tab:0})],
+  zona:['ct','i'], cruces:[['ct','i','Equilibrio']], extra:[{s:'i',x:224,label:'Meta de utilidad S/ 2,000'}],
+  clas:{ cols:['Costo fijo','Costo variable','Costo de producción','Gasto operativo'],
+         filas:[['Tela',[0,1,1,0]],['Hilos y etiquetas',[0,1,1,0]],['Bolsa de empaque',[0,1,1,0]],['Comisión de ventas',[0,1,0,1]],
+                ['Alquiler del taller',[1,0,1,0]],['Sueldo del operario',[1,0,1,0]],['Publicidad en redes',[1,0,0,1]],['Útiles de limpieza',[1,0,0,1]]] },
+  preg:[ P('¿Cuántos polos debe vender para no perder?',144,'CF = 1,700 + 1,500 + 340 + 60 = 3,600. CVu = 14 + 3 + 1 + 2 = 20. q = 3,600 ÷ (45 − 20) = 144.'),
+         P('Para una utilidad de S/ 2,000, ¿cuántos polos debe vender?',224,'25q − 3,600 = 2,000 → q = 5,600 ÷ 25 = 224.') ],
+  concl:'Para ganar S/ 2,000 al mes deben vender 224 polos. El equilibrio está en 144 polos: desde ahí cada polo deja S/ 25 (45 − 20) para cubrir el costo fijo y luego ganar.' },
+
+{ id:'c5', corto:'Caso 5: Manantial', titulo:'Caso 5: «Manantial»', area:'Agua en bidones: precio con IGV y valor de venta',
+  xn:'q (bidones)', qs:[0,200,400,600,800], vista:{xmin:0,xmax:900,ymin:0,ymax:9000},
+  sit:'<p>Reparte agua en bidones de 20 litros. Al público le cobra <b>S/ 11.80</b> por bidón, precio que <b>incluye el IGV (18 %)</b>. Datos del mes:</p><ul><li>Alquiler del local: <b>S/ 700.00</b>. Sueldo del repartidor: <b>S/ 1,200.00</b>. Luz, agua e internet: <b>S/ 100.00</b>.</li><li>Por cada bidón: agua tratada <b>S/ 3.50</b>, tapa y sello <b>S/ 0.50</b>, combustible y mantenimiento de la moto <b>S/ 1.00</b>.</li><li>Si el alquiler sube a <b>S/ 900.00</b>, aparece un <b>CT nuevo</b>.</li></ul>',
+  series:[S('ct','CT',CL.ct,2000,5), S('i','I',CL.i,0,10), S('cn','CT nuevo',CL.n,2200,5)],
+  zona:['ct','i'], cruces:[['ct','i','Equilibrio'],['cn','i','Nuevo equilibrio']],
+  preg:[ P('Valor de venta de un bidón, sin IGV (S/)',10,'11.80 ÷ 1.18 = 10.00.'),
+         P('IGV que se cobra en cada bidón (S/)',1.8,'11.80 − 10.00 = 1.80.'),
+         P('¿Cuántos bidones para no perder?',400,'CF = 700 + 1,200 + 100 = 2,000. CVu = 3.50 + 0.50 + 1.00 = 5. q = 2,000 ÷ (10 − 5) = 400.'),
+         P('Con alquiler de S/ 900, ¿cuántos bidones para no perder?',440,'CF = 2,200. q = 2,200 ÷ 5 = 440.') ],
+  concl:'No: I = 11.80q es incorrecto. Los S/ 11.80 incluyen el IGV, que no es ingreso del negocio: se entrega a SUNAT. El ingreso es el valor de venta: I = 10q.' }
+];
+
+var LIBRE={ id:'libre', corto:'Plano libre (colocar puntos)', titulo:'Plano libre', xn:'x', yn:'y', qs:[], vista:{xmin:-10,xmax:10,ymin:-10,ymax:10},
+  series:[S('A','Serie A',CL.i,0,0,{libre:1}), S('B','Serie B',CL.ct,0,0,{libre:1}), S('C','Serie C',CL.b,0,0,{libre:1}), S('D','Serie D',CL.n,0,0,{libre:1})] };
+
+function caso(id){ if(id==='libre') return LIBRE; for(var i=0;i<CASOS.length;i++) if(CASOS[i].id===id) return CASOS[i]; return CASOS[0]; }
+
+/* ============================ estado y guardado ============================ */
+var LS='pl_plano_v1';
+var SAVE={ caso:'frutal', d:{} };
+try{ var g=JSON.parse(localStorage.getItem(LS)||'null'); if(g && typeof g==='object'){ SAVE.caso=g.caso||'frutal'; SAVE.d=g.d||{}; } }catch(e){}
+function graba(){ try{ localStorage.setItem(LS, JSON.stringify(SAVE)); }catch(e){} }
+function nuevoE(K){ return { pts:[], mod:{}, tab:{}, preg:{}, clas:{}, texto:'', sol:false, vista:JSON.parse(JSON.stringify(K.vista)), nid:1, rev:false }; }
+var K=caso(SAVE.caso), E;
+function cargaCaso(id){
+  SAVE.caso=id; K=caso(id);
+  if(!SAVE.d[id]) SAVE.d[id]=nuevoE(K);
+  E=SAVE.d[id];
+  if(!E.vista) E.vista=JSON.parse(JSON.stringify(K.vista));
+  E.pts=E.pts||[]; E.mod=E.mod||{}; E.tab=E.tab||{}; E.preg=E.preg||{}; E.clas=E.clas||{}; E.nid=E.nid||1;
+  var pl=series(); if(!pl.some(function(s){ return s.id===serieAct; })) serieAct=pl.length?pl[0].id:null;
+  graba();
+}
+var serieAct=null, tool='punto';
+function series(){ return K.series.filter(function(s){ return s.libre || s.plot; }); }
+function serieDe(id){ for(var i=0;i<K.series.length;i++) if(K.series[i].id===id) return K.series[i]; return null; }
+var esCaso=function(){ return K.id!=='libre'; };
+
+/* ============================ utilidades numéricas ============================ */
+function num(v){
+  if(v===undefined||v===null) return NaN; v=String(v).trim().replace(/\s/g,'').replace(/^S\/?/i,'');
+  if(v==='') return NaN;
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(v)) v=v.replace(/,/g,''); else v=v.replace(',','.');
+  return /^-?\d*\.?\d+$/.test(v) ? parseFloat(v) : NaN;
+}
+function fmt(n){ if(!isFinite(n)) return '—'; var r=Math.round(n*100)/100; return r.toLocaleString('en-US',{maximumFractionDigits:2}); }
+function fmtIn(n){ return String(Math.round(n*100)/100); }
+function val(s,q){ return s.a+s.b*q; }
+function pasoNice(rango,obj){ var crudo=rango/obj, mag=Math.pow(10,Math.floor(Math.log(crudo)/Math.LN10)), r=crudo/mag; return (r<1.5?1:r<3?2:r<7?5:10)*mag; }
+function ajusta(pts){
+  var n=pts.length; if(n<2) return null;
+  var sx=0,sy=0; pts.forEach(function(p){ sx+=p.x; sy+=p.y; });
+  var mx=sx/n, my=sy/n, sxx=0, sxy=0; pts.forEach(function(p){ sxx+=(p.x-mx)*(p.x-mx); sxy+=(p.x-mx)*(p.y-my); });
+  if(sxx<1e-12) return null; var b=sxy/sxx; return { a:my-b*mx, b:b };
+}
+function cruce(r1,r2){ if(Math.abs(r1.b-r2.b)<1e-9) return null; var x=(r2.a-r1.a)/(r1.b-r2.b); return { x:x, y:r1.a+r1.b*x }; }
+
+/* ============================ geometría del plano ============================ */
+var W=900, H=620, ML=72, MR=24, MT=26, MB=60, Z=1;
+function medida(){
+  var chico=window.innerWidth<700;
+  if(chico){ W=520; H=620; ML=62; MR=16; MT=22; MB=70; Z=1.5; } else { W=900; H=620; ML=72; MR=24; MT=26; MB=60; Z=1; }
+  var sv=document.getElementById('pl'); sv.setAttribute('viewBox','0 0 '+W+' '+H); sv.style.aspectRatio=W+'/'+H;
+}
+function V(){ return E.vista; }
+function X(x){ return ML+(x-V().xmin)/(V().xmax-V().xmin)*(W-ML-MR); }
+function Y(y){ return H-MB-(y-V().ymin)/(V().ymax-V().ymin)*(H-MT-MB); }
+function iX(px){ return V().xmin+(px-ML)/(W-ML-MR)*(V().xmax-V().xmin); }
+function iY(py){ return V().ymin+(H-MB-py)/(H-MT-MB)*(V().ymax-V().ymin); }
+function pasos(){ return { x:pasoNice(V().xmax-V().xmin,9), y:pasoNice(V().ymax-V().ymin,8) }; }
+function tolY(){ return 0.02*(V().ymax-V().ymin); }
+
+/* ============================ dibujo ============================ */
+var svg=$('pl'), dibujo=$('dibujo'), cursor=$('cursor');
+function estrella(cx,cy,r,fill,stroke){
+  var p=[]; for(var i=0;i<10;i++){ var ang=-Math.PI/2+i*Math.PI/5, rr=i%2?r*0.45:r; p.push((cx+rr*Math.cos(ang)).toFixed(1)+','+(cy+rr*Math.sin(ang)).toFixed(1)); }
+  return '<polygon points="'+p.join(' ')+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.6" stroke-linejoin="round"/>';
+}
+function texto(x,y,t,o){ o=o||{}; return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" font-family="Inter,Arial,sans-serif" font-size="'+((o.sz||13)*Z).toFixed(1)+'" font-weight="'+(o.w||600)+'" fill="'+(o.c||'#0B1B3F')+'" text-anchor="'+(o.a||'start')+'"'+
+    (o.halo?' stroke="#fff" stroke-width="'+(4*Z)+'" paint-order="stroke" stroke-linejoin="round"':'')+'>'+esc(t)+'</text>'; }
+
+function puntosOk(p){
+  if(!esCaso() || p.s==='E') return null;
+  var s=serieDe(p.s); if(!s) return null;
+  return Math.abs(p.y-val(s,p.x))<=tolY();
+}
+function rectasAlumno(){
+  var res=[]; series().forEach(function(s){
+    var ps=E.pts.filter(function(p){ return p.s===s.id; }); var f=ajusta(ps); if(f) res.push({ s:s, a:f.a, b:f.b });
+  }); return res;
+}
+function crucesAlumno(rs){
+  var out=[]; for(var i=0;i<rs.length;i++) for(var j=i+1;j<rs.length;j++){
+    var c=cruce(rs[i],rs[j]); if(c) out.push({ p:rs[i], q:rs[j], x:c.x, y:c.y });
+  } return out;
+}
+function dentro(x,y){ var v=V(); return x>=v.xmin-1e-9 && x<=v.xmax+1e-9 && y>=v.ymin-1e-9 && y<=v.ymax+1e-9; }
+
+function pintaPlano(){
+  var v=V(), st=pasos(), h='';
+  var px0=ML, px1=W-MR, py0=MT, py1=H-MB;
+  h+='<defs><clipPath id="rec"><rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'"/></clipPath></defs>';
+  h+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff"/>';
+  h+='<rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'" fill="#FBFCFF"/>';
+  /* cuadrícula y números */
+  var i, t;
+  for(t=Math.ceil(v.xmin/st.x)*st.x; t<=v.xmax+1e-9; t+=st.x){
+    var gx=X(t); h+='<line x1="'+gx.toFixed(1)+'" y1="'+py0+'" x2="'+gx.toFixed(1)+'" y2="'+py1+'" stroke="#E3E9F6" stroke-width="1"/>';
+    h+=texto(gx,py1+19*Z,fmt(t),{a:'middle',sz:12,c:'#5B6B8C'});
+  }
+  for(t=Math.ceil(v.ymin/st.y)*st.y; t<=v.ymax+1e-9; t+=st.y){
+    var gy=Y(t); h+='<line x1="'+px0+'" y1="'+gy.toFixed(1)+'" x2="'+px1+'" y2="'+gy.toFixed(1)+'" stroke="#E3E9F6" stroke-width="1"/>';
+    h+=texto(px0-7,gy+4*Z,fmt(t),{a:'end',sz:12,c:'#5B6B8C'});
+  }
+  /* ejes */
+  var ejeY=(v.xmin<=0 && v.xmax>=0)? X(0) : px0, ejeX=(v.ymin<=0 && v.ymax>=0)? Y(0) : py1;
+  h+='<line x1="'+px0+'" y1="'+ejeX.toFixed(1)+'" x2="'+px1+'" y2="'+ejeX.toFixed(1)+'" stroke="#0B1B3F" stroke-width="2.2"/>';
+  h+='<line x1="'+ejeY.toFixed(1)+'" y1="'+py0+'" x2="'+ejeY.toFixed(1)+'" y2="'+py1+'" stroke="#0B1B3F" stroke-width="2.2"/>';
+  h+='<polygon points="'+px1+','+ejeX.toFixed(1)+' '+(px1-9)+','+(ejeX-5).toFixed(1)+' '+(px1-9)+','+(ejeX+5).toFixed(1)+'" fill="#0B1B3F"/>';
+  h+='<polygon points="'+ejeY.toFixed(1)+','+py0+' '+(ejeY-5).toFixed(1)+','+(py0+9)+' '+(ejeY+5).toFixed(1)+','+(py0+9)+'" fill="#0B1B3F"/>';
+  var xn=K.xn||'x', yn=K.yn||'S/';
+  h+=texto((px0+px1)/2,H-10*Z,xn,{a:'middle',sz:14,w:800,c:'#071767'});
+  h+='<text x="'+(16*Z)+'" y="'+((py0+py1)/2)+'" font-family="Inter,Arial,sans-serif" font-size="'+(14*Z)+'" font-weight="800" fill="#071767" text-anchor="middle" transform="rotate(-90 '+(16*Z)+' '+((py0+py1)/2)+')">'+esc(yn)+'</text>';
+
+  h+='<g clip-path="url(#rec)">';
+  /* ---- solución: zonas de pérdida y ganancia ---- */
+  if(esCaso() && E.sol && K.zona){
+    var sc=serieDe(K.zona[0]), si=serieDe(K.zona[1]), ce=cruce(sc,si);
+    if(ce && ce.x>v.xmin && ce.x<v.xmax){
+      var xa=v.xmin, xb=v.xmax;
+      h+='<polygon points="'+X(xa)+','+Y(val(sc,xa))+' '+X(ce.x)+','+Y(ce.y)+' '+X(xa)+','+Y(val(si,xa))+'" fill="rgba(229,72,77,.16)"/>';
+      h+='<polygon points="'+X(ce.x)+','+Y(ce.y)+' '+X(xb)+','+Y(val(sc,xb))+' '+X(xb)+','+Y(val(si,xb))+'" fill="rgba(31,157,85,.16)"/>';
+      var mxp=(xa+ce.x)/2; h+=texto(X(mxp),Y((val(sc,mxp)+val(si,mxp))/2)+4,'Pérdida',{a:'middle',sz:15,w:800,c:'#C0262B'});
+      var mxg=ce.x+(xb-ce.x)*0.6; h+=texto(X(mxg),Y((val(sc,mxg)+val(si,mxg))/2)+4,'Ganancia',{a:'middle',sz:15,w:800,c:'#16794A'});
+    }
+  }
+  /* ---- solución: rectas exactas ---- */
+  if(esCaso() && E.sol){
+    series().forEach(function(s){
+      h+='<line x1="'+X(v.xmin).toFixed(1)+'" y1="'+Y(val(s,v.xmin)).toFixed(1)+'" x2="'+X(v.xmax).toFixed(1)+'" y2="'+Y(val(s,v.xmax)).toFixed(1)+'" stroke="'+s.color+'" stroke-width="'+(7*Z)+'" stroke-opacity=".22" stroke-linecap="round"/>';
+    });
+  }
+  /* ---- recta del alumno ---- */
+  var rs=rectasAlumno();
+  rs.forEach(function(r){
+    h+='<line x1="'+X(v.xmin).toFixed(1)+'" y1="'+Y(r.a+r.b*v.xmin).toFixed(1)+'" x2="'+X(v.xmax).toFixed(1)+'" y2="'+Y(r.a+r.b*v.xmax).toFixed(1)+'" stroke="'+r.s.color+'" stroke-width="'+(3.2*Z)+'" stroke-linecap="round"/>';
+  });
+  h+='</g>';
+  /* nombres de las rectas */
+  var rotulo=function(s,a,b,solo){
+    var xr=v.xmax-(v.xmax-v.xmin)*0.015, yr=a+b*xr; if(yr>v.ymax||yr<v.ymin){ yr=v.ymax; xr=(yr-a)/b; if(!(b!==0&&xr>=v.xmin&&xr<=v.xmax)) return ''; }
+    return texto(X(xr)-6,Y(yr)+(yr>=v.ymax-1e-9?20:-8),s.nom,{a:'end',sz:13,w:800,c:s.color,halo:1});
+  };
+  rs.forEach(function(r){ h+=rotulo(r.s,r.a,r.b); });
+  if(esCaso() && E.sol){ series().forEach(function(s){ if(!rs.some(function(r){ return r.s.id===s.id; })) h+=rotulo(s,s.a,s.b); }); }
+  /* ---- cruces del alumno ---- */
+  var cr=crucesAlumno(rs);
+  cr.forEach(function(c){ if(dentro(c.x,c.y)){
+    h+=estrella(X(c.x),Y(c.y),11*Z,'#FFC400','#071767');
+    if(!(esCaso() && E.sol)) h+=texto(X(c.x)+14,Y(c.y)+22,'('+fmt(c.x)+'; '+fmt(c.y)+')',{sz:12.5,w:800,c:'#071767',halo:1});
+  } });
+  /* ---- solución: cruces exactos y puntos extra ---- */
+  if(esCaso() && E.sol){
+    (K.cruces||[]).forEach(function(c,ci){
+      var p=cruce(serieDe(c[0]),serieDe(c[1])); if(!p||!dentro(p.x,p.y)) return;
+      h+='<circle cx="'+X(p.x).toFixed(1)+'" cy="'+Y(p.y).toFixed(1)+'" r="'+(13*Z)+'" fill="none" stroke="#071767" stroke-width="2.4" stroke-dasharray="4 3"/>';
+      h+=texto(X(p.x)+16,Y(p.y)+(ci%2?30:-14),c[2]+': ('+fmt(p.x)+'; '+fmt(p.y)+')',{sz:12.5,w:800,c:'#071767',halo:1});
+    });
+    (K.extra||[]).forEach(function(e){
+      var s=serieDe(e.s), y=val(s,e.x);
+      h+='<circle cx="'+X(e.x).toFixed(1)+'" cy="'+Y(y).toFixed(1)+'" r="'+(10*Z)+'" fill="#FFC400" stroke="#071767" stroke-width="2"/>';
+      h+=texto(X(e.x)-14,Y(y)-14,e.label+': ('+fmt(e.x)+'; '+fmt(y)+')',{a:'end',sz:12.5,w:800,c:'#071767',halo:1});
+    });
+  }
+  /* ---- puntos del alumno ---- */
+  var auto=$('chAuto').checked, coord=$('chCoord').checked;
+  E.pts.forEach(function(p){
+    var cx=X(p.x), cy=Y(p.y);
+    if(p.s==='E'){ h+=estrella(cx,cy,12*Z,'#FFC400','#071767'); if(coord) h+=texto(cx+14,cy+4,'('+fmt(p.x)+'; '+fmt(p.y)+')',{sz:12,w:800,c:'#071767',halo:1}); return; }
+    var s=serieDe(p.s), col=s?s.color:'#071767', ok=auto?puntosOk(p):null;
+    if(ok!==null) h+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(13*Z)+'" fill="none" stroke="'+(ok?'#1F9D55':'#E5484D')+'" stroke-width="3"/>';
+    h+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(7*Z)+'" fill="'+col+'" stroke="#fff" stroke-width="2.2" data-id="'+p.id+'"/>';
+    if(ok===false) h+=texto(cx,cy-18*Z,'✗',{a:'middle',sz:15,w:800,c:'#E5484D',halo:1});
+    if(ok===true) h+=texto(cx,cy-18*Z,'✓',{a:'middle',sz:15,w:800,c:'#1F9D55',halo:1});
+    if(coord) h+=texto(cx+10*Z,cy+22*Z,'('+fmt(p.x)+'; '+fmt(p.y)+')',{sz:11.5,w:700,c:col,halo:1});
+  });
+  dibujo.innerHTML=h;
+  pintaBarraSerie(); pintaEstado(rs,cr);
+}
+
+function pintaBarraSerie(){
+  var b=$('barraSerie'), h='<span style="font-weight:800;color:#071767;font-size:13.5px">Serie para colocar:</span>';
+  series().forEach(function(s){
+    var n=E.pts.filter(function(p){ return p.s===s.id; }).length;
+    h+='<button type="button" class="chip'+(s.id===serieAct?' on':'')+'" data-serie="'+s.id+'" style="--c:'+s.color+'"><i></i>'+esc(s.nom)+' <small>'+n+' pts</small></button>';
+  });
+  b.innerHTML=h;
+}
+function pintaEstado(rs,cr){
+  var e=$('estado'), inf=$('info'), h='';
+  if(esCaso()){
+    var tot=0, ok=0; E.pts.forEach(function(p){ var o=puntosOk(p); if(o!==null){ tot++; if(o) ok++; } });
+    h+='<span>Puntos colocados: <b>'+tot+'</b></span><span>Sobre su recta: <b>'+ok+'</b></span>';
+    var marc=E.pts.filter(function(p){ return p.s==='E'; });
+    if(marc.length){
+      var buenas=marc.filter(function(m){ return (K.cruces||[]).some(function(c){ var p=cruce(serieDe(c[0]),serieDe(c[1])); return p && Math.abs(X(p.x)-X(m.x))<22 && Math.abs(Y(p.y)-Y(m.y))<22; }); }).length;
+      h+='<span>Cruces marcados: <b>'+marc.length+'</b> (correctos: <b>'+buenas+'</b>)</span>';
+    }
+  } else {
+    h+='<span>Puntos: <b>'+E.pts.length+'</b></span>';
+  }
+  e.innerHTML=h;
+  var li=[];
+  rs.forEach(function(r){
+    var q=esCaso()?(K.xn.replace(/\s*\(.*\)/,'')||'q'):'x';
+    var cuerpo=(Math.abs(r.a)<1e-9?(r.b<0?'−':''):fmt(r.a)+(r.b<0?' − ':' + '))+fmt(Math.abs(r.b))+'·'+q;
+    var txt=(r.s.libre?'y':r.s.nom)+' = '+cuerpo;
+    var mov=Math.abs(r.b)<1e-9?'es horizontal':(r.b>0?'sube ':'baja ')+fmt(Math.abs(r.b))+' por cada unidad';
+    li.push('<span class="eq"><b style="color:'+r.s.color+'">&#9632;</b> '+esc(txt)+' <span style="color:#5B6B8C">(corta el eje vertical en '+fmt(r.a)+'; '+mov+')</span></span>');
+  });
+  cr.forEach(function(c){ li.push('<span class="eq">&#9733; <b>'+esc(c.p.s.nom)+'</b> y <b>'+esc(c.q.s.nom)+'</b> se cruzan en <b>('+fmt(c.x)+'; '+fmt(c.y)+')</b></span>'); });
+  if(!li.length) li.push(esCaso()?'Coloca al menos 2 puntos de una serie para ver su recta y los cruces.':'Coloca al menos 2 puntos de una serie para ver su recta. Con 2 series se calcula el cruce.');
+  inf.innerHTML=li.join('');
+}
+
+/* ============================ interacción con el plano ============================ */
+function local(ev){ var pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY; var m=svg.getScreenCTM(); return m?pt.matrixTransform(m.inverse()):{x:0,y:0}; }
+function enPlano(p){ return p.x>=ML-2 && p.x<=W-MR+2 && p.y>=MT-2 && p.y<=H-MB+2; }
+function snap(x,y){
+  if(!$('chSnap').checked) return { x:Math.round(x*100)/100, y:Math.round(y*100)/100 };
+  var st=pasos(), sx=st.x/10, sy=st.y/10; return { x:Math.round(x/sx)*sx, y:Math.round(y/sy)*sy };
+}
+function clampV(p){ var v=V(); return { x:Math.min(v.xmax,Math.max(v.xmin,p.x)), y:Math.min(v.ymax,Math.max(v.ymin,p.y)) }; }
+function hit(p){
+  var rr=(Z>1?30:16), best=null, bd=rr*rr; E.pts.forEach(function(q){ var dx=X(q.x)-p.x, dy=Y(q.y)-p.y, d=dx*dx+dy*dy; if(d<bd){ bd=d; best=q; } }); return best;
+}
+function agrega(s,x,y){ E.pts.push({ id:E.nid++, s:s, x:x, y:y }); graba(); }
+var arrastre=null;
+svg.addEventListener('pointerdown',function(ev){
+  var p=local(ev); if(!enPlano(p)) return;
+  ev.preventDefault();
+  var h0=hit(p);
+  if(tool==='borrar'){ if(h0){ E.pts=E.pts.filter(function(q){ return q.id!==h0.id; }); graba(); pintaPlano(); } return; }
+  if(tool==='mover' || (tool==='punto' && h0)){ if(h0){ arrastre=h0; try{ svg.setPointerCapture(ev.pointerId); }catch(e){} svg.style.cursor='grabbing'; } return; }
+  var c=clampV(snap(iX(p.x),iY(p.y)));
+  if(tool==='eq'){ agrega('E',c.x,c.y); pintaPlano(); return; }
+  if(!serieAct) return;
+  agrega(serieAct,c.x,c.y); pintaPlano();
+});
+svg.addEventListener('pointermove',function(ev){
+  var p=local(ev);
+  if(arrastre){ var c=clampV(snap(iX(p.x),iY(p.y))); arrastre.x=c.x; arrastre.y=c.y; pintaPlano(); return; }
+  if(!enPlano(p)){ cursor.innerHTML=''; return; }
+  var c2=clampV(snap(iX(p.x),iY(p.y))), cx=X(c2.x), cy=Y(c2.y);
+  var t='('+fmt(c2.x)+'; '+fmt(c2.y)+')', tx=cx+14, an='start'; if(tx>W-130*Z){ tx=cx-14; an='end'; }
+  cursor.innerHTML='<line x1="'+cx+'" y1="'+MT+'" x2="'+cx+'" y2="'+(H-MB)+'" stroke="#071767" stroke-opacity=".25" stroke-dasharray="4 4"/>'+
+    '<line x1="'+ML+'" y1="'+cy+'" x2="'+(W-MR)+'" y2="'+cy+'" stroke="#071767" stroke-opacity=".25" stroke-dasharray="4 4"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="none" stroke="#071767" stroke-width="1.5"/>'+
+    '<rect x="'+(an==='start'?tx-4:tx-92*Z)+'" y="'+(cy-30*Z)+'" width="'+(96*Z)+'" height="'+(20*Z)+'" rx="6" fill="#071767" opacity=".92"/>'+
+    texto(an==='start'?tx+44*Z:tx-44*Z,cy-16*Z,t,{a:'middle',sz:12,w:700,c:'#fff'});
+});
+function finArrastre(){ if(arrastre){ arrastre=null; graba(); svg.style.cursor=''; pintaPlano(); } }
+svg.addEventListener('pointerup',finArrastre);
+svg.addEventListener('pointercancel',finArrastre);
+svg.addEventListener('pointerleave',function(){ if(!arrastre) cursor.innerHTML=''; });
+
+qq('[data-tool]').forEach(function(b){ b.addEventListener('click',function(){
+  tool=b.getAttribute('data-tool'); qq('[data-tool]').forEach(function(o){ o.classList.toggle('act',o===b); });
+  svg.className.baseVal='t-'+tool;
+}); });
+$('barraSerie').addEventListener('click',function(ev){ var b=ev.target.closest('[data-serie]'); if(!b) return; serieAct=b.getAttribute('data-serie'); if(tool==='borrar'||tool==='eq') {} pintaBarraSerie(); });
+$('btnDeshacer').addEventListener('click',function(){ E.pts.pop(); graba(); pintaPlano(); });
+$('btnLimpiar').addEventListener('click',function(){ if(!E.pts.length || window.confirm('¿Borrar todos los puntos del gráfico?')){ E.pts=[]; graba(); pintaPlano(); } });
+['chSnap','chCoord','chAuto'].forEach(function(id){ $(id).addEventListener('change',pintaPlano); });
+$('btnAgr').addEventListener('click',function(){
+  var x=num($('agX').value), y=num($('agY').value);
+  if(!isFinite(x)||!isFinite(y)){ $('agX').focus(); return; }
+  var v=V(); if(x<v.xmin||x>v.xmax||y<v.ymin||y>v.ymax){ window.alert('Ese punto queda fuera de la escala. Cambia la escala en «Escala del plano».'); return; }
+  if(!serieAct) return; agrega(serieAct,x,y); $('agX').value=''; $('agY').value=''; pintaPlano();
+});
+['agX','agY'].forEach(function(id){ $(id).addEventListener('keydown',function(ev){ if(ev.key==='Enter'){ $('btnAgr').click(); } }); });
+
+/* pantalla completa, solo gráfico, imagen */
+$('btnPant').addEventListener('click',function(){
+  var a=$('app'); if(document.fullscreenElement){ document.exitFullscreen(); } else if(a.requestFullscreen){ a.requestFullscreen().catch(function(){}); }
+});
+$('btnSolo').addEventListener('click',function(){ var a=$('app'); a.classList.toggle('solo'); this.innerHTML=a.classList.contains('solo')?'&#9638; Mostrar datos':'&#128470; Solo gráfico'; });
+$('btnPng').addEventListener('click',function(){
+  var clon=svg.cloneNode(true); clon.setAttribute('width',W); clon.setAttribute('height',H); clon.setAttribute('xmlns','http://www.w3.org/2000/svg');
+  var cu=clon.querySelector('#cursor'); if(cu) cu.innerHTML='';
+  var xml=new XMLSerializer().serializeToString(clon), img=new Image();
+  img.onload=function(){
+    var c=document.createElement('canvas'); c.width=W*2; c.height=H*2; var g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(img,0,0,c.width,c.height);
+    c.toBlob(function(b){ var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='plano-cartesiano-'+K.id+'.png'; document.body.appendChild(a); a.click(); a.remove(); });
+  };
+  img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+});
+
+/* ============================ panel de datos ============================ */
+function celdaTab(s,q){ return E.tab[s.id+'|'+q]; }
+function esperadoTab(s,q){ return val(s,q); }
+function inputCls(valor,esp,tol){ if(E.sol) return 'in sol'; var n=num(valor); if(!isFinite(n)) return 'in'; return 'in '+(Math.abs(n-esp)<=(tol||0.01)?'ok':'mal'); }
+
+function pintaPanel(){
+  var p=$('panel'), h='', opts='';
+  opts+='<option value="libre"'+(K.id==='libre'?' selected':'')+'>'+esc(LIBRE.corto)+'</option>';
+  CASOS.forEach(function(c){ opts+='<option value="'+c.id+'"'+(c.id===K.id?' selected':'')+'>'+esc(c.corto)+'</option>'; });
+  h+='<h3>Elige qué trabajar</h3><select class="sel" id="selCaso" aria-label="Caso">'+opts+'</select>';
+
+  if(!esCaso()){
+    h+='<div class="sit"><b>Plano libre.</b> Sirve para colocar puntos y trazar rectas durante la clase.</div>'+
+       '<ul class="ayuda"><li>Elige la <b>serie</b> (color) sobre el plano y haz clic para <b>colocar puntos</b>.</li>'+
+       '<li>Con <b>2 puntos o más</b> de una serie se traza su recta y se escribe su ecuación.</li>'+
+       '<li>Con <b>2 series</b> el plano marca el <b>cruce</b> (por ejemplo, el punto de equilibrio).</li>'+
+       '<li>También puedes escribir las coordenadas y pulsar «Agregar».</li></ul>';
+  } else {
+    h+='<div class="area">'+esc(K.area)+'</div><div class="sit">'+K.sit+'</div>';
+    var n=1;
+    /* clasificación (caso 4) */
+    if(K.clas){
+      h+='<h3><i>'+(n++)+'</i> Marca con X dónde va cada partida</h3><div class="tabw"><table class="tb cl" id="tbCl"><tr><th>Partida</th>'+K.clas.cols.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr>';
+      K.clas.filas.forEach(function(f,i){
+        h+='<tr><td class="nom">'+esc(f[0])+'</td>';
+        for(var j=0;j<4;j++){
+          var on=!!E.clas[i+'|'+j], clave=f[1][j]===1, c='', t='';
+          if(E.sol){ c=clave?'bien':''; t=clave?'✓':''; }
+          else { if(on) { c='on'; t='X'; } if(E.rev){ if(on&&clave) c='bien'; else if(on&&!clave) c='mal'; else if(!on&&clave) c='falta'; } }
+          h+='<td data-i="'+i+'" data-j="'+j+'" class="'+c+'">'+t+'</td>';
+        }
+        h+='</tr>';
+      });
+      h+='</table></div><div class="fila"><button type="button" class="btn min" data-acc="revcl">Revisar la tabla</button></div>';
+    }
+    /* modelos */
+    h+='<h3><i>'+(n++)+'</i> Escribe los modelos</h3>';
+    var xs=(K.xn||'q').replace(/\s*\(.*\)/,'');
+    K.series.filter(function(s){ return s.mod; }).forEach(function(s){
+      var ka=s.id+'|a', kb=s.id+'|b', va=E.sol?fmtIn(s.a):(E.mod[ka]||''), vb=E.sol?fmtIn(s.b):(E.mod[kb]||'');
+      h+='<div class="mrow"><b style="color:'+s.color+'">'+esc(s.nom)+' =</b>';
+      if(s.id==='i'){ h+='<input class="'+inputCls(vb,s.b)+'" data-k="mod" data-s="'+s.id+'" data-c="b" value="'+esc(vb)+'" inputmode="decimal" '+(E.sol?'readonly':'')+' aria-label="'+esc(s.nom)+' por unidad"> · '+xs; }
+      else { h+='<input class="'+inputCls(va,s.a)+'" data-k="mod" data-s="'+s.id+'" data-c="a" value="'+esc(va)+'" inputmode="decimal" '+(E.sol?'readonly':'')+' aria-label="'+esc(s.nom)+' parte fija"> + <input class="'+inputCls(vb,s.b)+'" data-k="mod" data-s="'+s.id+'" data-c="b" value="'+esc(vb)+'" inputmode="decimal" '+(E.sol?'readonly':'')+' aria-label="'+esc(s.nom)+' por unidad"> · '+xs; }
+      h+='</div>';
+    });
+    h+='<div class="nota">Costo total = costo fijo + costo variable por unidad · q. Ingreso = precio sin IGV · q.</div>';
+    /* tabla */
+    var ts=K.series.filter(function(s){ return s.tab; });
+    h+='<h3><i>'+(n++)+'</i> Completa la tabla</h3><div class="tabw"><table class="tb"><tr><th>'+esc(K.xn)+'</th>'+ts.map(function(s){ return '<th style="border-bottom:4px solid '+s.color+'">'+esc(s.nom)+' (S/)</th>'; }).join('')+'</tr>';
+    K.qs.forEach(function(q){
+      h+='<tr><td class="nom">'+fmt(q)+'</td>';
+      ts.forEach(function(s){
+        var k=s.id+'|'+q, v=E.sol?fmtIn(esperadoTab(s,q)):(E.tab[k]||'');
+        h+='<td><input class="'+inputCls(v,esperadoTab(s,q))+'" data-k="tab" data-s="'+s.id+'" data-q="'+q+'" value="'+esc(v)+'" inputmode="decimal" '+(E.sol?'readonly':'')+' aria-label="'+esc(s.nom)+' con '+q+'"></td>';
+      });
+      h+='</tr>';
+    });
+    h+='</table></div><div class="fila"><button type="button" class="btn min" data-acc="ubicar">&#9679; Ubicar mis puntos en el plano</button></div>';
+    /* gráfico */
+    h+='<h3><i>'+(n++)+'</i> Grafica y marca el equilibrio</h3><div class="ayuda" style="margin:0">Elige la serie sobre el plano, coloca los puntos y mira cómo se traza la recta. Usa <b>★ Marcar cruce</b> para el punto de equilibrio.</div>';
+    /* preguntas */
+    h+='<h3><i>'+(n++)+'</i> Responde</h3>';
+    K.preg.forEach(function(q,i){
+      var v=E.sol?fmtIn(q.ans):(E.preg[i]||''), cls=inputCls(v,q.ans,q.tol);
+      h+='<div style="margin:8px 0"><div style="font-size:14px;font-weight:600;color:#0B1B3F">'+(String.fromCharCode(97+i))+') '+esc(q.t)+'</div><input class="'+cls+'" data-k="preg" data-i="'+i+'" value="'+esc(v)+'" inputmode="decimal" '+(E.sol?'readonly':'')+' aria-label="Respuesta '+(i+1)+'">'+
+         '<div class="pq" id="pq'+i+'" '+((E.sol||cls.indexOf(' ok')>0)?'':'hidden')+'>'+esc(q.pq)+'</div></div>';
+    });
+    /* conclusión */
+    h+='<h3><i>'+(n++)+'</i> Escribe tu conclusión</h3><textarea class="in ancho" id="txtConcl" placeholder="Con tus palabras: ¿qué decides y por qué?">'+esc(E.texto||'')+'</textarea>';
+    if(E.sol) h+='<div class="sugerida"><b>Conclusión sugerida:</b> '+esc(K.concl)+'</div>';
+  }
+  /* escala */
+  var v=V();
+  h+='<details class="esc"><summary>Escala del plano</summary><div class="mrow" style="margin-top:8px">x mín <input class="in" id="vxn" value="'+fmtIn(v.xmin)+'"> x máx <input class="in" id="vxx" value="'+fmtIn(v.xmax)+'"></div>'+
+     '<div class="mrow">y mín <input class="in" id="vyn" value="'+fmtIn(v.ymin)+'"> y máx <input class="in" id="vyx" value="'+fmtIn(v.ymax)+'"></div>'+
+     '<div class="fila"><button type="button" class="btn min" data-acc="escala">Aplicar</button><button type="button" class="btn min" data-acc="cuad1">Cuadrante I</button><button type="button" class="btn min" data-acc="cuad4">Cuatro cuadrantes</button><button type="button" class="btn min" data-acc="escini">Escala original</button></div></details>';
+  /* acciones */
+  if(esCaso()){
+    h+='<div class="fila" style="margin-top:14px"><button type="button" class="btn pri" data-acc="sol">'+(E.sol?'Ocultar solución':'Mostrar solución')+'</button><button type="button" class="btn" data-acc="reiniciar">Reiniciar caso</button></div>';
+  }
+  p.innerHTML=h;
+  $('lbAuto').style.display=esCaso()?'':'none';
+}
+
+$('panel').addEventListener('change',function(ev){
+  if(ev.target.id==='selCaso'){ cargaCaso(ev.target.value); pintaTodo(); }
+});
+$('panel').addEventListener('input',function(ev){
+  var t=ev.target; if(!t.classList.contains('in') && t.id!=='txtConcl') return;
+  if(t.id==='txtConcl'){ E.texto=t.value; graba(); return; }
+  var k=t.getAttribute('data-k'); if(!k || E.sol) return;
+  var s=t.getAttribute('data-s'), esp, tol=0.01;
+  if(k==='mod'){ var c=t.getAttribute('data-c'); E.mod[s+'|'+c]=t.value; esp=serieDe(s)[c]; }
+  else if(k==='tab'){ var q=t.getAttribute('data-q'); E.tab[s+'|'+q]=t.value; esp=esperadoTab(serieDe(s),+q); }
+  else if(k==='preg'){ var i=+t.getAttribute('data-i'); E.preg[i]=t.value; esp=K.preg[i].ans; tol=K.preg[i].tol; }
+  var n=num(t.value); t.className='in'+(isFinite(n)?(Math.abs(n-esp)<=tol?' ok':' mal'):'');
+  if(k==='preg'){ var pq=$('pq'+t.getAttribute('data-i')); if(pq) pq.hidden=!(isFinite(n)&&Math.abs(n-esp)<=tol); }
+  graba();
+});
+$('panel').addEventListener('click',function(ev){
+  var td=ev.target.closest('table.cl td[data-i]');
+  if(td && !E.sol){ var key=td.getAttribute('data-i')+'|'+td.getAttribute('data-j'); E.clas[key]=!E.clas[key]; E.rev=false; graba(); pintaPanel(); return; }
+  var b=ev.target.closest('[data-acc]'); if(!b) return; var a=b.getAttribute('data-acc');
+  if(a==='sol'){ E.sol=!E.sol; graba(); pintaPanel(); pintaPlano(); }
+  else if(a==='reiniciar'){ if(window.confirm('¿Borrar todo lo que escribiste y los puntos de este caso?')){ SAVE.d[K.id]=nuevoE(K); E=SAVE.d[K.id]; graba(); pintaTodo(); } }
+  else if(a==='revcl'){ E.rev=!E.rev; pintaPanel(); }
+  else if(a==='ubicar'){
+    var hechos=0; K.series.filter(function(s){ return s.tab&&s.plot; }).forEach(function(s){
+      K.qs.forEach(function(q){ var y=num(E.tab[s.id+'|'+q]); if(!isFinite(y)) return;
+        if(E.pts.some(function(p){ return p.s===s.id && Math.abs(p.x-q)<1e-9 && Math.abs(p.y-y)<1e-9; })) return;
+        if(y<V().ymin||y>V().ymax||q<V().xmin||q>V().xmax) return; agrega(s.id,q,y); hechos++; });
+    });
+    if(!hechos) window.alert('Escribe primero los valores de la tabla (o ya están ubicados).'); pintaPlano();
+  }
+  else if(a==='escala'){
+    var x0=num($('vxn').value), x1=num($('vxx').value), y0=num($('vyn').value), y1=num($('vyx').value);
+    if(isFinite(x0)&&isFinite(x1)&&isFinite(y0)&&isFinite(y1)&&x1>x0&&y1>y0){ E.vista={xmin:x0,xmax:x1,ymin:y0,ymax:y1}; graba(); pintaPlano(); } else window.alert('Revisa los números: el máximo debe ser mayor que el mínimo.');
+  }
+  else if(a==='cuad1'){ var vv=V(); E.vista={xmin:0,xmax:Math.max(vv.xmax,10),ymin:0,ymax:Math.max(vv.ymax,10)}; graba(); pintaPanel(); pintaPlano(); }
+  else if(a==='cuad4'){ var m=Math.max(Math.abs(V().xmax),Math.abs(V().xmin),Math.abs(V().ymax),Math.abs(V().ymin),10); E.vista={xmin:-m,xmax:m,ymin:-m,ymax:m}; graba(); pintaPanel(); pintaPlano(); }
+  else if(a==='escini'){ E.vista=JSON.parse(JSON.stringify(K.vista)); graba(); pintaPanel(); pintaPlano(); }
+});
+
+function pintaTodo(){ pintaPanel(); pintaPlano(); }
+medida();
+cargaCaso(SAVE.caso);
+pintaTodo();
+var chicoAntes=window.innerWidth<700;
+window.addEventListener('resize',function(){ var c=window.innerWidth<700; if(c!==chicoAntes){ chicoAntes=c; medida(); pintaPlano(); } });
+})();
+</script>
+</body>
+</html>
