@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Práctica de Pensamiento Lógico · Semana 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Layout: una columna estrecha tipo app móvil; barra de acción fija abajo */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#3c3c3c; --muted:#777777; --line:#e5e5e5;
+  --green:#58cc02; --green-d:#58a700; --green-bg:#d7ffb8; --green-ink:#46a302;
+  --red:#ff4b4b; --red-d:#ea2b2b; --red-bg:#ffdfe0; --red-ink:#d33131;
+  --blue:#1cb0f6; --blue-d:#1899d6; --blue-bg:#ddf4ff; --gold:#ffc800;
+  --display:"Nunito","Trebuchet MS",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#131f24; --surface:#131f24; --ink:#e8eef1; --muted:#8ea0a8; --line:#37464f;
+    --green-bg:#1f3b12; --green-ink:#89e219; --red-bg:#3d1a1c; --red-ink:#ff7878; --blue-bg:#14323f;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#131f24; --surface:#131f24; --ink:#e8eef1; --muted:#8ea0a8; --line:#37464f;
+  --green-bg:#1f3b12; --green-ink:#89e219; --red-bg:#3d1a1c; --red-ink:#ff7878; --blue-bg:#14323f;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--display);font-weight:700;font-size:17px;line-height:1.4}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#app{max-width:600px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.pad{padding:20px 16px}
+
+/* Inicio */
+.hero{display:flex;align-items:center;gap:14px;padding:24px 16px 8px}
+.mascot{width:56px;height:56px;border-radius:16px;background:var(--green);display:grid;place-items:center;font-size:30px;color:#fff;box-shadow:0 4px 0 var(--green-d)}
+.hero h1{margin:0;font-size:24px;font-weight:900;text-wrap:balance}
+.hero p{margin:2px 0 0;color:var(--muted);font-size:15px}
+.stats{display:flex;gap:10px;padding:8px 16px 0}
+.chip{border:2px solid var(--line);border-radius:14px;padding:6px 12px;font-size:15px;font-weight:800}
+.exam{margin:16px;display:flex;align-items:center;gap:14px;width:calc(100% - 32px);text-align:left;background:var(--blue);color:#fff;border:0;border-radius:18px;padding:16px;box-shadow:0 5px 0 var(--blue-d)}
+.exam:active{transform:translateY(3px);box-shadow:0 2px 0 var(--blue-d)}
+.exam b{display:block;font-size:19px;font-weight:900}
+.exam span{font-size:14px;opacity:.95}
+.exam .big{font-size:30px}
+h2.sec{margin:8px 16px;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:900}
+.units{display:grid;gap:12px;padding:0 16px 32px}
+.unit{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 4px 0 var(--line)}
+.unit:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.badge{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:22px;font-weight:900;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-d)}
+.unit.done .badge{background:var(--gold);box-shadow:0 4px 0 #d9a800}
+.unit b{display:block;font-size:18px;font-weight:900}
+.unit small{color:var(--muted);font-size:14px;font-weight:700}
+
+/* Pregunta */
+.top{display:flex;align-items:center;gap:14px;padding:18px 16px 6px}
+.x{flex:none;border:0;background:none;font-size:26px;line-height:1;color:var(--muted);padding:4px 8px;border-radius:10px}
+.bar{flex:1;height:16px;background:var(--line);border-radius:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--green);border-radius:10px;transition:width .35s ease;position:relative}
+.bar i::after{content:"";position:absolute;left:8px;right:8px;top:4px;height:4px;border-radius:4px;background:rgba(255,255,255,.35)}
+.count{flex:none;font-weight:900;color:var(--muted);font-size:15px;min-width:44px;text-align:right;font-variant-numeric:tabular-nums}
+.timer{color:var(--blue-d)}
+.timer.low{color:var(--red-d)}
+.qwrap{flex:1;padding:16px 16px 24px}
+.tag{display:inline-block;font-size:13px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;color:var(--blue-d);margin-bottom:8px}
+.prompt{font-size:22px;font-weight:900;line-height:1.3;margin:0 0 20px;white-space:pre-line;text-wrap:pretty}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 3px 0 var(--line)}
+.opt .k{flex:none;width:34px;height:34px;border-radius:10px;border:2px solid var(--line);display:grid;place-items:center;font-size:15px;font-weight:900;color:var(--muted)}
+.opt:hover{background:var(--blue-bg)}
+.opt.sel{border-color:var(--blue);background:var(--blue-bg);box-shadow:0 3px 0 var(--blue)}
+.opt.sel .k{border-color:var(--blue);color:var(--blue-d)}
+.opt.ok{border-color:var(--green);background:var(--green-bg);box-shadow:0 3px 0 var(--green)}
+.opt.ok .k{border-color:var(--green);color:var(--green-ink)}
+.opt.bad{border-color:var(--red);background:var(--red-bg);box-shadow:0 3px 0 var(--red)}
+.opt.bad .k{border-color:var(--red);color:var(--red-ink)}
+.opt[disabled]{cursor:default}
+.opt[disabled]:hover{background:inherit}
+.opt.ok[disabled]:hover{background:var(--green-bg)}
+.opt.bad[disabled]:hover{background:var(--red-bg)}
+
+/* Barra de acción */
+.foot{position:sticky;bottom:0;border-top:2px solid var(--line);background:var(--bg);padding:16px}
+.foot.ok{background:var(--green-bg);border-color:transparent}
+.foot.bad{background:var(--red-bg);border-color:transparent}
+.fb{margin:0 0 12px;font-weight:800}
+.fb strong{display:block;font-size:20px;font-weight:900}
+.foot.ok strong{color:var(--green-ink)}
+.foot.bad strong{color:var(--red-ink)}
+.fb span{display:block;font-size:15px;margin-top:4px;font-weight:700}
+.row{display:flex;gap:10px}
+.btn{flex:1;border:0;border-radius:16px;padding:14px 18px;font-size:17px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;color:#fff;background:var(--green);box-shadow:0 4px 0 var(--green-d)}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+.btn[disabled]{background:var(--line);color:var(--muted);box-shadow:0 4px 0 var(--line);cursor:default;transform:none}
+.foot.bad .btn{background:var(--red);box-shadow:0 4px 0 var(--red-d)}
+.btn.ghost{flex:none;background:none;color:var(--muted);box-shadow:none;border:2px solid var(--line);box-shadow:0 3px 0 var(--line)}
+.btn.blue{background:var(--blue);box-shadow:0 4px 0 var(--blue-d)}
+
+/* Resultado */
+.res{flex:1;text-align:center;padding:36px 16px 16px}
+.res .trophy{font-size:64px;line-height:1}
+.res h1{margin:12px 0 4px;font-size:28px;font-weight:900;text-wrap:balance}
+.res p{margin:0;color:var(--muted)}
+.score{font-size:56px;font-weight:900;color:var(--green-ink);margin:12px 0 0;font-variant-numeric:tabular-nums}
+.score small{font-size:22px;color:var(--muted)}
+.tiles{display:flex;gap:10px;justify-content:center;margin:22px 0}
+.tile{flex:1;max-width:150px;border:2px solid var(--line);border-radius:16px;overflow:hidden}
+.tile h3{margin:0;padding:5px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--green)}
+.tile.r h3{background:var(--red)} .tile.g h3{background:var(--muted)} .tile.y h3{background:var(--gold)}
+.tile div{padding:12px 6px;font-size:22px;font-weight:900;font-variant-numeric:tabular-nums}
+.review{text-align:left;margin:8px 0 0;display:grid;gap:10px}
+.review h2{margin:12px 0 0;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.rev{border:2px solid var(--line);border-radius:14px;padding:12px;font-size:15px}
+.rev b{display:block;margin-bottom:4px;white-space:pre-line}
+.rev em{font-style:normal;color:var(--green-ink)}
+.rev .no{color:var(--red-ink)}
+.rev small{display:block;margin-top:4px;color:var(--muted);font-weight:700}
+@media (prefers-reduced-motion: reduce){ .bar i{transition:none} }
+@media (max-width:400px){ .prompt{font-size:20px} }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const U = {
+  A:"Reconocer proposiciones", B:"Contar proposiciones", C:"Simbolizar y leer notación",
+  D:"Proposiciones equivalentes", E:"Sistemas de ecuaciones", F:"Fracciones y capacidad", G:"Operaciones combinadas"
+};
+const Q = [
+ {u:"A",q:"¿Cuál de las siguientes expresiones es una proposición?",o:["¿Cuánto cuesta el alquiler del local?","El activo es igual al pasivo más el patrimonio.","Registra la factura en el libro diario.","¡Cuidado con el descuadre!"],a:1,e:"Es un enunciado con valor de verdad. Las otras son pregunta, orden y exclamación."},
+ {u:"A",q:"¿Cuál de las siguientes expresiones NO es una proposición?",o:["7 es un número primo.","Todo número par es divisible entre 2.","Lima es la capital de Chile.","¿Qué hora es?"],a:3,e:"Una pregunta no tiene valor de verdad. Las demás sí, incluso la falsa."},
+ {u:"A",q:"¿Cuál de las siguientes expresiones es una proposición?",o:["x + 5 = 12","Ojalá mañana llueva.","8 + 5 = 12","Cierra la ventana."],a:2,e:"\"8 + 5 = 12\" es falsa, pero es proposición. \"x + 5 = 12\" es un enunciado abierto."},
+ {u:"A",q:"¿Cuál de las siguientes oraciones es una proposición?",o:["Todo triángulo tiene tres lados.","¿Quién ganó el torneo?","Ojalá apruebe el examen.","¡Qué buen resultado!"],a:0,e:"Es verdadera. Las otras son pregunta, deseo y exclamación."},
+
+ {u:"B",q:"¿Cuáles de estas expresiones son proposiciones?\nI. Gabriel García Márquez nació en Colombia.\nII. ¡Socorro!\nIII. 3 + 4 = 8\nIV. ¿Qué día es hoy?\nV. La Tierra gira alrededor del Sol.",o:["I y III","I, III y V","II y IV","I, II y V"],a:1,e:"Son proposiciones I, III (falsa) y V."},
+ {u:"B",q:"¿Cuáles de estas expresiones son proposiciones?\nI. Tacna es una ciudad del Perú.\nII. Ven temprano mañana.\nIII. 2 es el único número primo par.\nIV. x² = 16\nV. ¡Qué bonito día!",o:["I, III y IV","II y V","I y III","I, II y III"],a:2,e:"Son proposiciones I y III. \"x² = 16\" es un enunciado abierto."},
+ {u:"B",q:"¿Cuántas de las siguientes expresiones son proposiciones?\nI. Arequipa está en el sur del Perú.\nII. 5 − 9 > 0\nIII. Pásame la calculadora.\nIV. ¿Cuánto es la depreciación?\nV. Todo número divisible entre 4 es par.\nVI. ¡Excelente trabajo!",o:["2","4","5","3"],a:3,e:"Son proposiciones I, II (falsa) y V: en total 3."},
+
+ {u:"C",q:"Sean las proposiciones p: Hay stock y q: El precio sube. ¿Qué oración expresa la notación p → ∼q?",o:["Si no hay stock, entonces el precio sube.","Si el precio sube, entonces hay stock.","Si hay stock, entonces el precio no sube.","Hay stock o el precio no sube."],a:2,e:"p → ∼q se lee: si hay stock, entonces el precio no sube."},
+ {u:"C",q:"Sea p: Ana es contadora y q: Ana es auditora. Simboliza la proposición compuesta “No es cierto que Ana sea contadora o auditora”.",o:["∼p ∨ ∼q","∼(p ∨ q)","∼p ∧ q","∼(p ∧ q)"],a:1,e:"\"No es cierto que A o B\" se simboliza ∼(p ∨ q)."},
+ {u:"C",q:"Sean p: Pago el impuesto y q: Recibo una multa. Simboliza “Si no pago el impuesto, entonces recibo una multa”.",o:["∼p → q","p → q","∼p → ∼q","q → ∼p"],a:0,e:"\"No pago\" es ∼p y \"recibo multa\" es q: ∼p → q."},
+ {u:"C",q:"Sean p: El balance cuadra y q: El auditor firma. ¿Qué oración expresa la notación ∼p ∨ q?",o:["No es cierto que el balance cuadre y el auditor firme.","El balance cuadra o el auditor no firma.","Si el balance cuadra, entonces el auditor no firma.","El balance no cuadra o el auditor firma."],a:3,e:"∼p ∨ q: el balance no cuadra o el auditor firma."},
+ {u:"C",q:"Sea p: La empresa gana y q: La empresa paga impuestos. Simboliza “Es falso que, si la empresa gana, entonces paga impuestos”.",o:["∼(p → q)","∼p → ∼q","p → ∼q","∼p ∧ q"],a:0,e:"\"Es falso que\" niega toda la condicional: ∼(p → q)."},
+
+ {u:"D",q:"Escriba la proposición equivalente: Si el cliente paga al contado entonces recibe descuento.",o:["Si el cliente recibe descuento entonces paga al contado.","Si el cliente no paga al contado entonces no recibe descuento.","Si el cliente no recibe descuento entonces no paga al contado.","El cliente no paga al contado y recibe descuento."],a:2,e:"Contrarrecíproca: p → q equivale a ∼q → ∼p."},
+ {u:"D",q:"Escriba la proposición equivalente: Si la empresa declara a tiempo entonces no paga multa.",o:["Si la empresa no paga multa entonces declara a tiempo.","Si la empresa paga multa entonces no declaró a tiempo.","Si la empresa no declara a tiempo entonces paga multa.","Si la empresa declara a tiempo entonces paga multa."],a:1,e:"p → ∼q equivale a q → ∼p."},
+ {u:"D",q:"Escriba la proposición equivalente: Si Luis es auditor entonces conoce las NIA.",o:["Si Luis no conoce las NIA entonces no es auditor.","Si Luis conoce las NIA entonces es auditor.","Si Luis no es auditor entonces no conoce las NIA.","Luis es auditor y no conoce las NIA."],a:0,e:"p → q equivale a ∼q → ∼p."},
+
+ {u:"E",q:"Carlos compró cuatro cuadernos y tres lapiceros por S/ 29.00, Rosa compró dos cuadernos y un lapicero por S/ 13.00. ¿Cuánto cuesta el cuaderno?",o:["S/ 4.00","S/ 6.00","S/ 3.00","S/ 5.00"],a:3,e:"4c + 3l = 29 y 2c + l = 13. De la segunda, l = 13 − 2c; al reemplazar, c = 5."},
+ {u:"E",q:"Carlos compró cuatro cuadernos y tres lapiceros por S/ 29.00, Rosa compró dos cuadernos y un lapicero por S/ 13.00. ¿Cuánto cuesta el lapicero?",o:["S/ 3.00","S/ 2.00","S/ 4.00","S/ 1.50"],a:0,e:"Con c = 5, l = 13 − 10 = 3."},
+ {u:"E",q:"En una bodega, 3 kg de arroz y 2 kg de azúcar cuestan S/ 22.00; 2 kg de arroz y 3 kg de azúcar cuestan S/ 23.00. ¿Cuánto cuesta el kilo de azúcar?",o:["S/ 4.00","S/ 5.00","S/ 6.00","S/ 3.00"],a:1,e:"3a + 2z = 22 y 2a + 3z = 23. Resolviendo, a = 4 y z = 5."},
+ {u:"E",q:"Una empresa vendió 48 unidades entre el producto A (S/ 30 cada una) y el producto B (S/ 50 cada una) y recaudó S/ 1 800. ¿Cuántas unidades del producto B vendió?",o:["20","30","18","24"],a:2,e:"A + B = 48 y 30A + 50B = 1 800. Con A = 48 − B: 20B = 360, B = 18."},
+
+ {u:"F",q:"Un camión parte de viaje con el tanque lleno. A mitad del viaje había consumido 3/10 del tanque y al llegar al destino le quedaban 16 litros. ¿Cuál es la capacidad del tanque?",o:["30 litros","36 litros","45 litros","40 litros"],a:3,e:"Al llegar consumió 2 × 3/10 = 6/10. Quedan 4/10 = 16 L, entonces el tanque es de 40 L."},
+ {u:"F",q:"Una moto parte de viaje con el tanque lleno. A mitad del viaje había consumido 2/9 del tanque y al llegar al destino le quedaban 10 litros. ¿Cuánto es la capacidad del tanque?",o:["18 litros","20 litros","24 litros","30 litros"],a:0,e:"Al llegar consumió 4/9. Quedan 5/9 = 10 L, entonces el tanque es de 18 L."},
+ {u:"F",q:"Una empresa destinó 3/8 de su presupuesto a planilla y 1/5 del resto a publicidad. Si le quedaron S/ 6 000, ¿cuál era el presupuesto?",o:["S/ 10 000","S/ 12 000","S/ 15 000","S/ 9 000"],a:1,e:"Tras planilla queda 5/8; publicidad es 1/5 de 5/8 = 1/8. Quedan 4/8 = 1/2 = S/ 6 000, entonces el presupuesto es S/ 12 000."},
+
+ {u:"G",q:"Resuelve 48 ÷ 6 + 5 × 4 − (15 − 9)",o:["22","26","14","34"],a:0,e:"8 + 20 − 6 = 22."},
+ {u:"G",q:"Resuelve 50 − 6 × 5 ÷ 10 − (18 − 11)",o:["36","40","44","32"],a:1,e:"50 − 3 − 7 = 40."},
+ {u:"G",q:"Resuelve 2³ + 18 ÷ 3² × 5 − (7 − 2)",o:["10","15","13","20"],a:2,e:"8 + 2 × 5 − 5 = 8 + 10 − 5 = 13."},
+ {u:"G",q:"Calcule √81 − √16 + 2³ ÷ 4",o:["5","9","3","7"],a:3,e:"9 − 4 + 2 = 7."}
+];
+const L = "abcd";
+const EXAM_MIN = 18;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let done = {};
+try { done = JSON.parse(localStorage.getItem("pl-done") || "{}"); } catch (e) { done = {}; }
+function save() { try { localStorage.setItem("pl-done", JSON.stringify(done)); } catch (e) {} }
+let S = {}, timer = null;
+
+function home() {
+  clearInterval(timer);
+  const units = Object.keys(U).map(k => {
+    const n = Q.filter(q => q.u === k).length, d = done[k];
+    return `<button class="unit ${d != null ? "done" : ""}" data-u="${k}">
+      <span class="badge">${d != null ? "★" : k}</span>
+      <span><b>${esc(U[k])}</b><small>${n} preguntas${d != null ? " · mejor precisión " + d + "%" : ""}</small></span></button>`;
+  }).join("");
+  const bestExam = done.exam != null ? ` · mejor nota ${done.exam}/20` : "";
+  $("#app").innerHTML = `
+    <div class="hero"><div class="mascot">∴</div><div><h1>Pensamiento Lógico</h1><p>Práctica para el Torneo, Fase 1</p></div></div>
+    <button class="exam" id="exam"><span class="big">⏱</span><span><b>Simulacro del examen</b><span>10 preguntas · ${EXAM_MIN} minutos · 2 pts, error −0.5${bestExam}</span></span></button>
+    <h2 class="sec">Lecciones por tema</h2>
+    <div class="units">${units}</div>`;
+  $("#exam").onclick = startExam;
+  document.querySelectorAll(".unit").forEach(b => b.onclick = () => startLesson(b.dataset.u));
+}
+
+/* ---------- Lección ---------- */
+function startLesson(u) {
+  const idx = Q.map((q, i) => i).filter(i => Q[i].u === u);
+  S = { mode: "lesson", u, queue: idx.slice(), total: idx.length, solved: 0, first: 0, retry: {}, sel: null, checked: false };
+  lesson();
+}
+function head(progress, right) {
+  return `<div class="top"><button class="x" id="quit" aria-label="Salir">✕</button>
+    <div class="bar"><i style="width:${progress}%"></i></div><div class="count" id="right">${right}</div></div>`;
+}
+function optsHTML(q, state) {
+  return q.o.map((t, i) => {
+    let c = "opt";
+    if (state && state.checked) { if (i === q.a) c += " ok"; else if (i === state.sel) c += " bad"; }
+    else if (i === state.sel) c += " sel";
+    return `<button class="${c}" data-i="${i}" ${state.checked ? "disabled" : ""}><span class="k">${L[i]}</span><span>${esc(t)}</span></button>`;
+  }).join("");
+}
+function lesson() {
+  const cur = S.queue[0], q = Q[cur];
+  const pct = Math.round(S.solved / S.total * 100);
+  $("#app").innerHTML = head(pct, S.solved + "/" + S.total) + `
+    <div class="qwrap"><span class="tag">${esc(U[S.u])}</span><p class="prompt">${esc(q.q)}</p><div class="opts" id="opts">${optsHTML(q, S)}</div></div>
+    <div class="foot" id="foot"><div class="row"><button class="btn" id="go" disabled>Comprobar</button></div></div>`;
+  $("#quit").onclick = home;
+  bindOpts(q);
+}
+function bindOpts(q) {
+  document.querySelectorAll(".opt").forEach(b => b.onclick = () => {
+    if (S.checked) return;
+    S.sel = +b.dataset.i;
+    $("#opts").innerHTML = optsHTML(q, S);
+    bindOpts(q);
+    const g = $("#go"); g.disabled = false;
+    g.onclick = S.mode === "lesson" ? check : examNext;
+  });
+}
+function check() {
+  const cur = S.queue[0], q = Q[cur];
+  S.checked = true;
+  const ok = S.sel === q.a;
+  if (ok) { S.solved++; if (!S.retry[cur]) S.first++; }
+  else { S.retry[cur] = true; S.queue.push(cur); }
+  $("#opts").innerHTML = optsHTML(q, S);
+  const f = $("#foot");
+  f.className = "foot " + (ok ? "ok" : "bad");
+  f.innerHTML = `<p class="fb"><strong>${ok ? "¡Correcto!" : "Incorrecto"}</strong><span>${ok ? "" : "Respuesta: " + L[q.a] + ") " + esc(q.o[q.a]) + ". "}${esc(q.e)}</span></p>
+    <div class="row"><button class="btn" id="go2">Continuar</button></div>`;
+  $("#go2").focus();
+  $("#go2").onclick = () => {
+    S.queue.shift(); S.sel = null; S.checked = false;
+    if (S.queue.length) lesson(); else lessonEnd();
+  };
+}
+function lessonEnd() {
+  const acc = Math.round(S.first / S.total * 100);
+  if (done[S.u] == null || acc > done[S.u]) done[S.u] = acc;
+  save();
+  $("#app").innerHTML = `<div class="res"><div class="trophy">🏆</div><h1>¡Lección completa!</h1><p>${esc(U[S.u])}</p>
+    <div class="tiles"><div class="tile y"><h3>XP</h3><div>${S.first * 10}</div></div><div class="tile"><h3>Precisión</h3><div>${acc}%</div></div></div>
+    <p>${acc === 100 ? "Sin errores a la primera." : "Las que fallaste volvieron a salir hasta que las acertaste."}</p></div>
+    <div class="foot"><div class="row"><button class="btn ghost" id="again">Repetir</button><button class="btn" id="home">Continuar</button></div></div>`;
+  $("#again").onclick = () => startLesson(S.u);
+  $("#home").onclick = home;
+}
+
+/* ---------- Simulacro ---------- */
+function pick(u, n) {
+  const a = Q.map((q, i) => i).filter(i => Q[i].u === u);
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a.slice(0, n);
+}
+function startExam() {
+  const plan = { A:1, B:1, C:2, D:1, E:2, F:1, G:2 };
+  let list = [];
+  Object.keys(plan).forEach(u => list = list.concat(pick(u, plan[u])));
+  S = { mode: "exam", list, i: 0, ans: Array(list.length).fill(null), sel: null, checked: false, end: Date.now() + EXAM_MIN * 60000 };
+  exam();
+  clearInterval(timer);
+  timer = setInterval(tick, 500);
+}
+function fmt(ms) { const s = Math.max(0, Math.ceil(ms / 1000)); return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
+function tick() {
+  const left = S.end - Date.now(), el = $("#timer");
+  if (el) { el.textContent = fmt(left); el.classList.toggle("low", left < 120000); }
+  if (left <= 0) examEnd();
+}
+function exam() {
+  const q = Q[S.list[S.i]], last = S.i === S.list.length - 1;
+  $("#app").innerHTML = `<div class="top"><button class="x" id="quit" aria-label="Salir">✕</button>
+    <div class="bar"><i style="width:${Math.round(S.i / S.list.length * 100)}%"></i></div>
+    <div class="count timer" id="timer" style="min-width:60px">${fmt(S.end - Date.now())}</div></div>
+    <div class="qwrap"><span class="tag">Pregunta ${S.i + 1} de ${S.list.length}</span><p class="prompt">${esc(q.q)}</p><div class="opts" id="opts">${optsHTML(q, S)}</div></div>
+    <div class="foot"><div class="row"><button class="btn ghost" id="skip">Dejar en blanco</button><button class="btn blue" id="go" disabled>${last ? "Finalizar" : "Siguiente"}</button></div></div>`;
+  $("#quit").onclick = () => { clearInterval(timer); home(); };
+  $("#skip").onclick = () => { S.sel = null; examNext(); };
+  bindOpts(q);
+}
+function examNext() {
+  S.ans[S.i] = S.sel; S.sel = null;
+  if (S.i === S.list.length - 1) return examEnd();
+  S.i++; exam();
+}
+function examEnd() {
+  clearInterval(timer);
+  let ok = 0, bad = 0, blank = 0; const wrong = [];
+  S.list.forEach((qi, k) => {
+    const a = S.ans[k];
+    if (a == null) blank++; else if (a === Q[qi].a) ok++; else { bad++; wrong.push([qi, a]); }
+  });
+  const score = Math.max(0, ok * 2 - bad * 0.5);
+  if (done.exam == null || score > done.exam) done.exam = score; save();
+  const rev = wrong.map(([qi, a]) => { const q = Q[qi]; return `<div class="rev"><b>${esc(q.q)}</b>
+    <span class="no">Marcaste: ${L[a]}) ${esc(q.o[a])}</span><br><em>Correcta: ${L[q.a]}) ${esc(q.o[q.a])}</em><small>${esc(q.e)}</small></div>`; }).join("");
+  $("#app").innerHTML = `<div class="res"><div class="trophy">${score >= 14 ? "🏆" : "📘"}</div><h1>Simulacro terminado</h1><p>Puntaje final</p>
+    <div class="score">${score.toFixed(1)}<small> / 20</small></div>
+    <div class="tiles"><div class="tile"><h3>Correctas</h3><div>${ok}</div></div><div class="tile r"><h3>Errores</h3><div>${bad}</div></div><div class="tile g"><h3>En blanco</h3><div>${blank}</div></div></div>
+    ${wrong.length ? `<div class="review"><h2>Revisa tus errores</h2>${rev}</div>` : "<p>Sin errores. Las preguntas en blanco no restan.</p>"}</div>
+    <div class="foot"><div class="row"><button class="btn ghost" id="again">Otro simulacro</button><button class="btn" id="home">Inicio</button></div></div>`;
+  $("#again").onclick = startExam;
+  $("#home").onclick = home;
+}
+
+home();
+</script>
+</body>
+</html>
