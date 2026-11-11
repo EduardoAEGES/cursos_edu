@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="2026-11-11-casos-recta-a">
+<title>Casos con dos datos: halla el modelo y grafica - Pensamiento L&oacute;gico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="odoo.css">
+<style>
+  :root{ --marino:#071767; --fucsia:#FC0045; --teal:#13A8AF; --ambar:#D98A00; --verde:#1F9D55; --rojo:#E5484D;
+         --tinta:#0B1B3F; --gris:#5B6B8C; --linea:#D5DDEF; --humo:#F1F5FD; }
+  [hidden]{ display:none !important; }
+  .cr-hero{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .app{ display:grid; grid-template-columns:minmax(330px,480px) minmax(0,1fr); gap:16px; align-items:start; margin-top:14px; }
+  @media (max-width:960px){ .app{ grid-template-columns:minmax(0,1fr); } }
+  .app:fullscreen{ background:#fff; overflow:auto; padding:14px; }
+  .aviso{ margin-top:12px; background:#EEF3FF; border:2px solid #C9D6F7; border-radius:12px; padding:10px 14px; font-size:14.5px; color:var(--marino); line-height:1.5; }
+  .aviso b{ color:var(--fucsia); }
+
+  .panel, .grafico{ background:#fff; border:1px solid var(--linea); border-radius:16px; padding:14px; box-shadow:0 6px 18px rgba(7,23,103,.06); }
+  .sel{ width:100%; padding:10px 12px; border:2px solid var(--linea); border-radius:12px; font:700 15px Inter,sans-serif; color:var(--marino); background:#fff; }
+  .sit{ background:var(--humo); border-left:5px solid var(--fucsia); border-radius:10px; padding:10px 12px; margin-top:10px; font-size:15px; line-height:1.55; color:var(--tinta); }
+  .sit p{ margin:0; } .sit b{ color:var(--marino); }
+  .puntos{ display:flex; gap:6px; margin:10px 0 2px; flex-wrap:wrap; }
+  .puntos i{ width:26px; height:8px; border-radius:6px; background:#DCE3F2; }
+  .puntos i.ok{ background:var(--verde); } .puntos i.ahora{ background:var(--fucsia); }
+
+  .paso{ margin-top:12px; border:2px solid var(--linea); border-radius:14px; padding:10px 12px; background:#fff; }
+  .paso.hecho{ border-color:#BFE6CF; background:#F4FBF7; }
+  .paso.ahora{ border-color:var(--fucsia); box-shadow:0 0 0 4px rgba(252,0,69,.10); }
+  .paso h3{ margin:0 0 6px; font-size:15px; color:var(--marino); font-weight:800; display:flex; align-items:center; gap:8px; }
+  .paso h3 i{ font-style:normal; width:26px; height:26px; border-radius:50%; background:var(--fucsia); color:#fff; display:grid; place-items:center; font-size:13px; flex:none; }
+  .paso.hecho h3 i{ background:var(--verde); }
+  .paso .q{ font-size:15.5px; line-height:1.5; color:var(--tinta); margin:0 0 8px; font-weight:600; }
+  .ops{ display:grid; gap:8px; }
+  .op{ text-align:left; border:2px solid var(--linea); background:#fff; border-radius:12px; padding:10px 12px; font:600 15px Inter,sans-serif; color:var(--tinta); cursor:pointer; display:flex; gap:10px; align-items:flex-start; }
+  .op:hover:not(:disabled){ border-color:var(--marino); background:#F6F8FF; }
+  .op b{ flex:none; width:24px; height:24px; border-radius:50%; background:var(--humo); color:var(--marino); display:grid; place-items:center; font-size:12.5px; }
+  .op.mal{ border-color:var(--rojo); background:#FFF3F3; color:#A12A2E; text-decoration:line-through; }
+  .op.bien{ border-color:var(--verde); background:#EAF8F0; } .op.bien b{ background:var(--verde); color:#fff; }
+  .op:focus-visible, .btn:focus-visible{ outline:3px solid var(--teal); outline-offset:2px; }
+  .fb{ font-size:14px; margin:8px 0 0; line-height:1.5; }
+  .fb.mal{ color:#A12A2E; font-weight:700; } .fb.bien{ color:#15693E; font-weight:600; }
+  .fin{ margin-top:12px; background:linear-gradient(135deg,#EAF8F0,#EEF3FF); border:2px solid #BFE6CF; border-radius:14px; padding:12px 14px; font-size:15px; line-height:1.55; }
+  .fin b{ color:var(--marino); }
+
+  .btn{ border:2px solid var(--linea); background:#fff; color:var(--marino); border-radius:12px; padding:8px 12px; font:700 14px Inter,sans-serif; cursor:pointer; }
+  .btn:hover{ border-color:var(--marino); } .btn.pri{ background:var(--fucsia); border-color:var(--fucsia); color:#fff; }
+  .btn.mar{ background:var(--marino); border-color:var(--marino); color:#fff; } .btn.min{ padding:5px 10px; font-size:13px; }
+  .fila{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:10px; }
+  .nombre{ padding:8px 10px; border:2px solid var(--linea); border-radius:10px; font:600 14px Inter,sans-serif; min-width:200px; flex:1; }
+
+  .barra{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+  .chip{ display:inline-flex; align-items:center; gap:7px; border:2px solid var(--linea); border-radius:99px; padding:5px 12px; background:#fff; font:700 13.5px Inter,sans-serif; color:var(--tinta); cursor:pointer; }
+  .chip i{ width:13px; height:13px; border-radius:50%; background:var(--c); flex:none; }
+  .chip.on{ border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 22%,transparent); }
+  .lienzo{ position:relative; }
+  svg#pl{ display:block; width:100%; height:auto; aspect-ratio:900/620; background:#fff; border-radius:12px; touch-action:manipulation; user-select:none; cursor:crosshair; }
+  .candado{ position:absolute; inset:0; background:rgba(241,245,253,.93); border-radius:12px; display:grid; place-items:center; text-align:center; padding:20px; color:var(--marino); font-weight:700; font-size:16px; line-height:1.5; }
+  .candado span{ display:block; font-size:40px; margin-bottom:6px; }
+  .tabla{ margin-top:10px; overflow-x:auto; }
+  table.tb{ border-collapse:collapse; width:100%; font-size:14px; }
+  table.tb th, table.tb td{ border:1px solid var(--linea); padding:5px 8px; text-align:center; }
+  table.tb th{ background:var(--marino); color:#fff; font-weight:700; }
+  table.tb td.hecho{ background:#DDF3E6; color:#15693E; font-weight:800; }
+  .nota{ font-size:13.5px; color:var(--gris); margin-top:8px; line-height:1.5; }
+  .nota b{ color:var(--marino); }
+  .estado{ margin-top:8px; background:var(--humo); border:1px solid var(--linea); border-radius:10px; padding:8px 12px; font-size:14px; line-height:1.55; color:var(--tinta); }
+  @media (min-width:961px){ .grafico{ position:sticky; top:10px; } .app:fullscreen .grafico{ position:static; } }
+  @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+
+<div class="o-navbar">
+  <a class="apps" href="index.html" aria-label="Inicio">&#9638;</a>
+  <a class="brand" href="index.html">Repositorio de Eduardo</a>
+  <nav class="menu">
+    <a href="index.html">Inicio</a>
+    <a class="activo" href="index.html#cursos">Cursos</a>
+    <a href="index.html#herramientas">Herramientas</a>
+  </nav>
+  <div class="right"><span class="o-avatar">EA</span></div>
+</div>
+
+<div class="o-cp">
+  <a class="o-btn o-btn-primary" href="pensamiento-logico.html">Volver al curso</a>
+  <span class="o-crumb"><a href="index.html">Repositorio</a><span class="largo"> / <a href="pensamiento-logico.html">Pensamiento L&oacute;gico</a></span> / <b>Casos con dos datos</b></span>
+  <div class="o-cp-right"><button class="btn min" id="btnPant" type="button">&#9974; Pantalla completa</button></div>
+</div>
+
+<div class="o-content">
+<div class="o-wrap">
+  <div class="o-sheet">
+    <div class="cr-hero">
+      <div class="o-hero" style="flex:1 1 320px;margin:0;padding:0;border:0">
+        <div class="ico">&#128200;</div>
+        <div class="txt">
+          <h1>Casos con dos datos: halla el modelo y gr&aacute;ficalo</h1>
+          <p class="sub">Resuelve paso a paso eligiendo la respuesta, y luego marca los puntos y la recta en el plano</p>
+        </div>
+      </div>
+      <span class="o-chip o-chip-ok">Pr&aacute;ctica libre</span>
+    </div>
+    <div class="aviso"><b>Pr&aacute;ctica libre:</b> no necesitas c&oacute;digo y <b>no se guarda nada</b> en esta p&aacute;gina. Cuando termines, pulsa <b>Descargar mi reporte en Word</b> para llevarte tus respuestas, el procedimiento y el gr&aacute;fico. Puedes graficar <b>en tu hoja</b> con la tabla de valores o <b>aqu&iacute;</b> en el plano.</div>
+
+    <div class="app" id="app">
+      <aside class="panel" aria-label="Resoluci&oacute;n paso a paso">
+        <select class="sel" id="selCaso" aria-label="Elige el caso"></select>
+        <div class="sit" id="sit"></div>
+        <div class="puntos" id="prog" aria-hidden="true"></div>
+        <div id="pasos"></div>
+        <div class="fila" id="reporte">
+          <input class="nombre" id="nombre" type="text" maxlength="60" placeholder="Tu nombre (opcional, para el reporte)" aria-label="Tu nombre">
+          <button class="btn pri" id="btnWord" type="button">&#11015; Descargar mi reporte en Word</button>
+        </div>
+        <p class="nota" id="msgWord"></p>
+      </aside>
+
+      <section class="grafico" aria-label="Plano">
+        <div class="barra" id="barraSerie"></div>
+        <div class="barra">
+          <button class="btn min" id="btnDeshacer" type="button">&#8630; Deshacer</button>
+          <button class="btn min" id="btnLimpiar" type="button">Limpiar gr&aacute;fico</button>
+          <button class="btn min" id="btnSol" type="button">&#128065; Ver soluci&oacute;n</button>
+          <button class="btn min" id="btnPng" type="button">&#11015; Imagen</button>
+          <button class="btn min" id="btnBlanco" type="button" title="Plano con la escala sugerida, para imprimir y graficar a mano">&#128424; Plano en blanco</button>
+        </div>
+        <div class="lienzo">
+          <svg id="pl" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plano cartesiano"><g id="dibujo"></g></svg>
+          <div class="candado" id="candado"><div><span>&#128274;</span>Primero resuelve los pasos hasta hallar la <b>ecuaci&oacute;n</b>. Despu&eacute;s podr&aacute;s graficarla aqu&iacute;.</div></div>
+        </div>
+        <div class="estado" id="estado"></div>
+        <div class="tabla" id="tabla"></div>
+        <p class="nota" id="escala"></p>
+      </section>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function plano(s){ return String(s).replace(/<[^>]+>/g,''); }
+function fmt(n){ if(!isFinite(n)) return '—'; var r=Math.round(n*100)/100; return r.toLocaleString('en-US',{maximumFractionDigits:2}); }
+function mon(n,K){ return (K.mon?K.mon+' ':'')+fmt(n); }
+
+/* ============================ los casos ============================ */
+var ROJO='#FC0045', AZUL='#071767';
+var CASOS=[
+ { id:'imprenta', corto:'Caso 1: Imprenta «Tinta Veloz»', area:'Imprenta',
+   sit:'Una imprenta cobra <b>S/ 180.00</b> por <b>200 volantes</b> y <b>S/ 330.00</b> por <b>500 volantes</b>. Si la relación es lineal, halla el costo por volante, el costo fijo, la ecuación y el costo de <b>800 volantes</b>.',
+   xn:'Volantes (x)', yn:'Costo (S/)', yl:'C', mon:'S/', uni:'volantes', p1:[200,180], p2:[500,330], xp:800,
+   vista:{xmax:900,ymax:600,tx:100,ty:100},
+   sb:'El costo fijo: lo que se paga aunque no se imprima ningún volante', sm:'Lo que aumenta el costo por cada volante adicional' },
+ { id:'pasteleria', corto:'Caso 2: Pastelería «Dulce Hogar»', area:'Pastelería',
+   sit:'El costo de producir <b>40 tortas</b> es <b>S/ 1,000.00</b> y el de <b>100 tortas</b> es <b>S/ 1,900.00</b>. Si el costo es lineal, halla el costo por torta, el costo fijo, la ecuación y el costo de <b>150 tortas</b>.',
+   xn:'Tortas (x)', yn:'Costo (S/)', yl:'C', mon:'S/', uni:'tortas', p1:[40,1000], p2:[100,1900], xp:150,
+   vista:{xmax:160,ymax:3000,tx:20,ty:500},
+   sb:'El costo fijo: horno, alquiler y otros pagos que existen aunque no se prepare ninguna torta', sm:'Lo que aumenta el costo por cada torta adicional' },
+ { id:'lavanderia', corto:'Caso 3: Lavandería «Espuma»', area:'Lavandería',
+   sit:'Por lavar <b>50 prendas</b> la lavandería gasta <b>S/ 260.00</b> al mes y por <b>130 prendas</b> gasta <b>S/ 420.00</b>. Si la relación es lineal, halla el gasto por prenda, el gasto fijo, la ecuación y el gasto de <b>200 prendas</b>.',
+   xn:'Prendas (x)', yn:'Gasto (S/)', yl:'G', mon:'S/', uni:'prendas', p1:[50,260], p2:[130,420], xp:200,
+   vista:{xmax:220,ymax:600,tx:20,ty:100},
+   sb:'El gasto fijo: lo que se paga aunque no se lave ninguna prenda', sm:'Lo que aumenta el gasto por cada prenda adicional' },
+ { id:'taxi', corto:'Caso 4: Taxi «Ruta Segura»', area:'Transporte',
+   sit:'Un taxi cobra <b>S/ 20.00</b> por un viaje de <b>5 km</b> y <b>S/ 50.00</b> por uno de <b>15 km</b>. Si la tarifa es lineal, halla lo que se cobra por km, el cobro inicial (banderazo), la ecuación y la tarifa de un viaje de <b>25 km</b>.',
+   xn:'Kilómetros (x)', yn:'Tarifa (S/)', yl:'T', mon:'S/', uni:'km', p1:[5,20], p2:[15,50], xp:25,
+   vista:{xmax:30,ymax:100,tx:5,ty:10},
+   sb:'El cobro inicial (banderazo): se paga aunque no se recorra ningún kilómetro', sm:'Lo que aumenta la tarifa por cada kilómetro adicional' },
+ { id:'luz', corto:'Caso 5: Taller «Metal Norte»', area:'Taller metalmecánico',
+   sit:'El recibo de luz del taller fue <b>S/ 150.00</b> con <b>200 kWh</b> y <b>S/ 270.00</b> con <b>400 kWh</b>. Si el recibo es lineal, halla el precio por kWh, el cargo fijo, la ecuación y el recibo con <b>500 kWh</b>.',
+   xn:'Consumo (kWh)', yn:'Recibo (S/)', yl:'R', mon:'S/', uni:'kWh', p1:[200,150], p2:[400,270], xp:500,
+   vista:{xmax:600,ymax:400,tx:100,ty:50},
+   sb:'El cargo fijo: se paga aunque no se consuma ningún kWh', sm:'Lo que aumenta el recibo por cada kWh adicional' },
+ { id:'empanadas', corto:'Caso 6: Empanadas «La Abuela»', area:'Producción de alimentos',
+   sit:'Producir <b>200 empanadas</b> cuesta <b>S/ 800.00</b> y producir <b>600 empanadas</b> cuesta <b>S/ 1,400.00</b>. Si el costo es lineal, halla el costo por empanada, el costo fijo, la ecuación y el costo de <b>1,000 empanadas</b>.',
+   xn:'Empanadas (x)', yn:'Costo (S/)', yl:'C', mon:'S/', uni:'empanadas', p1:[200,800], p2:[600,1400], xp:1000,
+   vista:{xmax:1200,ymax:2500,tx:200,ty:500},
+   sb:'El costo fijo: alquiler del local y del horno, que se pagan aunque no se produzca ninguna empanada', sm:'Lo que aumenta el costo por cada empanada adicional' },
+ { id:'cevicheria', corto:'Caso 7: Cevichería «Mar Azul» (con equilibrio)', area:'Restaurante',
+   sit:'Preparar <b>50 platos</b> cuesta <b>S/ 700.00</b> y <b>250 platos</b> cuesta <b>S/ 1,900.00</b>. Si el costo es lineal, halla el costo por plato, el costo fijo, la ecuación y el costo de <b>150 platos</b>. Cada plato se vende a <b>S/ 10.00</b> (sin IGV): halla también cuántos platos debe vender para <b>no perder</b>.',
+   xn:'Platos (x)', yn:'Soles (S/)', yl:'C', mon:'S/', uni:'platos', p1:[50,700], p2:[250,1900], xp:150, precio:10,
+   vista:{xmax:300,ymax:3000,tx:50,ty:500},
+   sb:'El costo fijo: alquiler del local, sueldos y otros pagos que existen aunque no se prepare ningún plato', sm:'Lo que aumenta el costo por cada plato adicional' }
+];
+CASOS.forEach(function(K){
+  K.m=(K.p2[1]-K.p1[1])/(K.p2[0]-K.p1[0]); K.b=K.p1[1]-K.m*K.p1[0]; K.yp=K.m*K.xp+K.b;
+  K.series=[{ id:'ct', nom:K.yl, color:ROJO, a:K.b, b:K.m, xs:[0,K.p1[0],K.p2[0],K.xp] }];
+  if(K.precio){ K.eqx=K.b/(K.precio-K.m); K.eqy=K.precio*K.eqx;
+    K.series.push({ id:'i', nom:'I', color:AZUL, a:0, b:K.precio, xs:[0,K.eqx,K.vista.xmax] }); }
+});
+
+/* ============================ preguntas de cada caso ============================ */
+function ecu(K,m,b){ return K.yl+' = '+fmt(m)+'x '+(b<0?'− ':'+ ')+fmt(Math.abs(b)); }
+function distintas(ok,lista,extra){
+  var vistos={}; vistos[ok.v]=1; var out=[];
+  lista.concat(extra||[]).forEach(function(d){ if(out.length<3 && !vistos[d.v]){ vistos[d.v]=1; out.push(d.t); } });
+  return out;
+}
+function arma(K,k,ci,q,okT,mals,pq,paso,titulo){
+  var pos=(ci*2+k)%4, ops=mals.slice(0,3); ops.splice(pos,0,okT);
+  return { paso:paso, titulo:titulo, q:q, ops:ops, ok:pos, pq:pq };
+}
+function preguntas(K,ci){
+  var x1=K.p1[0], y1=K.p1[1], x2=K.p2[0], y2=K.p2[1], m=K.m, b=K.b, Q=[], f=fmt;
+  var ok;
+  /* 1 datos */
+  Q.push(arma(K,0,ci,'¿Cuáles son los dos puntos (x; y) del enunciado? Recuerda: x = '+K.xn.replace(/ \(x\)/,'')+' e y = '+K.yn.replace(/ \(S\/\)/,'')+'.',
+    '('+f(x1)+'; '+f(y1)+') y ('+f(x2)+'; '+f(y2)+')',
+    ['('+f(y1)+'; '+f(x1)+') y ('+f(y2)+'; '+f(x2)+')','('+f(x1)+'; '+f(y2)+') y ('+f(x2)+'; '+f(y1)+')','('+f(x1)+'; '+f(x2)+') y ('+f(y1)+'; '+f(y2)+')'],
+    'Cada dato es un par (x; y): primero la cantidad y después el '+K.yn.split(' ')[0].toLowerCase()+'. Puntos: ('+f(x1)+'; '+f(y1)+') y ('+f(x2)+'; '+f(y2)+').',1,'Anota los datos'));
+  /* 2 pendiente */
+  ok={ v:m, t:'m = ('+f(y2)+' − '+f(y1)+') ÷ ('+f(x2)+' − '+f(x1)+') = '+f(m) };
+  Q.push(arma(K,1,ci,'Halla la pendiente m = (y₂ − y₁) ÷ (x₂ − x₁). ¿Cuál es el cálculo correcto?',ok.t,
+    distintas(ok,[{v:(x2-x1)/(y2-y1),t:'m = ('+f(x2)+' − '+f(x1)+') ÷ ('+f(y2)+' − '+f(y1)+') = '+f((x2-x1)/(y2-y1))},
+                  {v:(y2+y1)/(x2+x1),t:'m = ('+f(y2)+' + '+f(y1)+') ÷ ('+f(x2)+' + '+f(x1)+') = '+f((y2+y1)/(x2+x1))},
+                  {v:y2/x2,t:'m = '+f(y2)+' ÷ '+f(x2)+' = '+f(y2/x2)}],
+      [{v:'z'+m,t:'m = ('+f(y2)+' − '+f(y1)+') ÷ '+f(x2)+' = '+f((y2-y1)/x2)}]),
+    'Se restan las y y las x en el mismo orden: '+f(y2-y1)+' ÷ '+f(x2-x1)+' = '+f(m)+'. Es lo que cambia y por cada '+(K.uni==='km'?'km':K.uni.replace(/s$/,''))+' más.',2,'Pendiente (m)'));
+  /* 3 b */
+  ok={ v:b, t:'b = '+f(y1)+' − '+f(m)+' × '+f(x1)+' = '+f(b) };
+  Q.push(arma(K,2,ci,'Halla b con b = y₁ − m · x₁ usando el primer punto. ¿Cuál es el cálculo correcto?',ok.t,
+    distintas(ok,[{v:y1+m*x1,t:'b = '+f(y1)+' + '+f(m)+' × '+f(x1)+' = '+f(y1+m*x1)},
+                  {v:y1-x1,t:'b = '+f(y1)+' − '+f(x1)+' = '+f(y1-x1)},
+                  {v:m*x1,t:'b = '+f(m)+' × '+f(x1)+' = '+f(m*x1)}],
+      [{v:y1/x1,t:'b = '+f(y1)+' ÷ '+f(x1)+' = '+f(y1/x1)}]),
+    'm · x₁ = '+f(m*x1)+' y b = '+f(y1)+' − '+f(m*x1)+' = '+f(b)+'. Es el valor de y cuando x = 0.',3,'Valor inicial (b)'));
+  /* 4 ecuacion */
+  Q.push(arma(K,3,ci,'Con m = '+f(m)+' y b = '+f(b)+', ¿cuál es la ecuación y = m·x + b?',ecu(K,m,b),
+    [ecu(K,b,m),K.yl+' = '+f(m)+'x − '+f(b),K.yl+' = '+f(m)+'(x + '+f(b)+')'],
+    'Se reemplaza m y b en y = mx + b: '+ecu(K,m,b)+'.',4,'Ecuación'));
+  /* 5 comprobacion */
+  Q.push(arma(K,4,ci,'Comprueba con el segundo punto ('+f(x2)+'; '+f(y2)+'). ¿Qué operación lo verifica?',
+    f(m)+' × '+f(x2)+' + '+f(b)+' = '+f(y2),
+    [f(m)+' × '+f(x2)+' − '+f(b)+' = '+f(m*x2-b),f(b)+' × '+f(x2)+' + '+f(m)+' = '+f(b*x2+m),f(m)+' × '+f(y2)+' + '+f(b)+' = '+f(m*y2+b)],
+    'Se reemplaza x = '+f(x2)+' en la ecuación y debe salir '+f(y2)+': '+f(m)+' × '+f(x2)+' + '+f(b)+' = '+f(y2)+' ✓.',5,'Comprobación'));
+  /* 6 prediccion */
+  Q.push(arma(K,5,ci,'Usa la ecuación para '+f(K.xp)+' '+K.uni+'. ¿Cuál es el cálculo correcto?',
+    f(m)+' × '+f(K.xp)+' + '+f(b)+' = '+f(K.yp),
+    [f(m)+' × '+f(K.xp)+' = '+f(m*K.xp),f(K.xp)+' + '+f(b)+' = '+f(K.xp+b),'('+f(m)+' + '+f(b)+') × '+f(K.xp)+' = '+f((m+b)*K.xp)],
+    'x = '+f(K.xp)+': '+ecu(K,m,b)+' → '+f(m)+' × '+f(K.xp)+' + '+f(b)+' = '+K.mon+' '+f(K.yp)+'.',6,'Predicción'));
+  /* 7 interpretacion */
+  Q.push(arma(K,6,ci,'¿Qué significa b = '+f(b)+' en este caso?',K.sb,
+    ['El costo de cada unidad adicional','La ganancia que deja cada venta','El total que se paga con '+f(K.xp)+' '+K.uni],
+    'b es el valor de y cuando x = 0: lo que ya hay que pagar sin producir nada.',7,'Interpreta b'));
+  Q.push(arma(K,7,ci,'¿Qué significa m = '+f(m)+' en este caso?',K.sm,
+    ['El valor que se paga aunque no se produzca nada','La cantidad total de '+K.uni,'La ganancia total del negocio'],
+    'm es la pendiente: lo que cambia y cuando x aumenta en 1.',7,'Interpreta m'));
+  /* 8 equilibrio */
+  if(K.precio){
+    var e=K.eqx;
+    Q.push(arma(K,8,ci,'Cada plato se vende a S/ '+f(K.precio)+', entonces I = '+f(K.precio)+'x. ¿Con cuántos platos el ingreso iguala al costo? (I = C)',
+      f(K.precio)+'x = '+f(m)+'x + '+f(b)+' → '+f(K.precio-m)+'x = '+f(b)+' → x = '+f(e),
+      [f(K.precio)+'x = '+f(m)+'x + '+f(b)+' → '+f(K.precio+m)+'x = '+f(b)+' → x = '+f(b/(K.precio+m)),
+       f(K.precio)+'x = '+f(m)+'x + '+f(b)+' → x = '+f(b)+' ÷ '+f(K.precio)+' = '+f(b/K.precio),
+       f(K.precio)+'x = '+f(m)+'x + '+f(b)+' → '+f(K.precio-m)+'x = '+f(b)+' → x = '+f(b*(K.precio-m))],
+      'I = C → '+f(K.precio)+'x = '+f(m)+'x + '+f(b)+' → x = '+f(b)+' ÷ '+f(K.precio-m)+' = '+f(e)+' platos. Ahí I = C = S/ '+f(K.eqy)+'. Antes pierde; después gana.',8,'Punto de equilibrio'));
+  }
+  return Q;
+}
+CASOS.forEach(function(K,ci){ K.Q=preguntas(K,ci); });
+
+/* ============================ estado (solo en memoria, no se guarda) ============================ */
+var ESTADOS={}, K=CASOS[0], E=null, serieAct='ct', nid=1;
+function estado(id){ if(!ESTADOS[id]){ var c=CASOS.filter(function(x){ return x.id===id; })[0]; ESTADOS[id]={ ok:{}, mal:{}, elegida:{}, pts:[], sol:false }; ESTADOS[id].n=c.Q.length; } return ESTADOS[id]; }
+function cargaCaso(id){ K=CASOS.filter(function(x){ return x.id===id; })[0]; E=estado(id); serieAct='ct'; pintaTodo(); }
+function ahora(){ for(var i=0;i<K.Q.length;i++) if(!E.ok[i]) return i; return -1; }
+function ecuacionLista(){ return !!E.ok[3]; }
+
+/* ============================ geometría y dibujo del plano ============================ */
+var W=900, H=620, ML=72, MR=24, MT=26, MB=60, Z=1;
+function geo(chico){ if(chico){ W=520; H=620; ML=62; MR=16; MT=22; MB=70; Z=1.5; } else { W=900; H=620; ML=72; MR=24; MT=26; MB=60; Z=1; } }
+function X(x){ return ML+x/K.vista.xmax*(W-ML-MR); }
+function Y(y){ return H-MB-y/K.vista.ymax*(H-MT-MB); }
+function iX(px){ return (px-ML)/(W-ML-MR)*K.vista.xmax; }
+function iY(py){ return (H-MB-py)/(H-MT-MB)*K.vista.ymax; }
+function val(s,x){ return s.a+s.b*x; }
+function T(x,y,t,o){ o=o||{}; return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" font-family="Inter,Arial,sans-serif" font-size="'+((o.sz||13)*Z).toFixed(1)+'" font-weight="'+(o.w||600)+'" fill="'+(o.c||'#0B1B3F')+'" text-anchor="'+(o.a||'start')+'"'+
+  (o.halo?' stroke="#fff" stroke-width="'+(4*Z)+'" paint-order="stroke" stroke-linejoin="round"':'')+'>'+esc(t)+'</text>'; }
+function okPt(p){ var s=sDe(p.s); return Math.abs(p.y-val(s,p.x))<=K.vista.ty/10*0.6; }
+function sDe(id){ for(var i=0;i<K.series.length;i++) if(K.series[i].id===id) return K.series[i]; return K.series[0]; }
+function buenos(s){ var xs={}; E.pts.forEach(function(p){ if(p.s===s.id && okPt(p)) xs[p.x]=1; }); return Object.keys(xs).length; }
+
+/* o: {blanco, sol, pts} */
+function svgPlano(o){
+  var v=K.vista, h='', px0=ML, px1=W-MR, py0=MT, py1=H-MB, t;
+  h+='<defs><clipPath id="rec"><rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'"/></clipPath></defs>';
+  h+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff"/><rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'" fill="#FBFCFF"/>';
+  for(t=0;t<=v.xmax+1e-9;t+=v.tx){ var gx=X(t); h+='<line x1="'+gx.toFixed(1)+'" y1="'+py0+'" x2="'+gx.toFixed(1)+'" y2="'+py1+'" stroke="#E3E9F6"/>'+T(gx,py1+19*Z,fmt(t),{a:'middle',sz:12,c:'#5B6B8C'}); }
+  for(t=0;t<=v.ymax+1e-9;t+=v.ty){ var gy=Y(t); h+='<line x1="'+px0+'" y1="'+gy.toFixed(1)+'" x2="'+px1+'" y2="'+gy.toFixed(1)+'" stroke="#E3E9F6"/>'+T(px0-7,gy+4*Z,fmt(t),{a:'end',sz:12,c:'#5B6B8C'}); }
+  h+='<line x1="'+px0+'" y1="'+py1+'" x2="'+px1+'" y2="'+py1+'" stroke="#0B1B3F" stroke-width="2.2"/><line x1="'+px0+'" y1="'+py0+'" x2="'+px0+'" y2="'+py1+'" stroke="#0B1B3F" stroke-width="2.2"/>';
+  h+='<polygon points="'+px1+','+py1+' '+(px1-9)+','+(py1-5)+' '+(px1-9)+','+(py1+5)+'" fill="#0B1B3F"/><polygon points="'+px0+','+py0+' '+(px0-5)+','+(py0+9)+' '+(px0+5)+','+(py0+9)+'" fill="#0B1B3F"/>';
+  h+=T((px0+px1)/2,H-10*Z,K.xn,{a:'middle',sz:14,w:800,c:'#071767'});
+  h+='<text x="'+(16*Z)+'" y="'+((py0+py1)/2)+'" font-family="Inter,Arial,sans-serif" font-size="'+(14*Z)+'" font-weight="800" fill="#071767" text-anchor="middle" transform="rotate(-90 '+(16*Z)+' '+((py0+py1)/2)+')">'+esc(K.yn)+'</text>';
+  if(o.blanco) return h;
+  h+='<g clip-path="url(#rec)">';
+  var lineas=function(s,dash,w,op){ return '<line x1="'+X(0).toFixed(1)+'" y1="'+Y(val(s,0)).toFixed(1)+'" x2="'+X(v.xmax).toFixed(1)+'" y2="'+Y(val(s,v.xmax)).toFixed(1)+'" stroke="'+s.color+'" stroke-width="'+(w*Z)+'" stroke-linecap="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+(op?' opacity="'+op+'"':'')+'/>'; };
+  var dibujadas=[];
+  K.series.forEach(function(s){
+    if(o.sol){ h+=lineas(s,'10 7',5,0.45); }
+    var ps=(o.pts||[]).filter(function(p){ return p.s===s.id && okPt(p); }), xs={}; ps.forEach(function(p){ xs[p.x]=1; });
+    if(Object.keys(xs).length>=2 || o.todas){ h+=lineas(s,'',3.4,1); dibujadas.push(s); }
+  });
+  h+='</g>';
+  dibujadas.concat(o.sol?K.series.filter(function(s){ return dibujadas.indexOf(s)<0; }):[]).forEach(function(s){
+    var xr=v.xmax*0.985, yr=val(s,xr), tope=yr>v.ymax; if(tope){ yr=v.ymax; xr=(yr-s.a)/s.b; }
+    h+=T(X(xr)-6,Y(yr)+(tope?20:-8),s.nom,{a:'end',sz:13,w:800,c:s.color,halo:1});
+  });
+  if(K.precio && (o.sol || dibujadas.length===2)){
+    h+='<circle cx="'+X(K.eqx).toFixed(1)+'" cy="'+Y(K.eqy).toFixed(1)+'" r="'+(13*Z)+'" fill="#FFC400" stroke="#071767" stroke-width="2.4"/>'+
+       T(X(K.eqx)-16*Z,Y(K.eqy)-24*Z,'Equilibrio: ('+fmt(K.eqx)+'; '+fmt(K.eqy)+')',{a:'end',sz:12.5,w:800,c:'#071767',halo:1});
+  }
+  if(o.sol){ K.series.forEach(function(s){ s.xs.forEach(function(x){
+    h+='<circle cx="'+X(x).toFixed(1)+'" cy="'+Y(val(s,x)).toFixed(1)+'" r="'+(8*Z)+'" fill="none" stroke="'+s.color+'" stroke-width="2.4" stroke-dasharray="3 2"/>'; }); }); }
+  (o.pts||[]).forEach(function(p){
+    var s=sDe(p.s), ok=okPt(p), cx=X(p.x), cy=Y(p.y);
+    h+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(13*Z)+'" fill="none" stroke="'+(ok?'#1F9D55':'#E5484D')+'" stroke-width="3"/>'+
+       '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(7*Z)+'" fill="'+s.color+'" stroke="#fff" stroke-width="2.2"/>'+
+       T(cx,cy-18*Z,ok?'✓':'✗',{a:'middle',sz:15,w:800,c:ok?'#1F9D55':'#E5484D',halo:1})+
+       (p.x>K.vista.xmax*0.8?T(cx-10*Z,cy+22*Z,'('+fmt(p.x)+'; '+fmt(p.y)+')',{a:'end',sz:11.5,w:700,c:s.color,halo:1}):T(cx+10*Z,cy+22*Z,'('+fmt(p.x)+'; '+fmt(p.y)+')',{sz:11.5,w:700,c:s.color,halo:1}));
+  });
+  return h;
+}
+
+/* ============================ panel de pasos ============================ */
+function letra(i){ return 'ABCD'.charAt(i); }
+function pintaPasos(){
+  var cur=ahora(), h='';
+  var pr=''; K.Q.forEach(function(q,i){ pr+='<i class="'+(E.ok[i]?'ok':(i===cur?'ahora':''))+'"></i>'; }); $('prog').innerHTML=pr;
+  K.Q.forEach(function(q,i){
+    if(E.ok[i]){
+      h+='<div class="paso hecho"><h3><i>✓</i>Paso '+q.paso+' · '+esc(q.titulo)+'</h3><p class="q">'+esc(q.q)+'</p>'+
+         '<div class="op bien"><b>'+letra(q.ok)+'</b><span>'+esc(q.ops[q.ok])+'</span></div><p class="fb bien">'+esc(q.pq)+'</p></div>';
+    }else if(i===cur){
+      h+='<div class="paso ahora"><h3><i>'+q.paso+'</i>Paso '+q.paso+' · '+esc(q.titulo)+'</h3><p class="q">'+esc(q.q)+'</p><div class="ops">';
+      q.ops.forEach(function(o,j){ var mal=(E.mal[i]||[]).indexOf(j)>=0;
+        h+='<button type="button" class="op'+(mal?' mal':'')+'" data-q="'+i+'" data-j="'+j+'"'+(mal?' disabled':'')+'><b>'+letra(j)+'</b><span>'+esc(o)+'</span></button>'; });
+      h+='</div>'+((E.mal[i]||[]).length?'<p class="fb mal">Todavía no. Revisa la operación y prueba otra opción.</p>':'')+'</div>';
+    }
+  });
+  if(cur<0){
+    var conc='Modelo: <b>'+esc(ecu(K,K.m,K.b))+'</b>. Con '+fmt(K.xp)+' '+K.uni+' el resultado es <b>'+esc(K.mon+' '+fmt(K.yp))+'</b>.';
+    if(K.precio) conc+=' El punto de equilibrio es <b>'+fmt(K.eqx)+' platos</b> (ingreso = costo = S/ '+fmt(K.eqy)+').';
+    var sig=CASOS.indexOf(K)+1<CASOS.length?CASOS[CASOS.indexOf(K)+1]:null;
+    h+='<div class="fin"><b>¡Caso resuelto!</b> '+conc+'<br>Ahora grafícalo en el plano (o en tu hoja con la tabla de valores).'+
+       (sig?'<div class="fila"><button class="btn mar" id="btnSig" type="button">Siguiente caso →</button></div>':'')+'</div>';
+  }
+  $('pasos').innerHTML=h;
+}
+$('pasos').addEventListener('click',function(ev){
+  var b=ev.target.closest('button'); if(!b) return;
+  if(b.id==='btnSig'){ var i=CASOS.indexOf(K)+1; $('selCaso').value=CASOS[i].id; cargaCaso(CASOS[i].id); return; }
+  if(!b.dataset.q) return;
+  var i=+b.dataset.q, j=+b.dataset.j, q=K.Q[i];
+  if(j===q.ok){ E.ok[i]=true; E.elegida[i]=j; } else { (E.mal[i]=E.mal[i]||[]).push(j); }
+  pintaPasos(); pintaGrafico(); pintaTabla();
+});
+
+/* ============================ gráfico y tabla ============================ */
+function pintaGrafico(){
+  var lista=ecuacionLista();
+  $('candado').hidden=lista;
+  var chico=window.innerWidth<700; geo(chico);
+  var sv=$('pl'); sv.setAttribute('viewBox','0 0 '+W+' '+H); sv.style.aspectRatio=W+'/'+H;
+  $('dibujo').innerHTML=svgPlano({ pts:lista?E.pts:[], sol:lista&&E.sol });
+  var b='<span style="font-weight:800;color:#071767;font-size:13.5px">Marca puntos de:</span>';
+  if(K.series.length>1){ K.series.forEach(function(s){
+    var n=E.pts.filter(function(p){ return p.s===s.id; }).length;
+    b+='<button type="button" class="chip'+(s.id===serieAct?' on':'')+'" data-serie="'+s.id+'" style="--c:'+s.color+'"><i></i>'+esc(s.id==='ct'?'Costo (C)':'Ingreso (I)')+' <small>'+n+'</small></button>'; });
+  } else { b+='<span class="chip on" style="--c:'+ROJO+'"><i></i>'+esc(K.yl)+'</span>'; }
+  $('barraSerie').innerHTML=b;
+  $('btnSol').innerHTML=E.sol?'&#128065; Ocultar solución':'&#128065; Ver solución';
+  var tot=0, ok=0; E.pts.forEach(function(p){ tot++; if(okPt(p)) ok++; });
+  var msg='Haz clic en el plano para colocar un punto (se ajusta a la cuadrícula). Haz clic sobre un punto para quitarlo.';
+  if(lista){
+    var falta=[]; K.series.forEach(function(s){ s.xs.forEach(function(x){ if(!tieneTabla(s,x)) falta.push(s.nom+'('+fmt(x)+')'); }); });
+    msg='Puntos colocados: <b>'+tot+'</b> · correctos: <b>'+ok+'</b>.'+(falta.length?' Faltan de la tabla: '+esc(falta.join(', '))+'.':' <b>¡Tienes todos los puntos de la tabla!</b>')+
+        (tot-ok>0?' Los puntos con ✗ no están sobre la recta: revisa la tabla.':'');
+  }
+  $('estado').innerHTML=msg;
+  var e=K.vista; $('escala').innerHTML='<b>Escala sugerida para tu hoja:</b> eje x de 0 a '+fmt(e.xmax)+' (de '+fmt(e.tx)+' en '+fmt(e.tx)+') y eje y de 0 a '+fmt(e.ymax)+' (de '+fmt(e.ty)+' en '+fmt(e.ty)+').';
+}
+function tieneTabla(s,x){ return E.pts.some(function(p){ return p.s===s.id && Math.abs(p.x-x)<1e-6 && okPt(p); }); }
+function pintaTabla(){
+  if(!ecuacionLista()){ $('tabla').innerHTML=''; return; }
+  var h='';
+  K.series.forEach(function(s){
+    var nombre=s.id==='ct'?ecu(K,s.b,s.a):'I = '+fmt(s.b)+'x';
+    h+='<table class="tb" style="margin-bottom:8px"><thead><tr><th colspan="3">Tabla de valores · '+esc(nombre)+'</th></tr><tr><th>x</th><th>y</th><th>¿Ya está en tu plano?</th></tr></thead><tbody>';
+    s.xs.slice().sort(function(a,b){ return a-b; }).forEach(function(x){
+      var ya=tieneTabla(s,x); h+='<tr><td>'+fmt(x)+'</td><td>'+fmt(val(s,x))+'</td><td class="'+(ya?'hecho':'')+'">'+(ya?'✓ marcado':'')+'</td></tr>'; });
+    h+='</tbody></table>';
+  });
+  $('tabla').innerHTML=h;
+}
+$('barraSerie').addEventListener('click',function(ev){ var b=ev.target.closest('[data-serie]'); if(b){ serieAct=b.dataset.serie; pintaGrafico(); } });
+$('pl').addEventListener('click',function(ev){
+  if(!ecuacionLista()) return;
+  var sv=$('pl'), pt=sv.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
+  var m=sv.getScreenCTM(); if(!m) return; var p=pt.matrixTransform(m.inverse());
+  if(p.x<ML-10||p.x>W-MR+6||p.y<MT-6||p.y>H-MB+10) return;
+  /* clic sobre un punto: lo quita */
+  for(var i=E.pts.length-1;i>=0;i--){ var q=E.pts[i]; if(Math.hypot(X(q.x)-p.x,Y(q.y)-p.y)<14*Z){ E.pts.splice(i,1); pintaGrafico(); pintaTabla(); return; } }
+  var sx=K.vista.tx/10, sy=K.vista.ty/10;
+  var x=Math.round(iX(p.x)/sx)*sx, y=Math.round(iY(p.y)/sy)*sy;
+  x=Math.round(x*1000)/1000+0; y=Math.round(y*1000)/1000+0;
+  if(x<0||y<0||x>K.vista.xmax||y>K.vista.ymax) return;
+  if(E.pts.some(function(q){ return q.s===serieAct && q.x===x && q.y===y; })) return;
+  E.pts.push({ id:nid++, s:serieAct, x:x, y:y }); pintaGrafico(); pintaTabla();
+});
+$('btnDeshacer').addEventListener('click',function(){ E.pts.pop(); pintaGrafico(); pintaTabla(); });
+$('btnLimpiar').addEventListener('click',function(){ E.pts=[]; E.sol=false; pintaGrafico(); pintaTabla(); });
+$('btnSol').addEventListener('click',function(){ if(!ecuacionLista()) return; E.sol=!E.sol; pintaGrafico(); });
+$('btnPant').addEventListener('click',function(){ var a=$('app'); if(document.fullscreenElement){ document.exitFullscreen(); } else if(a.requestFullscreen){ a.requestFullscreen().catch(function(){}); } });
+window.addEventListener('resize',function(){ pintaGrafico(); });
+
+/* ============================ imágenes PNG ============================ */
+function svgA_png(inner,anchoPx){
+  return new Promise(function(res){
+    var xml='<svg xmlns="http://www.w3.org/2000/svg" width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">'+inner+'</svg>', img=new Image();
+    img.onload=function(){
+      var c=document.createElement('canvas'), f=anchoPx/W; c.width=Math.round(W*f); c.height=Math.round(H*f);
+      var g=c.getContext('2d'); g.fillStyle='#fff'; g.fillRect(0,0,c.width,c.height); g.drawImage(img,0,0,c.width,c.height);
+      c.toBlob(function(b){ b.arrayBuffer().then(function(ab){ res({ blob:b, bytes:new Uint8Array(ab), w:c.width, h:c.height }); }); },'image/png');
+    };
+    img.onerror=function(){ res(null); };
+    img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml);
+  });
+}
+function baja(blob,nombre){ var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); },4000); }
+$('btnPng').addEventListener('click',function(){ geo(false); svgA_png(svgPlano({ pts:ecuacionLista()?E.pts:[], sol:ecuacionLista()&&E.sol }),1800).then(function(r){ if(r) baja(r.blob,'grafico-'+K.id+'.png'); pintaGrafico(); }); });
+$('btnBlanco').addEventListener('click',function(){ geo(false); svgA_png(svgPlano({ blanco:true }),1800).then(function(r){ if(r) baja(r.blob,'plano-en-blanco-'+K.id+'.png'); pintaGrafico(); }); });
+
+/* ============================ reporte en Word (.docx sin librerías) ============================ */
+var CRC=(function(){ var t=[],c,n,k; for(n=0;n<256;n++){ c=n; for(k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return t; })();
+function crc32(b){ var c=0xFFFFFFFF; for(var i=0;i<b.length;i++) c=CRC[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function utf8(s){ return new TextEncoder().encode(s); }
+function zip(files){
+  var partes=[], central=[], desp=0, ahoraD=new Date();
+  var hora=(ahoraD.getHours()<<11)|(ahoraD.getMinutes()<<5)|(ahoraD.getSeconds()>>1), fecha=((ahoraD.getFullYear()-1980)<<9)|((ahoraD.getMonth()+1)<<5)|ahoraD.getDate();
+  files.forEach(function(f){
+    var nom=utf8(f.n), d=f.d, crc=crc32(d), cab=new DataView(new ArrayBuffer(30));
+    cab.setUint32(0,0x04034b50,true); cab.setUint16(4,20,true); cab.setUint16(6,0x0800,true); cab.setUint16(8,0,true); cab.setUint16(10,hora,true); cab.setUint16(12,fecha,true);
+    cab.setUint32(14,crc,true); cab.setUint32(18,d.length,true); cab.setUint32(22,d.length,true); cab.setUint16(26,nom.length,true); cab.setUint16(28,0,true);
+    partes.push(new Uint8Array(cab.buffer),nom,d);
+    var ce=new DataView(new ArrayBuffer(46));
+    ce.setUint32(0,0x02014b50,true); ce.setUint16(4,20,true); ce.setUint16(6,20,true); ce.setUint16(8,0x0800,true); ce.setUint16(10,0,true); ce.setUint16(12,hora,true); ce.setUint16(14,fecha,true);
+    ce.setUint32(16,crc,true); ce.setUint32(20,d.length,true); ce.setUint32(24,d.length,true); ce.setUint16(28,nom.length,true); ce.setUint32(42,desp,true);
+    central.push(new Uint8Array(ce.buffer),nom);
+    desp+=30+nom.length+d.length;
+  });
+  var tamC=0; central.forEach(function(c){ tamC+=c.length; });
+  var fin=new DataView(new ArrayBuffer(22)); fin.setUint32(0,0x06054b50,true); fin.setUint16(8,files.length,true); fin.setUint16(10,files.length,true); fin.setUint32(12,tamC,true); fin.setUint32(16,desp,true);
+  return new Blob(partes.concat(central,[new Uint8Array(fin.buffer)]),{ type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+}
+function x(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function run(t,o){ o=o||{}; return '<w:r><w:rPr>'+(o.b?'<w:b/>':'')+(o.i?'<w:i/>':'')+(o.c?'<w:color w:val="'+o.c+'"/>':'')+'<w:sz w:val="'+(o.sz||22)+'"/></w:rPr><w:t xml:space="preserve">'+x(t)+'</w:t></w:r>'; }
+function par(runs,o){ o=o||{}; return '<w:p><w:pPr>'+(o.keep?'<w:keepNext/>':'')+'<w:spacing w:before="'+(o.antes||0)+'" w:after="'+(o.desp===undefined?80:o.desp)+'"/>'+(o.al?'<w:jc w:val="'+o.al+'"/>':'')+(o.fondo?'<w:shd w:val="clear" w:color="auto" w:fill="'+o.fondo+'"/>':'')+'</w:pPr>'+(Array.isArray(runs)?runs.join(''):runs)+'</w:p>'; }
+function tablaW(filas,anchos){
+  var h='<w:tbl><w:tblPr><w:tblW w:w="'+anchos.reduce(function(a,b){ return a+b; },0)+'" w:type="dxa"/><w:tblBorders>'+['top','left','bottom','right','insideH','insideV'].map(function(l){ return '<w:'+l+' w:val="single" w:sz="4" w:space="0" w:color="B9C6E6"/>'; }).join('')+'</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>'+anchos.map(function(a){ return '<w:gridCol w:w="'+a+'"/>'; }).join('')+'</w:tblGrid>';
+  filas.forEach(function(f,i){ h+='<w:tr>'+f.map(function(c,j){ return '<w:tc><w:tcPr><w:tcW w:w="'+anchos[j]+'" w:type="dxa"/>'+(i===0?'<w:shd w:val="clear" w:color="auto" w:fill="071767"/>':(c.ok?'<w:shd w:val="clear" w:color="auto" w:fill="DDF3E6"/>':''))+'</w:tcPr>'+par(run(c.t===undefined?c:c.t,{ b:i===0||c.b, c:i===0?'FFFFFF':undefined, sz:20 }),{ al:'center', desp:20 })+'</w:tc>'; }).join('')+'</w:tr>'; });
+  return h+'</w:tbl>';
+}
+function imagenW(rid,id,cx,cy,nom){
+  return '<w:p><w:pPr><w:spacing w:before="80" w:after="120"/><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="'+cx+'" cy="'+cy+'"/><wp:docPr id="'+id+'" name="'+x(nom)+'" descr="'+x(nom)+'"/>'+
+   '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="'+id+'" name="'+x(nom)+'"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="'+rid+'"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="'+cx+'" cy="'+cy+'"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
+}
+function casosHechos(){ return CASOS.filter(function(c){ var e=ESTADOS[c.id]; return e && (Object.keys(e.ok).length || Object.keys(e.mal).length || e.pts.length); }); }
+
+$('btnWord').addEventListener('click',function(){
+  var lista=casosHechos(), msg=$('msgWord');
+  if(!lista.length){ msg.textContent='Primero resuelve al menos un paso de algún caso.'; return; }
+  msg.textContent='Preparando tu reporte…';
+  var guardaK=K, guardaE=E, imgs=[];
+  geo(false);
+  var tareas=lista.map(function(c,idx){
+    K=c; E=ESTADOS[c.id]; var eq=!!E.ok[3];
+    var conPts=eq && E.pts.length>0;
+    var inner=svgPlano(eq?(conPts?{ pts:E.pts }:{ todas:true, pts:[], sol:true }):{ blanco:true });
+    return svgA_png(inner,1500).then(function(r){ return { c:c, r:r, tipo:eq?(conPts?'alumno':'solucion'):'blanco' }; });
+  });
+  K=guardaK; E=guardaE;
+  Promise.all(tareas).then(function(res){
+    var nombre=($('nombre').value||'').trim(), hoy=new Date().toLocaleDateString('es-PE'), cuerpo='', files=[], rels='';
+    cuerpo+=par(run('Reporte: casos con dos datos (modelo lineal)',{ b:true, sz:36, c:'071767' }),{ desp:60 });
+    cuerpo+=par(run('Pensamiento Lógico · Certus',{ sz:22, c:'5B6B8C' }),{ desp:40 });
+    cuerpo+=par([run('Estudiante: ',{ b:true }),run(nombre||'—'),run('     Fecha: ',{ b:true }),run(hoy)],{ desp:160 });
+    var totQ=0, totOk=0, totFallos=0;
+    res.forEach(function(it,idx){
+      var c=it.c, e=ESTADOS[c.id], eq=!!e.ok[3];
+      cuerpo+=par(run(c.corto,{ b:true, sz:30, c:'FC0045' }),{ antes:240, desp:80, keep:true });
+      cuerpo+=par(run('Enunciado: ',{ b:true })+run(plano(c.sit)),{ fondo:'F1F5FD', desp:120 });
+      cuerpo+=par(run('Mis respuestas, paso a paso',{ b:true, sz:24, c:'071767' }),{ keep:true, desp:60 });
+      c.Q.forEach(function(q,i){
+        totQ++; var f=(e.mal[i]||[]).length; totFallos+=f; var hecho=!!e.ok[i]; if(hecho) totOk++;
+        cuerpo+=par([run('Paso '+q.paso+' · '+q.titulo+'. ',{ b:true }),run(q.q)],{ desp:30, keep:true });
+        cuerpo+=par([run('Respuesta: ',{ b:true, c:hecho?'15693E':'A12A2E' }),run(hecho?q.ops[q.ok]:'sin resolver',{ c:hecho?'15693E':'A12A2E' }),
+                     run(hecho?(f?'   (intentos fallidos: '+f+')':'   (a la primera ✓)'):'',{ i:true, c:'5B6B8C', sz:20 })],{ desp:20 });
+        cuerpo+=par([run('Procedimiento: ',{ b:true, sz:20 }),run(q.pq,{ sz:20 })],{ desp:100 });
+      });
+      if(eq){
+        cuerpo+=par(run('Tabla de valores',{ b:true, sz:24, c:'071767' }),{ antes:80, keep:true, desp:60 });
+        c.series.forEach(function(s){
+          var filas=[['x','y']]; s.xs.slice().sort(function(a,b){ return a-b; }).forEach(function(xx){ filas.push([fmt(xx),fmt(val(s,xx))]); });
+          cuerpo+=par(run(s.id==='ct'?ecu(c,s.b,s.a):'I = '+fmt(s.b)+'x',{ b:true, sz:20 }),{ desp:20, keep:true });
+          cuerpo+=tablaW(filas,[1800,1800])+par('',{ desp:60 });
+        });
+        var cap=it.tipo==='alumno'?'Mi gráfico':'Gráfico de la solución';
+        cuerpo+=par(run(cap,{ b:true, sz:24, c:'071767' }),{ keep:true, desp:40 });
+        if(it.r){ var rid='rIdImg'+idx, w=5760000, hh=Math.round(w*it.r.h/it.r.w); files.push({ n:'word/media/grafico'+idx+'.png', d:it.r.bytes });
+          rels+='<Relationship Id="'+rid+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/grafico'+idx+'.png"/>';
+          cuerpo+=imagenW(rid,idx+1,w,hh,cap+' · '+c.corto); }
+        var conc=ecu(c,c.m,c.b)+'. Con '+fmt(c.xp)+' '+c.uni+': '+c.mon+' '+fmt(c.yp)+'.'+(c.precio?' Punto de equilibrio: '+fmt(c.eqx)+' platos (S/ '+fmt(c.eqy)+').':'');
+        cuerpo+=par([run('Conclusión: ',{ b:true }),run(conc)],{ fondo:'EAF8F0', desp:100 });
+      }else{
+        cuerpo+=par(run('Este caso quedó sin terminar: la ecuación todavía no se halló.',{ i:true, c:'5B6B8C' }),{ desp:100 });
+      }
+    });
+    cuerpo+=par(run('Resumen: '+totOk+' de '+totQ+' pasos resueltos · '+totFallos+' intentos fallidos en total.',{ b:true, c:'071767' }),{ antes:200, fondo:'EEF3FF' });
+    var doc='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>'+cuerpo+
+      '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>';
+    var ct='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>';
+    var rr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+    var dr='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdSt" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>'+rels+'</Relationships>';
+    var st='<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/><w:sz w:val="22"/><w:lang w:val="es-PE"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>';
+    var todos=[{ n:'[Content_Types].xml', d:utf8(ct) },{ n:'_rels/.rels', d:utf8(rr) },{ n:'word/document.xml', d:utf8(doc) },{ n:'word/_rels/document.xml.rels', d:utf8(dr) },{ n:'word/styles.xml', d:utf8(st) }].concat(files);
+    baja(zip(todos),'Reporte-casos-modelo-lineal.docx');
+    msg.textContent='Listo: se descargó tu reporte en Word con '+lista.length+(lista.length===1?' caso.':' casos.');
+    pintaGrafico();
+  });
+});
+
+/* ============================ arranque ============================ */
+function pintaTodo(){ $('sit').innerHTML='<p>'+K.sit+'</p>'; pintaPasos(); pintaGrafico(); pintaTabla(); }
+$('selCaso').innerHTML=CASOS.map(function(c){ return '<option value="'+c.id+'">'+esc(c.corto)+'</option>'; }).join('');
+$('selCaso').addEventListener('change',function(){ cargaCaso(this.value); });
+cargaCaso(CASOS[0].id);
+})();
+</script>
+</body>
+</html>
