@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Semana 4 · Kardex 3D</title>
+<title>Kardex e inventarios 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 .fc.b{background:color-mix(in srgb,var(--c) 78%,black)}
 .fc.u{background:color-mix(in srgb,var(--c) 35%,black)}
 .fc.f{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 92%,white),var(--c))}
-.fc.f .ft{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;font:700 13px/1.15 'Sora',sans-serif;color:#0b1020}
+.fc.f .ft{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;font:700 18px/1.15 'Sora',sans-serif;color:#0b1020}
 /* animations */
 .grow{transform:scaleY(.001);transition:transform .9s steps(7,end)}
 .layer.on .grow{transform:scaleY(1)}
@@ -36,15 +36,15 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 /* billboard */
 .bb{position:absolute;left:0;top:0;transform:translate3d(var(--x),var(--y),var(--z)) rotateY(calc(var(--ry) * -1)) rotateX(calc(var(--rx) * -1)) translate(-50%,-50%);white-space:nowrap;pointer-events:none}
 .bb.anchor-b{transform:translate3d(var(--x),var(--y),var(--z)) rotateY(calc(var(--ry) * -1)) rotateX(calc(var(--rx) * -1)) translate(-50%,-100%)}
-.lbl{font:600 15px/1.2 'Inter',sans-serif;color:var(--ink);text-shadow:0 2px 8px rgba(0,0,0,.6)}
-.lbl.sm{font-size:12.5px;color:#c9d2ee;font-weight:500}
-.lbl.val{font:800 20px/1 'Sora',sans-serif}
-.lbl.big{font:800 40px/1 'Sora',sans-serif;letter-spacing:-.02em}
+.lbl{font:700 21px/1.2 'Inter',sans-serif;color:var(--ink);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.lbl.sm{font-size:18px;color:#c9d2ee;font-weight:500}
+.lbl.val{font:800 28px/1 'Sora',sans-serif}
+.lbl.big{font:800 54px/1 'Sora',sans-serif;letter-spacing:-.02em}
 .lbl.huge{font:800 64px/1 'Sora',sans-serif;letter-spacing:-.03em}
 .lbl.pill{background:var(--glass);border:1px solid var(--line);padding:6px 11px;border-radius:999px;backdrop-filter:blur(6px)}
-.board{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:14px 16px;white-space:normal;box-shadow:0 18px 50px rgba(0,0,0,.45);font:500 14px/1.45 'Inter',sans-serif;color:var(--ink)}
-.board h4{margin:0 0 6px;font:700 15px/1.2 'Sora',sans-serif}
-.board .k{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:4px}
+.board{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:14px 16px;white-space:normal;box-shadow:0 18px 50px rgba(0,0,0,.45);font:500 19px/1.45 'Inter',sans-serif;color:var(--ink)}
+.board h4{margin:0 0 6px;font:700 20px/1.2 'Sora',sans-serif}
+.board .k{color:var(--mut);font-size:15px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:4px}
 .board ul{margin:4px 0 0;padding-left:18px}
 .board li{margin:2px 0}
 /* floor */
@@ -59,32 +59,32 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 .pp b{position:absolute;left:1px;top:14px;width:20px;height:24px;border-radius:10px 10px 4px 4px;background:var(--pc);filter:brightness(.82)}
 /* UI */
 header{position:fixed;left:0;right:0;top:0;padding:16px 22px;display:flex;align-items:center;gap:14px;pointer-events:none;z-index:5}
-header .kick{font:700 11px/1 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--a);background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);padding:7px 10px;border-radius:999px}
-header h1{margin:0;font:800 clamp(18px,2.2vw,26px)/1.1 'Sora',sans-serif;letter-spacing:-.01em}
-header .sub{color:var(--mut);font-size:13px;margin-top:3px}
-#panel{position:fixed;left:22px;bottom:22px;width:min(420px,calc(100vw - 44px));max-height:calc(100vh - 120px);overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:18px 20px 16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.45);z-index:6}
+header .kick{font:700 14px/1 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--a);background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);padding:7px 10px;border-radius:999px}
+header h1{margin:0;font:800 clamp(22px,2.6vw,34px)/1.1 'Sora',sans-serif;letter-spacing:-.01em}
+header .sub{color:var(--mut);font-size:17px;margin-top:3px}
+#panel{position:fixed;left:22px;bottom:22px;width:min(560px,calc(100vw - 44px));max-height:calc(100vh - 110px);overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:18px 20px 16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.45);z-index:6}
 #panel .meta{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-#panel .num{font:800 12px/1 'Sora';color:#0b1020;background:var(--a);padding:6px 9px;border-radius:8px}
-#panel .day{font:700 11px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border-radius:8px;border:1px solid var(--line);color:var(--mut)}
+#panel .num{font:800 15px/1 'Sora';color:#0b1020;background:var(--a);padding:6px 9px;border-radius:8px}
+#panel .day{font:700 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border-radius:8px;border:1px solid var(--line);color:var(--mut)}
 #panel .day.M{color:var(--d);border-color:rgba(96,165,250,.4)}
 #panel .day.X{color:var(--e);border-color:rgba(167,139,250,.45)}
-#panel h2{margin:4px 0 6px;font:800 21px/1.2 'Sora',sans-serif;letter-spacing:-.01em}
-#panel .lead{color:#d6dcf2;font-size:14.5px;line-height:1.5;margin:0 0 10px}
-#panel .body{font-size:14px;line-height:1.55;color:#cfd6ee}
+#panel h2{margin:4px 0 8px;font:800 28px/1.2 'Sora',sans-serif;letter-spacing:-.01em}
+#panel .lead{color:#d6dcf2;font-size:19px;line-height:1.5;margin:0 0 10px}
+#panel .body{font-size:18px;line-height:1.55;color:#cfd6ee}
 #panel .body p{margin:0 0 8px}
 #panel .body ul,#panel .body ol{margin:0 0 8px;padding-left:20px}
 #panel .body li{margin:3px 0}
-#panel .f{background:rgba(0,0,0,.28);border:1px solid var(--line);border-left:3px solid var(--b);border-radius:10px;padding:9px 12px;margin:8px 0;font:600 14px/1.5 'JetBrains Mono',ui-monospace,monospace;color:#fde68a;overflow-x:auto}
-#panel .tip{background:rgba(45,212,191,.09);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:13.5px}
+#panel .f{background:rgba(0,0,0,.28);border:1px solid var(--line);border-left:3px solid var(--b);border-radius:10px;padding:9px 12px;margin:8px 0;font:600 18px/1.5 'JetBrains Mono',ui-monospace,monospace;color:#fde68a;overflow-x:auto}
+#panel .tip{background:rgba(45,212,191,.09);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:17px}
 #panel .tip b{color:var(--a)}
-#panel table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0 8px}
+#panel table{border-collapse:collapse;width:100%;font-size:17px;margin:6px 0 8px}
 #panel th,#panel td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
 #panel th:first-child,#panel td:first-child{text-align:left}
 #panel th{color:var(--mut);font-weight:600}
 #panel code{word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:12.5px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px}
 .hl-a{color:var(--a);font-weight:700}.hl-b{color:var(--b);font-weight:700}.hl-c{color:var(--c);font-weight:700}.hl-d{color:var(--d);font-weight:700}.hl-e{color:var(--e);font-weight:700}
 #nav{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-#nav button{font:700 13px 'Inter';color:var(--ink);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer}
+#nav button{font:700 17px 'Inter';color:var(--ink);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer}
 #nav button:hover{background:rgba(255,255,255,.14)}
 #nav button.pri{background:var(--a);color:#06201c;border-color:transparent}
 #nav button:disabled{opacity:.35;cursor:default}
@@ -94,19 +94,19 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 #dots button.X{box-shadow:inset 0 0 0 1.5px rgba(167,139,250,.7)}
 #dots button.cur{background:var(--a);transform:scale(1.25)}
 #dots button.done{background:rgba(45,212,191,.45)}
-#hint{position:fixed;right:22px;bottom:22px;color:var(--mut);font-size:12.5px;text-align:right;line-height:1.6;z-index:4;pointer-events:none}
+#hint{position:fixed;right:22px;bottom:22px;color:var(--mut);font-size:15px;text-align:right;line-height:1.6;z-index:4;pointer-events:none}
 #hint kbd{font:600 11px 'Inter';border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:var(--ink)}
-#back{position:fixed;right:22px;top:20px;z-index:7;color:var(--mut);font-size:13px;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:rgba(0,0,0,.2)}
+#back{position:fixed;right:22px;top:20px;z-index:7;color:var(--mut);font-size:16px;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:rgba(0,0,0,.2)}
 #back:hover{color:var(--ink)}
 #prog{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--a),var(--d));z-index:8;transition:width .5s}
 #legend{position:fixed;right:22px;top:64px;z-index:4;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-#legend span{font-size:12.5px;color:#cfd6ee;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);padding:4px 9px;border-radius:999px;border:1px solid var(--line)}
+#legend span{font-size:16px;color:#cfd6ee;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);padding:4px 9px;border-radius:999px;border:1px solid var(--line)}
 #legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 @media (max-width:860px){
  header{padding:12px 120px 12px 14px}header .kick,header .sub{display:none}header h1{font-size:17px}
  #back{top:12px;right:12px;font-size:12px}
  #panel{left:10px;right:10px;bottom:10px;width:auto;max-height:46vh;padding:14px 15px 12px;border-radius:16px}
- #panel h2{font-size:18px}#panel .lead{font-size:13.5px}#panel .body{font-size:13.5px}
+ #panel h2{font-size:22px}#panel .lead{font-size:16px}#panel .body{font-size:16px}
  #hint{display:none}#legend{display:none}
 }
 
@@ -162,28 +162,39 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 .guy .bub.th{border-radius:16px;font-style:italic;color:#334155}
 .guy.ia:hover .torso{outline:2px solid #fff;outline-offset:1px}
 .bb.click{pointer-events:auto;cursor:pointer}
+.pjw{display:flex;align-items:flex-start;gap:6px;white-space:normal}
+.pjw img{height:250px;width:auto;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.pjw.izq{flex-direction:row-reverse}
+.pjw .say{background:#fff;color:#14182b;border-radius:16px;padding:12px 16px;font:700 21px/1.3 'Inter',sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+@media (max-width:860px){
+ .lbl{font-size:34px}.lbl.sm{font-size:30px}.lbl.val{font-size:36px}.lbl.big{font-size:60px}
+ .board{font-size:34px!important;width:440px!important}.board .k{font-size:26px}
+ .pjw img{height:220px}.pjw .say{display:none}
+ #panel{max-height:50vh}#panel h2{font-size:24px}#panel .lead,#panel .body,#ia .res{font-size:17px}
+ #panel .f{font-size:16px}#panel table{font-size:16px}#ia button{font-size:16px}
+}
 /* interactive panel */
 #ia:empty{display:none}
 #ia{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3)}
-#ia .ttl{font:800 12px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--d);margin-bottom:8px}
-#ia .row{display:grid;grid-template-columns:118px 1fr 48px;gap:8px;align-items:center;margin:5px 0;font-size:13px}
+#ia .ttl{font:800 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--d);margin-bottom:8px}
+#ia .row{display:grid;grid-template-columns:130px 1fr 54px;gap:8px;align-items:center;margin:5px 0;font-size:16px}
 #ia input[type=range]{width:100%;accent-color:var(--a)}
 #ia output{font:700 13px 'JetBrains Mono',monospace;text-align:right;color:#fde68a}
-#ia .res{margin-top:8px;font-size:14px;line-height:1.5}
+#ia .res{margin-top:8px;font-size:18px;line-height:1.5}
 #ia .btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-#ia button,.qz button{font:600 13px 'Inter';color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer}
+#ia button,.qz button{font:600 17px 'Inter';color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer}
 #ia button:hover,.qz button:hover{background:rgba(255,255,255,.16)}
 #ia button.on{background:var(--a);color:#06201c}
 #quiz:empty{display:none}
 .qz{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.35)}
-.qz .ttl{font:800 12px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--b);margin-bottom:8px}
-.qz .q{font-weight:600;margin-bottom:8px;font-size:14px}
+.qz .ttl{font:800 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--b);margin-bottom:8px}
+.qz .q{font-weight:600;margin-bottom:8px;font-size:18px}
 .qz .ops{display:flex;flex-direction:column;gap:6px}
 .qz .ops button{text-align:left}
 .qz button.ok{background:rgba(45,212,191,.25);border-color:var(--a)}
 .qz button.no{background:rgba(251,113,133,.22);border-color:var(--c)}
-.qz .fb{margin-top:8px;font-size:13.5px;line-height:1.5}
-#score{font:700 11px/1 'Inter';letter-spacing:.06em;padding:6px 9px;border-radius:8px;background:rgba(251,191,36,.14);color:var(--b);border:1px solid rgba(251,191,36,.35)}
+.qz .fb{margin-top:8px;font-size:17px;line-height:1.5}
+#score{font:700 14px/1 'Inter';letter-spacing:.06em;padding:6px 9px;border-radius:8px;background:rgba(251,191,36,.14);color:var(--b);border:1px solid rgba(251,191,36,.35)}
 .click{pointer-events:auto!important;cursor:pointer}
 
 </style>
@@ -209,181 +220,168 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 (function(){
 const mon = v => String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 const m2 = v => (Math.round(v*100)/100).toFixed(2);
+/* ejemplo de clase: mochilas de una tienda (datos ilustrativos) */
 const MOV = [
-  {d:'01 nov', t:'Inventario inicial', k:'in', lot:0, q:50,  c:38},
-  {d:'06 nov', t:'Compra 1',            k:'in', lot:1, q:150, c:40},
-  {d:'12 nov', t:'Venta 1',             k:'out', q:140},
-  {d:'19 nov', t:'Compra 2',            k:'in', lot:2, q:140, c:42},
-  {d:'28 nov', t:'Venta 2',             k:'out', q:160}
+  {d:'Día 1',  t:'Inventario inicial', k:'in', lot:0, q:20, c:10},
+  {d:'Día 5',  t:'Compra',             k:'in', lot:1, q:30, c:12},
+  {d:'Día 10', t:'Venta',              k:'out', q:40},
+  {d:'Día 18', t:'Compra',             k:'in', lot:2, q:10, c:14},
+  {d:'Día 25', t:'Venta',              k:'out', q:15}
 ];
-const LOTC = ['b','d','a'], LOTP = [38,40,42];
-/* PEPS: estado tras aplicar los movimientos 0..m */
+const LOTC = ['b','d','a'], LOTP = [10,12,14];
 function peps(m){
-  const lots=[0,0,0]; let cv=0; const sal=[];
+  const lots=[0,0,0]; let cv=0;
   for (let i=0;i<=m;i++){ const x=MOV[i];
     if (x.k==='in') lots[x.lot]=x.q;
     else { let r=x.q; for (let j=0;j<3;j++){ const t=Math.min(lots[j],r); lots[j]-=t; cv+=t*LOTP[j]; r-=t; } } }
-  const val = lots.reduce((s,q,j)=>s+q*LOTP[j],0);
-  return {lots, cv, qty:lots.reduce((a,b)=>a+b,0), val};
+  return {lots, cv, qty:lots.reduce((a,b)=>a+b,0), val:lots.reduce((s,q,j)=>s+q*LOTP[j],0)};
 }
 function prom(m){
-  let qty=0,val=0,cv=0,avg=0;
+  let qty=0,val=0,cv=0;
   for (let i=0;i<=m;i++){ const x=MOV[i];
     if (x.k==='in'){ qty+=x.q; val+=x.q*x.c; } else { const a=val/qty; cv+=x.q*a; val-=x.q*a; qty-=x.q; } }
-  avg = qty? val/qty : 0; return {qty,val,cv,avg};
+  return {qty,val,cv,avg:qty?val/qty:0};
 }
 const NOTA_PEPS = [
-  'Entra el inventario inicial: 50 polos a S/ 38 (lote 1).',
-  'Entra la compra 1: 150 polos a S/ 40 (lote 2). El saldo queda en dos capas.',
-  'Sale la venta 1 (140): PEPS saca primero los más antiguos: 50 a S/ 38 y 90 a S/ 40.',
-  'Entra la compra 2: 140 polos a S/ 42 (lote 3). Quedan 60 a S/ 40 y 140 a S/ 42.',
-  'Sale la venta 2 (160): primero los 60 a S/ 40 y luego 100 a S/ 42. Quedan 40 a S/ 42.'
+  'Entran 20 mochilas a S/ 10: primer lote.',
+  'Entran 30 a S/ 12: segundo lote. El saldo queda en dos capas.',
+  'Salen 40: primero las 20 más antiguas (S/ 10) y luego 20 de S/ 12.',
+  'Entran 10 a S/ 14: tercer lote.',
+  'Salen 15: primero las 10 de S/ 12 y luego 5 de S/ 14. Quedan las más recientes.'
 ];
 const NOTA_PROM = [
-  'Saldo: 50 polos a S/ 38.00.',
-  'Compra 1: ahora hay 200 polos por S/ 7,900. Costo promedio = 7,900 ÷ 200 = S/ 39.50.',
-  'Venta 1: los 140 polos salen todos a S/ 39.50 = S/ 5,530. Quedan 60 a S/ 39.50.',
-  'Compra 2: 200 polos por S/ 8,250. Costo promedio = 8,250 ÷ 200 = S/ 41.25.',
-  'Venta 2: 160 polos a S/ 41.25 = S/ 6,600. Quedan 40 a S/ 41.25 = S/ 1,650.'
+  'Saldo: 20 mochilas a S/ 10.00.',
+  'Compra: 50 mochilas por S/ 560. Nuevo promedio: 560 ÷ 50 = S/ 11.20.',
+  'Venta: las 40 salen a S/ 11.20. El promedio no cambia al vender.',
+  'Compra: 20 mochilas por S/ 252. Nuevo promedio: S/ 12.60.',
+  'Venta: las 15 salen a S/ 12.60. Quedan 5 a S/ 12.60.'
 ];
 window.COURSE = {
 kicker: 'Costos y Presupuestos · Semana 4',
-title: 'Kardex paso a paso',
-sub: 'Valuación de inventarios PEPS y promedio ponderado · caso «Rompiendo esquemas» (polos)',
+title: 'Kardex e inventarios',
+sub: 'Teoría breve en 3D: kardex, PEPS, promedio ponderado, equilibrio ponderado y utilidad deseada',
 back: 'analisis-costos-presupuestos.html',
 steps: [
-{ t:'¿Qué es el kardex?', dayt:'Inventarios', cam:[22,-22,1.05],
-  s:'El <b>kardex</b> es la ficha donde se anota cada movimiento del inventario de un producto. Todo lo que entra, todo lo que sale y lo que queda.',
-  html:`<table><tr><th>Columna</th><th>Qué anota</th></tr>
-  <tr><td class="hl-a">Entradas</td><td>Compras: cantidad, costo unitario, importe</td></tr>
-  <tr><td class="hl-c">Salidas</td><td>Ventas: cantidad, costo unitario, importe</td></tr>
-  <tr><td class="hl-d">Saldo</td><td>Lo que queda en almacén</td></tr></table>
-  <div class="f">Saldo nuevo = saldo anterior + entradas − salidas</div>
-  <div class="tip"><b>Caso:</b> los tres jóvenes de «Rompiendo esquemas» compran polos a precios cada vez más altos y quieren saber cuánto costó lo que vendieron.</div>`,
-  quiz:{q:'Un kardex tiene 50 polos de saldo y compras 150. ¿Cuál es el nuevo saldo en unidades?',o:['150','200','100','50'],a:1,fb:'50 + 150 = 200 polos.'},
+{ t:'¿Qué es el kardex?', dayt:'Inventarios', cam:[20,-20,1.05],
+  s:'Es la ficha de control de <b>un producto</b>: registra cada movimiento en <b>unidades y en soles</b>.',
+  html:`<ul><li><b class="hl-a">Entradas:</b> compras.</li><li><b class="hl-c">Salidas:</b> ventas, al costo.</li><li><b class="hl-d">Saldo:</b> lo que queda.</li></ul>
+  <div class="f">Saldo = saldo anterior + entradas − salidas</div>`,
   build(W){
-    W.block(-260,40,0,150,80,120,'a',{text:'ENTRADAS<br>compras'});
-    W.block(0,60,0,170,120,140,'d',{text:'SALDO<br>lo que queda'});
-    W.block(260,40,0,150,80,120,'c',{text:'SALIDAS<br>ventas'});
-    W.arrow(-175,0,-95,0,'a'); W.arrow(95,0,175,0,'c');
-    W.label(-260,130,0,'+ unidades · costo · importe','sm'); W.label(260,130,0,'− unidades · costo · importe','sm');
-    W.label(0,185,0,'KARDEX','big',{color:'d'});
-    W.guy(-120,130,{i:3,c:'e',s:1.4,from:[-420,170],act:'talk',say:'Todo movimiento se anota',sayFor:2600,click:g=>g.act('point').say('Entra, sale… ¡y siempre queda un saldo!',2600)});
-    W.guy(130,130,{i:8,c:'b',s:1.4,from:[420,170],faceEnd:-1,act:'think',say:'¿A qué costo salió cada polo?',think:true,delay:1500,click:g=>g.act('talk').say('Eso lo decide el método: PEPS o promedio',2800)});
+    W.block(-250,40,0,160,80,120,'a',{text:'ENTRADAS'});
+    W.block(0,60,0,180,120,140,'d',{text:'SALDO'});
+    W.block(250,40,0,160,80,120,'c',{text:'SALIDAS'});
+    W.arrow(-165,0,-95,0,'a'); W.arrow(95,0,165,0,'c');
+    W.pj(-40,150,'tj-docente-presenta','Cada movimiento queda anotado',{delay:700});
   }},
 
-{ t:'PEPS en vivo: lo primero que entra, primero sale', dayt:'Método PEPS', cam:[24,-24,1],
-  s:'Cada compra es un <b>lote</b> con su costo. Pulsa <b>Siguiente movimiento</b> y mira cómo la venta vacía primero el lote más antiguo.',
-  html:`<p>El saldo queda <b>por capas</b>: una fila del kardex por cada costo distinto.</p>
-  <div class="f">Venta 1 = 50 × 38 + 90 × 40 = <span class="hl-b">5,500</span></div>
-  <div class="tip"><b>Dato:</b> con PEPS el inventario final queda a los costos de compra más recientes.</div>`,
-  legend:[['b','Lote 1 · S/ 38'],['d','Lote 2 · S/ 40'],['a','Lote 3 · S/ 42']],
-  quiz:{q:'Con PEPS, la venta 1 (140 polos) se valúa con…',o:['140 × 40 = 5,600','50 × 38 + 90 × 40 = 5,500','140 × 39.50 = 5,530','140 × 38 = 5,320'],a:1,fb:'PEPS saca primero los 50 polos a S/ 38 y completa con 90 a S/ 40.'},
+{ t:'Costo de ventas e inventario final', dayt:'Inventarios', cam:[20,-20,1.05],
+  s:'Todo lo disponible termina en uno de dos lugares: <b>se vendió</b> o <b>se quedó</b>.',
+  html:`<div class="f">Inv. inicial + compras = costo de ventas + inv. final</div>
+  <ul><li><b class="hl-c">Costo de ventas</b> → estado de resultados.</li><li><b class="hl-d">Inventario final</b> → balance.</li></ul>
+  <p>El kardex dice <b>a qué costo</b> sale cada unidad. Ese costo depende del <b>método</b>.</p>`,
+  legend:[['e','Disponible'],['c','Costo de ventas'],['d','Inventario final']],
   build(W){
-    const sc=1.25, X=[-170,0,170];
-    const B = X.map((x,i)=>W.bar(x,0,0,LOTC[i],{w:90,d:90,val:'0',cat:'Lote '+(i+1)+' · S/ '+LOTP[i],delay:300}));
-    W.block(-330,10,0,110,20,90,'#334155'); W.label(-330,70,0,'Entradas','sm');
-    W.block(330,10,0,110,20,90,'#334155'); W.label(330,70,0,'Salidas','sm');
-    const clerk = W.guy(-330,110,{i:5,c:'e',s:1.4,from:[-460,170],act:'wave',say:'Listo para el kardex',sayFor:2200});
-    const board = W.board(0,380,0,'<div class="k">Kardex PEPS</div>Pulsa «Siguiente movimiento»',{w:300,accent:'d'});
-    return {B,sc,board,clerk};
+    W.bar(-210,0,230,'e',{w:110,d:110,val:'Disponible',cat:'Inv. inicial<br>+ compras'});
+    W.arrow(-130,0,-30,0,'w');
+    W.bar(40,0,170,'c',{w:100,d:100,val:'Vendido',cat:'Costo de<br>ventas',delay:1000});
+    W.bar(170,0,60,'d',{w:100,d:100,val:'Queda',cat:'Inventario<br>final',delay:1200});
+    W.pj(330,150,'tj-alumna-sorpresa','¡Lo que no se vendió sigue en el almacén!',{delay:1600,left:true});
+  }},
+
+{ t:'PEPS: primero en entrar, primero en salir', dayt:'Método PEPS', cam:[22,-22,1],
+  s:'Cada compra forma un <b>lote</b> con su costo. Al vender, se consume <b>el lote más antiguo</b>. Pulsa <b>Siguiente movimiento</b>.',
+  html:`<ul><li>El saldo se anota <b>por capas</b>: una fila por cada costo.</li><li>El inventario final queda a los <b>costos más recientes</b>.</li></ul>
+  <p style="color:var(--mut)">Ejemplo: mochilas de una tienda, datos ilustrativos.</p>`,
+  legend:[['b','Lote S/ 10'],['d','Lote S/ 12'],['a','Lote S/ 14']],
+  build(W){
+    const X=[-170,0,170];
+    const B = X.map((x,i)=>W.bar(x,0,0,LOTC[i],{w:100,d:100,val:'0',cat:'Lote S/ '+LOTP[i],delay:300}));
+    const board = W.board(0,320,0,'Pulsa «Siguiente movimiento»',{w:340,accent:'d'});
+    W.pj(-350,120,'tj-docente-puntero','',{delay:500});
+    return {B,board};
   },
   ui(U,R){
-    U.title('Laboratorio · kardex PEPS');
+    U.title('Kardex PEPS en vivo');
     const res=U.out(); let m=-1;
     const paint=()=>{ const s=m<0?{lots:[0,0,0],cv:0,qty:0,val:0}:peps(m);
-      s.lots.forEach((q,i)=>R.B[i].set(q*R.sc,{val:String(q)}));
+      s.lots.forEach((q,i)=>R.B[i].set(q*6,{val:String(q)}));
       const mv=m<0?null:MOV[m];
-      R.board.innerHTML = m<0 ? '<div class="k">Kardex PEPS</div>Pulsa «Siguiente movimiento»' :
-        `<div class="k">${mv.d} · ${mv.t}</div><b>Saldo:</b> ${s.qty} polos · S/ ${mon(s.val)}<br><b>Costo de ventas acumulado:</b> S/ ${mon(s.cv)}`;
+      R.board.innerHTML = m<0 ? 'Pulsa «Siguiente movimiento»' :
+        `<div class="k">${mv.d} · ${mv.t}</div>Saldo: <b>${s.qty} u. · S/ ${mon(s.val)}</b><br>Costo de ventas: <b>S/ ${mon(s.cv)}</b>`;
       res.innerHTML = m<0 ? '' : NOTA_PEPS[m];
-      if (m>=0) R.clerk.act(mv.k==='in'?'cheer':'point').say(mv.k==='in'?'¡Entra mercadería!':'¡Sale primero lo más antiguo!',1800);
     };
     U.btns([['Siguiente movimiento ▶',()=>{ if(m<MOV.length-1){ m++; paint(); } }],['Reiniciar ↺',()=>{ m=-1; paint(); }]]);
     paint();
   }},
 
-{ t:'Promedio ponderado en vivo', dayt:'Método promedio', cam:[22,-22,1],
-  s:'Aquí no hay capas: cada compra <b>recalcula un costo promedio</b> y todas las salidas salen a ese costo. Pulsa los movimientos.',
-  html:`<div class="f">Costo promedio = saldo en soles ÷ saldo en unidades</div>
-  <div class="f">Compra 1: (1,900 + 6,000) ÷ 200 = <span class="hl-b">S/ 39.50</span></div>
-  <div class="tip"><b>Ventaja:</b> suaviza las subidas de precio y es más fácil de llevar: una sola fila de saldo.</div>`,
-  legend:[['d','Saldo en unidades'],['b','Costo promedio (S/ × 4)']],
-  quiz:{q:'Tras la compra 1 hay 200 polos por S/ 7,900. ¿Cuál es el costo promedio?',o:['S/ 38.00','S/ 39.50','S/ 40.00','S/ 39.00'],a:1,fb:'7,900 ÷ 200 = 39.50.'},
+{ t:'Promedio ponderado', dayt:'Método promedio', cam:[22,-22,1],
+  s:'No hay capas: cada <b>compra recalcula</b> un costo promedio, y todas las salidas salen a ese costo.',
+  html:`<div class="f">Costo promedio = saldo en S/ ÷ saldo en unidades</div>
+  <ul><li>Se recalcula solo cuando <b>entra</b> mercadería.</li><li><b>Suaviza</b> las subidas de precio y es más fácil de llevar.</li></ul>`,
+  legend:[['d','Saldo (unidades)'],['b','Costo promedio']],
   build(W){
-    const sb=W.bar(-90,0,0,'d',{w:110,d:110,val:'0',cat:'Saldo (polos)',delay:300});
-    const pb=W.bar(120,0,0,'b',{w:70,d:70,val:'0',cat:'Costo promedio',delay:300});
-    W.block(-330,10,0,110,20,90,'#334155'); W.label(-330,70,0,'Movimientos','sm');
-    const clerk=W.guy(-330,110,{i:6,c:'e',s:1.4,from:[-460,170],act:'wave',say:'Aquí todo se promedia',sayFor:2200});
-    const board=W.board(0,380,0,'<div class="k">Kardex promedio</div>Pulsa «Siguiente movimiento»',{w:300,accent:'b'});
-    return {sb,pb,board,clerk};
+    const sb=W.bar(-110,0,0,'d',{w:120,d:120,val:'0',cat:'Saldo',delay:300});
+    const pb=W.bar(110,0,0,'b',{w:90,d:90,val:'S/ 0',cat:'Costo promedio',delay:300});
+    const board=W.board(0,320,0,'Pulsa «Siguiente movimiento»',{w:340,accent:'b'});
+    W.pj(-350,120,'tj-alumno-senala','',{delay:500});
+    return {sb,pb,board};
   },
   ui(U,R){
-    U.title('Laboratorio · promedio ponderado');
+    U.title('Kardex promedio en vivo');
     const res=U.out(); let m=-1;
     const paint=()=>{ const s=m<0?{qty:0,val:0,cv:0,avg:0}:prom(m);
-      R.sb.set(s.qty*1.25,{val:String(Math.round(s.qty))}); R.pb.set(s.avg*4,{val:'S/ '+m2(s.avg)});
+      R.sb.set(s.qty*6,{val:String(Math.round(s.qty))}); R.pb.set(s.avg*12,{val:'S/ '+m2(s.avg)});
       const mv=m<0?null:MOV[m];
-      R.board.innerHTML = m<0 ? '<div class="k">Kardex promedio</div>Pulsa «Siguiente movimiento»' :
-        `<div class="k">${mv.d} · ${mv.t}</div><b>Saldo:</b> ${Math.round(s.qty)} polos · S/ ${mon(s.val)}<br><b>Costo promedio:</b> S/ ${m2(s.avg)}<br><b>Costo de ventas acumulado:</b> S/ ${mon(s.cv)}`;
+      R.board.innerHTML = m<0 ? 'Pulsa «Siguiente movimiento»' :
+        `<div class="k">${mv.d} · ${mv.t}</div>Promedio: <b>S/ ${m2(s.avg)}</b><br>Saldo: <b>${Math.round(s.qty)} u. · S/ ${mon(s.val)}</b><br>Costo de ventas: <b>S/ ${mon(s.cv)}</b>`;
       res.innerHTML = m<0 ? '' : NOTA_PROM[m];
-      if (m>=0) R.clerk.act(mv.k==='in'?'cheer':'point').say(mv.k==='in'?'¡Recalculo el promedio!':'¡Sale todo al mismo costo!',1800);
     };
     U.btns([['Siguiente movimiento ▶',()=>{ if(m<MOV.length-1){ m++; paint(); } }],['Reiniciar ↺',()=>{ m=-1; paint(); }]]);
     paint();
   }},
 
-{ t:'PEPS frente a promedio: ¿cambia la utilidad?', dayt:'Comparación', cam:[18,-20,1],
-  s:'Los precios de compra subieron de S/ 38 a S/ 42. Mismo negocio, mismas ventas (300 polos a S/ 60): el método cambia el resultado.',
-  html:`<table><tr><th></th><th>PEPS</th><th>Promedio</th></tr>
-  <tr><td>Costo de ventas</td><td>12,100</td><td>12,130</td></tr>
-  <tr><td>Utilidad bruta</td><td>5,900</td><td>5,870</td></tr>
-  <tr><td>Costos fijos</td><td>6,500</td><td>6,500</td></tr>
-  <tr><td>Resultado</td><td class="hl-c">−600</td><td class="hl-c">−630</td></tr>
-  <tr><td>Inventario final</td><td>1,680</td><td>1,650</td></tr></table>
-  <div class="f">Comprobación: costo de ventas + inventario final = 13,780 (compras + inv. inicial)</div>
-  <div class="tip">La NIC 2 permite PEPS y promedio ponderado; el UEPS no está permitido.</div>`,
-  legend:[['d','PEPS'],['b','Promedio ponderado']],
-  quiz:{q:'Cuando los precios de compra suben, ¿qué método muestra el inventario final más alto?',o:['PEPS','Promedio ponderado','Los dos igual','UEPS'],a:0,fb:'PEPS deja el inventario a los costos más recientes: 1,680 frente a 1,650.'},
+{ t:'¿Qué cambia según el método?', dayt:'Comparación', cam:[18,-20,1],
+  s:'Si los precios de compra <b>suben</b>, cada método reparte distinto el costo.',
+  html:`<table><tr><th>Precios al alza</th><th>PEPS</th><th>Promedio</th></tr>
+  <tr><td>Costo de ventas</td><td>Menor</td><td>Mayor</td></tr>
+  <tr><td>Utilidad</td><td class="hl-a">Mayor</td><td>Menor</td></tr>
+  <tr><td>Inventario final</td><td class="hl-a">Mayor</td><td>Menor</td></tr></table>
+  <div class="tip">La <b>NIC 2</b> permite PEPS y promedio ponderado. El UEPS no está permitido.</div>`,
+  legend:[['d','PEPS'],['b','Promedio']],
   build(W){
-    W.bar(-250,0,1680/8,'d',{w:60,d:60,val:'1,680',cat:'Inv. final PEPS'});
-    W.bar(-170,0,1650/8,'b',{w:60,d:60,val:'1,650',cat:'Inv. final prom.'});
-    W.bar(70,0,-600/3,'d',{w:60,d:60,val:'−600',cat:'Resultado PEPS',valColor:'c'});
-    W.bar(150,0,-630/3,'b',{w:60,d:60,val:'−630',cat:'Resultado prom.',valColor:'c'});
-    W.label(-210,260,0,'Inventario final','pill sm'); W.label(110,60,0,'Resultado del mes','pill sm');
-    W.guy(300,110,{i:11,c:'e',s:1.4,from:[470,180],faceEnd:-1,act:'think',say:'Solo S/ 30 de diferencia…',think:true,delay:1200,click:g=>g.act('point').say('PEPS lleva al costo los polos más baratos',2800)});
+    W.bar(-260,0,140,'d',{w:80,d:80,val:'Menor',cat:'Costo ventas<br>PEPS'});
+    W.bar(-140,0,175,'b',{w:80,d:80,val:'Mayor',cat:'Costo ventas<br>promedio'});
+    W.bar(100,0,175,'d',{w:80,d:80,val:'Mayor',cat:'Utilidad<br>PEPS'});
+    W.bar(230,0,140,'b',{w:80,d:80,val:'Menor',cat:'Utilidad<br>promedio'});
+    W.pj(370,120,'tj-docente-presenta','Lo que no va al costo, queda en la utilidad',{delay:1300,left:true});
   }},
 
-{ t:'Equilibrio ponderado (en breve)', dayt:'Varios productos', cam:[20,-20,1],
-  s:'Con tres productos, cada uno aporta según su participación: <b>MC ponderado = Σ (MC × participación)</b>.',
-  html:`<table><tr><th>Producto</th><th>MC</th><th>Part.</th><th>MC pond.</th></tr>
-  <tr><td>Básico</td><td>15</td><td>50%</td><td>7.5</td></tr><tr><td>Exclusivo</td><td>25</td><td>30%</td><td>7.5</td></tr><tr><td>Combo</td><td>25</td><td>20%</td><td>5.0</td></tr></table>
-  <div class="f">MC ponderado = 20 · PE = 7,000 ÷ 20 = <span class="hl-b">350 unidades</span></div>
-  <p>Reparto: 175 básicos, 105 exclusivos y 70 combos.</p>`,
-  legend:[['b','Básico 50%'],['d','Exclusivo 30%'],['a','Combo 20%']],
-  quiz:{q:'Costos fijos S/ 7,000 y MC ponderado S/ 20. ¿Cuántas unidades en el equilibrio?',o:['140','350','450','7,020'],a:1,fb:'7,000 ÷ 20 = 350 unidades.'},
+{ t:'Equilibrio ponderado', dayt:'Varios productos', cam:[20,-20,1],
+  s:'Cuando se venden <b>varios productos</b>, cada uno aporta margen según su <b>participación</b> en las ventas.',
+  html:`<div class="f">MC ponderado = Σ (MC × participación)</div>
+  <div class="f">PE total = costos fijos ÷ MC ponderado</div>
+  <p>Las participaciones suman <b>100 %</b>. El equilibrio total se reparte entre los productos con esos mismos porcentajes.</p>`,
+  legend:[['b','Producto A'],['d','Producto B'],['a','Producto C']],
   build(W){
-    W.bar(-150,0,175*0.9,'b',{w:70,d:70,val:'175',cat:'Básico'});
-    W.bar(0,0,105*0.9,'d',{w:70,d:70,val:'105',cat:'Exclusivo'});
-    W.bar(150,0,70*0.9,'a',{w:70,d:70,val:'70',cat:'Combo'});
-    W.label(0,240,0,'PE = 350 unidades','big',{color:'b'});
-    W.guy(-300,110,{i:2,c:'a',s:1.4,from:[-470,180],act:'point',say:'Cada producto aporta según su mezcla',sayFor:2600,delay:900});
+    W.bar(-170,0,50*3.4,'b',{w:90,d:90,val:'50 %',cat:'Producto A'});
+    W.bar(-40,0,30*3.4,'d',{w:90,d:90,val:'30 %',cat:'Producto B'});
+    W.bar(90,0,20*3.4,'a',{w:90,d:90,val:'20 %',cat:'Producto C'});
+    W.label(-40,250,0,'Mezcla de ventas','big',{color:'b'});
+    W.pj(290,120,'tj-alumno-senala','Cada producto pesa según cuánto se vende',{delay:1200,left:true});
   }},
 
-{ t:'Utilidad deseada (en breve)', dayt:'Planeación de utilidades', cam:[20,-20,1],
-  s:'La utilidad que quieren ganar se <b>suma a los costos fijos</b>: es un costo más que hay que cubrir.',
-  html:`<div class="f">Unidades = (CF + utilidad) ÷ MC = (7,000 + 2,000) ÷ 20 = <span class="hl-b">450</span></div>
-  <p>Esperan vender 400: ganarían S/ 1,000 y <b class="hl-c">faltan 50 unidades</b> para la meta.</p>
-  <div class="tip"><b>Comprueba:</b> 450 × 20 = 9,000 de margen; menos 7,000 de costos fijos = S/ 2,000.</div>`,
-  legend:[['d','Equilibrio'],['a','Esperadas'],['b','Meta']],
-  quiz:{q:'Con CF = 7,000, utilidad deseada = 2,000 y MC ponderado = 20, ¿cuántas unidades hay que vender?',o:['350','400','450','500'],a:2,fb:'(7,000 + 2,000) ÷ 20 = 450.'},
+{ t:'Planeación de utilidades', dayt:'Utilidad deseada', cam:[20,-20,1],
+  s:'No basta con no perder: la empresa fija la utilidad que quiere y la <b>trata como un costo fijo más</b>.',
+  html:`<div class="f">Unidades = (CF + utilidad deseada) ÷ MC</div>
+  <div class="f">Ventas = unidades × precio</div>
+  <p>Con varios productos se usa el <b>MC ponderado</b>.</p>`,
+  legend:[['g','Costos fijos'],['a','Utilidad deseada']],
   build(W){
-    W.bar(-150,0,350*.5,'d',{w:80,d:80,val:'350',cat:'Equilibrio'});
-    W.bar(0,0,400*.5,'a',{w:80,d:80,val:'400',cat:'Esperadas'});
-    W.bar(150,0,450*.5,'b',{w:80,d:80,val:'450',cat:'Meta: S/ 2,000'});
-    W.plane(0,225,0,420,150,{color:'b',label:'Meta 450',lo:70,delay:1200});
-    W.label(0,290,0,'Faltan 50 unidades','big',{color:'c',delay:1500});
-    W.guy(300,110,{i:9,c:'c',s:1.4,from:[470,180],faceEnd:-1,act:'think',say:'¡Faltan 50!',think:true,delay:1500,click:g=>g.act('talk').say('Empujemos el exclusivo y el combo: dejan S/ 25',2800)});
+    W.bar(-120,0,150,'g',{w:120,d:120,val:'',cat:'Lo que debe cubrir el margen'});
+    W.bar(-120,0,80,'a',{w:120,d:120,val:'',base:150,delay:1000});
+    W.label(-300,75,0,'Costos fijos','pill'); W.label(-300,190,0,'+ Utilidad deseada','pill',{color:'a',delay:1200});
+    W.label(-120,300,0,'= Margen<br>necesario','big',{color:'a',delay:1500});
+    W.pj(220,120,'tj-alumna-sorpresa','¡La utilidad también se planifica!',{delay:1700,left:true});
   }}
 ]};
 
@@ -408,9 +406,9 @@ let cam = {rx:20, ry:-28, z:1, ty:0}, tgt = {...cam};
 let base = 1, dragging = false, lastInteract = -1e9;
 function layout(){
   const w = innerWidth, h = innerHeight, mobile = w < 860;
-  base = mobile ? Math.min(w/820, h/1250) : Math.min((w-440)/920, h/760);
-  base = Math.max(.32, Math.min(base, 1.25));
-  document.documentElement.style.setProperty('--cx', mobile ? '50%' : (440 + (w-440)/2) + 'px');
+  base = mobile ? Math.min(w/900, h/1150) : Math.min((w-600)/800, h/650);
+  base = Math.max(.32, Math.min(base, 1.6));
+  document.documentElement.style.setProperty('--cx', mobile ? '50%' : (600 + (w-600)/2) + 'px');
   document.documentElement.style.setProperty('--cy', mobile ? '40%' : '60%');
 }
 addEventListener('resize', layout); layout();
@@ -534,6 +532,11 @@ function makeW(root, ctx){
       t.appendChild(inner); root.appendChild(t);
       const lab = o.label ? W.label(x + w/2 + (o.lo||70), y, z, o.label, 'pill sm', {delay:dl+200, color:o.color}) : null;
       return {el:t, label:lab, setY(yy, text){ t.style.transform = pos(yy); if(lab){ setXYZ(lab, x + w/2 + (o.lo||70), yy, z); if(text!=null) lab.innerHTML=text; } }};
+    },
+    pj(x,z,img,say,o={}){
+      const left=!!o.left;
+      const html='<div class="pjw'+(left?' izq':'')+'"><img src="personajes/'+img+'.webp" alt="">'+(say?'<div class="say">'+say+'</div>':'')+'</div>';
+      return W.label(x,0,z,html,'',{anchor:'b',delay:o.delay});
     },
     /* stop-motion character */
     guy(x,z,o={}){
