@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Semana 13 · Estudio de producto 3D</title>
+<title>Quinua Fresh 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0a0f1f;--ink:#eef1fb;--mut:#9aa6c7;--a:#2dd4bf;--b:#fbbf24;--c:#fb7185;--d:#60a5fa;--e:#a78bfa;--g:#64748b;--glass:rgba(16,23,48,.78);--line:rgba(255,255,255,.10);--rx:20deg;--ry:-28deg}
+:root{--bg:#1d1d20;--ink:#f6f6f7;--mut:#b9b9c0;--a:#E31E24;--b:#FF5A5F;--c:#FF8A8E;--d:#C9CACF;--e:#8E8E95;--g:#5E5E66;--glass:rgba(32,32,36,.86);--line:rgba(255,255,255,.10);--rx:20deg;--ry:-28deg}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#070b18 100%);color:var(--ink);font-family:'Inter',system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
+body{background:radial-gradient(1100px 700px at 62% 28%,#4a4a52 0%,#2a2a2e 50%,#141416 100%);color:var(--ink);font-family:'Inter',system-ui,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased}
 #vp{position:fixed;inset:0;perspective:1700px;perspective-origin:50% 30%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
 #vp.drag{cursor:grabbing}
 #world{position:absolute;left:var(--cx,50%);top:var(--cy,60%);width:0;height:0;transform-style:preserve-3d}
@@ -22,7 +22,7 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 .fc.b{background:color-mix(in srgb,var(--c) 78%,black)}
 .fc.u{background:color-mix(in srgb,var(--c) 35%,black)}
 .fc.f{background:linear-gradient(180deg,color-mix(in srgb,var(--c) 92%,white),var(--c))}
-.fc.f .ft{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;font:700 13px/1.15 'Sora',sans-serif;color:#0b1020}
+.fc.f .ft{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:4px;font:700 18px/1.15 'Sora',sans-serif;color:#0b1020}
 /* animations */
 .grow{transform:scaleY(.001);transition:transform .9s steps(7,end)}
 .layer.on .grow{transform:scaleY(1)}
@@ -36,15 +36,15 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 /* billboard */
 .bb{position:absolute;left:0;top:0;transform:translate3d(var(--x),var(--y),var(--z)) rotateY(calc(var(--ry) * -1)) rotateX(calc(var(--rx) * -1)) translate(-50%,-50%);white-space:nowrap;pointer-events:none}
 .bb.anchor-b{transform:translate3d(var(--x),var(--y),var(--z)) rotateY(calc(var(--ry) * -1)) rotateX(calc(var(--rx) * -1)) translate(-50%,-100%)}
-.lbl{font:600 15px/1.2 'Inter',sans-serif;color:var(--ink);text-shadow:0 2px 8px rgba(0,0,0,.6)}
-.lbl.sm{font-size:12.5px;color:#c9d2ee;font-weight:500}
-.lbl.val{font:800 20px/1 'Sora',sans-serif}
-.lbl.big{font:800 40px/1 'Sora',sans-serif;letter-spacing:-.02em}
+.lbl{font:700 21px/1.2 'Inter',sans-serif;color:var(--ink);text-shadow:0 2px 8px rgba(0,0,0,.6)}
+.lbl.sm{font-size:18px;color:#c9d2ee;font-weight:500}
+.lbl.val{font:800 28px/1 'Sora',sans-serif}
+.lbl.big{font:800 54px/1 'Sora',sans-serif;letter-spacing:-.02em}
 .lbl.huge{font:800 64px/1 'Sora',sans-serif;letter-spacing:-.03em}
 .lbl.pill{background:var(--glass);border:1px solid var(--line);padding:6px 11px;border-radius:999px;backdrop-filter:blur(6px)}
-.board{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:14px 16px;white-space:normal;box-shadow:0 18px 50px rgba(0,0,0,.45);font:500 14px/1.45 'Inter',sans-serif;color:var(--ink)}
-.board h4{margin:0 0 6px;font:700 15px/1.2 'Sora',sans-serif}
-.board .k{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:4px}
+.board{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:14px 16px;white-space:normal;box-shadow:0 18px 50px rgba(0,0,0,.45);font:500 19px/1.45 'Inter',sans-serif;color:var(--ink)}
+.board h4{margin:0 0 6px;font:700 20px/1.2 'Sora',sans-serif}
+.board .k{color:var(--mut);font-size:15px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:4px}
 .board ul{margin:4px 0 0;padding-left:18px}
 .board li{margin:2px 0}
 /* floor */
@@ -59,34 +59,34 @@ body{background:radial-gradient(1100px 700px at 62% 28%,#1c2a5c 0%,#0e1530 45%,#
 .pp b{position:absolute;left:1px;top:14px;width:20px;height:24px;border-radius:10px 10px 4px 4px;background:var(--pc);filter:brightness(.82)}
 /* UI */
 header{position:fixed;left:0;right:0;top:0;padding:16px 22px;display:flex;align-items:center;gap:14px;pointer-events:none;z-index:5}
-header .kick{font:700 11px/1 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--a);background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);padding:7px 10px;border-radius:999px}
-header h1{margin:0;font:800 clamp(18px,2.2vw,26px)/1.1 'Sora',sans-serif;letter-spacing:-.01em}
-header .sub{color:var(--mut);font-size:13px;margin-top:3px}
-#panel{position:fixed;left:22px;bottom:22px;width:min(420px,calc(100vw - 44px));max-height:calc(100vh - 120px);overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:18px 20px 16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.45);z-index:6}
+header .kick{font:700 14px/1 'Inter';letter-spacing:.14em;text-transform:uppercase;color:var(--a);background:rgba(45,212,191,.12);border:1px solid rgba(45,212,191,.35);padding:7px 10px;border-radius:999px}
+header h1{margin:0;font:800 clamp(22px,2.6vw,34px)/1.1 'Sora',sans-serif;letter-spacing:-.01em}
+header .sub{color:var(--mut);font-size:17px;margin-top:3px}
+#panel{position:fixed;left:22px;bottom:22px;width:min(560px,calc(100vw - 44px));max-height:calc(100vh - 110px);overflow:auto;background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:18px 20px 16px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 20px 60px rgba(0,0,0,.45);z-index:6}
 #panel .meta{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-#panel .num{font:800 12px/1 'Sora';color:#0b1020;background:var(--a);padding:6px 9px;border-radius:8px}
-#panel .day{font:700 11px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border-radius:8px;border:1px solid var(--line);color:var(--mut)}
+#panel .num{font:800 15px/1 'Sora';color:#fff;background:var(--a);padding:6px 9px;border-radius:8px}
+#panel .day{font:700 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;padding:6px 9px;border-radius:8px;border:1px solid var(--line);color:var(--mut)}
 #panel .day.M{color:var(--d);border-color:rgba(96,165,250,.4)}
 #panel .day.X{color:var(--e);border-color:rgba(167,139,250,.45)}
-#panel h2{margin:4px 0 6px;font:800 21px/1.2 'Sora',sans-serif;letter-spacing:-.01em}
-#panel .lead{color:#d6dcf2;font-size:14.5px;line-height:1.5;margin:0 0 10px}
-#panel .body{font-size:14px;line-height:1.55;color:#cfd6ee}
+#panel h2{margin:4px 0 8px;font:800 28px/1.2 'Sora',sans-serif;letter-spacing:-.01em}
+#panel .lead{color:#d6dcf2;font-size:19px;line-height:1.5;margin:0 0 10px}
+#panel .body{font-size:18px;line-height:1.55;color:#cfd6ee}
 #panel .body p{margin:0 0 8px}
 #panel .body ul,#panel .body ol{margin:0 0 8px;padding-left:20px}
 #panel .body li{margin:3px 0}
-#panel .f{background:rgba(0,0,0,.28);border:1px solid var(--line);border-left:3px solid var(--b);border-radius:10px;padding:9px 12px;margin:8px 0;font:600 14px/1.5 'JetBrains Mono',ui-monospace,monospace;color:#fde68a;overflow-x:auto}
-#panel .tip{background:rgba(45,212,191,.09);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:13.5px}
+#panel .f{background:rgba(0,0,0,.28);border:1px solid var(--line);border-left:3px solid var(--b);border-radius:10px;padding:9px 12px;margin:8px 0;font:600 18px/1.5 'JetBrains Mono',ui-monospace,monospace;color:#fde68a;overflow-x:auto}
+#panel .tip{background:rgba(45,212,191,.09);border:1px solid rgba(45,212,191,.3);border-radius:10px;padding:8px 12px;margin:8px 0;font-size:17px}
 #panel .tip b{color:var(--a)}
-#panel table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0 8px}
+#panel table{border-collapse:collapse;width:100%;font-size:17px;margin:6px 0 8px}
 #panel th,#panel td{border-bottom:1px solid var(--line);padding:5px 6px;text-align:right}
 #panel th:first-child,#panel td:first-child{text-align:left}
 #panel th{color:var(--mut);font-weight:600}
 #panel code{word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:12.5px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px}
 .hl-a{color:var(--a);font-weight:700}.hl-b{color:var(--b);font-weight:700}.hl-c{color:var(--c);font-weight:700}.hl-d{color:var(--d);font-weight:700}.hl-e{color:var(--e);font-weight:700}
 #nav{display:flex;align-items:center;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-#nav button{font:700 13px 'Inter';color:var(--ink);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer}
+#nav button{font:700 17px 'Inter';color:var(--ink);background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:10px;padding:9px 13px;cursor:pointer}
 #nav button:hover{background:rgba(255,255,255,.14)}
-#nav button.pri{background:var(--a);color:#06201c;border-color:transparent}
+#nav button.pri{background:var(--a);color:#fff;border-color:transparent}
 #nav button:disabled{opacity:.35;cursor:default}
 #dots{display:flex;gap:5px;flex-wrap:wrap;flex:1;justify-content:center}
 #dots button{width:8px;height:8px;cursor:pointer;padding:0;border-radius:50%;border:none;background:rgba(255,255,255,.22)}
@@ -94,19 +94,19 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 #dots button.X{box-shadow:inset 0 0 0 1.5px rgba(167,139,250,.7)}
 #dots button.cur{background:var(--a);transform:scale(1.25)}
 #dots button.done{background:rgba(45,212,191,.45)}
-#hint{position:fixed;right:22px;bottom:22px;color:var(--mut);font-size:12.5px;text-align:right;line-height:1.6;z-index:4;pointer-events:none}
+#hint{position:fixed;right:22px;bottom:22px;color:var(--mut);font-size:15px;text-align:right;line-height:1.6;z-index:4;pointer-events:none}
 #hint kbd{font:600 11px 'Inter';border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:var(--ink)}
-#back{position:fixed;right:22px;top:20px;z-index:7;color:var(--mut);font-size:13px;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:rgba(0,0,0,.2)}
+#back{position:fixed;right:22px;top:20px;z-index:7;color:var(--mut);font-size:16px;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;background:rgba(0,0,0,.2)}
 #back:hover{color:var(--ink)}
 #prog{position:fixed;left:0;top:0;height:3px;background:linear-gradient(90deg,var(--a),var(--d));z-index:8;transition:width .5s}
 #legend{position:fixed;right:22px;top:64px;z-index:4;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-#legend span{font-size:12.5px;color:#cfd6ee;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);padding:4px 9px;border-radius:999px;border:1px solid var(--line)}
+#legend span{font-size:16px;color:#cfd6ee;display:flex;align-items:center;gap:7px;background:rgba(0,0,0,.25);padding:4px 9px;border-radius:999px;border:1px solid var(--line)}
 #legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 @media (max-width:860px){
  header{padding:12px 120px 12px 14px}header .kick,header .sub{display:none}header h1{font-size:17px}
  #back{top:12px;right:12px;font-size:12px}
  #panel{left:10px;right:10px;bottom:10px;width:auto;max-height:46vh;padding:14px 15px 12px;border-radius:16px}
- #panel h2{font-size:18px}#panel .lead{font-size:13.5px}#panel .body{font-size:13.5px}
+ #panel h2{font-size:22px}#panel .lead{font-size:16px}#panel .body{font-size:16px}
  #hint{display:none}#legend{display:none}
 }
 
@@ -162,28 +162,45 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 .guy .bub.th{border-radius:16px;font-style:italic;color:#334155}
 .guy.ia:hover .torso{outline:2px solid #fff;outline-offset:1px}
 .bb.click{pointer-events:auto;cursor:pointer}
+.pjw{display:flex;align-items:flex-start;gap:6px;white-space:normal}
+.pjw img{height:250px;width:auto;display:block;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.pjw.izq{flex-direction:row-reverse}
+.pjw .say{background:#fff;color:#14182b;border-radius:16px;padding:12px 16px;font:700 21px/1.3 'Inter',sans-serif;width:240px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+@media (max-width:860px){
+ .lbl{font-size:34px}.lbl.sm{font-size:30px}.lbl.val{font-size:36px}.lbl.big{font-size:60px}
+ .board{font-size:34px!important;width:440px!important}.board .k{font-size:26px}
+ .pjw img{height:220px}.pjw .say{display:none}
+ #panel{max-height:50vh}#panel h2{font-size:24px}#panel .lead,#panel .body,#ia .res{font-size:17px}
+ #panel .f{font-size:16px}#panel table{font-size:16px}#ia button{font-size:16px}
+}
+.logo-c{height:38px;width:auto;flex:none}
+.logo-c.tj{height:44px;background:#fff;border-radius:8px;padding:4px 8px}
+#snd{position:fixed;right:22px;bottom:84px;z-index:7;font:700 16px 'Inter';color:var(--ink);background:rgba(20,20,22,.7);border:1px solid var(--line);border-radius:999px;padding:9px 15px;cursor:pointer}
+#snd.off{opacity:.6}
+@media (max-width:860px){ .logo-c{height:26px} #snd{top:52px;bottom:auto;right:12px;font-size:14px;padding:7px 12px} }
 /* interactive panel */
 #ia:empty{display:none}
 #ia{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3)}
-#ia .ttl{font:800 12px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--d);margin-bottom:8px}
-#ia .row{display:grid;grid-template-columns:118px 1fr 48px;gap:8px;align-items:center;margin:5px 0;font-size:13px}
+#ia .ttl{font:800 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--d);margin-bottom:8px}
+#ia .row{display:grid;grid-template-columns:130px 1fr 54px;gap:8px;align-items:center;margin:5px 0;font-size:16px}
 #ia input[type=range]{width:100%;accent-color:var(--a)}
 #ia output{font:700 13px 'JetBrains Mono',monospace;text-align:right;color:#fde68a}
-#ia .res{margin-top:8px;font-size:14px;line-height:1.5}
+#ia .res{margin-top:8px;font-size:18px;line-height:1.5}
 #ia .btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-#ia button,.qz button{font:600 13px 'Inter';color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer}
+#ia button,.qz button{font:600 17px 'Inter';color:var(--ink);background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:9px;padding:7px 11px;cursor:pointer}
 #ia button:hover,.qz button:hover{background:rgba(255,255,255,.16)}
 #ia button.on{background:var(--a);color:#06201c}
 #quiz:empty{display:none}
 .qz{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(251,191,36,.07);border:1px solid rgba(251,191,36,.35)}
-.qz .ttl{font:800 12px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--b);margin-bottom:8px}
-.qz .q{font-weight:600;margin-bottom:8px;font-size:14px}
+.qz .ttl{font:800 14px/1 'Inter';letter-spacing:.1em;text-transform:uppercase;color:var(--b);margin-bottom:8px}
+.qz .q{font-weight:600;margin-bottom:8px;font-size:18px}
 .qz .ops{display:flex;flex-direction:column;gap:6px}
 .qz .ops button{text-align:left}
 .qz button.ok{background:rgba(45,212,191,.25);border-color:var(--a)}
 .qz button.no{background:rgba(251,113,133,.22);border-color:var(--c)}
-.qz .fb{margin-top:8px;font-size:13.5px;line-height:1.5}
-#score{font:700 11px/1 'Inter';letter-spacing:.06em;padding:6px 9px;border-radius:8px;background:rgba(251,191,36,.14);color:var(--b);border:1px solid rgba(251,191,36,.35)}
+.qz .fb{margin-top:8px;font-size:17px;line-height:1.5}
+#score:empty{display:none}
+#score{font:700 14px/1 'Inter';letter-spacing:.06em;padding:6px 9px;border-radius:8px;background:rgba(251,191,36,.14);color:var(--b);border:1px solid rgba(251,191,36,.35)}
 .click{pointer-events:auto!important;cursor:pointer}
 
 </style>
@@ -192,8 +209,9 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 <div id="prog"></div>
 <div id="vp"><div id="world"><div id="floor"><div></div></div></div></div>
 <div id="ov"></div>
-<header><div><span class="kick" id="kick"></span></div><div><h1 id="title"></h1><div class="sub" id="sub"></div></div></header>
+<header><img class="logo-c tj" src="marca/logo-tj.png" alt="Thomas Jefferson"><div><span class="kick" id="kick"></span></div><div><h1 id="title"></h1><div class="sub" id="sub"></div></div></header>
 <a id="back" href="#">← Volver al curso</a>
+<button id="snd" type="button">🔊 Sonido</button>
 <div id="legend"></div>
 <section id="panel" aria-live="polite">
   <div class="meta"><span class="num" id="num"></span><span class="day" id="day"></span><span id="score"></span></div>
@@ -207,235 +225,165 @@ header .sub{color:var(--mut);font-size:13px;margin-top:3px}
 <div id="hint">Clic en la escena, <kbd>→</kbd> o <kbd>espacio</kbd>: avanzar · <kbd>←</kbd>: retroceder<br>Haz clic en las personas · arrastra para girar · rueda: zoom</div>
 <script>
 (function(){
+/* sonidos sintetizados con Web Audio: no hay archivos que descargar */
+window.SND=(function(){
+  let ctx=null, on=true;
+  try{ on = localStorage.getItem('quinua3d_snd')!=='0'; }catch(e){}
+  function ac(){ if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; } } if(ctx.state==='suspended') ctx.resume(); return ctx; }
+  function tono(f1,f2,dur,tipo,vol,ret){ const c=ac(); if(!c||!on) return; const t=c.currentTime+(ret||0);
+    const o=c.createOscillator(), g=c.createGain(); o.type=tipo||'sine';
+    o.frequency.setValueAtTime(f1,t); o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+    g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||0.18,t+0.02); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g).connect(c.destination); o.start(t); o.stop(t+dur+0.05); }
+  function soplo(){ const c=ac(); if(!c||!on) return; const t=c.currentTime, n=Math.floor(c.sampleRate*0.45);
+    const b=c.createBuffer(1,n,c.sampleRate), d=b.getChannelData(0); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*(1-i/n);
+    const s=c.createBufferSource(); s.buffer=b; const f=c.createBiquadFilter(); f.type='bandpass'; f.Q.value=1.2;
+    f.frequency.setValueAtTime(400,t); f.frequency.exponentialRampToValueAtTime(2400,t+0.4);
+    const g=c.createGain(); g.gain.value=0.22; s.connect(f).connect(g).connect(c.destination); s.start(t); }
+  return {
+    get on(){ return on; },
+    toggle(){ on=!on; try{ localStorage.setItem('quinua3d_snd', on?'1':'0'); }catch(e){} if(on) tono(660,990,0.15,'sine',0.15); return on; },
+    paso(){ soplo(); },
+    entra(){ tono(392,523,0.12,'triangle',0.2); tono(523,784,0.16,'triangle',0.2,0.11); },
+    sale(){ tono(1318,1318,0.09,'square',0.07); tono(1760,1760,0.22,'square',0.07,0.08); },
+    fin(){ [523,659,784,1046].forEach((f,i)=>tono(f,f,0.18,'triangle',0.16,i*0.1)); }
+  };
+})();
 const fx = v => v.toFixed(1).replace('.',',');
 const pct = v => Math.round(v)+'%';
 const SC = ['Definitivamente sí','Probablemente sí','Puede que sí / no','Probablemente no','Definitivamente no'];
-const SAY = ['¡Definitivamente lo compraría!','Probablemente lo compraría','Mmm… puede que sí, puede que no','Probablemente no','¡Definitivamente no!'];
-const SCOL = ['a','a','g','c','c'];
 window.COURSE = {
-kicker: 'Investigación Cuantitativa · Semana 13',
-title: 'Estudio de producto paso a paso',
-sub: 'Prueba de concepto, prueba de producto, T2B y comparación de medias · caso Quinua Fresh',
+kicker: 'Investigación Cuantitativa · S13',
+title: 'La historia de Quinua Fresh',
+sub: 'Prueba de concepto, prueba de producto y comparación de medias, contadas como una historia',
 back: 'investigacion-cuantitativa.html',
 steps: [
-{ t:'¿Qué fórmula lanzamos?', dayt:'Caso Quinua Fresh', cam:[18,-20,1.05],
-  s:'Quinua Fresh tiene dos fórmulas de su nuevo producto: <b class="hl-b">A</b> y <b class="hl-d">B</b>. La gerente quiere lanzar una, pero el analista pide datos antes de decidir.',
-  html:`<ul><li><b class="hl-d">Martes:</b> prueba de concepto y de producto, intención de compra y <b>Top Two Boxes (T2B)</b>.</li>
-  <li><b class="hl-e">Miércoles:</b> comparación de medias, prueba t, producto ganador y mejoras.</li></ul>
-  <div class="tip"><b>Cómo usar:</b> pulsa <i>Empezar</i> o →. <b>Haz clic en las personas</b> para escucharlas, usa los controles azules para mover los datos y resuelve el ★ reto de cada paso.</div>
-  <p style="color:var(--mut);font-size:12.5px">Datos ilustrativos, para practicar el procedimiento.</p>`,
+{ t:'Una decisión difícil', dayt:'Inicio del caso', cam:[18,-20,1.05],
+  s:'Quinua Fresh tiene lista una bebida de quinua en <b>dos fórmulas, A y B</b>. La gerente quiere lanzar una en marzo. El analista la detiene: «antes de gastar en producir, preguntemos a los consumidores».',
+  html:`<p>Así empieza todo estudio de producto: con una <b>decisión</b> que se quiere tomar con datos y no con intuición.</p>
+  <p style="color:var(--mut)">Caso de clase simulado, no un estudio real.</p>`,
   build(W){
-    W.block(-170,15,-40,160,30,160,'#334155'); W.block(170,15,-40,160,30,160,'#334155');
-    W.block(-170,100,-40,86,140,54,'b',{text:'Quinua<br>Fresh<br><span style="font-size:22px">A</span>'});
-    W.block(170,100,-40,86,140,54,'d',{text:'Quinua<br>Fresh<br><span style="font-size:22px">B</span>'});
-    const lines1=['¿Lanzamos A o B?','¡El lanzamiento es en marzo!','Quiero una decisión con datos'];
-    const lines2=['Hagamos un estudio de producto','Primero probemos el concepto','Luego comparamos A y B con una prueba t'];
-    let k1=0,k2=0;
-    W.guy(-50,110,{i:3,c:'e',s:1.4,from:[-380,170],act:'talk',say:'¿Lanzamos A o B?',sayFor:2000,click:g=>g.act('talk').say(lines1[++k1%3],2500)});
-    W.guy(50,110,{i:8,c:'a',s:1.4,from:[380,170],faceEnd:-1,act:'think',say:'Necesito datos… 📊',think:true,delay:1900,click:g=>g.act('point').say(lines2[++k2%3],2500)});
-    W.label(0,270,-40,'¿Cuál lanzamos?','big');
+    W.block(-150,70,-40,100,140,70,'b',{text:'Quinua<br>Fresh<br><span style="font-size:26px">A</span>'});
+    W.block(150,70,-40,100,140,70,'d',{text:'Quinua<br>Fresh<br><span style="font-size:26px">B</span>'});
+    W.label(0,250,-40,'¿A o B?','big',{color:'a'});
+    W.pj(-250,140,'tj-docente-presenta','¡Lancemos una en marzo!',{delay:600});
+    W.pj(210,140,'tj-alumno-senala','Primero, datos',{delay:1500,left:true});
   }},
 
-{ t:'Concepto vs. producto', day:'M', dayt:'Prueba de concepto y de producto', cam:[24,-16,1.05],
-  s:'Son dos pruebas distintas, en momentos distintos. Mira a cada consumidor: uno solo <b>lee la idea</b>, el otro <b>prueba el producto</b>.',
-  html:`<table><tr><th></th><th>Prueba de concepto</th><th>Prueba de producto</th></tr>
-  <tr><td>Evalúa</td><td>La <b>idea</b> descrita</td><td>El producto <b>real</b></td></tr>
-  <tr><td>Cuándo</td><td>Antes de fabricar</td><td>Con prototipo listo</td></tr>
-  <tr><td>Estímulo</td><td>Tarjeta de concepto</td><td>Se prueba / consume</td></tr>
-  <tr><td>Pregunta</td><td>¿Lo compraría?</td><td>¿Le gusta? ¿Cumple?</td></tr></table>
-  <div class="tip"><b>Regla:</b> el concepto mide la <i>promesa</i>; el producto mide si la <i>cumple</i>.</div>`,
-  quiz:{q:'Quinua Fresh aún no fabrica la bebida y quiere saber si la idea atrae a la gente. ¿Qué prueba usa?',o:['Prueba de producto','Prueba de concepto','Prueba t','Mapa de posicionamiento'],a:1,fb:'Sin producto físico solo se puede evaluar la idea con una tarjeta de concepto.'},
+{ t:'Primero se prueba la idea', day:'M', dayt:'Prueba de concepto', cam:[22,-18,1.05],
+  s:'Todavía no hay bebida. El equipo escribe una <b>tarjeta de concepto</b> y la muestra a 200 personas. Todos leen <b>exactamente el mismo texto</b>, con precio incluido.',
+  html:`<ol><li><b>Insight</b>: la necesidad.</li><li><b>Beneficio</b>: lo que resuelve.</li><li><b>Razón para creer</b>.</li><li><b>Precio y formato</b>.</li><li><b>Nombre e imagen</b>.</li></ol>
+  <div class="tip">La prueba de concepto mide la <b>promesa</b>, antes de fabricar.</div>`,
   build(W){
-    W.board(-210,190,-40,`<div class="k">Estímulo</div><h4>Tarjeta de concepto</h4>“Bebida de quinua lista para tomar. Energía natural para tu mañana, sin azúcar añadida. 300 ml a S/ 3.50.”`,{w:240,accent:'d'});
-    W.block(200,15,-40,140,30,140,'#334155'); W.block(200,100,-40,86,140,54,'b',{text:'Quinua<br>Fresh'});
-    W.guy(-210,60,{i:11,c:'d',s:1.3,from:[-460,200],act:'think',say:'Mmm… suena bien 🤔',think:true,click:g=>g.act('think').say('Lo compraría… si cumple lo que promete',2600,true)});
-    W.guy(200,60,{i:4,c:'a',s:1.3,from:[460,200],faceEnd:-1,act:'hold',say:'¡Está rico! 😋',delay:700,click:g=>g.act('cheer').say('Sabe a quinua de verdad',2400)});
-    W.label(-210,0,150,'Prueba de concepto · la idea','pill sm'); W.label(200,0,150,'Prueba de producto · lo tangible','pill sm');
+    W.board(-90,230,-40,`<div class="k">Tarjeta de concepto</div><h4>Quinua Fresh</h4>«¿Sin tiempo para desayunar? Energía natural de quinua andina, sin azúcar añadida. Botella de 300 ml a S/ 3.50.»`,{w:380,accent:'a'});
+    W.pj(210,140,'tj-alumna-sorpresa','Suena bien… ¿y cuánto cuesta? ¡Ah, aquí dice!',{delay:900,left:true});
   }},
 
-{ t:'Las piezas de la tarjeta de concepto', day:'M', dayt:'Prueba de concepto', cam:[14,-22,1],
-  s:'La tarjeta se construye por capas. <b>Haz clic en cada capa</b> y la analista te dará un ejemplo.',
-  html:`<ol><li><b class="hl-d">Insight:</b> la necesidad del consumidor.</li><li><b class="hl-a">Beneficio:</b> lo que el producto resuelve.</li>
-  <li><b class="hl-b">Razón para creer:</b> la prueba del beneficio.</li><li><b class="hl-e">Precio y formato.</b></li><li><b class="hl-c">Nombre e imagen.</b></li></ol>
-  <div class="tip"><b>Ojo:</b> todos ven la <i>misma</i> tarjeta, con el mismo texto.</div>`,
-  quiz:{q:'¿Por qué la tarjeta de concepto debe incluir el precio?',o:['Para que se vea más profesional','Porque sin precio la intención de compra se infla','Porque lo exige la ley','No es necesario incluirlo'],a:1,fb:'Si no saben cuánto cuesta, muchos dicen “sí lo compraría” y luego no lo hacen.'},
+{ t:'¿La comprarían?', day:'M', dayt:'Intención de compra y T2B', cam:[22,-18,1],
+  s:'Después de leer, cada persona marca qué tan probable es que la compre. Al equipo no le interesa el promedio: le interesan los que <b>de verdad</b> la comprarían, los dos casilleros de arriba.',
+  html:`<div class="f">T2B = 30 % + 25 % = 55 %</div>
+  <p>Más de la mitad está en el <b>Top Two Boxes</b>. El concepto pasa a la siguiente etapa.</p>`,
+  legend:[['a','Top Two Boxes'],['g','Resto']],
   build(W){
-    const L=[['d','1 · Insight','“No tengo tiempo de desayunar bien”'],['a','2 · Beneficio','“Energía natural toda la mañana”'],['b','3 · Razón para creer','“Quinua andina con proteína vegetal”'],['e','4 · Precio y formato','“Botella de 300 ml a S/ 3.50”'],['c','5 · Nombre e imagen','“Quinua Fresh, botella verde”']];
-    let ana; W.step=150;
-    L.forEach(([c,t,ex],i)=> W.block(-90, 22+i*46, -20, 260, 42, 130, c, {text:t, click:()=>ana && ana.act('point').say(ex,3200)}));
-    W.step=70;
-    ana = W.guy(150,40,{i:5,c:'e',s:1.5,from:[420,160],faceEnd:-1,act:'point',say:'¡Haz clic en una capa!',delay:400});
+    const V=[30,25,20,15,10];
+    V.forEach((v,i)=>W.bar(-280+i*140,0,v*7,i<2?'a':'g',{w:80,d:80,val:v+'%',cat:['Def. sí','Prob. sí','Neutral','Prob. no','Def. no'][i]}));
+    W.label(-210,290,0,'T2B 55 %','big',{color:'a',delay:1300});
+    W.pj(210,120,'tj-docente-presenta','¡Más de la mitad!',{delay:1600,left:true});
   }},
 
-{ t:'Escala de intención de compra', day:'M', dayt:'Prueba de concepto', cam:[22,-18,1],
-  s:'Tras leer la tarjeta, cada persona responde: “¿Qué tan probable es que compres este producto?” Encuestamos a <b>n = 200</b>. Cada muñequito representa a 10 personas. <b>Haz clic en ellos.</b>',
-  html:`<table><tr><th>Respuesta</th><th>Casos</th><th>%</th></tr>
-  <tr><td>5 · Definitivamente sí</td><td>60</td><td>30%</td></tr><tr><td>4 · Probablemente sí</td><td>50</td><td>25%</td></tr>
-  <tr><td>3 · Puede que sí / no</td><td>40</td><td>20%</td></tr><tr><td>2 · Probablemente no</td><td>30</td><td>15%</td></tr><tr><td>1 · Definitivamente no</td><td>20</td><td>10%</td></tr></table>
-  <div class="f">% = casos ÷ n × 100 → 60 ÷ 200 × 100 = 30%</div>`,
-  quiz:{q:'Si 30 de 200 personas responden “Probablemente no”, ¿qué porcentaje es?',o:['30%','15%','6,7%','20%'],a:1,fb:'30 ÷ 200 × 100 = 15%.'},
+{ t:'La meta se puso antes', day:'M', dayt:'Norma de acción', cam:[18,-22,1],
+  s:'Antes de ver los resultados, la gerente fijó una <b>norma de acción</b>: cada atributo debe alcanzar 60 % de T2B. Así nadie acomoda la meta al resultado.',
+  html:`<p>Sabor, saludable y practicidad la superan. <b class="hl-a">Precio accesible (50 %)</b> y empaque (58 %) quedan debajo.</p>
+  <div class="tip">El precio ya aparece como el punto débil. La historia volverá a él al final.</div>`,
+  legend:[['a','Debajo de la norma'],['d','Supera la norma']],
   build(W){
-    const V=[60,50,40,30,20], gap=125;
-    V.forEach((v,i)=>W.bar(-250+i*gap,-90,v*2.6,'d',{w:62,d:62,val:String(v),cat:SC[i],catOff:250}));
-    W.step=35;
-    V.forEach((v,i)=>{ const n=v/10;
-      for(let k=0;k<n;k++){ const r=Math.floor(k/2), c=k%2;
-        W.guy(-250+i*gap+(c-.5)*34, -10+r*34, {i:i*10+k, c:SCOL[i], from:[-250+i*gap+(Math.random()-.5)*200, 330], click:g=>g.act(i<2?'cheer':i>2?'sad':'think').say(SAY[i],2200)}); } });
-    W.step=70;
+    const A=[['Sabor',68],['Saludable',74],['Precio',50],['Empaque',58],['Practicidad',62]];
+    A.forEach(([c,v],i)=>W.bar(-280+i*140,0,v*3.2,v>=60?'d':'a',{w:80,d:80,val:v+'%',cat:c}));
+    W.plane(0,192,0,760,150,{color:'w',label:'Norma 60 %',lo:60,delay:1100});
+    W.pj(-250,120,'tj-alumno-senala','El precio no convence',{delay:1500});
   }},
 
-{ t:'Top Two Boxes (T2B) en vivo', day:'M', dayt:'Indicador T2B', cam:[16,-18,1],
-  s:'El T2B suma los dos casilleros más favorables. <b>Mueve los controles</b> y mira cómo cambian las barras y la reacción de la gerente.',
-  html:`<div class="f">T2B = % (5) + % (4) = 30% + 25% = <span class="hl-a">55%</span></div>
-  <div class="f" style="border-left-color:var(--c);color:#fecdd3">B2B = % (2) + % (1) = 15% + 10% = 25%</div>
-  <div class="tip"><b>En Excel:</b> <code>=(CONTAR.SI(B2:B201;5)+CONTAR.SI(B2:B201;4))/CONTARA(B2:B201)</code></div>`,
-  legend:[['a','Top Two Boxes'],['c','Bottom Two Boxes'],['g','Neutral']],
-  quiz:{q:'De 200 personas, 70 eligen “Definitivamente sí” y 40 “Probablemente sí”. ¿Cuál es el T2B?',o:['35%','55%','110%','20%'],a:1,fb:'(70 + 40) ÷ 200 = 110 ÷ 200 = 55%.'},
+{ t:'Llega el prototipo', day:'X', dayt:'Prueba de producto', cam:[26,-16,1.05],
+  s:'Ahora sí hay bebida. Ya no se prueba la promesa: se prueba si el producto <b>la cumple</b>. Cada persona prueba A y luego B, y a la mitad se le invierte el orden.',
+  html:`<ul><li><b>Monádica</b>: cada grupo prueba un solo producto.</li><li><b>Secuencial monádica</b>: todos prueban ambos, <b>rotando el orden</b> para evitar el sesgo de orden.</li></ul>
+  <div class="tip">Misma escala y mismas preguntas para A y B, si no, no se pueden comparar.</div>`,
   build(W){
-    const V=[60,50,40,30,20];
-    const B = V.map((v,i)=>W.bar(-300+i*125,0,v/200*100*6,SCOL[i],{w:62,d:62,val:pct(v/2),cat:SC[i]}));
-    const t2 = W.label(-237,280,0,'T2B = 55%','big',{color:'a',delay:1000});
-    const boss = W.guy(-30,140,{i:3,c:'e',s:1.3,from:[-420,220],act:'cheer',say:'¡Más de la mitad lo compraría!',sayFor:2500,delay:600});
-    return {V,B,t2,boss};
-  },
-  ui(U,R){
-    U.title('Laboratorio · cambia los casos');
-    const res = U.out();
-    const upd = ()=>{ const n = R.V.reduce((a,b)=>a+b,0)||1; const p = R.V.map(v=>v/n*100);
-      R.B.forEach((b,i)=>b.set(p[i]*6,{val:pct(p[i])})); const t = p[0]+p[1], bb = p[3]+p[4];
-      R.t2.innerHTML = 'T2B = '+pct(t);
-      res.innerHTML = `n = <b>${n}</b> · T2B = <b class="hl-a">${pct(t)}</b> · B2B = <b class="hl-c">${pct(bb)}</b>`;
-      if (t>=50) R.boss.act('cheer').say('¡T2B de '+pct(t)+'! El concepto avanza',2200); else R.boss.act('sad').say('T2B de '+pct(t)+'… hay que mejorar el concepto',2200);
-    };
-    SC.forEach((c,i)=>U.slider(`${5-i} · ${c}`,0,120,5,R.V[i],v=>{R.V[i]=v; upd();}));
-    res.innerHTML = 'n = <b>200</b> · T2B = <b class="hl-a">55%</b> · B2B = <b class="hl-c">25%</b>';
+    W.block(-230,50,0,90,100,60,'b',{text:'A'}); W.block(-110,50,0,90,100,60,'d',{text:'B'});
+    W.block(110,50,0,90,100,60,'d',{text:'B'}); W.block(230,50,0,90,100,60,'b',{text:'A'});
+    W.arrow(-195,60,-145,60,'w'); W.arrow(145,60,195,60,'w');
+    W.label(-170,170,0,'Mitad 1: A → B','pill'); W.label(170,170,0,'Mitad 2: B → A','pill');
+    W.pj(0,170,'tj-alumna-sorpresa','Ahora sí lo pruebo',{delay:1300});
   }},
 
-{ t:'T2B por atributo y norma de acción', day:'M', dayt:'Prueba de producto', cam:[18,-22,1],
-  s:'Cada atributo tiene su propio T2B, que se compara con una <b>norma de acción</b>: el mínimo fijado <i>antes</i> del estudio. <b>Mueve la norma</b>.',
-  html:`<table><tr><th>Atributo</th><th>T2B</th></tr><tr><td>Sabor</td><td>68%</td></tr><tr><td>Saludable</td><td>74%</td></tr><tr><td>Precio accesible</td><td>50%</td></tr><tr><td>Empaque</td><td>58%</td></tr><tr><td>Practicidad</td><td>62%</td></tr></table>
-  <div class="tip"><b>Con estrellas:</b> si la escala es de 6 estrellas, el T2B es el % que marca 5 o 6 estrellas. “Precio accesible” con T2B = 50%: solo la mitad lo ve claramente accesible.</div>`,
-  legend:[['a','Supera la norma'],['c','Debajo de la norma']],
-  quiz:{q:'Si la norma de acción sube a 70%, ¿cuántos atributos la superan?',o:['Ninguno','1','3','5'],a:1,fb:'Solo “Saludable” (74%) supera el 70%.'},
-  build(W){
-    const A=[['Sabor',68],['Saludable',74],['Precio accesible',50],['Empaque',58],['Practicidad',62]];
-    const B = A.map(([c,v],i)=>W.bar(-240+i*120,0,v*3,v>=60?'a':'c',{w:60,d:60,val:v+'%',cat:c}));
-    const P = W.plane(0,180,0,620,130,{color:'b',label:'Norma 60%',lo:50,delay:1000});
-    const qa = W.guy(330,90,{i:21,c:'b',s:1.3,from:[480,260],faceEnd:-1,act:'point',say:'Aprueban 3 de 5',delay:800});
-    return {A,B,P,qa};
-  },
-  ui(U,R){
-    U.title('Laboratorio · norma de acción');
-    U.slider('Norma de acción',40,80,1,60,v=>{
-      R.P.setY(v*3,'Norma '+v+'%'); let ok=0;
-      R.A.forEach(([c,t],i)=>{ const p=t>=v; ok+=p; R.B[i].set(t*3,{c:p?'a':'c',instant:true}); });
-      R.qa.act(ok>=3?'point':'sad').say(`Aprueban ${ok} de 5`,2000);
-    },v=>v+'%');
-  }},
-
-{ t:'Diseñar la prueba de producto', day:'X', dayt:'Prueba de producto', cam:[30,-14,1.1],
-  s:'Observa a los consumidores: en la <b class="hl-d">monádica</b> cada grupo prueba un solo producto; en la <b class="hl-a">secuencial monádica</b> todos prueban A y luego B (en orden rotado).',
-  html:`<ul><li><b class="hl-d">Monádica:</b> grupos independientes. Más parecida a la vida real.</li>
-  <li><b class="hl-a">Secuencial monádica:</b> cada persona califica ambos por separado. Se <b>rota el orden</b> (mitad A→B, mitad B→A) para evitar el sesgo de orden. Necesita menos personas.</li></ul>
-  <div class="tip"><b>Clave:</b> misma escala y mismas preguntas para A y B; si no, no se pueden comparar.</div>`,
-  quiz:{q:'Cada persona prueba A y luego B, y a la mitad se le invierte el orden. ¿Qué diseño es?',o:['Monádica','Secuencial monádica','Prueba de concepto','Pareada sin rotación'],a:1,fb:'Todos prueban ambos productos, uno tras otro, rotando el orden.'},
-  build(W){
-    W.block(-300,40,-110,52,80,34,'b',{text:'A'}); W.block(-150,40,-110,52,80,34,'d',{text:'B'});
-    W.block(140,40,-110,52,80,34,'b',{text:'A'}); W.block(260,40,-110,52,80,34,'d',{text:'B'});
-    W.crowd(-300,30,6,'b',{cols:3,sp:34,from:[-300,320],step:60,act:'hold'});
-    W.crowd(-150,30,6,'d',{cols:3,sp:34,from:[-150,320],step:60,act:'hold',seed:20});
-    const seq = W.crowd(200,40,6,'a',{cols:3,sp:40,step:60,seed:40});
-    let flip=false;
-    W.later(()=>W.every(()=>{ flip=!flip; seq.forEach((g,i)=>{ const goA = (i%2===0)===flip; g.walkTo(goA?140+(i%3-1)*26:260+(i%3-1)*26, -40+Math.floor(i/3)*30, gg=>{ gg.act('hold'); if(i===0) gg.say(goA?'Ahora pruebo A':'Ahora pruebo B',1400); }); }); },3200),1200);
-    W.label(-225,0,170,'Monádica · cada grupo, un producto','pill sm'); W.label(200,0,170,'Secuencial · todos prueban A y B','pill sm');
-  }},
-
-{ t:'Comparación de medias', day:'X', dayt:'Comparación de medias', cam:[16,-18,1],
-  s:'Cada persona califica su agrado del 1 al 7. Algunos encuestados llevan su nota en la camiseta: <b>haz clic</b> para escucharlos.',
+{ t:'Las notas de agrado', day:'X', dayt:'Comparación de medias', cam:[16,-18,1],
+  s:'Cada persona calificó su agrado del 1 al 7. Con 100 personas por fórmula, A obtiene <b>5,8</b> y B <b>5,1</b>. La gerente sonríe: «¡ganó A!». El analista no tanto.',
   html:`<table><tr><th>Fórmula</th><th>n</th><th>Media</th><th>Desv. est.</th></tr>
-  <tr><td class="hl-b">A</td><td>100</td><td>5,8</td><td>1,2</td></tr><tr><td class="hl-d">B</td><td>100</td><td>5,1</td><td>1,4</td></tr></table>
-  <div class="f">Media = Σ notas ÷ n &nbsp;·&nbsp; Diferencia = 5,8 − 5,1 = 0,7</div>
-  <div class="tip"><b>En Excel:</b> <code>=PROMEDIO(B2:B101)</code> y <code>=DESVEST.M(B2:B101)</code></div>`,
+  <tr><td>A</td><td>100</td><td>5,8</td><td>1,2</td></tr><tr><td>B</td><td>100</td><td>5,1</td><td>1,4</td></tr></table>
+  <div class="f">Diferencia = 5,8 − 5,1 = 0,7</div>`,
   legend:[['b','Fórmula A'],['d','Fórmula B']],
-  quiz:{q:'Tres personas califican la fórmula B con 6, 5 y 7. ¿Cuál es su media?',o:['5','6','18','7'],a:1,fb:'(6 + 5 + 7) ÷ 3 = 18 ÷ 3 = 6.'},
   build(W){
-    W.bar(-130,-80,5.8*40,'b',{w:100,d:100,val:'5,8',cat:'Fórmula A',catOff:220});
-    W.bar(130,-80,5.1*40,'d',{w:100,d:100,val:'5,1',cat:'Fórmula B',catOff:220});
-    W.label(0,300,-80,'Diferencia = 0,7','pill',{delay:1200});
-    const nA=[7,6,5,6,7,4], nB=[5,6,4,5,6,5]; W.step=60;
-    nA.forEach((n,k)=>W.guy(-200+k*28,60+(k%2)*26,{i:60+k,c:'b',tag:n,from:[-420,260],act:n>=6?'cheer':null,click:g=>g.act(n>=6?'cheer':'talk').say(`A: le doy ${n} de 7`,1800)}));
-    nB.forEach((n,k)=>W.guy(60+k*28,60+(k%2)*26,{i:70+k,c:'d',tag:n,from:[420,260],click:g=>g.act(n>=6?'cheer':'talk').say(`B: le doy ${n} de 7`,1800)}));
-    W.step=70;
+    W.bar(-110,0,5.8*40,'b',{w:110,d:110,val:'5,8',cat:'Fórmula A'});
+    W.bar(110,0,5.1*40,'d',{w:110,d:110,val:'5,1',cat:'Fórmula B'});
+    W.pj(-250,120,'tj-docente-presenta','¡Ganó A!',{delay:1100});
+    W.pj(210,120,'tj-alumno-sentado','¿Y si fue suerte?',{delay:1800,left:true});
   }},
 
-{ t:'¿La diferencia es significativa? (prueba t)', day:'X', dayt:'Prueba t de diferencia de medias', cam:[12,-12,1.05],
-  s:'La prueba t compara la diferencia contra lo que el azar podría producir (α = 0,05). <b>Mueve las medias y el tamaño de muestra</b> y mira al juez.',
-  html:`<div class="f">H0: μA = μB &nbsp;·&nbsp; H1: μA ≠ μB</div>
-  <div class="f">EE = √(s²A/nA + s²B/nB) = √(1,44/100 + 1,96/100) = 0,184<br>t = (5,8 − 5,1) ÷ 0,184 = <span class="hl-b">3,80</span></div>
-  <p>Si |t| &gt; <b>1,96</b> (zona roja) <b class="hl-a">rechazamos H0</b>: la diferencia es real, no azar.</p>
-  <div class="tip"><b>En Excel:</b> <code>=PRUEBA.T(rangoA;rangoB;2;3)</code> da el p-valor; si p &lt; 0,05 es significativa.</div>`,
-  legend:[['d','No rechazo H0'],['c','Rechazo H0 (5%)'],['b','t calculado']],
-  quiz:{q:'Con las mismas medias (5,8 y 5,1), ¿qué pasa con t si la muestra baja de 100 a 20 por grupo?',o:['t sube','t baja y puede dejar de ser significativo','t no cambia','t se vuelve negativo'],a:1,fb:'Con menos casos el error estándar crece, t baja (≈1,70) y ya no supera 1,96. ¡Pruébalo con el control!'},
+{ t:'¿Fue suerte o es real?', day:'X', dayt:'Prueba t', cam:[12,-12,1.05],
+  s:'El analista explica: otra muestra daría otras medias. La <b>prueba t</b> compara la diferencia con lo que el azar podría producir. Si t cae en la <b>zona roja</b>, la diferencia es real.',
+  html:`<div class="f">t = (5,8 − 5,1) ÷ √(1,44/100 + 1,96/100) = 3,80</div>
+  <p>3,80 &gt; 1,96: se rechaza H0. <b class="hl-a">A gusta más que B</b>, no es suerte.</p>
+  <div class="tip">Mueve el tamaño de muestra: con pocas personas, la misma diferencia deja de ser significativa.</div>`,
+  legend:[['g','Puede ser azar'],['a','Zona de rechazo (5 %)'],['b','t calculado']],
   build(W){
     W.step=20;
-    for (let z=-4; z<=4.001; z+=0.25){ const h = 250*Math.exp(-z*z/2); W.bar(z*82,-30,Math.max(h,3),Math.abs(z)>1.96?'c':'d',{w:17,d:60}); }
+    for (let z=-4; z<=4.001; z+=0.25){ const h = 250*Math.exp(-z*z/2); W.bar(z*82,-30,Math.max(h,3),Math.abs(z)>1.96?'a':'g',{w:17,d:60}); }
     W.step=70;
-    W.label(-1.96*82,-30,50,'−1,96','pill sm'); W.label(1.96*82,-30,50,'+1,96','pill sm'); W.label(0,-30,50,'0','pill sm');
+    W.label(-1.96*82,-30,60,'−1,96','pill sm'); W.label(1.96*82,-30,60,'+1,96','pill sm');
     const G = W.group(3.8*82,0,40);
     G.W.bar(0,0,180,'b',{w:14,d:14,delay:1500});
     const tl = G.W.label(0,215,0,'t = 3,80','val',{color:'b',delay:1800});
-    const judge = W.guy(-270,110,{i:2,c:'w',s:1.5,from:[-460,260],act:'cheer',say:'¡Significativa! Rechazo H0',delay:1200,click:g=>g.say('Si |t| > 1,96 la diferencia no es azar',2500)});
-    return {G,tl,judge,mA:5.8,mB:5.1,n:100};
+    return {G,tl,mA:5.8,mB:5.1,n:100};
   },
   ui(U,R){
-    U.title('Laboratorio · prueba t');
+    U.title('Prueba t en vivo');
     const res = U.out();
     const upd = ()=>{ const ee=Math.sqrt(1.44/R.n+1.96/R.n), t=(R.mA-R.mB)/ee, x=Math.max(-4.4,Math.min(4.4,t))*82;
       R.G.moveTo(x,40); R.tl.innerHTML='t = '+t.toFixed(2).replace('.',',');
       const sig = Math.abs(t)>1.96;
-      res.innerHTML = `EE = ${ee.toFixed(3).replace('.',',')} · t = <b class="hl-b">${t.toFixed(2).replace('.',',')}</b> → ${sig?'<b class="hl-a">significativa (rechazo H0)</b>':'<b class="hl-c">no significativa (puede ser azar)</b>'}`;
-      if (sig) R.judge.act('cheer').say('¡Significativa! Rechazo H0',2000); else R.judge.act('think').say('Mmm… podría ser azar',2000,true);
+      res.innerHTML = `t = <b class="hl-b">${t.toFixed(2).replace('.',',')}</b> → ${sig?'<b class="hl-a">diferencia real</b>':'<b>puede ser azar</b>'}`;
     };
-    U.slider('Media A',4,7,0.1,5.8,v=>{R.mA=v;upd();},fx);
-    U.slider('Media B',4,7,0.1,5.1,v=>{R.mB=v;upd();},fx);
     U.slider('n por grupo',10,200,10,100,v=>{R.n=v;upd();});
-    res.innerHTML='EE = 0,184 · t = <b class="hl-b">3,80</b> → <b class="hl-a">significativa (rechazo H0)</b>';
+    res.innerHTML='t = <b class="hl-b">3,80</b> → <b class="hl-a">diferencia real</b>';
   }},
 
-{ t:'Diagnóstico por atributo', day:'X', dayt:'Mejoras', cam:[16,-20,1],
-  s:'La media dice quién gana; los atributos dicen <b>qué mejorar</b>. Escucha a los consumidores frente a cada atributo.',
-  html:`<table><tr><th>Atributo</th><th>A</th><th>B</th><th>Lectura</th></tr>
-  <tr><td>Sabor</td><td>6,1</td><td>5,2</td><td class="hl-a">Fortaleza de A</td></tr><tr><td>Textura</td><td>5,4</td><td>5,6</td><td class="hl-b">Empate / mejorar</td></tr>
-  <tr><td>Precio</td><td>4,6</td><td>5,3</td><td class="hl-c">Debilidad de A</td></tr><tr><td>Empaque</td><td>5,9</td><td>5,0</td><td class="hl-a">Fortaleza de A</td></tr></table>
-  <p>Coincide con el T2B bajo de “Precio accesible” del martes.</p>`,
+{ t:'Lo que dicen los atributos', day:'X', dayt:'Diagnóstico', cam:[16,-20,1],
+  s:'A ganó, pero el analista quiere saber <b>qué mejorar</b>. Compara atributo por atributo: A gana en sabor y empaque, empata en textura y <b>pierde en precio</b>, igual que en la prueba de concepto.',
+  html:`<table><tr><th>Atributo</th><th>A</th><th>B</th></tr>
+  <tr><td>Sabor</td><td>6,1</td><td>5,2</td></tr><tr><td>Textura</td><td>5,4</td><td>5,6</td></tr>
+  <tr><td>Precio</td><td class="hl-a">4,6</td><td>5,3</td></tr><tr><td>Empaque</td><td>5,9</td><td>5,0</td></tr></table>
+  <p>La media dice <b>quién gana</b>; los atributos dicen <b>qué mejorar</b>.</p>`,
   legend:[['b','Fórmula A'],['d','Fórmula B']],
-  quiz:{q:'¿Qué atributo debería mejorar primero la fórmula A?',o:['Sabor','Empaque','Precio','Ninguno, ya ganó'],a:2,fb:'Es donde A queda más lejos de B (4,6 vs 5,3) y coincide con el T2B bajo de precio.'},
   build(W){
-    const D=[['Sabor',6.1,5.2,'¡Qué rico sabor!','cheer'],['Textura',5.4,5.6,'Un poco espesa…','think'],['Precio',4.6,5.3,'¡Está caro! 💸','sad'],['Empaque',5.9,5.0,'¡Qué linda botella!','cheer']];
-    D.forEach(([c,a,b,say,act],i)=>{ const x=-255+i*170;
-      W.bar(x-30,-40,a*40,'b',{w:50,d:60,val:fx(a)}); W.bar(x+30,-40,b*40,'d',{w:50,d:60,val:fx(b)});
-      W.label(x,-30,40,c,'pill sm');
-      W.guy(x,150,{i:80+i,c:'b',from:[x,330],act,say,delay:900+i*300,click:g=>g.act(act).say(say,2000)});
-    });
+    const D=[['Sabor',6.1,5.2],['Textura',5.4,5.6],['Precio',4.6,5.3],['Empaque',5.9,5.0]];
+    D.forEach(([c,a,b],i)=>{ const x=-270+i*180;
+      W.bar(x-35,0,a*40,'b',{w:60,d:60,val:fx(a)}); W.bar(x+35,0,b*40,'d',{w:60,d:60,val:fx(b)});
+      W.label(x,-30,90,c,'pill sm'); });
+    W.pj(210,120,'tj-alumna-sorpresa','Rica… pero cara',{delay:1500,left:true});
   }},
 
-{ t:'Producto ganador y mejoras', day:'X', dayt:'Decisión', cam:[18,-18,1],
-  s:'La decisión se toma con reglas fijadas <b>antes</b> de ver los datos. ¡El equipo celebra! Haz clic en ellos.',
-  html:`<p><b>Regla de decisión:</b> gana la fórmula con media significativamente mayor <i>y</i> T2B ≥ 50%.</p>
-  <p class="hl-b">→ Fórmula A: 5,8 vs 5,1 (t = 3,80) y T2B = 55%. Gana.</p>
-  <ul><li>Revisar el <b>precio</b> o lanzar un formato más pequeño.</li><li>Ajustar la <b>textura</b>.</li><li>Conservar <b>sabor</b> y <b>empaque</b>.</li></ul>
-  <div class="tip"><b>Para tu informe:</b> “A supera a B en agrado (5,8 vs 5,1; p &lt; 0,05); se recomienda lanzar A revisando el precio.”</div>`,
-  quiz:{q:'A tiene mayor media que B, pero la prueba t da 1,2. ¿Qué concluyes?',o:['A gana con seguridad','La diferencia no es significativa: no hay evidencia de que A sea mejor','B gana','Hay que repetir con la media'],a:1,fb:'1,2 &lt; 1,96: la diferencia puede deberse al azar de la muestra.'},
+{ t:'La decisión', day:'X', dayt:'Final de la historia', cam:[18,-18,1],
+  s:'Con datos en la mano, Quinua Fresh lanza la <b>fórmula A</b>. Y como el precio salió débil dos veces, sale con una <b>presentación más pequeña y más barata</b>.',
+  html:`<ul><li><b>Lanzar</b> la fórmula A: mayor agrado, diferencia significativa y T2B de 55 %.</li><li><b>Mejorar</b> precio y textura.</li><li><b>Mantener</b> sabor y empaque.</li></ul>
+  <div class="tip">Las reglas se fijaron <b>antes</b> de ver los datos: por eso la decisión es confiable.</div>`,
   build(W){
-    W.block(-60,70,-40,170,140,150,'b',{text:'<span style="font-size:30px">1°</span><br>Fórmula A'});
-    W.block(130,40,-40,170,80,150,'d',{text:'<span style="font-size:24px">2°</span><br>Fórmula B'});
-    W.label(-60,215,-40,'Ganador','big',{color:'b'});
-    const L=['¡Lanzamos A!','¡Bajemos el precio!','¡Gracias a los datos!','¡A producir!'];
-    [-260,-170,260,340].forEach((x,k)=>W.guy(x,90,{i:30+k,c:['e','a','c','d'][k],s:1.3,from:[x<0?-480:480,250],act:'cheer',say:L[k],sayFor:2200,delay:500+k*250,click:g=>g.act('cheer').say(L[(k+1)%4],1800)}));
-    W.board(-320,190,-60,`<div class="k">Mejorar</div><ul><li>Precio</li><li>Textura</li></ul>`,{w:150,accent:'c'});
-    W.board(330,190,-60,`<div class="k">Mantener</div><ul><li>Sabor</li><li>Empaque</li></ul>`,{w:150,accent:'a'});
+    W.block(20,70,-120,170,140,150,'b',{text:'<span style="font-size:32px">1°</span><br>Fórmula A'});
+    W.block(220,40,-120,170,80,150,'d',{text:'<span style="font-size:24px">2°</span><br>Fórmula B'});
+    W.label(20,220,-120,'¡Se lanza!','big',{color:'a'});
+    W.pj(-250,140,'tj-docente-presenta','¡Decidimos con datos!',{delay:900});
+    W.pj(210,200,'tj-docente-puntero','Y bajamos el precio',{delay:1600,left:true});
   }}
 ]};
+
 })();
 
 </script>
@@ -446,7 +394,7 @@ const C = window.COURSE;
 const vp = document.getElementById('vp');
 const world = document.getElementById('world');
 const $ = s => document.querySelector(s);
-const COL = {a:'#2dd4bf',b:'#fbbf24',c:'#fb7185',d:'#60a5fa',e:'#a78bfa',g:'#64748b',w:'#e2e8f0'};
+const COL = {a:'#E31E24',b:'#FF5A5F',c:'#FF8A8E',d:'#C9CACF',e:'#8E8E95',g:'#5E5E66',w:'#f1f1f3'};
 const col = c => COL[c] || c;
 const SKIN = ['#f1c27d','#e0ac69','#c68642','#8d5524','#ffdbac','#d1a27a'];
 const HAIR = ['#2d1b0e','#111827','#6b3e26','#a0522d','#3b2f2f','#d4a017'];
@@ -457,9 +405,9 @@ let cam = {rx:20, ry:-28, z:1, ty:0}, tgt = {...cam};
 let base = 1, dragging = false, lastInteract = -1e9;
 function layout(){
   const w = innerWidth, h = innerHeight, mobile = w < 860;
-  base = mobile ? Math.min(w/820, h/1250) : Math.min((w-440)/920, h/760);
-  base = Math.max(.32, Math.min(base, 1.25));
-  document.documentElement.style.setProperty('--cx', mobile ? '50%' : (440 + (w-440)/2) + 'px');
+  base = mobile ? Math.min(w/900, h/1150) : Math.min((w-600)/800, h/650);
+  base = Math.max(.32, Math.min(base, 1.6));
+  document.documentElement.style.setProperty('--cx', mobile ? '50%' : (600 + (w-600)/2) + 'px');
   document.documentElement.style.setProperty('--cy', mobile ? '40%' : '60%');
 }
 addEventListener('resize', layout); layout();
@@ -584,6 +532,11 @@ function makeW(root, ctx){
       const lab = o.label ? W.label(x + w/2 + (o.lo||70), y, z, o.label, 'pill sm', {delay:dl+200, color:o.color}) : null;
       return {el:t, label:lab, setY(yy, text){ t.style.transform = pos(yy); if(lab){ setXYZ(lab, x + w/2 + (o.lo||70), yy, z); if(text!=null) lab.innerHTML=text; } }};
     },
+    pj(x,z,img,say,o={}){
+      const left=!!o.left;
+      const html='<div class="pjw'+(left?' izq':'')+'"><img src="personajes/'+img+'.webp" alt="">'+(say?'<div class="say">'+say+'</div>':'')+'</div>';
+      return W.label(x,0,z,html,'',{anchor:'b',delay:o.delay});
+    },
     /* stop-motion character */
     guy(x,z,o={}){
       const dl = W._d(o), i = o.i ?? Math.floor(Math.random()*1000);
@@ -680,6 +633,9 @@ function makeU(box){
 }
 
 /* ---------- steps ---------- */
+let cur0Done = false;
+const sndB=document.getElementById('snd'); const pintaSnd=()=>{ sndB.textContent = SND.on ? '🔊 Sonido' : '🔇 Sin sonido'; sndB.classList.toggle('off', !SND.on); };
+sndB.addEventListener('click', ev=>{ ev.stopPropagation(); SND.toggle(); pintaSnd(); }); pintaSnd();
 const steps = C.steps; let cur = -1, layer = null, ovl = null, ctx = null;
 const quizRes = {};
 document.title = C.title + ' · 3D';
@@ -707,6 +663,7 @@ function renderQuiz(i){
 function go(i){
   if (i<0 || i>=steps.length || i===cur) return;
   cur = i; const s = steps[i];
+  if (window.SND && cur0Done) SND.paso(); cur0Done = true;
   if (ctx){ ctx.dead = true; ctx.timers.forEach(f=>f()); }
   if (layer){ const old = layer, oo = ovl; [old,oo].forEach(x=>{ x.classList.remove('on'); x.classList.add('out'); }); setTimeout(()=>{ old.remove(); oo.remove(); }, 450); }
   layer = el('layer'); world.appendChild(layer);
@@ -717,8 +674,8 @@ function go(i){
   { const L=layer, O=ovl; requestAnimationFrame(()=>requestAnimationFrame(()=>{ L.classList.add('on'); O.classList.add('on'); })); }
   const c = s.cam || [];
   tgt = {rx:c[0]??20, ry:c[1]??-28, z:c[2]??1, ty:c[3]??0};
-  $('#num').textContent = i===0 ? 'Inicio' : `Paso ${i} de ${steps.length-1}`;
-  const day = $('#day'); day.className = 'day ' + (s.day||''); day.textContent = s.day ? DAY[s.day]+' · '+(s.dayt||'') : (s.dayt||'Caso Quinua Fresh');
+  $('#num').textContent = `Capítulo ${i+1} de ${steps.length}`;
+  const day = $('#day'); day.className = 'day ' + (s.day||''); day.textContent = s.day ? DAY[s.day]+' · '+(s.dayt||'').replace(/^Capítulo \d+$/,'') : (s.dayt||'Quinua Fresh');
   $('#h').textContent = s.t; $('#lead').innerHTML = s.s || ''; $('#body').innerHTML = s.html || '';
   const ia = $('#ia'); ia.innerHTML = ''; if (s.ui) s.ui(makeU(ia), R, W);
   if (R.onQuiz) ctx.onQuiz = R.onQuiz;
