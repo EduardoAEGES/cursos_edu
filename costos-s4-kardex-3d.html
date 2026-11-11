@@ -177,6 +177,12 @@ header .sub{color:var(--mut);font-size:17px;margin-top:3px}
 #snd{position:fixed;right:22px;bottom:84px;z-index:7;font:700 16px 'Inter';color:var(--ink);background:rgba(7,23,103,.7);border:1px solid var(--line);border-radius:999px;padding:9px 15px;cursor:pointer}
 #snd.off{opacity:.6}
 @media (max-width:860px){ .logo-c{height:26px} #snd{top:52px;bottom:auto;right:12px;font-size:14px;padding:7px 12px} }
+#ia table.kx{width:100%;border-collapse:collapse;font-size:15px;margin-top:8px}
+#ia table.kx th{font-size:13px;color:var(--mut);text-align:left;border-bottom:1px solid var(--line);padding:4px}
+#ia table.kx td{padding:5px 4px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.35}
+#ia table.kx td small{color:var(--mut);font-size:12px}
+#ia table.kx td.en{color:#7fe3ff} #ia table.kx td.sa{color:#ff8fa8}
+#ia table.kx tr.ult{background:rgba(255,255,255,.07)}
 /* interactive panel */
 #ia:empty{display:none}
 #ia{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3)}
@@ -286,6 +292,115 @@ const NOTA_PROM = [
   'Compra: 20 mochilas por S/ 252. Nuevo promedio: S/ 12.60.',
   'Venta: las 15 salen a S/ 12.60. Quedan 5 a S/ 12.60.'
 ];
+/* ===== almacén animado: 1 caja = 5 mochilas ===== */
+const CAJA = 5;
+const KX_PEPS = [
+  ['Día 1','Inventario inicial','20 × S/ 10 = 200','—','20 × 10 = <b>200</b>'],
+  ['Día 5','Compra','30 × S/ 12 = 360','—','20 × 10 + 30 × 12 = <b>560</b>'],
+  ['Día 10','Venta','—','20 × 10 + 20 × 12 = <b>440</b>','10 × 12 = <b>120</b>'],
+  ['Día 18','Compra','10 × S/ 14 = 140','—','10 × 12 + 10 × 14 = <b>260</b>'],
+  ['Día 25','Venta','—','10 × 12 + 5 × 14 = <b>190</b>','5 × 14 = <b>70</b>']
+];
+const KX_PROM = [
+  ['Día 1','Inventario inicial','20 × S/ 10 = 200','—','20 u. a S/ 10.00 = <b>200</b>'],
+  ['Día 5','Compra','30 × S/ 12 = 360','—','50 u. a S/ 11.20 = <b>560</b>'],
+  ['Día 10','Venta','—','40 × 11.20 = <b>448</b>','10 u. a S/ 11.20 = <b>112</b>'],
+  ['Día 18','Compra','10 × S/ 14 = 140','—','20 u. a S/ 12.60 = <b>252</b>'],
+  ['Día 25','Venta','—','15 × 12.60 = <b>189</b>','5 u. a S/ 12.60 = <b>63</b>']
+];
+const RX = [-150,0,150], RZ = -40, PATHZ = 100, INX = -340, OUTX = 340;
+function slotPos(r,k){ const c=k%2, l=Math.floor(k/2); return [RX[r]+(c-.5)*54, 4+l*50, RZ]; }
+function almacen(W, modo){
+  W.step = 0;
+  /* estantes */
+  RX.forEach((x,r)=>{
+    [-62,62].forEach(dx=>W.block(x+dx,82,RZ,8,164,8,'#9AA3C7',{delay:150}));
+    [2,52,102,152].forEach(y=>W.block(x,y,RZ,132,4,60,'#7B86B8',{delay:150}));
+    if (modo==='peps') W.label(x,182,RZ,'Lote S/ '+LOTP[r],'pill sm',{delay:400,color:LOTC[r]});
+  });
+  if (modo==='prom') W.label(0,182,RZ,'Todas las cajas al mismo costo','pill sm',{delay:400});
+  /* puertas */
+  W.block(INX,45,PATHZ,80,90,60,'#3B4A9E',{text:'🚚<br>ENTRA',delay:200});
+  W.block(OUTX,45,PATHZ,80,90,60,'#3B4A9E',{text:'🛍️<br>SALE',delay:200});
+  const lin = W.label(INX,150,PATHZ,'','val',{color:'a',delay:300});
+  const lout = W.label(OUTX,150,PATHZ,'','val',{color:'b',delay:300});
+  const lsal = W.label(0,300,RZ,'En almacén: 0 mochilas','pill',{delay:300});
+  W.label(0,-30,PATHZ+70,'1 caja = 5 mochilas','sm',{delay:500});
+  W.step = 70;
+  return {modo, lin, lout, lsal, cajas:[], busy:false};
+}
+/* mueve una caja por puntos [x,y,z] en pasos cortos (stop-motion) */
+function viaje(W, G, pts, cb){
+  let seg=0, k=0; const N=6;
+  const id = W.every(()=>{
+    const a = seg===0 ? [G.x,G.y,G.z] : pts[seg-1], b = pts[seg]; k++;
+    if (seg===0 && k===1){ G._a=[G.x,G.y,G.z]; }
+    const A = seg===0 ? G._a : pts[seg-1];
+    G.set(A[0]+(b[0]-A[0])*k/N, A[1]+(b[1]-A[1])*k/N, A[2]+(b[2]-A[2])*k/N);
+    if (k>=N){ k=0; seg++; if (seg>=pts.length){ clearInterval(id); cb && cb(); } }
+  }, 70);
+}
+function nuevaCaja(W, color, txt){
+  const G = W.group(INX, 0, PATHZ);
+  const b = G.W.block(0,21,0,48,42,48,color,{text:'<span style="font-size:13px">'+txt+'</span>',delay:0});
+  G.caja = b; return G;
+}
+function uiAlmacen(U, R, W, modo){
+  const KX = modo==='peps' ? KX_PEPS : KX_PROM;
+  U.title(modo==='peps' ? 'Kardex PEPS en vivo' : 'Kardex promedio en vivo');
+  const nota = U.out('Pulsa <b>Siguiente movimiento</b>: verás entrar y salir las cajas.');
+  const tab = U.out('');
+  let m=-1;
+  /* ocupación de estantes: lista de cajas por estante, en orden de llegada */
+  const est=[[],[],[]];
+  const pinta = ()=>{
+    tab.innerHTML = m<0 ? '' : '<table class="kx"><tr><th>Fecha</th><th>Entra</th><th>Sale</th><th>Saldo</th></tr>'+
+      KX.slice(0,m+1).map((r,i)=>`<tr${i===m?' class="ult"':''}><td>${r[0]}<br><small>${r[1]}</small></td><td class="en">${r[2]}</td><td class="sa">${r[3]}</td><td>${r[4]}</td></tr>`).join('')+'</table>';
+    const s = modo==='peps' ? peps(m) : prom(m);
+    R.lsal.innerHTML = m<0 ? 'En almacén: 0 mochilas' : `En almacén: <b>${Math.round(s.qty)}</b> mochilas · S/ ${mon(s.val)}`;
+  };
+  const libre = r=>{ for(let k=0;k<6;k++) if(!est[r].some(c=>c.k===k)) return k; return 0; };
+  const sigue = ()=>{
+    if (R.busy || m>=MOV.length-1) return;
+    m++; const mv=MOV[m]; R.busy=true;
+    const s = modo==='prom' ? prom(m) : null;
+    if (mv.k==='in'){
+      R.lin.innerHTML = `ENTRAN ${mv.q}<br><span style="font-size:.6em">a S/ ${mv.c} c/u</span>`; R.lout.innerHTML='';
+      nota.innerHTML = (modo==='peps' ? NOTA_PEPS : NOTA_PROM)[m];
+      SND.entra();
+      const n = mv.q/CAJA;
+      for (let j=0;j<n;j++) W.later(()=>{
+        let r = modo==='peps' ? mv.lot : [0,1,2].find(x=>est[x].length<6);
+        const k = libre(r), [x,y,z] = slotPos(r,k);
+        const col = modo==='peps' ? LOTC[mv.lot] : 'a';
+        const G = nuevaCaja(W, col, 'S/ '+(modo==='peps' ? mv.c : m2(s.avg)));
+        const c = {G,k,lot:mv.lot}; est[r].push(c);
+        viaje(W, G, [[x,0,PATHZ],[x,y,z]], ()=>{});
+      }, j*260);
+      W.later(()=>{
+        if (modo==='prom'){ est.flat().forEach(c=>{ const f=c.G.el.querySelector('.ft'); if(f) f.innerHTML='<span style="font-size:13px">S/ '+m2(s.avg)+'</span>'; }); }
+        R.busy=false; pinta();
+      }, n*260+900);
+    } else {
+      R.lout.innerHTML = `SALEN ${mv.q}`; R.lin.innerHTML='';
+      nota.innerHTML = (modo==='peps' ? NOTA_PEPS : NOTA_PROM)[m];
+      SND.sale();
+      /* PEPS: primero el estante más antiguo; promedio: también salen las más antiguas, pero al costo promedio */
+      const n = mv.q/CAJA, salen=[];
+      for (let j=0;j<n;j++){ const r=[0,1,2].find(x=>est[x].length); const c=est[r].sort((a,b)=>b.k-a.k).shift(); salen.push(c); }
+      salen.forEach((c,j)=>W.later(()=>{
+        const [x,y,z] = slotPos(0,0); const G=c.G;
+        viaje(W, G, [[G.x,G.y,PATHZ],[G.x,0,PATHZ],[OUTX,0,PATHZ]], ()=>G.el.remove());
+      }, j*240));
+      W.later(()=>{ R.busy=false; pinta(); }, n*240+1300);
+    }
+    if (m===MOV.length-1) W.later(()=>SND.fin(), 2200);
+    pinta();
+  };
+  U.btns([['Siguiente movimiento ▶',sigue],['Reiniciar ↺',()=>{ go_reinicia(); }]]);
+  pinta();
+}
+
 window.COURSE = {
 kicker: 'Costos y Presupuestos · S4',
 title: 'Kardex e inventarios',
@@ -318,59 +433,19 @@ steps: [
     W.pj(330,150,'tutor-explica','¡Lo que no se vendió sigue en el almacén!',{delay:1600,left:true});
   }},
 
-{ t:'PEPS: primero en entrar, primero en salir', dayt:'Método PEPS', cam:[22,-22,1],
-  s:'Cada compra forma un <b>lote</b> con su costo. Al vender, se consume <b>el lote más antiguo</b>. Pulsa <b>Siguiente movimiento</b>.',
-  html:`<ul><li>El saldo se anota <b>por capas</b>: una fila por cada costo.</li><li>El inventario final queda a los <b>costos más recientes</b>.</li></ul>
-  <p style="color:var(--mut)">Ejemplo: mochilas de una tienda, datos ilustrativos.</p>`,
-  legend:[['b','Lote S/ 10'],['d','Lote S/ 12'],['a','Lote S/ 14']],
-  build(W){
-    const X=[-170,0,170];
-    const B = X.map((x,i)=>W.bar(x,0,0,LOTC[i],{w:100,d:100,val:'0',cat:'Lote S/ '+LOTP[i],delay:300}));
-    const board = W.board(0,320,0,'Pulsa «Siguiente movimiento»',{w:340,accent:'d'});
-    W.pj(-350,120,'profe-idea','',{delay:500});
-    return {B,board};
-  },
-  ui(U,R){
-    U.title('Kardex PEPS en vivo');
-    const res=U.out(); let m=-1;
-    const paint=()=>{ const s=m<0?{lots:[0,0,0],cv:0,qty:0,val:0}:peps(m);
-      s.lots.forEach((q,i)=>R.B[i].set(q*6,{val:String(q)}));
-      const mv=m<0?null:MOV[m];
-      R.board.innerHTML = m<0 ? 'Pulsa «Siguiente movimiento»' :
-        `<div class="k">${mv.d} · ${mv.t}</div>Saldo: <b>${s.qty} u. · S/ ${mon(s.val)}</b><br>Costo de ventas: <b>S/ ${mon(s.cv)}</b>`;
-      res.innerHTML = m<0 ? '' : NOTA_PEPS[m];
-      if (m>=0) (mv.k==='in' ? SND.entra() : SND.sale()); if (m===MOV.length-1) setTimeout(()=>SND.fin(),450);
-    };
-    U.btns([['Siguiente movimiento ▶',()=>{ if(m<MOV.length-1){ m++; paint(); } }],['Reiniciar ↺',()=>{ m=-1; paint(); }]]);
-    paint();
-  }},
+{ t:'PEPS: primero en entrar, primero en salir', dayt:'Método PEPS', cam:[24,-14,.9],
+  s:'Un almacén de mochilas. Cada compra llega en cajas y va a <b>su propio estante</b>, con su costo. Al vender, sale primero <b>lo más antiguo</b>.',
+  html:`<p>Pulsa <b>Siguiente movimiento</b>: mira <b class="hl-a">cuánto entra</b>, <b class="hl-b">cuánto sale</b> y cómo se llena el kardex.</p>`,
+  legend:[['b','Compra a S/ 10'],['d','Compra a S/ 12'],['a','Compra a S/ 14']],
+  build(W){ return almacen(W,'peps'); },
+  ui(U,R,W){ uiAlmacen(U,R,W,'peps'); }},
 
-{ t:'Promedio ponderado', dayt:'Método promedio', cam:[22,-22,1],
-  s:'No hay capas: cada <b>compra recalcula</b> un costo promedio, y todas las salidas salen a ese costo.',
-  html:`<div class="f">Costo promedio = saldo en S/ ÷ saldo en unidades</div>
-  <ul><li>Se recalcula solo cuando <b>entra</b> mercadería.</li><li><b>Suaviza</b> las subidas de precio y es más fácil de llevar.</li></ul>`,
-  legend:[['d','Saldo (unidades)'],['b','Costo promedio']],
-  build(W){
-    const sb=W.bar(-110,0,0,'d',{w:120,d:120,val:'0',cat:'Saldo',delay:300});
-    const pb=W.bar(110,0,0,'b',{w:90,d:90,val:'S/ 0',cat:'Costo promedio',delay:300});
-    const board=W.board(0,320,0,'Pulsa «Siguiente movimiento»',{w:340,accent:'b'});
-    W.pj(-350,120,'alumno-senala','',{delay:500});
-    return {sb,pb,board};
-  },
-  ui(U,R){
-    U.title('Kardex promedio en vivo');
-    const res=U.out(); let m=-1;
-    const paint=()=>{ const s=m<0?{qty:0,val:0,cv:0,avg:0}:prom(m);
-      R.sb.set(s.qty*6,{val:String(Math.round(s.qty))}); R.pb.set(s.avg*12,{val:'S/ '+m2(s.avg)});
-      const mv=m<0?null:MOV[m];
-      R.board.innerHTML = m<0 ? 'Pulsa «Siguiente movimiento»' :
-        `<div class="k">${mv.d} · ${mv.t}</div>Promedio: <b>S/ ${m2(s.avg)}</b><br>Saldo: <b>${Math.round(s.qty)} u. · S/ ${mon(s.val)}</b><br>Costo de ventas: <b>S/ ${mon(s.cv)}</b>`;
-      res.innerHTML = m<0 ? '' : NOTA_PROM[m];
-      if (m>=0) (mv.k==='in' ? SND.entra() : SND.sale()); if (m===MOV.length-1) setTimeout(()=>SND.fin(),450);
-    };
-    U.btns([['Siguiente movimiento ▶',()=>{ if(m<MOV.length-1){ m++; paint(); } }],['Reiniciar ↺',()=>{ m=-1; paint(); }]]);
-    paint();
-  }},
+{ t:'Promedio ponderado', dayt:'Método promedio', cam:[24,-14,.9],
+  s:'El mismo almacén, otra forma de valorar: las cajas se mezclan y <b>todas valen lo mismo</b>. Cada compra <b>recalcula el costo promedio</b>.',
+  html:`<div class="f">Costo promedio = saldo en S/ ÷ unidades en almacén</div>
+  <p>Mira la etiqueta de las cajas: cambia solo cuando <b>entra</b> mercadería.</p>`,
+  build(W){ return almacen(W,'prom'); },
+  ui(U,R,W){ uiAlmacen(U,R,W,'prom'); }},
 
 { t:'¿Qué cambia según el método?', dayt:'Comparación', cam:[18,-20,1],
   s:'Si los precios de compra <b>suben</b>, cada método reparte distinto el costo.',
@@ -720,6 +795,7 @@ function go(i){
   $('#legend').innerHTML = (s.legend||[]).map(([c,t])=>`<span><i style="background:${col(c)}"></i>${t}</span>`).join('');
   try { history.replaceState(null,'', '#paso-'+i); } catch(e){}
 }
+window.go_reinicia = ()=>{ const k=cur; cur=-1; go(k); };
 $('#prev').onclick = ()=>go(cur-1);
 $('#next').onclick = ()=> cur===steps.length-1 ? go(0) : go(cur+1);
 addEventListener('keydown', e=>{
