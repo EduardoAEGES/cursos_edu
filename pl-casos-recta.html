@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="version" content="2026-11-11-casos-recta-a">
+<meta name="version" content="2026-11-11-casos-recta-b">
 <title>Casos con dos datos: halla el modelo y grafica - Pensamiento L&oacute;gico</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,6 +71,37 @@
   .estado{ margin-top:8px; background:var(--humo); border:1px solid var(--linea); border-radius:10px; padding:8px 12px; font-size:14px; line-height:1.55; color:var(--tinta); }
   @media (min-width:961px){ .grafico{ position:sticky; top:10px; } .app:fullscreen .grafico{ position:static; } }
   @media (prefers-reduced-motion:reduce){ *{ animation:none!important; transition:none!important; } }
+
+  /* datos siempre a la vista, con ayuda al pasar el mouse */
+  .datos{ margin-top:10px; background:#fff; border:2px solid #C9D6F7; border-radius:14px; padding:10px 12px; }
+  .datos .dt{ font-size:14.5px; color:var(--marino); } .datos .dt small{ color:var(--gris); font-weight:600; }
+  .dchips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .dc{ background:var(--humo); border:1px solid var(--linea); border-radius:10px; padding:5px 10px; font-weight:700; font-size:15px; color:var(--tinta); animation:aparece .5s both; }
+  .dc.ecu{ background:#FFF0F3; border-color:#FFC2CF; color:var(--fucsia); }
+  .leyenda{ margin-top:8px; font-size:13.5px; color:var(--gris); font-weight:600; }
+  .vx{ color:#0E8A90; font-weight:800; } .vy{ color:var(--fucsia); font-weight:800; } .vm{ color:var(--ambar); font-weight:800; } .vb{ color:#15693E; font-weight:800; }
+  .tip{ position:relative; cursor:help; border-bottom:2px dotted currentColor; }
+  .tip::after{ content:attr(data-tip); position:absolute; left:50%; bottom:calc(100% + 8px); transform:translateX(-50%) scale(.9); opacity:0; pointer-events:none; white-space:nowrap; background:var(--marino); color:#fff; font:600 12.5px Inter,sans-serif; padding:6px 9px; border-radius:8px; z-index:20; transition:.15s; }
+  .tip:hover::after, .tip:focus::after{ opacity:1; transform:translateX(-50%) scale(1); }
+  /* animación del cálculo */
+  .demo{ margin-top:10px; background:#fff; border:2px dashed #C9D6F7; border-radius:12px; padding:10px; }
+  .demoL .an{ font-size:15.5px; line-height:1.5; padding:6px 8px; margin:4px 0; border-radius:10px; background:var(--humo); opacity:0; animation:aparece .6s ease forwards; animation-delay:var(--d); }
+  .demoL .an b{ color:var(--marino); } .demoL .an small{ color:var(--gris); font-weight:600; }
+  svg.mini{ display:block; width:100%; height:auto; margin-top:8px; border-radius:10px; border:1px solid var(--linea); }
+  .an-s{ opacity:0; animation:aparece .6s ease forwards; animation-delay:var(--d); }
+  .trazo{ stroke-dasharray:1; stroke-dashoffset:1; animation:trazo .9s ease forwards; animation-delay:var(--d); }
+  .pulso{ animation:pulso 1.1s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+  .demo.quieta .an, .demo.quieta .an-s{ animation:none; opacity:1; } .demo.quieta .trazo{ animation:none; stroke-dashoffset:0; }
+  .op.sacude{ animation:sacude .35s; }
+  table.tb th .vx{ background:#13A8AF; color:#fff; padding:1px 9px; border-radius:6px; } table.tb th .vy{ background:#FC0045; color:#fff; padding:1px 9px; border-radius:6px; }
+  tr.es td{ background:#FFF4DB; } tr.es td:first-child{ font-weight:800; }
+  @keyframes aparece{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+  @keyframes trazo{ to{ stroke-dashoffset:0; } }
+  @keyframes pulso{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.35); } }
+  @keyframes sacude{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-6px); } 75%{ transform:translateX(6px); } }
+  .tog{ display:inline-flex; align-items:center; gap:6px; font-size:13.5px; color:var(--tinta); cursor:pointer; font-weight:600; }
+  .tog input{ width:17px; height:17px; accent-color:var(--fucsia); }
+
 </style>
 </head>
 <body>
@@ -111,6 +142,7 @@
       <aside class="panel" aria-label="Resoluci&oacute;n paso a paso">
         <select class="sel" id="selCaso" aria-label="Elige el caso"></select>
         <div class="sit" id="sit"></div>
+        <div class="datos" id="datos"></div>
         <div class="puntos" id="prog" aria-hidden="true"></div>
         <div id="pasos"></div>
         <div class="fila" id="reporte">
@@ -130,7 +162,7 @@
           <button class="btn min" id="btnBlanco" type="button" title="Plano con la escala sugerida, para imprimir y graficar a mano">&#128424; Plano en blanco</button>
         </div>
         <div class="lienzo">
-          <svg id="pl" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plano cartesiano"><g id="dibujo"></g></svg>
+          <svg id="pl" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plano cartesiano"><g id="dibujo"></g><g id="cursor" pointer-events="none"></g></svg>
           <div class="candado" id="candado"><div><span>&#128274;</span>Primero resuelve los pasos hasta hallar la <b>ecuaci&oacute;n</b>. Despu&eacute;s podr&aacute;s graficarla aqu&iacute;.</div></div>
         </div>
         <div class="estado" id="estado"></div>
@@ -269,7 +301,7 @@ CASOS.forEach(function(K,ci){ K.Q=preguntas(K,ci); });
 
 /* ============================ estado (solo en memoria, no se guarda) ============================ */
 var ESTADOS={}, K=CASOS[0], E=null, serieAct='ct', nid=1;
-function estado(id){ if(!ESTADOS[id]){ var c=CASOS.filter(function(x){ return x.id===id; })[0]; ESTADOS[id]={ ok:{}, mal:{}, elegida:{}, pts:[], sol:false }; ESTADOS[id].n=c.Q.length; } return ESTADOS[id]; }
+function estado(id){ if(!ESTADOS[id]){ var c=CASOS.filter(function(x){ return x.id===id; })[0]; ESTADOS[id]={ ok:{}, mal:{}, elegida:{}, pts:[], sol:false, visto:{}, demo:-1, objSel:null, ultimoMal:null }; ESTADOS[id].n=c.Q.length; } return ESTADOS[id]; }
 function cargaCaso(id){ K=CASOS.filter(function(x){ return x.id===id; })[0]; E=estado(id); serieAct='ct'; pintaTodo(); }
 function ahora(){ for(var i=0;i<K.Q.length;i++) if(!E.ok[i]) return i; return -1; }
 function ecuacionLista(){ return !!E.ok[3]; }
@@ -288,17 +320,33 @@ function okPt(p){ var s=sDe(p.s); return Math.abs(p.y-val(s,p.x))<=K.vista.ty/10
 function sDe(id){ for(var i=0;i<K.series.length;i++) if(K.series[i].id===id) return K.series[i]; return K.series[0]; }
 function buenos(s){ var xs={}; E.pts.forEach(function(p){ if(p.s===s.id && okPt(p)) xs[p.x]=1; }); return Object.keys(xs).length; }
 
-/* o: {blanco, sol, pts} */
+/* ---------- plano principal. o: {blanco, sol, pts, proy, obj, guia} ---------- */
+function burbuja(cx,cy,txt,col){
+  var w=(String(txt).length*7.4+12)*Z, h=20*Z;
+  return '<rect x="'+(cx-w/2).toFixed(1)+'" y="'+(cy-h/2).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="'+(6*Z)+'" fill="'+col+'"/>'+
+         T(cx,cy+4.5*Z,txt,{a:'middle',sz:12,w:800,c:'#fff'});
+}
+function guias(x,y,col,anim){
+  var px0=ML, py1=H-MB, gx=X(x), gy=Y(y), h='';
+  h+='<line x1="'+gx.toFixed(1)+'" y1="'+gy.toFixed(1)+'" x2="'+gx.toFixed(1)+'" y2="'+py1+'" stroke="'+col+'" stroke-width="'+(2*Z)+'" stroke-dasharray="'+(6*Z)+' '+(4*Z)+'"/>';
+  h+='<line x1="'+gx.toFixed(1)+'" y1="'+gy.toFixed(1)+'" x2="'+px0+'" y2="'+gy.toFixed(1)+'" stroke="'+col+'" stroke-width="'+(2*Z)+'" stroke-dasharray="'+(6*Z)+' '+(4*Z)+'"/>';
+  if(x>0) h+=burbuja(gx,py1+14*Z,fmt(x),'#13A8AF');
+  if(y>0) h+=burbuja(px0-28*Z,gy,fmt(y),'#FC0045');
+  return h;
+}
 function svgPlano(o){
   var v=K.vista, h='', px0=ML, px1=W-MR, py0=MT, py1=H-MB, t;
   h+='<defs><clipPath id="rec"><rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'"/></clipPath></defs>';
   h+='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff"/><rect x="'+px0+'" y="'+py0+'" width="'+(px1-px0)+'" height="'+(py1-py0)+'" fill="#FBFCFF"/>';
-  for(t=0;t<=v.xmax+1e-9;t+=v.tx){ var gx=X(t); h+='<line x1="'+gx.toFixed(1)+'" y1="'+py0+'" x2="'+gx.toFixed(1)+'" y2="'+py1+'" stroke="#E3E9F6"/>'+T(gx,py1+19*Z,fmt(t),{a:'middle',sz:12,c:'#5B6B8C'}); }
-  for(t=0;t<=v.ymax+1e-9;t+=v.ty){ var gy=Y(t); h+='<line x1="'+px0+'" y1="'+gy.toFixed(1)+'" x2="'+px1+'" y2="'+gy.toFixed(1)+'" stroke="#E3E9F6"/>'+T(px0-7,gy+4*Z,fmt(t),{a:'end',sz:12,c:'#5B6B8C'}); }
+  /* cuadrícula fina (cada tick/5) y marcada (cada tick) */
+  for(t=0;t<=v.xmax+1e-9;t+=v.tx/5){ var mx=X(t); h+='<line x1="'+mx.toFixed(1)+'" y1="'+py0+'" x2="'+mx.toFixed(1)+'" y2="'+py1+'" stroke="#EEF2FA"/>'; }
+  for(t=0;t<=v.ymax+1e-9;t+=v.ty/5){ var my=Y(t); h+='<line x1="'+px0+'" y1="'+my.toFixed(1)+'" x2="'+px1+'" y2="'+my.toFixed(1)+'" stroke="#EEF2FA"/>'; }
+  for(t=0;t<=v.xmax+1e-9;t+=v.tx){ var gx=X(t); h+='<line x1="'+gx.toFixed(1)+'" y1="'+py0+'" x2="'+gx.toFixed(1)+'" y2="'+py1+'" stroke="#D5DDEF"/>'+T(gx,py1+19*Z,fmt(t),{a:'middle',sz:12,c:'#5B6B8C'}); }
+  for(t=0;t<=v.ymax+1e-9;t+=v.ty){ var gy=Y(t); h+='<line x1="'+px0+'" y1="'+gy.toFixed(1)+'" x2="'+px1+'" y2="'+gy.toFixed(1)+'" stroke="#D5DDEF"/>'+T(px0-7,gy+4*Z,fmt(t),{a:'end',sz:12,c:'#5B6B8C'}); }
   h+='<line x1="'+px0+'" y1="'+py1+'" x2="'+px1+'" y2="'+py1+'" stroke="#0B1B3F" stroke-width="2.2"/><line x1="'+px0+'" y1="'+py0+'" x2="'+px0+'" y2="'+py1+'" stroke="#0B1B3F" stroke-width="2.2"/>';
   h+='<polygon points="'+px1+','+py1+' '+(px1-9)+','+(py1-5)+' '+(px1-9)+','+(py1+5)+'" fill="#0B1B3F"/><polygon points="'+px0+','+py0+' '+(px0-5)+','+(py0+9)+' '+(px0+5)+','+(py0+9)+'" fill="#0B1B3F"/>';
-  h+=T((px0+px1)/2,H-10*Z,K.xn,{a:'middle',sz:14,w:800,c:'#071767'});
-  h+='<text x="'+(16*Z)+'" y="'+((py0+py1)/2)+'" font-family="Inter,Arial,sans-serif" font-size="'+(14*Z)+'" font-weight="800" fill="#071767" text-anchor="middle" transform="rotate(-90 '+(16*Z)+' '+((py0+py1)/2)+')">'+esc(K.yn)+'</text>';
+  h+=T((px0+px1)/2,H-10*Z,K.xn+' · eje horizontal',{a:'middle',sz:14,w:800,c:'#13A8AF'});
+  h+='<text x="'+(16*Z)+'" y="'+((py0+py1)/2)+'" font-family="Inter,Arial,sans-serif" font-size="'+(14*Z)+'" font-weight="800" fill="#FC0045" text-anchor="middle" transform="rotate(-90 '+(16*Z)+' '+((py0+py1)/2)+')">'+esc(K.yn)+' · eje vertical</text>';
   if(o.blanco) return h;
   h+='<g clip-path="url(#rec)">';
   var lineas=function(s,dash,w,op){ return '<line x1="'+X(0).toFixed(1)+'" y1="'+Y(val(s,0)).toFixed(1)+'" x2="'+X(v.xmax).toFixed(1)+'" y2="'+Y(val(s,v.xmax)).toFixed(1)+'" stroke="'+s.color+'" stroke-width="'+(w*Z)+'" stroke-linecap="round"'+(dash?' stroke-dasharray="'+dash+'"':'')+(op?' opacity="'+op+'"':'')+'/>'; };
@@ -319,14 +367,133 @@ function svgPlano(o){
   }
   if(o.sol){ K.series.forEach(function(s){ s.xs.forEach(function(x){
     h+='<circle cx="'+X(x).toFixed(1)+'" cy="'+Y(val(s,x)).toFixed(1)+'" r="'+(8*Z)+'" fill="none" stroke="'+s.color+'" stroke-width="2.4" stroke-dasharray="3 2"/>'; }); }); }
+  /* guía del siguiente punto */
+  if(o.obj){
+    h+=guias(o.obj.x,o.obj.y,'#D98A00');
+    h+='<circle class="pulso" cx="'+X(o.obj.x).toFixed(1)+'" cy="'+Y(o.obj.y).toFixed(1)+'" r="'+(11*Z)+'" fill="rgba(217,138,0,.18)" stroke="#D98A00" stroke-width="3"/>';
+  }
+  /* puntos del alumno con proyecciones a los ejes */
+  (o.pts||[]).forEach(function(p){
+    var s=sDe(p.s), ok=okPt(p), cx=X(p.x), cy=Y(p.y);
+    if(ok && o.proy) h+=guias(p.x,p.y,s.color);
+  });
   (o.pts||[]).forEach(function(p){
     var s=sDe(p.s), ok=okPt(p), cx=X(p.x), cy=Y(p.y);
     h+='<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(13*Z)+'" fill="none" stroke="'+(ok?'#1F9D55':'#E5484D')+'" stroke-width="3"/>'+
        '<circle cx="'+cx.toFixed(1)+'" cy="'+cy.toFixed(1)+'" r="'+(7*Z)+'" fill="'+s.color+'" stroke="#fff" stroke-width="2.2"/>'+
-       T(cx,cy-18*Z,ok?'✓':'✗',{a:'middle',sz:15,w:800,c:ok?'#1F9D55':'#E5484D',halo:1})+
-       (p.x>K.vista.xmax*0.8?T(cx-10*Z,cy+22*Z,'('+fmt(p.x)+'; '+fmt(p.y)+')',{a:'end',sz:11.5,w:700,c:s.color,halo:1}):T(cx+10*Z,cy+22*Z,'('+fmt(p.x)+'; '+fmt(p.y)+')',{sz:11.5,w:700,c:s.color,halo:1}));
+       T(cx,cy-18*Z,ok?'✓':'✗',{a:'middle',sz:15,w:800,c:ok?'#1F9D55':'#E5484D',halo:1});
+    var rot=(p.s==='ct' && p.x===0 && ok)?'b = '+fmt(p.y):'('+fmt(p.x)+'; '+fmt(p.y)+')';
+    h+=(p.x>K.vista.xmax*0.8?T(cx-12*Z,cy-18*Z,rot,{a:'end',sz:12,w:800,c:s.color,halo:1}):T(cx+14*Z,cy-14*Z,rot,{sz:12,w:800,c:s.color,halo:1}));
   });
   return h;
+}
+
+/* ---------- ayudas animadas: cada paso se explica con números que aparecen poco a poco ---------- */
+var TIPOS=['datos','pend','b','ecu','comp','pred','ib','im','eq'];
+CASOS.forEach(function(K){ K.Q.forEach(function(q,i){ q.tipo=TIPOS[i]; }); });
+function vx(v){ return '<span class="vx">'+fmt(v)+'</span>'; }
+function vy(v){ return '<span class="vy">'+fmt(v)+'</span>'; }
+function vm(v){ return '<span class="vm">'+fmt(v)+'</span>'; }
+function vb(v){ return '<span class="vb">'+fmt(v)+'</span>'; }
+function lineasDemo(K,tipo){
+  var x1=K.p1[0], y1=K.p1[1], x2=K.p2[0], y2=K.p2[1], m=K.m, b=K.b, f=fmt, xp=K.xp, yp=K.yp, tx=K.vista.tx;
+  switch(tipo){
+    case 'datos': return [
+      '<b>Punto 1:</b> '+vx(x1)+' '+K.uni+' → '+vy(y1)+' ⇒ P₁ ( '+vx(x1)+' ; '+vy(y1)+' )',
+      '<b>Punto 2:</b> '+vx(x2)+' '+K.uni+' → '+vy(y2)+' ⇒ P₂ ( '+vx(x2)+' ; '+vy(y2)+' )',
+      'La <span class="vx">cantidad</span> va en <b>x</b> y el <span class="vy">resultado en soles</span> va en <b>y</b>.'];
+    case 'pend': return [
+      'Resta los valores de <b>y</b>: '+vy(y2)+' − '+vy(y1)+' = <b>'+f(y2-y1)+'</b> &nbsp;<small>(Δy: cuánto sube)</small>',
+      'Resta los valores de <b>x</b>: '+vx(x2)+' − '+vx(x1)+' = <b>'+f(x2-x1)+'</b> &nbsp;<small>(Δx: cuánto avanza)</small>',
+      'Divide: m = Δy ÷ Δx = '+f(y2-y1)+' ÷ '+f(x2-x1)+' = '+vm(m)];
+    case 'b': return [
+      'Multiplica: m × x₁ = '+vm(m)+' × '+vx(x1)+' = <b>'+f(m*x1)+'</b> &nbsp;<small>(lo que sube hasta x₁)</small>',
+      'Resta: b = y₁ − '+f(m*x1)+' = '+vy(y1)+' − '+f(m*x1)+' = '+vb(b),
+      'b es donde la recta toca el <b>eje vertical</b> (x = 0).'];
+    case 'ecu': return [
+      'Fórmula: <b>y = m·x + b</b>',
+      'Reemplaza: m = '+vm(m)+' y b = '+vb(b),
+      'Ecuación: <b>'+K.yl+' = '+vm(m)+'·x + '+vb(b)+'</b>'];
+    case 'comp': return [
+      'Reemplaza x = '+vx(x2)+': '+vm(m)+' × '+vx(x2)+' = <b>'+f(m*x2)+'</b>',
+      'Suma b: '+f(m*x2)+' + '+vb(b)+' = <b>'+f(m*x2+b)+'</b>',
+      'Coincide con y₂ = '+vy(y2)+' ✓'];
+    case 'pred': return [
+      'x = '+vx(xp)+' → '+vm(m)+' × '+vx(xp)+' = <b>'+f(m*xp)+'</b>',
+      'Suma b: '+f(m*xp)+' + '+vb(b)+' = '+vy(yp),
+      'Con '+f(xp)+' '+K.uni+': <b>'+K.mon+' '+f(yp)+'</b>'];
+    case 'ib': return [
+      'Cuando x = 0, y = <b>b</b> = '+vb(b),
+      'Es lo que ya hay que pagar <b>sin producir nada</b>.',
+      'En el gráfico: el punto donde la recta corta el eje vertical.'];
+    case 'im': return [
+      'm = '+vm(m)+' significa: por cada <b>+1</b> '+K.uni.replace(/s$/,'')+', y sube '+vm(m),
+      'Por cada <b>+'+f(tx)+'</b> '+K.uni+': '+vm(m)+' × '+vx(tx)+' = <b>+'+f(m*tx)+'</b>',
+      'En el gráfico: avanzas a la derecha y subes con la misma proporción.'];
+    case 'eq': return [
+      'Igualas: I = C → '+f(K.precio)+'x = '+vm(m)+'x + '+vb(b),
+      'Pasas '+f(m)+'x: '+f(K.precio-m)+'x = '+f(b)+' → x = '+f(b)+' ÷ '+f(K.precio-m)+' = '+vx(K.eqx),
+      'En ese punto I = C = '+vy(K.eqy)+'. Antes pierde y después gana.'];
+  }
+  return [];
+}
+function miniSvg(K,tipo){
+  var w=620, h=350, ml=70, mr=24, mt=16, mb=48, v=K.vista, f=fmt, x1=K.p1[0], y1=K.p1[1], x2=K.p2[0], y2=K.p2[1], m=K.m, b=K.b;
+  var MX=function(x){ return ml+x/v.xmax*(w-ml-mr); }, MY=function(y){ return h-mb-y/v.ymax*(h-mt-mb); };
+  var S=function(x,y,t,o){ o=o||{}; return '<text x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" font-family="Inter,Arial,sans-serif" font-size="'+((o.sz||13)*1.3).toFixed(1)+'" font-weight="'+(o.w||700)+'" fill="'+(o.c||'#0B1B3F')+'" text-anchor="'+(o.a||'start')+'" stroke="#fff" stroke-width="4" paint-order="stroke" stroke-linejoin="round">'+esc(t)+'</text>'; };
+  var A=function(d,inner){ return '<g class="an-s" style="--d:'+d+'s">'+inner+'</g>'; };
+  var tr=function(d,x1_,y1_,x2_,y2_,col,wd,dash){ return '<line class="trazo" pathLength="1" style="--d:'+d+'s" x1="'+MX(x1_).toFixed(1)+'" y1="'+MY(y1_).toFixed(1)+'" x2="'+MX(x2_).toFixed(1)+'" y2="'+MY(y2_).toFixed(1)+'" stroke="'+col+'" stroke-width="'+(wd||4)+'" stroke-linecap="round"'+(dash?' data-dash="1"':'')+'/>'; };
+  var bub=function(cx,cy,t,col){ var ww=String(t).length*10+16; return '<rect x="'+(cx-ww/2).toFixed(1)+'" y="'+(cy-13)+'" width="'+ww.toFixed(1)+'" height="26" rx="7" fill="'+col+'"/>'+S(cx,cy+5.5,t,{a:'middle',sz:12,w:800,c:'#fff'}).replace('stroke="#fff" stroke-width="4"','stroke="none" stroke-width="0"'); };
+  var proy=function(d,x,y,col){ var s=''; if(x>0) s+='<line x1="'+MX(x).toFixed(1)+'" y1="'+MY(y).toFixed(1)+'" x2="'+MX(x).toFixed(1)+'" y2="'+(h-mb)+'" stroke="'+col+'" stroke-width="2" stroke-dasharray="6 4"/>'+bub(MX(x),h-mb+16,f(x),'#13A8AF');
+    if(y>0) s+='<line x1="'+MX(x).toFixed(1)+'" y1="'+MY(y).toFixed(1)+'" x2="'+ml+'" y2="'+MY(y).toFixed(1)+'" stroke="'+col+'" stroke-width="2" stroke-dasharray="6 4"/>'+bub(ml-36,MY(y),f(y),'#FC0045'); return A(d,s); };
+  var pt=function(d,x,y,txt,col){ return A(d,'<circle cx="'+MX(x).toFixed(1)+'" cy="'+MY(y).toFixed(1)+'" r="8" fill="'+col+'" stroke="#fff" stroke-width="2.5"/>'+(txt?S(MX(x)+12,MY(y)-12,txt,{sz:13,w:800,c:col}):'')); };
+  var s='<svg class="mini" viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ayuda visual del paso"><rect width="'+w+'" height="'+h+'" fill="#fff"/><rect x="'+ml+'" y="'+mt+'" width="'+(w-ml-mr)+'" height="'+(h-mt-mb)+'" fill="#FBFCFF"/>';
+  var t_;
+  for(t_=0;t_<=v.xmax+1e-9;t_+=v.tx) s+='<line x1="'+MX(t_).toFixed(1)+'" y1="'+mt+'" x2="'+MX(t_).toFixed(1)+'" y2="'+(h-mb)+'" stroke="#E3E9F6"/>'+S(MX(t_),h-mb+26,f(t_),{a:'middle',sz:10.5,c:'#5B6B8C',w:600}).replace('stroke="#fff" stroke-width="4"','stroke="none"');
+  for(t_=0;t_<=v.ymax+1e-9;t_+=v.ty) s+='<line x1="'+ml+'" y1="'+MY(t_).toFixed(1)+'" x2="'+(w-mr)+'" y2="'+MY(t_).toFixed(1)+'" stroke="#E3E9F6"/>'+S(ml-6,MY(t_)+5,f(t_),{a:'end',sz:10.5,c:'#5B6B8C',w:600}).replace('stroke="#fff" stroke-width="4"','stroke="none"');
+  s+='<line x1="'+ml+'" y1="'+(h-mb)+'" x2="'+(w-mr)+'" y2="'+(h-mb)+'" stroke="#0B1B3F" stroke-width="2"/><line x1="'+ml+'" y1="'+mt+'" x2="'+ml+'" y2="'+(h-mb)+'" stroke="#0B1B3F" stroke-width="2"/>';
+  var ct=K.series[0];
+  var linea=function(d,ser){ return '<line class="trazo" pathLength="1" style="--d:'+d+'s" x1="'+MX(0)+'" y1="'+MY(val(ser,0)).toFixed(1)+'" x2="'+MX(v.xmax)+'" y2="'+MY(val(ser,v.xmax)).toFixed(1)+'" stroke="'+ser.color+'" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>'; };
+  var teal='#13A8AF', fuc='#FC0045', amb='#D98A00', ver='#1F9D55';
+  switch(tipo){
+    case 'datos': s+=proy(0,x1,y1,teal)+pt(0.2,x1,y1,'P₁',fuc)+proy(1.4,x2,y2,teal)+pt(1.6,x2,y2,'P₂',fuc); break;
+    case 'pend': s+=linea(0,ct)+pt(0,x1,y1,'P₁',fuc)+pt(0,x2,y2,'P₂',fuc)+
+      tr(0.2,x2,y1,x2,y2,fuc,5)+A(1.0,S(MX(x2)+10,(MY(y1)+MY(y2))/2+5,'Δy = '+f(y2-y1),{sz:14,w:800,c:fuc}))+
+      tr(1.6,x1,y1,x2,y1,teal,5)+A(2.4,S((MX(x1)+MX(x2))/2,MY(y1)+22,'Δx = '+f(x2-x1),{a:'middle',sz:14,w:800,c:teal}))+
+      A(3.0,bub((MX(x1)+MX(x2))/2-50,(MY(y1)+MY(y2))/2-30,'m = '+f(m),amb)); break;
+    case 'b': s+=linea(0,ct)+pt(0,x1,y1,'P₁',fuc)+
+      tr(0.2,0,b,x1,b,ver,4)+tr(1.6,x1,b,x1,y1,amb,4)+A(2.4,S(MX(x1)+10,(MY(b)+MY(y1))/2+5,'m·x₁ = '+f(m*x1),{sz:13,w:800,c:amb}))+
+      A(3.0,'<circle class="pulso" cx="'+MX(0)+'" cy="'+MY(b).toFixed(1)+'" r="11" fill="rgba(31,157,85,.2)" stroke="'+ver+'" stroke-width="3"/>'+bub(MX(0)+70,MY(b)+26,'b = '+f(b),ver)); break;
+    case 'ecu': s+=linea(0,ct)+pt(0,x1,y1,'P₁',fuc)+pt(0,x2,y2,'P₂',fuc)+A(1.6,bub(MX(v.xmax*0.34),MY(val(ct,v.xmax*0.34))-34,K.yl+' = '+f(m)+'x + '+f(b),fuc)); break;
+    case 'comp': s+=linea(0,ct)+pt(0,x1,y1,'P₁',fuc)+proy(0.4,x2,y2,teal)+pt(0.6,x2,y2,'P₂',fuc)+A(2.8,'<circle cx="'+MX(x2)+'" cy="'+MY(y2).toFixed(1)+'" r="15" fill="none" stroke="'+ver+'" stroke-width="4"/>'+S(MX(x2)-22,MY(y2)-22,'✓ coincide',{a:'end',sz:14,w:800,c:ver})); break;
+    case 'pred': s+=linea(0,ct)+pt(0,x1,y1,'P₁',fuc)+pt(0,x2,y2,'P₂',fuc)+proy(1.6,K.xp,K.yp,amb)+A(2.4,'<circle class="pulso" cx="'+MX(K.xp).toFixed(1)+'" cy="'+MY(K.yp).toFixed(1)+'" r="11" fill="rgba(217,138,0,.2)" stroke="'+amb+'" stroke-width="3"/>'+S(MX(K.xp)-14,MY(K.yp)-16,'('+f(K.xp)+'; '+f(K.yp)+')',{a:'end',sz:13,w:800,c:amb})); break;
+    case 'ib': s+=linea(0,ct)+A(0.6,'<circle class="pulso" cx="'+MX(0)+'" cy="'+MY(b).toFixed(1)+'" r="11" fill="rgba(31,157,85,.2)" stroke="'+ver+'" stroke-width="3"/>'+bub(MX(0)+86,MY(b)+26,'b = '+f(b)+' (eje vertical)',ver)); break;
+    case 'im': { var tx=v.tx; s+=linea(0,ct)+tr(0.4,x1,y1,x1+tx,y1,teal,5)+A(1.2,S(MX(x1+tx/2),MY(y1)+22,'+'+f(tx),{a:'middle',sz:14,w:800,c:teal}))+
+      tr(1.8,x1+tx,y1,x1+tx,y1+m*tx,fuc,5)+A(2.6,S(MX(x1+tx)+10,MY(y1+m*tx/2)+5,'+'+f(m*tx),{sz:14,w:800,c:fuc}))+pt(0,x1,y1,'',amb); break; }
+    case 'eq': { var ci=K.series[1]; s+=linea(0,ct)+linea(0.6,ci)+A(1.8,'<circle class="pulso" cx="'+MX(K.eqx).toFixed(1)+'" cy="'+MY(K.eqy).toFixed(1)+'" r="12" fill="#FFC400" stroke="#071767" stroke-width="3"/>')+proy(2.2,K.eqx,K.eqy,'#071767')+
+      A(2.6,S(MX(K.eqx)+16,MY(K.eqy)-14,'Equilibrio',{sz:13,w:800,c:'#071767'})); break; }
+  }
+  s+=S(ml+8,mt+20,K.yn+' (vertical)',{sz:11,c:fuc,w:800})+S(w-mr-4,h-mb-8,K.xn+' (horizontal)',{a:'end',sz:11,c:teal,w:800});
+  return s+'</svg>';
+}
+function demoHTML(K,i,anim){
+  var q=K.Q[i], L=lineasDemo(K,q.tipo), h='<div class="demo'+(anim?'':' quieta')+'"><div class="demoL">';
+  L.forEach(function(l,k){ h+='<div class="an" style="--d:'+(k*1.4)+'s">'+l+'</div>'; });
+  return h+'</div>'+miniSvg(K,q.tipo)+'</div>';
+}
+
+/* ---------- datos siempre a la vista ---------- */
+function pintaDatos(){
+  var x1=K.p1[0], y1=K.p1[1], x2=K.p2[0], y2=K.p2[1];
+  var t=function(cls,tip,v){ return '<span class="tip '+cls+'" tabindex="0" data-tip="'+esc(tip)+'">'+fmt(v)+'</span>'; };
+  var h='<div class="dt">📌 <b>Tus datos</b> <small>(pasa el mouse o toca cada número)</small></div><div class="dchips">'+
+   '<span class="dc">P₁ ( '+t('vx','x₁ = '+K.xn.replace(/ \(.*\)/,'')+' del punto 1',x1)+' ; '+t('vy','y₁ = '+K.yn.replace(/ \(.*\)/,'')+' del punto 1',y1)+' )</span>'+
+   '<span class="dc">P₂ ( '+t('vx','x₂ = '+K.xn.replace(/ \(.*\)/,'')+' del punto 2',x2)+' ; '+t('vy','y₂ = '+K.yn.replace(/ \(.*\)/,'')+' del punto 2',y2)+' )</span>';
+  if(E.ok[1]) h+='<span class="dc">m = '+t('vm','m = pendiente: cuánto sube y por cada 1 de x',K.m)+'</span>';
+  if(E.ok[2]) h+='<span class="dc">b = '+t('vb','b = valor de y cuando x = 0 (donde corta el eje vertical)',K.b)+'</span>';
+  if(E.ok[3]) h+='<span class="dc ecu">'+esc(ecu(K,K.m,K.b))+'</span>';
+  h+='</div><div class="leyenda"><span class="vx">x</span> = '+esc(K.xn.replace(/ \(.*\)/,''))+' (eje horizontal) · <span class="vy">y</span> = '+esc(K.yn.replace(/ \(.*\)/,''))+' (eje vertical)</div>';
+  $('datos').innerHTML=h;
 }
 
 /* ============================ panel de pasos ============================ */
@@ -334,15 +501,21 @@ function letra(i){ return 'ABCD'.charAt(i); }
 function pintaPasos(){
   var cur=ahora(), h='';
   var pr=''; K.Q.forEach(function(q,i){ pr+='<i class="'+(E.ok[i]?'ok':(i===cur?'ahora':''))+'"></i>'; }); $('prog').innerHTML=pr;
+  pintaDatos();
   K.Q.forEach(function(q,i){
     if(E.ok[i]){
+      var abierto=(E.demo===i), anim=abierto && !E.visto[i];
       h+='<div class="paso hecho"><h3><i>✓</i>Paso '+q.paso+' · '+esc(q.titulo)+'</h3><p class="q">'+esc(q.q)+'</p>'+
-         '<div class="op bien"><b>'+letra(q.ok)+'</b><span>'+esc(q.ops[q.ok])+'</span></div><p class="fb bien">'+esc(q.pq)+'</p></div>';
+         '<div class="op bien"><b>'+letra(q.ok)+'</b><span>'+esc(q.ops[q.ok])+'</span></div><p class="fb bien">'+esc(q.pq)+'</p>'+
+         (abierto?demoHTML(K,i,anim)+'<div class="fila"><button class="btn min" type="button" data-demo="'+i+'">▶ Ver otra vez</button></div>'
+                  :'<div class="fila"><button class="btn min" type="button" data-demo="'+i+'">▶ Ver cómo se calcula</button></div>')+'</div>';
+      if(anim) E.visto[i]=true;
     }else if(i===cur){
+      var um=E.ultimoMal&&E.ultimoMal.i===i?E.ultimoMal.j:-1;
       h+='<div class="paso ahora"><h3><i>'+q.paso+'</i>Paso '+q.paso+' · '+esc(q.titulo)+'</h3><p class="q">'+esc(q.q)+'</p><div class="ops">';
       q.ops.forEach(function(o,j){ var mal=(E.mal[i]||[]).indexOf(j)>=0;
-        h+='<button type="button" class="op'+(mal?' mal':'')+'" data-q="'+i+'" data-j="'+j+'"'+(mal?' disabled':'')+'><b>'+letra(j)+'</b><span>'+esc(o)+'</span></button>'; });
-      h+='</div>'+((E.mal[i]||[]).length?'<p class="fb mal">Todavía no. Revisa la operación y prueba otra opción.</p>':'')+'</div>';
+        h+='<button type="button" class="op'+(mal?' mal':'')+(j===um?' sacude':'')+'" data-q="'+i+'" data-j="'+j+'"'+(mal?' disabled':'')+'><b>'+letra(j)+'</b><span>'+esc(o)+'</span></button>'; });
+      h+='</div>'+((E.mal[i]||[]).length?'<p class="fb mal">Todavía no. Mira tus datos arriba (📌) y revisa la operación.</p>':'')+'</div>';
     }
   });
   if(cur<0){
@@ -357,66 +530,108 @@ function pintaPasos(){
 $('pasos').addEventListener('click',function(ev){
   var b=ev.target.closest('button'); if(!b) return;
   if(b.id==='btnSig'){ var i=CASOS.indexOf(K)+1; $('selCaso').value=CASOS[i].id; cargaCaso(CASOS[i].id); return; }
+  if(b.dataset.demo!==undefined){ var d=+b.dataset.demo; E.demo=d; delete E.visto[d]; pintaPasos(); return; }
   if(!b.dataset.q) return;
   var i=+b.dataset.q, j=+b.dataset.j, q=K.Q[i];
-  if(j===q.ok){ E.ok[i]=true; E.elegida[i]=j; } else { (E.mal[i]=E.mal[i]||[]).push(j); }
+  if(j===q.ok){ E.ok[i]=true; E.elegida[i]=j; E.demo=i; delete E.visto[i]; E.ultimoMal=null; }
+  else { (E.mal[i]=E.mal[i]||[]).push(j); E.ultimoMal={ i:i, j:j }; }
   pintaPasos(); pintaGrafico(); pintaTabla();
 });
 
 /* ============================ gráfico y tabla ============================ */
+var GUIA=true;
+function tieneTabla(s,x){ return E.pts.some(function(p){ return p.s===s.id && Math.abs(p.x-x)<1e-6 && okPt(p); }); }
+function faltantes(){
+  var out=[]; K.series.forEach(function(s){ s.xs.slice().sort(function(a,b){ return a-b; }).forEach(function(x){ if(!tieneTabla(s,x)) out.push({ s:s.id, x:x, y:val(s,x) }); }); });
+  return out;
+}
+function objetivo(){
+  var f=faltantes(); if(!f.length) return null;
+  if(E.objSel){ var o=f.filter(function(q){ return q.s===E.objSel.s && q.x===E.objSel.x; })[0]; if(o) return o; E.objSel=null; }
+  var mia=f.filter(function(q){ return q.s===serieAct; }); return mia.length?mia[0]:f[0];
+}
 function pintaGrafico(){
   var lista=ecuacionLista();
   $('candado').hidden=lista;
   var chico=window.innerWidth<700; geo(chico);
   var sv=$('pl'); sv.setAttribute('viewBox','0 0 '+W+' '+H); sv.style.aspectRatio=W+'/'+H;
-  $('dibujo').innerHTML=svgPlano({ pts:lista?E.pts:[], sol:lista&&E.sol });
+  var ob=lista?objetivo():null;
+  $('dibujo').innerHTML=svgPlano({ pts:lista?E.pts:[], sol:lista&&E.sol, proy:true, obj:(ob&&GUIA)?ob:null });
   var b='<span style="font-weight:800;color:#071767;font-size:13.5px">Marca puntos de:</span>';
   if(K.series.length>1){ K.series.forEach(function(s){
     var n=E.pts.filter(function(p){ return p.s===s.id; }).length;
     b+='<button type="button" class="chip'+(s.id===serieAct?' on':'')+'" data-serie="'+s.id+'" style="--c:'+s.color+'"><i></i>'+esc(s.id==='ct'?'Costo (C)':'Ingreso (I)')+' <small>'+n+'</small></button>'; });
   } else { b+='<span class="chip on" style="--c:'+ROJO+'"><i></i>'+esc(K.yl)+'</span>'; }
+  b+='<label class="tog"><input type="checkbox" id="chGuia"'+(GUIA?' checked':'')+'> Mostrar guía del siguiente punto</label>';
   $('barraSerie').innerHTML=b;
   $('btnSol').innerHTML=E.sol?'&#128065; Ocultar solución':'&#128065; Ver solución';
   var tot=0, ok=0; E.pts.forEach(function(p){ tot++; if(okPt(p)) ok++; });
   var msg='Haz clic en el plano para colocar un punto (se ajusta a la cuadrícula). Haz clic sobre un punto para quitarlo.';
   if(lista){
-    var falta=[]; K.series.forEach(function(s){ s.xs.forEach(function(x){ if(!tieneTabla(s,x)) falta.push(s.nom+'('+fmt(x)+')'); }); });
-    msg='Puntos colocados: <b>'+tot+'</b> · correctos: <b>'+ok+'</b>.'+(falta.length?' Faltan de la tabla: '+esc(falta.join(', '))+'.':' <b>¡Tienes todos los puntos de la tabla!</b>')+
-        (tot-ok>0?' Los puntos con ✗ no están sobre la recta: revisa la tabla.':'');
+    var xn=K.xn.replace(/ \(.*\)/,''), yn=K.yn.replace(/ \(.*\)/,'');
+    if(ob){
+      if(ob.s!==serieAct && K.series.length>1 && !faltantes().some(function(q){ return q.s===serieAct; })) serieAct=ob.s;
+      msg='<b>Siguiente punto:</b> busca <span class="vx">x = '+fmt(ob.x)+'</span> ('+esc(xn.toLowerCase())+', eje horizontal) y sube hasta <span class="vy">y = '+fmt(ob.y)+'</span> ('+esc(yn.toLowerCase())+', eje vertical).'+
+          (GUIA?' <small>(La guía naranja te muestra dónde.)</small>':'')+'<br>Colocados: <b>'+tot+'</b> · correctos: <b>'+ok+'</b>'+(tot-ok>0?' · los puntos con ✗ no están sobre la recta.':'');
+    }else msg='<b>¡Tienes todos los puntos de la tabla!</b> Colocados: <b>'+tot+'</b> · correctos: <b>'+ok+'</b>.'+(tot-ok>0?' Los puntos con ✗ no están sobre la recta: quítalos con un clic.':'');
   }
   $('estado').innerHTML=msg;
   var e=K.vista; $('escala').innerHTML='<b>Escala sugerida para tu hoja:</b> eje x de 0 a '+fmt(e.xmax)+' (de '+fmt(e.tx)+' en '+fmt(e.tx)+') y eje y de 0 a '+fmt(e.ymax)+' (de '+fmt(e.ty)+' en '+fmt(e.ty)+').';
 }
-function tieneTabla(s,x){ return E.pts.some(function(p){ return p.s===s.id && Math.abs(p.x-x)<1e-6 && okPt(p); }); }
 function pintaTabla(){
   if(!ecuacionLista()){ $('tabla').innerHTML=''; return; }
-  var h='';
+  var h='', ob=objetivo();
   K.series.forEach(function(s){
     var nombre=s.id==='ct'?ecu(K,s.b,s.a):'I = '+fmt(s.b)+'x';
-    h+='<table class="tb" style="margin-bottom:8px"><thead><tr><th colspan="3">Tabla de valores · '+esc(nombre)+'</th></tr><tr><th>x</th><th>y</th><th>¿Ya está en tu plano?</th></tr></thead><tbody>';
+    h+='<table class="tb" style="margin-bottom:8px"><thead><tr><th colspan="3">Tabla de valores · '+esc(nombre)+'</th></tr><tr><th><span class="vx">x</span></th><th><span class="vy">y</span></th><th>Tu plano</th></tr></thead><tbody>';
     s.xs.slice().sort(function(a,b){ return a-b; }).forEach(function(x){
-      var ya=tieneTabla(s,x); h+='<tr><td>'+fmt(x)+'</td><td>'+fmt(val(s,x))+'</td><td class="'+(ya?'hecho':'')+'">'+(ya?'✓ marcado':'')+'</td></tr>'; });
+      var ya=tieneTabla(s,x), es=ob&&ob.s===s.id&&ob.x===x;
+      h+='<tr'+(es?' class="es"':'')+'><td>'+fmt(x)+'</td><td>'+fmt(val(s,x))+'</td><td class="'+(ya?'hecho':'')+'">'+(ya?'✓ marcado':'<button type="button" class="btn min" data-ub="'+s.id+'|'+x+'">📍 Ubicar</button>')+'</td></tr>'; });
     h+='</tbody></table>';
   });
   $('tabla').innerHTML=h;
 }
-$('barraSerie').addEventListener('click',function(ev){ var b=ev.target.closest('[data-serie]'); if(b){ serieAct=b.dataset.serie; pintaGrafico(); } });
-$('pl').addEventListener('click',function(ev){
-  if(!ecuacionLista()) return;
+$('tabla').addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-ub]'); if(!b) return; var p=b.dataset.ub.split('|'); E.objSel={ s:p[0], x:+p[1] }; serieAct=p[0]; GUIA=true; pintaGrafico(); pintaTabla();
+});
+$('barraSerie').addEventListener('click',function(ev){ var b=ev.target.closest('[data-serie]'); if(b){ serieAct=b.dataset.serie; E.objSel=null; pintaGrafico(); pintaTabla(); } });
+$('barraSerie').addEventListener('change',function(ev){ if(ev.target.id==='chGuia'){ GUIA=ev.target.checked; pintaGrafico(); } });
+function puntoDe(ev){
   var sv=$('pl'), pt=sv.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
-  var m=sv.getScreenCTM(); if(!m) return; var p=pt.matrixTransform(m.inverse());
-  if(p.x<ML-10||p.x>W-MR+6||p.y<MT-6||p.y>H-MB+10) return;
-  /* clic sobre un punto: lo quita */
-  for(var i=E.pts.length-1;i>=0;i--){ var q=E.pts[i]; if(Math.hypot(X(q.x)-p.x,Y(q.y)-p.y)<14*Z){ E.pts.splice(i,1); pintaGrafico(); pintaTabla(); return; } }
+  var m=sv.getScreenCTM(); if(!m) return null; var p=pt.matrixTransform(m.inverse());
+  if(p.x<ML-10||p.x>W-MR+6||p.y<MT-6||p.y>H-MB+10) return null;
+  return p;
+}
+function snap(p){
   var sx=K.vista.tx/10, sy=K.vista.ty/10;
   var x=Math.round(iX(p.x)/sx)*sx, y=Math.round(iY(p.y)/sy)*sy;
   x=Math.round(x*1000)/1000+0; y=Math.round(y*1000)/1000+0;
-  if(x<0||y<0||x>K.vista.xmax||y>K.vista.ymax) return;
-  if(E.pts.some(function(q){ return q.s===serieAct && q.x===x && q.y===y; })) return;
-  E.pts.push({ id:nid++, s:serieAct, x:x, y:y }); pintaGrafico(); pintaTabla();
+  return { x:Math.max(0,Math.min(K.vista.xmax,x)), y:Math.max(0,Math.min(K.vista.ymax,y)) };
+}
+$('pl').addEventListener('click',function(ev){
+  if(!ecuacionLista()) return;
+  var p=puntoDe(ev); if(!p) return;
+  for(var i=E.pts.length-1;i>=0;i--){ var q=E.pts[i]; if(Math.hypot(X(q.x)-p.x,Y(q.y)-p.y)<14*Z){ E.pts.splice(i,1); E.objSel=null; pintaGrafico(); pintaTabla(); return; } }
+  var s=snap(p);
+  if(E.pts.some(function(q){ return q.s===serieAct && q.x===s.x && q.y===s.y; })) return;
+  E.pts.push({ id:nid++, s:serieAct, x:s.x, y:s.y }); E.objSel=null; pintaGrafico(); pintaTabla();
 });
-$('btnDeshacer').addEventListener('click',function(){ E.pts.pop(); pintaGrafico(); pintaTabla(); });
-$('btnLimpiar').addEventListener('click',function(){ E.pts=[]; E.sol=false; pintaGrafico(); pintaTabla(); });
+/* mira con precisión: cruz y valores mientras mueves el mouse */
+$('pl').addEventListener('pointermove',function(ev){
+  if(!ecuacionLista()){ return; }
+  var p=puntoDe(ev), c=$('cursor'); if(!p){ c.innerHTML=''; return; }
+  var s=snap(p), gx=X(s.x), gy=Y(s.y), h='';
+  h+='<line x1="'+gx.toFixed(1)+'" y1="'+MT+'" x2="'+gx.toFixed(1)+'" y2="'+(H-MB)+'" stroke="#13A8AF" stroke-width="1.4" stroke-dasharray="4 3" opacity=".7"/>';
+  h+='<line x1="'+ML+'" y1="'+gy.toFixed(1)+'" x2="'+(W-MR)+'" y2="'+gy.toFixed(1)+'" stroke="#FC0045" stroke-width="1.4" stroke-dasharray="4 3" opacity=".7"/>';
+  h+='<circle cx="'+gx.toFixed(1)+'" cy="'+gy.toFixed(1)+'" r="'+(5*Z)+'" fill="none" stroke="#071767" stroke-width="2"/>';
+  h+=burbuja(gx,H-MB+14*Z,fmt(s.x),'#13A8AF')+burbuja(ML-28*Z,gy,fmt(s.y),'#FC0045');
+  var lx=gx>W*0.6?gx-14*Z:gx+14*Z, an=gx>W*0.6?'end':'start';
+  h+=T(lx,gy-12*Z,'x = '+fmt(s.x)+' · y = '+fmt(s.y),{a:an,sz:12.5,w:800,c:'#071767',halo:1});
+  c.innerHTML=h;
+});
+$('pl').addEventListener('pointerleave',function(){ $('cursor').innerHTML=''; });
+$('btnDeshacer').addEventListener('click',function(){ E.pts.pop(); E.objSel=null; pintaGrafico(); pintaTabla(); });
+$('btnLimpiar').addEventListener('click',function(){ E.pts=[]; E.sol=false; E.objSel=null; pintaGrafico(); pintaTabla(); });
 $('btnSol').addEventListener('click',function(){ if(!ecuacionLista()) return; E.sol=!E.sol; pintaGrafico(); });
 $('btnPant').addEventListener('click',function(){ var a=$('app'); if(document.fullscreenElement){ document.exitFullscreen(); } else if(a.requestFullscreen){ a.requestFullscreen().catch(function(){}); } });
 window.addEventListener('resize',function(){ pintaGrafico(); });
@@ -435,7 +650,7 @@ function svgA_png(inner,anchoPx){
   });
 }
 function baja(blob,nombre){ var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nombre; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function(){ URL.revokeObjectURL(a.href); },4000); }
-$('btnPng').addEventListener('click',function(){ geo(false); svgA_png(svgPlano({ pts:ecuacionLista()?E.pts:[], sol:ecuacionLista()&&E.sol }),1800).then(function(r){ if(r) baja(r.blob,'grafico-'+K.id+'.png'); pintaGrafico(); }); });
+$('btnPng').addEventListener('click',function(){ geo(false); svgA_png(svgPlano({ pts:ecuacionLista()?E.pts:[], sol:ecuacionLista()&&E.sol, proy:true }),1800).then(function(r){ if(r) baja(r.blob,'grafico-'+K.id+'.png'); pintaGrafico(); }); });
 $('btnBlanco').addEventListener('click',function(){ geo(false); svgA_png(svgPlano({ blanco:true }),1800).then(function(r){ if(r) baja(r.blob,'plano-en-blanco-'+K.id+'.png'); pintaGrafico(); }); });
 
 /* ============================ reporte en Word (.docx sin librerías) ============================ */
@@ -483,7 +698,7 @@ $('btnWord').addEventListener('click',function(){
   var tareas=lista.map(function(c,idx){
     K=c; E=ESTADOS[c.id]; var eq=!!E.ok[3];
     var conPts=eq && E.pts.length>0;
-    var inner=svgPlano(eq?(conPts?{ pts:E.pts }:{ todas:true, pts:[], sol:true }):{ blanco:true });
+    var inner=svgPlano(eq?(conPts?{ pts:E.pts, proy:true }:{ todas:true, pts:[], sol:true }):{ blanco:true });
     return svgA_png(inner,1500).then(function(r){ return { c:c, r:r, tipo:eq?(conPts?'alumno':'solucion'):'blanco' }; });
   });
   K=guardaK; E=guardaE;
