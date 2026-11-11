@@ -177,7 +177,9 @@ header .sub{color:var(--mut);font-size:17px;margin-top:3px}
 .logo-c.tj{height:44px;background:#fff;border-radius:8px;padding:4px 8px}
 #snd{position:fixed;right:22px;bottom:84px;z-index:7;font:700 16px 'Inter';color:var(--ink);background:rgba(20,20,22,.7);border:1px solid var(--line);border-radius:999px;padding:9px 15px;cursor:pointer}
 #snd.off{opacity:.6}
-@media (max-width:860px){ .logo-c{height:26px} #snd{top:52px;bottom:auto;right:12px;font-size:14px;padding:7px 12px} }
+#full{position:fixed;right:22px;bottom:136px;z-index:7;font:700 16px 'Inter';color:#fff;background:var(--a);border:0;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+#full:hover{filter:brightness(1.1)}
+@media (max-width:860px){ .logo-c{height:26px} #snd{top:52px;bottom:auto;right:12px;font-size:14px;padding:7px 12px} #full{top:92px;bottom:auto;right:12px;font-size:14px;padding:7px 12px} }
 /* interactive panel */
 #ia:empty{display:none}
 #ia{margin:10px 0 4px;padding:12px;border-radius:12px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.3)}
@@ -212,6 +214,7 @@ header .sub{color:var(--mut);font-size:17px;margin-top:3px}
 <header><img class="logo-c tj" src="marca/logo-tj.png" alt="Thomas Jefferson"><div><span class="kick" id="kick"></span></div><div><h1 id="title"></h1><div class="sub" id="sub"></div></div></header>
 <a id="back" href="#">← Volver al curso</a>
 <button id="snd" type="button">🔊 Sonido</button>
+<button id="full" type="button">⛶ Pantalla completa</button>
 <div id="legend"></div>
 <section id="panel" aria-live="polite">
   <div class="meta"><span class="num" id="num"></span><span class="day" id="day"></span><span id="score"></span></div>
@@ -698,6 +701,28 @@ const m = /^#paso-(\d+)$/.exec(location.hash||''); go(m ? Math.min(+m[1], steps.
 window.__go = go;
 })();
 
+
+/* pantalla completa: abre la presentación en una ventana nueva; allí el botón activa la pantalla completa */
+(function(){
+  const b=document.getElementById('full'); if(!b) return;
+  const enVentana = /[?&]ventana=1/.test(location.search);
+  const doc=document.documentElement;
+  const esFull=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+  const pinta=()=>{ b.textContent = !enVentana ? '⛶ Pantalla completa' : (esFull() ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa'); };
+  b.addEventListener('click', ev=>{
+    ev.stopPropagation();
+    if(!enVentana){
+      const url=location.pathname+'?ventana=1'+location.hash;
+      const w=window.open(url,'_blank'); if(w) try{ w.opener=null; }catch(e){}
+      if(!w) location.href=url;   /* si el navegador bloquea la ventana, se abre aquí */
+      return;
+    }
+    if(esFull()){ (document.exitFullscreen||document.webkitExitFullscreen).call(document); }
+    else { const f=doc.requestFullscreen||doc.webkitRequestFullscreen; if(f) f.call(doc); }
+  });
+  document.addEventListener('fullscreenchange',pinta); document.addEventListener('webkitfullscreenchange',pinta);
+  pinta();
+})();
 </script>
 </body>
 </html>
