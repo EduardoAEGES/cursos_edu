@@ -3863,7 +3863,6 @@ function armaPanel(items){
   var todo=items.map(function(i){ return i.s; }).join(' ');
   var mf=/(\d{1,2}) de (\w+) de (\d{4})/.exec(todo), anio=mf ? +mf[3] : new Date().getFullYear();
   var md=/Duraci[oó]n\s*:\s*(\d{1,2}:\d{2}:\d{2})/.exec(todo);
-  var mt=/(Panel de an[aá]lisis del aprendizaje)\s+(.+?)\s+\d+\s+N[uú]mero total/i.exec(todo);
   /* columnas: la de usuario, la de tiempo en línea y la de conversación */
   var xU=null, xL=null, xC=null;
   items.forEach(function(i){
@@ -3876,13 +3875,14 @@ function armaPanel(items){
   /* orden de lectura: página, de arriba abajo, de izquierda a derecha */
   items.sort(function(a,b){ return (a.p-b.p) || (Math.abs(a.y-b.y)>2 ? b.y-a.y : a.x-b.x); });
   var filas=[], cur=null, dentro=false;
-  var NOMBRE_NO=/BigBlueButton|Panel de an|[ÚU]ltima actualizaci|Descargar datos|https?:|N[uú]mero total|Puntuaci|Vista general|Cronolog|Encuestas|Cuestionarios|^\d{1,2}\/\d{1,2}\/\d{2}/i;
+  var NOMBRE_NO=/BigBlueButton|Panel de|[ÚU]ltima actualizaci|Descargar datos|https?:|N[uú]mero total|Puntuaci|Vista general|Cronolog|Encuestas|Cuestionarios|^\d{1,2}\/\d{1,2}\/\d{2}/i;
   items.forEach(function(i){
     if(/^USUARIO$/i.test(i.s)){ dentro=true; return; }
     if(!dentro) return;
-    var m=/^(\d{1,2})\s+([a-záéíóú]{3,4})\.?,?\s+(\d{1,2}):(\d{2}):(\d{2})$/i.exec(i.s);
+    /* «4 nov., 18:16:49» o «4 de noviembre, 18:16:49»: según el idioma y la versión de BigBlueButton */
+    var m=/^(\d{1,2})\s+(?:de\s+)?([a-záéíóú]{3,10})\.?,?\s+(\d{1,2}):(\d{2}):(\d{2})$/i.exec(i.s);
     if(m && cur){
-      var mes=MESES[m[2].toLowerCase().slice(0,3)];
+      var nom=m[2].toLowerCase(), mes=(MESL[nom]!==undefined) ? MESL[nom] : MESES[nom.slice(0,3)];
       cur.marcas.push(new Date(anio, mes===undefined?0:mes, +m[1], +m[3], +m[4], +m[5]).getTime());
       return;
     }
@@ -3898,13 +3898,13 @@ function armaPanel(items){
   filas=filas.filter(function(f){ return f.marcas.length; });
   /* el nombre de la clase: lo que va después del título del panel */
   var tit='', ip=-1;
-  items.forEach(function(i,n){ if(ip<0 && /^Panel de an[aá]lisis del aprendizaje$/i.test(i.s)) ip=n; });
+  items.forEach(function(i,n){ if(ip<0 && /^Panel de (an[aá]lisis del )?aprendizaje$/i.test(i.s)) ip=n; });
   for(var q=ip+1; ip>=0 && q<items.length && q<ip+8; q++){
     var s=items[q].s;
     if(!/[A-Za-zÁÉÍÓÚáéíóú]{3}/.test(s) || /^\d|Finalizado|En curso|Duraci|de \w+ de \d{4}/i.test(s)) continue;
     tit=s; break;
   }
-  var mtt=/Panel de an[aá]lisis del aprendizaje - (.+?)(\s+https?:|$)/i.exec(todo);
+  var mtt=/Panel de (?:an[aá]lisis del )?aprendizaje - (.+?)(\s+https?:|$)/i.exec(todo);
   if(mtt && (!tit || /Panel/.test(tit))) tit=mtt[1];
   return { filas:filas, duracion: md ? segDe(md[1]) : 0, titulo: tit,
            fecha: mf ? new Date(anio, MESL[mf[2].toLowerCase()]||0, +mf[1]).getTime() : null };
