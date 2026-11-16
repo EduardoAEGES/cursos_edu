@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutor AA2 y AA3</title>
+<meta name="version" content="2026-11-16-1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<style>
+/* ============================================================
+   Tutor guiado AA2 (Chan Chan) y AA3 (Andrés) · Pensamiento Lógico · Certus
+   Una página por evidencia, ordenada por avance y por paso. Cada paso:
+   qué haces, captura, comprueba, cuánto debe salir y qué va en el Word.
+   ============================================================ */
+:root{
+  --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF;
+  --tinta:#0B1B3F; --gris:#55607F; --linea:#D5DDEF; --humo:#F1F5FD; --fondo:#EEF1F8;
+  --ok:#0E7A4A; --ok-s:#E3F5EC; --mal:#B0002F; --mal-s:#FFE8EE; --tip:#8A5A00; --tip-s:#FFF4D6;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{font-family:'Nunito',system-ui,'Segoe UI',sans-serif;color:var(--tinta);background:var(--fondo);font-size:17px;line-height:1.55}
+button,input{font-family:inherit;font-size:inherit}
+button{cursor:pointer}
+a{color:var(--marino)}
+img{max-width:100%;display:block}
+
+/* barra */
+.barra{position:sticky;top:0;z-index:20;background:var(--marino);color:#fff;border-bottom:4px solid var(--fucsia)}
+.barra .in{max-width:1100px;margin:0 auto;padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.barra img{height:28px;width:auto;background:#fff;border-radius:99px;padding:3px 9px}
+.barra .tt{flex:1;min-width:160px;font-weight:900;font-size:16px;line-height:1.2}
+.barra .tt small{display:block;font-weight:700;font-size:12px;opacity:.8;letter-spacing:.05em;text-transform:uppercase}
+.tabs{display:flex;gap:6px}
+.tabs button{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:7px 14px;font-weight:900;font-size:15px}
+.tabs button.on{background:#fff;color:var(--marino);border-color:#fff}
+.barra{}
+@media (max-width:700px){.barra{position:static}.barra .tt{font-size:14px}}
+.volver{color:#fff;font-weight:800;font-size:14px;text-decoration:none;opacity:.85}
+
+.wrap{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
+.vista{display:none}.vista.on{display:block}
+
+/* portada de cada evidencia */
+.hero{background:#fff;border:1px solid var(--linea);border-radius:18px;padding:20px 22px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:center;box-shadow:0 6px 18px rgba(7,23,103,.06)}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h1{margin:4px 0 6px;font-size:30px;line-height:1.1;color:var(--marino);font-weight:900}
+.hero p{margin:0 0 8px;color:var(--gris);font-weight:600}
+.eti{display:inline-block;background:var(--fucsia);color:#fff;font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:99px;padding:4px 11px}
+.prog{background:var(--humo);border-radius:14px;padding:14px}
+.prog b{font-size:28px;color:var(--marino)}
+.barp{height:12px;background:#DCE3F3;border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.barp i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--aqua),var(--fucsia));transition:width .4s}
+.prog small{color:var(--gris);font-weight:700}
+
+/* regla de oro y el caso */
+.caja{background:#fff;border:1px solid var(--linea);border-radius:16px;padding:16px 18px;margin-top:14px}
+.caja h2{margin:0 0 8px;font-size:21px;color:var(--marino)}
+.oro{border-left:6px solid var(--fucsia);background:#FFF3F6}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:820px){.g2{grid-template-columns:minmax(0,1fr)}}
+
+/* calendario de avances */
+.cal{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+@media (max-width:820px){.cal{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cal a{display:block;text-decoration:none;color:inherit;background:#fff;border:2px solid var(--linea);border-radius:14px;padding:12px}
+.cal a:hover{border-color:var(--fucsia)}
+.cal .d{font-weight:900;color:var(--fucsia);font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+.cal .n{font-weight:900;font-size:18px;color:var(--marino)}
+.cal .q{font-size:14px;color:var(--gris);font-weight:700}
+.cal .k{margin-top:6px;font-size:13px;font-weight:800;color:var(--aqua)}
+
+/* avance */
+.avance{margin-top:26px}
+.avance>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--marino);padding-bottom:6px;margin-bottom:12px;scroll-margin-top:70px}
+.avance>header h2{margin:0;font-size:25px;color:var(--marino);font-weight:900}
+.avance>header span{font-weight:800;color:var(--fucsia)}
+
+/* paso */
+.paso{background:#fff;border:1px solid var(--linea);border-radius:16px;margin-bottom:14px;box-shadow:0 4px 12px rgba(7,23,103,.05);overflow:hidden}
+.paso>summary{list-style:none;display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
+.paso>summary::-webkit-details-marker{display:none}
+.paso .num{flex:none;width:38px;height:38px;border-radius:50%;background:var(--marino);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:17px}
+.paso.hecho .num{background:var(--ok)}
+.paso.hecho .num::after{content:'✓'}
+.paso.hecho .num span{display:none}
+.paso .tit{flex:1;min-width:0}
+.paso .tit b{display:block;font-size:19px;line-height:1.25;color:var(--marino)}
+.paso .tit small{font-weight:800;color:var(--gris);font-size:13px}
+.paso .flecha{flex:none;font-weight:900;color:var(--gris);transition:transform .2s}
+.paso[open] .flecha{transform:rotate(90deg)}
+.cuerpo{padding:0 18px 18px;border-top:1px solid var(--linea)}
+.bloque{margin-top:14px}
+.bloque>h3{margin:0 0 6px;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--fucsia);font-weight:900}
+ol.pasos{margin:0;padding-left:22px}
+ol.pasos li{margin:4px 0}
+ul.word{margin:0;padding-left:22px}
+.ruta{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;font-weight:800;font-size:15px}
+.ruta i{font-style:normal;background:var(--humo);border:1px solid var(--linea);border-radius:7px;padding:1px 8px}
+.ruta i+i::before{content:'› ';color:var(--gris)}
+code,.fx{font-family:Consolas,'Courier New',monospace;background:#F4F6FB;border:1px solid var(--linea);border-radius:6px;padding:1px 6px;font-size:.92em;word-break:break-word}
+.fml{font-weight:900;color:var(--marino);background:#fff;border:2px dashed var(--celeste);border-radius:10px;padding:8px 12px;text-align:center;margin:8px 0;font-size:18px}
+
+figure{margin:10px 0 0;background:var(--humo);border:1px solid var(--linea);border-radius:12px;padding:10px}
+figure a{display:block;overflow-x:auto}
+figure img{border-radius:6px;background:#fff;max-width:none;width:100%;min-width:560px}
+figure.chica img{min-width:0}
+figcaption{font-size:14px;color:var(--gris);font-weight:700;margin-top:6px}
+
+table.t{width:100%;border-collapse:collapse;background:#fff;font-size:15px}
+table.t th{background:var(--marino);color:#fff;text-align:left;padding:7px 9px;font-size:14px}
+table.t td{border-bottom:1px solid #E3E8F3;padding:6px 9px;vertical-align:top}
+table.t td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:800}
+.tabla{overflow-x:auto}
+
+/* comprueba */
+.comp{background:var(--humo);border-radius:12px;padding:12px}
+.campos{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.campos label{display:flex;flex-direction:column;font-weight:800;font-size:14px;color:var(--gris);gap:3px}
+.campos input{width:170px;border:2px solid var(--linea);border-radius:9px;padding:7px 9px;font-weight:800;color:var(--tinta);background:#fff}
+.campos input:focus{outline:none;border-color:var(--celeste)}
+.btn{border:0;background:var(--marino);color:#fff;font-weight:900;border-radius:10px;padding:9px 16px}
+.btn:hover{background:var(--fucsia)}
+.btn.sec{background:#fff;color:var(--marino);border:2px solid var(--linea)}
+.msgs{margin-top:8px;display:flex;flex-direction:column;gap:5px}
+.msg{border-radius:9px;padding:7px 11px;font-weight:700;font-size:15px}
+.msg.ok{background:var(--ok-s);color:var(--ok)} .msg.bad{background:var(--mal-s);color:var(--mal)} .msg.tip{background:var(--tip-s);color:var(--tip)}
+
+/* cuánto debe salir */
+details.sale{border:2px solid var(--ok);border-radius:12px;background:var(--ok-s)}
+details.sale>summary{cursor:pointer;padding:9px 12px;font-weight:900;color:var(--ok)}
+details.sale>div{padding:0 14px 12px}
+.res{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
+.res span{background:#fff;border:1px solid #BFE3CF;border-radius:10px;padding:6px 10px;font-weight:700}
+.res span b{display:block;font-size:20px;color:var(--ok);font-weight:900}
+.ojo{background:var(--tip-s);border-radius:10px;padding:8px 12px;font-size:15px;margin-top:8px}
+.ojo b{color:var(--tip)}
+
+.hecho-btn{margin-top:14px;display:flex;align-items:center;gap:10px;font-weight:800}
+.hecho-btn input{width:22px;height:22px;accent-color:var(--ok)}
+
+/* factura */
+.factura{background:#fff;border:2px solid var(--marino);border-radius:12px;padding:12px;font-size:14px;overflow-x:auto}
+.factura .cab{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.factura .ruc{border:2px solid var(--marino);border-radius:8px;padding:6px 12px;text-align:center;font-weight:900;color:var(--marino)}
+.factura table{min-width:560px}
+
+/* svg */
+.linea{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:8px;overflow-x:auto}
+.linea svg{min-width:640px;width:100%;height:auto}
+
+.pie{max-width:1100px;margin:0 auto;padding:16px;color:var(--gris);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+
+<div class="barra"><div class="in">
+  <img src="marca/certus-azul.png" alt="Certus">
+  <div class="tt"><small>Pensamiento Lógico · Tutor guiado</small>Resuelve tu AA2 y tu AA3 paso a paso</div>
+  <div class="tabs" role="tablist">
+    <button type="button" data-v="aa2" role="tab">AA2 · Chan Chan</button>
+    <button type="button" data-v="aa3" role="tab">AA3 · Andrés</button>
+  </div>
+  <a class="volver" href="pensamiento-logico.html">← Curso</a>
+</div></div>
+
+<main class="wrap">
+
+<!-- =================================================================== AA2 -->
+<section class="vista" id="v-aa2">
+  <div class="hero">
+    <div>
+      <span class="eti">Evidencia AA2 · Caso 2</span>
+      <h1>Orgullosos de nuestro Patrimonio Cultural</h1>
+      <p>Museo de Sitio de Chan Chan: meta del 120 % para diciembre de 2026, museos más visitados, demanda de mochilas y factura de Juan.</p>
+      <p>Abre cada paso en orden. En cada uno tienes <b>qué hacer</b>, una <b>captura</b> de cómo queda, un espacio para <b>comprobar</b> tu número y, si te trabas, <b>cuánto debe salir</b>.</p>
+    </div>
+    <div class="prog">
+      <div><b id="p-aa2">0</b> de <span id="t-aa2">0</span> pasos hechos</div>
+      <div class="barp"><i id="b-aa2"></i></div>
+      <small>Tu avance se guarda en este navegador.</small>
+    </div>
+  </div>
+
+  <div class="cal">
+    <a href="#aa2-a1"><div class="d">Lunes 16/11</div><div class="n">Avance 1</div><div class="q">Base de datos, P4 demanda y P1 estrategias</div><div class="k">Pasos 1 a 4</div></a>
+    <a href="#aa2-a2"><div class="d">Miércoles 18/11</div><div class="n">Avance 2</div><div class="q">P2: dato base, meta al 120 % e ingresos</div><div class="k">Pasos 5 a 7</div></a>
+    <a href="#aa2-a3"><div class="d">Lunes 23/11</div><div class="n">Avance 3</div><div class="q">P3 top 3, P5 factura e informe final</div><div class="k">Pasos 8 a 11</div></a>
+    <a href="#aa2-a3"><div class="d">Miércoles 25/11</div><div class="n">Exposición</div><div class="q">7 minutos, exponen todos</div><div class="k">Paso 11</div></a>
+  </div>
+
+  <div class="caja oro">
+    <h2>Antes de empezar: las tres reglas del caso</h2>
+    <ol class="pasos">
+      <li>Usa la columna <b>TOTAL_PAGANTES</b>. Las columnas TOTAL y TOTAL_NOPAGANTES incluyen a quienes no pagaron entrada.</li>
+      <li>Cada mes tiene <b>dos filas</b>: una de nacionales y otra de extranjeros. Para el total del mes, súmalas.</li>
+      <li>Los visitantes se redondean a <b>personas enteras</b>; los montos en soles, a <b>dos decimales</b>.</li>
+    </ol>
+  </div>
+
+  <!-- ---------------- AVANCE 1 ---------------- -->
+  <div class="avance" id="aa2-a1">
+    <header><h2>Avance 1</h2><span>Lunes 16/11 · P4 y P1</span></header>
+
+    <details class="paso" data-p="aa2-1" open>
+      <summary><span class="num"><span>1</span></span><span class="tit"><b>Descarga la base de datos oficial</b><small>Para P1, P2 y P3</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Entra a <a href="https://www.datosabiertos.gob.pe/dataset/visitas-museos" target="_blank" rel="noopener">datosabiertos.gob.pe/dataset/visitas-museos</a>.</li>
+            <li>En «Dato y Medio de Distribución», en la fila <b>Dataset - Visitas a museos (CSV)</b>, pulsa <b>Descargar</b> (marcado con el 1 en la captura).</li>
+            <li>Guarda el archivo y <b>anota la fecha de hoy</b>: va en la fuente de cada tabla y gráfico.</li>
+            <li>No lo abras todavía con doble clic: en el paso 5 aprendes a abrirlo sin que se dañen las tildes.</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-portal-datos-abiertos.webp" target="_blank"><img src="capturas/aa2-portal-datos-abiertos.webp" alt="Página Visitas a museos de la Plataforma Nacional de Datos Abiertos con el botón Descargar del CSV marcado" loading="lazy"></a>
+          <figcaption>Captura 1. Portal de Datos Abiertos (consulta del 16/11/2026). El archivo pesa unos 3 MB y tiene más de 20 000 filas.</figcaption></figure>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>En referencias: Ministerio de Cultura. (2026). <i>Visitas a museos</i> [Conjunto de datos]. Plataforma Nacional de Datos Abiertos. https://www.datosabiertos.gob.pe/dataset/visitas-museos</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Ya descargué la base y anoté la fecha</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-2">
+      <summary><span class="num"><span>2</span></span><span class="tit"><b>Halla la ecuación de la demanda y grafícala</b><small>Pregunta 4</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Escribe los dos datos como puntos <b>(Q; P)</b>: primero la cantidad, después el precio. Ojo: el enunciado da los datos en otro orden.</li>
+            <li>Calcula la pendiente: <div class="fml">m = (P₂ − P₁) ÷ (Q₂ − Q₁)</div> En una demanda sale <b>negativa</b>: si sube el precio, se venden menos.</li>
+            <li>Halla b con un punto: <span class="fx">b = P₁ − m·Q₁</span>, y escribe <b>P = mQ + b</b>. Comprueba con el otro punto.</li>
+            <li>El corte con el eje Q (P = 0) es <span class="fx">Q = −b ÷ m</span>.</li>
+            <li>En Excel arma una tabla de Q (de 0 al corte con el eje Q, incluyendo 350 y 390) y la columna P con <span class="fx">=$B$7*A12+$B$8</span>.</li>
+            <li>Selecciona la tabla: <span class="ruta"><i>Insertar</i><i>Gráfico</i><i>Dispersión con líneas rectas</i></span>. Pon título y nombre a los ejes.</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-p4-demanda.webp" target="_blank"><img src="capturas/aa2-p4-demanda.webp" alt="Hoja de Excel con los puntos, la pendiente, la ordenada, la tabla de valores y la gráfica de la demanda" loading="lazy"></a>
+          <figcaption>Captura 2. Hoja «P4 Demanda»: azul = dato, verde = resultado, a la derecha la fórmula que se escribe.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Pendiente m<input type="number" step="any" id="a2-m"></label>
+            <label>Ordenada b<input type="number" step="any" id="a2-b"></label>
+            <button class="btn" type="button" data-c="a2mb">Comprobar</button></div><div class="msgs" id="r-a2mb"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Puntos<b>(350; 180) y (390; 160)</b></span><span>Pendiente<b>m = −0.5</b></span><span>Ordenada<b>b = 355</b></span><span>Ecuación<b>P = −0.5Q + 355</b></span><span>Corte eje Q<b>Q = 710</b></span></div>
+          <p><b>Interpretación:</b> m = −0.5 → por cada mochila adicional que se quiere vender, el precio debe bajar S/ 0.50 (o: si el precio sube S/ 1, se venden 2 mochilas menos). b = 355 → a S/ 355 ya nadie compraría. Q = 710 → es la cantidad máxima que se demandaría si fueran gratis.</p>
+          <p class="ojo"><b>Errores típicos:</b> pendiente +0.5 (restas en distinto orden) o −2 (dividiste cantidad entre precio).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Los dos puntos, la fórmula de m con números y el despeje hasta P = mQ + b.</li><li>Comprobación con el segundo punto.</li><li>Tabla de valores y gráfica con título, ejes y los dos puntos marcados.</li><li>Tres líneas de interpretación: m, b y el corte con el eje Q.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 4</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-3">
+      <summary><span class="num"><span>3</span></span><span class="tit"><b>Diagnostica con los datos de Chan Chan</b><small>Pregunta 1, primera parte</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Abre la base como se explica en el paso 5 y filtra <b>NOM_MUSEO = Museo de Sitio de Chan Chan</b> y <b>ANIO = 2025</b>.</li>
+            <li>Arma una tabla de 12 meses con TOTAL_PAGANTES de nacionales, de extranjeros y su suma.</li>
+            <li>Haz un gráfico de columnas apiladas: <span class="ruta"><i>Insertar</i><i>Columna apilada</i></span>.</li>
+            <li>Escribe dos o tres hallazgos con números. Estas preguntas te guían: ¿diciembre es un mes alto o bajo? ¿Cómo están los extranjeros en diciembre frente a julio?</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-p1-diagnostico.webp" target="_blank"><img src="capturas/aa2-p1-diagnostico.webp" alt="Tabla de visitantes pagantes por mes de Chan Chan en 2025 con gráfico de columnas apiladas" loading="lazy"></a>
+          <figcaption>Captura 3. Hoja «P1 Diagnóstico» con el gráfico mensual. Diciembre está resaltado.</figcaption></figure>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Diciembre 2025<b>1 616</b></span><span>Extranjeros en dic.<b>123</b></span><span>Julio (mes más alto)<b>6 660</b></span><span>Faltan para la meta<b>323</b></span></div>
+          <p>Hallazgos esperados: diciembre es <b>el mes más bajo del año</b> (1 616 pagantes, menos de la cuarta parte de julio); en diciembre llegan solo 123 extranjeros que pagan, frente a 1 243 en julio; para llegar al 120 % faltan 323 visitantes (lo calculas exacto en el paso 6).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Gráfico mensual de Chan Chan 2025 con su fuente.</li><li>Dos o tres hallazgos con números.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo el diagnóstico</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-4">
+      <summary><span class="num"><span>4</span></span><span class="tit"><b>Diseña tres estrategias y sus banners</b><small>Pregunta 1, segunda parte</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Para cada estrategia define: <b>público</b>, <b>canal</b>, <b>acción concreta</b> y <b>meta</b> (visitantes adicionales).</li>
+            <li>Las tres metas deben sumar <b>al menos 323</b>, lo que falta para el 120 %.</li>
+            <li>Al menos una estrategia debe apuntar a <b>extranjeros</b>: la meta pide que sean el 35 % y en diciembre de 2025 fueron solo el 8 %.</li>
+            <li>Diseña un banner por estrategia (Canva o PowerPoint, 1600 × 900) con tres capas: <b>mensaje corto</b>, <b>dato verificable</b> y <b>llamado a la acción</b>.</li>
+          </ol>
+        </div>
+        <div class="bloque"><h3>Así se ve una tabla resumen bien hecha (ejemplo)</h3>
+          <div class="tabla"><table class="t">
+            <tr><th>Estrategia</th><th>Público</th><th>Canal</th><th>Meta</th></tr>
+            <tr><td>Navidad chimú: recorrido nocturno con guía</td><td>Familias de Trujillo</td><td>Facebook y TikTok del museo</td><td class="n">+130</td></tr>
+            <tr><td>Paquete Huanchaco + Chan Chan</td><td>Turistas extranjeros</td><td>Hoteles y agencias de Huanchaco</td><td class="n">+120</td></tr>
+            <tr><td>Visita de fin de año para empresas</td><td>Trabajadores de empresas de La Libertad</td><td>Correo a áreas de bienestar</td><td class="n">+80</td></tr>
+            <tr><td colspan="3"><b>Total (debe ser 323 o más)</b></td><td class="n">+330</td></tr>
+          </table></div>
+          <p class="ojo"><b>Banner débil:</b> «Visita Chan Chan. Te esperamos.» No tiene dato ni llamado concreto. <b>Banner bueno:</b> «Vive la ciudad de barro más grande de América · Patrimonio Mundial UNESCO desde 1986 · Reserva tu visita nocturna del 20 al 30 de diciembre».</p>
+        </div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Tabla resumen con fila de total.</li><li>Cada estrategia descrita en 3 o 4 líneas.</li><li>Cada banner como «Figura N» con «Fuente: elaboración propia» y el autor de las fotos si usaste alguna.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo las tres estrategias y los tres banners</label>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------------- AVANCE 2 ---------------- -->
+  <div class="avance" id="aa2-a2">
+    <header><h2>Avance 2</h2><span>Miércoles 18/11 · P2</span></header>
+
+    <details class="paso" data-p="aa2-5">
+      <summary><span class="num"><span>5</span></span><span class="tit"><b>Abre la base en Excel y saca el dato de diciembre de 2025</b><small>Pregunta 2, dato base</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Abre un Excel en blanco y ve a <span class="ruta"><i>Datos</i><i>Desde texto/CSV</i></span> y elige el archivo.</li>
+            <li>En «Origen del archivo» elige <b>1252: Europeo occidental (Windows)</b>; en «Delimitador», <b>Punto y coma</b>. Pulsa <b>Cargar</b>.</li>
+            <li>Activa el filtro: <span class="ruta"><i>Datos</i><i>Filtro</i></span>. Filtra NOM_MUSEO = <b>Museo de Sitio de Chan Chan</b>, ANIO = <b>2025</b>, COD_MES = <b>12</b>.</li>
+            <li>Quedan dos filas (nacionales y extranjeros). Suma su <b>TOTAL_PAGANTES</b>.</li>
+            <li>Otra forma, con fórmula: <span class="fx">=SUMAR.SI.CONJUNTO(R:R; E:E; "Museo de Sitio de Chan Chan"; B:B; 2025; F:F; 12)</span> (R es TOTAL_PAGANTES).</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-base-filtrada.webp" target="_blank"><img src="capturas/aa2-base-filtrada.webp" alt="Filas filtradas de Chan Chan 2025 con las dos filas de diciembre resaltadas y su suma" loading="lazy"></a>
+          <figcaption>Captura 4. Base filtrada (se ocultaron columnas para que se lea). En amarillo, las dos filas de diciembre: 1 493 + 123.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Pagantes dic. 2025<input type="number" step="1" id="a2-base"></label>
+            <button class="btn" type="button" data-c="a2base">Comprobar</button></div><div class="msgs" id="r-a2base"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Nacionales<b>1 493</b></span><span>Extranjeros<b>123</b></span><span>Dato base<b>1 616</b></span></div>
+          <p class="ojo"><b>Errores típicos:</b> 1 493 (solo nacionales), 3 013 o 2 890 (usaron TOTAL, que incluye no pagantes). La base que se consultó es la de corte 28/10/2026; si el Ministerio la actualiza, el número podría variar un poco: explica en tu informe qué fecha de descarga usaste.</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Tabla con nacionales, extranjeros y total de diciembre de 2025.</li><li>Debajo: «Fuente: Ministerio de Cultura, Visitas a museos, Plataforma Nacional de Datos Abiertos, consultado el (fecha)».</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo el dato base con su fuente</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-6">
+      <summary><span class="num"><span>6</span></span><span class="tit"><b>Proyecta al 120 % y reparte 65 % y 35 %</b><small>Pregunta 2, proyección</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Meta 2026 = 1.20 × dato base, redondeado a entero: <span class="fx">=REDONDEAR(1.2*B6;0)</span>.</li>
+            <li>Nacionales = 65 % de la meta, redondeado: <span class="fx">=REDONDEAR(0.65*B7;0)</span>.</li>
+            <li>Extranjeros = meta − nacionales: <span class="fx">=B7-B8</span>. Así la suma da exacta.</li>
+            <li>Visitantes que faltan = meta − dato base (lo usas en el paso 4).</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-p2-proyeccion.webp" target="_blank"><img src="capturas/aa2-p2-proyeccion.webp" alt="Hoja de Excel con la meta al 120 por ciento, el reparto y la tabla de ingresos" loading="lazy"></a>
+          <figcaption>Captura 5. Hoja «P2 Proyección»: columna C muestra la fórmula que se escribe en cada celda.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Meta 2026<input type="number" step="1" id="a2-tot"></label>
+            <label>Nacionales<input type="number" step="1" id="a2-nac"></label>
+            <label>Extranjeros<input type="number" step="1" id="a2-ext"></label>
+            <button class="btn" type="button" data-c="a2proy">Comprobar</button></div><div class="msgs" id="r-a2proy"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Meta dic. 2026<b>1 939</b></span><span>Nacionales (65 %)<b>1 260</b></span><span>Extranjeros (35 %)<b>679</b></span><span>Faltan<b>323</b></span></div>
+          <p>1.2 × 1 616 = 1 939.2 → 1 939. 0.65 × 1 939 = 1 260.35 → 1 260. 1 939 − 1 260 = 679.</p>
+          <p class="ojo"><b>Error típico:</b> 323 como meta (calcularon solo el 20 % de aumento).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>La operación de la meta con sus números y el redondeo.</li><li>El reparto y la suma de comprobación (1 260 + 679 = 1 939).</li><li>Un gráfico de columnas: diciembre 2025 frente a la meta 2026.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo la meta y el reparto</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-7">
+      <summary><span class="num"><span>7</span></span><span class="tit"><b>Calcula los ingresos por entradas</b><small>Pregunta 2, respuesta</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <div class="fml">Ingresos = nacionales × S/ 11 + extranjeros × S/ 15</div>
+          <ol class="pasos"><li>Arma la tabla de la parte baja de la captura 5: tipo, visitantes, tarifa e ingreso, con fila de total.</li><li>Comenta qué grupo aporta más y por qué los extranjeros pesan más en soles que en personas.</li></ol>
+        </div>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Ingreso total (S/)<input type="number" step="any" id="a2-ing"></label>
+            <button class="btn" type="button" data-c="a2ing">Comprobar</button></div><div class="msgs" id="r-a2ing"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Nacionales<b>S/ 13 860.00</b></span><span>Extranjeros<b>S/ 10 185.00</b></span><span>Total<b>S/ 24 045.00</b></span></div>
+          <p>Los extranjeros son el 35 % de los visitantes pero aportan el 42.4 % de los ingresos, porque su entrada cuesta más (S/ 15 frente a S/ 11).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Tabla de ingresos.</li><li>Recuadro de respuesta: visitantes de diciembre de 2026 (total, nacionales, extranjeros) e ingresos.</li><li>Interpretación de dos líneas.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 2</label>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------------- AVANCE 3 ---------------- -->
+  <div class="avance" id="aa2-a3">
+    <header><h2>Avance 3</h2><span>Lunes 23/11 · P3, P5 e informe · Exposición 25/11</span></header>
+
+    <details class="paso" data-p="aa2-8">
+      <summary><span class="num"><span>8</span></span><span class="tit"><b>Encuentra los tres museos más visitados en 2025</b><small>Pregunta 3, ranking y gráfico</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Haz clic dentro de la base: <span class="ruta"><i>Insertar</i><i>Tabla dinámica</i><i>Aceptar</i></span>.</li>
+            <li>Arrastra: <b>NOM_MUSEO</b> a Filas, <b>ANIO</b> a Columnas, <b>TOTAL_PAGANTES</b> a Valores.</li>
+            <li>Si aparece «Cuenta de TOTAL_PAGANTES», cámbialo: <span class="ruta"><i>Configuración de campo de valor</i><i>Suma</i></span>.</li>
+            <li>Clic derecho en un número de la columna 2025: <span class="ruta"><i>Ordenar</i><i>De mayor a menor</i></span>.</li>
+            <li>Copia los tres primeros con sus valores de 2024 y 2025 a una tabla aparte y haz un gráfico de <b>columnas agrupadas</b>.</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-p3-top3.webp" target="_blank"><img src="capturas/aa2-p3-top3.webp" alt="Tabla del top 3 de museos con valores 2024 y 2025, variación porcentual y gráfico de columnas" loading="lazy"></a>
+          <figcaption>Captura 6. Hoja «P3 Top 3»: lo que copias de la tabla dinámica, la variación y el gráfico.</figcaption></figure>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="tabla"><table class="t">
+            <tr><th>#</th><th>Museo</th><th>Región</th><th>2024</th><th>2025</th></tr>
+            <tr><td>1</td><td>Museo de Sitio Pucllana</td><td>Lima</td><td class="n">161 689</td><td class="n">166 034</td></tr>
+            <tr><td>2</td><td>Museo Tumbas Reales de Sipán</td><td>Lambayeque</td><td class="n">60 425</td><td class="n">138 971</td></tr>
+            <tr><td>3</td><td>Museo Histórico Regional de Cusco</td><td>Cusco</td><td class="n">110 117</td><td class="n">120 199</td></tr>
+          </table></div>
+          <p class="ojo"><b>Ojo:</b> si sale otro orden, revisa que sumes TOTAL_PAGANTES (no TOTAL) y que el campo esté en «Suma».</p>
+        </div></details></div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo el top 3 y el gráfico</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-9">
+      <summary><span class="num"><span>9</span></span><span class="tit"><b>Calcula la variación porcentual del más visitado</b><small>Pregunta 3, variación</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <div class="fml">VP = (valor 2025 − valor 2024) ÷ valor 2024 × 100</div>
+          <ol class="pasos"><li>Se divide siempre entre el valor <b>inicial</b> (2024).</li><li>En Excel: <span class="fx">=(D4-C4)/C4</span> con formato porcentaje y dos decimales.</li><li>Positivo = subió; negativo = bajó.</li></ol>
+        </div>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Variación en %<input type="number" step="any" id="a2-vp"></label>
+            <button class="btn" type="button" data-c="a2vp">Comprobar</button></div><div class="msgs" id="r-a2vp"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>Pucllana<b>+2.69 %</b></span></div>
+          <p>(166 034 − 161 689) ÷ 161 689 × 100 = 2.69 %. «El museo más visitado en 2025 fue el Museo de Sitio Pucllana y sus visitantes pagantes aumentaron 2.69 % respecto a 2024».</p>
+          <p class="ojo"><b>Errores típicos:</b> 2.62 % (dividieron entre 2025) o 0.0269 (falta multiplicar por 100).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Procedimiento de la tabla dinámica en 3 o 4 pasos.</li><li>Tabla del top 3, gráfico con fuente y la variación con su frase.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 3</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-10">
+      <summary><span class="num"><span>10</span></span><span class="tit"><b>Emite la factura de Juan</b><small>Pregunta 5</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Los precios del caso <b>ya incluyen IGV</b>. Para sacar el valor sin IGV divides entre 1.18; no sumes 18 % encima.</li>
+            <li>Valor unitario: <span class="fx">=REDONDEAR(C4/1.18;4)</span>. Valor de venta de cada línea: <span class="fx">=REDONDEAR(B4*C4/1.18;2)</span>.</li>
+            <li>Op. gravada = suma de los valores de venta. IGV = 18 % de la op. gravada. Total = op. gravada + IGV.</li>
+            <li>Comprueba: el total debe ser igual a lo que paga Juan (2 × 70 + 3 × 45 + 2 × 85).</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa2-p5-factura.webp" target="_blank"><img src="capturas/aa2-p5-factura.webp" alt="Hoja de cálculo de la factura con valores unitarios, valores de venta, IGV y total" loading="lazy"></a>
+          <figcaption>Captura 7. Hoja «P5 Factura»: el cálculo que respalda la factura.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Op. gravada (S/)<input type="number" step="any" id="a2-vv"></label>
+            <label>IGV (S/)<input type="number" step="any" id="a2-igv"></label>
+            <label>Importe total (S/)<input type="number" step="any" id="a2-tt"></label>
+            <button class="btn" type="button" data-c="a2fac">Comprobar</button></div><div class="msgs" id="r-a2fac"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir y un modelo de factura</summary><div>
+          <div class="res"><span>Op. gravada<b>S/ 377.12</b></span><span>IGV 18 %<b>S/ 67.88</b></span><span>Importe total<b>S/ 445.00</b></span></div>
+          <div class="factura">
+            <div class="cab">
+              <div><b>Tienda del Museo Chan Chan S.A.C.</b><br>Av. Mansiche s/n, Trujillo, La Libertad<br>Cliente: Juan Pérez Ríos · RUC 10456789012<br>Fecha: 15/12/2026 · Moneda: soles</div>
+              <div class="ruc">RUC 20601234567<br>FACTURA ELECTRÓNICA<br>F001-000123</div>
+            </div>
+            <table class="t" style="margin-top:8px">
+              <tr><th>Cant.</th><th>Unidad</th><th>Descripción</th><th>Valor unitario</th><th>Precio unitario</th><th>Valor de venta</th></tr>
+              <tr><td>2</td><td>Unidad</td><td>Polo bordado Chan Chan</td><td class="n">59.3220</td><td class="n">70.00</td><td class="n">118.64</td></tr>
+              <tr><td>3</td><td>Unidad</td><td>Gorro tejido</td><td class="n">38.1356</td><td class="n">45.00</td><td class="n">114.41</td></tr>
+              <tr><td>2</td><td>Unidad</td><td>Artesanía en cerámica</td><td class="n">72.0339</td><td class="n">85.00</td><td class="n">144.07</td></tr>
+              <tr><td colspan="5" style="text-align:right"><b>Op. gravada</b></td><td class="n">377.12</td></tr>
+              <tr><td colspan="5" style="text-align:right"><b>IGV 18 %</b></td><td class="n">67.88</td></tr>
+              <tr><td colspan="5" style="text-align:right"><b>Importe total</b></td><td class="n">445.00</td></tr>
+            </table>
+            <small>RUC, nombres y número de factura ficticios.</small>
+          </div>
+          <p class="ojo"><b>Errores típicos:</b> total S/ 525.10 (sumaron IGV a precios que ya lo tenían) o IGV S/ 80.10 (18 % del precio final).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Tabla del cálculo del valor unitario y del valor de venta.</li><li>La factura como tabla o imagen, con datos ficticios indicados.</li><li>Comprobación del total en una línea.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 5</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa2-11">
+      <summary><span class="num"><span>11</span></span><span class="tit"><b>Arma el informe y prepara la exposición</b><small>Entrega 23/11 · Exposición 25/11</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="g2">
+          <div class="bloque"><h3>Orden del informe (Word)</h3>
+            <ol class="pasos"><li>Carátula: institución, carrera, curso, «Evidencia AA2, Caso 2», integrantes, docente, NRC y fecha.</li><li>Índice automático: <span class="ruta"><i>Referencias</i><i>Tabla de contenido</i></span>.</li><li>Introducción: qué pide el caso, la meta y la fuente de datos.</li><li>P1 a P5: procedimiento, tabla o gráfico numerado con fuente y recuadro de respuesta.</li><li>Conclusiones (una por pregunta) y referencias en APA 7.</li><li>Anexo: el Excel con las fórmulas.</li></ol>
+          </div>
+          <div class="bloque"><h3>Exposición de 7 minutos</h3>
+            <div class="tabla"><table class="t">
+              <tr><th>Minuto</th><th>Qué se presenta</th></tr>
+              <tr><td>0:00–0:45</td><td>Equipo, museo y meta del 120 %</td></tr>
+              <tr><td>0:45–2:15</td><td>P1: diagnóstico, estrategias y banners</td></tr>
+              <tr><td>2:15–3:30</td><td>P2: 1 616 → 1 939 visitantes y S/ 24 045</td></tr>
+              <tr><td>3:30–4:45</td><td>P3: top 3 y variación de Pucllana</td></tr>
+              <tr><td>4:45–6:00</td><td>P4: P = −0.5Q + 355 e interpretación</td></tr>
+              <tr><td>6:00–7:00</td><td>P5: factura y conclusión</td></tr>
+            </table></div>
+          </div>
+        </div>
+        <div class="bloque"><h3>Preguntas que hará el docente</h3>
+          <ul class="word"><li>¿Por qué usaron TOTAL_PAGANTES y no TOTAL?</li><li>¿Qué significa que la pendiente sea negativa?</li><li>¿Por qué el IGV no es el 18 % de lo que pagó Juan?</li><li>¿Entre qué valor dividieron la variación porcentual?</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Informe entregado y exposición ensayada</label>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- =================================================================== AA3 -->
+<section class="vista" id="v-aa3">
+  <div class="hero">
+    <div>
+      <span class="eti">Evidencia AA3 · Caso 3</span>
+      <h1>Emprendimiento y educación financiera</h1>
+      <p>Andrés ahorra en CrediBank para abrir su óptica en Arequipa y luego pide un préstamo. Calculas su saldo, comparas tasas y hallas el último pago.</p>
+      <p>Abre cada paso en orden. En cada uno tienes <b>qué hacer</b>, una <b>captura</b> o un dibujo, un espacio para <b>comprobar</b> y <b>cuánto debe salir</b>.</p>
+    </div>
+    <div class="prog">
+      <div><b id="p-aa3">0</b> de <span id="t-aa3">0</span> pasos hechos</div>
+      <div class="barp"><i id="b-aa3"></i></div>
+      <small>Tu avance se guarda en este navegador.</small>
+    </div>
+  </div>
+
+  <div class="cal">
+    <a href="#aa3-a1"><div class="d">Lunes 30/11</div><div class="n">Avance 1</div><div class="q">P1 tasas, línea de tiempo y tres entidades</div><div class="k">Pasos 1 a 3</div></a>
+    <a href="#aa3-a2"><div class="d">Miércoles 2/12</div><div class="n">Avance 2</div><div class="q">P2 saldo y alquiler, P3 TEA, P4 tiempo</div><div class="k">Pasos 4 a 7</div></a>
+    <a href="#aa3-a3"><div class="d">Lunes 7/12</div><div class="n">Avance 3</div><div class="q">P5 préstamo e informe final</div><div class="k">Pasos 8 y 9</div></a>
+    <a href="#aa3-a3"><div class="d">Miércoles 9/12</div><div class="n">Exposición</div><div class="q">7 minutos, exponen todos</div><div class="k">Paso 9</div></a>
+  </div>
+
+  <div class="caja oro">
+    <h2>Regla de oro del caso</h2>
+    <p style="margin:0">Todas las tasas son <b>efectivas anuales</b>. Cuando el tiempo está en meses, el exponente es <b>meses ÷ 12</b>: <span class="fx">(1 + TEA)^(meses/12)</span>. <b>Nunca dividas la TEA entre 12.</b> Trabaja con todos los decimales y redondea a dos solo el resultado final.</p>
+  </div>
+
+  <!-- ---------------- AVANCE 1 ---------------- -->
+  <div class="avance" id="aa3-a1">
+    <header><h2>Avance 1</h2><span>Lunes 30/11 · P1, línea de tiempo y P4 (investigación)</span></header>
+
+    <details class="paso" data-p="aa3-1" open>
+      <summary><span class="num"><span>1</span></span><span class="tit"><b>Diferencia la TEA, la TREA y la TCEA</b><small>Pregunta 1</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Lo que tienes que saber</h3>
+          <div class="tabla"><table class="t">
+            <tr><th>Tasa</th><th>Se usa en</th><th>Qué incluye</th><th>Para qué sirve</th></tr>
+            <tr><td><b>TEA</b></td><td>Depósitos y créditos</td><td>Solo el interés, con capitalización, expresado al año</td><td>Comparar tasas de distinto periodo</td></tr>
+            <tr><td><b>TREA</b></td><td>Depósitos (ahorro, plazo fijo, CTS)</td><td>Interés menos comisiones y gastos</td><td>Saber cuánto gana realmente el ahorrista</td></tr>
+            <tr><td><b>TCEA</b></td><td>Créditos y préstamos</td><td>Interés más comisiones, seguros y gastos</td><td>Saber cuánto cuesta realmente el préstamo</td></tr>
+          </table></div>
+          <p class="ojo"><b>Idea clave:</b> si una cuenta no cobra comisiones, TREA = TEA. En un crédito, la TCEA siempre es igual o mayor que la TEA. Para ahorrar, Andrés compara TREA; para endeudarse, compara TCEA.</p>
+        </div>
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Entra a la web oficial de una entidad y busca su <b>tarifario</b>, «cartilla de información» o «fórmulas y ejemplos». Ahí están la TEA, la TREA y la TCEA de cada producto.</li>
+            <li>También sirve el reporte de tasas de la SBS (sbs.gob.pe, «Tasas de interés promedio»).</li>
+            <li>Anota para cada tasa: entidad, producto, valor, enlace y <b>fecha de consulta</b>.</li>
+          </ol>
+        </div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>La tabla comparativa.</li><li>Un ejemplo real de cada tasa con fuente y fecha.</li><li>Una conclusión: qué tasa mira Andrés para ahorrar y cuál para endeudarse.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 1</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-2">
+      <summary><span class="num"><span>2</span></span><span class="tit"><b>Dibuja la línea de tiempo del ahorro</b><small>Pregunta 2, primera parte</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos"><li>El 0 es el día en que abre la cuenta; cada marca es un mes.</li><li>Depósitos con flecha hacia abajo (entran a la cuenta); retiros hacia arriba (salen).</li><li>Marca los <b>tramos</b> entre movimientos: 4, 4, 4 y 8 meses.</li><li>Puedes hacerla en PowerPoint, en Excel con formas o a mano y escaneada.</li></ol>
+        </div>
+        <div class="bloque"><h3>Así debe quedar</h3>
+          <div class="linea">
+            <svg viewBox="0 0 760 220" role="img" aria-label="Línea de tiempo del ahorro de Andrés del mes 0 al 20">
+              <line x1="40" y1="110" x2="720" y2="110" stroke="#071767" stroke-width="3"/>
+              <g font-family="Nunito,Arial" font-size="14" fill="#55607F" text-anchor="middle">
+                <g stroke="#071767" stroke-width="2">
+                  <line x1="40" y1="103" x2="40" y2="117"/><line x1="176" y1="103" x2="176" y2="117"/><line x1="312" y1="103" x2="312" y2="117"/><line x1="448" y1="103" x2="448" y2="117"/><line x1="720" y1="103" x2="720" y2="117"/>
+                </g>
+                <text x="40" y="136">Mes 0</text><text x="176" y="136">Mes 4</text><text x="312" y="136">Mes 8</text><text x="448" y="136">Mes 12</text><text x="720" y="136">Mes 20</text>
+                <text x="108" y="100" fill="#13A8AF" font-weight="800">4 meses</text><text x="244" y="100" fill="#13A8AF" font-weight="800">4 meses</text><text x="380" y="100" fill="#13A8AF" font-weight="800">4 meses</text><text x="584" y="100" fill="#13A8AF" font-weight="800">8 meses</text>
+              </g>
+              <g stroke="#0E7A4A" stroke-width="3" fill="#0E7A4A">
+                <line x1="40" y1="150" x2="40" y2="190"/><polygon points="40,145 33,157 47,157" transform="rotate(180 40 151)"/>
+                <line x1="312" y1="150" x2="312" y2="190"/><polygon points="312,145 305,157 319,157" transform="rotate(180 312 151)"/>
+                <line x1="448" y1="150" x2="448" y2="190"/><polygon points="448,145 441,157 455,157" transform="rotate(180 448 151)"/>
+              </g>
+              <g stroke="#B0002F" stroke-width="3" fill="#B0002F">
+                <line x1="176" y1="40" x2="176" y2="80"/><polygon points="176,32 169,44 183,44"/>
+                <line x1="720" y1="40" x2="720" y2="80"/><polygon points="720,32 713,44 727,44"/>
+              </g>
+              <g font-family="Nunito,Arial" font-size="15" font-weight="900" text-anchor="middle">
+                <text x="40" y="210" fill="#0E7A4A">+10 000</text><text x="312" y="210" fill="#0E7A4A">+6 000</text><text x="448" y="210" fill="#0E7A4A">+7 000</text>
+                <text x="176" y="24" fill="#B0002F">−2 000</text><text x="720" y="24" fill="#B0002F">Retira todo: ¿S?</text>
+              </g>
+              <text x="380" y="170" font-family="Nunito,Arial" font-size="13" fill="#55607F" text-anchor="middle">TEA 4.6 % · verde = depósito · rojo = retiro</text>
+            </svg>
+          </div>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo la línea de tiempo del ahorro</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-3">
+      <summary><span class="num"><span>3</span></span><span class="tit"><b>Investiga la TREA de tres entidades en Arequipa</b><small>Pregunta 4, primera parte</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>Elige tres tipos distintos con agencias en Arequipa: un <b>banco</b>, una <b>caja municipal</b> y una <b>financiera o caja rural</b>.</li>
+            <li>En la web oficial busca el <b>depósito a plazo fijo en soles</b> y su TREA para un plazo cercano a un año.</li>
+            <li>Si puedes, confirma con el reporte de tasas de la SBS. Guarda enlace y fecha: las tasas cambian cada mes.</li>
+            <li>Arma la tabla: entidad, tipo, producto, plazo, TREA, enlace y fecha. En el paso 7 le agregas el tiempo.</li>
+          </ol>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver un ejemplo de cómo queda</summary><div>
+          <div class="tabla"><table class="t">
+            <tr><th>Entidad</th><th>Tipo</th><th>TREA plazo fijo</th><th>Fuente</th></tr>
+            <tr><td>Caja Cusco</td><td>Caja municipal</td><td class="n">7.13 %</td><td>SBS, promedio &gt; 360 días, marzo 2026</td></tr>
+            <tr><td>BBVA, Depósito a Plazo Negocios</td><td>Banco</td><td class="n">4.90 %</td><td>bbva.pe, TREA en soles</td></tr>
+            <tr><td>Mibanco</td><td>Banco</td><td class="n">4.48 %</td><td>SBS, promedio &gt; 360 días, mayo 2026</td></tr>
+          </table></div>
+          <p class="ojo"><b>Son tasas de referencia:</b> cada equipo usa las que encuentre el día que consulta. Se evalúa la fuente y el cálculo, no que coincida con este ejemplo.</p>
+        </div></details></div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo la tabla de tres entidades</label>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------------- AVANCE 2 ---------------- -->
+  <div class="avance" id="aa3-a2">
+    <header><h2>Avance 2</h2><span>Miércoles 2/12 · P2, P3 y P4</span></header>
+
+    <details class="paso" data-p="aa3-4">
+      <summary><span class="num"><span>4</span></span><span class="tit"><b>Calcula el saldo tramo por tramo hasta el mes 20</b><small>Pregunta 2, monto retirado</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <div class="fml">Saldo antes del movimiento = saldo anterior × (1 + 4.6 %)^(meses del tramo ÷ 12)</div>
+          <ol class="pasos">
+            <li>En Excel, una fila por movimiento: mes, movimiento, monto, meses del tramo, saldo antes y saldo después.</li>
+            <li>Saldo antes: <span class="fx">=F7*(1+$B$4)^(D8/12)</span>. Saldo después: <span class="fx">=E8+C8</span> (el retiro va con signo negativo).</li>
+            <li>En el mes 20 el saldo antes es lo que retira Andrés.</li>
+            <li>Comprueba llevando cada flujo al mes 20 por separado: <span class="fx">=10000*1.046^(20/12)-2000*1.046^(16/12)+6000*1.046^(12/12)+7000*1.046^(8/12)</span>.</li>
+          </ol>
+        </div>
+        <figure><a href="capturas/aa3-p2-ahorro.webp" target="_blank"><img src="capturas/aa3-p2-ahorro.webp" alt="Hoja de Excel con los tramos de la cuenta de ahorros, el monto del mes 20 y el porcentaje del alquiler" loading="lazy"></a>
+          <figcaption>Captura 1. Hoja «P2 Ahorro»: tramos, monto del mes 20, comprobación e intereses. Abajo, el alquiler (paso 5).</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Monto del mes 20 (S/)<input type="number" step="any" id="a3-s20"></label>
+            <button class="btn" type="button" data-c="a3s20">Comprobar</button></div><div class="msgs" id="r-a3s20"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="tabla"><table class="t">
+            <tr><th>Mes</th><th>Cálculo</th><th>Saldo antes</th><th>Movimiento</th><th>Saldo después</th></tr>
+            <tr><td>0</td><td>Depósito inicial</td><td class="n">—</td><td class="n">+10 000.00</td><td class="n">10 000.00</td></tr>
+            <tr><td>4</td><td>10 000 × 1.046^(4/12)</td><td class="n">10 151.04</td><td class="n">−2 000.00</td><td class="n">8 151.04</td></tr>
+            <tr><td>8</td><td>8 151.04 × 1.046^(4/12)</td><td class="n">8 274.15</td><td class="n">+6 000.00</td><td class="n">14 274.15</td></tr>
+            <tr><td>12</td><td>14 274.15 × 1.046^(4/12)</td><td class="n">14 489.75</td><td class="n">+7 000.00</td><td class="n">21 489.75</td></tr>
+            <tr><td>20</td><td>21 489.75 × 1.046^(8/12)</td><td class="n">22 143.82</td><td class="n">Retira todo</td><td class="n">0.00</td></tr>
+          </table></div>
+          <div class="res"><span>Monto retirado<b>S/ 22 143.82</b></span><span>Aportes netos<b>S/ 21 000.00</b></span><span>Intereses ganados<b>S/ 1 143.82</b></span></div>
+          <p class="ojo"><b>Errores típicos:</b> usar 4.6 % ÷ 12 como tasa mensual, usar interés simple u olvidar restar el retiro del mes 4.</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Tabla de tramos con la operación de cada uno.</li><li>Recuadro con el monto del mes 20 y los intereses ganados.</li><li>La comprobación en una línea.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Tengo el monto del mes 20</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-5">
+      <summary><span class="num"><span>5</span></span><span class="tit"><b>Investiga el alquiler y calcula el porcentaje</b><small>Pregunta 2, alquiler</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos">
+            <li>En urbania.pe o adondevivir.com busca: alquiler, local comercial, Arequipa, entre <b>20 y 60 m²</b>, primer piso.</li>
+            <li>Guarda precio mensual, distrito, área, enlace y fecha.</li>
+            <li>Pago inicial = <b>3 meses</b> (1 de adelanto + 2 de garantía).</li>
+          </ol>
+          <div class="fml">% = (alquiler mensual × 3) ÷ monto del mes 20 × 100</div>
+        </div>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Alquiler mensual (S/)<input type="number" step="any" id="a3-alq"></label>
+            <label>Tu porcentaje<input type="number" step="any" id="a3-pct"></label>
+            <button class="btn" type="button" data-c="a3pct">Comprobar</button></div><div class="msgs" id="r-a3pct"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver un ejemplo resuelto</summary><div>
+          <p>Local de 24 m² en el Cercado de Arequipa a S/ 3 485 al mes: pago inicial 3 × 3 485 = <b>S/ 10 455.00</b> → 10 455 ÷ 22 143.82 = <b>47.21 %</b> del monto retirado.</p>
+          <p>Interpretación: casi la mitad del ahorro se va solo en asegurar el local; por eso Andrés necesita el préstamo para equipar la óptica. Cada equipo obtiene un porcentaje distinto según su local.</p>
+        </div></details></div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 2</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-6">
+      <summary><span class="num"><span>6</span></span><span class="tit"><b>Despeja la TEA equivalente con un solo depósito</b><small>Pregunta 3</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <div class="fml">TEA = (S ÷ C)^(12 ÷ 20) − 1</div>
+          <ol class="pasos"><li>C = S/ 21 000 (aportes netos) y S = monto del mes 20.</li><li>En Excel: <span class="fx">=(B5/B4)^(12/20)-1</span> con formato de porcentaje.</li><li>Comprueba: 21 000 × (1 + TEA)^(20/12) debe dar el monto del mes 20.</li><li>Compárala con 4.6 % y explica la diferencia.</li></ol>
+        </div>
+        <figure><a href="capturas/aa3-p3-tea.webp" target="_blank"><img src="capturas/aa3-p3-tea.webp" alt="Hoja de Excel con el despeje de la TEA equivalente y su comprobación" loading="lazy"></a>
+          <figcaption>Captura 2. Hoja «P3 TEA equivalente».</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>TEA en %<input type="number" step="any" id="a3-tea"></label>
+            <button class="btn" type="button" data-c="a3tea">Comprobar</button></div><div class="msgs" id="r-a3tea"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="res"><span>TEA necesaria<b>3.23 %</b></span><span>Frente a CrediBank<b>1.37 puntos menos</b></span></div>
+          <p>Es menor que 4.6 % porque en un solo depósito todo el dinero gana intereses los 20 meses; en el caso real, S/ 13 000 entraron recién en los meses 8 y 12, y el retiro del mes 4 dejó de ganar intereses.</p>
+          <p class="ojo"><b>Errores típicos:</b> 9.24 % (exponente 20/12 en vez de 12/20) o 0.27 % (tasa mensual sin convertir).</p>
+        </div></details></div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 3</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-7">
+      <summary><span class="num"><span>7</span></span><span class="tit"><b>Calcula cuánto tarda en cada entidad y recomienda</b><small>Pregunta 4, segunda parte</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <div class="fml">meses = ln(S ÷ 21 000) ÷ ln(1 + TREA) × 12</div>
+          <ol class="pasos"><li>En Excel: <span class="fx">=LN($B$5/$B$4)/LN(1+C8)*12</span>. También sirve <span class="fx">=NPER(C8;0;-21000;S)*12</span>.</li><li>Agrega a tu tabla del paso 3 dos columnas: meses y diferencia frente a 20 meses.</li><li>Haz un gráfico de barras con los meses de cada entidad.</li><li>Recomienda una entidad y menciona el Fondo de Seguro de Depósitos y las condiciones de retiro anticipado.</li></ol>
+        </div>
+        <figure><a href="capturas/aa3-p4-plazo-fijo.webp" target="_blank"><img src="capturas/aa3-p4-plazo-fijo.webp" alt="Hoja de Excel con tres entidades, su TREA, el tiempo en meses y un gráfico de barras" loading="lazy"></a>
+          <figcaption>Captura 3. Hoja «P4 Plazo fijo» con tasas de referencia.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado (con tu propia TREA)</h3>
+          <div class="comp"><div class="campos">
+            <label>TREA en %<input type="number" step="any" id="a3-tr"></label>
+            <label>Tus meses<input type="number" step="any" id="a3-n"></label>
+            <button class="btn" type="button" data-c="a3n">Comprobar</button></div><div class="msgs" id="r-a3n"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir con las tasas del ejemplo</summary><div>
+          <div class="tabla"><table class="t">
+            <tr><th>Entidad</th><th>TREA</th><th>Meses</th><th>Frente a 20 meses</th></tr>
+            <tr><td>Caja Cusco</td><td class="n">7.13 %</td><td class="n">9.2</td><td>10.8 meses menos</td></tr>
+            <tr><td>BBVA</td><td class="n">4.90 %</td><td class="n">13.3</td><td>6.7 meses menos</td></tr>
+            <tr><td>Mibanco</td><td class="n">4.48 %</td><td class="n">14.5</td><td>5.5 meses menos</td></tr>
+          </table></div>
+          <p>La entidad con mayor TREA llega antes. Recomendación esperada: la de mayor TREA, siempre que esté cubierta por el Fondo de Seguro de Depósitos.</p>
+        </div></details></div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 4</label>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------------- AVANCE 3 ---------------- -->
+  <div class="avance" id="aa3-a3">
+    <header><h2>Avance 3</h2><span>Lunes 7/12 · P5 e informe · Exposición 9/12</span></header>
+
+    <details class="paso" data-p="aa3-8">
+      <summary><span class="num"><span>8</span></span><span class="tit"><b>Plantea la ecuación de valor y halla el último pago</b><small>Pregunta 5</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="bloque"><h3>Qué haces</h3>
+          <ol class="pasos"><li>Dibuja la línea de tiempo del préstamo con la <b>fecha focal en el mes 36</b>.</li><li>Lleva todo al mes 36 multiplicando por <span class="fx">1.34^(meses que faltan/12)</span>: el préstamo 36 meses, el pago 1 26, el pago 2 16, el pago 3 12. X ya está en el 36.</li><li>Iguala: deuda llevada = pagos llevados + X, y despeja X.</li><li>Comprueba trayendo todos los pagos (con X) al mes 0: debe dar S/ 22 000.</li></ol>
+          <div class="fml">22 000 × 1.34^(36/12) = 8 000 × 1.34^(26/12) + 8 000 × 1.34^(16/12) + 7 500 × 1.34^(12/12) + X</div>
+        </div>
+        <div class="linea">
+          <svg viewBox="0 0 760 220" role="img" aria-label="Línea de tiempo del préstamo de 36 meses con fecha focal en el mes 36">
+            <line x1="40" y1="110" x2="720" y2="110" stroke="#071767" stroke-width="3"/>
+            <g stroke="#071767" stroke-width="2"><line x1="40" y1="103" x2="40" y2="117"/><line x1="229" y1="103" x2="229" y2="117"/><line x1="418" y1="103" x2="418" y2="117"/><line x1="493" y1="103" x2="493" y2="117"/><line x1="720" y1="103" x2="720" y2="117"/></g>
+            <g font-family="Nunito,Arial" font-size="14" fill="#55607F" text-anchor="middle"><text x="40" y="136">Mes 0</text><text x="229" y="136">Mes 10</text><text x="418" y="136">Mes 20</text><text x="493" y="136">Mes 24</text><text x="720" y="136">Mes 36</text></g>
+            <g stroke="#0E7A4A" stroke-width="3" fill="#0E7A4A"><line x1="40" y1="40" x2="40" y2="80"/><polygon points="40,32 33,44 47,44"/></g>
+            <g stroke="#B0002F" stroke-width="3" fill="#B0002F">
+              <line x1="229" y1="150" x2="229" y2="190"/><polygon points="229,197 222,185 236,185"/>
+              <line x1="418" y1="150" x2="418" y2="190"/><polygon points="418,197 411,185 425,185"/>
+              <line x1="493" y1="150" x2="493" y2="190"/><polygon points="493,197 486,185 500,185"/>
+              <line x1="720" y1="150" x2="720" y2="190"/><polygon points="720,197 713,185 727,185"/>
+            </g>
+            <g font-family="Nunito,Arial" font-size="15" font-weight="900" text-anchor="middle">
+              <text x="40" y="24" fill="#0E7A4A">Recibe 22 000</text>
+              <text x="229" y="215" fill="#B0002F">8 000</text><text x="418" y="215" fill="#B0002F">8 000</text><text x="493" y="215" fill="#B0002F">7 500</text><text x="700" y="215" fill="#B0002F">X = ?</text>
+            </g>
+            <circle cx="720" cy="110" r="12" fill="none" stroke="#FC0045" stroke-width="3"/>
+            <text x="690" y="85" font-family="Nunito,Arial" font-size="14" font-weight="900" fill="#FC0045" text-anchor="end">Fecha focal</text>
+            <text x="300" y="80" font-family="Nunito,Arial" font-size="13" fill="#55607F" text-anchor="middle">TEA 34 % · verde = recibe · rojo = paga</text>
+          </svg>
+        </div>
+        <figure><a href="capturas/aa3-p5-prestamo.webp" target="_blank"><img src="capturas/aa3-p5-prestamo.webp" alt="Hoja de Excel con los factores al mes 36, el último pago y la comprobación" loading="lazy"></a>
+          <figcaption>Captura 4. Hoja «P5 Préstamo»: cada flujo con su factor y su valor en el mes 36.</figcaption></figure>
+        <div class="bloque"><h3>Comprueba tu resultado</h3>
+          <div class="comp"><div class="campos">
+            <label>Último pago X (S/)<input type="number" step="any" id="a3-x"></label>
+            <button class="btn" type="button" data-c="a3x">Comprobar</button></div><div class="msgs" id="r-a3x"></div></div>
+        </div>
+        <div class="bloque"><details class="sale"><summary>Ver cuánto debe salir</summary><div>
+          <div class="tabla"><table class="t">
+            <tr><th>Concepto</th><th>Mes</th><th>Meses al 36</th><th>Factor</th><th>Valor en el mes 36</th></tr>
+            <tr><td>Préstamo</td><td>0</td><td>36</td><td class="n">2.406104</td><td class="n">52 934.29</td></tr>
+            <tr><td>Pago 1</td><td>10</td><td>26</td><td class="n">1.885358</td><td class="n">15 082.86</td></tr>
+            <tr><td>Pago 2</td><td>20</td><td>16</td><td class="n">1.477315</td><td class="n">11 818.52</td></tr>
+            <tr><td>Pago 3</td><td>24</td><td>12</td><td class="n">1.340000</td><td class="n">10 050.00</td></tr>
+          </table></div>
+          <div class="res"><span>Último pago X<b>S/ 15 982.91</b></span><span>Total pagado<b>S/ 39 482.91</b></span><span>Intereses<b>S/ 17 482.91</b></span></div>
+          <p>X = 52 934.29 − 36 951.38 = 15 982.91. Con la tasa mensual equivalente TEM = 2.4689 % sale lo mismo.</p>
+          <p class="ojo"><b>Errores típicos:</b> S/ 20 613.02 (usaron 34 % ÷ 12), S/ 6 642.65 (dejaron X en el mes 0) o un número negativo (restaron los pagos sin intereses).</p>
+        </div></details></div>
+        <div class="bloque"><h3>En tu Word</h3>
+          <ul class="word"><li>Línea de tiempo con la fecha focal marcada.</li><li>Ecuación de valor con todos los factores.</li><li>Tabla, valor de X y comprobación.</li><li>Total pagado e intereses, con una línea de interpretación.</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Terminé la pregunta 5</label>
+      </div>
+    </details>
+
+    <details class="paso" data-p="aa3-9">
+      <summary><span class="num"><span>9</span></span><span class="tit"><b>Arma el informe y prepara la exposición</b><small>Entrega 7/12 · Exposición 9/12</small></span><span class="flecha">›</span></summary>
+      <div class="cuerpo">
+        <div class="g2">
+          <div class="bloque"><h3>Orden del informe (Word)</h3>
+            <ol class="pasos"><li>Carátula: institución, carrera, curso, «Evidencia AA3, Caso 3», integrantes, docente, NRC y fecha.</li><li>Índice automático.</li><li>Introducción: la situación de Andrés y qué se resuelve.</li><li>P1 a P5 con procedimiento, tabla o gráfico con fuente y recuadro de respuesta.</li><li>Conclusiones y una recomendación final para Andrés.</li><li>Referencias en APA 7 (con fecha de consulta de cada tasa) y anexo con el Excel.</li></ol>
+          </div>
+          <div class="bloque"><h3>Exposición de 7 minutos</h3>
+            <div class="tabla"><table class="t">
+              <tr><th>Minuto</th><th>Qué se presenta</th></tr>
+              <tr><td>0:00–0:45</td><td>Andrés, su meta y el equipo</td></tr>
+              <tr><td>0:45–1:45</td><td>P1: TEA, TREA y TCEA con ejemplos</td></tr>
+              <tr><td>1:45–3:15</td><td>P2: línea de tiempo, S/ 22 143.82 y alquiler</td></tr>
+              <tr><td>3:15–4:15</td><td>P3: TEA equivalente de 3.23 %</td></tr>
+              <tr><td>4:15–5:30</td><td>P4: entidades y recomendación</td></tr>
+              <tr><td>5:30–7:00</td><td>P5: ecuación de valor, X = S/ 15 982.91</td></tr>
+            </table></div>
+          </div>
+        </div>
+        <div class="bloque"><h3>Preguntas que hará el docente</h3>
+          <ul class="word"><li>¿Por qué no dividieron la TEA entre 12?</li><li>¿Por qué la TEA de la pregunta 3 es menor que 4.6 %?</li><li>¿Qué entidad recomiendan y por qué?</li><li>¿Cuánto paga Andrés en total por el préstamo y cuánto es de intereses?</li></ul>
+        </div>
+        <label class="hecho-btn"><input type="checkbox"> Informe entregado y exposición ensayada</label>
+      </div>
+    </details>
+  </div>
+</section>
+</main>
+
+<div class="pie">Elaborado por el equipo académico de CERTUS: Luis, Mirko y Eduardo · Pensamiento Lógico 2026-II · Datos de museos: Ministerio de Cultura, Plataforma Nacional de Datos Abiertos (corte 28/10/2026).</div>
+
+<script>
+(function(){
+  var LS='pl_tutor_aa2_aa3_v1', S={};
+  try{ S=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ S={}; }
+  function guardar(){ try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
+
+  /* pestañas AA2 / AA3 (por hash) */
+  function vistaDe(h){ return /^aa3/.test(h)?'aa3':'aa2'; }
+  function mostrar(){
+    var h=(location.hash||'#aa2').slice(1), v=vistaDe(h);
+    document.querySelectorAll('.vista').forEach(function(s){ s.classList.toggle('on',s.id==='v-'+v); });
+    document.querySelectorAll('.tabs button').forEach(function(b){ var on=b.dataset.v===v; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
+    var el=document.getElementById(h);
+    if(el&&el.classList.contains('avance')){ var p=el.querySelector('.paso'); if(p)p.open=true; el.scrollIntoView(); }
+    else window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.tabs button').forEach(function(b){ b.addEventListener('click',function(){ location.hash=b.dataset.v; }); });
+  window.addEventListener('hashchange',mostrar);
+
+  /* pasos hechos */
+  function contar(){
+    ['aa2','aa3'].forEach(function(v){
+      var ps=document.querySelectorAll('#v-'+v+' .paso'), n=0;
+      ps.forEach(function(p){ if(S[p.dataset.p])n++; });
+      document.getElementById('p-'+v).textContent=n;
+      document.getElementById('t-'+v).textContent=ps.length;
+      document.getElementById('b-'+v).style.width=(n/ps.length*100)+'%';
+    });
+  }
+  document.querySelectorAll('.paso').forEach(function(p){
+    var cb=p.querySelector('.hecho-btn input'), k=p.dataset.p;
+    cb.checked=!!S[k]; p.classList.toggle('hecho',!!S[k]);
+    cb.addEventListener('change',function(){ S[k]=cb.checked; p.classList.toggle('hecho',cb.checked); guardar(); contar(); });
+  });
+
+  /* comprobadores */
+  function num(id){ var v=document.getElementById(id).value; return v===''?NaN:parseFloat(v); }
+  function cerca(a,b,t){ return Math.abs(a-b)<=t; }
+  function salida(id,arr){ var el=document.getElementById('r-'+id); el.innerHTML=''; arr.forEach(function(x){ var d=document.createElement('div'); d.className='msg '+x[0]; d.textContent=x[1]; el.appendChild(d); }); }
+
+  var i3=0.046, f=function(m){ return Math.pow(1+i3,m/12); };
+  var S20=(((10000*f(4)-2000)*f(4)+6000)*f(4)+7000)*f(8);
+  var im=i3/12, malMensual=(((10000*Math.pow(1+im,4)-2000)*Math.pow(1+im,4)+6000)*Math.pow(1+im,4)+7000)*Math.pow(1+im,8);
+  var malSimple=10000*(1+i3*20/12)-2000*(1+i3*16/12)+6000*(1+i3)+7000*(1+i3*8/12);
+  var sinRetiro=((10000*f(8)+6000)*f(4)+7000)*f(8);
+  var TEA3=Math.pow(S20/21000,12/20)-1;
+  var X=22000*Math.pow(1.34,3)-(8000*Math.pow(1.34,26/12)+8000*Math.pow(1.34,16/12)+7500*1.34);
+  var tm=0.34/12, Xmal=22000*Math.pow(1+tm,36)-(8000*Math.pow(1+tm,26)+8000*Math.pow(1+tm,16)+7500*Math.pow(1+tm,12));
+
+  var C={
+    a2mb:function(){ var m=num('a2-m'), b=num('a2-b'), r=[];
+      if(isNaN(m)) return salida('a2mb',[['tip','Escribe tu pendiente.']]);
+      if(cerca(m,-0.5,1e-3)) r.push(['ok','La pendiente es correcta.']);
+      else if(cerca(m,0.5,1e-3)) r.push(['bad','El valor está bien pero el signo no: resta los precios en el mismo orden que las cantidades.']);
+      else if(cerca(Math.abs(m),2,1e-3)) r.push(['bad','Dividiste al revés: es cambio del precio entre cambio de la cantidad.']);
+      else r.push(['bad','La pendiente no es correcta. Escribe los puntos como (Q; P).']);
+      if(!isNaN(b)){ if(cerca(b,355,0.01)) r.push(['ok','b es correcta. Comprueba con el segundo punto y grafica.']); else r.push(['bad','b no es correcta: b = P₁ − m·Q₁. Cuidado con menos por menos.']); }
+      salida('a2mb',r); },
+    a2base:function(){ var a=num('a2-base');
+      if(isNaN(a)) return salida('a2base',[['tip','Escribe tu dato base.']]);
+      if(a===1616) return salida('a2base',[['ok','Correcto: nacionales más extranjeros que pagaron en diciembre de 2025.']]);
+      if(a===1493) return salida('a2base',[['bad','Ese es solo el de nacionales. Suma también la fila de extranjeros.']]);
+      if(a===3013||a===2890) return salida('a2base',[['bad','Ese valor incluye a los que no pagaron. Usa TOTAL_PAGANTES.']]);
+      if(a===123) return salida('a2base',[['bad','Ese es solo el de extranjeros. Suma también la fila de nacionales.']]);
+      salida('a2base',[['bad','No coincide. Revisa el filtro: Chan Chan, año 2025, mes 12, columna TOTAL_PAGANTES.']]); },
+    a2proy:function(){ var t=num('a2-tot'), n=num('a2-nac'), e=num('a2-ext'), r=[];
+      if(isNaN(t)) return salida('a2proy',[['tip','Empieza por la meta 2026.']]);
+      r.push(t===1939?['ok','La meta al 120 % es correcta.']:(t===323?['bad','Ese es solo el aumento. Multiplica el dato base por 1.20.']:['bad','La meta debe ser 1.20 × dato base, redondeada a entero.']));
+      if(!isNaN(n)) r.push(n===1260?['ok','Nacionales: correcto.']:['bad','Nacionales es el 65 % de la meta, redondeado.']);
+      if(!isNaN(n)&&!isNaN(e)) r.push(n+e===t?['ok','La suma coincide con la meta.']:['bad','Nacionales más extranjeros deben sumar la meta: extranjeros = meta − nacionales.']);
+      salida('a2proy',r); },
+    a2ing:function(){ var v=num('a2-ing');
+      if(isNaN(v)) return salida('a2ing',[['tip','Escribe tu ingreso total.']]);
+      if(cerca(v,24045,0.5)) return salida('a2ing',[['ok','Correcto. Ahora escribe la interpretación.']]);
+      if(cerca(v,1260*15+679*11,0.5)) return salida('a2ing',[['bad','Intercambiaste las tarifas: nacional S/ 11 y extranjero S/ 15.']]);
+      salida('a2ing',[['bad','No coincide con nacionales × 11 + extranjeros × 15. Revisa también tu reparto.']]); },
+    a2vp:function(){ var v=num('a2-vp'), ok=(166034-161689)/161689*100;
+      if(isNaN(v)) return salida('a2vp',[['tip','Escribe tu variación en %.']]);
+      if(cerca(v,ok,0.01)) return salida('a2vp',[['ok','Correcto: el museo más visitado creció. Escribe la frase de interpretación.']]);
+      if(cerca(v,(166034-161689)/166034*100,0.01)) return salida('a2vp',[['bad','Dividiste entre 2025. Se divide entre el valor inicial, 2024.']]);
+      if(cerca(v,ok/100,1e-4)) return salida('a2vp',[['tip','Está en decimal: multiplica por 100.']]);
+      if(cerca(v,-ok,0.01)) return salida('a2vp',[['bad','El signo está invertido: final menos inicial.']]);
+      salida('a2vp',[['bad','No coincide. Revisa que sea el más visitado y que uses TOTAL_PAGANTES.']]); },
+    a2fac:function(){ var a=num('a2-vv'), g=num('a2-igv'), t=num('a2-tt'), r=[];
+      if(isNaN(a)||isNaN(g)||isNaN(t)) return salida('a2fac',[['tip','Completa los tres montos.']]);
+      r.push(cerca(a,377.12,0.02)?['ok','Op. gravada correcta.']:(cerca(a,445,0.02)?['bad','Ese es el total con IGV: divide entre 1.18.']:['bad','La op. gravada es la suma de los valores de venta sin IGV.']));
+      r.push(cerca(g,67.88,0.02)?['ok','IGV correcto.']:(cerca(g,80.1,0.02)?['bad','Calculaste el 18 % del precio final. El IGV es el 18 % de la op. gravada.']:['bad','El IGV no es correcto.']));
+      r.push(cerca(t,445,0.02)?['ok','El total coincide con lo que pagó Juan.']:(cerca(t,525.1,0.05)?['bad','Sumaste IGV a precios que ya lo incluían.']:['bad','El total debe ser igual a la suma de cantidad × precio.']));
+      salida('a2fac',r); },
+    a3s20:function(){ var v=num('a3-s20');
+      if(isNaN(v)) return salida('a3s20',[['tip','Escribe tu monto.']]);
+      if(cerca(v,S20,0.06)) return salida('a3s20',[['ok','Correcto. Calcula también los intereses: monto menos S/ 21 000.']]);
+      if(cerca(v,malMensual,0.5)) return salida('a3s20',[['bad','Usaste la TEA dividida entre 12. Usa el exponente meses ÷ 12.']]);
+      if(cerca(v,malSimple,0.5)) return salida('a3s20',[['bad','Eso es interés simple. Cada tramo crece con (1 + TEA)^(meses ÷ 12).']]);
+      if(cerca(v,sinRetiro,0.5)) return salida('a3s20',[['bad','Te faltó restar el retiro del mes 4.']]);
+      if(cerca(v,21000,0.5)) return salida('a3s20',[['bad','Sumaste los aportes sin intereses.']]);
+      salida('a3s20',[['bad','No coincide. Revisa los meses de cada tramo: 4, 4, 4 y 8.']]); },
+    a3pct:function(){ var a=num('a3-alq'), p=num('a3-pct');
+      if(isNaN(a)||isNaN(p)) return salida('a3pct',[['tip','Escribe el alquiler y tu porcentaje.']]);
+      var ok=3*a/S20*100;
+      if(cerca(p,ok,0.05)) return salida('a3pct',[['ok','Bien calculado para tu local. Interprétalo: ¿qué le queda a Andrés para equipar la óptica?']]);
+      if(cerca(p,a/S20*100,0.05)) return salida('a3pct',[['bad','Usaste un solo mes. El pago inicial son 3: un adelanto y dos de garantía.']]);
+      if(cerca(p,ok/100,5e-4)) return salida('a3pct',[['tip','Está en decimal: multiplica por 100.']]);
+      salida('a3pct',[['bad','No coincide con (alquiler × 3) ÷ 22 143.82 × 100.']]); },
+    a3tea:function(){ var v=num('a3-tea');
+      if(isNaN(v)) return salida('a3tea',[['tip','Escribe tu TEA en %.']]);
+      if(cerca(v,TEA3*100,0.01)) return salida('a3tea',[['ok','Correcto. Compárala con 4.6 % y explica la diferencia.']]);
+      if(cerca(v,(Math.pow(S20/21000,20/12)-1)*100,0.02)) return salida('a3tea',[['bad','Invertiste el exponente: es 12 ÷ 20.']]);
+      if(cerca(v,(Math.pow(S20/21000,1/20)-1)*100,0.01)) return salida('a3tea',[['bad','Esa es una tasa mensual. Se pide la efectiva anual.']]);
+      if(cerca(v,TEA3,2e-4)) return salida('a3tea',[['tip','Está en decimal: multiplica por 100.']]);
+      salida('a3tea',[['bad','No coincide. Usa C = 21 000 y S = monto del mes 20.']]); },
+    a3n:function(){ var t=num('a3-tr'), n=num('a3-n');
+      if(isNaN(t)||isNaN(n)||t<=0) return salida('a3n',[['tip','Escribe la TREA y tus meses.']]);
+      var ok=Math.log(S20/21000)/Math.log(1+t/100)*12;
+      if(cerca(n,ok,0.1)) return salida('a3n',[['ok','Correcto para esa TREA. Compáralo con los 20 meses de CrediBank.']]);
+      if(cerca(n,ok/12,0.01)) return salida('a3n',[['tip','Está en años: multiplica por 12.']]);
+      salida('a3n',[['bad','No coincide. Revisa: ln(22 143.82 ÷ 21 000) ÷ ln(1 + TREA) × 12, con la TREA en decimal.']]); },
+    a3x:function(){ var v=num('a3-x');
+      if(isNaN(v)) return salida('a3x',[['tip','Escribe tu último pago.']]);
+      if(cerca(v,X,0.06)) return salida('a3x',[['ok','Correcto. Comprueba trayendo todo al mes 0 y calcula los intereses del préstamo.']]);
+      if(cerca(v,Xmal,0.5)) return salida('a3x',[['bad','Usaste 34 % ÷ 12. Usa 1.34^(meses ÷ 12).']]);
+      if(cerca(v,X/Math.pow(1.34,3),0.5)) return salida('a3x',[['bad','Ese es X en el mes 0. El último pago es en el mes 36: llévalo.']]);
+      if(v<0) return salida('a3x',[['bad','Restaste los pagos sin intereses. Lleva cada flujo a la fecha focal.']]);
+      salida('a3x',[['bad','No coincide. Revisa los meses hasta el 36: 26, 16 y 12.']]); }
+  };
+  document.querySelectorAll('[data-c]').forEach(function(b){ b.addEventListener('click',C[b.dataset.c]); });
+  document.querySelectorAll('.comp input').forEach(function(inp){ inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var b=inp.closest('.comp').querySelector('[data-c]'); if(b)b.click(); } }); });
+
+  contar(); mostrar();
+})();
+</script>
+</body>
+</html>
