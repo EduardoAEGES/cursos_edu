@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tutor AA2 y AA3</title>
-<meta name="version" content="2026-11-16-2">
+<meta name="version" content="2026-11-16-3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Cinzel:wght@600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap">
@@ -247,6 +247,32 @@ body.t-aa3 table.t th{background:#14402A}
 body.t-aa3 .bloque>h3{color:#B3261E}
 body.t-aa3 .linea{border:2px solid #E3D7BC}
 
+/* alumno, nube, puerta y panel */
+.alumno{order:10;flex-basis:100%;display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:13px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.18);padding-top:5px}
+.alumno:has(#quien:empty){display:none}
+.alumno b{font-size:14px}
+.alumno button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:8px;padding:3px 8px;font-weight:800;font-size:12px}
+.nube{font-weight:800;border-radius:99px;padding:2px 9px;font-size:12px;background:rgba(255,255,255,.15)}
+.nube.ok{background:#DFF5E8;color:#0E7A4A} .nube.mal{background:#FFE8EE;color:#B0002F} .nube:empty{display:none}
+body.cerrado main,body.cerrado .alumno{visibility:hidden}
+.puerta{position:fixed;inset:0;z-index:50;background:rgba(7,23,103,.72);display:flex;align-items:center;justify-content:center;padding:16px}
+.puerta-c{background:#fff;color:#0B1B3F;border-radius:18px;padding:22px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:10px;max-height:92vh;overflow:auto}
+.puerta-c.ancho{max-width:960px}
+.puerta-c img{height:34px;width:auto;align-self:flex-start}
+.puerta-c h2{margin:0;color:#071767;font-size:22px}
+.puerta-c p{margin:0;color:#55607F;font-size:15px}
+.puerta-c label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:14px;color:#55607F}
+.puerta-c input{border:2px solid #D5DDEF;border-radius:10px;padding:10px 12px;font-weight:800;font-size:17px;color:#0B1B3F}
+.puerta-c input:focus{outline:none;border-color:#20D3FF}
+.puerta-c .btn{background:#071767;padding:12px}
+.puerta-c .btn:hover{background:#FC0045}
+.puerta-c .btn.sec,body.t-aa2 .puerta-c .btn.sec,body.t-aa3 .puerta-c .btn.sec{background:#fff;color:#071767;border:2px solid #D5DDEF}
+.puerta-c .btn,body.t-aa2 .puerta-c .btn,body.t-aa3 .puerta-c .btn{background:#071767}
+.f-err{color:#B0002F;font-weight:800;font-size:14px;min-height:1em}
+.panel-cab{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.panel-cab h2{flex:1}
+.puerta-c table.t th{background:#071767}
+.docente{background:none;border:0;color:inherit;text-decoration:underline;font-weight:700;font-size:13px;margin-bottom:6px}
 .pie{max-width:1100px;margin:0 auto;padding:16px;color:var(--gris);font-size:13px;text-align:center}
 </style>
 </head>
@@ -259,6 +285,7 @@ body.t-aa3 .linea{border:2px solid #E3D7BC}
     <button type="button" data-v="aa2" role="tab">AA2 · Chan Chan</button>
     <button type="button" data-v="aa3" role="tab">AA3 · Andrés</button>
   </div>
+  <span class="alumno"><b id="quien"></b><span id="nube" class="nube"></span><button type="button" id="cambiar">Cambiar</button></span>
   <a class="volver" href="pensamiento-logico.html">← Curso</a>
 </div></div>
 
@@ -963,20 +990,87 @@ body.t-aa3 .linea{border:2px solid #E3D7BC}
 </section>
 </main>
 
-<div class="pie">Elaborado por el equipo académico de CERTUS: Luis, Mirko y Eduardo · Pensamiento Lógico 2026-II · Datos de museos: Ministerio de Cultura, Plataforma Nacional de Datos Abiertos (corte 28/10/2026).</div>
+<div class="puerta" id="puerta" hidden>
+  <form class="puerta-c" id="f-puerta" novalidate>
+    <img src="marca/certus-azul.png" alt="Certus">
+    <h2>Antes de empezar, identifícate</h2>
+    <p>Tu avance se guarda con tu nombre para que el docente lo vea y para que lo recuperes desde cualquier equipo. Escríbelo igual cada vez que entres.</p>
+    <label>Apellidos (los dos)<input id="f-ape" autocomplete="family-name" placeholder="Ej.: QUISPE MAMANI" required></label>
+    <label>Nombres<input id="f-nom" autocomplete="given-name" placeholder="Ej.: Ana Lucía" required></label>
+    <div class="f-err" id="f-err" role="alert"></div>
+    <button class="btn" type="submit">Entrar al tutor</button>
+  </form>
+</div>
+
+<div class="puerta" id="panel" hidden>
+  <div class="puerta-c ancho">
+    <div class="panel-cab"><h2>Avance de los alumnos</h2><span id="panel-n"></span>
+      <button class="btn sec" type="button" id="panel-csv">Descargar Excel (CSV)</button><button class="btn" type="button" id="panel-cerrar">Cerrar</button></div>
+    <div class="tabla"><table class="t"><thead><tr><th>N°</th><th>Alumno</th><th>AA2 pasos</th><th>AA2 comprobados</th><th>AA3 pasos</th><th>AA3 comprobados</th><th>Última vez</th></tr></thead><tbody id="panel-filas"></tbody></table></div>
+  </div>
+</div>
+
+<div class="pie"><button type="button" id="ver-docente" class="docente">Avance de los alumnos (docente)</button><br>Elaborado por el equipo académico de CERTUS: Luis, Mirko y Eduardo · Pensamiento Lógico 2026-II · Datos de museos: Ministerio de Cultura, Plataforma Nacional de Datos Abiertos (corte 28/10/2026).</div>
 
 <script>
 (function(){
-  var LS='pl_tutor_aa2_aa3_v1', S={};
-  try{ S=JSON.parse(localStorage.getItem(LS)||'{}')||{}; }catch(e){ S={}; }
-  function guardar(){ try{ localStorage.setItem(LS,JSON.stringify(S)); }catch(e){} }
+  /* ---------- alumno y avance (este equipo + Supabase) ----------
+     Se guarda en la tabla sala_asientos (la misma del aula en vivo):
+     una fila por alumno en la sala SALA; el avance va en «estado». */
+  var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
+  var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
+  var TABLA=SUPA+'/rest/v1/sala_asientos', SALA='PL-TUTOR-AA2-AA3', CLAVE='46069339';
+  var LS='pl_tutor_aa2_aa3_v2', LSA='pl_tutor_alumno';
+  function hdr(x){ var o={apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json'}; if(x)for(var k in x)o[k]=x[k]; return o; }
+  function nuevo(){ return {p:{},r:{},ok:{}}; }
+  function leeJSON(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+  function grabaJSON(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  var A=leeJSON(LSA), S=leeJSON(LS)||nuevo();
+  S.p=S.p||{}; S.r=S.r||{}; S.ok=S.ok||{};
+  /* avance de la versión anterior (solo pasos marcados) */
+  var viejo=leeJSON('pl_tutor_aa2_aa3_v1');
+  if(viejo){ for(var kv in viejo){ if(viejo[kv]) S.p[kv]=true; } try{ localStorage.removeItem('pl_tutor_aa2_aa3_v1'); }catch(e){} }
+
+  function limpia(t){ return String(t||'').replace(/\s+/g,' ').trim(); }
+  function claveAlumno(a){ return (limpia(a.apellidos)+', '+limpia(a.nombres)).toUpperCase(); }
+  function estadoNube(t){ var e=document.getElementById('nube'); if(!e)return; e.textContent=t[1]; e.className='nube '+t[0]; }
+
+  function resumen(){
+    var r={}; ['aa2','aa3'].forEach(function(v){
+      var ps=document.querySelectorAll('#v-'+v+' .paso'), n=0;
+      ps.forEach(function(p){ if(S.p[p.dataset.p])n++; });
+      r[v]=n+'/'+ps.length;
+    });
+    return r;
+  }
+  var tNube=null;
+  function subir(){
+    if(!A) return;
+    var est={ apellidos:A.apellidos, nombres:A.nombres, p:S.p, r:S.r, ok:S.ok, resumen:resumen(), pagina:'pl-aa2-aa3-tutor' };
+    estadoNube(['va','Guardando…']);
+    fetch(TABLA+'?on_conflict=sala,alumno',{ method:'POST', headers:hdr({Prefer:'resolution=merge-duplicates,return=minimal'}),
+      body:JSON.stringify([{ sala:SALA, alumno:claveAlumno(A), caso:'tutor', estado:est, actualizado:new Date().toISOString() }]) })
+      .then(function(r){ if(!r.ok) throw r.status; estadoNube(['ok','✓ Guardado en la nube']); })
+      .catch(function(){ estadoNube(['mal','Sin conexión: guardado en este equipo']); });
+  }
+  function guardar(){ grabaJSON(LS,S); clearTimeout(tNube); tNube=setTimeout(subir,1200); }
+  function bajar(){
+    return fetch(TABLA+'?select=estado,actualizado&sala=eq.'+encodeURIComponent(SALA)+'&alumno=eq.'+encodeURIComponent(claveAlumno(A))+'&limit=1',{headers:hdr()})
+      .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+      .then(function(rows){
+        if(rows&&rows.length&&rows[0].estado){
+          var e=rows[0].estado; S={p:e.p||{},r:e.r||{},ok:e.ok||{}}; grabaJSON(LS,S); estadoNube(['ok','✓ Avance recuperado de la nube']);
+        } else { subir(); }
+      })
+      .catch(function(){ estadoNube(['mal','Sin conexión: guardado en este equipo']); });
+  }
 
   /* pestañas AA2 / AA3 (por hash) */
   function vistaDe(h){ return /^aa3/.test(h)?'aa3':'aa2'; }
   function mostrar(){
     var h=(location.hash||'#aa2').slice(1), v=vistaDe(h);
     document.querySelectorAll('.vista').forEach(function(s){ s.classList.toggle('on',s.id==='v-'+v); });
-    document.body.className='t-'+v;
+    document.body.classList.toggle('t-aa2',v==='aa2'); document.body.classList.toggle('t-aa3',v==='aa3');
     document.querySelectorAll('.tabs button').forEach(function(b){ var on=b.dataset.v===v; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
     var el=document.getElementById(h);
     if(el&&el.classList.contains('avance')){ var p=el.querySelector('.paso'); if(p)p.open=true; el.scrollIntoView(); }
@@ -989,7 +1083,7 @@ body.t-aa3 .linea{border:2px solid #E3D7BC}
   function contar(){
     ['aa2','aa3'].forEach(function(v){
       var ps=document.querySelectorAll('#v-'+v+' .paso'), n=0;
-      ps.forEach(function(p){ if(S[p.dataset.p])n++; });
+      ps.forEach(function(p){ if(S.p[p.dataset.p])n++; });
       document.getElementById('p-'+v).textContent=n;
       document.getElementById('t-'+v).textContent=ps.length;
       document.getElementById('b-'+v).style.width=(n/ps.length*100)+'%';
@@ -997,9 +1091,16 @@ body.t-aa3 .linea{border:2px solid #E3D7BC}
   }
   document.querySelectorAll('.paso').forEach(function(p){
     var cb=p.querySelector('.hecho-btn input'), k=p.dataset.p;
-    cb.checked=!!S[k]; p.classList.toggle('hecho',!!S[k]);
-    cb.addEventListener('change',function(){ S[k]=cb.checked; p.classList.toggle('hecho',cb.checked); guardar(); contar(); });
+    cb.addEventListener('change',function(){ S.p[k]=cb.checked; p.classList.toggle('hecho',cb.checked); guardar(); contar(); });
   });
+  /* pone en pantalla lo guardado: pasos, números escritos y comprobaciones */
+  function pintar(){
+    document.querySelectorAll('.paso').forEach(function(p){ var on=!!S.p[p.dataset.p]; p.querySelector('.hecho-btn input').checked=on; p.classList.toggle('hecho',on); });
+    document.querySelectorAll('.comp input').forEach(function(inp){ inp.value=(S.r[inp.id]!=null)?S.r[inp.id]:''; });
+    document.querySelectorAll('.msgs').forEach(function(m){ m.innerHTML=''; });
+    Object.keys(S.ok).forEach(function(c){ if(S.ok[c]){ var el=document.getElementById('r-'+c); if(el) el.innerHTML='<div class="msg ok">✓ Ya lo comprobaste: estaba correcto.</div>'; } });
+    contar();
+  }
 
   /* comprobadores */
   function num(id){ var v=document.getElementById(id).value; return v===''?NaN:parseFloat(v); }
@@ -1091,10 +1192,65 @@ body.t-aa3 .linea{border:2px solid #E3D7BC}
       if(v<0) return salida('a3x',[['bad','Restaste los pagos sin intereses. Lleva cada flujo a la fecha focal.']]);
       salida('a3x',[['bad','No coincide. Revisa los meses hasta el 36: 26, 16 y 12.']]); }
   };
-  document.querySelectorAll('[data-c]').forEach(function(b){ b.addEventListener('click',C[b.dataset.c]); });
+  document.querySelectorAll('[data-c]').forEach(function(b){ b.addEventListener('click',function(){
+    var c=b.dataset.c; C[c]();
+    b.closest('.comp').querySelectorAll('input').forEach(function(inp){ S.r[inp.id]=inp.value; });
+    var ms=document.querySelectorAll('#r-'+c+' .msg');
+    S.ok[c]=ms.length>0 && !document.querySelector('#r-'+c+' .msg.bad, #r-'+c+' .msg.tip');
+    guardar();
+  }); });
   document.querySelectorAll('.comp input').forEach(function(inp){ inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ var b=inp.closest('.comp').querySelector('[data-c]'); if(b)b.click(); } }); });
 
-  contar(); mostrar();
+  /* ---------- puerta: nombres y apellidos obligatorios ---------- */
+  var puerta=document.getElementById('puerta'), fa=document.getElementById('f-ape'), fn=document.getElementById('f-nom'), fe=document.getElementById('f-err');
+  function quien(){ document.getElementById('quien').textContent=A?(limpia(A.nombres)+' '+limpia(A.apellidos)):''; }
+  function abrirPuerta(){ puerta.hidden=false; document.body.classList.add('cerrado'); fa.value=A?A.apellidos:''; fn.value=A?A.nombres:''; fe.textContent=''; setTimeout(function(){ fa.focus(); },50); }
+  function valido(t){ t=limpia(t); return t.length>=2 && /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ' .-]+$/.test(t) && /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ]{2}/.test(t); }
+  document.getElementById('f-puerta').addEventListener('submit',function(e){
+    e.preventDefault();
+    var ap=limpia(fa.value), no=limpia(fn.value);
+    if(!valido(ap)||ap.split(' ').length<2){ fe.textContent='Escribe tus dos apellidos (solo letras).'; fa.focus(); return; }
+    if(!valido(no)){ fe.textContent='Escribe tu nombre o nombres (solo letras).'; fn.focus(); return; }
+    var otro=!A || claveAlumno(A)!==claveAlumno({apellidos:ap,nombres:no});
+    A={apellidos:ap.toUpperCase(), nombres:no.replace(/\S+/g,function(w){ return w.charAt(0).toUpperCase()+w.slice(1).toLowerCase(); })};
+    grabaJSON(LSA,A);
+    if(otro){ S=nuevo(); grabaJSON(LS,S); }
+    puerta.hidden=true; document.body.classList.remove('cerrado'); quien();
+    estadoNube(['va','Buscando tu avance…']);
+    bajar().then(pintar);
+    pintar();
+  });
+  document.getElementById('cambiar').addEventListener('click',abrirPuerta);
+
+  /* ---------- panel del docente ---------- */
+  var panel=document.getElementById('panel'), filas=[];
+  function fecha(t){ var d=new Date(t); return d.toLocaleDateString('es-PE')+' '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'}); }
+  function cuentaOk(e,pre){ return Object.keys(e.ok||{}).filter(function(k){ return e.ok[k] && k.indexOf(pre)===0; }).length; }
+  document.getElementById('ver-docente').addEventListener('click',function(){
+    var c=prompt('Clave del docente');
+    if(c===null) return;
+    if(c.trim()!==CLAVE){ alert('Clave incorrecta'); return; }
+    panel.hidden=false;
+    var tb=document.getElementById('panel-filas'); tb.innerHTML='<tr><td colspan="7">Cargando…</td></tr>';
+    fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(SALA)+'&order=alumno.asc&limit=2000',{headers:hdr()})
+      .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+      .then(function(rows){
+        filas=rows.map(function(x){ var e=x.estado||{}, rs=e.resumen||{};
+          return {alumno:x.alumno, aa2:rs.aa2||'0/11', ok2:cuentaOk(e,'a2')+'/6', aa3:rs.aa3||'0/9', ok3:cuentaOk(e,'a3')+'/6', act:fecha(x.actualizado)}; });
+        document.getElementById('panel-n').textContent=filas.length+' alumnos';
+        tb.innerHTML=filas.length?filas.map(function(f,i){ return '<tr><td>'+(i+1)+'</td><td>'+f.alumno.replace(/</g,'&lt;')+'</td><td class="n">'+f.aa2+'</td><td class="n">'+f.ok2+'</td><td class="n">'+f.aa3+'</td><td class="n">'+f.ok3+'</td><td>'+f.act+'</td></tr>'; }).join(''):'<tr><td colspan="7">Todavía nadie ha entrado.</td></tr>';
+      })
+      .catch(function(){ tb.innerHTML='<tr><td colspan="7">No se pudo leer Supabase. Revisa la conexión.</td></tr>'; });
+  });
+  document.getElementById('panel-cerrar').addEventListener('click',function(){ panel.hidden=true; });
+  document.getElementById('panel-csv').addEventListener('click',function(){
+    var t='N°;Alumno;AA2 pasos;AA2 comprobados;AA3 pasos;AA3 comprobados;Última actualización\n'+filas.map(function(f,i){ return [i+1,f.alumno,f.aa2,f.ok2,f.aa3,f.ok3,f.act].map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(';'); }).join('\n');
+    var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+t],{type:'text/csv;charset=utf-8'})); a.download='avance-tutor-aa2-aa3.csv'; document.body.appendChild(a); a.click(); a.remove();
+  });
+
+  mostrar();
+  if(A){ quien(); pintar(); estadoNube(['va','Buscando tu avance…']); bajar().then(pintar); }
+  else abrirPuerta();
 })();
 </script>
 </body>
