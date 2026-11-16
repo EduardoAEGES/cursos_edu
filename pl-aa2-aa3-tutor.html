@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tutor AA2 y AA3</title>
-<meta name="version" content="2026-11-16-3">
+<meta name="version" content="2026-11-16-4">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Cinzel:wght@600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap">
@@ -272,7 +272,49 @@ body.cerrado main,body.cerrado .alumno{visibility:hidden}
 .panel-cab{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .panel-cab h2{flex:1}
 .puerta-c table.t th{background:#071767}
-.docente{background:none;border:0;color:inherit;text-decoration:underline;font-weight:700;font-size:13px;margin-bottom:6px}
+.lnk{background:none;border:0;color:#55607F;text-decoration:underline;font-weight:800;font-size:14px;padding:4px}
+body.modo-master main,body.modo-master .barra,body.modo-master .pie{display:none}
+body.modo-master{background:#EEF1F8}
+.master{min-height:100vh;background:#EEF1F8;color:#0B1B3F;font-family:'Nunito',sans-serif}
+.m-cab{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#071767;color:#fff;padding:10px 18px;border-bottom:4px solid #FC0045}
+.m-cab img{height:28px;width:auto}
+.m-tt{flex:1;min-width:180px;font-weight:900;font-size:18px;line-height:1.2}
+.m-tt small{display:block;font-size:12px;opacity:.8;letter-spacing:.06em;text-transform:uppercase}
+.m-vivo{color:#7CF0B0;font-weight:900;font-size:13px}
+.m-cab .btn,body.t-aa2 .m-cab .btn,body.t-aa3 .m-cab .btn{background:#FC0045;color:#fff;border:0}
+.m-cab .btn.sec,body.t-aa2 .m-cab .btn.sec,body.t-aa3 .m-cab .btn.sec{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.4)}
+.m-wrap{max-width:1300px;margin:0 auto;padding:16px}
+.m-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:800px){.m-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.m-kpis div{background:#fff;border:1px solid #D5DDEF;border-radius:14px;padding:12px 14px;border-top:5px solid #20D3FF}
+.m-kpis b{display:block;font-size:30px;color:#071767;line-height:1.1}
+.m-kpis span{font-weight:700;color:#55607F;font-size:14px}
+.m-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;margin-top:14px;align-items:start}
+@media (max-width:1000px){.m-grid{grid-template-columns:minmax(0,1fr)}}
+.m-caja{background:#fff;border:1px solid #D5DDEF;border-radius:14px;padding:12px}
+.m-caja h3{margin:0 0 8px;color:#071767}
+.m-caja h4{margin:10px 0 6px;color:#FC0045;font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.m-fil{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.m-fil input,.m-fil select{border:2px solid #D5DDEF;border-radius:9px;padding:7px 10px;font-weight:700;font-family:inherit;font-size:15px}
+.m-fil input{flex:1;min-width:160px}
+.m-upd{color:#55607F;font-size:13px;font-weight:700}
+.master table.t th,body.t-aa2 .master table.t th,body.t-aa3 .master table.t th{background:#071767}
+.m-t td{vertical-align:middle}
+.mbc{min-width:130px}
+.mb{height:9px;background:#E4E9F5;border-radius:99px;overflow:hidden;display:inline-block;width:65%;vertical-align:middle}
+.mb i{display:block;height:100%;background:linear-gradient(90deg,#13A8AF,#0E7A4A)}
+.mbc small,.ps small{font-weight:900;margin-left:6px;color:#071767}
+.pto{color:#0E7A4A;font-size:12px;font-weight:800}
+.ver{border:1px solid #D5DDEF;background:#fff;border-radius:8px;padding:4px 10px;font-weight:800;color:#071767;white-space:nowrap}
+tr.abierta td,tr.det td{background:#F4F7FF}
+.dt{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.dt>div{display:flex;flex-wrap:wrap;gap:5px}
+.pc,.cc{border-radius:99px;padding:2px 9px;background:#E9ECF3;color:#55607F;font-weight:800}
+.pc.si,.cc.si{background:#DFF5E8;color:#0E7A4A}
+.cc.no{background:#FFE8EE;color:#B0002F}
+.ps{display:grid;grid-template-columns:minmax(0,1fr) 90px 28px;gap:8px;align-items:center;font-size:13px;font-weight:700;margin:4px 0}
+.ps .mb{width:100%}
+
 .pie{max-width:1100px;margin:0 auto;padding:16px;color:var(--gris);font-size:13px;text-align:center}
 </style>
 </head>
@@ -999,18 +1041,53 @@ body.cerrado main,body.cerrado .alumno{visibility:hidden}
     <label>Nombres<input id="f-nom" autocomplete="given-name" placeholder="Tu nombre o nombres" required></label>
     <div class="f-err" id="f-err" role="alert"></div>
     <button class="btn" type="submit">Entrar al tutor</button>
+    <button type="button" class="lnk" id="a-master">Soy docente: entrar como master</button>
+  </form>
+  <form class="puerta-c" id="f-master" novalidate hidden>
+    <img src="marca/certus-azul.png" alt="Certus">
+    <h2>Modo master</h2>
+    <p>Monitoreo del avance de todos los alumnos en el tutor AA2 y AA3.</p>
+    <label>DNI del docente<input id="m-dni" inputmode="numeric" maxlength="8" autocomplete="off" required></label>
+    <div class="f-err" id="m-err" role="alert"></div>
+    <button class="btn" type="submit">Entrar al monitoreo</button>
+    <button type="button" class="lnk" id="a-alumno">Volver: soy alumno</button>
   </form>
 </div>
 
-<div class="puerta" id="panel" hidden>
-  <div class="puerta-c ancho">
-    <div class="panel-cab"><h2>Avance de los alumnos</h2><span id="panel-n"></span>
-      <button class="btn sec" type="button" id="panel-csv">Descargar Excel (CSV)</button><button class="btn" type="button" id="panel-cerrar">Cerrar</button></div>
-    <div class="tabla"><table class="t"><thead><tr><th>N°</th><th>Alumno</th><th>AA2 pasos</th><th>AA2 comprobados</th><th>AA3 pasos</th><th>AA3 comprobados</th><th>Última vez</th></tr></thead><tbody id="panel-filas"></tbody></table></div>
+<section class="master" id="master" hidden>
+  <div class="m-cab">
+    <img src="marca/certus-blanco.png" alt="Certus">
+    <div class="m-tt"><small>Modo master · Pensamiento Lógico</small>Monitoreo del tutor AA2 y AA3</div>
+    <span class="m-vivo" id="m-vivo">● En vivo</span>
+    <button type="button" class="btn sec" id="m-ref">Actualizar</button>
+    <button type="button" class="btn sec" id="m-csv">Descargar Excel (CSV)</button>
+    <button type="button" class="btn" id="m-salir">Salir</button>
   </div>
-</div>
+  <div class="m-wrap">
+    <div class="m-kpis">
+      <div><b id="k-n">0</b><span>alumnos registrados</span></div>
+      <div><b id="k-act">0</b><span>activos en los últimos 15 min</span></div>
+      <div><b id="k-aa2">0 %</b><span>avance promedio AA2</span></div>
+      <div><b id="k-aa3">0 %</b><span>avance promedio AA3</span></div>
+    </div>
+    <div class="m-grid">
+      <div class="m-caja">
+        <div class="m-fil">
+          <input type="search" id="m-bus" placeholder="Buscar alumno">
+          <select id="m-ord"><option value="nom">Orden: apellidos</option><option value="rec">Orden: más reciente</option><option value="a2">Orden: más avance AA2</option><option value="a3">Orden: más avance AA3</option><option value="men">Orden: menos avance</option></select>
+          <span class="m-upd" id="m-upd"></span>
+        </div>
+        <div class="tabla"><table class="t m-t"><thead><tr><th>N°</th><th>Alumno</th><th>AA2</th><th>AA3</th><th>Comprobados</th><th>Última vez</th><th></th></tr></thead><tbody id="m-filas"></tbody></table></div>
+      </div>
+      <div class="m-caja">
+        <h3>¿Cuántos terminaron cada paso?</h3>
+        <div id="m-pasos"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="pie"><button type="button" id="ver-docente" class="docente">Avance de los alumnos (docente)</button><br>Elaborado por el equipo académico de CERTUS: Luis, Mirko y Eduardo · Pensamiento Lógico 2026-II · Datos de museos: Ministerio de Cultura, Plataforma Nacional de Datos Abiertos (corte 28/10/2026).</div>
+<div class="pie">Elaborado por el equipo académico de CERTUS: Luis, Mirko y Eduardo · Pensamiento Lógico 2026-II · Datos de museos: Ministerio de Cultura, Plataforma Nacional de Datos Abiertos (corte 28/10/2026).</div>
 
 <script>
 (function(){
@@ -1222,34 +1299,109 @@ body.cerrado main,body.cerrado .alumno{visibility:hidden}
   });
   document.getElementById('cambiar').addEventListener('click',abrirPuerta);
 
-  /* ---------- panel del docente ---------- */
-  var panel=document.getElementById('panel'), filas=[];
+  /* ---------- modo master: monitoreo de todos los alumnos ---------- */
+  var MASTER='46069339', LSM='pl_tutor_master', fm=document.getElementById('f-master'), fp=document.getElementById('f-puerta');
+  var master=document.getElementById('master'), filas=[], tVivo=null, abierto={};
+  var PASOS=[].map.call(document.querySelectorAll('.paso'),function(p){ return {k:p.dataset.p, v:p.dataset.p.slice(0,3), t:p.querySelector('.tit b').textContent}; });
+  var NOMC={a2mb:'P4 pendiente y b',a2base:'P2 dato base',a2proy:'P2 meta y reparto',a2ing:'P2 ingresos',a2vp:'P3 variación',a2fac:'P5 factura',
+            a3s20:'P2 monto mes 20',a3pct:'P2 alquiler',a3tea:'P3 TEA',a3n:'P4 tiempo',a3x:'P5 último pago'};
+  /* campos de cada comprobación, para mostrar lo que escribió el alumno */
+  var CAMPOS={}; Object.keys(NOMC).forEach(function(c){ var b=document.querySelector('[data-c="'+c+'"]'); CAMPOS[c]=b?[].map.call(b.closest('.comp').querySelectorAll('input'),function(i){ return i.id; }):[]; });
+  function escH(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function fecha(t){ var d=new Date(t); return d.toLocaleDateString('es-PE')+' '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'}); }
-  function cuentaOk(e,pre){ return Object.keys(e.ok||{}).filter(function(k){ return e.ok[k] && k.indexOf(pre)===0; }).length; }
-  document.getElementById('ver-docente').addEventListener('click',function(){
-    var c=prompt('Clave del docente');
-    if(c===null) return;
-    if(c.trim()!==CLAVE){ alert('Clave incorrecta'); return; }
-    panel.hidden=false;
-    var tb=document.getElementById('panel-filas'); tb.innerHTML='<tr><td colspan="7">Cargando…</td></tr>';
-    fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(SALA)+'&order=alumno.asc&limit=2000',{headers:hdr()})
+  function hace(t){ var m=Math.round((Date.now()-new Date(t))/60000); if(m<1)return 'ahora'; if(m<60)return 'hace '+m+' min'; var h=Math.round(m/60); if(h<24)return 'hace '+h+' h'; return fecha(t); }
+  function cuenta(e,v){ var n=0; PASOS.forEach(function(x){ if(x.v===v && e.p && e.p[x.k]) n++; }); return n; }
+  function totalDe(v){ return PASOS.filter(function(x){ return x.v===v; }).length; }
+  function barra(n,t){ var pc=t?Math.round(n/t*100):0; return '<div class="mb"><i style="width:'+pc+'%"></i></div><small>'+n+'/'+t+'</small>'; }
+  function okDe(e){ return Object.keys(NOMC).filter(function(k){ return e.ok && e.ok[k]; }).length; }
+  function entrarMaster(){
+    puerta.hidden=true; master.hidden=false; document.body.classList.add('modo-master'); document.body.classList.remove('cerrado');
+    window.scrollTo(0,0); cargar(); clearInterval(tVivo); tVivo=setInterval(cargar,30000);
+  }
+  function salirMaster(){
+    try{ localStorage.removeItem(LSM); }catch(e){}
+    clearInterval(tVivo); master.hidden=true; document.body.classList.remove('modo-master');
+    fm.hidden=true; fp.hidden=false;
+    if(A){ puerta.hidden=true; quien(); pintar(); } else abrirPuerta();
+  }
+  function cargar(){
+    document.getElementById('m-upd').textContent='Actualizando…';
+    fetch(TABLA+'?select=alumno,estado,actualizado&sala=eq.'+encodeURIComponent(SALA)+'&limit=5000',{headers:hdr()})
       .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
       .then(function(rows){
-        filas=rows.map(function(x){ var e=x.estado||{}, rs=e.resumen||{};
-          return {alumno:x.alumno, aa2:rs.aa2||'0/11', ok2:cuentaOk(e,'a2')+'/6', aa3:rs.aa3||'0/9', ok3:cuentaOk(e,'a3')+'/6', act:fecha(x.actualizado)}; });
-        document.getElementById('panel-n').textContent=filas.length+' alumnos';
-        tb.innerHTML=filas.length?filas.map(function(f,i){ return '<tr><td>'+(i+1)+'</td><td>'+f.alumno.replace(/</g,'&lt;')+'</td><td class="n">'+f.aa2+'</td><td class="n">'+f.ok2+'</td><td class="n">'+f.aa3+'</td><td class="n">'+f.ok3+'</td><td>'+f.act+'</td></tr>'; }).join(''):'<tr><td colspan="7">Todavía nadie ha entrado.</td></tr>';
+        filas=rows.map(function(x){ var e=x.estado||{}; return {alumno:x.alumno, e:e, a2:cuenta(e,'aa2'), a3:cuenta(e,'aa3'), ok:okDe(e), t:x.actualizado}; });
+        document.getElementById('m-upd').textContent='Actualizado '+new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · se refresca cada 30 s';
+        pintarMaster();
       })
-      .catch(function(){ tb.innerHTML='<tr><td colspan="7">No se pudo leer Supabase. Revisa la conexión.</td></tr>'; });
-  });
-  document.getElementById('panel-cerrar').addEventListener('click',function(){ panel.hidden=true; });
-  document.getElementById('panel-csv').addEventListener('click',function(){
-    var t='N°;Alumno;AA2 pasos;AA2 comprobados;AA3 pasos;AA3 comprobados;Última actualización\n'+filas.map(function(f,i){ return [i+1,f.alumno,f.aa2,f.ok2,f.aa3,f.ok3,f.act].map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(';'); }).join('\n');
+      .catch(function(){ document.getElementById('m-upd').textContent='No se pudo leer Supabase. Reintento en 30 s.'; });
+  }
+  function pintarMaster(){
+    var T2=totalDe('aa2'), T3=totalDe('aa3'), n=filas.length, TC=Object.keys(NOMC).length;
+    document.getElementById('k-n').textContent=n;
+    document.getElementById('k-act').textContent=filas.filter(function(f){ return Date.now()-new Date(f.t)<15*60000; }).length;
+    document.getElementById('k-aa2').textContent=(n?Math.round(filas.reduce(function(a,f){return a+f.a2;},0)/(n*T2)*100):0)+' %';
+    document.getElementById('k-aa3').textContent=(n?Math.round(filas.reduce(function(a,f){return a+f.a3;},0)/(n*T3)*100):0)+' %';
+    var q=document.getElementById('m-bus').value.trim().toUpperCase(), o=document.getElementById('m-ord').value;
+    var v=filas.filter(function(f){ return !q || f.alumno.indexOf(q)>=0; });
+    v.sort(function(a,b){
+      if(o==='rec') return new Date(b.t)-new Date(a.t);
+      if(o==='a2') return b.a2-a.a2 || a.alumno.localeCompare(b.alumno);
+      if(o==='a3') return b.a3-a.a3 || a.alumno.localeCompare(b.alumno);
+      if(o==='men') return (a.a2+a.a3)-(b.a2+b.a3) || a.alumno.localeCompare(b.alumno);
+      return a.alumno.localeCompare(b.alumno);
+    });
+    var tb=document.getElementById('m-filas');
+    tb.innerHTML=v.length?v.map(function(f,i){
+      var act=Date.now()-new Date(f.t)<15*60000, ab=!!abierto[f.alumno];
+      var h='<tr class="'+(ab?'abierta':'')+'"><td>'+(i+1)+'</td><td><b>'+escH(f.alumno)+'</b>'+(act?' <span class="pto" title="Activo en los últimos 15 min">● activo</span>':'')+'</td><td class="mbc">'+barra(f.a2,T2)+'</td><td class="mbc">'+barra(f.a3,T3)+'</td><td class="n">'+f.ok+'/'+TC+'</td><td>'+hace(f.t)+'</td><td><button type="button" class="ver" data-a="'+escH(f.alumno)+'">'+(ab?'Ocultar':'Ver detalle')+'</button></td></tr>';
+      if(ab){
+        var e=f.e;
+        var chips=PASOS.map(function(x){ return '<span class="pc '+(e.p&&e.p[x.k]?'si':'')+'" title="'+escH(x.t)+'">'+x.v.toUpperCase()+' · '+x.k.split('-')[1]+'</span>'; }).join('');
+        var cs=Object.keys(NOMC).map(function(c){
+          var vals=CAMPOS[c].map(function(id){ return e.r&&e.r[id]; }).filter(function(x){ return x!=null && x!==''; });
+          var cl=(e.ok&&e.ok[c])?'si':(vals.length?'no':'');
+          return '<span class="cc '+cl+'">'+NOMC[c]+(vals.length?': <b>'+escH(vals.join(' · '))+'</b>':'')+'</span>';
+        }).join('');
+        h+='<tr class="det"><td></td><td colspan="6"><div class="dt"><b>Pasos marcados como hechos</b><div>'+chips+'</div><b>Comprobaciones (verde = correcta · rojo = intentó y no le salió · gris = no lo intentó)</b><div>'+cs+'</div></div></td></tr>';
+      }
+      return h;
+    }).join(''):'<tr><td colspan="7">'+(n?'Nadie coincide con la búsqueda.':'Todavía ningún alumno ha entrado.')+'</td></tr>';
+    tb.querySelectorAll('.ver').forEach(function(b){ b.addEventListener('click',function(){ var k=b.dataset.a; abierto[k]=!abierto[k]; pintarMaster(); }); });
+    document.getElementById('m-pasos').innerHTML=['aa2','aa3'].map(function(vv){
+      return '<h4>'+(vv==='aa2'?'AA2 · Chan Chan':'AA3 · Andrés')+'</h4>'+PASOS.filter(function(x){ return x.v===vv; }).map(function(x){
+        var c=filas.filter(function(f){ return f.e.p&&f.e.p[x.k]; }).length, pc=n?Math.round(c/n*100):0;
+        return '<div class="ps"><span>'+x.k.split('-')[1]+'. '+escH(x.t)+'</span><div class="mb"><i style="width:'+pc+'%"></i></div><small>'+c+'</small></div>';
+      }).join('');
+    }).join('');
+  }
+  document.getElementById('m-bus').addEventListener('input',pintarMaster);
+  document.getElementById('m-ord').addEventListener('change',pintarMaster);
+  document.getElementById('m-ref').addEventListener('click',cargar);
+  document.getElementById('m-salir').addEventListener('click',salirMaster);
+  document.getElementById('m-csv').addEventListener('click',function(){
+    var cols=['N°','Alumno','AA2 pasos','AA3 pasos','Comprobados correctos'].concat(PASOS.map(function(x){ return x.v.toUpperCase()+' paso '+x.k.split('-')[1]; })).concat(['Última actualización']);
+    var t=cols.join(';')+'\n'+filas.slice().sort(function(a,b){ return a.alumno.localeCompare(b.alumno); }).map(function(f,i){
+      return [i+1,f.alumno,f.a2+'/'+totalDe('aa2'),f.a3+'/'+totalDe('aa3'),f.ok].concat(PASOS.map(function(x){ return f.e.p&&f.e.p[x.k]?'Sí':''; })).concat([fecha(f.t)])
+        .map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(';'); }).join('\n');
     var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+t],{type:'text/csv;charset=utf-8'})); a.download='avance-tutor-aa2-aa3.csv'; document.body.appendChild(a); a.click(); a.remove();
   });
+  document.getElementById('a-master').addEventListener('click',function(){ fp.hidden=true; fm.hidden=false; document.getElementById('m-err').textContent=''; setTimeout(function(){ document.getElementById('m-dni').focus(); },50); });
+  document.getElementById('a-alumno').addEventListener('click',function(){ fm.hidden=true; fp.hidden=false; });
+  fm.addEventListener('submit',function(e){
+    e.preventDefault();
+    var d=document.getElementById('m-dni').value.replace(/\D/g,'');
+    if(d!==MASTER){ document.getElementById('m-err').textContent='DNI de docente incorrecto.'; return; }
+    document.getElementById('m-dni').value='';
+    try{ localStorage.setItem(LSM,'1'); }catch(er){}
+    entrarMaster();
+  });
+
 
   mostrar();
-  if(A){ quien(); pintar(); estadoNube(['va','Buscando tu avance…']); bajar().then(pintar); }
+  var esMaster=false; try{ esMaster=localStorage.getItem(LSM)==='1'; }catch(e){}
+  if(/[?&]master\b/.test(location.search) && !esMaster){ abrirPuerta(); document.getElementById('a-master').click(); }
+  else if(esMaster) entrarMaster();
+  else if(A){ quien(); pintar(); estadoNube(['va','Buscando tu avance…']); bajar().then(pintar); }
   else abrirPuerta();
 })();
 </script>
