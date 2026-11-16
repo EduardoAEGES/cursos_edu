@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tutor AA2 y AA3</title>
-<meta name="version" content="2026-11-16-1">
+<meta name="version" content="2026-11-16-2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Cinzel:wght@600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,800&display=swap">
 <style>
 /* ============================================================
    Tutor guiado AA2 (Chan Chan) y AA3 (Andrés) · Pensamiento Lógico · Certus
@@ -152,10 +152,105 @@ details.sale>div{padding:0 14px 12px}
 .linea{background:#fff;border:1px solid var(--linea);border-radius:12px;padding:8px;overflow-x:auto}
 .linea svg{min-width:640px;width:100%;height:auto}
 
+
+/* =================== TEMAS =================== */
+/* ---- AA2: museo chimú (barro, terracota, mar de Huanchaco, grecas) ---- */
+body.t-aa2{--marino:#4A2414;--fucsia:#B5562B;--celeste:#2F7A7A;--aqua:#2F7A7A;--fondo:#EFE3CF;--humo:#F7EEDF;--linea:#DCC7A6;--gris:#7A5A44;--tinta:#2E1A10;
+  background:#EFE3CF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M0 40h20v-20h20v20h-10v-10h-0' fill='none' stroke='%23D9C4A1' stroke-width='2' opacity='.5'/%3E%3C/svg%3E");}
+body.t-aa2 h1,body.t-aa2 .avance>header h2,body.t-aa2 .paso .tit b,body.t-aa2 .cal .n,body.t-aa2 .caja h2{font-family:'Cinzel',Georgia,serif;letter-spacing:.02em}
+.greca{height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22'%3E%3Crect width='44' height='22' fill='%234A2414'/%3E%3Cpath d='M2 19V3h18v12h-10V9h4' fill='none' stroke='%23E2B97F' stroke-width='3'/%3E%3Cpath d='M24 3v16h18V7h-10v6h4' fill='none' stroke='%23E2B97F' stroke-width='3'/%3E%3C/svg%3E") repeat-x;border-radius:4px}
+body.t-aa2 .hero{background:linear-gradient(160deg,#6B3A22,#4A2414);color:#F7EEDF;border:0;position:relative;overflow:hidden;padding-top:34px;padding-bottom:34px}
+body.t-aa2 .hero::before,body.t-aa2 .hero::after{content:'';position:absolute;left:0;right:0;height:14px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M1 13V1h12v8H7V5' fill='none' stroke='%23E2B97F' stroke-width='2'/%3E%3Cpath d='M15 1v12h12V5h-6v4' fill='none' stroke='%23E2B97F' stroke-width='2'/%3E%3C/svg%3E") repeat-x}
+body.t-aa2 .hero::before{top:8px} body.t-aa2 .hero::after{bottom:8px}
+body.t-aa2 .hero h1{color:#F3D9A9} body.t-aa2 .hero p{color:#EBD8BC}
+body.t-aa2 .hero .eti{background:#2F7A7A}
+body.t-aa2 .prog{background:rgba(255,248,235,.1);border:1px solid rgba(226,185,127,.5);color:#F7EEDF}
+body.t-aa2 .prog b{color:#F3D9A9} body.t-aa2 .prog small{color:#EBD8BC}
+body.t-aa2 .barp{background:rgba(255,255,255,.18)} body.t-aa2 .barp i{background:linear-gradient(90deg,#E2B97F,#2F7A7A)}
+body.t-aa2 .cal a{background:#FFFBF4;border-color:#DCC7A6;border-top:6px solid #B5562B;border-radius:4px 4px 12px 12px}
+body.t-aa2 .cal a::before{content:attr(data-sala);display:block;font-family:'Cinzel',serif;font-weight:800;font-size:12px;color:#2F7A7A;letter-spacing:.12em}
+body.t-aa2 .caja{background:#FFFBF4} body.t-aa2 .oro{border-left-color:#2F7A7A;background:#EAF3F1}
+body.t-aa2 .avance>header{border-bottom:0;padding-bottom:0;display:block}
+body.t-aa2 .avance>header .placa{display:inline-flex;align-items:baseline;gap:12px;flex-wrap:wrap;background:#4A2414;color:#F3D9A9;padding:8px 18px;border-radius:6px 6px 0 0}
+body.t-aa2 .avance>header h2{color:#F3D9A9} body.t-aa2 .avance>header span{color:#E2B97F}
+body.t-aa2 .avance>header .greca{border-radius:0 4px 4px 4px}
+body.t-aa2 .paso{background:#FFFBF4;border-color:#DCC7A6;border-radius:6px}
+body.t-aa2 .paso .num{border-radius:4px;background:#B5562B;box-shadow:inset 0 0 0 3px #E2B97F;font-family:'Cinzel',serif}
+body.t-aa2 .paso.hecho .num{background:#2F7A7A}
+body.t-aa2 .paso .tit small::before{content:'Vitrina · ';color:#B5562B}
+body.t-aa2 figure{background:#3A2216;border:0;padding:14px 14px 0;border-radius:4px;box-shadow:0 10px 24px rgba(74,36,20,.25)}
+body.t-aa2 figure img{border:6px solid #F7EEDF;border-radius:0}
+body.t-aa2 figcaption{background:#F7EEDF;color:#4A2414;margin:12px -14px 0;padding:8px 14px;border-top:3px solid #B5562B;font-family:Georgia,serif;font-style:italic}
+body.t-aa2 details.sale{border-color:#2F7A7A;background:#EAF3F1;border-radius:4px}
+body.t-aa2 details.sale>summary{color:#1F5A5A}
+body.t-aa2 .res span b{color:#1F5A5A}
+body.t-aa2 .comp{background:#F3E6D0}
+body.t-aa2 .btn{background:#4A2414} body.t-aa2 .btn:hover{background:#B5562B}
+body.t-aa2 table.t th{background:#4A2414}
+body.t-aa2 .bloque>h3{color:#B5562B}
+
+/* ---- AA3: Navidad bancaria (pino, rojo, dorado, tarjeta, vouchers) ---- */
+body.t-aa3{--marino:#14402A;--fucsia:#B3261E;--celeste:#C9A227;--aqua:#1E7A45;--fondo:#F6F0E2;--humo:#FBF6EA;--linea:#E3D7BC;--gris:#5E6B5F;--tinta:#1F2A22;
+  background:#F6F0E2 radial-gradient(circle,rgba(201,162,39,.18) 1.5px,transparent 2px) 0 0/34px 34px;}
+body.t-aa3 h1,body.t-aa3 .avance>header h2,body.t-aa3 .paso .tit b,body.t-aa3 .cal .n,body.t-aa3 .caja h2{font-family:'Fraunces',Georgia,serif}
+.luces{height:24px;background:
+  radial-gradient(circle at 12px 15px,#E8B931 5px,transparent 6px) 0 0/96px 24px,
+  radial-gradient(circle at 36px 15px,#C8312A 5px,transparent 6px) 0 0/96px 24px,
+  radial-gradient(circle at 60px 15px,#2E8B57 5px,transparent 6px) 0 0/96px 24px,
+  radial-gradient(circle at 84px 15px,#3B82C4 5px,transparent 6px) 0 0/96px 24px,
+  linear-gradient(transparent 7px,#2B3D31 7px 9px,transparent 9px) 0 0/100% 24px}
+body.t-aa3 .hero{background:linear-gradient(150deg,#1E5631,#0F3A20);color:#FBF4E6;border:0;position:relative;overflow:hidden}
+body.t-aa3 .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.5) 1.5px,transparent 2px) 0 0/46px 46px,radial-gradient(circle,rgba(255,255,255,.3) 1px,transparent 1.6px) 23px 23px/46px 46px}
+body.t-aa3 .hero>*{position:relative;z-index:1}
+body.t-aa3 .hero h1{color:#F3E2A6} body.t-aa3 .hero p{color:#E6EEDF}
+body.t-aa3 .hero .eti{background:#B3261E}
+/* la tarjeta del banco */
+.tarjeta{display:none}
+body.t-aa3 #v-aa3 .tarjeta{display:block;aspect-ratio:1.586;border-radius:16px;padding:16px 18px;color:#FBF4E6;background:linear-gradient(135deg,#B3261E 0%,#7E1712 60%,#5A0F0B 100%);box-shadow:0 14px 30px rgba(0,0,0,.35);position:relative;overflow:hidden;font-family:'Nunito',sans-serif}
+.tarjeta::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}
+.tarjeta .bn{font-family:'Fraunces',serif;font-weight:800;font-size:20px;letter-spacing:.02em}
+.tarjeta .bn small{display:block;font-family:'Nunito';font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+.tarjeta .chip{width:44px;height:32px;border-radius:7px;margin:12px 0 8px;background:linear-gradient(135deg,#F3E2A6,#C9A227);box-shadow:inset 0 0 0 2px rgba(0,0,0,.15)}
+.tarjeta .nro{font-family:Consolas,monospace;font-size:17px;letter-spacing:.14em}
+.tarjeta .tit{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px;font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.tarjeta .tit b{display:block;font-size:15px;letter-spacing:.04em}
+.tarjeta .sello{position:absolute;right:16px;top:14px;font-size:26px}
+body.t-aa3 .prog{color:#1F2A22;background:#FBF6EA;margin-top:12px;border:2px dashed #C9A227}
+body.t-aa3 .prog b{color:#B3261E}
+body.t-aa3 .barp i{background:linear-gradient(90deg,#1E7A45,#C9A227,#B3261E)}
+body.t-aa3 .cal a{background:#FFFDF8;border:2px solid #E3D7BC;position:relative;border-radius:10px 10px 10px 30px}
+body.t-aa3 .cal a::after{content:'';position:absolute;top:10px;right:12px;width:12px;height:12px;border-radius:50%;border:3px solid #C9A227}
+body.t-aa3 .cal .d{color:#B3261E}
+body.t-aa3 .caja{background:#FFFDF8} body.t-aa3 .oro{border-left-color:#C9A227;background:#FBF0CF}
+body.t-aa3 .avance>header{border-bottom:0;display:block;padding:0}
+body.t-aa3 .avance>header .placa{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;background:#14402A;color:#FBF4E6;padding:10px 18px;border-radius:12px 12px 0 0}
+body.t-aa3 .avance>header h2{color:#F3E2A6} body.t-aa3 .avance>header span{color:#F8C9C4}
+body.t-aa3 .avance>header .placa::after{content:'';flex:1;min-width:20px;height:14px;align-self:center;background:repeating-linear-gradient(90deg,#B3261E 0 14px,#FBF4E6 14px 28px);border-radius:3px;opacity:.85}
+body.t-aa3 .paso{background:#FFFDF8;border-color:#E3D7BC}
+body.t-aa3 .paso .num{background:radial-gradient(circle at 35% 30%,#E85A50,#B3261E 60%,#7E1712);position:relative;margin-top:6px;box-shadow:0 3px 6px rgba(0,0,0,.2)}
+body.t-aa3 .paso .num::before{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:12px;height:8px;border-radius:2px;background:#C9A227}
+body.t-aa3 .paso.hecho .num{background:radial-gradient(circle at 35% 30%,#4FB37A,#1E7A45 60%,#0F3A20)}
+body.t-aa3 .paso .tit small::before{content:'Movimiento · ';color:#B3261E}
+body.t-aa3 figure{background:#FFFDF8;border:2px solid #E3D7BC;border-top:8px solid #14402A}
+body.t-aa3 figcaption::before{content:'CrediBank · Estado de cuenta · ';color:#14402A;font-weight:900}
+/* voucher */
+body.t-aa3 details.sale{background:#FFFDF8;border:0;border-radius:0;position:relative;box-shadow:0 4px 12px rgba(0,0,0,.08);
+  -webkit-mask:radial-gradient(circle 7px at 50% 0,transparent 98%,#000) 0 0/18px 51% repeat-x,radial-gradient(circle 7px at 50% 100%,transparent 98%,#000) 0 100%/18px 51% repeat-x;
+  mask:radial-gradient(circle 7px at 50% 0,transparent 98%,#000) 0 0/18px 51% repeat-x,radial-gradient(circle 7px at 50% 100%,transparent 98%,#000) 0 100%/18px 51% repeat-x;padding:8px 0}
+body.t-aa3 details.sale>summary{color:#14402A;font-family:Consolas,monospace;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px dashed #E3D7BC}
+body.t-aa3 details.sale>summary::before{content:'🧾 '}
+body.t-aa3 .res span{border:1px dashed #C9A227;background:#FBF6EA;font-family:Consolas,monospace;font-size:14px}
+body.t-aa3 .res span b{color:#B3261E;font-family:'Nunito'}
+body.t-aa3 .comp{background:#EEF4EC;border:1px solid #CFE0CB}
+body.t-aa3 .btn{background:#14402A} body.t-aa3 .btn:hover{background:#B3261E}
+body.t-aa3 table.t th{background:#14402A}
+body.t-aa3 .bloque>h3{color:#B3261E}
+body.t-aa3 .linea{border:2px solid #E3D7BC}
+
 .pie{max-width:1100px;margin:0 auto;padding:16px;color:var(--gris);font-size:13px;text-align:center}
 </style>
 </head>
-<body>
+<body class="t-aa2">
 
 <div class="barra"><div class="in">
   <img src="marca/certus-azul.png" alt="Certus">
@@ -173,7 +268,7 @@ details.sale>div{padding:0 14px 12px}
 <section class="vista" id="v-aa2">
   <div class="hero">
     <div>
-      <span class="eti">Evidencia AA2 · Caso 2</span>
+      <span class="eti">Museo de Sitio de Chan Chan · Evidencia AA2</span>
       <h1>Orgullosos de nuestro Patrimonio Cultural</h1>
       <p>Museo de Sitio de Chan Chan: meta del 120 % para diciembre de 2026, museos más visitados, demanda de mochilas y factura de Juan.</p>
       <p>Abre cada paso en orden. En cada uno tienes <b>qué hacer</b>, una <b>captura</b> de cómo queda, un espacio para <b>comprobar</b> tu número y, si te trabas, <b>cuánto debe salir</b>.</p>
@@ -186,14 +281,14 @@ details.sale>div{padding:0 14px 12px}
   </div>
 
   <div class="cal">
-    <a href="#aa2-a1"><div class="d">Lunes 16/11</div><div class="n">Avance 1</div><div class="q">Base de datos, P4 demanda y P1 estrategias</div><div class="k">Pasos 1 a 4</div></a>
-    <a href="#aa2-a2"><div class="d">Miércoles 18/11</div><div class="n">Avance 2</div><div class="q">P2: dato base, meta al 120 % e ingresos</div><div class="k">Pasos 5 a 7</div></a>
-    <a href="#aa2-a3"><div class="d">Lunes 23/11</div><div class="n">Avance 3</div><div class="q">P3 top 3, P5 factura e informe final</div><div class="k">Pasos 8 a 11</div></a>
-    <a href="#aa2-a3"><div class="d">Miércoles 25/11</div><div class="n">Exposición</div><div class="q">7 minutos, exponen todos</div><div class="k">Paso 11</div></a>
+    <a href="#aa2-a1" data-sala="SALA 1"><div class="d">Lunes 16/11</div><div class="n">Avance 1</div><div class="q">Base de datos, P4 demanda y P1 estrategias</div><div class="k">Pasos 1 a 4</div></a>
+    <a href="#aa2-a2" data-sala="SALA 2"><div class="d">Miércoles 18/11</div><div class="n">Avance 2</div><div class="q">P2: dato base, meta al 120 % e ingresos</div><div class="k">Pasos 5 a 7</div></a>
+    <a href="#aa2-a3" data-sala="SALA 3"><div class="d">Lunes 23/11</div><div class="n">Avance 3</div><div class="q">P3 top 3, P5 factura e informe final</div><div class="k">Pasos 8 a 11</div></a>
+    <a href="#aa2-a3" data-sala="AUDITORIO"><div class="d">Miércoles 25/11</div><div class="n">Exposición</div><div class="q">7 minutos, exponen todos</div><div class="k">Paso 11</div></a>
   </div>
 
   <div class="caja oro">
-    <h2>Antes de empezar: las tres reglas del caso</h2>
+    <h2>Reglas de la visita</h2>
     <ol class="pasos">
       <li>Usa la columna <b>TOTAL_PAGANTES</b>. Las columnas TOTAL y TOTAL_NOPAGANTES incluyen a quienes no pagaron entrada.</li>
       <li>Cada mes tiene <b>dos filas</b>: una de nacionales y otra de extranjeros. Para el total del mes, súmalas.</li>
@@ -203,7 +298,7 @@ details.sale>div{padding:0 14px 12px}
 
   <!-- ---------------- AVANCE 1 ---------------- -->
   <div class="avance" id="aa2-a1">
-    <header><h2>Avance 1</h2><span>Lunes 16/11 · P4 y P1</span></header>
+    <header><div class="placa"><h2>Sala 1 · Avance 1</h2><span>Lunes 16/11 · P4 y P1</span></div><div class="greca"></div></header>
 
     <details class="paso" data-p="aa2-1" open>
       <summary><span class="num"><span>1</span></span><span class="tit"><b>Descarga la base de datos oficial</b><small>Para P1, P2 y P3</small></span><span class="flecha">›</span></summary>
@@ -313,7 +408,7 @@ details.sale>div{padding:0 14px 12px}
 
   <!-- ---------------- AVANCE 2 ---------------- -->
   <div class="avance" id="aa2-a2">
-    <header><h2>Avance 2</h2><span>Miércoles 18/11 · P2</span></header>
+    <header><div class="placa"><h2>Sala 2 · Avance 2</h2><span>Miércoles 18/11 · P2</span></div><div class="greca"></div></header>
 
     <details class="paso" data-p="aa2-5">
       <summary><span class="num"><span>5</span></span><span class="tit"><b>Abre la base en Excel y saca el dato de diciembre de 2025</b><small>Pregunta 2, dato base</small></span><span class="flecha">›</span></summary>
@@ -403,7 +498,7 @@ details.sale>div{padding:0 14px 12px}
 
   <!-- ---------------- AVANCE 3 ---------------- -->
   <div class="avance" id="aa2-a3">
-    <header><h2>Avance 3</h2><span>Lunes 23/11 · P3, P5 e informe · Exposición 25/11</span></header>
+    <header><div class="placa"><h2>Sala 3 · Avance 3</h2><span>Lunes 23/11 · P3, P5 e informe · Exposición 25/11</span></div><div class="greca"></div></header>
 
     <details class="paso" data-p="aa2-8">
       <summary><span class="num"><span>8</span></span><span class="tit"><b>Encuentra los tres museos más visitados en 2025</b><small>Pregunta 3, ranking y gráfico</small></span><span class="flecha">›</span></summary>
@@ -533,17 +628,27 @@ details.sale>div{padding:0 14px 12px}
 
 <!-- =================================================================== AA3 -->
 <section class="vista" id="v-aa3">
+  <div class="luces" aria-hidden="true"></div>
   <div class="hero">
     <div>
-      <span class="eti">Evidencia AA3 · Caso 3</span>
+      <span class="eti">CrediBank · Campaña navideña · Evidencia AA3</span>
       <h1>Emprendimiento y educación financiera</h1>
       <p>Andrés ahorra en CrediBank para abrir su óptica en Arequipa y luego pide un préstamo. Calculas su saldo, comparas tasas y hallas el último pago.</p>
       <p>Abre cada paso en orden. En cada uno tienes <b>qué hacer</b>, una <b>captura</b> o un dibujo, un espacio para <b>comprobar</b> y <b>cuánto debe salir</b>.</p>
+    </div>
+    <div>
+    <div class="tarjeta" aria-hidden="true">
+      <span class="sello">🎄</span>
+      <div class="bn"><small>Cuenta de ahorros</small>CrediBank</div>
+      <div class="chip"></div>
+      <div class="nro">4600 2026 1225 0020</div>
+      <div class="tit"><div>Titular<b>Andrés · Óptica Arequipa</b></div><div>TEA<b>4.6 %</b></div></div>
     </div>
     <div class="prog">
       <div><b id="p-aa3">0</b> de <span id="t-aa3">0</span> pasos hechos</div>
       <div class="barp"><i id="b-aa3"></i></div>
       <small>Tu avance se guarda en este navegador.</small>
+    </div>
     </div>
   </div>
 
@@ -555,13 +660,13 @@ details.sale>div{padding:0 14px 12px}
   </div>
 
   <div class="caja oro">
-    <h2>Regla de oro del caso</h2>
+    <h2>Regla de oro de CrediBank</h2>
     <p style="margin:0">Todas las tasas son <b>efectivas anuales</b>. Cuando el tiempo está en meses, el exponente es <b>meses ÷ 12</b>: <span class="fx">(1 + TEA)^(meses/12)</span>. <b>Nunca dividas la TEA entre 12.</b> Trabaja con todos los decimales y redondea a dos solo el resultado final.</p>
   </div>
 
   <!-- ---------------- AVANCE 1 ---------------- -->
   <div class="avance" id="aa3-a1">
-    <header><h2>Avance 1</h2><span>Lunes 30/11 · P1, línea de tiempo y P4 (investigación)</span></header>
+    <header><div class="placa"><h2>Regalo 1 · Avance 1</h2><span>Lunes 30/11 · P1, línea de tiempo y P4</span></div></header>
 
     <details class="paso" data-p="aa3-1" open>
       <summary><span class="num"><span>1</span></span><span class="tit"><b>Diferencia la TEA, la TREA y la TCEA</b><small>Pregunta 1</small></span><span class="flecha">›</span></summary>
@@ -654,7 +759,7 @@ details.sale>div{padding:0 14px 12px}
 
   <!-- ---------------- AVANCE 2 ---------------- -->
   <div class="avance" id="aa3-a2">
-    <header><h2>Avance 2</h2><span>Miércoles 2/12 · P2, P3 y P4</span></header>
+    <header><div class="placa"><h2>Regalo 2 · Avance 2</h2><span>Miércoles 2/12 · P2, P3 y P4</span></div></header>
 
     <details class="paso" data-p="aa3-4">
       <summary><span class="num"><span>4</span></span><span class="tit"><b>Calcula el saldo tramo por tramo hasta el mes 20</b><small>Pregunta 2, monto retirado</small></span><span class="flecha">›</span></summary>
@@ -773,7 +878,7 @@ details.sale>div{padding:0 14px 12px}
 
   <!-- ---------------- AVANCE 3 ---------------- -->
   <div class="avance" id="aa3-a3">
-    <header><h2>Avance 3</h2><span>Lunes 7/12 · P5 e informe · Exposición 9/12</span></header>
+    <header><div class="placa"><h2>Regalo 3 · Avance 3</h2><span>Lunes 7/12 · P5 e informe · Exposición 9/12</span></div></header>
 
     <details class="paso" data-p="aa3-8">
       <summary><span class="num"><span>8</span></span><span class="tit"><b>Plantea la ecuación de valor y halla el último pago</b><small>Pregunta 5</small></span><span class="flecha">›</span></summary>
@@ -871,6 +976,7 @@ details.sale>div{padding:0 14px 12px}
   function mostrar(){
     var h=(location.hash||'#aa2').slice(1), v=vistaDe(h);
     document.querySelectorAll('.vista').forEach(function(s){ s.classList.toggle('on',s.id==='v-'+v); });
+    document.body.className='t-'+v;
     document.querySelectorAll('.tabs button').forEach(function(b){ var on=b.dataset.v===v; b.classList.toggle('on',on); b.setAttribute('aria-selected',on); });
     var el=document.getElementById(h);
     if(el&&el.classList.contains('avance')){ var p=el.querySelector('.paso'); if(p)p.open=true; el.scrollIntoView(); }
