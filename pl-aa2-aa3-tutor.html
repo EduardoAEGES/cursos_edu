@@ -1046,8 +1046,8 @@ tr.abierta td,tr.det td{background:#F4F7FF}
   <form class="puerta-c" id="f-master" novalidate hidden>
     <img src="marca/certus-azul.png" alt="Certus">
     <h2>Modo master</h2>
-    <p>Monitoreo del avance de todos los alumnos en el tutor AA2 y AA3.</p>
-    <label>DNI del docente<input id="m-dni" inputmode="numeric" maxlength="8" autocomplete="off" required></label>
+    <p>Ingresa el código master para monitorear el avance de todos los alumnos.</p>
+    <label>Código master<input id="m-dni" type="password" autocomplete="off" required></label>
     <div class="f-err" id="m-err" role="alert"></div>
     <button class="btn" type="submit">Entrar al monitoreo</button>
     <button type="button" class="lnk" id="a-alumno">Volver: soy alumno</button>
@@ -1096,7 +1096,7 @@ tr.abierta td,tr.det td{background:#F4F7FF}
      una fila por alumno en la sala SALA; el avance va en «estado». */
   var SUPA='https://klmjmlhwuzhymrplemgw.supabase.co';
   var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtsbWptbGh3dXpoeW1ycGxlbWd3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTMyNjQsImV4cCI6MjA4NzE2OTI2NH0.xFWMvUJa9n9TBcBG1WSeqCGiWBaCAtCU9aY7GXk4W6E';
-  var TABLA=SUPA+'/rest/v1/sala_asientos', SALA='PL-TUTOR-AA2-AA3', CLAVE='46069339';
+  var TABLA=SUPA+'/rest/v1/sala_asientos', SALA='PL-TUTOR-AA2-AA3';
   var LS='pl_tutor_aa2_aa3_v2', LSA='pl_tutor_alumno';
   function hdr(x){ var o={apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json'}; if(x)for(var k in x)o[k]=x[k]; return o; }
   function nuevo(){ return {p:{},r:{},ok:{}}; }
@@ -1300,13 +1300,18 @@ tr.abierta td,tr.det td{background:#F4F7FF}
   document.getElementById('cambiar').addEventListener('click',abrirPuerta);
 
   /* ---------- modo master: monitoreo de todos los alumnos ---------- */
-  var MASTER='46069339', LSM='pl_tutor_master', fm=document.getElementById('f-master'), fp=document.getElementById('f-puerta');
+  var MASTER='8ea0784005a8fcbb3f51344fc0973d01ba0d91354abbf89af5f94b93b936b915', LSM='pl_tutor_master', fm=document.getElementById('f-master'), fp=document.getElementById('f-puerta');
   var master=document.getElementById('master'), filas=[], tVivo=null, abierto={};
   var PASOS=[].map.call(document.querySelectorAll('.paso'),function(p){ return {k:p.dataset.p, v:p.dataset.p.slice(0,3), t:p.querySelector('.tit b').textContent}; });
   var NOMC={a2mb:'P4 pendiente y b',a2base:'P2 dato base',a2proy:'P2 meta y reparto',a2ing:'P2 ingresos',a2vp:'P3 variación',a2fac:'P5 factura',
             a3s20:'P2 monto mes 20',a3pct:'P2 alquiler',a3tea:'P3 TEA',a3n:'P4 tiempo',a3x:'P5 último pago'};
   /* campos de cada comprobación, para mostrar lo que escribió el alumno */
   var CAMPOS={}; Object.keys(NOMC).forEach(function(c){ var b=document.querySelector('[data-c="'+c+'"]'); CAMPOS[c]=b?[].map.call(b.closest('.comp').querySelectorAll('input'),function(i){ return i.id; }):[]; });
+  /* el código no se guarda en la página: solo su huella SHA-256 */
+  function huella(t){
+    if(!(window.crypto&&crypto.subtle)) return Promise.resolve('');
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(function(b){ return [].map.call(new Uint8Array(b),function(x){ return ('0'+x.toString(16)).slice(-2); }).join(''); });
+  }
   function escH(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function fecha(t){ var d=new Date(t); return d.toLocaleDateString('es-PE')+' '+d.toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'}); }
   function hace(t){ var m=Math.round((Date.now()-new Date(t))/60000); if(m<1)return 'ahora'; if(m<60)return 'hace '+m+' min'; var h=Math.round(m/60); if(h<24)return 'hace '+h+' h'; return fecha(t); }
@@ -1389,11 +1394,13 @@ tr.abierta td,tr.det td{background:#F4F7FF}
   document.getElementById('a-alumno').addEventListener('click',function(){ fm.hidden=true; fp.hidden=false; });
   fm.addEventListener('submit',function(e){
     e.preventDefault();
-    var d=document.getElementById('m-dni').value.replace(/\D/g,'');
-    if(d!==MASTER){ document.getElementById('m-err').textContent='DNI de docente incorrecto.'; return; }
-    document.getElementById('m-dni').value='';
-    try{ localStorage.setItem(LSM,'1'); }catch(er){}
-    entrarMaster();
+    var d=document.getElementById('m-dni').value.trim();
+    huella('pl-tutor:'+d).then(function(h){
+      if(h!==MASTER){ document.getElementById('m-err').textContent='Código incorrecto.'; return; }
+      document.getElementById('m-dni').value='';
+      try{ localStorage.setItem(LSM,'1'); }catch(er){}
+      entrarMaster();
+    });
   });
 
 
