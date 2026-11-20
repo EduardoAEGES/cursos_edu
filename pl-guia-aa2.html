@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guía para evidencia AA2</title>
-<meta name="version" content="2026-11-20-4">
+<meta name="version" content="2026-11-20-5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap">
@@ -153,6 +153,8 @@ button{font-family:inherit;cursor:pointer}
       <button type="button" class="btn leer" id="abrir-libro">&#128214; Leer el caso ejemplo</button>
       <a class="btn" id="d-word" target="_blank" rel="noopener">&#11015;&#65039; Descargar en Word</a>
       <a class="btn" id="d-pdf" target="_blank" rel="noopener">&#11015;&#65039; Descargar en PDF</a>
+      <a class="btn" id="b-factura" target="_blank" rel="noopener">&#129534; Crear la factura</a>
+      <a class="btn" id="b-resuelto" target="_blank" rel="noopener">&#9989; Ver el caso resuelto</a>
     </div>
   </section>
 
@@ -201,6 +203,12 @@ button{font-family:inherit;cursor:pointer}
 /* Descargas del Google Doc del caso (compartido como «Cualquier persona con el enlace»). */
 var DOC_ID = '1vVJBWe0gQwbWkPhMGK5S3uEhyJoqHvrGeUezXa4Kq5k';
 
+/* Herramienta para crear la factura (pregunta 5). */
+var FACTURA = 'https://laboratorio-tributario.vercel.app/taxlab360/factura.html';
+
+/* Caso resuelto: pega aquí su enlace. Mientras esté vacío, el botón dice «en preparación». */
+var CASO_RESUELTO = '';
+
 /* ------------------------------------------------------------
    VIDEOS: cuando un video esté en YouTube, pega su enlace en
    «video» (sirve https://youtu.be/…, https://www.youtube.com/watch?v=…
@@ -236,6 +244,7 @@ var PASOS = [
   { n:'5', video:'', tit:'La factura de Rosa', sub:'Pregunta 5',
     html:'<p>Rosa visita el museo y compra en su tienda <b>2 polos</b>, <b>3 llaveros</b> y <b>1 réplica de orejera Moche</b>. Los precios de venta, que ya incluyen el IGV de 18 %, son: S/ 47.20 cada polo, S/ 11.80 cada llavero y S/ 59.00 la réplica de orejera.</p>' +
          '<p>Elabora la <b>factura</b> que se le entregará a Rosa, mostrando el valor unitario sin IGV, el valor de venta, el IGV y el importe total. Puedes usar datos ficticios para el RUC de la tienda y el de Rosa.</p>' +
+         '<p><a class="btn" href="' + FACTURA + '" target="_blank" rel="noopener">&#129534; Crear la factura ↗</a></p>' +
          '<span class="rub">Rúbrica 4: Cálculo de valor de venta e IGV</span>' },
 
   { n:'Cierre', esp:true, video:'',
@@ -299,6 +308,10 @@ var PAGINAS = [
   var base = 'https://docs.google.com/document/d/' + DOC_ID;
   document.getElementById('d-word').href = base + '/export?format=docx';
   document.getElementById('d-pdf').href  = base + '/export?format=pdf';
+  document.getElementById('b-factura').href = FACTURA;
+  var bRes = document.getElementById('b-resuelto');
+  if(CASO_RESUELTO){ bRes.href = CASO_RESUELTO; }
+  else { bRes.setAttribute('aria-disabled', 'true'); bRes.tabIndex = -1; bRes.innerHTML += ' (en preparación)'; }
 
   /* preguntas y videos */
   function idYoutube(v){
