@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guía para evidencia AA2</title>
-<meta name="version" content="2026-11-20-1">
+<meta name="version" content="2026-11-20-2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
@@ -61,6 +61,12 @@ a{color:var(--marino)}
 
 .doc{position:relative;border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:var(--humo)}
 .doc iframe{display:block;width:100%;height:75vh;min-height:420px;border:0;background:#fff}
+.doc .cerrar{display:none;position:absolute;top:10px;right:10px;z-index:2;border:0;border-radius:10px;background:var(--fucsia);color:#fff;font-weight:900;font-size:15px;padding:8px 14px;cursor:pointer;font-family:inherit}
+.doc.grande{position:fixed;inset:0;z-index:100;border-radius:0;border:0}
+.doc.grande iframe{height:100%;min-height:0}
+.doc.grande .cerrar{display:block}
+body.sin-scroll{overflow:hidden}
+.ojo{margin-top:6px;background:var(--tip-s);border:1px solid #F1DDA0;border-radius:10px;padding:8px 12px;color:var(--tip);font-weight:700;font-size:15px}
 .nota{font-size:14px;color:var(--gris);font-weight:600;margin:8px 0 0}
 
 .datos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}
@@ -127,12 +133,12 @@ a{color:var(--marino)}
   <section class="caja" id="documento">
     <h2>El documento del caso</h2>
     <div class="botones">
-      <a class="btn pri" id="d-abrir" target="_blank" rel="noopener">&#128196; Abrir el documento</a>
+      <button type="button" class="btn pri" id="d-abrir">&#128196; Ver el documento en grande</button>
       <a class="btn" id="d-word" target="_blank" rel="noopener">&#11015;&#65039; Descargar en Word</a>
       <a class="btn fu" id="d-pdf" target="_blank" rel="noopener">&#11015;&#65039; Descargar en PDF</a>
     </div>
-    <div class="doc"><iframe id="d-marco" title="Caso Museo Tumbas Reales de Sipán" loading="lazy"></iframe></div>
-    <p class="nota">Si el documento no se ve aquí, usa «Abrir el documento». Las descargas se abren en una pestaña nueva.</p>
+    <div class="doc" id="d-caja"><button type="button" class="cerrar" id="d-cerrar">✕ Cerrar</button><iframe id="d-marco" title="Caso Museo Tumbas Reales de Sipán" loading="lazy"></iframe></div>
+    <p class="nota">El documento se lee aquí mismo. «Ver el documento en grande» lo amplía a toda la pantalla; las descargas en Word y PDF bajan el archivo.</p>
   </section>
 
   <!-- El caso en breve -->
@@ -190,6 +196,7 @@ var PASOS = [
   { n:'2', video:'', tit:'Visitantes e ingresos de agosto 2027', sub:'Pregunta 2',
     html:'<p>¿Cuántos visitantes pagarán entrada en agosto de 2027, <b>en total</b> y separados en <b>nacionales</b> y <b>extranjeros</b>?</p>' +
          '<p>¿A cuánto ascenderán los <b>ingresos por entradas</b> si la entrada nacional cuesta S/ 12.00 y la extranjera S/ 18.00? Redondea el número de visitantes a personas enteras.</p>' +
+         '<p class="ojo">&#9888;&#65039; Antes de resolver esta pregunta, revisa el <b>primer video (Video preliminar · indicaciones iniciales y cálculos previos)</b>: ahí se obtienen los visitantes de agosto de 2026 que necesitas.</p>' +
          '<span class="rub">Rúbrica 2 · Análisis de rentabilidad</span>' },
 
   { n:'3', video:'', tit:'Los tres museos más visitados', sub:'Pregunta 3',
@@ -215,7 +222,11 @@ var PASOS = [
 
 (function(){
   var base = 'https://docs.google.com/document/d/' + DOC_ID;
-  document.getElementById('d-abrir').href = base + '/edit?usp=sharing';
+  var caja = document.getElementById('d-caja');
+  function grande(si){ caja.classList.toggle('grande', si); document.body.classList.toggle('sin-scroll', si); }
+  document.getElementById('d-abrir').onclick = function(){ grande(true); };
+  document.getElementById('d-cerrar').onclick = function(){ grande(false); };
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') grande(false); });
   document.getElementById('d-word').href  = base + '/export?format=docx';
   document.getElementById('d-pdf').href   = base + '/export?format=pdf';
   document.getElementById('d-marco').src  = base + '/preview';
