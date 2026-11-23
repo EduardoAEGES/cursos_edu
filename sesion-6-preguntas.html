@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-11-23-preguntas-a">
+<meta name="version" content="2026-11-23-preguntas-b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -1514,10 +1514,8 @@
 
 <div id="impreso" class="ai" aria-hidden="true"></div>
 
-<script src="aula.js?v=20261123a"></script>
 <script src="reiniciar.js"></script>
 <script src="calculadora.js"></script>
-<script src="bbb-chat.js?v=20261031"></script>
 <script>
 (function(){
 'use strict';
@@ -1757,7 +1755,7 @@ q15:{"tipo": "quiz", "corto": "Asiento del pago", "titulo": "Asiento del pago al
 
 /* ================= las diapositivas ================= */
 var D=[
-{"et": "Portada", "t": "Sesión 6: Preguntas de créditos y asientos", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><span class=\"pt-sem\">Sesi&oacute;n 6</span><h2>Preguntas de cr&eacute;ditos y asientos</h2><p class=\"pt-ses\">Contabilidad: gesti&oacute;n de cobranzas y pagos (AA3)</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>C&oacute;mo se usa</b>Cada pregunta se responde justo despu&eacute;s de la diapositiva de teor&iacute;a que indica. As&iacute; se comprueba lo aprendido a medida que avanza la clase.</div><div class=\"pt-agenda\"><b>Hoy responderemos</b><ol><li><b>Cr&eacute;ditos</b>: preguntas 1 a 11</li><li><b>Asientos</b>: preguntas 12 a 15</li></ol></div></div><div class=\"pt-yo\" data-yo></div></div>"},
+{"et": "Portada", "t": "Sesión 6: Preguntas de créditos y asientos", "h": "<div class=\"portada\"><img class=\"pt-logo\" src=\"marca/certus-azul.png\" alt=\"Certus\"><span class=\"pt-sem\">Sesi&oacute;n 6</span><h2>Preguntas de cr&eacute;ditos y asientos</h2><p class=\"pt-ses\">Contabilidad: gesti&oacute;n de cobranzas y pagos (AA3)</p><div class=\"pt-sala\" data-sala></div><div class=\"pt-dos\"><div class=\"pt-logro\"><b>C&oacute;mo se usa</b>Cada pregunta se responde justo despu&eacute;s de la diapositiva de teor&iacute;a que indica. As&iacute; se comprueba lo aprendido a medida que avanza la clase.</div><div class=\"pt-agenda\"><b>Hoy responderemos</b><ol><li>Cr&eacute;ditos: preguntas 1 a 11</li><li>Asientos: preguntas 12 a 15</li></ol></div></div><div class=\"pt-yo\" data-yo></div></div>"},
 {"et": "Créditos, pregunta 1", "t": "¿Al contado o al crédito?", "claves": ["q1"], "lado": 1, "h": "<p class=\"fase f1\"><i>1</i><span>Créditos</span></p><div class=\"cuando\"><small>Se responde despu&eacute;s de</small><b>Al contado o al crédito</b></div><div class=\"tipo\">Opci&oacute;n m&uacute;ltiple: elige una respuesta en cada caso.</div><div class=\"clave\"><b>Pista:</b> al contado se paga en el momento; al cr&eacute;dito, despu&eacute;s.</div>"},
 {"et": "Créditos, pregunta 2", "t": "Cada cuenta con su nombre", "claves": ["q2"], "lado": 1, "h": "<p class=\"fase f1\"><i>2</i><span>Créditos</span></p><div class=\"cuando\"><small>Se responde despu&eacute;s de</small><b>Cuentas por cobrar y cuentas por pagar</b></div><div class=\"tipo\">Unir parejas: arrastra cada nombre a su cuenta.</div><div class=\"clave\"><b>Pista:</b> la 12 es lo que <b>nos deben</b>; la 42, lo que <b>debemos</b>.</div>"},
 {"et": "Créditos, pregunta 3", "t": "¿Cuáles son parte del activo?", "claves": ["q3"], "lado": 1, "h": "<p class=\"fase f1\"><i>3</i><span>Créditos</span></p><div class=\"cuando\"><small>Se responde despu&eacute;s de</small><b>Cuentas por cobrar y cuentas por pagar</b></div><div class=\"tipo\">Casillas: responde S&iacute; o No en cada cuenta.</div><div class=\"clave\"><b>Pista:</b> activo es lo que la empresa <b>tiene o le deben</b>.</div>"},
@@ -5095,7 +5093,20 @@ if(window.Aula){
     }, 60);
   })();
 }else{
+  /* sin código ni ingreso: las preguntas se abren directo y ocupan toda la pantalla */
   $('mazo').hidden=false;
+  $('puerta').hidden=true;
+  full();
+  var pide=function(){
+    document.removeEventListener('pointerdown', pide, true);
+    document.removeEventListener('keydown', pide, true);
+    var raiz=document.documentElement;
+    if($('esc').classList.contains('full') && !document.fullscreenElement && raiz.requestFullscreen){
+      try{ var pr=raiz.requestFullscreen(); if(pr && pr.catch) pr.catch(function(){}); }catch(x){}
+    }
+  };
+  document.addEventListener('pointerdown', pide, true);
+  document.addEventListener('keydown', pide, true);
 }
 if(window.Reinicio) Reinicio.monta({
   donde:'reinicio', claves:[LS], texto:'Reiniciar mis respuestas',
