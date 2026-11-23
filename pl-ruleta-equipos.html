@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="version" content="20261123">
+<title>Ruleta de equipos · Pensamiento Lógico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --azul:#071767; --azul-2:#1D2F8F; --fucsia:#FC0045; --cielo:#EEF1FB;
+    --texto:#14183A; --suave:#5A6185; --borde:#D7DCEF;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{ font-family:Inter,system-ui,sans-serif; color:var(--texto); background:var(--cielo); min-height:100vh;
+        display:flex; flex-direction:column; }
+
+  header{ background:var(--azul); color:#fff; display:flex; align-items:center; gap:14px; padding:12px 22px; }
+  header img{ height:30px; }
+  header .tit{ font-weight:800; font-size:19px; letter-spacing:.2px; }
+  header .tit small{ display:block; font-weight:500; font-size:12px; opacity:.8; letter-spacing:0; }
+  header .der{ margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+  .hbtn{ font:inherit; font-size:13px; font-weight:600; color:#fff; background:rgba(255,255,255,.12);
+         border:1px solid rgba(255,255,255,.35); border-radius:8px; padding:7px 12px; cursor:pointer; text-decoration:none; }
+  .hbtn:hover{ background:rgba(255,255,255,.22); }
+
+  main{ flex:1; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:22px; padding:22px;
+        max-width:1320px; width:100%; margin:0 auto; align-items:start; }
+  @media (max-width:900px){ main{ grid-template-columns:1fr; padding:16px; } }
+
+  .panel{ background:#fff; border:1px solid var(--borde); border-radius:16px; padding:18px; box-shadow:0 4px 18px rgba(7,23,103,.06); }
+
+  /* ruleta */
+  .zona{ display:flex; flex-direction:column; align-items:center; gap:16px; }
+  .escenario{ position:relative; width:min(560px,100%,calc(100vh - 230px)); aspect-ratio:1/1; min-width:260px; }
+  #rueda{ width:100%; height:100%; display:block; border-radius:50%;
+          box-shadow:0 10px 30px rgba(7,23,103,.25), 0 0 0 8px #fff, 0 0 0 11px var(--azul); }
+  .puntero{ position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:0; height:0;
+            border-left:20px solid transparent; border-right:20px solid transparent; border-top:36px solid var(--fucsia);
+            filter:drop-shadow(0 3px 3px rgba(0,0,0,.3)); z-index:3; }
+  .centro{ position:absolute; left:50%; top:50%; width:22%; aspect-ratio:1/1; transform:translate(-50%,-50%);
+           border-radius:50%; background:#fff; border:4px solid var(--azul); display:flex; align-items:center; justify-content:center;
+           box-shadow:0 3px 10px rgba(0,0,0,.25); cursor:pointer; z-index:2; }
+  .centro img{ width:72%; }
+  .controles{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; align-items:center; }
+  #girar{ font:inherit; font-size:18px; font-weight:800; color:#fff; background:var(--fucsia); border:0; border-radius:999px;
+          padding:13px 40px; cursor:pointer; box-shadow:0 6px 16px rgba(252,0,69,.35); letter-spacing:.3px; }
+  #girar:hover{ filter:brightness(1.07); }
+  #girar:disabled{ opacity:.5; cursor:not-allowed; box-shadow:none; }
+  .chk{ display:flex; align-items:center; gap:8px; font-size:14px; color:var(--suave); cursor:pointer; user-select:none; }
+  .chk input{ width:18px; height:18px; accent-color:var(--azul); }
+  .btn2{ font:inherit; font-size:13px; font-weight:600; color:var(--azul); background:#fff; border:1px solid var(--borde);
+         border-radius:8px; padding:8px 14px; cursor:pointer; }
+  .btn2:hover{ border-color:var(--azul); }
+  #quedan{ font-size:13px; color:var(--suave); }
+
+  /* resultado */
+  .resultado{ min-height:230px; display:flex; flex-direction:column; justify-content:center; }
+  .espera{ text-align:center; color:var(--suave); font-size:15px; }
+  .espera b{ display:block; font-size:42px; margin-bottom:6px; }
+  .tarjeta{ border-radius:14px; overflow:hidden; border:1px solid var(--borde); animation:entra .45s ease-out; }
+  @keyframes entra{ from{ transform:scale(.9); opacity:0; } to{ transform:none; opacity:1; } }
+  .tarjeta .cab{ color:#fff; padding:14px 18px; display:flex; align-items:center; gap:12px; }
+  .tarjeta .cab .nom{ font-size:30px; font-weight:800; line-height:1.1; }
+  .tarjeta .cab .num{ font-size:13px; font-weight:700; background:rgba(255,255,255,.2); border-radius:999px; padding:4px 10px; margin-left:auto; white-space:nowrap; }
+  .tarjeta ol{ margin:0; padding:14px 18px 14px 42px; font-size:19px; font-weight:600; line-height:1.55; }
+  .tarjeta .caso{ padding:0 18px 14px; }
+  .pill{ display:inline-block; font-size:13px; font-weight:700; color:var(--azul); background:var(--cielo); border-radius:999px; padding:4px 12px; }
+
+  /* lista */
+  h2{ font-size:15px; margin:0 0 10px; color:var(--azul); text-transform:uppercase; letter-spacing:.6px; }
+  .grupos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; }
+  .g{ border:1px solid var(--borde); border-left:6px solid var(--c); border-radius:10px; padding:8px 10px; font-size:12.5px; line-height:1.4; position:relative; }
+  .g b{ display:block; font-size:13.5px; color:var(--texto); margin-bottom:2px; }
+  .g span{ color:var(--suave); }
+  .g.fuera{ opacity:.42; }
+  .g .orden{ position:absolute; top:6px; right:8px; font-size:11px; font-weight:800; color:#fff; background:var(--fucsia);
+             border-radius:999px; min-width:20px; height:20px; display:flex; align-items:center; justify-content:center; padding:0 6px; }
+  .sep{ height:16px; }
+
+  footer{ text-align:center; font-size:12px; color:var(--suave); padding:6px 0 16px; }
+
+  /* confeti */
+  .conf{ position:fixed; top:-12px; width:10px; height:14px; z-index:50; pointer-events:none; animation:cae linear forwards; }
+  @keyframes cae{ to{ transform:translateY(105vh) rotate(720deg); } }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="marca/certus-blanco.png" alt="Certus">
+  <div class="tit">Ruleta de equipos<small>Pensamiento Lógico</small></div>
+  <div class="der">
+    <button class="hbtn" id="pantalla" type="button">⛶ Pantalla completa</button>
+    <a class="hbtn" href="pensamiento-logico.html">Volver al curso</a>
+  </div>
+</header>
+
+<main>
+  <section class="panel zona">
+    <div class="escenario">
+      <div class="puntero"></div>
+      <canvas id="rueda" width="1100" height="1100"></canvas>
+      <div class="centro" id="centro" title="Girar"><img src="marca/certus-azul.png" alt=""></div>
+    </div>
+    <div class="controles">
+      <button id="girar" type="button">Girar ruleta</button>
+    </div>
+    <div class="controles">
+      <label class="chk"><input type="checkbox" id="sacar" checked> Sacar de la ruleta al equipo que sale</label>
+      <button class="btn2" id="reiniciar" type="button">↺ Reiniciar</button>
+      <span id="quedan"></span>
+    </div>
+  </section>
+
+  <section>
+    <div class="panel resultado" id="resultado">
+      <div class="espera"><b>🎡</b>Gira la ruleta para elegir un equipo</div>
+    </div>
+    <div class="sep"></div>
+    <div class="panel">
+      <h2>Equipos</h2>
+      <div class="grupos" id="grupos"></div>
+    </div>
+  </section>
+</main>
+
+<footer>Elaborado por el equipo académico de CERTUS</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var EQUIPOS = [
+    { id:'e1',  nom:'Equipo 1',   caso:'Caso 1', c:'#071767', miembros:['Bejar Ayala, Luz Clarita','Linero Robaina, Alejandro Jhoan','Lopez Avalos, Jalei de Maria','Orosco Polo, Roven Hugo David','Rivero Mejia, Liz'] },
+    { id:'e2',  nom:'Equipo 2',   caso:'Caso 2', c:'#FC0045', miembros:['Arrarte Melendez, Christina Nahomy','Rea Sandoval, Ximena Alexandra','Cotrina Cañari, Lucila Teresa','Chinga Inga, Valeria Yamile'] },
+    { id:'e3',  nom:'Equipo 3',   caso:'Caso 1', c:'#1F6FD1', miembros:['Orellana San Miguel, Melody Angelica','Abad Tirado, Diana Karen','Castillo Velasquez, Karen Milene','Reyes Pardave, Estefani Kinberlyn'] },
+    { id:'e41', nom:'Equipo 4.1', caso:'',       c:'#B0004A', miembros:['Otarola Flores, Milagros del Pilar','Vasquez Nano, Aydi Milu'] },
+    { id:'e42', nom:'Equipo 4.2', caso:'',       c:'#3A4BB8', miembros:['Parker Ponce, Natali Angie','Viteli Mendoza, Ariana Milagros'] },
+    { id:'e5',  nom:'Equipo 5',   caso:'Caso 1', c:'#E8457A', miembros:['Ponte Bravo, Katherine Stephanie','Bernuy Ramirez, Jaanai Michelle','Zaga Cardenas, Sila Zarahi'] },
+    { id:'e6',  nom:'Equipo 6',   caso:'Caso 1', c:'#0B2FA0', miembros:['Ríos Falcon, Nelda','Zuñiga Escalante, Jordan Yaset','López Romero, Yessenia Paola','Barroso Quispe, Hillary Giovana'] },
+    { id:'i1',  nom:'Individual', corto:'Ind. Chuqui',  caso:'', c:'#7A0F45', miembros:['Chuqui Agapito, Gloria Camila'] },
+    { id:'i2',  nom:'Individual', corto:'Ind. Cobeñas', caso:'', c:'#2C3E7A', miembros:['Cobeñas Martel, Ruth Noemi'] }
+  ];
+
+  var LS = 'plRuletaEquipos_20261123';
+  var orden = [];            // ids en el orden en que salieron
+  try{ var s = JSON.parse(localStorage.getItem(LS) || '[]'); if(Array.isArray(s)) orden = s.filter(function(id){ return porId(id); }); }catch(e){}
+
+  var canvas = document.getElementById('rueda'), ctx = canvas.getContext('2d');
+  var btn = document.getElementById('girar'), chkSacar = document.getElementById('sacar');
+  var angulo = 0, girando = false, enRueda = [];
+
+  function porId(id){ for(var i=0;i<EQUIPOS.length;i++) if(EQUIPOS[i].id===id) return EQUIPOS[i]; return null; }
+  function guardar(){ try{ localStorage.setItem(LS, JSON.stringify(orden)); }catch(e){} }
+  function etiqueta(e){ return e.corto || e.nom; }
+
+  function calcularRueda(){
+    enRueda = chkSacar.checked ? EQUIPOS.filter(function(e){ return orden.indexOf(e.id) < 0; }) : EQUIPOS.slice();
+  }
+
+  function dibujar(){
+    var W = canvas.width, R = W/2, n = enRueda.length;
+    ctx.clearRect(0,0,W,W);
+    if(!n){
+      ctx.fillStyle = '#EEF1FB'; ctx.beginPath(); ctx.arc(R,R,R,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#071767'; ctx.font = '700 46px Inter, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('¡Todos los equipos salieron!', R, R - R*0.42);
+      return;
+    }
+    var seg = Math.PI*2/n;
+    for(var i=0;i<n;i++){
+      var a0 = angulo + i*seg - Math.PI/2, a1 = a0 + seg;
+      ctx.beginPath(); ctx.moveTo(R,R); ctx.arc(R,R,R,a0,a1); ctx.closePath();
+      ctx.fillStyle = enRueda[i].c; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 5; ctx.stroke();
+      ctx.save(); ctx.translate(R,R); ctx.rotate(a0 + seg/2);
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#fff';
+      var fs = n > 7 ? 46 : 54;
+      ctx.font = '800 ' + fs + 'px Inter, sans-serif';
+      var txt = etiqueta(enRueda[i]);
+      while(ctx.measureText(txt).width > R*0.66 && fs > 26){ fs -= 2; ctx.font = '800 ' + fs + 'px Inter, sans-serif'; }
+      ctx.shadowColor = 'rgba(0,0,0,.35)'; ctx.shadowBlur = 6;
+      ctx.fillText(txt, R - 34, 0);
+      ctx.restore();
+    }
+  }
+
+  // índice bajo el puntero (arriba)
+  function indiceArriba(){
+    var n = enRueda.length, seg = Math.PI*2/n;
+    var a = ((-angulo) % (Math.PI*2) + Math.PI*2) % (Math.PI*2);
+    return Math.floor(a / seg) % n;
+  }
+
+  // sonido
+  var actx = null;
+  function tic(){
+    try{
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'square'; o.frequency.value = 900;
+      g.gain.setValueAtTime(0.06, actx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.04);
+      o.connect(g); g.connect(actx.destination); o.start(); o.stop(actx.currentTime + 0.05);
+    }catch(e){}
+  }
+  function fanfarria(){
+    try{
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      [523,659,784,1047].forEach(function(f,k){
+        var o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + k*0.11;
+        o.type = 'triangle'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t+0.02); g.gain.exponentialRampToValueAtTime(0.0001, t+0.35);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t+0.4);
+      });
+    }catch(e){}
+  }
+
+  function confeti(){
+    var cols = ['#071767','#FC0045','#1F6FD1','#FFC400','#ffffff'];
+    for(var i=0;i<70;i++){
+      var d = document.createElement('div'); d.className = 'conf';
+      d.style.left = Math.random()*100 + 'vw'; d.style.background = cols[i % cols.length];
+      d.style.animationDuration = (1.8 + Math.random()*1.6) + 's'; d.style.animationDelay = (Math.random()*0.4) + 's';
+      document.body.appendChild(d); setTimeout(function(x){ return function(){ x.remove(); }; }(d), 4200);
+    }
+  }
+
+  function girar(){
+    if(girando) return;
+    calcularRueda();
+    var n = enRueda.length; if(!n) return;
+    girando = true; btn.disabled = true;
+    var elegido = Math.floor(Math.random()*n), seg = Math.PI*2/n;
+    // ángulo final: el centro (con algo de ruido) del segmento elegido queda arriba
+    var ruido = (Math.random()-0.5) * seg * 0.7;
+    var destinoMod = -(elegido*seg + seg/2 + ruido);
+    var actualMod = angulo % (Math.PI*2);
+    var delta = destinoMod - actualMod; while(delta < 0) delta += Math.PI*2;
+    delta += Math.PI*2 * (5 + Math.floor(Math.random()*3));
+    var inicio = angulo, dur = 5200 + Math.random()*1200, t0 = performance.now(), ultimo = indiceArriba();
+    function paso(t){
+      var p = Math.min(1, (t - t0)/dur), e = 1 - Math.pow(1-p, 4);
+      angulo = inicio + delta*e; dibujar();
+      var k = indiceArriba(); if(k !== ultimo){ ultimo = k; tic(); }
+      if(p < 1) requestAnimationFrame(paso);
+      else terminar(enRueda[indiceArriba()]);
+    }
+    requestAnimationFrame(paso);
+  }
+
+  function terminar(e){
+    girando = false;
+    if(orden.indexOf(e.id) < 0){ orden.push(e.id); guardar(); }
+    mostrar(e); fanfarria(); confeti();
+    setTimeout(function(){ calcularRueda(); angulo = 0; dibujar(); listar(); btn.disabled = !enRueda.length; }, chkSacar.checked ? 1600 : 0);
+    listar();
+  }
+
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  function mostrar(e){
+    var pos = orden.indexOf(e.id) + 1;
+    var titulo = e.id.charAt(0) === 'i' ? 'Equipo individual' : e.nom;
+    document.getElementById('resultado').innerHTML =
+      '<div class="tarjeta"><div class="cab" style="background:' + e.c + '"><span class="nom">' + esc(titulo) + '</span>' +
+      '<span class="num">Sale en el puesto ' + pos + '</span></div>' +
+      '<ol>' + e.miembros.map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('') + '</ol>' +
+      (e.caso ? '<div class="caso"><span class="pill">' + esc(e.caso) + '</span></div>' : '') + '</div>';
+  }
+
+  function listar(){
+    document.getElementById('grupos').innerHTML = EQUIPOS.map(function(e){
+      var k = orden.indexOf(e.id), titulo = e.id.charAt(0) === 'i' ? 'Equipo individual' : e.nom;
+      return '<div class="g' + (k >= 0 ? ' fuera' : '') + '" style="--c:' + e.c + '">' +
+        (k >= 0 ? '<span class="orden">' + (k+1) + '</span>' : '') +
+        '<b>' + esc(titulo) + (e.caso ? ' · ' + esc(e.caso) : '') + '</b>' +
+        e.miembros.map(function(m){ return '<span>' + esc(m) + '</span>'; }).join('<br>') + '</div>';
+    }).join('');
+    var q = EQUIPOS.length - orden.length;
+    document.getElementById('quedan').textContent = q ? 'Quedan ' + q + ' de ' + EQUIPOS.length : 'Ya salieron todos';
+  }
+
+  btn.addEventListener('click', girar);
+  document.getElementById('centro').addEventListener('click', girar);
+  document.addEventListener('keydown', function(ev){ if((ev.code === 'Space' || ev.code === 'Enter') && ev.target === document.body){ ev.preventDefault(); girar(); } });
+  chkSacar.addEventListener('change', function(){ if(girando) return; calcularRueda(); angulo = 0; dibujar(); btn.disabled = !enRueda.length; });
+  document.getElementById('reiniciar').addEventListener('click', function(){
+    if(girando) return;
+    if(orden.length && !confirm('¿Reiniciar la ruleta? Se borra el orden de salida.')) return;
+    orden = []; guardar(); angulo = 0; calcularRueda(); dibujar(); listar(); btn.disabled = false;
+    document.getElementById('resultado').innerHTML = '<div class="espera"><b>🎡</b>Gira la ruleta para elegir un equipo</div>';
+  });
+  document.getElementById('pantalla').addEventListener('click', function(){
+    if(document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  });
+
+  calcularRueda(); dibujar(); listar(); btn.disabled = !enRueda.length;
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(dibujar);
+})();
+</script>
+</body>
+</html>
