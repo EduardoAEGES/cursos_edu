@@ -7,7 +7,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<meta name="version" content="2026-11-23-creditos-d">
+<meta name="version" content="2026-11-23-creditos-e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap">
@@ -991,9 +991,9 @@
   .asi tr.tt td{ font-size:14px; padding:1px 12px; }
   [data-act="k1"] .banco{ padding:6px; gap:6px; } [data-act="k1"] .caja .z{ min-height:44px !important; }
   [data-act^="k"] .pq:empty{ display:none !important; }
-  .teo2:has([data-act="k8"]) .asi td{ padding-top:0; padding-bottom:0; }
-  .teo2:has([data-act="k8"]) .asi{ margin-bottom:4px; }
-  .teo2:has([data-act="k8"]) .enunciado{ margin-bottom:5px !important; }
+  .teo2:has([data-act="k13"]) .asi td{ padding-top:0; padding-bottom:0; }
+  .teo2:has([data-act="k13"]) .asi{ margin-bottom:4px; }
+  .teo2:has([data-act="k13"]) .enunciado{ margin-bottom:5px !important; }
   /* el título de la cabecera en una sola línea: la barra del docente no le quita alto a la lámina */
   .esc .cab .t{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1 1 0; }
   /* el docente resuelve con «Resolver Todo»: sin «Ver Respuesta» en cada pregunta */
@@ -1028,6 +1028,9 @@
   .leyenda2{ display:flex; gap:18px; margin-top:12px; font-size:16px; font-weight:800; color:var(--gris); }
   .leyenda2 span::before{ content:''; display:inline-block; width:14px; height:14px; border-radius:50%; background:var(--c); margin-right:6px; vertical-align:-2px; }
   .fase.f2 i, .fase.f2 span{ background:var(--marino); }
+  [data-act="k1"] .ficha.puesta{ padding:3px 10px !important; font-size:17px !important; }
+  [data-act="k1"] .caja .z{ gap:4px !important; padding:5px !important; }
+  [data-act="k1"] .banco:not(:has(.ficha)){ min-height:0; padding:4px 10px; }
 </style>
 <link rel="stylesheet" href="cont-certus.css?v=20261102">
 <link rel="stylesheet" href="pl-movil.css?v=20261027">
@@ -1698,13 +1701,13 @@ pintaSon();
 
 /* ================= las actividades ================= */
 var ACT={
-k1:{"tipo": "arr", "corto": "¿Nos deben o debemos?", "titulo": "¿Nos deben o le debemos?", "fichas": [{"id": "a", "t": "Vendimos a 30 días", "g": "NOS"}, {"id": "b", "t": "Cliente con saldo vencido", "g": "NOS"}, {"id": "c", "t": "Factura emitida sin cobrar", "g": "NOS"}, {"id": "d", "t": "Compramos a crédito", "g": "DEB"}, {"id": "e", "t": "Falta pagar al proveedor", "g": "DEB"}, {"id": "f", "t": "Factura del proveedor por pagar", "g": "DEB"}], "cajas": [{"id": "NOS", "t": "Nos deben · 1212"}, {"id": "DEB", "t": "Le debemos · 4212"}], "fin": "<p class=\"pq\">Vender a crédito crea un <b>derecho de cobro</b> (1212). Comprar a crédito crea una <b>deuda</b> (4212).</p>"},
+k1:{"tipo": "arr", "corto": "¿Nos deben o debemos?", "titulo": "¿Nos deben o le debemos?", "fichas": [{"id": "a", "t": "Vendimos a 30 días", "g": "NOS"}, {"id": "b", "t": "Cliente con saldo vencido", "g": "NOS"}, {"id": "c", "t": "Factura emitida sin cobrar", "g": "NOS"}, {"id": "d", "t": "Compramos a crédito", "g": "DEB"}, {"id": "e", "t": "Falta pagar al proveedor", "g": "DEB"}, {"id": "f", "t": "Factura del proveedor por pagar", "g": "DEB"}], "cajas": [{"id": "NOS", "t": "Nos deben · 1212"}, {"id": "DEB", "t": "Le debemos · 4212"}], "fin": "<p class=\"pq\">Venta a crédito: <b>nos deben</b>. Compra a crédito: <b>debemos</b>.</p>"},
 k2:{"tipo": "quiz", "corto": "Cuentas 12 y 42", "titulo": "¿Qué cuenta es?", "lista": [{"q": "Lo que los clientes nos deben por las ventas al crédito", "ops": ["10 Efectivo", "12 Cuentas por cobrar", "42 Cuentas por pagar"], "ok": 1, "pq": "Es un activo: un derecho de cobro."}, {"q": "Lo que le debemos al proveedor de mercadería", "ops": ["12 Cuentas por cobrar", "70 Ventas", "42 Cuentas por pagar"], "ok": 2, "pq": "Es un pasivo: una obligación."}, {"q": "¿En qué parte del balance va la 12?", "ops": ["Activo", "Pasivo", "Patrimonio"], "ok": 0, "pq": "La 42 va en el pasivo."}], "fin": "<p class=\"pq\"><b>12</b> = me deben (activo) · <b>42</b> = debo (pasivo).</p>"},
 k3:{"tipo": "par", "corto": "Tipos de cliente", "titulo": "Cada cliente con su tipo", "fichas": [{"id": "cp", "t": "CP · potencial"}, {"id": "cm", "t": "CM · medio"}, {"id": "cn", "t": "CN · nuevo"}], "huecos": [{"id": "cp", "q": "Compra cada semana, en volumen, y tiene una línea de crédito alta"}, {"id": "cm", "q": "Compra de vez en cuando y tiene una línea de crédito moderada"}, {"id": "cn", "q": "Es su primera compra: no tiene historial ni línea de crédito"}], "fin": "<p class=\"pq\">El tipo de cliente decide <b>cuánto crédito</b> se le da y qué porcentajes se usan para su saldo.</p>"},
 k4:{"tipo": "quiz", "corto": "Parte 1: por cobrar", "titulo": "Completa el cuadro de cuentas por cobrar", "lista": [{"q": "¿Qué va en A? (La Esquina, CM: 6,000 × 50 %)", "ops": ["6,000", "1,800", "3,000"], "ok": 2, "pq": "6,000 × 50 % = 3,000."}, {"q": "¿Qué va en B? (total vencido: 6,000 + 3,000)", "ops": ["9,000", "16,000", "7,000"], "ok": 0, "pq": "Es lo que se cobra en abril."}, {"q": "¿Qué va en C? (total por vencer: 4,000 + 3,000)", "ops": ["16,000", "7,000", "9,000"], "ok": 1, "pq": "Es lo que se cobra en mayo."}], "fin": "<p class=\"pq\">Revisa: vencido 9,000 + por vencer 7,000 = saldo 16,000.</p>"},
 k5:{"tipo": "quiz", "corto": "Parte 2: pagos", "titulo": "Completa el cuadro de pagos al proveedor", "lista": [{"q": "¿Qué va en A? (60 % de 14,160)", "ops": ["5,664", "8,496", "14,160"], "ok": 1, "pq": "14,160 × 60 % = 8,496."}, {"q": "¿Qué va en B? (40 % de 14,160)", "ops": ["8,496", "2,160", "5,664"], "ok": 2, "pq": "14,160 × 40 % = 5,664."}, {"q": "¿Qué va en C? (total − pago 1 − pago 2)", "ops": ["0", "14,160", "2,832"], "ok": 0, "pq": "Si da 0, se paga toda la factura."}], "fin": "<p class=\"pq\">Los dos pagos suman el total de la factura: <b>diferencia 0</b>.</p>"},
 k6:{"tipo": "quiz", "corto": "Parte 3: capacidad", "titulo": "Completa la capacidad de pago", "lista": [{"q": "¿Qué va en A? (dinero disponible en abril)", "ops": ["11,950", "9,000", "20,446"], "ok": 0, "pq": "0 + 9,000 + 2,950 = 11,950."}, {"q": "¿Qué va en B? (saldo final de abril)", "ops": ["−3,454", "3,454", "11,950"], "ok": 1, "pq": "11,950 − 8,496 = 3,454: pasa a mayo."}, {"q": "¿Qué va en C? (saldo final de mayo)", "ops": ["10,454", "−1,210", "4,790"], "ok": 2, "pq": "3,454 + 7,000 − 5,664 = 4,790."}], "fin": "<p class=\"pq\">Saldos positivos en abril y mayo: <b>sí tiene capacidad de pago</b>.</p>"},
-k7:{"tipo": "quiz", "corto": "Debe o Haber", "titulo": "¿Debe o Haber?", "lista": [{"q": "La 4212 sube: nace una deuda con el proveedor", "ops": ["Debe", "Haber"], "ok": 1, "pq": "Pasivo que sube: Haber."}, {"q": "La 1041 sube: entra dinero al banco", "ops": ["Haber", "Debe"], "ok": 1, "pq": "Activo que sube: Debe."}, {"q": "La 1212 baja: el cliente nos pagó", "ops": ["Debe", "Haber"], "ok": 1, "pq": "Activo que baja: Haber."}, {"q": "La 7012 registra una venta", "ops": ["Debe", "Haber"], "ok": 1, "pq": "Ingreso: Haber."}], "fin": "<p class=\"pq\">Primero pregunta <b>qué tipo de cuenta es</b> y si <b>sube o baja</b>.</p>"},
+k7:{"tipo": "quiz", "corto": "Debe o Haber", "titulo": "¿Debe o Haber?", "lista": [{"q": "La 4212 sube: nace una deuda con el proveedor", "ops": ["Debe", "Haber"], "ok": 1, "pq": ""}, {"q": "La 1041 sube: entra dinero al banco", "ops": ["Haber", "Debe"], "ok": 1, "pq": ""}, {"q": "La 1212 baja: el cliente nos pagó", "ops": ["Debe", "Haber"], "ok": 1, "pq": ""}, {"q": "La 7012 registra una venta", "ops": ["Debe", "Haber"], "ok": 1, "pq": ""}], "fin": "<p class=\"pq\">Primero pregunta <b>qué tipo de cuenta es</b> y si <b>sube o baja</b>.</p>"},
 k8:{"tipo": "quiz", "corto": "Asiento resuelto: compra", "titulo": "Lee el asiento de la compra", "lista": [{"q": "¿Por qué la 4212 va al Haber?", "ops": ["Es una venta", "Nace una deuda", "Entra dinero"], "ok": 1, "pq": "Pasivo que sube."}, {"q": "¿Qué importe va en la 4212?", "ops": ["Valor: 10,000", "IGV: 1,800", "Total: 11,800"], "ok": 2, "pq": "Le debemos toda la factura."}, {"q": "¿Por qué el IGV va al Debe?", "ops": ["Es crédito fiscal", "Es una deuda", "Es una venta"], "ok": 0, "pq": "Es un saldo a favor de la empresa."}], "fin": "<p class=\"pq\">Debe 10,000 + 1,800 = Haber 11,800: <b>cuadra</b>.</p>"},
 k9:{"tipo": "quiz", "corto": "Almacén", "titulo": "El ingreso al almacén", "lista": [{"q": "¿Qué importe va en A?", "ops": ["10,000", "11,800", "1,800"], "ok": 0, "pq": ""}, {"q": "¿Qué cuenta va en B?", "ops": ["4212 Por pagar", "6111 Variación existencias", "6011 Compras"], "ok": 1, "pq": ""}], "fin": "<p class=\"pq\">El almacén se registra por el <b>valor sin IGV</b>.</p>"},
 k10:{"tipo": "quiz", "corto": "Pago: faltan datos", "titulo": "Completa el pago", "lista": [{"q": "¿Qué importe va en A?", "ops": ["11,800", "10,000", "5,900"], "ok": 2, "pq": ""}, {"q": "¿Qué cuenta va en B?", "ops": ["1041 Banco", "1212 Por cobrar", "7012 Ventas"], "ok": 0, "pq": ""}], "fin": "<p class=\"pq\">Al pagar, la deuda <b>baja</b> (4212 al Debe) y el banco <b>baja</b> (1041 al Haber).</p>"},
