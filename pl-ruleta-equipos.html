@@ -67,8 +67,6 @@
   .tarjeta .cab .nom{ font-size:30px; font-weight:800; line-height:1.1; }
   .tarjeta .cab .num{ font-size:13px; font-weight:700; background:rgba(255,255,255,.2); border-radius:999px; padding:4px 10px; margin-left:auto; white-space:nowrap; }
   .tarjeta ol{ margin:0; padding:14px 18px 14px 42px; font-size:19px; font-weight:600; line-height:1.55; }
-  .tarjeta .caso{ padding:0 18px 14px; }
-  .pill{ display:inline-block; font-size:13px; font-weight:700; color:var(--azul); background:var(--cielo); border-radius:999px; padding:4px 12px; }
 
   /* lista */
   h2{ font-size:15px; margin:0 0 10px; color:var(--azul); text-transform:uppercase; letter-spacing:.6px; }
@@ -80,6 +78,14 @@
   .g .orden{ position:absolute; top:6px; right:8px; font-size:11px; font-weight:800; color:#fff; background:var(--fucsia);
              border-radius:999px; min-width:20px; height:20px; display:flex; align-items:center; justify-content:center; padding:0 6px; }
   .sep{ height:16px; }
+  .salida{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .salida li{ display:flex; gap:12px; align-items:flex-start; border:1px solid var(--borde); border-left:6px solid var(--c);
+              border-radius:10px; padding:9px 12px; animation:entra .4s ease-out; }
+  .salida li b{ display:block; font-size:16px; }
+  .salida .int{ display:block; font-size:12.5px; color:var(--suave); line-height:1.45; margin-top:2px; }
+  .salida .pos{ flex:none; width:30px; height:30px; border-radius:50%; background:var(--c); color:#fff; font-weight:800;
+                display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .salida li.vacia{ border-left-color:var(--borde); color:var(--suave); font-size:14px; animation:none; }
 
   footer{ text-align:center; font-size:12px; color:var(--suave); padding:6px 0 16px; }
 
@@ -122,6 +128,11 @@
     </div>
     <div class="sep"></div>
     <div class="panel">
+      <h2>Orden de salida</h2>
+      <ol class="salida" id="salida"></ol>
+    </div>
+    <div class="sep"></div>
+    <div class="panel">
       <h2>Equipos</h2>
       <div class="grupos" id="grupos"></div>
     </div>
@@ -135,18 +146,17 @@
   'use strict';
 
   var EQUIPOS = [
-    { id:'e1',  nom:'Equipo 1',   caso:'Caso 1', c:'#071767', miembros:['Bejar Ayala, Luz Clarita','Linero Robaina, Alejandro Jhoan','Lopez Avalos, Jalei de Maria','Orosco Polo, Roven Hugo David','Rivero Mejia, Liz'] },
-    { id:'e2',  nom:'Equipo 2',   caso:'Caso 2', c:'#FC0045', miembros:['Arrarte Melendez, Christina Nahomy','Rea Sandoval, Ximena Alexandra','Cotrina Cañari, Lucila Teresa','Chinga Inga, Valeria Yamile'] },
-    { id:'e3',  nom:'Equipo 3',   caso:'Caso 1', c:'#1F6FD1', miembros:['Orellana San Miguel, Melody Angelica','Abad Tirado, Diana Karen','Castillo Velasquez, Karen Milene','Reyes Pardave, Estefani Kinberlyn'] },
-    { id:'e41', nom:'Equipo 4.1', caso:'',       c:'#B0004A', miembros:['Otarola Flores, Milagros del Pilar','Vasquez Nano, Aydi Milu'] },
-    { id:'e42', nom:'Equipo 4.2', caso:'',       c:'#3A4BB8', miembros:['Parker Ponce, Natali Angie','Viteli Mendoza, Ariana Milagros'] },
-    { id:'e5',  nom:'Equipo 5',   caso:'Caso 1', c:'#E8457A', miembros:['Ponte Bravo, Katherine Stephanie','Bernuy Ramirez, Jaanai Michelle','Zaga Cardenas, Sila Zarahi'] },
-    { id:'e6',  nom:'Equipo 6',   caso:'Caso 1', c:'#0B2FA0', miembros:['Ríos Falcon, Nelda','Zuñiga Escalante, Jordan Yaset','López Romero, Yessenia Paola','Barroso Quispe, Hillary Giovana'] },
-    { id:'i1',  nom:'Individual', corto:'Ind. Chuqui',  caso:'', c:'#7A0F45', miembros:['Chuqui Agapito, Gloria Camila'] },
-    { id:'i2',  nom:'Individual', corto:'Ind. Cobeñas', caso:'', c:'#2C3E7A', miembros:['Cobeñas Martel, Ruth Noemi'] }
+    { id:'e1',  nom:'Equipo 1',   c:'#071767', miembros:['Bejar Ayala, Luz Clarita','Linero Robaina, Alejandro Jhoan','Lopez Avalos, Jalei de Maria','Orosco Polo, Roven Hugo David','Rivero Mejia, Liz'] },
+    { id:'e2',  nom:'Equipo 2',   c:'#FC0045', miembros:['Arrarte Melendez, Christina Nahomy','Rea Sandoval, Ximena Alexandra','Cotrina Cañari, Lucila Teresa','Chinga Inga, Valeria Yamile'] },
+    { id:'e3',  nom:'Equipo 3',   c:'#1F6FD1', miembros:['Orellana San Miguel, Melody Angelica','Abad Tirado, Diana Karen','Castillo Velasquez, Karen Milene','Reyes Pardave, Estefani Kinberlyn'] },
+    { id:'e41', nom:'Equipo 4.1', c:'#B0004A', miembros:['Otarola Flores, Milagros del Pilar','Vasquez Nano, Aydi Milu'] },
+    { id:'e42', nom:'Equipo 4.2', c:'#3A4BB8', miembros:['Parker Ponce, Natali Angie','Viteli Mendoza, Ariana Milagros'] },
+    { id:'e5',  nom:'Equipo 5',   c:'#E8457A', miembros:['Ponte Bravo, Katherine Stephanie','Bernuy Ramirez, Jaanai Michelle','Zaga Cardenas, Sila Zarahi'] },
+    { id:'e6',  nom:'Equipo 6',   c:'#0B2FA0', miembros:['Ríos Falcon, Nelda','Zuñiga Escalante, Jordan Yaset','López Romero, Yessenia Paola','Barroso Quispe, Hillary Giovana'] },
+    { id:'ind', nom:'Equipos individuales', corto:'Individuales', c:'#7A0F45', miembros:['Chuqui Agapito, Gloria Camila','Cobeñas Martel, Ruth Noemi','Guerreros Luque, Milagros Pamela','Cruz Cruz, Brenda Judith','Pariñas Valverde, Carolina Noemi'] }
   ];
 
-  var LS = 'plRuletaEquipos_20261123';
+  var LS = 'plRuletaEquipos_20261123b';
   var orden = [];            // ids en el orden en que salieron
   try{ var s = JSON.parse(localStorage.getItem(LS) || '[]'); if(Array.isArray(s)) orden = s.filter(function(id){ return porId(id); }); }catch(e){}
 
@@ -264,22 +274,26 @@
 
   function mostrar(e){
     var pos = orden.indexOf(e.id) + 1;
-    var titulo = e.id.charAt(0) === 'i' ? 'Equipo individual' : e.nom;
+    var titulo = e.nom;
     document.getElementById('resultado').innerHTML =
       '<div class="tarjeta"><div class="cab" style="background:' + e.c + '"><span class="nom">' + esc(titulo) + '</span>' +
       '<span class="num">Sale en el puesto ' + pos + '</span></div>' +
-      '<ol>' + e.miembros.map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('') + '</ol>' +
-      (e.caso ? '<div class="caso"><span class="pill">' + esc(e.caso) + '</span></div>' : '') + '</div>';
+      '<ol>' + e.miembros.map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('') + '</ol></div>';
   }
 
   function listar(){
     document.getElementById('grupos').innerHTML = EQUIPOS.map(function(e){
-      var k = orden.indexOf(e.id), titulo = e.id.charAt(0) === 'i' ? 'Equipo individual' : e.nom;
+      var k = orden.indexOf(e.id), titulo = e.nom;
       return '<div class="g' + (k >= 0 ? ' fuera' : '') + '" style="--c:' + e.c + '">' +
         (k >= 0 ? '<span class="orden">' + (k+1) + '</span>' : '') +
-        '<b>' + esc(titulo) + (e.caso ? ' · ' + esc(e.caso) : '') + '</b>' +
+        '<b>' + esc(titulo) + '</b>' +
         e.miembros.map(function(m){ return '<span>' + esc(m) + '</span>'; }).join('<br>') + '</div>';
     }).join('');
+    document.getElementById('salida').innerHTML = orden.length ? orden.map(function(id, k){
+      var e = porId(id);
+      return '<li style="--c:' + e.c + '"><span class="pos">' + (k+1) + '</span><span><b>' + esc(e.nom) + '</b>' +
+        '<span class="int">' + e.miembros.map(esc).join(' · ') + '</span></span></li>';
+    }).join('') : '<li class="vacia">Todavía no sale ningún equipo.</li>';
     var q = EQUIPOS.length - orden.length;
     document.getElementById('quedan').textContent = q ? 'Quedan ' + q + ' de ' + EQUIPOS.length : 'Ya salieron todos';
   }
