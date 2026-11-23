@@ -54,6 +54,11 @@ var R={
     ['r','Lo <b>vencido</b> se cobra este mes; lo <b>por vencer</b>, el siguiente.'],
     ['r','Capacidad de pago = lo que <b>entra</b> − lo que se <b>paga</b> en el mes.'],
     ['r','Todo asiento cuadra: <b>Debe = Haber</b>.']],
+  'sesion-6-preguntas':[
+    ['r','Vencido = <b>saldo × % de su tipo</b>. Lo por vencer se cobra el mes siguiente.'],
+    ['r','Valor = total ÷ <b>1.18</b> e IGV = valor × 18 %.'],
+    ['r','Activo y gasto suben en el <b>Debe</b>; pasivo e ingreso, en el <b>Haber</b>.'],
+    ['r','Todo asiento cuadra: <b>Debe = Haber</b>.']],
   'cont-s7':[
     ['r','La <b>depreciación acumulada</b> resta del activo fijo.'],
     ['r','Moneda extranjera × <b>tipo de cambio</b> antes de sumarla.'],
