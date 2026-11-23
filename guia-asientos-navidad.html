@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía de asientos contables · Curso Contabilidad</title>
+<meta name="version" content="2026-11-23-navidad-a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap">
+<style>
+  :root{
+    --marino:#071767; --fucsia:#FC0045; --celeste:#20D3FF; --aqua:#13A8AF; --morado:#C600A3;
+    --oro:#F5B800; --pino:#0E7C4A; --tinta:#0B1B3F; --gris:#55607F; --humo:#F1F5FD; --linea:#D5DDEF;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; }
+  body{ background:#E7EBF3; font-family:'Nunito',system-ui,'Segoe UI',sans-serif; color:var(--tinta);
+        -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  @page{ size:A4; margin:0; }
+
+  .barra{ max-width:210mm; margin:14px auto 10px; display:flex; gap:10px; justify-content:flex-end; padding:0 4px; }
+  .barra a, .barra button{ font:inherit; font-weight:800; font-size:14px; border-radius:99px; padding:8px 16px; cursor:pointer;
+                           border:2px solid var(--marino); background:#fff; color:var(--marino); text-decoration:none; }
+  .barra button{ background:var(--fucsia); border-color:var(--fucsia); color:#fff; }
+
+  .hoja{ width:210mm; height:297mm; margin:0 auto 24px; background:#fff; position:relative; overflow:hidden;
+         box-shadow:0 10px 40px rgba(7,23,103,.18); display:flex; flex-direction:column; }
+  @media print{
+    body{ background:#fff; }
+    .barra{ display:none; }
+    .hoja{ margin:0; box-shadow:none; }
+  }
+  /* en pantallas angostas la hoja se ve completa, a escala */
+  @media screen and (max-width:820px){
+    .hoja{ zoom:calc(100vw / 820px); }
+  }
+
+  /* ---------- cabecera ---------- */
+  .cab{ position:relative; background:var(--marino); color:#fff; padding:14mm 10mm 4.4mm; flex:none; }
+  .cab .guirnalda{ position:absolute; left:0; top:0; width:100%; height:16mm; }
+  .cab .nieve{ position:absolute; inset:0; pointer-events:none; }
+  .cab .fila{ position:relative; display:flex; align-items:center; gap:6mm; }
+  .cab .txt{ flex:1; min-width:0; }
+  .cab .marcas{ display:flex; align-items:center; gap:4mm; }
+  .cab .logo{ height:8mm; display:block; }
+  .chip{ display:inline-block; background:var(--fucsia); color:#fff; font-weight:900; font-size:11pt;
+         letter-spacing:.12em; padding:1.4mm 4mm; border-radius:99px; }
+  .cab h1{ margin:2.6mm 0 1mm; font-size:28pt; line-height:1.02; font-weight:900; letter-spacing:-.3px; }
+  .cab h1 span{ color:var(--celeste); }
+  .cab p{ margin:0; font-size:11.5pt; font-weight:700; opacity:.92; }
+  .cab p b{ color:var(--oro); }
+  .cab .arbol{ flex:none; width:31mm; height:34mm; margin:-4mm 0 -2mm; }
+
+  /* ---------- cuerpo ---------- */
+  .cuerpo{ flex:1; padding:4.4mm 8mm 0; display:grid; gap:3.2mm; grid-template-rows:auto auto 1fr; min-height:0; }
+  .fila3{ display:grid; gap:3.6mm; grid-template-columns:1fr 1.12fr 1fr; }
+  .fila3b{ display:grid; gap:3.6mm; grid-template-columns:.9fr 1.3fr .9fr; }
+  .fila2{ display:grid; gap:4mm; grid-template-columns:1fr 1fr; }
+  .caja{ border:2px solid var(--linea); border-radius:4mm; padding:3.2mm 4mm 3.6mm; position:relative; background:#fff; }
+  .caja h2{ margin:0 0 2.4mm; font-size:12.5pt; font-weight:900; color:var(--marino); display:flex; align-items:center; gap:2.2mm; }
+  .caja h2 .n{ flex:none; width:7mm; height:7mm; border-radius:50%; background:var(--fucsia); color:#fff; font-size:10.5pt;
+               display:inline-flex; align-items:center; justify-content:center; position:relative; }
+  .caja h2 .n::before{ content:''; position:absolute; top:-1.6mm; left:50%; width:2.4mm; height:1.8mm; margin-left:-1.2mm;
+                       background:var(--oro); border-radius:.6mm .6mm 0 0; }
+  .caja.az{ background:var(--humo); border-color:#C9D6F2; }
+  .caja .acebo{ position:absolute; right:2.5mm; top:2mm; width:11mm; height:8mm; }
+
+  /* 1. regla de oro */
+  .oro{ display:grid; grid-template-columns:34mm 1fr; gap:3mm; align-items:center; }
+  .oro svg{ width:34mm; height:auto; display:block; }
+  .oro .def{ font-size:10.5pt; line-height:1.4; margin:0 0 2mm; }
+  .formula{ background:var(--marino); color:#fff; border-radius:3mm; padding:2mm 3mm; text-align:center; font-weight:900; font-size:12pt; letter-spacing:.02em; }
+  .formula small{ display:block; font-size:8.5pt; font-weight:700; color:var(--celeste); letter-spacing:0; margin-top:.4mm; }
+
+  /* 2. dónde sube */
+  table.sube{ width:100%; border-collapse:separate; border-spacing:0 1.3mm; font-size:10.5pt; }
+  table.sube th{ font-size:8.5pt; letter-spacing:.08em; text-transform:uppercase; color:var(--gris); text-align:left; padding:0 2mm; }
+  table.sube td{ padding:1.5mm 2mm; background:#fff; font-weight:700; }
+  table.sube td:first-child{ border-radius:2mm 0 0 2mm; border-left:2.2mm solid var(--c); }
+  table.sube td:last-child{ border-radius:0 2mm 2mm 0; }
+  table.sube td small{ display:block; font-size:8.5pt; font-weight:600; color:var(--gris); }
+  .pill{ display:inline-flex; align-items:center; gap:1mm; border-radius:99px; padding:.6mm 2.6mm; font-weight:900; font-size:9.5pt; }
+  .pill.d{ background:#E3F7F7; color:#0B7479; }
+  .pill.h{ background:#FFE6EE; color:#C2003A; }
+
+  /* 3. IGV */
+  .igv{ display:flex; align-items:center; gap:2mm; }
+  .regalo{ flex:1; position:relative; border-radius:2.5mm; padding:4.2mm 2mm 2mm; text-align:center; color:#fff; }
+  .regalo::before{ content:''; position:absolute; left:50%; top:0; bottom:0; width:2.2mm; margin-left:-1.1mm; background:rgba(255,255,255,.38); }
+  .regalo::after{ content:''; position:absolute; left:50%; top:-3.4mm; width:8mm; height:4.4mm; margin-left:-4mm;
+                  border:1.4mm solid var(--oro); border-bottom:0; border-radius:50% 50% 0 0; }
+  .regalo b{ position:relative; display:block; font-size:15pt; font-weight:900; line-height:1.1; }
+  .regalo span{ position:relative; display:block; font-size:8.5pt; font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+  .regalo.t{ background:var(--marino); } .regalo.v{ background:var(--aqua); } .regalo.i{ background:var(--fucsia); }
+  .op{ flex:none; font-weight:900; font-size:9pt; color:var(--marino); text-align:center; line-height:1.15; }
+  .op i{ display:block; font-style:normal; font-size:15pt; color:var(--fucsia); }
+  .nota{ margin:2.6mm 0 0; font-size:9.5pt; color:var(--gris); font-weight:700; }
+  .nota b{ color:var(--tinta); }
+
+  /* 4. pasos */
+  .pasos{ display:grid; gap:1.8mm; }
+  .paso{ display:grid; grid-template-columns:8.5mm 1fr; gap:2.4mm; align-items:center; }
+  .paso .b{ width:8.5mm; height:8.5mm; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-weight:900; font-size:12pt; color:#fff; position:relative; }
+  .paso .b::before{ content:''; position:absolute; top:-1.5mm; width:2.6mm; height:1.8mm; background:var(--oro); border-radius:.6mm .6mm 0 0; }
+  .paso:nth-child(1) .b{ background:var(--fucsia); } .paso:nth-child(2) .b{ background:var(--aqua); }
+  .paso:nth-child(3) .b{ background:var(--morado); } .paso:nth-child(4) .b{ background:var(--marino); }
+  .paso p{ margin:0; font-size:10pt; line-height:1.3; }
+  .paso p b{ display:block; font-size:10.5pt; color:var(--marino); }
+
+  /* 5. asientos modelo */
+  .modelos h2{ margin-bottom:2mm; }
+  .mods{ display:grid; grid-template-columns:repeat(5,1fr); gap:2.4mm; }
+  .mod{ border-radius:3mm; overflow:hidden; border:1.6px solid var(--linea); background:#fff; display:flex; flex-direction:column; }
+  .mod .tt{ background:var(--c); color:#fff; font-weight:900; font-size:10pt; padding:1.6mm 2mm; display:flex; align-items:center; gap:1.4mm; }
+  .mod .tt img{ width:5mm; height:5mm; object-fit:contain; filter:brightness(0) invert(1); }
+  .mod .te{ display:grid; grid-template-columns:1fr 1fr; flex:1; }
+  .mod .te > div{ padding:1.4mm 1.6mm 1.8mm; font-size:9pt; line-height:1.3; }
+  .mod .te > div + div{ border-left:1.6px solid var(--tinta); }
+  .mod .te .lb{ display:block; font-size:7.5pt; font-weight:900; letter-spacing:.08em; text-transform:uppercase; color:var(--gris);
+                border-bottom:1.6px solid var(--tinta); margin:0 -1.6mm 1.2mm; padding:0 1.6mm .8mm; }
+  .mod .te b{ display:block; font-size:10pt; color:var(--tinta); }
+  .mod .te small{ display:block; font-size:7.8pt; color:var(--gris); font-weight:700; margin-bottom:.8mm; }
+  .mod .cu{ font-size:7.8pt; color:var(--gris); padding:1.1mm 2mm; background:var(--humo); font-weight:700; }
+
+  /* 6. ejemplo y catálogo */
+  .ultima{ display:grid; grid-template-columns:1.25fr 1fr; gap:4mm; min-height:0; }
+  table.diario{ width:100%; border-collapse:collapse; font-size:10pt; }
+  table.diario th{ background:var(--marino); color:#fff; font-size:8.5pt; letter-spacing:.06em; text-transform:uppercase; padding:1.5mm 2mm; text-align:left; }
+  table.diario th.n, table.diario td.n{ text-align:right; }
+  table.diario td{ padding:1.5mm 2mm; border-bottom:1px solid var(--linea); }
+  table.diario td small{ color:var(--gris); font-weight:700; }
+  table.diario tr.tot td{ background:#E3F7F7; font-weight:900; color:#0B7479; border-bottom:0; }
+  table.diario tr.glosa td{ font-size:8.8pt; color:var(--gris); font-style:italic; border-bottom:0; padding-top:1.2mm; }
+  .ejemplo .enun{ margin:0 0 2mm; font-size:10pt; }
+  .cats{ display:grid; grid-template-columns:1fr 1fr; gap:1.4mm; }
+  .cat{ display:flex; align-items:center; gap:1.6mm; background:#fff; border:1.4px solid var(--linea); border-radius:2mm; padding:1mm 1.6mm; font-size:8.6pt; font-weight:700; line-height:1.15; }
+  .cat b{ flex:none; min-width:11mm; text-align:center; background:var(--c); color:#fff; border-radius:1.4mm; padding:.6mm 1mm; font-size:9pt; }
+  .leyenda{ display:flex; gap:1.4mm 2mm; flex-wrap:wrap; margin-top:2mm; font-size:8pt; font-weight:800; color:var(--gris); }
+  .leyenda i{ display:inline-block; width:2.6mm; height:2.6mm; border-radius:50%; background:var(--c); margin-right:1mm; vertical-align:-.3mm; }
+
+  /* ---------- pie ---------- */
+  .pie{ flex:none; margin-top:4mm; position:relative; background:var(--fucsia); color:#fff; padding:3.4mm 10mm 3.6mm; display:flex; align-items:center; gap:4mm; }
+  .pie .alerta{ flex:1; font-size:10.5pt; font-weight:800; line-height:1.3; }
+  .pie .alerta b{ color:#FFF1A8; }
+  .pie .fiesta{ flex:none; text-align:right; font-weight:900; font-size:12pt; line-height:1.15; }
+  .pie .fiesta small{ display:block; font-size:8.5pt; font-weight:700; opacity:.9; }
+  .pie .copos{ position:absolute; inset:0; pointer-events:none; }
+
+  /* ---------- versión en tres columnas ---------- */
+  .caja h2 .sub{ font-size:9pt; color:var(--gris); font-weight:700; }
+  .balanza{ display:block; width:100%; max-width:46mm; height:auto; margin:0 auto 1.4mm; }
+  .def{ font-size:9.6pt; line-height:1.35; margin:0 0 2mm; text-align:center; }
+  .formula{ font-size:13pt; }
+  table.sube{ font-size:9.8pt; border-spacing:0 1.1mm; }
+  table.sube td{ padding:1.1mm 1.4mm; }
+  table.sube td small{ font-size:7.6pt; }
+  .pill{ white-space:nowrap; padding:.5mm 2mm; font-size:8.6pt; }
+  .igv{ display:block; text-align:center; }
+  .igv .regalo{ margin:3.6mm auto 0; }
+  .igv .regalo.t{ width:62%; }
+  .igv .ramas{ display:block; width:100%; height:6mm; }
+  .igv .dos{ display:grid; grid-template-columns:1fr 1fr; gap:3mm; }
+  .igv .op{ display:block; font-size:8.6pt; color:var(--marino); font-weight:900; margin:.6mm 0 0; }
+  .igv .dos .regalo{ margin-top:4.2mm; }
+  .regalo b{ font-size:14pt; }
+  .regalo span{ font-size:7.6pt; }
+  .nota{ text-align:center; margin-top:2.4mm; }
+  .mods .mod .te > div{ font-size:8.6pt; }
+  .pasos{ gap:2.2mm; }
+  .paso{ grid-template-columns:7.5mm 1fr; gap:2mm; }
+  .paso .b{ width:7.5mm; height:7.5mm; font-size:11pt; }
+  .paso p{ font-size:9pt; line-height:1.25; }
+  .paso p b{ font-size:9.8pt; }
+  table.diario{ font-size:9.4pt; }
+  table.diario td small{ display:inline; font-size:7.2pt; margin-left:1mm; }
+  table.diario td.n{ white-space:nowrap; font-weight:800; }
+  table.diario td{ padding:1.2mm 1.8mm; }
+  .glosa{ margin:1.6mm 0 0; font-size:8.6pt; color:var(--gris); font-style:italic; font-weight:700; }
+  .cats{ grid-template-columns:1fr; gap:1.2mm; }
+  .cat{ font-size:8.2pt; padding:.35mm 1.2mm; }
+  .cat b{ padding:.4mm 1mm; font-size:8.6pt; }
+  .cats{ gap:1mm; }
+  .ojo{ margin-top:2mm; background:#FFF6D6; border-left:1.6mm solid var(--oro); border-radius:1.6mm; padding:1.6mm 2.4mm; font-size:8.8pt; line-height:1.3; }
+  .regalos{ display:block; width:78%; margin:2.4mm auto 0; }
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <a href="contabilidad.html">&larr; Volver al curso</a>
+  <button type="button" onclick="window.print()">&#128424; Imprimir o guardar PDF</button>
+</div>
+
+<main class="hoja" aria-label="Guía de asientos contables">
+
+  <!-- ===================== CABECERA ===================== -->
+  <header class="cab">
+    <svg class="guirnalda" viewBox="0 0 210 16" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 2 Q 13 11 26 3 T 52 3 T 78 3 T 104 3 T 130 3 T 156 3 T 182 3 T 210 2" fill="none" stroke="#0E7C4A" stroke-width="2.6"/>
+      <path d="M0 2 Q 13 11 26 3 T 52 3 T 78 3 T 104 3 T 130 3 T 156 3 T 182 3 T 210 2" fill="none" stroke="#2FA36B" stroke-width="1" stroke-dasharray="1.2 1.6"/>
+      <g>
+        <line x1="13" y1="6.6" x2="13" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="13" cy="11" r="2.6" fill="#FC0045"/>
+        <line x1="39" y1="6.6" x2="39" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="39" cy="11" r="2.6" fill="#20D3FF"/>
+        <line x1="65" y1="6.6" x2="65" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="65" cy="11" r="2.6" fill="#F5B800"/>
+        <line x1="91" y1="6.6" x2="91" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="91" cy="11" r="2.6" fill="#C600A3"/>
+        <line x1="117" y1="6.6" x2="117" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="117" cy="11" r="2.6" fill="#FC0045"/>
+        <line x1="143" y1="6.6" x2="143" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="143" cy="11" r="2.6" fill="#20D3FF"/>
+        <line x1="169" y1="6.6" x2="169" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="169" cy="11" r="2.6" fill="#F5B800"/>
+        <line x1="195" y1="6.6" x2="195" y2="8.6" stroke="#F5B800" stroke-width=".7"/><circle cx="195" cy="11" r="2.6" fill="#13A8AF"/>
+      </g>
+      <g fill="#fff" opacity=".5">
+        <circle cx="12.2" cy="10.2" r=".7"/><circle cx="38.2" cy="10.2" r=".7"/><circle cx="64.2" cy="10.2" r=".7"/><circle cx="90.2" cy="10.2" r=".7"/>
+        <circle cx="116.2" cy="10.2" r=".7"/><circle cx="142.2" cy="10.2" r=".7"/><circle cx="168.2" cy="10.2" r=".7"/><circle cx="194.2" cy="10.2" r=".7"/>
+      </g>
+    </svg>
+    <svg class="nieve" viewBox="0 0 210 70" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="#fff" opacity=".22">
+        <circle cx="120" cy="22" r="1"/><circle cx="135" cy="40" r=".8"/><circle cx="104" cy="52" r="1.1"/><circle cx="150" cy="58" r=".7"/>
+        <circle cx="92" cy="30" r=".7"/><circle cx="126" cy="62" r=".9"/><circle cx="8" cy="60" r=".8"/><circle cx="160" cy="26" r=".9"/>
+      </g>
+    </svg>
+    <div class="fila">
+      <div class="txt">
+        <div class="marcas"><img class="logo" src="marca/certus-blanco.png" alt="Certus"><span class="chip">CURSO CONTABILIDAD</span></div>
+        <h1>Gu&iacute;a de <span>asientos contables</span></h1>
+        <p>La partida doble en una sola hoja &middot; <b>Edici&oacute;n navide&ntilde;a</b></p>
+      </div>
+      <svg class="arbol" viewBox="0 0 80 88" aria-hidden="true">
+        <polygon points="40,6 42.6,12.6 49.6,12.8 44,17 46,23.8 40,19.8 34,23.8 36,17 30.4,12.8 37.4,12.6" fill="#F5B800"/>
+        <polygon points="40,18 60,42 20,42" fill="#0E7C4A"/>
+        <polygon points="40,30 66,60 14,60" fill="#12925A"/>
+        <polygon points="40,44 72,80 8,80" fill="#0E7C4A"/>
+        <rect x="35" y="80" width="10" height="7" rx="1" fill="#8A5A2B"/>
+        <path d="M24 40 Q40 47 56 38" fill="none" stroke="#F5B800" stroke-width="1.4"/>
+        <path d="M19 58 Q40 66 61 56" fill="none" stroke="#20D3FF" stroke-width="1.4"/>
+        <path d="M14 77 Q40 85 66 74" fill="none" stroke="#F5B800" stroke-width="1.4"/>
+        <circle cx="31" cy="35" r="4.4" fill="#FC0045"/><text x="31" y="37.4" font-size="6" font-weight="900" fill="#fff" text-anchor="middle" font-family="Nunito,sans-serif">D</text>
+        <circle cx="50" cy="35" r="4.4" fill="#20D3FF"/><text x="50" y="37.4" font-size="6" font-weight="900" fill="#071767" text-anchor="middle" font-family="Nunito,sans-serif">H</text>
+        <circle cx="40" cy="53" r="4.6" fill="#F5B800"/><text x="40" y="55.4" font-size="6.4" font-weight="900" fill="#071767" text-anchor="middle" font-family="Nunito,sans-serif">=</text>
+        <circle cx="25" cy="70" r="3.4" fill="#C600A3"/><circle cx="55" cy="68" r="3.4" fill="#FC0045"/>
+        <circle cx="40" cy="73" r="3" fill="#fff"/><circle cx="62" cy="52" r="2.6" fill="#fff"/><circle cx="19" cy="52" r="2.6" fill="#F5B800"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ===================== CUERPO ===================== -->
+  <section class="cuerpo">
+
+    <div class="fila3">
+      <!-- 1. partida doble -->
+      <div class="caja az">
+        <h2><span class="n">1</span>La partida doble</h2>
+        <svg class="balanza" viewBox="0 0 120 74" role="img" aria-label="Balanza en equilibrio: Debe igual a Haber">
+          <rect x="57" y="14" width="6" height="50" rx="2" fill="#071767"/>
+          <rect x="40" y="64" width="40" height="7" rx="3" fill="#071767"/>
+          <circle cx="60" cy="12" r="5.5" fill="#F5B800"/>
+          <rect x="12" y="16" width="96" height="4" rx="2" fill="#071767"/>
+          <line x1="20" y1="20" x2="4" y2="42" stroke="#55607F" stroke-width="1.3"/><line x1="20" y1="20" x2="36" y2="42" stroke="#55607F" stroke-width="1.3"/>
+          <line x1="100" y1="20" x2="84" y2="42" stroke="#55607F" stroke-width="1.3"/><line x1="100" y1="20" x2="116" y2="42" stroke="#55607F" stroke-width="1.3"/>
+          <path d="M2 42 H38 Q36 56 20 56 Q4 56 2 42Z" fill="#13A8AF"/><path d="M82 42 H118 Q116 56 100 56 Q84 56 82 42Z" fill="#FC0045"/>
+          <text x="20" y="51.5" font-size="8.5" font-weight="900" fill="#fff" text-anchor="middle" font-family="Nunito,sans-serif">DEBE</text>
+          <text x="100" y="51.5" font-size="8.5" font-weight="900" fill="#fff" text-anchor="middle" font-family="Nunito,sans-serif">HABER</text>
+        </svg>
+        <p class="def">Cada operaci&oacute;n mueve <b>dos o m&aacute;s cuentas</b>: una al Debe y otra al Haber.</p>
+        <div class="formula">DEBE = HABER<small>la regla de oro de todo asiento</small></div>
+      </div>
+
+      <!-- 2. dónde sube -->
+      <div class="caja">
+        <h2><span class="n">2</span>&iquest;D&oacute;nde sube?</h2>
+        <svg class="acebo" viewBox="0 0 44 32" aria-hidden="true"><path d="M22 18 C14 4 2 8 4 16 C8 14 10 18 8 22 C14 22 18 20 22 18Z" fill="#0E7C4A"/><path d="M22 18 C30 4 42 8 40 16 C36 14 34 18 36 22 C30 22 26 20 22 18Z" fill="#12925A"/><circle cx="19" cy="21" r="3.4" fill="#FC0045"/><circle cx="25" cy="21" r="3.4" fill="#FC0045"/><circle cx="22" cy="25.5" r="3.4" fill="#E0003C"/></svg>
+        <table class="sube">
+          <thead><tr><th>Cuenta</th><th>Sube</th><th>Baja</th></tr></thead>
+          <tbody>
+            <tr style="--c:#13A8AF"><td>Activo<small>banco, clientes</small></td><td><span class="pill d">&#9650; Debe</span></td><td><span class="pill h">&#9660; Haber</span></td></tr>
+            <tr style="--c:#FC0045"><td>Pasivo<small>proveedor, IGV</small></td><td><span class="pill h">&#9650; Haber</span></td><td><span class="pill d">&#9660; Debe</span></td></tr>
+            <tr style="--c:#C600A3"><td>Ingreso<small>ventas</small></td><td><span class="pill h">&#9650; Haber</span></td><td><span class="pill d">&#9660; Debe</span></td></tr>
+            <tr style="--c:#071767"><td>Gasto<small>compras</small></td><td><span class="pill d">&#9650; Debe</span></td><td><span class="pill h">&#9660; Haber</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 3. IGV -->
+      <div class="caja">
+        <h2><span class="n">3</span>Separa el IGV</h2>
+        <div class="igv">
+          <div class="regalo t"><b>2,360</b><span>Total con IGV</span></div>
+          <svg class="ramas" viewBox="0 0 100 26" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M50 0 V8 M50 8 H24 V26 M50 8 H76 V26" fill="none" stroke="#071767" stroke-width="1.6"/>
+            <polygon points="20,20 28,20 24,26" fill="#071767"/><polygon points="72,20 80,20 76,26" fill="#071767"/>
+          </svg>
+          <div class="dos">
+            <div><span class="op">Total &divide; 1.18</span><div class="regalo v"><b>2,000</b><span>Valor</span></div></div>
+            <div><span class="op">Total &minus; Valor</span><div class="regalo i"><b>360</b><span>IGV 18 %</span></div></div>
+          </div>
+        </div>
+        <p class="nota">Comprueba: <b>2,000 + 360 = 2,360</b></p>
+      </div>
+    </div>
+
+    <!-- 5. modelos -->
+    <div class="caja modelos">
+      <h2><span class="n">4</span>Los cinco asientos modelo <span class="sub">&middot; cuenta T: Debe a la izquierda, Haber a la derecha</span></h2>
+      <div class="mods">
+        <div class="mod" style="--c:#FC0045">
+          <div class="tt"><img src="marca/iconos/formulario.png" alt="">Venta</div>
+          <div class="te">
+            <div><span class="lb">Debe</span><b>1212</b><small>Total</small></div>
+            <div><span class="lb">Haber</span><b>40111</b><small>IGV</small><b>7012</b><small>Valor</small></div>
+          </div>
+          <div class="cu">Factura por cobrar</div>
+        </div>
+        <div class="mod" style="--c:#13A8AF">
+          <div class="tt"><img src="marca/iconos/billetes.png" alt="">Cobranza</div>
+          <div class="te">
+            <div><span class="lb">Debe</span><b>1041</b><small>Cobrado</small></div>
+            <div><span class="lb">Haber</span><b>1212</b><small>Cobrado</small></div>
+          </div>
+          <div class="cu">Entra dinero al banco</div>
+        </div>
+        <div class="mod" style="--c:#C600A3">
+          <div class="tt"><img src="marca/iconos/tarjeta.png" alt="">Compra</div>
+          <div class="te">
+            <div><span class="lb">Debe</span><b>6011</b><small>Valor</small><b>40111</b><small>IGV</small></div>
+            <div><span class="lb">Haber</span><b>4212</b><small>Total</small></div>
+          </div>
+          <div class="cu">Al cr&eacute;dito, con IGV</div>
+        </div>
+        <div class="mod" style="--c:#0E7C4A">
+          <div class="tt"><img src="marca/iconos/lista.png" alt="">Almac&eacute;n</div>
+          <div class="te">
+            <div><span class="lb">Debe</span><b>2011</b><small>Valor</small></div>
+            <div><span class="lb">Haber</span><b>6111</b><small>Valor</small></div>
+          </div>
+          <div class="cu">Destino de la compra</div>
+        </div>
+        <div class="mod" style="--c:#071767">
+          <div class="tt"><img src="marca/iconos/celular.png" alt="">Pago</div>
+          <div class="te">
+            <div><span class="lb">Debe</span><b>4212</b><small>Pagado</small></div>
+            <div><span class="lb">Haber</span><b>1041</b><small>Pagado</small></div>
+          </div>
+          <div class="cu">Sale dinero del banco</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fila3b">
+      <!-- pasos -->
+      <div class="caja az">
+        <h2><span class="n">5</span>4 pasos</h2>
+        <div class="pasos">
+          <div class="paso"><span class="b">1</span><p><b>&iquest;Qu&eacute; pas&oacute;?</b>Venta, cobro, compra o pago.</p></div>
+          <div class="paso"><span class="b">2</span><p><b>Separa el IGV</b>Si el monto lo incluye.</p></div>
+          <div class="paso"><span class="b">3</span><p><b>Ubica cada cuenta</b>&iquest;Sube o baja?</p></div>
+          <div class="paso"><span class="b">4</span><p><b>Suma y compara</b>Debe = Haber.</p></div>
+        </div>
+        <svg class="regalos" viewBox="0 0 120 40" aria-hidden="true">
+          <rect x="8" y="14" width="34" height="24" rx="2" fill="#FC0045"/><rect x="22" y="14" width="6" height="24" fill="#F5B800"/><rect x="6" y="10" width="38" height="7" rx="2" fill="#E0003C"/><rect x="22" y="10" width="6" height="7" fill="#F5B800"/>
+          <path d="M25 10 C17 1 11 7 19 10 M25 10 C33 1 39 7 31 10" fill="none" stroke="#F5B800" stroke-width="2.2"/>
+          <rect x="48" y="20" width="28" height="18" rx="2" fill="#13A8AF"/><rect x="59" y="20" width="6" height="18" fill="#fff"/><rect x="46" y="16" width="32" height="6" rx="2" fill="#0E8F95"/>
+          <rect x="82" y="8" width="30" height="30" rx="2" fill="#071767"/><rect x="94" y="8" width="6" height="30" fill="#20D3FF"/><rect x="80" y="4" width="34" height="7" rx="2" fill="#0B1F86"/>
+          <text x="97" y="30" font-size="9" font-weight="900" fill="#fff" text-anchor="middle" font-family="Nunito,sans-serif">=</text>
+        </svg>
+      </div>
+
+      <!-- ejemplo -->
+      <div class="caja ejemplo">
+        <h2><span class="n">6</span>Ejemplo resuelto</h2>
+        <p class="enun">Venta al cr&eacute;dito por <b>S/ 2,360</b> con IGV.</p>
+        <table class="diario">
+          <thead><tr><th>Cuenta</th><th class="n">Debe</th><th class="n">Haber</th></tr></thead>
+          <tbody>
+            <tr><td><b>1212</b> Clientes<small>activo sube</small></td><td class="n">2,360</td><td class="n"></td></tr>
+            <tr><td><b>40111</b> IGV<small>pasivo sube</small></td><td class="n"></td><td class="n">360</td></tr>
+            <tr><td><b>7012</b> Ventas<small>ingreso</small></td><td class="n"></td><td class="n">2,000</td></tr>
+            <tr class="tot"><td>Totales &#10003; cuadra</td><td class="n">2,360</td><td class="n">2,360</td></tr>
+          </tbody>
+        </table>
+        <p class="glosa">Glosa: por la venta de mercader&iacute;a seg&uacute;n factura.</p>
+        <div class="ojo"><b>Ojo:</b> cuando el cliente paga, la misma <b>1212</b> va al <b>Haber</b>, porque su deuda baja.</div>
+      </div>
+
+      <!-- cuentas -->
+      <div class="caja az">
+        <h2><span class="n">7</span>Tus cuentas</h2>
+        <div class="cats">
+          <div class="cat" style="--c:#13A8AF"><b>1041</b>Banco</div>
+          <div class="cat" style="--c:#13A8AF"><b>1212</b>Facturas por cobrar</div>
+          <div class="cat" style="--c:#13A8AF"><b>2011</b>Mercader&iacute;as</div>
+          <div class="cat" style="--c:#FC0045"><b>40111</b>IGV</div>
+          <div class="cat" style="--c:#FC0045"><b>4212</b>Facturas por pagar</div>
+          <div class="cat" style="--c:#071767"><b>6011</b>Compras</div>
+          <div class="cat" style="--c:#071767"><b>6111</b>Variaci&oacute;n de stock</div>
+          <div class="cat" style="--c:#C600A3"><b>7012</b>Ventas</div>
+        </div>
+        <div class="leyenda">
+          <span><i style="--c:#13A8AF"></i>Activo</span><span><i style="--c:#FC0045"></i>Pasivo</span><span><i style="--c:#071767"></i>Gasto</span><span><i style="--c:#C600A3"></i>Ingreso</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== PIE ===================== -->
+  <footer class="pie">
+    <svg class="copos" viewBox="0 0 210 16" preserveAspectRatio="none" aria-hidden="true">
+      <g fill="#fff" opacity=".28"><circle cx="150" cy="4" r=".9"/><circle cx="160" cy="12" r=".7"/><circle cx="172" cy="6" r="1"/><circle cx="140" cy="11" r=".6"/><circle cx="120" cy="5" r=".7"/></g>
+    </svg>
+    <div class="alerta">&#127873; <b>Antes de entregar:</b> suma el Debe, suma el Haber y compara. Si no son iguales, el asiento est&aacute; mal.</div>
+    <div class="fiesta">&#127876; &iexcl;Felices fiestas!<small>Curso Contabilidad &middot; CERTUS</small></div>
+  </footer>
+
+</main>
+</body>
+</html>
