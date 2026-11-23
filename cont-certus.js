@@ -49,6 +49,12 @@ var R={
     ['r','Cobranza: <b>10</b> al Debe, <b>12</b> al Haber.'],
     ['r','Pago a proveedor: <b>42</b> al Debe, <b>10</b> al Haber.'],
     ['r','Capacidad de pago = lo que se <b>cobra</b> − lo que se <b>debe pagar</b> en el mes.']],
+  'sesion-6-partida-doble':[
+    ['r','Partida doble: cada operación toca <b>dos o más cuentas</b> y el <b>Debe = Haber</b>.'],
+    ['r','Activo y gasto <b>suben en el Debe</b>; pasivo e ingreso <b>suben en el Haber</b>.'],
+    ['r','Valor = Total ÷ <b>1.18</b> · IGV = Total − Valor.'],
+    ['r','Venta: <b>1212</b> / 40111 y 7012 · Cobranza: <b>1041</b> / 1212.'],
+    ['r','Compra: <b>6011</b> y 40111 / 4212 · Almacén: <b>2011</b> / 6111 · Pago: <b>4212</b> / 1041.']],
   'cont-s7':[
     ['r','La <b>depreciación acumulada</b> resta del activo fijo.'],
     ['r','Moneda extranjera × <b>tipo de cambio</b> antes de sumarla.'],

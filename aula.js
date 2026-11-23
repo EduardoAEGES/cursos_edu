@@ -56,6 +56,7 @@
    Opcional: simple: true
        El alumno entra solo con su nombre, y hasta sin él (queda como
        «Participante 123»). No se pide código de sala: se usa el de la clase.
+       Con nombre: true el nombre es obligatorio: sin él no se entra a la sala.
 
    Opcional: ajusta: function(est, quien){ return est; }
        Antes de armar el reporte, la página puede recalcular ok, total y
@@ -220,7 +221,7 @@ function pintaControles(){
           '<input id="aulaDni" type="text" inputmode="numeric" maxlength="8" '+
           'placeholder="8 dígitos" autocomplete="off"></label>' : '')+
         '<label class="aula-campo" id="aulaCnom"'+(conFicha()?' hidden':'')+'>'+
-          (conFicha()?'Apellidos y nombres':(simple()?'Tu nombre (opcional)':'Tu nombre'))+
+          (conFicha()?'Apellidos y nombres':((simple()&&!nombreObligado())?'Tu nombre (opcional)':'Tu nombre'))+
           '<input id="aulaNombre" type="text" maxlength="60" placeholder="'+
           (conFicha()?'Apellidos y nombres':'Nombre y apellido')+'" autocomplete="off"></label>'+
         '<label class="aula-campo" id="aulaCsala"'+((simple() && !pin())?' hidden':'')+'>'+
@@ -417,7 +418,7 @@ function entraPractica(){
 function sigueAlumno(s){
   if(!conFicha()){
     var n0=$('aulaNombre').value.trim();
-    if(simple() && n0.length<2){
+    if(simple() && !nombreObligado() && n0.length<2){
       n0=leeLocal('anonimo') || ('Participante '+(100+Math.floor(Math.random()*900)));
       guardaLocal('anonimo', n0);
     }
@@ -615,6 +616,8 @@ function falla(e){
 /* ---------------- la ficha del alumno (DNI) ---------------- */
 /* simple: sin código de sala (se usa el de la clase) y el nombre es opcional */
 function simple(){ return !!(cfg && cfg.simple); }
+/* nombre: true — en el modo simple el nombre deja de ser opcional */
+function nombreObligado(){ return !!(cfg && cfg.nombre); }
 function conFicha(){ return !!(cfg && cfg.ficha && cfg.ficha.clave); }
 function claveFicha(){ return String(cfg.ficha.clave); }
 function dniBueno(v){ return /^[0-9]{8}$/.test(String(v||'').trim()); }
