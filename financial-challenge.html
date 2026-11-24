@@ -46,6 +46,12 @@ footer{text-align:center;padding:18px 16px 28px;color:var(--vd)}
 summary{cursor:pointer;color:var(--vd);font-size:18px;list-style:none;display:flex;align-items:center}summary::-webkit-details-marker{display:none}
 summary:after{content:"+";margin-left:auto;color:var(--rj);font-size:24px}details[open]>summary:after{content:"–"}details[open]>summary{margin-bottom:10px}
 header{padding:16px 16px 28px}.luces{margin-bottom:8px}header img{height:26px;margin-bottom:6px}header h1{font-size:clamp(22px,6.5vw,34px)}header p{margin:4px auto 0;font-size:14px}
+details.card{background:transparent;border:2px dotted var(--or);box-shadow:none;padding:14px 16px}
+.acc{display:flex;gap:8px;flex-wrap:wrap}.acc button{flex:1 1 140px}
+#modal{position:fixed;inset:0;background:#0a3427cc;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+#modal.on{display:flex}#modal .caja{background:#fff;border:3px dotted var(--or);border-radius:18px;padding:18px;text-align:center;width:min(420px,100%);max-height:100%;overflow:auto}
+#modal #qr{border:0;padding:0;display:block}#modal #qr svg{width:min(340px,78vw);height:min(340px,78vw);margin:0 auto}
+#modal .btns button{flex:1 1 140px}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <symbol id="copo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/><path d="M9.5 3.8L12 6.3l2.5-2.5M9.5 20.2L12 17.7l2.5 2.5M3 10.2l3.4.9-.9 3.4M21 13.8l-3.4-.9.9-3.4M3 13.8l3.4-.9-.9-3.4M21 10.2l-3.4.9.9 3.4"/></g></symbol>
@@ -92,9 +98,9 @@ header{padding:16px 16px 28px}.luces{margin-bottom:8px}header img{height:26px;ma
 <p><svg class="i" style="color:var(--vd)"><use href="#regalo"/></svg>No necesitas ser de Contabilidad. Antes de empezar te explicamos todo lo necesario.</p>
 <h2 style="margin-top:14px"><svg class="i"><use href="#copo"/></svg>¿Cómo se juega?</h2>
 <ul><li>Ronda clasificatoria con ranking en vivo.</li><li>Los 4 mejores pasan a la siguiente fase.</li><li>Duelo por el 3.er puesto y gran final.</li></ul></details>
-<section class="card qr"><h2><svg class="i"><use href="#qrico"/></svg>Comparte esta inscripción</h2><div id="qr"></div>
-<p>Escanea el código para abrir el formulario.</p>
-<div class="btns"><button class="sec" id="comp"><svg class="i"><use href="#regalo"/></svg>Compartir</button><button class="sec" id="png"><svg class="i"><use href="#bajar"/></svg>Descargar PNG</button><button class="sec" id="svg"><svg class="i"><use href="#bajar"/></svg>Descargar SVG</button></div></section>
+<div class="acc"><button class="sec" id="comp"><svg class="i"><use href="#qrico"/></svg>Compartir</button><button class="sec" id="png"><svg class="i"><use href="#bajar"/></svg>Descargar imagen</button></div>
+<div id="modal" role="dialog" aria-modal="true" aria-label="Código QR"><div class="caja"><h2 style="justify-content:center"><svg class="i"><use href="#qrico"/></svg>Escanea para inscribirte</h2><div id="qr"></div>
+<div class="btns"><button id="env"><svg class="i"><use href="#enviar"/></svg>Enviar enlace</button><button class="sec" id="png2"><svg class="i"><use href="#bajar"/></svg>Descargar imagen</button><button class="sec" id="cerrar">Cerrar</button></div></div></div>
 </main>
 <footer><svg class="i" style="color:var(--rj)"><use href="#copo"/></svg>Eduardo Mamani Roque – Área de Finanzas · CERTUS Arequipa</footer>
 <script>(function(){var n=document.getElementById('nieve');for(var i=0;i<28;i++){var e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.animationDuration=(4+Math.random()*5)+'s';e.style.animationDelay=(-Math.random()*8)+'s';e.style.opacity=.4+Math.random()*.5;n.appendChild(e)}})();</script>
@@ -108,14 +114,18 @@ var qr = qrcode(0,'M'); qr.addData(url); qr.make();
 $('qr').innerHTML = qr.createSvgTag({cellSize:8,margin:0,scalable:true});
 function svgTxt(){return $('qr').innerHTML.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"')}
 function bajar(blob,n){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=n;a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
-$('svg').onclick=function(){bajar(new Blob([svgTxt()],{type:'image/svg+xml'}),'qr-financial-challenge.svg')};
 function aPng(cb){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=900;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,900,900);x.imageSmoothingEnabled=false;x.drawImage(img,50,50,800,800);c.toBlob(cb,'image/png')};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgTxt())}
-$('png').onclick=function(){aPng(function(b){bajar(b,'qr-financial-challenge.png')})};
-$('comp').onclick=function(){
+function bajarImg(){aPng(function(b){bajar(b,'qr-financial-challenge.png')})}
+$('png').onclick=bajarImg;$('png2').onclick=bajarImg;
+$('comp').onclick=function(){$('modal').className='on'};
+$('cerrar').onclick=function(){$('modal').className=''};
+$('modal').onclick=function(e){if(e.target===this)this.className=''};
+document.onkeydown=function(e){if(e.key==='Escape')$('modal').className=''};
+$('env').onclick=function(){
   var d={title:'Financial Challenge',text:'Financial Challenge – Miércoles 25 de noviembre, CERTUS Arequipa. Inscríbete:',url:url};
   if(navigator.share){aPng(function(b){var f=new File([b],'qr-financial-challenge.png',{type:'image/png'});
     if(navigator.canShare&&navigator.canShare({files:[f]}))d.files=[f];navigator.share(d).catch(function(){})})}
-  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){$('comp').textContent='Enlace copiado'})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){$('env').lastChild.textContent='Enlace copiado'})}
   else prompt('Copia el enlace:',url)};
 $('f').onsubmit=function(e){e.preventDefault();var m=$('msg'),b=$('b');
   if($('web').value)return;
