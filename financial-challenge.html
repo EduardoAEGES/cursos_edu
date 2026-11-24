@@ -42,7 +42,10 @@ button.sec{background:var(--vd)}button[disabled]{opacity:.6}
 #qr svg{display:block;width:min(220px,60vw);height:min(220px,60vw)}
 .btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
 footer{text-align:center;padding:18px 16px 28px;color:var(--vd)}
-@media(max-width:560px){.fila{grid-template-columns:1fr;gap:0}.card{padding:16px}main{padding:12px}.btns button{flex:1 1 100%}input,select{font-size:16px}}
+@media(max-width:560px){.fila{gap:0 8px}.card{padding:16px}main{padding:12px}.btns button{flex:1 1 100%}input,select{font-size:16px}}
+summary{cursor:pointer;color:var(--vd);font-size:18px;list-style:none;display:flex;align-items:center}summary::-webkit-details-marker{display:none}
+summary:after{content:"+";margin-left:auto;color:var(--rj);font-size:24px}details[open]>summary:after{content:"–"}details[open]>summary{margin-bottom:10px}
+header{padding:16px 16px 28px}.luces{margin-bottom:8px}header img{height:26px;margin-bottom:6px}header h1{font-size:clamp(22px,6.5vw,34px)}header p{margin:4px auto 0;font-size:14px}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <symbol id="copo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/><path d="M9.5 3.8L12 6.3l2.5-2.5M9.5 20.2L12 17.7l2.5 2.5M3 10.2l3.4.9-.9 3.4M21 13.8l-3.4-.9.9-3.4M3 13.8l3.4-.9-.9-3.4M21 10.2l-3.4.9.9 3.4"/></g></symbol>
@@ -63,22 +66,10 @@ footer{text-align:center;padding:18px 16px 28px;color:var(--vd)}
 <header><div class="nieve" id="nieve"></div>
 <div class="luces"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
 <img src="marca/certus-blanco.png" alt="CERTUS">
-<h1><svg class="i" style="color:#ffd35a"><use href="#estrella"/></svg>Financial Challenge<svg class="i" style="color:#ffd35a"><use href="#estrella"/></svg></h1>
-<p>El futuro de los negocios: inteligencia, tecnología y nuevas oportunidades</p></header>
+<h1><svg class="i" style="color:#ffd35a"><use href="#estrella"/></svg>Financial Challenge</h1>
+<p>Miércoles 25 de noviembre · 10:45 a.m. · CERTUS Arequipa</p></header>
 <main>
-<section class="card"><h2><svg class="i"><use href="#arbol"/></svg>¿En qué consiste?</h2>
-<p>¿Te animas a tomar decisiones como un verdadero analista de negocios? Resolverás casos reales de negocios de Arequipa: una cafetería, una distribuidora y un gimnasio. Con hojas de cálculo, descubrirás cuánto venden, cuánto ganan y qué decisiones les convienen.</p>
-<p><svg class="i" style="color:var(--vd)"><use href="#regalo"/></svg>No necesitas ser de Contabilidad. Antes de empezar te explicamos todo lo necesario.</p>
-<h2 style="margin-top:16px"><svg class="i"><use href="#copo"/></svg>¿Cómo se juega?</h2>
-<ul><li>Ronda clasificatoria con ranking en vivo.</li><li>Los 4 mejores pasan a la siguiente fase.</li><li>Duelo por el 3.er puesto y gran final.</li></ul></section>
-<section class="card"><h2><svg class="i"><use href="#copa"/></svg>Premios para los 4 mejores</h2>
-<div class="premios">
-<div><svg style="color:#d9a928"><use href="#medalla"/></svg>1.er puesto<strong>S/ 150</strong></div>
-<div><svg style="color:#9aa3ab"><use href="#medalla"/></svg>2.º puesto<strong>S/ 100</strong></div>
-<div><svg style="color:#b4693a"><use href="#medalla"/></svg>3.er puesto<strong>S/ 50</strong></div>
-<div><svg style="color:#0e4a38"><use href="#medalla"/></svg>4.º puesto<strong>S/ 30</strong></div></div>
-<div class="datos"><div><svg class="i"><use href="#calendario"/></svg>Miércoles 25 de noviembre</div><div><svg class="i"><use href="#reloj"/></svg>10:45 a.m. – 12:30 p.m.</div><div><svg class="i"><use href="#lugar"/></svg>CERTUS – Sede Arequipa</div><div><svg class="i"><use href="#grupo"/></svg>Abierto a estudiantes de todas las carreras</div></div></section>
-<section class="card"><h2><svg class="i"><use href="#lapiz"/></svg>Inscríbete</h2>
+<section class="card"><h2><svg class="i"><use href="#lapiz"/></svg>Inscríbete aquí</h2>
 <form id="f" autocomplete="on">
 <label for="nombre">Apellidos y nombres</label><input id="nombre" name="nombre" required autocomplete="name">
 <div class="fila"><div><label for="dni">DNI</label><input id="dni" name="dni" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 dígitos"></div>
@@ -89,6 +80,18 @@ footer{text-align:center;padding:18px 16px 28px;color:var(--vd)}
 <input type="text" name="web" id="web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
 <button id="b" type="submit"><svg class="i"><use href="#enviar"/></svg>Inscribirme</button><div id="msg" role="status"></div>
 </form></section>
+<details class="card"><summary><svg class="i"><use href="#copa"/></svg>Premios, fecha y lugar</summary>
+<div class="premios">
+<div><svg style="color:#d9a928"><use href="#medalla"/></svg>1.er puesto<strong>S/ 150</strong></div>
+<div><svg style="color:#9aa3ab"><use href="#medalla"/></svg>2.º puesto<strong>S/ 100</strong></div>
+<div><svg style="color:#b4693a"><use href="#medalla"/></svg>3.er puesto<strong>S/ 50</strong></div>
+<div><svg style="color:#0e4a38"><use href="#medalla"/></svg>4.º puesto<strong>S/ 30</strong></div></div>
+<div class="datos"><div><svg class="i"><use href="#calendario"/></svg>Miércoles 25 de noviembre</div><div><svg class="i"><use href="#reloj"/></svg>10:45 a.m. – 12:30 p.m.</div><div><svg class="i"><use href="#lugar"/></svg>CERTUS – Sede Arequipa</div><div><svg class="i"><use href="#grupo"/></svg>Abierto a estudiantes de todas las carreras</div></div></details>
+<details class="card"><summary><svg class="i"><use href="#arbol"/></svg>¿En qué consiste y cómo se juega?</summary>
+<p>¿Te animas a tomar decisiones como un verdadero analista de negocios? Resolverás casos reales de negocios de Arequipa: una cafetería, una distribuidora y un gimnasio. Con hojas de cálculo, descubrirás cuánto venden, cuánto ganan y qué decisiones les convienen.</p>
+<p><svg class="i" style="color:var(--vd)"><use href="#regalo"/></svg>No necesitas ser de Contabilidad. Antes de empezar te explicamos todo lo necesario.</p>
+<h2 style="margin-top:14px"><svg class="i"><use href="#copo"/></svg>¿Cómo se juega?</h2>
+<ul><li>Ronda clasificatoria con ranking en vivo.</li><li>Los 4 mejores pasan a la siguiente fase.</li><li>Duelo por el 3.er puesto y gran final.</li></ul></details>
 <section class="card qr"><h2><svg class="i"><use href="#qrico"/></svg>Comparte esta inscripción</h2><div id="qr"></div>
 <p>Escanea el código para abrir el formulario.</p>
 <div class="btns"><button class="sec" id="comp"><svg class="i"><use href="#regalo"/></svg>Compartir</button><button class="sec" id="png"><svg class="i"><use href="#bajar"/></svg>Descargar PNG</button><button class="sec" id="svg"><svg class="i"><use href="#bajar"/></svg>Descargar SVG</button></div></section>
