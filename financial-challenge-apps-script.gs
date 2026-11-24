@@ -1,6 +1,6 @@
 // Pegar en la hoja de Google: Extensiones > Apps Script. Luego Implementar > Nueva implementación
 // > Aplicación web > Ejecutar como: yo / Acceso: cualquier persona. Copiar la URL /exec en financial-challenge.html (APPS_SCRIPT_URL).
-var ENCABEZADOS = ['Fecha y hora','Nombres y apellidos','DNI','Código de estudiante','Correo','Celular','Carrera','Ciclo','Experiencia en Excel'];
+var ENCABEZADOS = ['Fecha y hora','Apellidos y nombres','DNI','Teléfono','Carrera','Ciclo','Nivel de Excel'];
 function doPost(e) {
   var lock = LockService.getScriptLock(); lock.waitLock(10000);
   try {
@@ -10,7 +10,7 @@ function doPost(e) {
     var dni = String(p.dni || '').trim();
     var datos = hoja.getRange(2,3,Math.max(hoja.getLastRow()-1,1),1).getDisplayValues();
     for (var i=0;i<datos.length;i++) if (datos[i][0] === dni) return salida({ok:false, duplicado:true});
-    hoja.appendRow([new Date(), p.nombre, "'"+dni, p.codigo, p.correo, "'"+p.celular, p.carrera, p.ciclo, p.excel]);
+    hoja.appendRow([new Date(), p.nombre, "'"+dni, "'"+p.celular, p.carrera, p.ciclo, p.excel]);
     return salida({ok:true});
   } finally { lock.releaseLock(); }
 }

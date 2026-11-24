@@ -80,14 +80,12 @@ footer{text-align:center;padding:18px 16px 28px;color:var(--vd)}
 <div class="datos"><div><svg class="i"><use href="#calendario"/></svg>Miércoles 25 de noviembre</div><div><svg class="i"><use href="#reloj"/></svg>10:45 a.m. – 12:30 p.m.</div><div><svg class="i"><use href="#lugar"/></svg>CERTUS – Sede Arequipa</div><div><svg class="i"><use href="#grupo"/></svg>Abierto a estudiantes de todas las carreras</div></div></section>
 <section class="card"><h2><svg class="i"><use href="#lapiz"/></svg>Inscríbete</h2>
 <form id="f" autocomplete="on">
-<label for="nombre">Nombres y apellidos</label><input id="nombre" name="nombre" required autocomplete="name">
+<label for="nombre">Apellidos y nombres</label><input id="nombre" name="nombre" required autocomplete="name">
 <div class="fila"><div><label for="dni">DNI</label><input id="dni" name="dni" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 dígitos"></div>
-<div><label for="codigo">Código de estudiante</label><input id="codigo" name="codigo" required></div></div>
-<div class="fila"><div><label for="correo">Correo</label><input id="correo" name="correo" type="email" required autocomplete="email"></div>
-<div><label for="celular">Celular</label><input id="celular" name="celular" required inputmode="tel" pattern="[0-9]{9}" maxlength="9" placeholder="9 dígitos" autocomplete="tel"></div></div>
+<div><label for="celular">Teléfono</label><input id="celular" name="celular" required inputmode="tel" pattern="[0-9]{9}" maxlength="9" placeholder="9 dígitos" autocomplete="tel"></div></div>
 <div class="fila"><div><label for="carrera">Carrera</label><input id="carrera" name="carrera" required></div>
 <div><label for="ciclo">Ciclo</label><select id="ciclo" name="ciclo" required><option value="">Elegir…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div></div>
-<label for="excel">Experiencia en Excel</label><select id="excel" name="excel" required><option value="">Elegir…</option><option>Ninguna</option><option>Básica</option><option>Intermedia</option><option>Avanzada</option></select>
+<label for="excel">Nivel de Excel</label><select id="excel" name="excel" required><option value="">Elegir…</option><option>Ninguno</option><option>Básico</option><option>Intermedio</option><option>Avanzado</option></select>
 <input type="text" name="web" id="web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
 <button id="b" type="submit"><svg class="i"><use href="#enviar"/></svg>Inscribirme</button><div id="msg" role="status"></div>
 </form></section>
