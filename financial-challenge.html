@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="5">
+<meta name="version" content="6">
 <title>Financial Challenge · Inscripción</title>
 <style>
 :root{--vd:#0e4a38;--vd2:#0a3427;--rj:#c1272d;--or:#d9a928;--cr:#fff9ee;--tx:#2a2a26}
@@ -84,7 +84,7 @@ details.card{background:transparent;border:2px dotted var(--or);box-shadow:none;
 <div class="fila"><div><label for="dni">DNI</label><input id="dni" name="dni" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 dígitos"></div>
 <div><label for="celular">Teléfono</label><input id="celular" name="celular" required inputmode="tel" pattern="[0-9]{9}" maxlength="9" placeholder="9 dígitos" autocomplete="tel"></div></div>
 <div class="fila"><div><label for="carrera">Carrera</label><input id="carrera" name="carrera" required></div>
-<div><label for="ciclo">Ciclo</label><select id="ciclo" name="ciclo" required><option value="">Elegir…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div></div>
+<div><label for="ciclo">Ciclo</label><select id="ciclo" name="ciclo" required><option value="">Elegir…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>Egresado</option></select></div></div>
 <label for="excel">Nivel de Excel</label><select id="excel" name="excel" required><option value="">Elegir…</option><option>Ninguno</option><option>Básico</option><option>Intermedio</option><option>Avanzado</option></select>
 <input type="text" name="web" id="web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
 <button id="b" type="submit"><svg class="i"><use href="#enviar"/></svg>Inscribirme</button><div id="msg" role="status"></div>
@@ -105,7 +105,7 @@ details.card{background:transparent;border:2px dotted var(--or);box-shadow:none;
 <div id="modal" role="dialog" aria-modal="true" aria-label="Código QR"><div class="caja"><h2 style="justify-content:center"><svg class="i"><use href="#qrico"/></svg>Escanea para inscribirte</h2><div id="qr"></div>
 <div class="btns"><button id="env"><svg class="i"><use href="#enviar"/></svg>Enviar enlace</button><button class="sec" id="png2"><svg class="i"><use href="#bajar"/></svg>Descargar imagen</button><button class="sec" id="cerrar">Cerrar</button></div></div></div>
 </main>
-<footer><svg class="i" style="color:var(--rj)"><use href="#copo"/></svg>Eduardo Mamani Roque – Área de Finanzas · CERTUS Arequipa</footer>
+<footer><svg class="i" style="color:var(--rj)"><use href="#copo"/></svg>Equipo de Negocios y Finanzas · CERTUS Arequipa</footer>
 <script>(function(){var n=document.getElementById('nieve');for(var i=0;i<28;i++){var e=document.createElement('i');e.style.left=Math.random()*100+'%';e.style.animationDuration=(4+Math.random()*5)+'s';e.style.animationDelay=(-Math.random()*8)+'s';e.style.opacity=.4+Math.random()*.5;n.appendChild(e)}})();</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 <script>
