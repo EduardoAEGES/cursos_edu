@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="version" content="1">
+<title>Financial Challenge · Inscripción</title>
+<style>
+:root{--az:#071767;--fu:#FC0045;--bg:#F3F5FB;--tx:#1b1f3a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:var(--az);color:#fff;padding:28px 16px;text-align:center}
+header img{height:34px;margin-bottom:10px}header h1{margin:0;font-size:28px}header p{margin:6px 0 0;opacity:.85;font-style:italic}
+main{max-width:860px;margin:0 auto;padding:16px;display:grid;gap:16px}
+.card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px #07176714}
+h2{margin:0 0 10px;color:var(--az);font-size:18px}
+.premios{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}.premios div{background:var(--bg);border-radius:10px;padding:10px;text-align:center}.premios b{display:block;color:var(--fu);font-size:18px}
+ul{margin:0;padding-left:20px}
+label{display:block;font-weight:600;margin:12px 0 4px}input,select{width:100%;padding:11px;border:1.5px solid #cfd5ea;border-radius:9px;font:inherit}
+input:focus,select:focus{outline:none;border-color:var(--fu)}
+.fila{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}@media(max-width:560px){.fila{grid-template-columns:1fr}}
+button{border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--fu);color:#fff}
+button.sec{background:var(--az)}button[disabled]{opacity:.6}
+#msg{margin-top:12px;font-weight:600}.ok{color:#0a7d3c}.err{color:#b3261e}
+.qr{text-align:center}#qr{display:inline-block;padding:12px;background:#fff;border:1px solid #dde}#qr svg,#qr img{display:block;width:220px;height:220px}
+.btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+footer{text-align:center;padding:16px;color:#667}
+</style></head><body>
+<header><img src="marca/certus-blanco.png" alt="CERTUS"><h1>🏆 FINANCIAL CHALLENGE 🏆</h1><p>El futuro de los negocios: inteligencia, tecnología y nuevas oportunidades</p></header>
+<main>
+<section class="card"><h2>¿En qué consiste?</h2>
+<p>Resolverás casos reales de negocios de Arequipa: una cafetería, una distribuidora y un gimnasio. Con hojas de cálculo, descubrirás cuánto venden, cuánto ganan y qué decisiones les convienen.</p>
+<p>✅ <b>No necesitas ser de Contabilidad.</b> Antes de empezar te explicamos todo lo necesario.</p>
+<h2>¿Cómo se juega?</h2><ul><li>Ronda clasificatoria con ranking en vivo.</li><li>Los 4 mejores pasan a la siguiente fase.</li><li>Duelo por el 3.er puesto y <b>gran final</b>.</li></ul></section>
+<section class="card"><h2>Premios para los 4 mejores</h2>
+<div class="premios"><div>🥇 1.er puesto<b>S/ 150</b></div><div>🥈 2.º puesto<b>S/ 100</b></div><div>🥉 3.er puesto<b>S/ 50</b></div><div>🏅 4.º puesto<b>S/ 30</b></div></div>
+<p>📅 Miércoles 25 de noviembre · 🕥 10:45 a.m. – 12:30 p.m.<br>📍 CERTUS – Sede Arequipa · 👥 Abierto a estudiantes de <b>todas las carreras</b></p></section>
+<section class="card"><h2>📝 Inscríbete</h2>
+<form id="f" autocomplete="on">
+<label for="nombre">Nombres y apellidos</label><input id="nombre" name="nombre" required>
+<div class="fila"><div><label for="dni">DNI</label><input id="dni" name="dni" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 dígitos"></div>
+<div><label for="codigo">Código de estudiante</label><input id="codigo" name="codigo" required></div></div>
+<div class="fila"><div><label for="correo">Correo</label><input id="correo" name="correo" type="email" required></div>
+<div><label for="celular">Celular</label><input id="celular" name="celular" required inputmode="tel" pattern="[0-9]{9}" maxlength="9" placeholder="9 dígitos"></div></div>
+<div class="fila"><div><label for="carrera">Carrera</label><input id="carrera" name="carrera" required></div>
+<div><label for="ciclo">Ciclo</label><select id="ciclo" name="ciclo" required><option value="">Elegir…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div></div>
+<label for="excel">Experiencia en Excel</label><select id="excel" name="excel" required><option value="">Elegir…</option><option>Ninguna</option><option>Básica</option><option>Intermedia</option><option>Avanzada</option></select>
+<input type="text" name="web" id="web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+<div style="margin-top:16px"><button id="b" type="submit">Inscribirme</button></div><div id="msg" role="status"></div>
+</form></section>
+<section class="card qr"><h2>Comparte esta inscripción</h2><div id="qr"></div>
+<p>Escanea el código para abrir el formulario.</p>
+<div class="btns"><button class="sec" id="comp">Compartir</button><button class="sec" id="png">Descargar PNG</button><button class="sec" id="svg">Descargar SVG</button></div></section>
+</main>
+<footer>Eduardo Mamani Roque – Área de Finanzas · CERTUS Arequipa</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+// Pegar aquí la URL /exec de la aplicación web de Google Apps Script (ver financial-challenge-apps-script.gs).
+var APPS_SCRIPT_URL = '';
+var $=function(i){return document.getElementById(i)};
+var url = location.origin + location.pathname;
+var qr = qrcode(0,'M'); qr.addData(url); qr.make();
+$('qr').innerHTML = qr.createSvgTag({cellSize:8,margin:0,scalable:true});
+function svgTxt(){return $('qr').innerHTML.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"')}
+function bajar(blob,n){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=n;a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
+$('svg').onclick=function(){bajar(new Blob([svgTxt()],{type:'image/svg+xml'}),'qr-financial-challenge.svg')};
+function aPng(cb){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=900;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,900,900);x.imageSmoothingEnabled=false;x.drawImage(img,50,50,800,800);c.toBlob(cb,'image/png')};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgTxt())}
+$('png').onclick=function(){aPng(function(b){bajar(b,'qr-financial-challenge.png')})};
+$('comp').onclick=function(){
+  var d={title:'Financial Challenge',text:'🏆 Financial Challenge – Miércoles 25 de noviembre, CERTUS Arequipa. Inscríbete:',url:url};
+  if(navigator.share){aPng(function(b){var f=new File([b],'qr-financial-challenge.png',{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[f]}))d.files=[f];navigator.share(d).catch(function(){})})}
+  else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){$('comp').textContent='Enlace copiado ✓'})}
+  else prompt('Copia el enlace:',url)};
+$('f').onsubmit=function(e){e.preventDefault();var m=$('msg'),b=$('b');
+  if($('web').value)return;
+  if(!APPS_SCRIPT_URL){m.className='err';m.textContent='El formulario aún no está conectado a la hoja de Google.';return}
+  b.disabled=true;m.className='';m.textContent='Enviando…';
+  fetch(APPS_SCRIPT_URL,{method:'POST',body:new URLSearchParams(new FormData($('f')))}).then(function(r){return r.json()}).then(function(j){
+    if(j.ok){m.className='ok';m.textContent='¡Listo! Tu inscripción quedó registrada. Nos vemos el miércoles 25 de noviembre.';$('f').reset()}
+    else if(j.duplicado){m.className='err';m.textContent='Ese DNI ya está inscrito.'}
+    else throw 0}).catch(function(){m.className='err';m.textContent='No se pudo enviar. Inténtalo de nuevo.'}).then(function(){b.disabled=false})};
+</script></body></html>
