@@ -113,9 +113,10 @@ var url = location.origin + location.pathname;
 var qr = qrcode(0,'M'); qr.addData(url); qr.make();
 $('qr').innerHTML = qr.createSvgTag({cellSize:8,margin:0,scalable:true});
 function svgTxt(){return $('qr').innerHTML.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"')}
-function bajar(blob,n){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=n;a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000)}
-function aPng(cb){var img=new Image();img.onload=function(){var c=document.createElement('canvas');c.width=c.height=900;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,900,900);x.imageSmoothingEnabled=false;x.drawImage(img,50,50,800,800);c.toBlob(cb,'image/png')};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgTxt())}
-function bajarImg(){aPng(function(b){bajar(b,'qr-financial-challenge.png')})}
+function bajar(blob,n){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=n;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500)}
+function aPng(cb){var n=qr.getModuleCount(),m=4,t=n+2*m,k=Math.floor(1000/t),w=k*t,c=document.createElement('canvas');c.width=c.height=w;var x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,w);x.fillStyle='#000';for(var r=0;r<n;r++)for(var q=0;q<n;q++)if(qr.isDark(r,q))x.fillRect((q+m)*k,(r+m)*k,k,k);
+  if(c.toBlob)c.toBlob(cb,'image/png');else cb(null)}
+function bajarImg(){aPng(function(b){if(b)bajar(b,'qr-financial-challenge.png')})}
 $('png').onclick=bajarImg;$('png2').onclick=bajarImg;
 $('comp').onclick=function(){$('modal').className='on'};
 $('cerrar').onclick=function(){$('modal').className=''};
