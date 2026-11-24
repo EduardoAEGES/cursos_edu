@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="4">
+<meta name="version" content="5">
 <title>Financial Challenge · Inscripción</title>
 <style>
 :root{--vd:#0e4a38;--vd2:#0a3427;--rj:#c1272d;--or:#d9a928;--cr:#fff9ee;--tx:#2a2a26}
@@ -52,6 +52,8 @@ details.card{background:transparent;border:2px dotted var(--or);box-shadow:none;
 #modal.on{display:flex}#modal .caja{background:#fff;border:3px dotted var(--or);border-radius:18px;padding:18px;text-align:center;width:min(420px,100%);max-height:100%;overflow:auto}
 #modal #qr{border:0;padding:0;display:block}#modal #qr svg{width:min(340px,78vw);height:min(340px,78vw);margin:0 auto}
 #modal .btns button{flex:1 1 140px}
+#cupos{margin:0 0 6px;padding:10px 12px;border:2px dotted var(--or);border-radius:12px;text-align:center;color:var(--vd);display:none}
+#cupos.on{display:block}#cupos strong{color:var(--rj);font-size:26px}#cupos.espera strong{color:var(--or)}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
 <symbol id="copo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7"/><path d="M9.5 3.8L12 6.3l2.5-2.5M9.5 20.2L12 17.7l2.5 2.5M3 10.2l3.4.9-.9 3.4M21 13.8l-3.4-.9.9-3.4M3 13.8l3.4-.9-.9-3.4M21 10.2l-3.4.9.9 3.4"/></g></symbol>
@@ -76,6 +78,7 @@ details.card{background:transparent;border:2px dotted var(--or);box-shadow:none;
 <p>Miércoles 25 de noviembre · 10:45 a.m. · CERTUS Arequipa</p></header>
 <main>
 <section class="card"><h2><svg class="i"><use href="#lapiz"/></svg>Inscríbete aquí</h2>
+<div id="cupos" role="status"></div>
 <form id="f" autocomplete="on">
 <label for="nombre">Apellidos y nombres</label><input id="nombre" name="nombre" required autocomplete="name">
 <div class="fila"><div><label for="dni">DNI</label><input id="dni" name="dni" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 dígitos"></div>
@@ -128,12 +131,18 @@ $('env').onclick=function(){
     if(navigator.canShare&&navigator.canShare({files:[f]}))d.files=[f];navigator.share(d).catch(function(){})})}
   else if(navigator.clipboard){navigator.clipboard.writeText(url).then(function(){$('env').lastChild.textContent='Enlace copiado'})}
   else prompt('Copia el enlace:',url)};
+function pintaCupos(j){var c=$('cupos');if(!j||j.quedan===undefined)return;c.className='on';
+  if(j.quedan>0){c.innerHTML='Quedan <strong>'+j.quedan+'</strong> '+(j.quedan==1?'cupo':'cupos')+' de '+j.cupos}
+  else if(j.espera>0){c.className='on espera';c.innerHTML='Cupos agotados. Quedan <strong>'+j.espera+'</strong> lugares en lista de espera'}
+  else{c.className='on espera';c.innerHTML='Inscripciones cerradas: cupos y lista de espera completos';$('b').disabled=true}}
+if(APPS_SCRIPT_URL)fetch(APPS_SCRIPT_URL).then(function(r){return r.json()}).then(pintaCupos).catch(function(){});
 $('f').onsubmit=function(e){e.preventDefault();var m=$('msg'),b=$('b');
   if($('web').value)return;
   if(!APPS_SCRIPT_URL){m.className='err';m.textContent='El formulario aún no está conectado a la hoja de Google.';return}
   b.disabled=true;m.className='';m.textContent='Enviando…';
   fetch(APPS_SCRIPT_URL,{method:'POST',body:new URLSearchParams(new FormData($('f')))}).then(function(r){return r.json()}).then(function(j){
-    if(j.ok){m.className='ok';m.textContent='¡Listo! Tu inscripción quedó registrada. Nos vemos el miércoles 25 de noviembre.';$('f').reset()}
+    if(j.ok){m.className='ok';m.textContent=j.estado==='En espera'?'Quedaste en lista de espera. Si se libera un cupo, te avisaremos.':'¡Listo! Tu inscripción quedó registrada. Nos vemos el miércoles 25 de noviembre.';$('f').reset();pintaCupos(j)}
+    else if(j.lleno){m.className='err';m.textContent='Las inscripciones y la lista de espera están completas.';pintaCupos({quedan:0,espera:0,cupos:25});return}
     else if(j.duplicado){m.className='err';m.textContent='Ese DNI ya está inscrito.'}
-    else throw 0}).catch(function(){m.className='err';m.textContent='No se pudo enviar. Inténtalo de nuevo.'}).then(function(){b.disabled=false})};
+    else throw 0}).catch(function(){m.className='err';m.textContent='No se pudo enviar. Inténtalo de nuevo.'}).then(function(){if(!/cerradas/.test($('cupos').textContent))b.disabled=false})};
 </script></body></html>
