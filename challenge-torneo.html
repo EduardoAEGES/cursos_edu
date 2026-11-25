@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="2">
-<title>Financial Challenge · Torneo en vivo</title>
+<meta name="version" content="3">
+<title>Financial Challenge - Torneo en vivo</title>
 <style>
 :root{--az:#071767;--az2:#0d2490;--fu:#FC0045;--or:#F5B800;--fondo:#050d3d;--txt:#eef1ff;--mut:#9aa6d9;--card:#0c1a5c;--ok:#22c55e}
 *{box-sizing:border-box}
@@ -69,13 +69,13 @@ a{color:#7fb0ff}
 .links a.cerrado{background:#1e2f8f}
 @media(max-width:820px){.fix{grid-template-columns:1fr}.fix h3{display:none}.col{height:auto}}
 </style></head><body>
-<header><img src="marca/certus-blanco.png" alt="CERTUS"><h1>Financial <span>Challenge</span> · Torneo en vivo</h1><div id="act">Cargando…</div></header>
+<header><img src="marca/certus-blanco.png" alt="CERTUS"><h1>Financial <span>Challenge</span> - Torneo en vivo</h1><div id="act">Cargando…</div></header>
 <nav><button data-t="vivo" class="on">En vivo</button><button data-t="mio">Mi archivo</button><button data-t="doc">Docente</button></nav>
 <main>
 <section class="panel on" id="vivo">
   <div class="stats" id="stats"></div>
   <div id="podio"></div>
-  <h2>Fixture <small>cuartos, semifinales y final · gana quien tenga más aciertos; en empate, quien terminó primero</small></h2>
+  <h2>Fixture <small>cuartos, semifinales y final - gana quien tenga más aciertos; en empate, quien terminó primero</small></h2>
   <div class="fix" id="fix"></div>
   <h2>Clasificatoria <small id="sub"></small></h2>
   <div class="grid" id="grid"></div>
@@ -94,12 +94,12 @@ a{color:#7fb0ff}
   <div id="docente" hidden>
     <p class="links2" id="dlinks"></p>
     <div class="pasos">
-      <div class="paso"><h4>1 · Inscritos</h4><p>Crea la hoja de la clasificatoria de cada inscrito nuevo.</p><button class="btn" data-a="sincronizar">Crear hojas</button></div>
-      <div class="paso"><h4>2 · Clasificatoria</h4><p>Cierra las hojas y las califica solas.</p><div class="fila"><button class="btn" data-a="calificarClasificatoria">Calificar</button><button class="btn sec" data-a="abrirClasificatoria">Reabrir</button></div></div>
-      <div class="paso"><h4>3 · Cuartos</h4><div class="fila"><button class="btn" data-a="armar" data-r="cuartos">Armar</button><button class="btn sec" data-a="calificar" data-r="cuartos">Calificar</button></div></div>
-      <div class="paso"><h4>4 · Semifinales</h4><div class="fila"><button class="btn" data-a="armar" data-r="semis">Armar</button><button class="btn sec" data-a="calificar" data-r="semis">Calificar</button></div></div>
-      <div class="paso"><h4>5 · Tercer puesto</h4><div class="fila"><button class="btn" data-a="armar" data-r="tercer">Armar</button><button class="btn sec" data-a="calificar" data-r="tercer">Calificar</button></div></div>
-      <div class="paso"><h4>6 · Gran final</h4><div class="fila"><button class="btn" data-a="armar" data-r="final">Armar</button><button class="btn sec" data-a="calificar" data-r="final">Calificar</button></div></div>
+      <div class="paso"><h4>1 - Inscritos</h4><p>Crea la hoja de la clasificatoria de cada inscrito nuevo.</p><button class="btn" data-a="sincronizar">Crear hojas</button></div>
+      <div class="paso"><h4>2 - Clasificatoria</h4><p>Cierra las hojas y las califica solas.</p><div class="fila"><button class="btn" data-a="calificarClasificatoria">Calificar</button><button class="btn sec" data-a="abrirClasificatoria">Reabrir</button></div></div>
+      <div class="paso"><h4>3 - Cuartos</h4><div class="fila"><button class="btn" data-a="armar" data-r="cuartos">Armar</button><button class="btn sec" data-a="calificar" data-r="cuartos">Calificar</button></div></div>
+      <div class="paso"><h4>4 - Semifinales</h4><div class="fila"><button class="btn" data-a="armar" data-r="semis">Armar</button><button class="btn sec" data-a="calificar" data-r="semis">Calificar</button></div></div>
+      <div class="paso"><h4>5 - Tercer puesto</h4><div class="fila"><button class="btn" data-a="armar" data-r="tercer">Armar</button><button class="btn sec" data-a="calificar" data-r="tercer">Calificar</button></div></div>
+      <div class="paso"><h4>6 - Gran final</h4><div class="fila"><button class="btn" data-a="armar" data-r="final">Armar</button><button class="btn sec" data-a="calificar" data-r="final">Calificar</button></div></div>
     </div>
     <div class="msg" id="dmsg"></div>
     <h2>Duelos <small>corrige el ganador si hace falta</small></h2><div id="dpart"></div>
@@ -138,7 +138,7 @@ function pintar(){
   $('stats').innerHTML='<div class="stat"><b>'+P.length+'</b><span>participantes</span></div><div class="stat"><b>'+cal+'</b><span>calificados</span></div><div class="stat"><b>'+(ronda?esc(ronda.nombre.replace(/ \d$/,'')):(cal?'Torneo':'Clasificatoria'))+'</b><span>fase en juego</span></div>';
   var orden=P.slice().sort(function(a,b){return (a.p||999)-(b.p||999)||a.n.localeCompare(b.n)});
   $('sub').textContent=cal?'pasan los 8 primeros a cuartos':'aún sin calificar';
-  $('grid').innerHTML=orden.map(function(p){var top=p.p&&p.p<=8;return '<div class="p'+(top?' top':'')+'">'+(p.p?'<span class="pos">'+p.p+'°</span>':'')+avatar(p.n)+'<div style="flex:1;min-width:0"><div class="n">'+esc(p.n)+'</div><div class="c">'+esc(p.c)+'</div><div class="bar"><i style="width:'+((p.a||0)/tot*100)+'%"></i></div><div class="pt">'+(p.a!=null?'<b>'+p.a+'</b> / '+tot+' aciertos'+(p.h?' · '+p.h:''):'<span class="vacio">sin calificar</span>')+'</div></div></div>'}).join('')||'<p class="vacio">Aún no hay participantes.</p>';
+  $('grid').innerHTML=orden.map(function(p){var top=p.p&&p.p<=8;return '<div class="p'+(top?' top':'')+'">'+(p.p?'<span class="pos">'+p.p+'°</span>':'')+avatar(p.n)+'<div style="flex:1;min-width:0"><div class="n">'+esc(p.n)+'</div><div class="c">'+esc(p.c)+'</div><div class="bar"><i style="width:'+((p.a||0)/tot*100)+'%"></i></div><div class="pt">'+(p.a!=null?'<b>'+p.a+'</b> / '+tot+' aciertos'+(p.h?' - '+p.h:''):'<span class="vacio">sin calificar</span>')+'</div></div></div>'}).join('')||'<p class="vacio">Aún no hay participantes.</p>';
   function mcard(m,extra){
     if(!m)return '';
     function j(l){var n=m[l],ac=m['ac'+l],g=m.ganador;var cls=g?(g===l?'gana':'pierde'):'';return '<div class="j '+cls+'">'+avatar(n)+'<div class="nm">'+(n?esc(n):'<span class="vacio">Por definir</span>')+'</div><div class="sc">'+(ac!=null?ac:'')+'</div></div>'}
@@ -151,14 +151,14 @@ function pintar(){
     '<div class="col">'+mcard(by.F,' final')+mcard(by.T)+'</div>';
   var F=by.F,T=by.T;
   if(F&&F.ganador){var c=F.ganador==='A'?F.A:F.B,s=F.ganador==='A'?F.B:F.A,t=T&&T.ganador?(T.ganador==='A'?T.A:T.B):'';
-    $('podio').innerHTML='<h2>Podio</h2><div class="podio"><div>'+avatar(c)+'<span>Campeón<br><b>'+esc(c)+'</b> · S/ 100</span></div><div>'+avatar(s)+'<span>Segundo<br><b>'+esc(s)+'</b> · S/ 60</span></div>'+(t?'<div>'+avatar(t)+'<span>Tercero<br><b>'+esc(t)+'</b> · S/ 40</span></div>':'')+'</div>'}
+    $('podio').innerHTML='<h2>Podio</h2><div class="podio"><div>'+avatar(c)+'<span>Campeón<br><b>'+esc(c)+'</b> - S/ 100</span></div><div>'+avatar(s)+'<span>Segundo<br><b>'+esc(s)+'</b> - S/ 60</span></div>'+(t?'<div>'+avatar(t)+'<span>Tercero<br><b>'+esc(t)+'</b> - S/ 40</span></div>':'')+'</div>'}
   else $('podio').innerHTML='';
   if(!$('docente').hidden)pintarDoc();
 }
 function pintarDoc(){
   var M=E.partidos||[],P=E.participantes||[];
-  if(E.docente)$('dlinks').innerHTML='<a href="'+E.docente.master+'" target="_blank" rel="noopener">Abrir hoja master</a> · <a href="'+E.docente.carpeta+'" target="_blank" rel="noopener">Abrir carpeta de Drive</a>';
-  $('dpart').innerHTML='<table><tr><th>Duelo</th><th>Jugador A</th><th>Aciertos</th><th>Jugador B</th><th>Aciertos</th><th>Ganador</th></tr>'+M.map(function(m){return '<tr><td>'+esc(m.nombre)+'</td><td>'+esc(m.A||'-')+'</td><td>'+(m.acA!=null?m.acA:'')+(m.hA?' · '+m.hA:'')+'</td><td>'+esc(m.B||'-')+'</td><td>'+(m.acB!=null?m.acB:'')+(m.hB?' · '+m.hB:'')+'</td><td>'+(m.A&&m.B?'<button class="btn sec" data-g="'+m.id+'" data-l="A">'+(m.ganador==='A'?'✔ ':'')+'A</button> <button class="btn sec" data-g="'+m.id+'" data-l="B">'+(m.ganador==='B'?'✔ ':'')+'B</button>':'')+'</td></tr>'}).join('')+'</table>';
+  if(E.docente)$('dlinks').innerHTML='<a href="'+E.docente.master+'" target="_blank" rel="noopener">Abrir hoja master</a> - <a href="'+E.docente.carpeta+'" target="_blank" rel="noopener">Abrir carpeta de Drive</a>';
+  $('dpart').innerHTML='<table><tr><th>Duelo</th><th>Jugador A</th><th>Aciertos</th><th>Jugador B</th><th>Aciertos</th><th>Ganador</th></tr>'+M.map(function(m){return '<tr><td>'+esc(m.nombre)+'</td><td>'+esc(m.A||'-')+'</td><td>'+(m.acA!=null?m.acA:'')+(m.hA?' - '+m.hA:'')+'</td><td>'+esc(m.B||'-')+'</td><td>'+(m.acB!=null?m.acB:'')+(m.hB?' - '+m.hB:'')+'</td><td>'+(m.A&&m.B?'<button class="btn sec" data-g="'+m.id+'" data-l="A">'+(m.ganador==='A'?'✔ ':'')+'A</button> <button class="btn sec" data-g="'+m.id+'" data-l="B">'+(m.ganador==='B'?'✔ ':'')+'B</button>':'')+'</td></tr>'}).join('')+'</table>';
   $('dclas').innerHTML='<table><tr><th>Puesto</th><th>Participante</th><th>Aciertos</th><th>Hora</th><th></th></tr>'+P.map(function(p){return '<tr><td>'+(p.p||'')+'</td><td>'+esc(p.n)+'</td><td><input type="number" min="0" max="'+E.totalClasif+'" value="'+(p.a!=null?p.a:'')+'" id="ac'+p.i+'"></td><td>'+(p.h||'')+'</td><td><button class="btn sec" data-ac="'+p.i+'">Guardar</button></td></tr>'}).join('')+'</table>';
 }
 function accion(o,boton){
@@ -171,7 +171,7 @@ document.querySelector('nav').onclick=function(e){var t=e.target.dataset.t;if(!t
 $('ver').onclick=function(){
   var m=$('mmsg');m.className='msg';m.textContent='Buscando…';$('mlinks').innerHTML='';
   api('accion=miArchivo&dni='+encodeURIComponent($('dni').value)).then(function(d){if(d.error)throw new Error(d.error);m.textContent='Hola, '+d.nombre;
-    $('mlinks').innerHTML=d.archivos.map(function(a){return '<a class="'+(a.estado==='cerrado'?'cerrado':'')+'" href="'+a.url+'" target="_blank" rel="noopener">'+esc(a.ronda)+(a.estado==='cerrado'?' · cerrado':' · abrir')+'</a>'}).join('')})
+    $('mlinks').innerHTML=d.archivos.map(function(a){return '<a class="'+(a.estado==='cerrado'?'cerrado':'')+'" href="'+a.url+'" target="_blank" rel="noopener">'+esc(a.ronda)+(a.estado==='cerrado'?' - cerrado':' - abrir')+'</a>'}).join('')})
   .catch(function(e){m.className='msg err';m.textContent=e.message});
 };
 $('entrar').onclick=function(){try{localStorage.setItem('fc_clave',$('clave').value)}catch(x){}
