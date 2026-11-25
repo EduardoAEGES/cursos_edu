@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="1">
+<meta name="version" content="2">
 <title>Financial Challenge · Torneo en vivo</title>
 <style>
 :root{--az:#071767;--az2:#0d2490;--fu:#FC0045;--or:#F5B800;--fondo:#050d3d;--txt:#eef1ff;--mut:#9aa6d9;--card:#0c1a5c;--ok:#22c55e}
@@ -109,7 +109,7 @@ a{color:#7fb0ff}
 </main>
 <script>
 // Pega aquí la URL /exec de la aplicación web de Apps Script (Torneo_Challenge_AppsScript.gs)
-var API='';
+var API='https://script.google.com/macros/s/AKfycbyIdNIlGr4Bq03YGcAfV3pp0SiadwJ9lhk7MhTaVNGf2SmzpJVOYrXhj5dxdYFuyD7S/exec';
 var $=function(i){return document.getElementById(i)};
 var E={participantes:[],partidos:[]};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
