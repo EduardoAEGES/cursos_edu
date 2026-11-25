@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="version" content="3">
+<meta name="version" content="4">
 <title>Financial Challenge - Torneo en vivo</title>
 <style>
 :root{--az:#071767;--az2:#0d2490;--fu:#FC0045;--or:#F5B800;--fondo:#050d3d;--txt:#eef1ff;--mut:#9aa6d9;--card:#0c1a5c;--ok:#22c55e}
@@ -101,6 +101,8 @@ a{color:#7fb0ff}
       <div class="paso"><h4>5 - Tercer puesto</h4><div class="fila"><button class="btn" data-a="armar" data-r="tercer">Armar</button><button class="btn sec" data-a="calificar" data-r="tercer">Calificar</button></div></div>
       <div class="paso"><h4>6 - Gran final</h4><div class="fila"><button class="btn" data-a="armar" data-r="final">Armar</button><button class="btn sec" data-a="calificar" data-r="final">Calificar</button></div></div>
     </div>
+    <div class="paso" style="margin-top:12px"><h4>Pruebas y limpieza</h4><p>Borra las respuestas de las hojas y las calificaciones para volver a probar. Marca filas abajo para limpiar solo esas.</p>
+      <div class="fila"><button class="btn sec" data-a="limpiar" data-al="clasificatoria">Limpiar clasificatoria</button><button class="btn sec" data-a="limpiar" data-al="torneo">Reiniciar torneo</button><button class="btn" data-a="limpiar" data-al="todo">Limpiar TODO</button><button class="btn sec" id="limpSel">Limpiar marcados</button></div></div>
     <div class="msg" id="dmsg"></div>
     <h2>Duelos <small>corrige el ganador si hace falta</small></h2><div id="dpart"></div>
     <h2>Clasificatoria <small>corrige aciertos a mano si hace falta</small></h2><div id="dclas"></div>
@@ -158,8 +160,8 @@ function pintar(){
 function pintarDoc(){
   var M=E.partidos||[],P=E.participantes||[];
   if(E.docente)$('dlinks').innerHTML='<a href="'+E.docente.master+'" target="_blank" rel="noopener">Abrir hoja master</a> - <a href="'+E.docente.carpeta+'" target="_blank" rel="noopener">Abrir carpeta de Drive</a>';
-  $('dpart').innerHTML='<table><tr><th>Duelo</th><th>Jugador A</th><th>Aciertos</th><th>Jugador B</th><th>Aciertos</th><th>Ganador</th></tr>'+M.map(function(m){return '<tr><td>'+esc(m.nombre)+'</td><td>'+esc(m.A||'-')+'</td><td>'+(m.acA!=null?m.acA:'')+(m.hA?' - '+m.hA:'')+'</td><td>'+esc(m.B||'-')+'</td><td>'+(m.acB!=null?m.acB:'')+(m.hB?' - '+m.hB:'')+'</td><td>'+(m.A&&m.B?'<button class="btn sec" data-g="'+m.id+'" data-l="A">'+(m.ganador==='A'?'✔ ':'')+'A</button> <button class="btn sec" data-g="'+m.id+'" data-l="B">'+(m.ganador==='B'?'✔ ':'')+'B</button>':'')+'</td></tr>'}).join('')+'</table>';
-  $('dclas').innerHTML='<table><tr><th>Puesto</th><th>Participante</th><th>Aciertos</th><th>Hora</th><th></th></tr>'+P.map(function(p){return '<tr><td>'+(p.p||'')+'</td><td>'+esc(p.n)+'</td><td><input type="number" min="0" max="'+E.totalClasif+'" value="'+(p.a!=null?p.a:'')+'" id="ac'+p.i+'"></td><td>'+(p.h||'')+'</td><td><button class="btn sec" data-ac="'+p.i+'">Guardar</button></td></tr>'}).join('')+'</table>';
+  $('dpart').innerHTML='<table><tr><th>Duelo</th><th>Jugador A</th><th>Aciertos</th><th>Jugador B</th><th>Aciertos</th><th>Ganador</th><th>Marcar</th></tr>'+M.map(function(m){return '<tr><td>'+esc(m.nombre)+'</td><td>'+esc(m.A||'-')+'</td><td>'+(m.acA!=null?m.acA:'')+(m.hA?' - '+m.hA:'')+'</td><td>'+esc(m.B||'-')+'</td><td>'+(m.acB!=null?m.acB:'')+(m.hB?' - '+m.hB:'')+'</td><td>'+(m.A&&m.B?'<button class="btn sec" data-g="'+m.id+'" data-l="A">'+(m.ganador==='A'?'✔ ':'')+'A</button> <button class="btn sec" data-g="'+m.id+'" data-l="B">'+(m.ganador==='B'?'✔ ':'')+'B</button>':'')+'</td><td><input type="checkbox" class="selm" data-id="'+m.id+'" style="width:auto"></td></tr>'}).join('')+'</table>';
+  $('dclas').innerHTML='<table><tr><th>Puesto</th><th>Participante</th><th>Aciertos</th><th>Hora</th><th></th><th>Marcar</th></tr>'+P.map(function(p){return '<tr><td>'+(p.p||'')+'</td><td>'+esc(p.n)+'</td><td><input type="number" min="0" max="'+E.totalClasif+'" value="'+(p.a!=null?p.a:'')+'" id="ac'+p.i+'"></td><td>'+(p.h||'')+'</td><td><button class="btn sec" data-ac="'+p.i+'">Guardar</button></td><td><input type="checkbox" class="selp" data-i="'+p.i+'" style="width:auto"></td></tr>'}).join('')+'</table>';
 }
 function accion(o,boton){
   var m=$('dmsg');m.className='msg';m.textContent='Trabajando… (puede tardar un minuto)';document.querySelectorAll('#docente button').forEach(function(b){b.disabled=true});
@@ -177,10 +179,15 @@ $('ver').onclick=function(){
 $('entrar').onclick=function(){try{localStorage.setItem('fc_clave',$('clave').value)}catch(x){}
   post({accion:'entrar'}).then(function(d){if(d.error)throw new Error(d.error);E=d;$('login').hidden=true;$('docente').hidden=false;pintar()}).catch(function(e){$('lmsg').className='msg err';$('lmsg').textContent=e.message})};
 $('docente').onclick=function(e){var b=e.target.closest('button');if(!b)return;
+  if(b.id==='limpSel'){var idx=[].map.call(document.querySelectorAll('.selp:checked'),function(x){return x.dataset.i}),ids=[].map.call(document.querySelectorAll('.selm:checked'),function(x){return x.dataset.id});
+    if(!idx.length&&!ids.length){alert('Marca al menos una fila o un duelo.');return}
+    if(!confirm('Se borran las respuestas y las notas de lo marcado. Los duelos que dependen de un duelo marcado también se reinician. ¿Continuar?'))return;
+    accion({accion:'limpiar',alcance:'seleccion',idx:idx,ids:ids});return}
+  if(b.dataset.a==='limpiar'){var t={clasificatoria:'Se borran las respuestas y notas de la clasificatoria de TODOS.',torneo:'Se reinicia el torneo completo: cuartos a final, hojas y resultados.',todo:'Se borra TODO: respuestas, notas y el torneo completo.'}[b.dataset.al];if(!confirm(t+' ¿Continuar?'))return;accion({accion:'limpiar',alcance:b.dataset.al});return}
   if(b.dataset.a){var txt=b.dataset.a==='calificar'||b.dataset.a==='calificarClasificatoria'?'Esto cierra las hojas de la ronda y las califica. ¿Continuar?':null;if(txt&&!confirm(txt))return;accion({accion:b.dataset.a,ronda:b.dataset.r},b)}
   else if(b.dataset.g)accion({accion:'ganador',id:b.dataset.g,lado:b.dataset.l});
   else if(b.dataset.ac)accion({accion:'aciertos',idx:b.dataset.ac,valor:$('ac'+b.dataset.ac).value});
 };
-cargar();setInterval(function(){if(document.visibilityState==='visible'&&!document.querySelector('#docente input:focus'))cargar()},10000);
+cargar();setInterval(function(){if(document.visibilityState==='visible'&&$('docente').hidden)cargar()},10000);
 </script>
 </body></html>
