@@ -2,6 +2,15 @@
 var ENCABEZADOS = ['Fecha y hora','Apellidos y nombres','DNI','Teléfono','Carrera','Ciclo','Nivel de Excel','Estado'];
 var CUPOS = 25;   // inscritos confirmados
 var ESPERA = 5;   // lista de espera adicional
+// Torneo en vivo: cada inscripción se anota también en el archivo MASTER, al instante.
+var TORNEO_URL = 'PEGA_AQUI_LA_URL_EXEC_DEL_TORNEO';
+var CLAVE_TORNEO = 'CLAVE_DEL_DOCENTE';
+function avisarTorneo(dni, p, estado) {
+  try {
+    UrlFetchApp.fetch(TORNEO_URL, { method: 'post', contentType: 'application/json', muteHttpExceptions: true, followRedirects: true,
+      payload: JSON.stringify({ accion: 'inscribir', clave: CLAVE_TORNEO, dni: dni, nombre: p.nombre, carrera: p.carrera, ciclo: p.ciclo, estado: estado }) });
+  } catch (err) { /* si falla, el botón Crear hojas del torneo lo recupera */ }
+}
 
 function inscritos(hoja) { return Math.max(hoja.getLastRow() - 1, 0); }
 function estadoCupos(n) {
@@ -33,6 +42,7 @@ function doPost(e) {
     if (n >= CUPOS + ESPERA) return salida({ ok: false, lleno: true });
     var estado = n < CUPOS ? 'Inscrito' : 'En espera';
     hoja.appendRow([new Date(), p.nombre, "'" + dni, "'" + p.celular, p.carrera, p.ciclo, p.excel, estado]);
+    avisarTorneo(dni, p, estado);
     var r = estadoCupos(n + 1); r.ok = true; r.estado = estado;
     return salida(r);
   } finally {
